@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Scentmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
 <script>
-  window.haptic = type => { try { if(type==='medium')navigator.vibrate?.([25]); else if(type==='success')navigator.vibrate?.([15,50,30]); } catch(e){} };
+  window._hapticImpl = type => { try { if(type==='medium')navigator.vibrate?.([25]); else if(type==='success')navigator.vibrate?.([15,50,30]); } catch(e){} };
+  window.haptic = type => window._hapticImpl(type);
+</script>
+<script type="module">
+  import { WebHaptics } from 'https://esm.sh/web-haptics@0.0.6';
+  const _h = new WebHaptics();
+  window._hapticImpl = type => { try { _h.trigger(type); } catch(e) {} };
 </script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -103,11 +109,11 @@ body{font-family:"Source Serif 4",Georgia,serif;
   }
   .capsule-col-inner{
     border-right:none;border-bottom:1px solid var(--black);
-    padding:18px 16px 24px;
+    padding:18px 16px calc(80px + env(safe-area-inset-bottom,0px));
   }
   .col-main{min-height:auto}
   .col-main-nav{padding:12px 16px 10px;position:sticky}
-  .col-main-content{padding:18px 16px 80px}
+  .col-main-content{padding:18px 16px calc(80px + env(safe-area-inset-bottom,0px))}
   .col-detail{display:none!important}
   .detail-scrim{display:none!important}
 
@@ -524,7 +530,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .sheet.visible{transform:translateY(0)}
   .sheet.under{transform:translateY(18px) scale(.97);border-radius:18px 18px 0 0}
   .sheet-inner{display:flex;flex-direction:column;flex:1;min-height:0;padding:0 18px 0}
-  .sheet-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(52px + env(safe-area-inset-bottom,0px))}
+  .sheet-content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(52px + env(safe-area-inset-bottom,0px))}
   .sheet-handle{width:38px;height:5px;border-radius:2px;background:var(--g300);margin:12px auto 0}
   .sheet-topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 0 15px}
   .sheet-back{display:flex;align-items:center;gap:4px;font-size:.82rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:0;transition:color .12s;min-width:56px;min-height:44px}
