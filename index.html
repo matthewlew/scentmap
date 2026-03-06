@@ -125,14 +125,14 @@ body{font-family:"Source Serif 4",Georgia,serif;
 
   /* Capsule grid */
   .capsule-grid{grid-template-columns:1fr 1fr;gap:0}
-  .cap-cell{min-height:150px;padding:14px 12px}
-  .cap-role{font-size:.74rem}
-  .cap-desc-short{font-size:.68rem;margin-bottom:8px}
-  .cap-sym{font-size:1.45rem;margin-bottom:8px}
-  .cap-primary{font-size:.86rem}
-  .cap-frag-brand{font-size:.71rem}
-  .cap-assign-cta{font-size:.74rem;gap:5px;margin-top:4px}
-  .cap-plus{width:16px;height:16px;font-size:.8rem}
+  .cap-cell{min-height:160px;padding:16px 13px}
+  .cap-role{font-size:.78rem;letter-spacing:.01em}
+  .cap-desc-short{font-size:.73rem;margin-bottom:10px;line-height:1.35}
+  .cap-sym{font-size:1.5rem;margin-bottom:10px}
+  .cap-primary{font-size:.92rem}
+  .cap-frag-brand{font-size:.75rem}
+  .cap-assign-cta{font-size:.78rem;gap:5px;margin-top:5px}
+  .cap-plus{width:17px;height:17px;font-size:.82rem}
 
   /* Catalog */
   .sec-label{font-size:.82rem;margin-bottom:15px}
@@ -526,6 +526,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
     border-radius:14px 14px 0 0;
     transform:translateY(100%);transition:transform .28s cubic-bezier(.16,1,.3,1);
     max-height:88vh;overflow:hidden;display:flex;flex-direction:column;
+    pointer-events:auto;
   }
   .sheet.visible{transform:translateY(0)}
   .sheet.under{transform:translateY(18px) scale(.97);border-radius:18px 18px 0 0}
