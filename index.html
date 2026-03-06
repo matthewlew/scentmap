@@ -595,7 +595,7 @@ let ROLES=[
    symLine:'❄ signals density — materials that need cold air to find their best expression.',
    long:'Cold air suppresses projection, so this role demands density — resins, woods, leather, and oud that need ambient warmth to open fully. Worn in autumn and winter when richer materials find their best expression. The emotional register is gravitas and enclosure. The inverse of Summer: where that role demands restraint, this one rewards depth.'},
 ];
-const RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
+let RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
 
 const FAM={
   citrus:  {label:'Citrus',  color:'#9A6800'},
@@ -687,7 +687,7 @@ let CAT=[
   {brand:'Diptyque',    id:'eau-de-lierre',   name:'Eau de Lierre',     roles:['casual','heat'],      family:'green',   sillage:3,layering:3,top:'Ivy, Citrus',                   mid:'Ivy Leaf, Violet',             base:'White Musk, Cedar'},
   {brand:'Diptyque',    id:'volutes',         name:'Volutes',           roles:['formal','cold'],      family:'amber',   sillage:6,layering:7,top:'Incense, Mandarin',             mid:'Tobacco, Iris',                base:'Sandalwood, Musk, Amber'},
 ];
-const CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
+let CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
 ['gypsy-water','eleventh-hour','endeavour','oronardo','mixed-emotions'].forEach(id=>setState(id,'owned'));
 
 let NI=[
@@ -766,12 +766,11 @@ let NI=[
   {name:'White Musk',        family:'floral',  desc:'The cleanest of musks — transparent, soapy, skin-like.'},
   {name:'Yellow Oleander',   family:'floral',  desc:'A tropical flowering shrub — warm, honeyed floral, slightly waxy.'},
 ];
-1390
-  =Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
+let NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
 
 /* ══ DESKTOP DETAIL STACK ══════════════════════════════════════════ */
 function isDesktop(){return window.innerWidth>=1100}
-const NI_MAPfunction isTablet(){return window.innerWidth>=768&&window.innerWidth<1100}
+function isTablet(){return window.innerWidth>=768&&window.innerWidth<1100}
 
 const detailStack=[];
 function openDesktopDetail(renderFn){
