@@ -7,6 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+<script type="module">
+  import { WebHaptics } from 'https://esm.sh/web-haptics@0.0.6';
+  const _h = new WebHaptics();
+  window.haptic = pattern => { try { _h.trigger(pattern); } catch(e) {} };
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 button,input,select,textarea{font-family:inherit;font-size:inherit}
@@ -935,9 +940,28 @@ document.getElementById('detail-back').addEventListener('click',popDesktopDetail
 document.getElementById('detail-close-btn').addEventListener('click',closeDesktopDetail);
 document.getElementById('detail-scrim').addEventListener('click',closeDesktopDetail);
 
+/* ══ BODY SCROLL LOCK (iOS-compatible) ════════════════════════════ */
+let _scrollLocked=false,_lockY=0;
+function lockBodyScroll(){
+  if(_scrollLocked)return;
+  _lockY=window.scrollY;
+  document.body.style.cssText+=`;position:fixed;top:-${_lockY}px;width:100%;overflow-y:scroll`;
+  _scrollLocked=true;
+}
+function unlockBodyScroll(){
+  if(!_scrollLocked)return;
+  document.body.style.position='';
+  document.body.style.top='';
+  document.body.style.width='';
+  document.body.style.overflowY='';
+  window.scrollTo(0,_lockY);
+  _scrollLocked=false;
+}
+
 /* ══ MOBILE SHEET STACK ════════════════════════════════════════════ */
 const sheetStack=[];
 function pushSheet(renderFn){
+  if(!sheetStack.length)lockBodyScroll();
   const overlay=document.getElementById('sheet-stack');
   const el=document.createElement('div');
   el.className='sheet';
@@ -966,12 +990,16 @@ function popSheet(){
   top.classList.remove('visible');
   top.addEventListener('transitionend',()=>top.remove(),{once:true});
   updateSheetPos();updateSheetBacks();
-  if(!sheetStack.length)document.getElementById('sheet-stack').classList.remove('has-sheets');
+  if(!sheetStack.length){
+    document.getElementById('sheet-stack').classList.remove('has-sheets');
+    unlockBodyScroll();
+  }
 }
 function closeAllSheets(){
   const all=[...sheetStack];sheetStack.length=0;
   all.forEach(s=>{s.classList.remove('visible');s.addEventListener('transitionend',()=>s.remove(),{once:true})});
   document.getElementById('sheet-stack').classList.remove('has-sheets');
+  unlockBodyScroll();
 }
 function updateSheetPos(){sheetStack.forEach((s,i)=>{const t=i===sheetStack.length-1;s.classList.toggle('visible',t);s.classList.toggle('under',!t)})}
 function updateSheetBacks(){sheetStack.forEach((s,i)=>s.querySelector('.sheet-back').classList.toggle('hidden',i===0))}
@@ -1033,6 +1061,7 @@ function renderFragDetail(container,frag){
   container.querySelectorAll('.dc-state-wrap .tab').forEach(btn=>{
     btn.addEventListener('click',()=>{
       setState(frag.id,btn.dataset.s);
+      if(btn.dataset.s==='owned') window.haptic?.('medium');
       container.querySelectorAll('.dc-state-wrap .tab').forEach(b=>b.classList.toggle('active',b===btn));
       refreshAfterStateChange(frag.id);
     });
@@ -1075,6 +1104,7 @@ function buildRoleChips(frag,chipsEl){
       } else {
         // Add (as last)
         assignFrag(role.id,frag.id);
+        window.haptic?.('success');
       }
       buildRoleChips(frag,chipsEl);
       buildCapsule();buildRoles();
@@ -1261,6 +1291,7 @@ function renderPicker(container,roleId){
     addBtn.addEventListener('click',e=>{
       e.stopPropagation();
       assignFrag(roleId,frag.id);
+      window.haptic?.('success');
       buildCapsule();buildRoles();
       container.innerHTML='';renderPicker(container,roleId);
     });
@@ -1425,7 +1456,7 @@ function buildCatalog(){
       const row=e.target.closest('.scent-row');if(!row)return;
       const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
       const fm=FAM[frag.family]||{color:'#888'};
-      if(checkEl){cycleState(id);renderCatRow(row,frag,fm);updBC(brand,key);updCC();syncDots(id);buildCapsule()}
+      if(checkEl){cycleState(id);if(isOwned(id))window.haptic?.('medium');renderCatRow(row,frag,fm);updBC(brand,key);updCC();syncDots(id);buildCapsule()}
       else if(nameEl){openFragDetail(frag)}
     });
     frags.forEach(frag=>{
