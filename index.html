@@ -569,7 +569,7 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 
 <script>
 /* ══ DATA ══════════════════════════════════════════════════════════ */
-const ROLES=[
+let ROLES=[
   {id:'casual',   sym:'♥', name:'Casual',      desc:'Reach for it without thinking',
    symLine:'♥ signals ease — worn without occasion or deliberation.',
    long:'Worn daily without occasion — the fragrance you put on before leaving without deliberate thought. Its emotional register is low-key comfort: familiar, undemanding, and sociable. Unlike Signature, which projects identity, Casual simply inhabits your skin without asking anything of the room.'},
@@ -661,7 +661,7 @@ function getAllRolesForFrag(fragId){
 ['casual','gypsy-water'],['signature','endeavour'],['cold','eleventh-hour'],['creative','oronardo']
   .forEach(([r,f])=>{if(!RA[r])RA[r]=[];RA[r].push(f)});
 
-const CAT=[
+let CAT=[
   {brand:'Byredo',      id:'gypsy-water',     name:'Gypsy Water',       roles:['casual'],             family:'woody',   sillage:3,layering:5,top:'Juniper, Bergamot, Lemon',      mid:'Pine, Incense, Pepper',        base:'Sandalwood, Vanilla, Amber'},
   {brand:'Byredo',      id:'eleventh-hour',   name:'Eleventh Hour',     roles:['cold','intimate'],    family:'amber',   sillage:7,layering:8,top:'Bergamot, Pepper, Plum',        mid:'Rum, Fig, Cedar',              base:'Tonka, Labdanum, Amber'},
   {brand:'Byredo',      id:'mixed-emotions',  name:'Mixed Emotions',    roles:['casual','work'],      family:'woody',   sillage:3,layering:4,top:'Black Currant, Mate, Tea',       mid:'Violet Leaf, Birch',           base:'Papyrus, Amber'},
@@ -690,7 +690,7 @@ const CAT=[
 const CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
 ['gypsy-water','eleventh-hour','endeavour','oronardo','mixed-emotions'].forEach(id=>setState(id,'owned'));
 
-const NI=[
+let NI=[
   {name:'African Violet',    family:'floral',  desc:'A soft, powdery violet with a delicate watery quality — warmer and rounder than common violet leaf.'},
   {name:'Aldehydes',         family:'floral',  desc:'Synthetic molecules producing clean, soapy, waxy brightness — powdery and luminous.'},
   {name:'Amber',             family:'amber',   desc:'A warm resinous accord of labdanum, benzoin, and vanilla. Rich, golden, slightly powdery.'},
