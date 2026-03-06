@@ -7,10 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
-<script type="module">
-  import { WebHaptics } from 'https://esm.sh/web-haptics@0.0.6';
-  const _h = new WebHaptics();
-  window.haptic = pattern => { try { _h.trigger(pattern); } catch(e) {} };
+<script>
+  window.haptic = type => { try { if(type==='medium')navigator.vibrate?.([25]); else if(type==='success')navigator.vibrate?.([15,50,30]); } catch(e){} };
 </script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -521,11 +519,12 @@ body{font-family:"Source Serif 4",Georgia,serif;
     background:#fff;border:1px solid var(--black);border-bottom:none;
     border-radius:14px 14px 0 0;
     transform:translateY(100%);transition:transform .28s cubic-bezier(.16,1,.3,1);
-    max-height:88vh;overflow-y:auto;
+    max-height:88vh;overflow:hidden;display:flex;flex-direction:column;
   }
   .sheet.visible{transform:translateY(0)}
   .sheet.under{transform:translateY(18px) scale(.97);border-radius:18px 18px 0 0}
-  .sheet-inner{padding:0 18px 52px}
+  .sheet-inner{display:flex;flex-direction:column;flex:1;min-height:0;padding:0 18px 0}
+  .sheet-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(52px + env(safe-area-inset-bottom,0px))}
   .sheet-handle{width:38px;height:5px;border-radius:2px;background:var(--g300);margin:12px auto 0}
   .sheet-topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 0 15px}
   .sheet-back{display:flex;align-items:center;gap:4px;font-size:.82rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:0;transition:color .12s;min-width:56px;min-height:44px}
@@ -602,6 +601,25 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .onboard-skip{font-size:.73rem;color:var(--g450);background:none;border:none;cursor:pointer}
 .onboard-next{font-size:.82rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:6px;padding:8px 18px;cursor:pointer;transition:opacity .12s}
 .onboard-next:hover{opacity:.85}
+
+/* ══ MOBILE BOTTOM NAV ════════════════════════════════════════ */
+.mobile-bottomnav{display:none}
+@media(max-width:767px){
+  .mobile-bottomnav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;
+    background:#fff;border-top:1px solid var(--black);
+    z-index:150;padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .mbn-btn{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:none;border:none;cursor:pointer;font-family:inherit;
+    font-size:.58rem;color:var(--g500);gap:2px;padding:8px 2px 6px;
+    transition:color .12s;letter-spacing:.01em;min-height:52px;
+  }
+  .mbn-btn.active{color:var(--black);font-weight:600}
+  .mbn-icon{font-size:1.15rem;line-height:1}
+  .col-main-nav{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -670,6 +688,15 @@ body{font-family:"Source Serif 4",Georgia,serif;
 </div>
 
 <div class="detail-scrim" id="detail-scrim"></div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-bottomnav" id="mobile-bottomnav">
+  <button class="mbn-btn active" onclick="goMobile('scentmap',this)"><span class="mbn-icon">◉</span>Scentmap</button>
+  <button class="mbn-btn" onclick="goMobile('catalog',this)"><span class="mbn-icon">≡</span>Catalog</button>
+  <button class="mbn-btn" onclick="goMobile('roles',this)"><span class="mbn-icon">♥</span>Roles</button>
+  <button class="mbn-btn" onclick="goMobile('notes',this)"><span class="mbn-icon">✿</span>Notes</button>
+  <button class="mbn-btn" onclick="goMobile('changelog',this)"><span class="mbn-icon">✦</span>Changelog</button>
+</div>
 
 <!-- MOBILE SHEET STACK -->
 <div class="sheet-stack-overlay" id="sheet-stack">
@@ -1520,8 +1547,22 @@ function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab)').forEach(t=>t.classList.remove('active'));
   document.getElementById('p-'+id).classList.add('active');
-  btn.classList.add('active');
+  if(btn)btn.classList.add('active');
   closeDesktopDetail();
+}
+function goMobile(id,btn){
+  document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const capsule=document.querySelector('.col-capsule');
+  const main=document.querySelector('.col-main');
+  if(id==='scentmap'){
+    capsule.style.display='';
+    main.style.display='none';
+  } else {
+    capsule.style.display='none';
+    main.style.display='';
+    go(id,null);
+  }
 }
 
 /* ══ ONBOARDING ═════════════════════════════════════════════════════ */
@@ -1568,6 +1609,10 @@ Promise.all([
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   // Now initialize
   buildCapsule();buildRoles();buildCatalog();buildNotes();showOnboard();
+  if(window.innerWidth<768){
+    const btn=document.querySelector('.mbn-btn');
+    if(btn)goMobile('scentmap',btn);
+  }
 });
 
 // Load and render changelog
