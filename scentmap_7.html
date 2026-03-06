@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scentmap</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;
+  --g700:#333;
+  --g600:#555;
+  --g500:#666;
+  --g450:#767676;
+  --g400:#888;
+  --g300:#bbb;
+  --g200:#e2e2e2;
+  --g100:#f4f4f4;
+  --white:#fff;
+  --wish:#9A4E10;
+  --col-capsule:280px;
+  --col-detail:340px;
+  --chart-max:520px;
+}
+html,body{background:#fff;color:#0a0a0a}
+html{font-size:16px}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* ══ SHELL ═══════════════════════════════════════════════════ */
+.shell{display:flex;min-height:100vh;max-width:1400px;margin:0 auto}
+
+/* LEFT: capsule — no right border */
+.col-capsule{
+  width:var(--col-capsule);flex-shrink:0;
+  border-right:none;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.capsule-col-inner{padding:16px 16px 60px;border-right:1px solid var(--black)}
+
+/* MIDDLE: main — always fills remaining width */
+.col-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.col-main-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px 10px;border-bottom:1px solid var(--black);
+  position:sticky;top:0;background:#fff;z-index:50;
+}
+.col-main-content{padding:20px 20px 80px}
+
+/* RIGHT: detail panel — desktop: in-flow third column */
+/* Desktop ≥1100px: true panel, no overlay */
+@media(min-width:1100px){
+  .col-detail{
+    width:0;flex-shrink:0;overflow:hidden;
+    border-left:0px solid var(--black);
+    transition:width .28s cubic-bezier(.16,1,.3,1), border-left-width .28s;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    display:flex;flex-direction:column;
+  }
+  .col-detail.open{
+    width:var(--col-detail);
+    border-left:1px solid var(--black);
+    overflow-y:auto;
+  }
+  .detail-scrim{display:none!important}
+}
+
+/* Tablet 768–1099px: fixed sidesheet with scrim */
+@media(min-width:768px) and (max-width:1099px){
+  .col-detail{
+    position:fixed;top:0;right:0;bottom:0;
+    width:var(--col-detail);
+    background:#fff;border-left:1px solid var(--black);
+    transform:translateX(100%);
+    transition:transform .28s cubic-bezier(.16,1,.3,1);
+    z-index:80;display:flex;flex-direction:column;
+  }
+  .col-detail.open{transform:translateX(0)}
+  .detail-scrim{
+    position:fixed;inset:0;z-index:79;
+    background:rgba(0,0,0,.18);
+    opacity:0;pointer-events:none;transition:opacity .22s;
+  }
+  .detail-scrim.open{opacity:1;pointer-events:all}
+}
+
+/* Mobile <768px: hidden (uses sheet stack) */
+@media(max-width:767px){
+  .col-capsule{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--black)}
+  .capsule-col-inner{border-right:none;border-bottom:1px solid var(--black)}
+  .col-main-nav{padding:10px 14px 8px}
+  .col-main-content{padding:16px 14px 80px}
+  .col-detail{display:none!important}
+  .detail-scrim{display:none!important}
+}
+
+.detail-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px 10px;flex-shrink:0;
+  border-bottom:1px solid var(--g200);
+}
+.detail-back{
+  display:flex;align-items:center;gap:3px;font-size:.78rem;color:var(--g500);
+  background:none;border:none;cursor:pointer;padding:0;transition:color .12s;
+  visibility:hidden;min-width:52px;
+}
+.detail-back.visible{visibility:visible}
+.detail-back:hover{color:var(--black)}
+.detail-close-btn{
+  font-size:.8rem;color:var(--g500);background:none;border:none;
+  cursor:pointer;padding:3px 0;transition:color .12s;
+}
+.detail-close-btn:hover{color:var(--black)}
+.detail-inner{padding:16px 18px 60px;flex:1;overflow-y:auto}
+
+/* ══ TABS (shared pattern) ════════════════════════════════════ */
+.tabs{display:flex;gap:2px;background:var(--g100);border-radius:8px;padding:3px}
+.tab{
+  font-size:.76rem;font-weight:500;color:var(--g500);
+  background:none;border:none;cursor:pointer;
+  padding:5px 9px;border-radius:5px;white-space:nowrap;
+  transition:color .12s,background .12s;
+}
+.tab:hover{color:var(--black)}
+.tab.active{color:var(--black);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+/* ══ NAV LOGO ═════════════════════════════════════════════════ */
+.logo{font-size:.71rem;font-weight:700;letter-spacing:.26em;text-transform:uppercase}
+
+/* ══ PANELS ═══════════════════════════════════════════════════ */
+.panel{display:none}
+.panel.active{display:block}
+.sec-label{
+  font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--g450);margin-bottom:13px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sec-label .sub{font-weight:400;color:var(--g450);letter-spacing:0;text-transform:none;font-size:.74rem}
+
+/* ══ CAPSULE ══════════════════════════════════════════════════ */
+.capsule-tagline{font-size:.7rem;color:var(--g500);line-height:1.45;margin-bottom:14px}
+.capsule-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-top:1px solid var(--black);border-left:1px solid var(--black);
+}
+.cap-cell{
+  border-right:1px solid var(--black);border-bottom:1px solid var(--black);
+  padding:11px 10px;display:flex;flex-direction:column;
+  align-items:center;text-align:center;min-height:130px;
+  background:#fff;cursor:pointer;transition:background .12s;
+  position:relative;
+}
+.cap-cell:hover{background:var(--g100)}
+.cap-role{font-size:.68rem;font-weight:600;color:var(--g500);margin-bottom:1px}
+.cap-desc-short{font-size:.61rem;color:var(--g450);margin-bottom:7px;line-height:1.3}
+.cap-sym{font-size:1.25rem;line-height:1;margin-bottom:7px}
+.cap-frag-wrap{width:100%}
+.cap-primary{font-size:.78rem;font-weight:600;line-height:1.2;margin-bottom:1px}
+.cap-primary.is-wish::before{content:'~';color:var(--wish);margin-right:1px}
+.cap-frag-brand{font-size:.63rem;color:var(--g450)}
+/* stacked secondary fragrances */
+.cap-more{font-size:.6rem;color:var(--g450);margin-top:3px;font-style:italic}
+.cap-cell.empty .cap-sym{opacity:.13;color:var(--g400)!important}
+.cap-cell.empty .cap-role,.cap-cell.empty .cap-desc-short{color:var(--g450)}
+.cap-assign-cta{display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--g450);margin-top:3px}
+.cap-plus{width:14px;height:14px;border-radius:50%;border:1px solid var(--g300);display:flex;align-items:center;justify-content:center;font-size:.72rem;color:var(--g400);line-height:1}
+/* count badge */
+.cap-count{position:absolute;top:6px;right:7px;font-size:.58rem;color:var(--g450);font-weight:600}
+
+/* ══ CATALOG ══════════════════════════════════════════════════ */
+.cat-section{margin-bottom:22px}
+.brand-hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:7px;border-bottom:1px solid var(--black);margin-bottom:9px}
+.brand-n{font-size:.7rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+.brand-c{font-size:.7rem;color:var(--g450)}
+.scent-list{border:1px solid var(--black);border-radius:7px;overflow:hidden}
+.scent-row{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 11px;background:#fff;border-bottom:1px solid var(--g200);
+  transition:background .1s;
+}
+.scent-row:last-child{border-bottom:none}
+.scent-row:hover{background:var(--g100)}
+.s-check{
+  width:14px;height:14px;flex-shrink:0;border-radius:3px;
+  border:1px solid var(--g300);background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .12s;
+  font-size:.66rem;font-weight:700;color:transparent;
+}
+.scent-row.s-wish .s-check{border-color:var(--wish);color:var(--wish)}
+.scent-row.s-owned .s-check{border-color:var(--black);background:var(--black);color:#fff}
+.s-fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.s-info{flex:1;min-width:0}
+.s-name-btn{
+  font-size:.84rem;font-weight:500;background:none;border:none;padding:0;
+  cursor:pointer;color:var(--black);text-align:left;
+  text-decoration:underline;text-underline-offset:2px;
+  text-decoration-color:var(--g300);transition:text-decoration-color .12s;display:block;
+}
+.s-name-btn:hover{text-decoration-color:var(--black)}
+.scent-row.s-wish  .s-name-btn{font-weight:600}
+.scent-row.s-wish  .s-name-btn::before{content:'~';color:var(--wish);margin-right:1px}
+.scent-row.s-owned .s-name-btn{font-weight:700}
+.s-meta{font-size:.68rem;color:var(--g500);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-syms{display:flex;gap:2px;flex-shrink:0}
+.s-sym{font-size:.78rem;color:var(--g300);line-height:1}
+.scent-row.s-owned .s-sym{color:var(--black)}
+.scent-row.s-wish  .s-sym{color:var(--wish)}
+.cat-legend{display:flex;gap:11px;margin-bottom:12px;flex-wrap:wrap}
+.cl-item{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--g500)}
+.cl-box{width:13px;height:13px;border-radius:3px;border:1px solid var(--g300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.63rem;font-weight:700}
+
+/* ══ ROLES ════════════════════════════════════════════════════ */
+.rs{padding:18px 0 22px;border-bottom:1px solid var(--g200)}
+.rs:last-child{border-bottom:none}
+.rs-head{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.rs-sym{font-size:1.05rem;line-height:1;flex-shrink:0}
+.rs-name{font-size:.92rem;font-weight:700;letter-spacing:-.02em}
+.rs-meta{font-size:.68rem;color:var(--g450);margin-left:auto;white-space:nowrap}
+.rs-tagline{font-size:.74rem;color:var(--g500);font-style:italic;margin-bottom:6px}
+.rs-body{font-size:.74rem;color:var(--g500);line-height:1.65;margin-bottom:11px;border-left:2px solid var(--g200);padding-left:9px}
+.fam-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.fam-chip{display:flex;align-items:center;gap:3px;font-size:.66rem;color:var(--g600);padding:2px 6px 2px 4px;border-radius:20px;border:1px solid var(--g200)}
+.fam-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* Chart — max-width on desktop */
+.chart-section{max-width:var(--chart-max)}
+.chart-outer{position:relative;margin-left:48px;margin-right:4px}
+.y-title{position:absolute;left:-46px;top:50%;transform:translateY(-50%) rotate(-90deg);font-size:.57rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--g450);white-space:nowrap;pointer-events:none}
+.y-labels{position:absolute;left:-46px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.y-lbl{font-size:.57rem;color:var(--g450);text-align:right;width:40px;line-height:1}
+.chart-area{
+  position:relative;width:100%;padding-bottom:74%;
+  border-left:1px solid var(--black);border-bottom:1px solid var(--black);
+  background:#fff;overflow:visible;
+}
+.chart-area::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(to right, var(--g100) 0 1px,transparent 1px 10%),
+    repeating-linear-gradient(to bottom,var(--g100) 0 1px,transparent 1px 10%);
+}
+.x-labels{display:flex;justify-content:space-between;padding:3px 0 2px;font-size:.57rem;color:var(--g450)}
+.x-title{font-size:.57rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--g450);text-align:center;margin-top:2px}
+
+/* Dots */
+.dot{position:absolute;transform:translate(-50%,50%);cursor:pointer;z-index:10}
+.dot-c{
+  width:10px;height:10px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.85);margin:0 auto;
+  box-shadow:0 0 0 1px rgba(0,0,0,.2);
+  transition:transform .15s;position:relative;z-index:2;
+}
+.dot:hover{z-index:30}
+.dot:hover .dot-c{transform:scale(2.2)}
+.dot.s-wish .dot-c{background:#fff!important}
+.dot-lbl{
+  position:absolute;
+  font-size:.61rem;font-weight:500;color:var(--black);
+  white-space:nowrap;background:rgba(255,255,255,.94);
+  padding:1px 3px;border-radius:2px;
+  pointer-events:none;z-index:1;line-height:1.3;
+}
+.dot-lbl.lbl-above{bottom:calc(100% + 5px);left:50%;transform:translateX(-50%)}
+.dot-lbl.lbl-below{top:calc(100% + 5px);left:50%;transform:translateX(-50%)}
+.dot-lbl.lbl-left{right:calc(100% + 6px);top:50%;transform:translateY(-50%)}
+.dot-lbl.lbl-right{left:calc(100% + 6px);top:50%;transform:translateY(-50%)}
+.dot:hover .dot-lbl{z-index:31}
+
+.axis-glossary{margin-top:26px;padding-top:16px;border-top:1px solid var(--g200);font-size:.74rem;color:var(--g500);line-height:1.7;max-width:var(--chart-max)}
+.axis-glossary strong{color:var(--black)}
+
+/* ══ NOTES ════════════════════════════════════════════════════ */
+.notes-family-row{display:flex;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--g200)}
+.notes-family-row:last-child{border-bottom:none}
+.nf-left{display:flex;align-items:center;gap:6px;width:90px;flex-shrink:0;padding-top:2px}
+.nf-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.nf-name{font-size:.8rem;font-weight:500}
+.nf-right{flex:1;display:flex;flex-direction:column}
+.note-link{
+  font-size:.8rem;color:var(--black);
+  text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--g300);
+  cursor:pointer;line-height:1.75;background:none;border:none;padding:0;text-align:left;
+  transition:text-decoration-color .12s;display:inline-block;
+}
+.note-link:hover{text-decoration-color:var(--black)}
+
+/* ══ DETAIL CONTENT ═══════════════════════════════════════════ */
+/* Fragrance name/brand */
+.dc-name{font-size:1.05rem;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-bottom:2px}
+.dc-brand{font-size:.76rem;color:var(--g500);margin-bottom:12px}
+
+/* State tabs — reuse .tabs / .tab */
+.dc-state-wrap{margin-bottom:13px}
+
+.dc-ftag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;color:#fff;margin-bottom:12px}
+.dc-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.dc-stat{background:var(--g100);border-radius:6px;padding:8px 10px}
+.dc-slbl{font-size:.61rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:4px}
+.dc-bar{height:3px;background:var(--g200);border-radius:2px;margin-bottom:4px;overflow:hidden}
+.dc-fill{height:100%;background:var(--black);border-radius:2px}
+.dc-sval{font-size:.72rem;color:var(--g500)}
+.dc-div{height:1px;background:var(--g200);margin:11px 0}
+.dc-nlbl{font-size:.61rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g500);margin-bottom:7px}
+.dc-note{display:flex;gap:6px;margin-bottom:5px}
+.dc-nt{font-size:.61rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g400);width:24px;flex-shrink:0;padding-top:3px}
+.dc-nv{font-size:.78rem;color:var(--g600);line-height:1.7}
+.dc-nv .note-link{font-size:.78rem}
+
+/* Role assignment chips */
+.dc-roles-lbl{font-size:.61rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g500);margin:12px 0 7px}
+.dc-role-chips{display:flex;flex-wrap:wrap;gap:5px}
+.dc-role-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  border:1px solid var(--g200);border-radius:20px;
+  padding:4px 10px;font-size:.74rem;color:var(--g500);
+  background:#fff;cursor:pointer;transition:all .14s;
+  user-select:none;
+}
+.dc-role-chip:hover{border-color:var(--g400);color:var(--black)}
+/* primary assignment */
+.dc-role-chip.assigned-primary{
+  background:var(--black);color:#fff;border-color:var(--black);
+}
+/* secondary (2nd, 3rd) */
+.dc-role-chip.assigned-secondary{
+  background:var(--g100);color:var(--black);border-color:var(--g400);
+  font-weight:600;
+}
+.dc-role-chip .chip-sym{font-size:.88rem;line-height:1}
+.dc-role-chip .chip-order{font-size:.58rem;opacity:.7;margin-left:1px}
+
+/* ══ PICKER HERO ══════════════════════════════════════════════ */
+.picker-hero{
+  border:1px solid var(--g200);border-radius:8px;
+  padding:14px 14px 12px;margin-bottom:14px;
+  background:var(--g100);
+}
+.picker-hero-empty{
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:6px 0 4px;
+}
+.picker-hero-sym-empty{font-size:2.2rem;opacity:.18;margin-bottom:6px;line-height:1}
+.picker-hero-empty-label{font-size:.8rem;color:var(--g500);margin-bottom:3px;font-weight:500}
+.picker-hero-empty-desc{font-size:.72rem;color:var(--g450);line-height:1.5}
+
+.picker-hero-filled{display:flex;align-items:flex-start;gap:12px}
+.picker-hero-sym{font-size:2rem;line-height:1;flex-shrink:0;margin-top:2px}
+.picker-hero-info{flex:1;min-width:0}
+.picker-hero-name{font-size:.94rem;font-weight:700;letter-spacing:-.01em;line-height:1.2;margin-bottom:1px}
+.picker-hero-name.is-wish::before{content:'~';color:var(--wish);margin-right:2px}
+.picker-hero-brand{font-size:.7rem;color:var(--g500);margin-bottom:5px}
+.picker-hero-notes{font-size:.7rem;color:var(--g600);line-height:1.5}
+.picker-hero-notes strong{color:var(--g500);font-weight:600;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;margin-right:4px}
+.picker-hero-secondary{margin-top:8px;padding-top:8px;border-top:1px solid var(--g200)}
+.picker-hero-sec-label{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g450);margin-bottom:4px}
+.picker-hero-sec-row{display:flex;align-items:center;gap:6px;padding:2px 0}
+.picker-hero-sec-idx{font-size:.6rem;color:var(--g450);width:12px;flex-shrink:0}
+.picker-hero-sec-name{font-size:.76rem;font-weight:500}
+.picker-hero-sec-name.is-wish::before{content:'~';color:var(--wish);margin-right:1px}
+
+.picker-role-sym-line{font-size:.7rem;color:var(--g450);margin-top:5px;font-style:italic}
+
+/* Picker sections */
+.picker-header{margin-bottom:10px}
+.picker-title{font-size:.92rem;font-weight:700;letter-spacing:-.01em;margin-bottom:1px}
+.picker-sub{font-size:.72rem;color:var(--g500)}
+.picker-sec-lbl{font-size:.59rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g450);margin:12px 0 5px}
+.carousel-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1px 1px;padding-bottom:5px}
+.carousel-wrap::-webkit-scrollbar{height:3px}
+.carousel-wrap::-webkit-scrollbar-thumb{background:var(--g200);border-radius:2px}
+.carousel{display:flex;gap:7px;padding:1px 1px 3px}
+.carousel-card{
+  flex-shrink:0;width:118px;border:1px solid var(--black);border-radius:6px;
+  padding:9px 10px;cursor:pointer;background:#fff;transition:background .12s;text-align:left;
+}
+.carousel-card:hover{background:var(--g100)}
+.carousel-card-name{
+  font-size:.75rem;font-weight:600;margin-bottom:1px;line-height:1.25;
+  text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--g300);
+}
+.carousel-card-brand{font-size:.62rem;color:var(--g500)}
+.carousel-card-family{display:flex;align-items:center;gap:3px;margin-top:5px}
+.picker-list{border:1px solid var(--black);border-radius:6px;overflow:hidden}
+.picker-row{
+  display:flex;align-items:center;gap:7px;padding:8px 10px;
+  background:#fff;border-bottom:1px solid var(--g200);transition:background .1s;
+}
+.picker-row:last-child{border-bottom:none}
+.picker-row:hover{background:var(--g100)}
+.picker-row.is-primary{background:var(--g100)}
+.picker-fdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.picker-info{flex:1;min-width:0}
+.picker-name-btn{
+  font-size:.82rem;font-weight:600;background:none;border:none;padding:0;
+  cursor:pointer;color:var(--black);text-align:left;
+  text-decoration:underline;text-underline-offset:2px;
+  text-decoration-color:var(--g300);transition:text-decoration-color .12s;display:block;
+}
+.picker-name-btn:hover{text-decoration-color:var(--black)}
+.picker-name-btn.is-wish::before{content:'~';color:var(--wish);margin-right:1px}
+.picker-brand-row{font-size:.66rem;color:var(--g500)}
+.picker-order-badge{
+  font-size:.62rem;font-weight:600;color:var(--g450);
+  background:var(--g100);border:1px solid var(--g200);
+  border-radius:3px;padding:1px 5px;flex-shrink:0;
+}
+.picker-order-badge.primary-badge{background:var(--black);color:#fff;border-color:var(--black)}
+.picker-empty{font-size:.78rem;color:var(--g450);padding:14px 0 5px}
+
+/* Note detail */
+.np-name{font-size:.92rem;font-weight:700;letter-spacing:-.01em;margin-bottom:2px}
+.np-family{font-size:.72rem;color:var(--g500);margin-bottom:7px}
+.np-desc{font-size:.78rem;color:var(--black);line-height:1.55;margin-bottom:7px}
+.np-frags{font-size:.72rem;color:var(--g500)}
+.np-frag-link{font-size:.72rem;color:var(--g700);font-weight:600;text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--g300);background:none;border:none;cursor:pointer;padding:0;margin:0 1px;transition:text-decoration-color .12s}
+.np-frag-link:hover{text-decoration-color:var(--black)}
+
+/* ══ MOBILE SHEET STACK ═══════════════════════════════════════ */
+@media(max-width:767px){
+  .sheet-stack-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
+  .sheet-backdrop{position:absolute;inset:0;background:transparent;transition:background .22s;pointer-events:none}
+  .sheet-stack-overlay.has-sheets .sheet-backdrop{background:rgba(0,0,0,.28);pointer-events:all;cursor:pointer}
+  .sheet{
+    position:absolute;bottom:0;left:0;right:0;max-width:500px;margin:0 auto;
+    background:#fff;border:1px solid var(--black);border-bottom:none;
+    border-radius:14px 14px 0 0;
+    transform:translateY(100%);transition:transform .28s cubic-bezier(.16,1,.3,1);
+    max-height:88vh;overflow-y:auto;
+  }
+  .sheet.visible{transform:translateY(0)}
+  .sheet.under{transform:translateY(18px) scale(.97);border-radius:18px 18px 0 0}
+  .sheet-inner{padding:0 16px 44px}
+  .sheet-handle{width:34px;height:4px;border-radius:2px;background:var(--g300);margin:10px auto 0}
+  .sheet-topbar{display:flex;align-items:center;justify-content:space-between;padding:11px 0 13px}
+  .sheet-back{display:flex;align-items:center;gap:3px;font-size:.76rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:0;transition:color .12s;min-width:52px}
+  .sheet-back:hover{color:var(--black)}
+  .sheet-back.hidden{visibility:hidden}
+  .sheet-close{font-size:.86rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:3px 0 3px 8px;transition:color .12s}
+  .sheet-close:hover{color:var(--black)}
+}
+@media(min-width:768px){.sheet-stack-overlay{display:none}}
+
+/* ══ NOTE FLOAT POPUP ═════════════════════════════════════════ */
+.note-float-overlay{position:fixed;inset:0;z-index:400;pointer-events:none}
+.note-float-overlay.open{pointer-events:all}
+.note-float-bg{position:absolute;inset:0;pointer-events:none}
+.note-float-overlay.open .note-float-bg{pointer-events:all}
+.note-popup{
+  position:fixed;background:#fff;border:1px solid var(--black);
+  box-shadow:0 4px 20px rgba(0,0,0,.12);border-radius:7px;padding:12px 14px 14px;
+  width:248px;max-width:calc(100vw - 32px);
+  opacity:0;transform:scale(.95) translateY(4px);
+  transition:opacity .13s,transform .13s;pointer-events:none;
+}
+.note-float-overlay.open .note-popup{opacity:1;transform:scale(1) translateY(0);pointer-events:all}
+.nfp-header{display:flex;align-items:flex-start;justify-content:space-between;gap:7px;margin-bottom:2px}
+.nfp-close{font-size:.86rem;color:var(--g450);background:none;border:none;cursor:pointer;padding:0}
+.nfp-close:hover{color:var(--black)}
+
+/* ══ ONBOARDING ═══════════════════════════════════════════════ */
+.onboard-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.48);display:flex;align-items:flex-end;justify-content:center}
+.onboard-card{width:100%;max-width:500px;background:#fff;border-radius:18px 18px 0 0;padding:22px 20px 40px}
+.onboard-dots{display:flex;gap:5px;margin-bottom:16px}
+.onboard-dot{height:3px;border-radius:2px;background:var(--g200);flex:1;transition:background .2s}
+.onboard-dot.active{background:var(--black)}
+.onboard-icon{font-size:1.6rem;margin-bottom:8px;line-height:1}
+.onboard-head{font-size:.97rem;font-weight:700;letter-spacing:-.02em;margin-bottom:5px}
+.onboard-body{font-size:.82rem;color:var(--g600);line-height:1.6;margin-bottom:22px}
+.onboard-actions{display:flex;align-items:center;justify-content:space-between}
+.onboard-skip{font-size:.73rem;color:var(--g450);background:none;border:none;cursor:pointer}
+.onboard-next{font-size:.82rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:6px;padding:8px 18px;cursor:pointer;transition:opacity .12s}
+.onboard-next:hover{opacity:.85}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- LEFT: CAPSULE -->
+  <div class="col-capsule">
+    <div class="capsule-col-inner">
+      <div class="logo" style="margin-bottom:5px">Scentmap</div>
+      <div class="capsule-tagline">One fragrance per role. Tap to assign.</div>
+      <div class="capsule-grid" id="capsule-grid"></div>
+    </div>
+  </div>
+
+  <!-- MIDDLE: MAIN -->
+  <div class="col-main">
+    <div class="col-main-nav">
+      <div class="tabs">
+        <button class="tab active" onclick="go('catalog',this)">Catalog</button>
+        <button class="tab" onclick="go('roles',this)">Roles</button>
+        <button class="tab" onclick="go('notes',this)">Notes</button>
+      </div>
+    </div>
+    <div class="col-main-content">
+
+      <div class="panel active" id="p-catalog">
+        <div class="sec-label">Catalog <span class="sub" id="cat-count"></span></div>
+        <div class="cat-legend">
+          <div class="cl-item"><div class="cl-box"></div>Not tracked</div>
+          <div class="cl-item"><div class="cl-box" style="border-color:var(--wish);color:var(--wish)">~</div>Wishlist</div>
+          <div class="cl-item"><div class="cl-box" style="border-color:var(--black);background:var(--black);color:#fff">✓</div>Owned</div>
+        </div>
+        <div id="cat-body"></div>
+      </div>
+
+      <div class="panel" id="p-roles">
+        <div id="roles-body"></div>
+        <div class="axis-glossary">
+          <strong>Sillage</strong> — how far a fragrance projects from the skin. Skin-level is intimate; enormous fills the room.<br><br>
+          <strong>Layering</strong> — how complex and evolving a fragrance is over time. Linear reads as a single note throughout; deep unfolds across distinct phases.
+        </div>
+      </div>
+
+      <div class="panel" id="p-notes">
+        <div class="sec-label">Notes <span class="sub" id="notes-count"></span></div>
+        <div id="notes-body"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: DETAIL PANEL/SIDESHEET -->
+  <div class="col-detail" id="col-detail">
+    <div class="detail-topbar">
+      <button class="detail-back" id="detail-back">← Back</button>
+      <button class="detail-close-btn" id="detail-close-btn">✕ Close</button>
+    </div>
+    <div class="detail-inner" id="detail-inner"></div>
+  </div>
+</div>
+
+<div class="detail-scrim" id="detail-scrim"></div>
+
+<!-- MOBILE SHEET STACK -->
+<div class="sheet-stack-overlay" id="sheet-stack">
+  <div class="sheet-backdrop" id="sheet-backdrop"></div>
+</div>
+
+<!-- NOTE FLOAT -->
+<div class="note-float-overlay" id="note-float-overlay">
+  <div class="note-float-bg" id="note-float-bg"></div>
+  <div class="note-popup" id="note-popup">
+    <div class="nfp-header">
+      <div class="np-name" id="np-name"></div>
+      <button class="nfp-close" id="nfp-close">✕</button>
+    </div>
+    <div class="np-family" id="np-family"></div>
+    <div class="np-desc"   id="np-desc"></div>
+    <div class="np-frags"  id="np-frags"></div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div class="onboard-overlay" id="onboard-overlay" style="display:none">
+  <div class="onboard-card">
+    <div class="onboard-dots" id="onboard-dots"></div>
+    <div class="onboard-icon" id="onboard-icon"></div>
+    <div class="onboard-head" id="onboard-head"></div>
+    <div class="onboard-body" id="onboard-body"></div>
+    <div class="onboard-actions">
+      <button class="onboard-skip" id="onboard-skip">Skip</button>
+      <button class="onboard-next" id="onboard-next">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══ DATA ══════════════════════════════════════════════════════════ */
+const ROLES=[
+  {id:'casual',   sym:'♥', name:'Casual',      desc:'Reach for it without thinking',
+   symLine:'♥ signals ease — worn without occasion or deliberation.',
+   long:'Worn daily without occasion — the fragrance you put on before leaving without deliberate thought. Its emotional register is low-key comfort: familiar, undemanding, and sociable. Unlike Signature, which projects identity, Casual simply inhabits your skin without asking anything of the room.'},
+  {id:'signature',sym:'♠', name:'Signature',   desc:'The one that\'s unmistakably you',
+   symLine:'♠ signals intent — a consistent claim about who you are.',
+   long:'The fragrance people associate with your presence — worn consistently enough that it becomes part of how you\'re remembered. It carries intentionality: this is a considered choice rather than a default. It differs from Casual in that it makes a quiet claim about identity, and from Formal in that it works across contexts.'},
+  {id:'intimate', sym:'✿', name:'Intimate',    desc:'For close quarters and quiet moments',
+   symLine:'✿ signals proximity — a fragrance meant to be discovered, not announced.',
+   long:'Designed for proximity — worn when physical closeness is expected or desired. Sillage is deliberately restrained; the fragrance rewards being near. Emotionally it reads as warmth, invitation, and vulnerability. Distinct from Casual in intentionality, and from Signature in being context-specific rather than all-day.'},
+  {id:'creative', sym:'✦', name:'Creative',    desc:'Conversation-starting, rule-breaking',
+   symLine:'✦ signals curiosity — something unusual enough to prompt a question.',
+   long:'Worn when the fragrance itself is the point — unusual materials, unexpected progressions, compositions that refuse easy categorisation. The emotional register is curiosity and confidence. Unlike Signature, it isn\'t worn often; unlike Formal, it doesn\'t need to be appropriate — it needs to be interesting.'},
+  {id:'work',     sym:'♣', name:'Professional',desc:'Present but never imposing',
+   symLine:'♣ signals restraint — respect for shared space you didn\'t choose.',
+   long:'Calibrated for shared spaces where consent to smell it has not been given. It projects just enough to be noticed as grooming rather than statement. The intention is respect: your fragrance should not enter a meeting before you do. Differs from Casual in restraint, and from Signature in that legibility matters less than courtesy.'},
+  {id:'heat',     sym:'♦', name:'Summer',      desc:'Survives warmth, stays fresh',
+   symLine:'♦ signals adaptation — chemistry chosen for what heat does to it.',
+   long:'Heat amplifies projection dramatically, so this role demands compositions that remain pleasant under pressure. Fresh, aquatic, and citrus profiles are natural fits; heavy amber and oud typically wrong. Emotionally it maps to ease and lightness. Unlike Casual, the choice here is constrained by chemistry, not just mood.'},
+  {id:'formal',   sym:'★', name:'Formal',      desc:'Walk into a room wearing it',
+   symLine:'★ signals occasion — worn when fragrance is understood as part of dress.',
+   long:'Reserved for occasions where fragrance is understood as part of dress — events, dinners, ceremony. Higher sillage is acceptable because the social contract anticipates it. Emotionally it registers as intent and occasion-awareness. Unlike Signature, it isn\'t worn constantly; unlike Creative, it must read as appropriate before interesting.'},
+  {id:'cold',     sym:'❄', name:'Winter',      desc:'Heavy, rich, built for cold air',
+   symLine:'❄ signals density — materials that need cold air to find their best expression.',
+   long:'Cold air suppresses projection, so this role demands density — resins, woods, leather, and oud that need ambient warmth to open fully. Worn in autumn and winter when richer materials find their best expression. The emotional register is gravitas and enclosure. The inverse of Summer: where that role demands restraint, this one rewards depth.'},
+];
+const RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
+
+const FAM={
+  citrus:  {label:'Citrus',  color:'#9A6800'},
+  green:   {label:'Green',   color:'#1A6030'},
+  floral:  {label:'Floral',  color:'#902050'},
+  woody:   {label:'Woody',   color:'#6E3210'},
+  amber:   {label:'Amber',   color:'#984000'},
+  chypre:  {label:'Chypre',  color:'#285438'},
+  aquatic: {label:'Aquatic', color:'#0A4880'},
+  leather: {label:'Leather', color:'#42200E'},
+  gourmand:{label:'Gourmand',color:'#7C4C00'},
+  oud:     {label:'Oud',     color:'#4A1850'},
+};
+const FAM_ORDER=['floral','amber','citrus','woody','chypre','gourmand','green','oud','leather','aquatic'];
+
+/* State */
+const ST={};
+function gst(id){return ST[id]||'none'}
+function setState(id,s){ST[id]=s}
+function isOwned(id){return gst(id)==='owned'}
+function isWish(id){return gst(id)==='wish'}
+function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
+
+/* Role assignments: roleId → ordered array of fragId (index 0 = primary) */
+const RA={};
+function getAssigned(roleId){return RA[roleId]||[]}
+function getPrimary(roleId){return getAssigned(roleId)[0]||null}
+function assignFrag(roleId,fragId){
+  if(!RA[roleId])RA[roleId]=[];
+  // Remove if already present
+  const idx=RA[roleId].indexOf(fragId);
+  if(idx!==-1){RA[roleId].splice(idx,1);return}
+  // Otherwise add (push to end if not primary, or prepend to make primary)
+  RA[roleId].push(fragId);
+}
+function makePrimary(roleId,fragId){
+  if(!RA[roleId])RA[roleId]=[];
+  const idx=RA[roleId].indexOf(fragId);
+  if(idx===-1)RA[roleId].unshift(fragId);
+  else{RA[roleId].splice(idx,1);RA[roleId].unshift(fragId);}
+}
+function removeFromRole(roleId,fragId){
+  if(!RA[roleId])return;
+  RA[roleId]=RA[roleId].filter(id=>id!==fragId);
+}
+function getFragRoleStatus(fragId,roleId){
+  const arr=getAssigned(roleId);
+  const idx=arr.indexOf(fragId);
+  if(idx===-1)return'none';
+  if(idx===0)return'primary';
+  return idx+1; // numeric position
+}
+function getAllRolesForFrag(fragId){
+  const result={};
+  ROLES.forEach(r=>{
+    const s=getFragRoleStatus(fragId,r.id);
+    if(s!=='none')result[r.id]=s;
+  });
+  return result;
+}
+
+// Defaults
+['casual','gypsy-water'],['signature','endeavour'],['cold','eleventh-hour'],['creative','oronardo']
+  .forEach(([r,f])=>{if(!RA[r])RA[r]=[];RA[r].push(f)});
+
+const CAT=[
+  {brand:'Byredo',      id:'gypsy-water',     name:'Gypsy Water',       roles:['casual'],             family:'woody',   sillage:3,layering:5,top:'Juniper, Bergamot, Lemon',      mid:'Pine, Incense, Pepper',        base:'Sandalwood, Vanilla, Amber'},
+  {brand:'Byredo',      id:'eleventh-hour',   name:'Eleventh Hour',     roles:['cold','intimate'],    family:'amber',   sillage:7,layering:8,top:'Bergamot, Pepper, Plum',        mid:'Rum, Fig, Cedar',              base:'Tonka, Labdanum, Amber'},
+  {brand:'Byredo',      id:'mixed-emotions',  name:'Mixed Emotions',    roles:['casual','work'],      family:'woody',   sillage:3,layering:4,top:'Black Currant, Mate, Tea',       mid:'Violet Leaf, Birch',           base:'Papyrus, Amber'},
+  {brand:'Byredo',      id:'bal-dafrique',    name:"Bal d'Afrique",     roles:['heat','casual'],      family:'floral',  sillage:6,layering:5,top:'Bergamot, Neroli, Lemon',       mid:'African Violet, Cyclamen',     base:'Musk, Vetiver, Amber'},
+  {brand:'Byredo',      id:'blanche',         name:'Blanche',           roles:['casual','work'],      family:'floral',  sillage:4,layering:4,top:'Pink Pepper, Aldehydes',        mid:'Rose, Peony',                  base:'Sandalwood, Musk'},
+  {brand:'Byredo',      id:'bibliothèque',    name:'Bibliothèque',      roles:['work','formal'],      family:'amber',   sillage:5,layering:7,top:'Peach, Plum',                   mid:'Violet, Neroli',               base:'Vanilla, Sandalwood, Vetiver'},
+  {brand:'Byredo',      id:'oud-immortel',    name:'Oud Immortel',      roles:['formal','cold'],      family:'oud',     sillage:8,layering:9,top:'Cedarwood, Incense',            mid:'Oud, Leather',                 base:'Sandalwood, Amber, Musk'},
+  {brand:'Byredo',      id:'alto-astral',     name:'Alto Astral',       roles:['heat','creative'],    family:'gourmand',sillage:5,layering:6,top:'Coconut Water, Aldehydes',      mid:'Jasmine, Incense',             base:'Sandalwood, Salted Amber'},
+  {brand:'Byredo',      id:'super-cedar',     name:'Super Cedar',       roles:['casual','work'],      family:'woody',   sillage:4,layering:3,top:'Bergamot, Rhubarb',             mid:'Cedar Milk',                   base:'Cedarwood, Musk'},
+  {brand:'Byredo',      id:'mojave-ghost',    name:'Mojave Ghost',      roles:['casual','signature'], family:'floral',  sillage:5,layering:6,top:'Ambrette, Sapodilla',           mid:'Magnolia, Violet, Sandalwood', base:'Amber, Musk'},
+  {brand:'Fueguia 1833',id:'endeavour',       name:'Endeavour',         roles:['signature','heat'],   family:'green',   sillage:4,layering:6,top:'Pink Pepper, Lemon',            mid:'Hinoki, Mint, Geranium',       base:'Palisander, Cedar'},
+  {brand:'Fueguia 1833',id:'tierra-del-fuego',name:'Tierra del Fuego',  roles:['formal','cold'],      family:'leather', sillage:7,layering:8,top:'Bergamot, Clove',              mid:'Leather, Tobacco',             base:'Oud, Resin, Amber'},
+  {brand:'Fueguia 1833',id:'patagonia',       name:'Patagonia',         roles:['casual','heat'],      family:'green',   sillage:4,layering:3,top:'Grapefruit, Bergamot',          mid:'Green Tea, Lavender',          base:'Musk, Driftwood'},
+  {brand:'Fueguia 1833',id:'kuanip',          name:'Kuanip',            roles:['signature','intimate'],family:'leather',sillage:5,layering:7,top:'Cardamom, Ginger',             mid:'Leather, Tobacco',             base:'Sandalwood, Musk'},
+  {brand:'Fueguia 1833',id:'alerce',          name:'Alerce',            roles:['casual','work'],      family:'woody',   sillage:3,layering:4,top:'Bergamot, Petitgrain',          mid:'Cypress, Iris',                base:'Cedarwood, Vetiver'},
+  {brand:'Xinú',        id:'oronardo',        name:'OroNardo',          roles:['creative','intimate'],family:'floral',  sillage:5,layering:8,top:'Orange Blossom, Marigold',      mid:'Tuberose, Queen of the Night', base:'Yellow Oleander, Musk'},
+  {brand:'Xinú',        id:'número-uno',      name:'Número Uno',        roles:['casual','heat'],      family:'citrus',  sillage:5,layering:3,top:'Grapefruit, Mandarin',          mid:'Jasmine, Vetiver',             base:'Musk, Sandalwood'},
+  {brand:'Xinú',        id:'noche',           name:'Noche',             roles:['intimate','cold'],    family:'oud',     sillage:6,layering:7,top:'Black Pepper, Cardamom',        mid:'Oud, Rose',                    base:'Patchouli, Amber, Musk'},
+  {brand:'Diptyque',    id:'philosykos',      name:'Philosykos',        roles:['casual','work'],      family:'green',   sillage:3,layering:4,top:'Fig Leaf, Green Fig',           mid:'Fig Wood, White Cedar',        base:'White Musk, Fig Milk'},
+  {brand:'Diptyque',    id:'do-son',          name:'Do Son',            roles:['heat','intimate'],    family:'floral',  sillage:4,layering:5,top:'Tuberose, Orange Blossom',      mid:'Rose, Muslin',                 base:'Musk, Cedarwood'},
+  {brand:'Diptyque',    id:'tam-dao',         name:'Tam Dao',           roles:['work','formal'],      family:'woody',   sillage:5,layering:6,top:'Cypress, Sandalwood',           mid:'Sandalwood, Rosewood',         base:'Sandalwood, Musk, Cedar'},
+  {brand:'Diptyque',    id:'lombre-dans-leau',name:"L'Ombre dans l'Eau",roles:['heat','creative'],    family:'chypre',  sillage:4,layering:5,top:'Blackcurrant Leaf, Citrus',     mid:'Rose, Blackcurrant',           base:'Cedarwood, Musk'},
+  {brand:'Diptyque',    id:'eau-de-lierre',   name:'Eau de Lierre',     roles:['casual','heat'],      family:'green',   sillage:3,layering:3,top:'Ivy, Citrus',                   mid:'Ivy Leaf, Violet',             base:'White Musk, Cedar'},
+  {brand:'Diptyque',    id:'volutes',         name:'Volutes',           roles:['formal','cold'],      family:'amber',   sillage:6,layering:7,top:'Incense, Mandarin',             mid:'Tobacco, Iris',                base:'Sandalwood, Musk, Amber'},
+];
+const CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
+['gypsy-water','eleventh-hour','endeavour','oronardo','mixed-emotions'].forEach(id=>setState(id,'owned'));
+
+const NI=[
+  {name:'African Violet',    family:'floral',  desc:'A soft, powdery violet with a delicate watery quality — warmer and rounder than common violet leaf.'},
+  {name:'Aldehydes',         family:'floral',  desc:'Synthetic molecules producing clean, soapy, waxy brightness — powdery and luminous.'},
+  {name:'Amber',             family:'amber',   desc:'A warm resinous accord of labdanum, benzoin, and vanilla. Rich, golden, slightly powdery.'},
+  {name:'Ambrette',          family:'floral',  desc:'Seed of the musk mallow. Musky, slightly nutty, subtly floral — a natural musk substitute.'},
+  {name:'Bergamot',          family:'citrus',  desc:'Cold-pressed from a sour Italian citrus rind. Bright, clean, slightly floral.'},
+  {name:'Birch',             family:'woody',   desc:'Smoky, tar-like, and leathery. Used in small doses for a cool forest-smoke effect.'},
+  {name:'Black Currant',     family:'chypre',  desc:'Sharp, tart, slightly catty. The leaf is more vegetal — green and sulfurous.'},
+  {name:'Blackcurrant Leaf', family:'chypre',  desc:'More vegetal and green than the fruit — sharp, slightly sulfurous, intensely natural.'},
+  {name:'Cardamom',          family:'amber',   desc:'Spicy, camphoraceous, slightly eucalyptus-like. Warm without being sweet.'},
+  {name:'Cedar',             family:'woody',   desc:'Clean, dry, pencil-shaving woody note. Virginia Cedar lighter; Atlas Cedar creamier.'},
+  {name:'Cedar Milk',        family:'woody',   desc:'A creamy, soft cedar variant — milky and smooth rather than dry and sharp.'},
+  {name:'Cedarwood',         family:'woody',   desc:'Deeper and warmer than cedar. Slightly sweet, balsamic, and smooth.'},
+  {name:'Clove',             family:'amber',   desc:'Spicy, sharp, eugenol-forward. Dense and slightly medicinal.'},
+  {name:'Coconut Water',     family:'gourmand',desc:'Light, slightly sweet aquatic note with tropical softness.'},
+  {name:'Cyclamen',          family:'floral',  desc:'Delicate, watery floral with a slightly metallic edge.'},
+  {name:'Cypress',           family:'woody',   desc:'Resinous, dry, slightly smoky. Austere, cool, bitter-green.'},
+  {name:'Driftwood',         family:'woody',   desc:'Sun-bleached, salt-worn wood. Dry, slightly marine.'},
+  {name:'Fig Leaf',          family:'green',   desc:'Sharper and more vegetal than fig fruit — green, slightly tart, milky at the edges.'},
+  {name:'Fig Milk',          family:'green',   desc:'The milky sap of the fig tree — softly creamy, slightly bitter.'},
+  {name:'Fig Wood',          family:'woody',   desc:'Dry, slightly dusty woody note from the inner branches.'},
+  {name:'Geranium',          family:'floral',  desc:'Rose-like but sharper — minty, green, slightly metallic.'},
+  {name:'Ginger',            family:'amber',   desc:'Sharp, warm, slightly woody spice. Drier than cardamom.'},
+  {name:'Grapefruit',        family:'citrus',  desc:'Bright, bitter-sweet citrus with a slightly waxy quality.'},
+  {name:'Green Fig',         family:'green',   desc:'Unripe fig — crisp, tart, green. Less creamy than ripe fig.'},
+  {name:'Green Tea',         family:'green',   desc:'Dry, slightly tannic, clean with subtle grassiness. Cooling.'},
+  {name:'Hinoki',            family:'woody',   desc:'Japanese cypress wood. Warm, slightly lemony, and clean.'},
+  {name:'Incense',           family:'oud',     desc:'Smoky, resinous, slightly sweet. From burning resins — meditative and ancient.'},
+  {name:'Iris',              family:'floral',  desc:'Powdery, slightly earthy, and cool. From orris root.'},
+  {name:'Ivy',               family:'green',   desc:'Crisp, clean, slightly bitter green. Herbaceous and watery.'},
+  {name:'Ivy Leaf',          family:'green',   desc:'Cool, slightly metallic green with watery bitterness.'},
+  {name:'Jasmine',           family:'floral',  desc:'Rich, indolic white floral. Slightly animalic and dense.'},
+  {name:'Juniper',           family:'woody',   desc:'Dry, piney, slightly peppery. Northern forests, cold air.'},
+  {name:'Labdanum',          family:'amber',   desc:'A dark, resinous gum from cistus plants. Warm, animalic, amber-like.'},
+  {name:'Lavender',          family:'green',   desc:'Herbaceous, slightly camphorous, softly floral.'},
+  {name:'Leather',           family:'leather', desc:'A dry, slightly smoky accord evocative of new leather.'},
+  {name:'Lemon',             family:'citrus',  desc:'Bright, sharp, clean citrus. One of the most universally used top notes.'},
+  {name:'Magnolia',          family:'floral',  desc:'Fresh, lightly spiced white floral with a hint of citrus.'},
+  {name:'Mandarin',          family:'citrus',  desc:'Sweeter and softer than orange — gentle citrus with a slightly floral undertone.'},
+  {name:'Marigold',          family:'floral',  desc:'Warm, slightly herbal floral with a tart, tomato-leaf edge.'},
+  {name:'Mate',              family:'green',   desc:'Dry, slightly smoky, tea-like. From yerba mate.'},
+  {name:'Mint',              family:'green',   desc:'Cool, camphoraceous, and sharp. Immediately refreshing.'},
+  {name:'Musk',              family:'floral',  desc:'A broad category of skin-like base notes — clean, animalic, or transparent.'},
+  {name:'Muslin',            family:'floral',  desc:'A soft, clean textile accord — lightly powdery, slightly soapy.'},
+  {name:'Neroli',            family:'floral',  desc:'Orange blossom distillate — clean, slightly honeyed, gently spicy.'},
+  {name:'Orange Blossom',    family:'floral',  desc:'White floral, honeyed, slightly indolic. More intense and waxy than neroli.'},
+  {name:'Oud',               family:'oud',     desc:'Resinous heartwood of infected agarwood. Smoky, dark, and complex.'},
+  {name:'Palisander',        family:'woody',   desc:'Brazilian rosewood. Warm, slightly sweet, and smooth.'},
+  {name:'Papyrus',           family:'woody',   desc:'Dry, slightly dusty, reedy — evocative of aged paper and river grasses.'},
+  {name:'Patchouli',         family:'chypre',  desc:'Dark, earthy, slightly sweet. Improves with age.'},
+  {name:'Peach',             family:'gourmand',desc:'Soft, ripe, slightly velvety. A gentle fruity modifier.'},
+  {name:'Pepper',            family:'amber',   desc:'Sharp, dry, slightly smoky. Black pepper adds bite; pink fruitier.'},
+  {name:'Petitgrain',        family:'citrus',  desc:'From leaves and twigs of the bitter orange tree. Woody, green, slightly floral.'},
+  {name:'Pine',              family:'woody',   desc:'Resinous, fresh, slightly camphoraceous. Cold forests.'},
+  {name:'Pink Pepper',       family:'amber',   desc:'Fruity, slightly spicy, and rosy. Less harsh than black pepper.'},
+  {name:'Plum',              family:'gourmand',desc:'Dark, jammy, slightly fermented. Adds depth to amber compositions.'},
+  {name:'Queen of the Night',family:'floral',  desc:'A rare nocturnal cactus flower — intensely sweet, creamy, intoxicating.'},
+  {name:'Resin',             family:'amber',   desc:'Warm, sweet, and balsamic tree secretions. Adds richness and longevity.'},
+  {name:'Rose',              family:'floral',  desc:'The most iconic floral. From fresh Turkish to dark Bulgarian absolute.'},
+  {name:'Rosewood',          family:'woody',   desc:'Sweet, slightly floral woody note with a rose-cedar character.'},
+  {name:'Rum',               family:'gourmand',desc:'Warm, slightly sweet, and alcoholic. Adds boozy character to amber.'},
+  {name:'Salted Amber',      family:'amber',   desc:'Amber with a mineral sea-salt accord — golden and resinous.'},
+  {name:'Sandalwood',        family:'woody',   desc:'Creamy, warm, slightly milky. Mysore sandalwood is most prized.'},
+  {name:'Sapodilla',         family:'gourmand',desc:'A tropical fruit note — sweet, caramel-brown, slightly smoky.'},
+  {name:'Tea',               family:'green',   desc:'Dry, slightly tannic, clean. Green tea more vegetal; black tea warmer.'},
+  {name:'Tobacco',           family:'leather', desc:'Warm, slightly sweet, hay-like. Dry tobacco austere; flower softer.'},
+  {name:'Tonka',             family:'amber',   desc:'Sweet, warm, coumarin-rich. Smells of vanilla, hay, and almond.'},
+  {name:'Tuberose',          family:'floral',  desc:'Dense, creamy, intensely indolic white floral. Heady and complex.'},
+  {name:'Vanilla',           family:'gourmand',desc:'Sweet, warm, universally appealing. Natural absolute is more complex.'},
+  {name:'Vetiver',           family:'chypre',  desc:'Earthy, smoky, and woody root note. One of the most versatile base notes.'},
+  {name:'Violet',            family:'floral',  desc:'Powdery, slightly sweet, and delicate. Soft and nostalgic.'},
+  {name:'Violet Leaf',       family:'green',   desc:'Green, watery, slightly metallic. Sharper than the flower.'},
+  {name:'White Cedar',       family:'woody',   desc:'Lighter and more airy than standard cedar — clean, slightly resinous.'},
+  {name:'White Musk',        family:'floral',  desc:'The cleanest of musks — transparent, soapy, skin-like.'},
+  {name:'Yellow Oleander',   family:'floral',  desc:'A tropical flowering shrub — warm, honeyed floral, slightly waxy.'},
+];
+const NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
+
+/* ══ DESKTOP DETAIL STACK ══════════════════════════════════════════ */
+function isDesktop(){return window.innerWidth>=1100}
+function isTablet(){return window.innerWidth>=768&&window.innerWidth<1100}
+
+const detailStack=[];
+function openDesktopDetail(renderFn){
+  detailStack.length=0;
+  detailStack.push(renderFn);
+  _renderDeskDetail();
+  document.getElementById('col-detail').classList.add('open');
+  if(isTablet())document.getElementById('detail-scrim').classList.add('open');
+}
+function pushDesktopDetail(renderFn){
+  detailStack.push(renderFn);
+  _renderDeskDetail();
+}
+function _renderDeskDetail(){
+  const top=detailStack[detailStack.length-1];if(!top)return;
+  const inner=document.getElementById('detail-inner');inner.innerHTML='';
+  top(inner);
+  document.getElementById('detail-back').classList.toggle('visible',detailStack.length>1);
+}
+function closeDesktopDetail(){
+  detailStack.length=0;
+  document.getElementById('col-detail').classList.remove('open');
+  document.getElementById('detail-scrim').classList.remove('open');
+}
+function popDesktopDetail(){
+  if(detailStack.length<=1){closeDesktopDetail();return}
+  detailStack.pop();_renderDeskDetail();
+}
+document.getElementById('detail-back').addEventListener('click',popDesktopDetail);
+document.getElementById('detail-close-btn').addEventListener('click',closeDesktopDetail);
+document.getElementById('detail-scrim').addEventListener('click',closeDesktopDetail);
+
+/* ══ MOBILE SHEET STACK ════════════════════════════════════════════ */
+const sheetStack=[];
+function pushSheet(renderFn){
+  const overlay=document.getElementById('sheet-stack');
+  const el=document.createElement('div');
+  el.className='sheet';
+  el.innerHTML=`<div class="sheet-inner"><div class="sheet-handle"></div>
+    <div class="sheet-topbar">
+      <button class="sheet-back hidden">← Back</button>
+      <button class="sheet-close">✕</button>
+    </div>
+    <div class="sheet-content"></div></div>`;
+  const handle=el.querySelector('.sheet-handle');
+  let ds=null;
+  handle.addEventListener('touchstart',e=>{ds=e.touches[0].clientY},{passive:true});
+  handle.addEventListener('touchmove',e=>{if(ds===null)return;const dy=e.touches[0].clientY-ds;if(dy>0)el.style.transform=`translateY(${dy}px)`},{passive:true});
+  handle.addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-(ds||0);el.style.transform='';if(dy>80)popSheet();ds=null});
+  el.querySelector('.sheet-close').addEventListener('click',closeAllSheets);
+  el.querySelector('.sheet-back').addEventListener('click',popSheet);
+  overlay.appendChild(el);sheetStack.push(el);
+  updateSheetPos();
+  requestAnimationFrame(()=>{el.classList.add('visible');overlay.classList.add('has-sheets')});
+  renderFn(el.querySelector('.sheet-content'));
+  updateSheetBacks();
+}
+function popSheet(){
+  if(!sheetStack.length)return;
+  const top=sheetStack.pop();
+  top.classList.remove('visible');
+  top.addEventListener('transitionend',()=>top.remove(),{once:true});
+  updateSheetPos();updateSheetBacks();
+  if(!sheetStack.length)document.getElementById('sheet-stack').classList.remove('has-sheets');
+}
+function closeAllSheets(){
+  const all=[...sheetStack];sheetStack.length=0;
+  all.forEach(s=>{s.classList.remove('visible');s.addEventListener('transitionend',()=>s.remove(),{once:true})});
+  document.getElementById('sheet-stack').classList.remove('has-sheets');
+}
+function updateSheetPos(){sheetStack.forEach((s,i)=>{const t=i===sheetStack.length-1;s.classList.toggle('visible',t);s.classList.toggle('under',!t)})}
+function updateSheetBacks(){sheetStack.forEach((s,i)=>s.querySelector('.sheet-back').classList.toggle('hidden',i===0))}
+document.getElementById('sheet-backdrop').addEventListener('click',closeAllSheets);
+
+/* ══ OPEN HELPERS ══════════════════════════════════════════════════ */
+function openDetail(renderFn){
+  if(isDesktop()||isTablet())openDesktopDetail(renderFn);
+  else pushSheet(c=>renderFn(c));
+}
+function pushDetail(renderFn){
+  if(isDesktop()||isTablet())pushDesktopDetail(renderFn);
+  else pushSheet(c=>renderFn(c));
+}
+
+/* ══ SHARED RENDERERS ══════════════════════════════════════════════ */
+const SW=['','Skin','Skin','Subtle','Subtle','Moderate','Moderate','Strong','Strong','Enveloping','Enormous'];
+const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered','Layered','Complex','Deep'];
+
+function linkNotes(str){
+  return str.split(', ').map(n=>{
+    const key=n.trim().toLowerCase();const note=NI_MAP[key];
+    return note?`<button class="note-link" data-note="${n.trim()}">${n.trim()}</button>`:n.trim();
+  }).join(', ');
+}
+
+function renderFragDetail(container,frag){
+  const st=gst(frag.id);
+  const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
+  const roleStatus=getAllRolesForFrag(frag.id);
+
+  container.innerHTML=`
+    <div class="dc-name">${frag.name}</div>
+    <div class="dc-brand">${frag.brand}</div>
+    <div class="dc-state-wrap">
+      <div class="tabs" style="display:inline-flex">
+        <button class="tab${st==='none'?' active':''}" data-s="none">Not tracked</button>
+        <button class="tab${st==='wish'?' active':''}" data-s="wish">Wishlist</button>
+        <button class="tab${st==='owned'?' active':''}" data-s="owned">Owned</button>
+      </div>
+    </div>
+    <div class="dc-ftag" style="background:${fm.color}">
+      <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
+      ${fm.label}
+    </div>
+    <div class="dc-stats">
+      <div class="dc-stat"><div class="dc-slbl">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${SW[frag.sillage]}</div></div>
+      <div class="dc-stat"><div class="dc-slbl">Layering</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${LW[frag.layering]}</div></div>
+    </div>
+    <div class="dc-div"></div>
+    <div class="dc-nlbl">Notes</div>
+    <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
+    <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
+    <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
+    <div class="dc-roles-lbl">Assigned to roles</div>
+    <div class="dc-role-chips" id="dc-chips-${frag.id}"></div>`;
+
+  // State tabs
+  container.querySelectorAll('.dc-state-wrap .tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      setState(frag.id,btn.dataset.s);
+      container.querySelectorAll('.dc-state-wrap .tab').forEach(b=>b.classList.toggle('active',b===btn));
+      refreshAfterStateChange(frag.id);
+    });
+  });
+
+  // Note links
+  container.querySelectorAll('.note-link').forEach(btn=>{
+    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note))});
+  });
+
+  // Role chips — all 8
+  buildRoleChips(frag,container.querySelector(`#dc-chips-${frag.id}`));
+}
+
+function buildRoleChips(frag,chipsEl){
+  if(!chipsEl)return;
+  chipsEl.innerHTML='';
+  ROLES.forEach(role=>{
+    const status=getFragRoleStatus(frag.id,role.id);
+    const isPrimary=status==='primary';
+    const isSecondary=typeof status==='number';
+    const chip=document.createElement('button');
+    chip.className='dc-role-chip'+(isPrimary?' assigned-primary':isSecondary?' assigned-secondary':'');
+    let orderLabel='';
+    if(isPrimary)orderLabel='<span class="chip-order">✓</span>';
+    else if(isSecondary)orderLabel=`<span class="chip-order">${status}</span>`;
+    chip.innerHTML=`<span class="chip-sym">${role.sym}</span> ${role.name}${orderLabel}`;
+    chip.title=isPrimary?`Remove ${frag.name} from ${role.name}`
+      :isSecondary?`Make ${frag.name} primary for ${role.name}`
+      :`Assign ${frag.name} to ${role.name}`;
+
+    chip.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(isPrimary){
+        // Remove from role entirely
+        removeFromRole(role.id,frag.id);
+      } else if(isSecondary){
+        // Promote to primary
+        makePrimary(role.id,frag.id);
+      } else {
+        // Add (as last)
+        assignFrag(role.id,frag.id);
+      }
+      buildRoleChips(frag,chipsEl);
+      buildCapsule();buildRoles();
+    });
+    chipsEl.appendChild(chip);
+  });
+}
+
+function renderNoteDetail(container,note){
+  const fm=FAM[note.family]||{label:note.family,color:'#888'};
+  const nl=note.name.toLowerCase();
+  const inf=CAT.filter(f=>[f.top,f.mid,f.base].join(', ').toLowerCase().includes(nl));
+  container.innerHTML=`<div class="np-name">${note.name}</div>
+    <div class="np-family">${fm.label}</div>
+    <div class="np-desc">${note.desc}</div>
+    ${inf.length?`<div class="np-frags">In catalog: <span id="_nfl"></span></div>`:''}`;
+  if(inf.length){
+    const span=container.querySelector('#_nfl');
+    inf.forEach((f,i)=>{
+      const btn=document.createElement('button');btn.className='np-frag-link';btn.textContent=f.name;
+      btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f))});
+      span.appendChild(btn);if(i<inf.length-1)span.appendChild(document.createTextNode(', '));
+    });
+  }
+}
+
+function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag))}
+
+function refreshAfterStateChange(id){
+  buildCapsule();buildRoles();
+  const row=document.querySelector(`.scent-row[data-id="${id}"]`);
+  if(row){const f=CAT_MAP[id];renderCatRow(row,f,FAM[f.family]||{color:'#888'})}
+  syncDots(id);
+  const brands=[...new Set(CAT.map(f=>f.brand))];
+  brands.forEach(b=>updBC(b,b.replace(/\s+/g,'-')));
+  updCC();
+}
+
+/* ══ NOTE FLOAT POPUP (Notes tab) ══════════════════════════════════ */
+function openNotePopup(note,triggerEl){
+  const fm=FAM[note.family]||{label:note.family,color:'#888'};
+  const nl=note.name.toLowerCase();
+  const inf=CAT.filter(f=>[f.top,f.mid,f.base].join(', ').toLowerCase().includes(nl));
+  document.getElementById('np-name').textContent=note.name;
+  document.getElementById('np-family').textContent=fm.label;
+  document.getElementById('np-desc').textContent=note.desc;
+  const fe=document.getElementById('np-frags');fe.innerHTML='';
+  if(inf.length){
+    fe.appendChild(document.createTextNode('In catalog: '));
+    inf.forEach((f,i)=>{
+      const btn=document.createElement('button');btn.className='np-frag-link';btn.textContent=f.name;
+      btn.addEventListener('click',e=>{e.stopPropagation();closeNotePopup();openFragDetail(f)});
+      fe.appendChild(btn);if(i<inf.length-1)fe.appendChild(document.createTextNode(', '));
+    });
+  }
+  const popup=document.getElementById('note-popup');
+  const rect=triggerEl.getBoundingClientRect();
+  let left=rect.left,top=rect.bottom+8;
+  if(left+248>window.innerWidth-12)left=window.innerWidth-248-12;
+  if(left<8)left=8;if(top+220>window.innerHeight)top=rect.top-220;if(top<8)top=8;
+  popup.style.left=left+'px';popup.style.top=top+'px';
+  document.getElementById('note-float-overlay').classList.add('open');
+}
+function closeNotePopup(){document.getElementById('note-float-overlay').classList.remove('open')}
+document.getElementById('note-float-bg').addEventListener('click',closeNotePopup);
+document.getElementById('nfp-close').addEventListener('click',closeNotePopup);
+
+/* ══ PICKER ═════════════════════════════════════════════════════════ */
+function openPicker(roleId){openDetail(c=>renderPicker(c,roleId))}
+
+function renderPicker(container,roleId){
+  const role=RM[roleId];
+  const assigned=getAssigned(roleId); // ordered array
+  const primaryId=assigned[0]||null;
+  const primaryFrag=primaryId?CAT_MAP[primaryId]:null;
+  const secondaries=assigned.slice(1).map(id=>CAT_MAP[id]).filter(Boolean);
+
+  // Header
+  const hdr=document.createElement('div');hdr.className='picker-header';
+  hdr.innerHTML=`<div class="picker-title">${role.sym} ${role.name}</div><div class="picker-sub">${role.desc}</div>`;
+  container.appendChild(hdr);
+
+  // Hero
+  const hero=document.createElement('div');hero.className='picker-hero';
+  if(!primaryFrag){
+    hero.innerHTML=`<div class="picker-hero-empty">
+      <div class="picker-hero-sym-empty">${role.sym}</div>
+      <div class="picker-hero-empty-label">No fragrance assigned</div>
+      <div class="picker-hero-empty-desc">${role.long.split('.')[0]}.</div>
+    </div>
+    <div class="picker-role-sym-line">${role.symLine}</div>`;
+  } else {
+    const fm=FAM[primaryFrag.family]||{color:'#888'};
+    const isW=isWish(primaryFrag.id)&&!isOwned(primaryFrag.id);
+    let secHTML='';
+    if(secondaries.length){
+      secHTML=`<div class="picker-hero-secondary">
+        <div class="picker-hero-sec-label">Also assigned</div>
+        ${secondaries.map((f,i)=>`<div class="picker-hero-sec-row">
+          <span class="picker-hero-sec-idx">${i+2}</span>
+          <span class="picker-hero-sec-name${isWish(f.id)&&!isOwned(f.id)?' is-wish':''}">${f.name}</span>
+        </div>`).join('')}
+      </div>`;
+    }
+    hero.innerHTML=`<div class="picker-hero-filled">
+      <div class="picker-hero-sym" style="color:${fm.color}">${role.sym}</div>
+      <div class="picker-hero-info">
+        <div class="picker-hero-name${isW?' is-wish':''}">${primaryFrag.name}</div>
+        <div class="picker-hero-brand">${primaryFrag.brand}</div>
+        <div class="picker-hero-notes"><strong>Top</strong>${primaryFrag.top}</div>
+      </div>
+    </div>
+    ${secHTML}
+    <div class="picker-role-sym-line">${role.symLine}</div>`;
+  }
+  container.appendChild(hero);
+
+  // Sections
+  const carousel=CAT.filter(f=>f.roles.includes(roleId)&&gst(f.id)==='none'&&!assigned.includes(f.id));
+  const ownedTagged=CAT.filter(f=>f.roles.includes(roleId)&&isOwned(f.id)&&!assigned.includes(f.id));
+  const ownedOther=CAT.filter(f=>!f.roles.includes(roleId)&&isOwned(f.id)&&!assigned.includes(f.id));
+  const wishedTagged=CAT.filter(f=>f.roles.includes(roleId)&&isWish(f.id)&&!assigned.includes(f.id));
+  const wishedOther=CAT.filter(f=>!f.roles.includes(roleId)&&isWish(f.id)&&!assigned.includes(f.id));
+  const wished=[...wishedTagged,...wishedOther];
+
+  // Assigned list at top (if any)
+  if(assigned.length){
+    const lbl=document.createElement('div');lbl.className='picker-sec-lbl';lbl.textContent='Assigned to this role';container.appendChild(lbl);
+    const list=document.createElement('div');list.className='picker-list';
+    assigned.forEach((fid,i)=>{
+      const f=CAT_MAP[fid];if(!f)return;
+      const fm=FAM[f.family]||{color:'#888'};
+      const row=document.createElement('div');row.className='picker-row'+(i===0?' is-primary':'');
+      const badge=document.createElement('span');
+      badge.className='picker-order-badge'+(i===0?' primary-badge':'');
+      badge.textContent=i===0?'Primary':`#${i+1}`;
+      const nameBtn=document.createElement('button');nameBtn.className='picker-name-btn'+(isWish(f.id)&&!isOwned(f.id)?' is-wish':'');nameBtn.textContent=f.name;
+      nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f))});
+      const info=document.createElement('div');info.className='picker-info';
+      info.appendChild(nameBtn);
+      const br=document.createElement('div');br.className='picker-brand-row';br.textContent=f.brand;info.appendChild(br);
+      const fdot=document.createElement('div');fdot.className='picker-fdot';fdot.style.background=fm.color;
+      const removeBtn=document.createElement('button');removeBtn.className='tab';removeBtn.style.cssText='font-size:.62rem;padding:3px 7px';removeBtn.textContent='Remove';
+      removeBtn.addEventListener('click',e=>{
+        e.stopPropagation();
+        removeFromRole(roleId,fid);
+        buildCapsule();buildRoles();
+        container.innerHTML='';renderPicker(container,roleId);
+      });
+      row.appendChild(fdot);row.appendChild(info);row.appendChild(badge);row.appendChild(removeBtn);
+      list.appendChild(row);
+    });
+    container.appendChild(list);
+  }
+
+  // Explore carousel
+  if(carousel.length){
+    const lbl=document.createElement('div');lbl.className='picker-sec-lbl';lbl.textContent=`Explore for this role (${carousel.length})`;container.appendChild(lbl);
+    const wrap=document.createElement('div');wrap.className='carousel-wrap';
+    const row=document.createElement('div');row.className='carousel';
+    carousel.forEach(frag=>{
+      const fm=FAM[frag.family]||{color:'#888'};
+      const card=document.createElement('button');card.className='carousel-card';
+      card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
+        <div class="carousel-card-brand">${frag.brand}</div>
+        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
+      card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag))});
+      row.appendChild(card);
+    });
+    wrap.appendChild(row);container.appendChild(wrap);
+  }
+
+  function makeRow(frag){
+    const fm=FAM[frag.family]||{color:'#888'};
+    const w=isWish(frag.id)&&!isOwned(frag.id);
+    const row=document.createElement('div');row.className='picker-row';
+    const nameBtn=document.createElement('button');nameBtn.className='picker-name-btn'+(w?' is-wish':'');nameBtn.textContent=frag.name;
+    nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag))});
+    const info=document.createElement('div');info.className='picker-info';
+    info.appendChild(nameBtn);
+    const br=document.createElement('div');br.className='picker-brand-row';br.textContent=frag.brand;info.appendChild(br);
+    const fdot=document.createElement('div');fdot.className='picker-fdot';fdot.style.background=fm.color;
+    const addBtn=document.createElement('button');addBtn.className='tab active';addBtn.style.cssText='font-size:.62rem;padding:3px 7px;background:var(--black);color:#fff;box-shadow:none';addBtn.textContent='Add';
+    addBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      assignFrag(roleId,frag.id);
+      buildCapsule();buildRoles();
+      container.innerHTML='';renderPicker(container,roleId);
+    });
+    row.appendChild(fdot);row.appendChild(info);row.appendChild(addBtn);
+    return row;
+  }
+
+  if(ownedTagged.length){
+    const lbl=document.createElement('div');lbl.className='picker-sec-lbl';lbl.textContent=`Matches this role — owned (${ownedTagged.length})`;container.appendChild(lbl);
+    const list=document.createElement('div');list.className='picker-list';ownedTagged.forEach(f=>list.appendChild(makeRow(f)));container.appendChild(list);
+  }
+  if(ownedOther.length){
+    const lbl=document.createElement('div');lbl.className='picker-sec-lbl';lbl.textContent=`Other owned (${ownedOther.length})`;container.appendChild(lbl);
+    const list=document.createElement('div');list.className='picker-list';ownedOther.forEach(f=>list.appendChild(makeRow(f)));container.appendChild(list);
+  }
+  if(!ownedTagged.length&&!ownedOther.length&&!assigned.length){
+    const msg=document.createElement('div');msg.className='picker-empty';msg.textContent='No owned fragrances yet — mark fragrances as owned in the Catalog.';container.appendChild(msg);
+  }
+  if(wished.length){
+    const lbl=document.createElement('div');lbl.className='picker-sec-lbl';lbl.textContent=`Wishlist (${wished.length})`;container.appendChild(lbl);
+    const list=document.createElement('div');list.className='picker-list';wished.forEach(f=>list.appendChild(makeRow(f)));container.appendChild(list);
+  }
+}
+
+/* ══ BUILD CAPSULE ══════════════════════════════════════════════════ */
+function buildCapsule(){
+  const grid=document.getElementById('capsule-grid');grid.innerHTML='';
+  ROLES.forEach(role=>{
+    const assigned=getAssigned(role.id);
+    const primaryId=assigned[0]||null;
+    const primaryFrag=primaryId?CAT_MAP[primaryId]:null;
+    const fm=primaryFrag?FAM[primaryFrag.family]:null;
+    const symColor=fm?fm.color:'';
+    const cell=document.createElement('div');
+    cell.className='cap-cell '+(primaryFrag?'filled':'empty');
+
+    let inner=`<div class="cap-role">${role.name}</div>
+      <div class="cap-desc-short">${role.desc}</div>
+      <div class="cap-sym" style="${symColor?`color:${symColor}`:''}">${role.sym}</div>`;
+
+    if(primaryFrag){
+      const isW=isWish(primaryFrag.id)&&!isOwned(primaryFrag.id);
+      inner+=`<div class="cap-frag-wrap">
+        <div class="cap-primary${isW?' is-wish':''}">${primaryFrag.name}</div>
+        <div class="cap-frag-brand">${primaryFrag.brand}</div>`;
+      if(assigned.length>1){
+        inner+=`<div class="cap-more">+${assigned.length-1} more</div>`;
+      }
+      inner+=`</div>`;
+      if(assigned.length>1){
+        const badge=document.createElement('div');
+        // Count badge shown inline above
+      }
+    } else {
+      inner+=`<div class="cap-assign-cta"><div class="cap-plus">+</div><span>Assign</span></div>`;
+    }
+    // Count badge top-right
+    if(assigned.length>1){
+      inner+=`<div class="cap-count">${assigned.length}</div>`;
+    }
+    cell.innerHTML=inner;
+    cell.addEventListener('click',()=>openPicker(role.id));
+    grid.appendChild(cell);
+  });
+}
+
+/* ══ BUILD ROLES ════════════════════════════════════════════════════ */
+function buildRoles(){
+  const body=document.getElementById('roles-body');body.innerHTML='';
+  ROLES.forEach(role=>{
+    const frags=CAT.filter(f=>f.roles.includes(role.id));
+    const assigned=getAssigned(role.id);
+    const oc=frags.filter(f=>isOwned(f.id)).length;
+    const wc=frags.filter(f=>isWish(f.id)).length;
+    const ac=assigned.length;
+    const meta=[ac&&`${ac} assigned`,oc&&`${oc} owned`,wc&&`${wc} wished`].filter(Boolean).join(' · ')||`${frags.length} catalogued`;
+    const sec=document.createElement('div');sec.className='rs';
+    sec.innerHTML=`<div class="rs-head"><span class="rs-sym">${role.sym}</span><span class="rs-name">${role.name}</span><span class="rs-meta">${meta}</span></div>
+      <div class="rs-tagline">${role.desc}</div>
+      <div class="rs-body">${role.long}</div>`;
+    if(!frags.length){sec.innerHTML+=`<div style="font-size:.76rem;color:var(--g450);padding:3px 0">No fragrances catalogued for this role.</div>`;body.appendChild(sec);return}
+
+    const fk=[...new Set(frags.map(f=>f.family))];
+    const fr=document.createElement('div');fr.className='fam-chips';
+    fk.forEach(k=>{const fm=FAM[k];if(!fm)return;const ch=document.createElement('div');ch.className='fam-chip';ch.innerHTML=`<div class="fam-dot" style="background:${fm.color}"></div>${fm.label}`;fr.appendChild(ch)});
+    sec.appendChild(fr);
+
+    // Chart section with max-width
+    const chartSec=document.createElement('div');chartSec.className='chart-section';
+    const outer=document.createElement('div');outer.className='chart-outer';
+    outer.innerHTML=`<div class="y-title">Layering</div>
+      <div class="y-labels"><div class="y-lbl">Complex</div><div class="y-lbl">Layered</div><div class="y-lbl">Balanced</div><div class="y-lbl">Single</div></div>`;
+    const ca=document.createElement('div');ca.className='chart-area';
+
+    // Dot collision
+    const placed=[];
+    function getOffset(px,py){
+      if(!placed.some(p=>Math.abs(p.x-px)<9&&Math.abs(p.y-py)<9)){placed.push({x:px,y:py});return{x:px,y:py}}
+      for(let r=12;r<=48;r+=12)for(let a=0;a<360;a+=45){
+        const nx=Math.max(2,Math.min(98,px+Math.cos(a*Math.PI/180)*r));
+        const ny=Math.max(2,Math.min(98,py+Math.sin(a*Math.PI/180)*r));
+        if(!placed.some(p=>Math.abs(p.x-nx)<9&&Math.abs(p.y-ny)<9)){placed.push({x:nx,y:ny});return{x:nx,y:ny}}
+      }
+      const fb={x:Math.min(98,px+16),y:py};placed.push(fb);return fb;
+    }
+    // Label collision
+    const lblRects=[];
+    function placeLabel(px,py,text){
+      const w=text.length*5+8,h=12,gap=8;
+      const preferred=py<50?['lbl-below','lbl-right','lbl-left','lbl-above']:['lbl-above','lbl-right','lbl-left','lbl-below'];
+      const rects={
+        'lbl-above':{x:px-w/2*0.3,y:py+gap*0.4,w:w*0.3,h:h*0.4},
+        'lbl-below':{x:px-w/2*0.3,y:py-gap*0.4-h*0.4,w:w*0.3,h:h*0.4},
+        'lbl-right':{x:px+gap*0.3,y:py-h/2*0.4,w:w*0.3,h:h*0.4},
+        'lbl-left' :{x:px-gap*0.3-w*0.3,y:py-h/2*0.4,w:w*0.3,h:h*0.4},
+      };
+      function ov(r1,r2){return!(r1.x+r1.w<r2.x||r2.x+r2.w<r1.x||r1.y+r1.h<r2.y||r2.y+r2.h<r1.y)}
+      for(const cls of preferred){
+        const rect=rects[cls];
+        if(!lblRects.some(r=>ov(r,rect))){lblRects.push(rect);return cls}
+      }
+      lblRects.push(rects[preferred[0]]);return preferred[0];
+    }
+
+    const sorted=[...frags].sort((a,b)=>b.layering-a.layering);
+    sorted.forEach(frag=>{
+      const fm=FAM[frag.family]||{color:'#888'};
+      const st=gst(frag.id);
+      const{x:px,y:py}=getOffset(frag.sillage*10,frag.layering*10);
+      const dot=document.createElement('div');
+      dot.className=`dot s-${st}`;dot.dataset.id=frag.id;
+      dot.style.cssText=`left:${px}%;bottom:${py}%`;
+      const dotStyle=st==='wish'?`background:#fff;box-shadow:0 0 0 2px ${fm.color};border:2px solid ${fm.color};`
+        :`background:${fm.color};border:2px solid rgba(255,255,255,.85);box-shadow:0 0 0 1px rgba(0,0,0,.2);`;
+      const suffix=st==='owned'?' ✓':'';
+      const labelText=frag.name+suffix;
+      const lblCls=placeLabel(px,py,labelText);
+      dot.innerHTML=`<div class="dot-c" style="${dotStyle}"></div><div class="dot-lbl ${lblCls}">${labelText}</div>`;
+      dot.addEventListener('click',e=>{e.stopPropagation();openFragDetail(frag)});
+      ca.appendChild(dot);
+    });
+
+    outer.appendChild(ca);
+    outer.innerHTML+=`<div class="x-labels"><span>Skin</span><span>Moderate</span><span>Enormous</span></div><div class="x-title">Sillage</div>`;
+    chartSec.appendChild(outer);sec.appendChild(chartSec);body.appendChild(sec);
+  });
+}
+
+/* ══ BUILD CATALOG ══════════════════════════════════════════════════ */
+function buildCatalog(){
+  const body=document.getElementById('cat-body');body.innerHTML='';
+  const brands=[...new Set(CAT.map(f=>f.brand))];
+  brands.forEach(brand=>{
+    const frags=CAT.filter(f=>f.brand===brand);
+    const key=brand.replace(/\s+/g,'-');
+    const sec=document.createElement('div');sec.className='cat-section';
+    sec.innerHTML=`<div class="brand-hdr"><div class="brand-n">${brand}</div><div class="brand-c" id="bc-${key}"></div></div>`;
+    const list=document.createElement('div');list.className='scent-list';
+    list.addEventListener('click',e=>{
+      const checkEl=e.target.closest('.s-check');
+      const nameEl=e.target.closest('.s-name-btn');
+      const row=e.target.closest('.scent-row');if(!row)return;
+      const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
+      const fm=FAM[frag.family]||{color:'#888'};
+      if(checkEl){cycleState(id);renderCatRow(row,frag,fm);updBC(brand,key);updCC();syncDots(id);buildCapsule()}
+      else if(nameEl){openFragDetail(frag)}
+    });
+    frags.forEach(frag=>{
+      const fm=FAM[frag.family]||{color:'#888'};
+      const row=document.createElement('div');row.dataset.id=frag.id;
+      renderCatRow(row,frag,fm);list.appendChild(row);
+    });
+    sec.appendChild(list);body.appendChild(sec);updBC(brand,key);
+  });
+  updCC();
+}
+
+function renderCatRow(row,frag,fm){
+  const st=gst(frag.id);
+  row.className=`scent-row s-${st}`;
+  const cc=st==='owned'?'✓':st==='wish'?'~':'';
+  const syms=frag.roles.map(rid=>{const r=RM[rid];return r?`<span class="s-sym">${r.sym}</span>`:''}).join('');
+  row.innerHTML=`<div class="s-check">${cc}</div>
+    <div class="s-fdot" style="background:${fm.color}"></div>
+    <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${frag.top}</div></div>
+    <div class="s-syms">${syms}</div>`;
+}
+function updBC(brand,key){
+  const frags=CAT.filter(f=>f.brand===brand);
+  const o=frags.filter(f=>isOwned(f.id)).length,w=frags.filter(f=>isWish(f.id)).length;
+  const el=document.getElementById(`bc-${key}`);
+  if(el)el.textContent=[o&&`${o} owned`,w&&`${w} wished`].filter(Boolean).join(' · ');
+}
+function updCC(){
+  const o=CAT.filter(f=>isOwned(f.id)).length,w=CAT.filter(f=>isWish(f.id)).length;
+  const el=document.getElementById('cat-count');
+  if(el)el.textContent=[o&&`${o} owned`,w&&`${w} wished`].filter(Boolean).join(' · ');
+}
+function syncDots(id){document.querySelectorAll(`.dot[data-id="${id}"]`).forEach(d=>d.className=`dot s-${gst(id)}`)}
+
+/* ══ BUILD NOTES ════════════════════════════════════════════════════ */
+function buildNotes(){
+  const body=document.getElementById('notes-body');body.innerHTML='';
+  const grouped={};
+  NI.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
+  Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
+  FAM_ORDER.forEach(fk=>{
+    if(!grouped[fk]?.length)return;
+    const fm=FAM[fk];if(!fm)return;
+    const row=document.createElement('div');row.className='notes-family-row';
+    const left=document.createElement('div');left.className='nf-left';
+    left.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>`;
+    const right=document.createElement('div');right.className='nf-right';
+    grouped[fk].forEach(note=>{
+      const btn=document.createElement('button');btn.className='note-link';btn.textContent=note.name;
+      btn.addEventListener('click',e=>{e.stopPropagation();openNotePopup(note,btn)});
+      right.appendChild(btn);
+    });
+    row.appendChild(left);row.appendChild(right);body.appendChild(row);
+  });
+  document.getElementById('notes-count').textContent=`${NI.length} notes`;
+}
+
+/* ══ NAV ════════════════════════════════════════════════════════════ */
+function go(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab)').forEach(t=>t.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  btn.classList.add('active');
+  closeDesktopDetail();
+}
+
+/* ══ ONBOARDING ═════════════════════════════════════════════════════ */
+const ONBOARD_STEPS=[
+  {icon:'♥ ♠ ✿ ✦',head:'Assign fragrances to roles',body:'Your capsule has 8 role slots. Tap any slot to assign a fragrance — you can have a primary plus additional alternatives for each role.'},
+  {icon:'◉',head:'Analyse your distribution',body:'The Roles tab shows a scatter chart plotting sillage against layering complexity. Clusters reveal habits; gaps reveal opportunities.'},
+  {icon:'✓',head:'Track owned and wishlist',body:'In the Catalog, tap the checkbox to cycle: not tracked → wishlist (~) → owned (✓). Open any fragrance to manage its role assignments.'},
+];
+let onboardStep=0;
+function showOnboard(){
+  if(localStorage.getItem('sm_onboarded'))return;
+  document.getElementById('onboard-overlay').style.display='flex';renderOnboardStep();
+}
+function renderOnboardStep(){
+  const s=ONBOARD_STEPS[onboardStep];
+  document.getElementById('onboard-icon').textContent=s.icon;
+  document.getElementById('onboard-head').textContent=s.head;
+  document.getElementById('onboard-body').textContent=s.body;
+  document.getElementById('onboard-next').textContent=onboardStep<ONBOARD_STEPS.length-1?'Next →':'Get started';
+  document.getElementById('onboard-dots').innerHTML=ONBOARD_STEPS.map((_,i)=>`<div class="onboard-dot${i===onboardStep?' active':''}"></div>`).join('');
+}
+document.getElementById('onboard-next').addEventListener('click',()=>{
+  if(onboardStep<ONBOARD_STEPS.length-1){onboardStep++;renderOnboardStep()}
+  else{localStorage.setItem('sm_onboarded','1');document.getElementById('onboard-overlay').style.display='none'}
+});
+document.getElementById('onboard-skip').addEventListener('click',()=>{
+  localStorage.setItem('sm_onboarded','1');document.getElementById('onboard-overlay').style.display='none';
+});
+
+/* ══ INIT ═══════════════════════════════════════════════════════════ */
+buildCapsule();buildRoles();buildCatalog();buildNotes();showOnboard();
+</script>
+</body>
+</html>
