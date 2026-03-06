@@ -766,7 +766,8 @@ const NI=[
   {name:'White Musk',        family:'floral',  desc:'The cleanest of musks — transparent, soapy, skin-like.'},
   {name:'Yellow Oleander',   family:'floral',  desc:'A tropical flowering shrub — warm, honeyed floral, slightly waxy.'},
 ];
-const NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
+1390
+  =Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
 
 /* ══ DESKTOP DETAIL STACK ══════════════════════════════════════════ */
 function isDesktop(){return window.innerWidth>=1100}
@@ -1389,7 +1390,23 @@ document.getElementById('onboard-skip').addEventListener('click',()=>{
 });
 
 /* ══ INIT ═══════════════════════════════════════════════════════════ */
-buildCapsule();buildRoles();buildCatalog();buildNotes();showOnboard();
+// Load data from JSON files
+Promise.all([
+  fetch('data/roles.json').then(r=>r.json()),
+  fetch('data/scents.json').then(r=>r.json()),
+  fetch('data/notes.json').then(r=>r.json())
+]).then(([roles, scents, notes])=>{
+  // Override the hardcoded arrays
+  ROLES=roles;
+  CAT=scents;
+  NI=notes;
+  // Rebuild derived objects
+  RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
+  CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
+  NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
+  // Now initialize
+  buildCapsule();buildRoles();buildCatalog();buildNotes();showOnboard();
+});
 </script>
 </body>
 </html>
