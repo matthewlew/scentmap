@@ -1,0 +1,66 @@
+[
+  {
+    "id": "casual",
+    "sym": "♥",
+    "name": "Casual",
+    "desc": "Reach for it without thinking",
+    "symLine": "♥ signals ease — worn without occasion or deliberation.",
+    "long": "Worn daily without occasion — the fragrance you put on before leaving without deliberate thought. Its emotional register is low-key comfort: familiar, undemanding, and sociable. Unlike Signature, which projects identity, Casual simply inhabits your skin without asking anything of the room."
+  },
+  {
+    "id": "signature",
+    "sym": "♠",
+    "name": "Signature",
+    "desc": "The one that's unmistakably you",
+    "symLine": "♠ signals intent — a consistent claim about who you are.",
+    "long": "The fragrance people associate with your presence — worn consistently enough that it becomes part of how you're remembered. It carries intentionality: this is a considered choice rather than a default. It differs from Casual in that it makes a quiet claim about identity, and from Formal in that it works across contexts."
+  },
+  {
+    "id": "intimate",
+    "sym": "✿",
+    "name": "Intimate",
+    "desc": "For close quarters and quiet moments",
+    "symLine": "✿ signals proximity — a fragrance meant to be discovered, not announced.",
+    "long": "Designed for proximity — worn when physical closeness is expected or desired. Sillage is deliberately restrained; the fragrance rewards being near. Emotionally it reads as warmth, invitation, and vulnerability. Distinct from Casual in intentionality, and from Signature in being context-specific rather than all-day."
+  },
+  {
+    "id": "creative",
+    "sym": "✦",
+    "name": "Creative",
+    "desc": "Conversation-starting, rule-breaking",
+    "symLine": "✦ signals curiosity — something unusual enough to prompt a question.",
+    "long": "Worn when the fragrance itself is the point — unusual materials, unexpected progressions, compositions that refuse easy categorisation. The emotional register is curiosity and confidence. Unlike Signature, it isn't worn often; unlike Formal, it doesn't need to be appropriate — it needs to be interesting."
+  },
+  {
+    "id": "work",
+    "sym": "♣",
+    "name": "Professional",
+    "desc": "Present but never imposing",
+    "symLine": "♣ signals restraint — respect for shared space you didn't choose.",
+    "long": "Calibrated for shared spaces where consent to smell it has not been given. It projects just enough to be noticed as grooming rather than statement. The intention is respect: your fragrance should not enter a meeting before you do. Differs from Casual in restraint, and from Signature in that legibility matters less than courtesy."
+  },
+  {
+    "id": "heat",
+    "sym": "♦",
+    "name": "Summer",
+    "desc": "Survives warmth, stays fresh",
+    "symLine": "♦ signals adaptation — chemistry chosen for what heat does to it.",
+    "long": "Heat amplifies projection dramatically, so this role demands compositions that remain pleasant under pressure. Fresh, aquatic, and citrus profiles are natural fits; heavy amber and oud typically wrong. Emotionally it maps to ease and lightness. Unlike Casual, the choice here is constrained by chemistry, not just mood."
+  },
+  {
+    "id": "formal",
+    "sym": "★",
+    "name": "Formal",
+    "desc": "Walk into a room wearing it",
+    "symLine": "★ signals occasion — worn when fragrance is understood as part of dress.",
+    "long": "Reserved for occasions where fragrance is understood as part of dress — events, dinners, ceremony. Higher sillage is acceptable because the social contract anticipates it. Emotionally it registers as intent and occasion-awareness. Unlike Signature, it isn't worn constantly; unlike Creative, it must read as appropriate before interesting."
+  },
+  {
+    "id": "cold",
+    "sym": "❄",
+    "name": "Winter",
+    "desc": "Heavy, rich, built for cold air",
+    "symLine": "❄ signals density — materials that need cold air to find their best expression.",
+    "long": "Cold air suppresses projection, so this role demands density — resins, woods, leather, and oud that need ambient warmth to open fully. Worn in autumn and winter when richer materials find their best expression. The emotional register is gravitas and enclosure. The inverse of Summer: where that role demands restraint, this one rewards depth."
+  }
+]
