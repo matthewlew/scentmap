@@ -4,8 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Scentmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:inherit}
 :root{
   --black:#0a0a0a;
   --g700:#333;
@@ -24,7 +28,7 @@
 }
 html,body{background:#fff;color:#0a0a0a}
 html{font-size:16px}
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+body{font-family:"Source Serif 4",Georgia,serif;
   line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
 
 /* ══ SHELL ═══════════════════════════════════════════════════ */
@@ -125,13 +129,24 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 .tab.active{color:var(--black);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 
 /* ══ NAV LOGO ═════════════════════════════════════════════════ */
-.logo{font-size:.71rem;font-weight:700;letter-spacing:.26em;text-transform:uppercase}
+.logo{font-size:.82rem;font-weight:400;letter-spacing:.04em;font-style:italic}
 
 /* ══ PANELS ═══════════════════════════════════════════════════ */
 .panel{display:none}
 .panel.active{display:block}
+
+/* ══ CHANGELOG ════════════════════════════════════════════════ */
+.changelog-body{max-width:640px;font-size:.875rem;line-height:1.65}
+.changelog-body h2{font-size:.72rem;font-weight:600;letter-spacing:.01em;color:var(--g450);margin:28px 0 14px;padding-bottom:7px;border-bottom:1px solid var(--g200)}
+.changelog-body h2:first-child{margin-top:0}
+.changelog-body h3{font-size:.75rem;font-weight:600;letter-spacing:.01em;color:var(--g600);margin:16px 0 8px}
+.changelog-body ul{padding-left:1.2em;margin:0 0 10px}
+.changelog-body li{margin:4px 0;color:var(--g700)}
+.changelog-body hr{border:none;border-top:1px solid var(--g200);margin:28px 0}
+.changelog-body p{margin:0 0 10px;color:var(--g700)}
+.changelog-body strong{color:var(--black);font-weight:600}
 .sec-label{
-  font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  font-size:.72rem;font-weight:600;letter-spacing:.02em;
   color:var(--g450);margin-bottom:13px;
   display:flex;align-items:center;justify-content:space-between;
 }
@@ -170,7 +185,7 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 /* ══ CATALOG ══════════════════════════════════════════════════ */
 .cat-section{margin-bottom:22px}
 .brand-hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:7px;border-bottom:1px solid var(--black);margin-bottom:9px}
-.brand-n{font-size:.7rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+.brand-n{font-size:.72rem;font-weight:600;letter-spacing:.01em}
 .brand-c{font-size:.7rem;color:var(--g450)}
 .scent-list{border:1px solid var(--black);border-radius:7px;overflow:hidden}
 .scent-row{
@@ -226,7 +241,7 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 /* Chart — max-width on desktop */
 .chart-section{max-width:var(--chart-max)}
 .chart-outer{position:relative;margin-left:48px;margin-right:4px}
-.y-title{position:absolute;left:-46px;top:50%;transform:translateY(-50%) rotate(-90deg);font-size:.57rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--g450);white-space:nowrap;pointer-events:none}
+.y-title{position:absolute;left:-46px;top:50%;transform:translateY(-50%) rotate(-90deg);font-size:.6rem;font-weight:500;letter-spacing:.02em;color:var(--g450);white-space:nowrap;pointer-events:none}
 .y-labels{position:absolute;left:-46px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
 .y-lbl{font-size:.57rem;color:var(--g450);text-align:right;width:40px;line-height:1}
 .chart-area{
@@ -241,7 +256,7 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
     repeating-linear-gradient(to bottom,var(--g100) 0 1px,transparent 1px 10%);
 }
 .x-labels{display:flex;justify-content:space-between;padding:3px 0 2px;font-size:.57rem;color:var(--g450)}
-.x-title{font-size:.57rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--g450);text-align:center;margin-top:2px}
+.x-title{font-size:.6rem;font-weight:500;letter-spacing:.02em;color:var(--g450);text-align:center;margin-top:2px}
 
 /* Dots */
 .dot{position:absolute;transform:translate(-50%,50%);cursor:pointer;z-index:10}
@@ -296,19 +311,19 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 .dc-ftag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;color:#fff;margin-bottom:12px}
 .dc-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
 .dc-stat{background:var(--g100);border-radius:6px;padding:8px 10px}
-.dc-slbl{font-size:.61rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:4px}
+.dc-slbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin-bottom:4px}
 .dc-bar{height:3px;background:var(--g200);border-radius:2px;margin-bottom:4px;overflow:hidden}
 .dc-fill{height:100%;background:var(--black);border-radius:2px}
 .dc-sval{font-size:.72rem;color:var(--g500)}
 .dc-div{height:1px;background:var(--g200);margin:11px 0}
-.dc-nlbl{font-size:.61rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g500);margin-bottom:7px}
+.dc-nlbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin-bottom:7px}
 .dc-note{display:flex;gap:6px;margin-bottom:5px}
-.dc-nt{font-size:.61rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g400);width:24px;flex-shrink:0;padding-top:3px}
+.dc-nt{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g400);width:24px;flex-shrink:0;padding-top:3px}
 .dc-nv{font-size:.78rem;color:var(--g600);line-height:1.7}
 .dc-nv .note-link{font-size:.78rem}
 
 /* Role assignment chips */
-.dc-roles-lbl{font-size:.61rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g500);margin:12px 0 7px}
+.dc-roles-lbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin:12px 0 7px}
 .dc-role-chips{display:flex;flex-wrap:wrap;gap:5px}
 .dc-role-chip{
   display:inline-flex;align-items:center;gap:4px;
@@ -351,9 +366,9 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 .picker-hero-name.is-wish::before{content:'~';color:var(--wish);margin-right:2px}
 .picker-hero-brand{font-size:.7rem;color:var(--g500);margin-bottom:5px}
 .picker-hero-notes{font-size:.7rem;color:var(--g600);line-height:1.5}
-.picker-hero-notes strong{color:var(--g500);font-weight:600;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;margin-right:4px}
+.picker-hero-notes strong{color:var(--g500);font-weight:600;font-size:.62rem;letter-spacing:.01em;margin-right:4px}
 .picker-hero-secondary{margin-top:8px;padding-top:8px;border-top:1px solid var(--g200)}
-.picker-hero-sec-label{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g450);margin-bottom:4px}
+.picker-hero-sec-label{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g450);margin-bottom:4px}
 .picker-hero-sec-row{display:flex;align-items:center;gap:6px;padding:2px 0}
 .picker-hero-sec-idx{font-size:.6rem;color:var(--g450);width:12px;flex-shrink:0}
 .picker-hero-sec-name{font-size:.76rem;font-weight:500}
@@ -365,7 +380,7 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 .picker-header{margin-bottom:10px}
 .picker-title{font-size:.92rem;font-weight:700;letter-spacing:-.01em;margin-bottom:1px}
 .picker-sub{font-size:.72rem;color:var(--g500)}
-.picker-sec-lbl{font-size:.59rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g450);margin:12px 0 5px}
+.picker-sec-lbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g450);margin:12px 0 5px}
 .carousel-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1px 1px;padding-bottom:5px}
 .carousel-wrap::-webkit-scrollbar{height:3px}
 .carousel-wrap::-webkit-scrollbar-thumb{background:var(--g200);border-radius:2px}
@@ -492,6 +507,7 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
         <button class="tab active" onclick="go('catalog',this)">Catalog</button>
         <button class="tab" onclick="go('roles',this)">Roles</button>
         <button class="tab" onclick="go('notes',this)">Notes</button>
+        <button class="tab" onclick="go('changelog',this)">Changelog</button>
       </div>
     </div>
     <div class="col-main-content">
@@ -517,6 +533,11 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
       <div class="panel" id="p-notes">
         <div class="sec-label">Notes <span class="sub" id="notes-count"></span></div>
         <div id="notes-body"></div>
+      </div>
+
+      <div class="panel" id="p-changelog">
+        <div class="sec-label">Changelog</div>
+        <div id="changelog-body" class="changelog-body"></div>
       </div>
 
     </div>
@@ -1405,6 +1426,45 @@ Promise.all([
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   // Now initialize
   buildCapsule();buildRoles();buildCatalog();buildNotes();showOnboard();
+});
+
+// Load and render changelog
+fetch('CHANGELOG.md').then(r=>r.text()).then(md=>{
+  const el=document.getElementById('changelog-body');
+  // Minimal Markdown → HTML renderer (supports ## h2, ### h3, - lists, nested  - lists, **bold**, `code`, ---)
+  function inlineFmt(s){
+    return s
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/`([^`]+)`/g,'<code style="font-family:monospace;font-size:.82em;background:var(--g100);padding:1px 4px;border-radius:3px">$1</code>');
+  }
+  const lines=md.split('\n');
+  let out='',inUL=false,inSubUL=false;
+  function closeSubUL(){if(inSubUL){out+='</ul></li>';inSubUL=false;}}
+  function closeUL(){closeSubUL();if(inUL){out+='</ul>';inUL=false;}}
+  lines.forEach(raw=>{
+    const line=raw.trimEnd();
+    if(/^# /.test(line)){return;}
+    if(/^## /.test(line)){closeUL();out+=`<h2>${inlineFmt(line.slice(3))}</h2>`;return;}
+    if(/^### /.test(line)){closeUL();out+=`<h3>${inlineFmt(line.slice(4))}</h3>`;return;}
+    if(/^---$/.test(line)){closeUL();out+='<hr>';return;}
+    if(/^  - /.test(line)){
+      if(!inSubUL){out+='<ul style="margin-top:4px">';inSubUL=true;}
+      out+=`<li>${inlineFmt(line.slice(4))}</li>`;return;
+    }
+    if(/^- /.test(line)){
+      closeSubUL();
+      if(!inUL){out+='<ul>';inUL=true;}
+      else out+='</li>';
+      out+=`<li>${inlineFmt(line.slice(2))}`;return;
+    }
+    if(line.trim()===''){closeUL();return;}
+    closeUL();out+=`<p>${inlineFmt(line)}</p>`;
+  });
+  closeUL();
+  el.innerHTML=out;
+}).catch(()=>{
+  document.getElementById('changelog-body').innerHTML='<p>Changelog not found.</p>';
 });
 </script>
 </body>
