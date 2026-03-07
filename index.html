@@ -34,6 +34,17 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --col-capsule:280px;
   --col-detail:340px;
   --chart-max:520px;
+
+  /* ── Commit 1: Semantic family color system ── */
+  --fam-woody:    #8B7355;
+  --fam-floral:   #C8A4A5;
+  --fam-amber:    #B8860B;
+  --fam-citrus:   #D4A847;
+  --fam-leather:  #5C4033;
+  --fam-oud:      #3D1A24;
+  --fam-green:    #6B7C5C;
+  --fam-chypre:   #7A8B6F;
+  --fam-gourmand: #C4956A;
 }
 html,body{background:#fff;color:#0a0a0a}
 html{font-size:16px}
@@ -276,9 +287,32 @@ body{font-family:"Source Serif 4",Georgia,serif;
   display:flex;align-items:center;gap:8px;
   padding:8px 11px;background:#fff;border-bottom:1px solid var(--g200);
   transition:background .1s;
+  border-left:3px solid transparent;
 }
 .scent-row:last-child{border-bottom:none}
 .scent-row:hover{background:var(--g100)}
+/* Commit 2: family accent border on catalog rows */
+.scent-row[data-family="woody"]  {border-left-color:var(--fam-woody)}
+.scent-row[data-family="floral"] {border-left-color:var(--fam-floral)}
+.scent-row[data-family="amber"]  {border-left-color:var(--fam-amber)}
+.scent-row[data-family="citrus"] {border-left-color:var(--fam-citrus)}
+.scent-row[data-family="leather"]{border-left-color:var(--fam-leather)}
+.scent-row[data-family="oud"]    {border-left-color:var(--fam-oud)}
+.scent-row[data-family="green"]  {border-left-color:var(--fam-green)}
+.scent-row[data-family="chypre"] {border-left-color:var(--fam-chypre)}
+.scent-row[data-family="gourmand"]{border-left-color:var(--fam-gourmand)}
+/* role symLine tooltip */
+.s-sym{font-size:.78rem;color:var(--g300);line-height:1;position:relative;cursor:default}
+.scent-row.s-owned .s-sym{color:var(--black)}
+.scent-row.s-wish  .s-sym{color:var(--wish)}
+.s-sym-tip{
+  display:none;position:absolute;bottom:calc(100% + 6px);right:0;
+  background:var(--black);color:#fff;font-size:.62rem;line-height:1.4;
+  padding:5px 8px;border-radius:5px;white-space:nowrap;z-index:100;
+  max-width:220px;white-space:normal;text-align:right;
+  pointer-events:none;
+}
+.s-sym:hover .s-sym-tip{display:block}
 .s-check{
   width:14px;height:14px;flex-shrink:0;border-radius:3px;
   border:1px solid var(--g300);background:#fff;
@@ -302,12 +336,97 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .scent-row.s-owned .s-name-btn{font-weight:700}
 .s-meta{font-size:.68rem;color:var(--g500);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s-syms{display:flex;gap:2px;flex-shrink:0}
-.s-sym{font-size:.78rem;color:var(--g300);line-height:1}
+/* ── Commit 2: family accent left-border on catalog rows ── */
+.scent-row{border-left:3px solid transparent}
+.scent-row[data-family="woody"]   {border-left-color:var(--fam-woody)}
+.scent-row[data-family="floral"]  {border-left-color:var(--fam-floral)}
+.scent-row[data-family="amber"]   {border-left-color:var(--fam-amber)}
+.scent-row[data-family="citrus"]  {border-left-color:var(--fam-citrus)}
+.scent-row[data-family="leather"] {border-left-color:var(--fam-leather)}
+.scent-row[data-family="oud"]     {border-left-color:var(--fam-oud)}
+.scent-row[data-family="green"]   {border-left-color:var(--fam-green)}
+.scent-row[data-family="chypre"]  {border-left-color:var(--fam-chypre)}
+.scent-row[data-family="gourmand"]{border-left-color:var(--fam-gourmand)}
+/* ── Commit 2: role symLine tooltip ── */
+.s-sym{font-size:.78rem;color:var(--g300);line-height:1;position:relative;cursor:default}
 .scent-row.s-owned .s-sym{color:var(--black)}
 .scent-row.s-wish  .s-sym{color:var(--wish)}
+.s-sym-tip{
+  display:none;position:absolute;bottom:calc(100% + 7px);right:0;
+  background:var(--black);color:#fff;font-size:.62rem;line-height:1.45;
+  padding:5px 9px;border-radius:5px;z-index:200;
+  width:200px;text-align:left;pointer-events:none;
+  box-shadow:0 2px 8px rgba(0,0,0,.18);
+}
+.s-sym:hover .s-sym-tip{display:block}
 .cat-legend{display:flex;gap:11px;margin-bottom:12px;flex-wrap:wrap}
 .cl-item{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--g500)}
 .cl-box{width:13px;height:13px;border-radius:3px;border:1px solid var(--g300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.63rem;font-weight:700}
+
+/* ── Commit 3: Role-first landing ── */
+.role-landing{padding:4px 0 20px}
+.role-landing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--black);border:1px solid var(--black);border-radius:8px;overflow:hidden;margin-top:12px}
+@media(max-width:767px){.role-landing-grid{grid-template-columns:repeat(2,1fr)}}
+.role-landing-card{
+  background:#fff;border:none;cursor:pointer;padding:18px 14px 16px;
+  display:flex;flex-direction:column;align-items:flex-start;text-align:left;
+  transition:background .12s;gap:4px;
+}
+.role-landing-card:hover{background:var(--g100)}
+.rlc-sym{font-size:1.5rem;line-height:1;margin-bottom:4px}
+.rlc-name{font-size:.82rem;font-weight:700;letter-spacing:-.01em}
+.rlc-desc{font-size:.68rem;color:var(--g500);line-height:1.35;flex:1}
+.rlc-count{font-size:.62rem;color:var(--g400);margin-top:6px}
+/* Commit 3: catalog filter bar */
+.cat-filter-bar{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:16px;background:var(--g100);border-radius:8px;padding:3px}
+/* ── Commit 4: Note constellation ── */
+.constellation-wrap{position:relative;width:100%;margin:0 0 24px}
+.constellation-canvas{width:100%;height:480px;display:block;border:1px solid var(--black);border-radius:8px;background:#fff;cursor:grab}
+.constellation-canvas:active{cursor:grabbing}
+@media(max-width:767px){.constellation-canvas{height:320px}}
+.constellation-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.cl2-item{display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--g500)}
+.cl2-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.constellation-tooltip{
+  position:fixed;background:var(--black);color:#fff;
+  font-size:.66rem;line-height:1.5;padding:7px 10px;border-radius:6px;
+  pointer-events:none;z-index:300;max-width:200px;
+  box-shadow:0 2px 12px rgba(0,0,0,.22);display:none;
+}
+/* ── Commit 5: Layering pairer ── */
+.pairer-wrap{margin:0 0 32px}
+.pairer-selectors{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
+.pairer-select-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
+.pairer-select-label{font-size:.64rem;font-weight:600;color:var(--g450);letter-spacing:.02em}
+.pairer-select{
+  font-size:.78rem;padding:7px 10px;border:1px solid var(--black);
+  border-radius:6px;background:#fff;cursor:pointer;appearance:none;
+  background-image:url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;
+  padding-right:24px;
+}
+.pairer-result{
+  border:1px solid var(--black);border-radius:8px;padding:18px 18px 14px;
+  display:none;
+}
+.pairer-result.visible{display:block}
+.pairer-score-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.pairer-score-circle{
+  width:54px;height:54px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:700;border:2px solid var(--black);
+}
+.pairer-score-circle.high{border-color:var(--fam-green);color:var(--fam-green)}
+.pairer-score-circle.mid{border-color:var(--fam-amber);color:var(--fam-amber)}
+.pairer-score-circle.low{border-color:var(--fam-oud);color:var(--fam-oud)}
+.pairer-verdict{font-size:.8rem;font-weight:600;line-height:1.3}
+.pairer-reasoning{font-size:.72rem;color:var(--g500);line-height:1.6;margin-top:6px}
+.pairer-pyramids{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;border-top:1px solid var(--g200);padding-top:14px}
+.pairer-pyramid-col{display:flex;flex-direction:column;gap:5px}
+.pairer-pyr-label{font-size:.6rem;font-weight:600;color:var(--g450);letter-spacing:.02em;margin-bottom:2px}
+.pairer-pyr-row{font-size:.68rem;color:var(--g600)}
+.pairer-pyr-tier{font-size:.58rem;color:var(--g400);display:block}
+/* ── Commit 3: Catalog tab shows landing on first load ── */
 
 /* ══ ROLES ════════════════════════════════════════════════════ */
 .rs{padding:18px 0 22px;border-bottom:1px solid var(--g200)}
@@ -1474,13 +1593,56 @@ function buildRoles(){
   });
 }
 
-/* ══ BUILD CATALOG ══════════════════════════════════════════════════ */
-function buildCatalog(){
+/* ══ COMMIT 3: ROLE-FIRST LANDING ══════════════════════════════════ */
+function buildRoleLanding(){
   const body=document.getElementById('cat-body');body.innerHTML='';
-  const brands=[...new Set(CAT.map(f=>f.brand))];
+  const wrap=document.createElement('div');wrap.className='role-landing';
+  const lbl=document.createElement('div');lbl.className='sec-label';
+  lbl.innerHTML='<span>What are you wearing it for?</span><span class="sub">Pick a role to explore</span>';
+  wrap.appendChild(lbl);
+  const grid=document.createElement('div');grid.className='role-landing-grid';
+  ROLES.forEach(role=>{
+    const frags=CAT.filter(f=>f.roles.includes(role.id));
+    const card=document.createElement('button');card.className='role-landing-card';
+    card.innerHTML=`<div class="rlc-sym">${role.sym}</div>
+      <div class="rlc-name">${role.name}</div>
+      <div class="rlc-desc">${role.desc}</div>
+      <div class="rlc-count">${frags.length} fragrances</div>`;
+    card.addEventListener('click',()=>{
+      document.getElementById('cat-role-filter').value=role.id;
+      buildCatalog(role.id);
+    });
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);body.appendChild(wrap);
+}
+
+/* ══ BUILD CATALOG ══════════════════════════════════════════════════ */
+function buildCatalog(roleFilter){
+  roleFilter=roleFilter||null;
+  const body=document.getElementById('cat-body');body.innerHTML='';
+
+  // Role filter bar
+  const filterBar=document.createElement('div');filterBar.className='cat-filter-bar';
+  const allBtn=document.createElement('button');
+  allBtn.className='tab'+(roleFilter===null?' active':'');
+  allBtn.textContent='All';
+  allBtn.addEventListener('click',()=>buildCatalog(null));
+  filterBar.appendChild(allBtn);
+  ROLES.forEach(r=>{
+    const btn=document.createElement('button');
+    btn.className='tab'+(roleFilter===r.id?' active':'');
+    btn.innerHTML=`${r.sym} ${r.name}`;
+    btn.addEventListener('click',()=>buildCatalog(r.id));
+    filterBar.appendChild(btn);
+  });
+  body.appendChild(filterBar);
+
+  let visibleCat=roleFilter?CAT.filter(f=>f.roles.includes(roleFilter)):CAT;
+  const brands=[...new Set(visibleCat.map(f=>f.brand))];
   brands.forEach(brand=>{
-    const frags=CAT.filter(f=>f.brand===brand);
-    const key=brand.replace(/\s+/g,'-');
+    const frags=visibleCat.filter(f=>f.brand===brand);
+    const key=brand.replace(/\s+/g,'-')+(roleFilter||'');
     const sec=document.createElement('div');sec.className='cat-section';
     sec.innerHTML=`<div class="brand-hdr"><div class="brand-n">${brand}</div><div class="brand-c" id="bc-${key}"></div></div>`;
     const list=document.createElement('div');list.className='scent-list';
@@ -1498,16 +1660,28 @@ function buildCatalog(){
       const row=document.createElement('div');row.dataset.id=frag.id;
       renderCatRow(row,frag,fm);list.appendChild(row);
     });
-    sec.appendChild(list);body.appendChild(sec);updBC(brand,key);
+    sec.appendChild(list);body.appendChild(sec);
+    // update brand count
+    const bcEl=document.getElementById(`bc-${key}`);
+    if(bcEl){const o=frags.filter(f=>isOwned(f.id)).length,w=frags.filter(f=>isWish(f.id)).length;bcEl.textContent=[o&&`${o} owned`,w&&`${w} wished`].filter(Boolean).join(' · ')}
   });
   updCC();
+  // hidden select for filter state (used by role landing)
+  let sel=document.getElementById('cat-role-filter');
+  if(!sel){sel=document.createElement('select');sel.id='cat-role-filter';sel.style.display='none';document.body.appendChild(sel);}
+  sel.value=roleFilter||'';
 }
 
 function renderCatRow(row,frag,fm){
   const st=gst(frag.id);
   row.className=`scent-row s-${st}`;
+  row.dataset.family=frag.family;
   const cc=st==='owned'?'✓':st==='wish'?'~':'';
-  const syms=frag.roles.map(rid=>{const r=RM[rid];return r?`<span class="s-sym">${r.sym}</span>`:''}).join('');
+  // Commit 2: role glyph with symLine tooltip
+  const syms=frag.roles.map(rid=>{
+    const r=RM[rid];if(!r)return'';
+    return `<span class="s-sym">${r.sym}<span class="s-sym-tip">${r.symLine}</span></span>`;
+  }).join('');
   row.innerHTML=`<div class="s-check">${cc}</div>
     <div class="s-fdot" style="background:${fm.color}"></div>
     <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${frag.top}</div></div>
@@ -1615,7 +1789,7 @@ Promise.all([
   CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   // Now initialize
-  buildCapsule();buildRoles();buildCatalog();buildNotes();showOnboard();
+  buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildConstellation();buildPairer();showOnboard();
   if(window.innerWidth<768){
     const btn=document.querySelector('.mbn-btn');
     if(btn)goMobile('scentmap',btn);
