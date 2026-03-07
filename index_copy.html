@@ -34,17 +34,6 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --col-capsule:280px;
   --col-detail:340px;
   --chart-max:520px;
-
-  /* ── Commit 1: Semantic family color system ── */
-  --fam-woody:    #8B7355;
-  --fam-floral:   #C8A4A5;
-  --fam-amber:    #B8860B;
-  --fam-citrus:   #D4A847;
-  --fam-leather:  #5C4033;
-  --fam-oud:      #3D1A24;
-  --fam-green:    #6B7C5C;
-  --fam-chypre:   #7A8B6F;
-  --fam-gourmand: #C4956A;
 }
 html,body{background:#fff;color:#0a0a0a}
 html{font-size:16px}
@@ -287,32 +276,9 @@ body{font-family:"Source Serif 4",Georgia,serif;
   display:flex;align-items:center;gap:8px;
   padding:8px 11px;background:#fff;border-bottom:1px solid var(--g200);
   transition:background .1s;
-  border-left:3px solid transparent;
 }
 .scent-row:last-child{border-bottom:none}
 .scent-row:hover{background:var(--g100)}
-/* Commit 2: family accent border on catalog rows */
-.scent-row[data-family="woody"]  {border-left-color:var(--fam-woody)}
-.scent-row[data-family="floral"] {border-left-color:var(--fam-floral)}
-.scent-row[data-family="amber"]  {border-left-color:var(--fam-amber)}
-.scent-row[data-family="citrus"] {border-left-color:var(--fam-citrus)}
-.scent-row[data-family="leather"]{border-left-color:var(--fam-leather)}
-.scent-row[data-family="oud"]    {border-left-color:var(--fam-oud)}
-.scent-row[data-family="green"]  {border-left-color:var(--fam-green)}
-.scent-row[data-family="chypre"] {border-left-color:var(--fam-chypre)}
-.scent-row[data-family="gourmand"]{border-left-color:var(--fam-gourmand)}
-/* role symLine tooltip */
-.s-sym{font-size:.78rem;color:var(--g300);line-height:1;position:relative;cursor:default}
-.scent-row.s-owned .s-sym{color:var(--black)}
-.scent-row.s-wish  .s-sym{color:var(--wish)}
-.s-sym-tip{
-  display:none;position:absolute;bottom:calc(100% + 6px);right:0;
-  background:var(--black);color:#fff;font-size:.62rem;line-height:1.4;
-  padding:5px 8px;border-radius:5px;white-space:nowrap;z-index:100;
-  max-width:220px;white-space:normal;text-align:right;
-  pointer-events:none;
-}
-.s-sym:hover .s-sym-tip{display:block}
 .s-check{
   width:14px;height:14px;flex-shrink:0;border-radius:3px;
   border:1px solid var(--g300);background:#fff;
@@ -336,97 +302,12 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .scent-row.s-owned .s-name-btn{font-weight:700}
 .s-meta{font-size:.68rem;color:var(--g500);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s-syms{display:flex;gap:2px;flex-shrink:0}
-/* ── Commit 2: family accent left-border on catalog rows ── */
-.scent-row{border-left:3px solid transparent}
-.scent-row[data-family="woody"]   {border-left-color:var(--fam-woody)}
-.scent-row[data-family="floral"]  {border-left-color:var(--fam-floral)}
-.scent-row[data-family="amber"]   {border-left-color:var(--fam-amber)}
-.scent-row[data-family="citrus"]  {border-left-color:var(--fam-citrus)}
-.scent-row[data-family="leather"] {border-left-color:var(--fam-leather)}
-.scent-row[data-family="oud"]     {border-left-color:var(--fam-oud)}
-.scent-row[data-family="green"]   {border-left-color:var(--fam-green)}
-.scent-row[data-family="chypre"]  {border-left-color:var(--fam-chypre)}
-.scent-row[data-family="gourmand"]{border-left-color:var(--fam-gourmand)}
-/* ── Commit 2: role symLine tooltip ── */
-.s-sym{font-size:.78rem;color:var(--g300);line-height:1;position:relative;cursor:default}
+.s-sym{font-size:.78rem;color:var(--g300);line-height:1}
 .scent-row.s-owned .s-sym{color:var(--black)}
 .scent-row.s-wish  .s-sym{color:var(--wish)}
-.s-sym-tip{
-  display:none;position:absolute;bottom:calc(100% + 7px);right:0;
-  background:var(--black);color:#fff;font-size:.62rem;line-height:1.45;
-  padding:5px 9px;border-radius:5px;z-index:200;
-  width:200px;text-align:left;pointer-events:none;
-  box-shadow:0 2px 8px rgba(0,0,0,.18);
-}
-.s-sym:hover .s-sym-tip{display:block}
 .cat-legend{display:flex;gap:11px;margin-bottom:12px;flex-wrap:wrap}
 .cl-item{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--g500)}
 .cl-box{width:13px;height:13px;border-radius:3px;border:1px solid var(--g300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.63rem;font-weight:700}
-
-/* ── Commit 3: Role-first landing ── */
-.role-landing{padding:4px 0 20px}
-.role-landing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--black);border:1px solid var(--black);border-radius:8px;overflow:hidden;margin-top:12px}
-@media(max-width:767px){.role-landing-grid{grid-template-columns:repeat(2,1fr)}}
-.role-landing-card{
-  background:#fff;border:none;cursor:pointer;padding:18px 14px 16px;
-  display:flex;flex-direction:column;align-items:flex-start;text-align:left;
-  transition:background .12s;gap:4px;
-}
-.role-landing-card:hover{background:var(--g100)}
-.rlc-sym{font-size:1.5rem;line-height:1;margin-bottom:4px}
-.rlc-name{font-size:.82rem;font-weight:700;letter-spacing:-.01em}
-.rlc-desc{font-size:.68rem;color:var(--g500);line-height:1.35;flex:1}
-.rlc-count{font-size:.62rem;color:var(--g400);margin-top:6px}
-/* Commit 3: catalog filter bar */
-.cat-filter-bar{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:16px;background:var(--g100);border-radius:8px;padding:3px}
-/* ── Commit 4: Note constellation ── */
-.constellation-wrap{position:relative;width:100%;margin:0 0 24px}
-.constellation-canvas{width:100%;height:480px;display:block;border:1px solid var(--black);border-radius:8px;background:#fff;cursor:grab}
-.constellation-canvas:active{cursor:grabbing}
-@media(max-width:767px){.constellation-canvas{height:320px}}
-.constellation-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.cl2-item{display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--g500)}
-.cl2-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.constellation-tooltip{
-  position:fixed;background:var(--black);color:#fff;
-  font-size:.66rem;line-height:1.5;padding:7px 10px;border-radius:6px;
-  pointer-events:none;z-index:300;max-width:200px;
-  box-shadow:0 2px 12px rgba(0,0,0,.22);display:none;
-}
-/* ── Commit 5: Layering pairer ── */
-.pairer-wrap{margin:0 0 32px}
-.pairer-selectors{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
-.pairer-select-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
-.pairer-select-label{font-size:.64rem;font-weight:600;color:var(--g450);letter-spacing:.02em}
-.pairer-select{
-  font-size:.78rem;padding:7px 10px;border:1px solid var(--black);
-  border-radius:6px;background:#fff;cursor:pointer;appearance:none;
-  background-image:url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 9px center;
-  padding-right:24px;
-}
-.pairer-result{
-  border:1px solid var(--black);border-radius:8px;padding:18px 18px 14px;
-  display:none;
-}
-.pairer-result.visible{display:block}
-.pairer-score-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.pairer-score-circle{
-  width:54px;height:54px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.1rem;font-weight:700;border:2px solid var(--black);
-}
-.pairer-score-circle.high{border-color:var(--fam-green);color:var(--fam-green)}
-.pairer-score-circle.mid{border-color:var(--fam-amber);color:var(--fam-amber)}
-.pairer-score-circle.low{border-color:var(--fam-oud);color:var(--fam-oud)}
-.pairer-verdict{font-size:.8rem;font-weight:600;line-height:1.3}
-.pairer-reasoning{font-size:.72rem;color:var(--g500);line-height:1.6;margin-top:6px}
-.pairer-pyramids{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;border-top:1px solid var(--g200);padding-top:14px}
-.pairer-pyramid-col{display:flex;flex-direction:column;gap:5px}
-.pairer-pyr-label{font-size:.6rem;font-weight:600;color:var(--g450);letter-spacing:.02em;margin-bottom:2px}
-.pairer-pyr-row{font-size:.68rem;color:var(--g600)}
-.pairer-pyr-tier{font-size:.58rem;color:var(--g400);display:block}
-/* ── Commit 3: Catalog tab shows landing on first load ── */
 
 /* ══ ROLES ════════════════════════════════════════════════════ */
 .rs{padding:18px 0 22px;border-bottom:1px solid var(--g200)}
@@ -1593,56 +1474,13 @@ function buildRoles(){
   });
 }
 
-/* ══ COMMIT 3: ROLE-FIRST LANDING ══════════════════════════════════ */
-function buildRoleLanding(){
-  const body=document.getElementById('cat-body');body.innerHTML='';
-  const wrap=document.createElement('div');wrap.className='role-landing';
-  const lbl=document.createElement('div');lbl.className='sec-label';
-  lbl.innerHTML='<span>What are you wearing it for?</span><span class="sub">Pick a role to explore</span>';
-  wrap.appendChild(lbl);
-  const grid=document.createElement('div');grid.className='role-landing-grid';
-  ROLES.forEach(role=>{
-    const frags=CAT.filter(f=>f.roles.includes(role.id));
-    const card=document.createElement('button');card.className='role-landing-card';
-    card.innerHTML=`<div class="rlc-sym">${role.sym}</div>
-      <div class="rlc-name">${role.name}</div>
-      <div class="rlc-desc">${role.desc}</div>
-      <div class="rlc-count">${frags.length} fragrances</div>`;
-    card.addEventListener('click',()=>{
-      document.getElementById('cat-role-filter').value=role.id;
-      buildCatalog(role.id);
-    });
-    grid.appendChild(card);
-  });
-  wrap.appendChild(grid);body.appendChild(wrap);
-}
-
 /* ══ BUILD CATALOG ══════════════════════════════════════════════════ */
-function buildCatalog(roleFilter){
-  roleFilter=roleFilter||null;
+function buildCatalog(){
   const body=document.getElementById('cat-body');body.innerHTML='';
-
-  // Role filter bar
-  const filterBar=document.createElement('div');filterBar.className='cat-filter-bar';
-  const allBtn=document.createElement('button');
-  allBtn.className='tab'+(roleFilter===null?' active':'');
-  allBtn.textContent='All';
-  allBtn.addEventListener('click',()=>buildCatalog(null));
-  filterBar.appendChild(allBtn);
-  ROLES.forEach(r=>{
-    const btn=document.createElement('button');
-    btn.className='tab'+(roleFilter===r.id?' active':'');
-    btn.innerHTML=`${r.sym} ${r.name}`;
-    btn.addEventListener('click',()=>buildCatalog(r.id));
-    filterBar.appendChild(btn);
-  });
-  body.appendChild(filterBar);
-
-  let visibleCat=roleFilter?CAT.filter(f=>f.roles.includes(roleFilter)):CAT;
-  const brands=[...new Set(visibleCat.map(f=>f.brand))];
+  const brands=[...new Set(CAT.map(f=>f.brand))];
   brands.forEach(brand=>{
-    const frags=visibleCat.filter(f=>f.brand===brand);
-    const key=brand.replace(/\s+/g,'-')+(roleFilter||'');
+    const frags=CAT.filter(f=>f.brand===brand);
+    const key=brand.replace(/\s+/g,'-');
     const sec=document.createElement('div');sec.className='cat-section';
     sec.innerHTML=`<div class="brand-hdr"><div class="brand-n">${brand}</div><div class="brand-c" id="bc-${key}"></div></div>`;
     const list=document.createElement('div');list.className='scent-list';
@@ -1660,28 +1498,16 @@ function buildCatalog(roleFilter){
       const row=document.createElement('div');row.dataset.id=frag.id;
       renderCatRow(row,frag,fm);list.appendChild(row);
     });
-    sec.appendChild(list);body.appendChild(sec);
-    // update brand count
-    const bcEl=document.getElementById(`bc-${key}`);
-    if(bcEl){const o=frags.filter(f=>isOwned(f.id)).length,w=frags.filter(f=>isWish(f.id)).length;bcEl.textContent=[o&&`${o} owned`,w&&`${w} wished`].filter(Boolean).join(' · ')}
+    sec.appendChild(list);body.appendChild(sec);updBC(brand,key);
   });
   updCC();
-  // hidden select for filter state (used by role landing)
-  let sel=document.getElementById('cat-role-filter');
-  if(!sel){sel=document.createElement('select');sel.id='cat-role-filter';sel.style.display='none';document.body.appendChild(sel);}
-  sel.value=roleFilter||'';
 }
 
 function renderCatRow(row,frag,fm){
   const st=gst(frag.id);
   row.className=`scent-row s-${st}`;
-  row.dataset.family=frag.family;
   const cc=st==='owned'?'✓':st==='wish'?'~':'';
-  // Commit 2: role glyph with symLine tooltip
-  const syms=frag.roles.map(rid=>{
-    const r=RM[rid];if(!r)return'';
-    return `<span class="s-sym">${r.sym}<span class="s-sym-tip">${r.symLine}</span></span>`;
-  }).join('');
+  const syms=frag.roles.map(rid=>{const r=RM[rid];return r?`<span class="s-sym">${r.sym}</span>`:''}).join('');
   row.innerHTML=`<div class="s-check">${cc}</div>
     <div class="s-fdot" style="background:${fm.color}"></div>
     <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${frag.top}</div></div>
@@ -1789,149 +1615,12 @@ Promise.all([
   CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   // Now initialize
-  buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildConstellation();buildPairer();showOnboard();
+  buildCapsule();buildRoles();buildCatalog();buildNotes();showOnboard();
   if(window.innerWidth<768){
     const btn=document.querySelector('.mbn-btn');
     if(btn)goMobile('scentmap',btn);
   }
 });
-
-/* ══ COMMIT 4: NOTE CONSTELLATION ═══════════════════════════════════ */
-function buildConstellation(){
-  const notesBody=document.getElementById('notes-body');
-  if(!notesBody)return;
-  const tip=document.createElement('div');tip.className='constellation-tooltip';document.body.appendChild(tip);
-  const wrap=document.createElement('div');wrap.className='constellation-wrap';
-  const lbl=document.createElement('div');lbl.className='sec-label';
-  lbl.innerHTML='<span>Note Constellation</span><span class="sub">Size = catalog frequency — click any node to filter</span>';
-  wrap.appendChild(lbl);
-  const canvas=document.createElement('canvas');canvas.className='constellation-canvas';
-  wrap.appendChild(canvas);
-  const freq={};
-  CAT.forEach(f=>['top','mid','base'].forEach(tier=>(f[tier]||'').split(',').map(s=>s.trim().toLowerCase()).forEach(n=>{freq[n]=(freq[n]||0)+1;})));
-  const FAM_COLORS={woody:'#8B7355',floral:'#C8A4A5',amber:'#B8860B',citrus:'#D4A847',leather:'#5C4033',oud:'#3D1A24',green:'#6B7C5C',chypre:'#7A8B6F',gourmand:'#C4956A'};
-  const nodes=NI.map((n,i)=>({...n,id:i,freq:freq[n.name.toLowerCase()]||0,x:0.1+Math.random()*0.8,y:0.1+Math.random()*0.8,vx:0,vy:0}));
-  function getR(n){return 4+Math.min(n.freq*2.8,16);}
-  function draw(){
-    const W=canvas.offsetWidth||200,H=canvas.offsetHeight||200;
-    if(canvas.width!==W||canvas.height!==H){canvas.width=W;canvas.height=H;}
-    const ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);
-    nodes.forEach(n=>{
-      const r=getR(n),col=FAM_COLORS[n.family]||'#aaa',x=n.x*W,y=n.y*H;
-      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
-      ctx.fillStyle=col+'bb';ctx.fill();
-      ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.stroke();
-      if(r>=9){ctx.fillStyle='#0a0a0a';ctx.font=`${Math.max(9,Math.min(r*0.9,13))}px "Source Serif 4",Georgia,serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n.name,x,y);}
-    });
-  }
-  let tc=0;
-  function tick(){
-    nodes.forEach(a=>nodes.forEach(b=>{
-      if(a===b)return;
-      const dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy)||.001,minD=0.1;
-      if(dist<minD){const f=(minD-dist)/dist*0.07;a.vx+=dx*f;a.vy+=dy*f;}
-    }));
-    nodes.forEach(a=>{a.x=Math.max(.02,Math.min(.98,a.x+a.vx*.7));a.y=Math.max(.02,Math.min(.98,a.y+a.vy*.7));a.vx*=.78;a.vy*=.78;});
-    draw();if(++tc<90)requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-  canvas.addEventListener('mousemove',e=>{
-    const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
-    const W=canvas.width,H=canvas.height;let hit=null;
-    nodes.forEach(n=>{const r=getR(n),dx=(n.x-mx)*W,dy=(n.y-my)*H;if(Math.sqrt(dx*dx+dy*dy)<r+6)hit=n;});
-    if(hit){
-      const inCat=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||'').toLowerCase().split(',').map(s=>s.trim()).includes(hit.name.toLowerCase())));
-      tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';
-      tip.innerHTML=`<strong>${hit.name}</strong><br>${hit.desc}<br><span style="opacity:.6;font-size:.6rem">${inCat.length} fragrance${inCat.length!==1?'s':''} in catalog</span>`;
-      canvas.style.cursor='pointer';
-    } else {tip.style.display='none';canvas.style.cursor='grab';}
-  });
-  canvas.addEventListener('mouseleave',()=>{tip.style.display='none';canvas.style.cursor='grab';});
-  canvas.addEventListener('click',e=>{
-    const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
-    const W=canvas.width,H=canvas.height;
-    nodes.forEach(n=>{
-      const r=getR(n),dx=(n.x-mx)*W,dy=(n.y-my)*H;
-      if(Math.sqrt(dx*dx+dy*dy)<r+6){
-        document.querySelectorAll('[data-panel]').forEach(t=>t.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-        const catTab=document.querySelector('[data-panel="catalog"]');
-        if(catTab){catTab.classList.add('active');document.getElementById('p-catalog')?.classList.add('active');}
-        const body=document.getElementById('cat-body');body.innerHTML='';
-        const matched=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||'').toLowerCase().split(',').map(s=>s.trim()).includes(n.name.toLowerCase())));
-        const hdr=document.createElement('div');hdr.className='sec-label';
-        hdr.innerHTML=`<span>Note: ${n.name}</span><span class="sub"><button class="tab" style="font-size:.65rem;padding:2px 8px" onclick="buildRoleLanding()">Clear ×</button></span>`;
-        body.appendChild(hdr);
-        const list=document.createElement('div');list.className='scent-list';
-        matched.forEach(frag=>{const fm=FAM[frag.family]||{color:'#888'};const row=document.createElement('div');row.dataset.id=frag.id;renderCatRow(row,frag,fm);list.appendChild(row);});
-        body.appendChild(list);
-      }
-    });
-  });
-  const legend=document.createElement('div');legend.className='constellation-legend';
-  [['woody','Woody'],['floral','Floral'],['amber','Amber'],['citrus','Citrus'],['leather','Leather'],['oud','Oud'],['green','Green'],['chypre','Chypre'],['gourmand','Gourmand']].forEach(([k,label])=>{
-    const item=document.createElement('div');item.className='cl2-item';
-    item.innerHTML=`<div class="cl2-dot" style="background:${FAM_COLORS[k]}"></div>${label}`;
-    legend.appendChild(item);
-  });
-  wrap.appendChild(legend);
-  notesBody.insertBefore(wrap,notesBody.firstChild);
-}
-
-/* ══ COMMIT 5: LAYERING PAIRER ═══════════════════════════════════ */
-function buildPairer(){
-  const COMPAT={
-    woody:  {woody:.7,floral:.8,amber:.9,citrus:.6,leather:.8,oud:.9,green:.6,chypre:.7,gourmand:.5},
-    floral: {woody:.8,floral:.5,amber:.7,citrus:.7,leather:.5,oud:.6,green:.8,chypre:.8,gourmand:.5},
-    amber:  {woody:.9,floral:.7,amber:.5,citrus:.4,leather:.8,oud:.9,green:.4,chypre:.6,gourmand:.8},
-    citrus: {woody:.6,floral:.7,amber:.4,citrus:.4,leather:.4,oud:.3,green:.9,chypre:.7,gourmand:.3},
-    leather:{woody:.8,floral:.5,amber:.8,citrus:.4,leather:.4,oud:.9,green:.5,chypre:.7,gourmand:.4},
-    oud:    {woody:.9,floral:.6,amber:.9,citrus:.3,leather:.9,oud:.3,green:.3,chypre:.5,gourmand:.6},
-    green:  {woody:.6,floral:.8,amber:.4,citrus:.9,leather:.5,oud:.3,green:.4,chypre:.9,gourmand:.3},
-    chypre: {woody:.7,floral:.8,amber:.6,citrus:.7,leather:.7,oud:.5,green:.9,chypre:.4,gourmand:.4},
-    gourmand:{woody:.5,floral:.5,amber:.8,citrus:.3,leather:.4,oud:.6,green:.3,chypre:.4,gourmand:.4},
-  };
-  const rolesBody=document.getElementById('roles-body');
-  if(!rolesBody)return;
-  const wrap=document.createElement('div');wrap.className='pairer-wrap';
-  const lbl=document.createElement('div');lbl.className='sec-label';
-  lbl.innerHTML='<span>Layering Pairer</span><span class="sub">Compatibility scored from pyramid & family</span>';
-  wrap.appendChild(lbl);
-  const selRow=document.createElement('div');selRow.className='pairer-selectors';
-  function makeSelect(labelText){
-    const g=document.createElement('div');g.className='pairer-select-group';
-    const lbl2=document.createElement('div');lbl2.className='pairer-select-label';lbl2.textContent=labelText;
-    const sel=document.createElement('select');sel.className='pairer-select';
-    sel.innerHTML='<option value="">— Choose —</option>'+CAT.map(f=>`<option value="${f.id}">${f.name} · ${f.brand}</option>`).join('');
-    g.appendChild(lbl2);g.appendChild(sel);return{g,sel};
-  }
-  const A=makeSelect('First fragrance'),B=makeSelect('Second fragrance');
-  selRow.appendChild(A.g);selRow.appendChild(B.g);wrap.appendChild(selRow);
-  const result=document.createElement('div');result.className='pairer-result';wrap.appendChild(result);
-  function computePair(){
-    const fa=CAT_MAP[A.sel.value],fb=CAT_MAP[B.sel.value];
-    if(!fa||!fb||fa.id===fb.id){result.className='pairer-result';return;}
-    const famScore=COMPAT[fa.family]?.[fb.family]??0.5;
-    const layerScore=1-Math.abs(fa.layering-fb.layering)/9*0.5;
-    const baseA=fa.base.toLowerCase().split(',').map(s=>s.trim());
-    const baseB=fb.base.toLowerCase().split(',').map(s=>s.trim());
-    const shared=baseA.filter(n=>baseB.some(m=>m.includes(n)||n.includes(m)));
-    const score=Math.max(10,Math.min(99,Math.round((famScore*.55+layerScore*.45-Math.min(shared.length*.12,.3))*100)));
-    const grade=score>=72?'high':score>=50?'mid':'low';
-    const verdict=score>=72?'Strong pairing — wear together':score>=50?'Workable — apply carefully':'Likely to compete';
-    const why=[];
-    if(famScore>=.8)why.push(`${fa.family} + ${fb.family} families complement naturally`);
-    else if(famScore<=.4)why.push(`${fa.family} and ${fb.family} can fight for the same register`);
-    else why.push(`${fa.family} and ${fb.family} are neutral together`);
-    if(Math.abs(fa.layering-fb.layering)<=2)why.push(`similar complexity (${fa.layering} vs ${fb.layering}) — apply in either order`);
-    else{const first=fa.layering>fb.layering?fa:fb;why.push(`complexity gap of ${Math.abs(fa.layering-fb.layering)} — apply ${first.name} first`);}
-    if(shared.length)why.push(`shared base: ${shared.join(', ')} — may deepen or feel redundant`);
-    result.className='pairer-result visible';
-    result.innerHTML=`<div class="pairer-score-row"><div class="pairer-score-circle ${grade}">${score}</div><div style="flex:1"><div class="pairer-verdict">${verdict}</div><div class="pairer-reasoning">${why.join('. ')}.</div></div></div><div class="pairer-pyramids"><div class="pairer-pyramid-col"><div class="pairer-pyr-label">${fa.name}</div><div class="pairer-pyr-row"><span class="pairer-pyr-tier">TOP</span>${fa.top}</div><div class="pairer-pyr-row"><span class="pairer-pyr-tier">MID</span>${fa.mid}</div><div class="pairer-pyr-row"><span class="pairer-pyr-tier">BASE</span>${fa.base}</div></div><div class="pairer-pyramid-col"><div class="pairer-pyr-label">${fb.name}</div><div class="pairer-pyr-row"><span class="pairer-pyr-tier">TOP</span>${fb.top}</div><div class="pairer-pyr-row"><span class="pairer-pyr-tier">MID</span>${fb.mid}</div><div class="pairer-pyr-row"><span class="pairer-pyr-tier">BASE</span>${fb.base}</div></div></div>`;
-  }
-  A.sel.addEventListener('change',computePair);B.sel.addEventListener('change',computePair);
-  rolesBody.parentElement.insertBefore(wrap,rolesBody);
-}
 
 // Load and render changelog
 fetch('CHANGELOG.md').then(r=>r.text()).then(md=>{
