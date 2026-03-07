@@ -426,6 +426,21 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .pairer-pyr-label{font-size:.6rem;font-weight:600;color:var(--g450);letter-spacing:.02em;margin-bottom:2px}
 .pairer-pyr-row{font-size:.68rem;color:var(--g600)}
 .pairer-pyr-tier{font-size:.58rem;color:var(--g400);display:block}
+/* ── Bug fix: mobile bottom sheets — prevent stacking ── */
+.mobile-sheet{
+  position:fixed;inset:0;z-index:200;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  background:rgba(0,0,0,.35);
+  opacity:0;pointer-events:none;transition:opacity .22s;
+}
+.mobile-sheet.open{opacity:1;pointer-events:all}
+.mobile-sheet-inner{
+  background:#fff;border-radius:16px 16px 0 0;
+  max-height:85vh;overflow-y:auto;
+  padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px));
+  transform:translateY(100%);transition:transform .28s cubic-bezier(.16,1,.3,1);
+}
+.mobile-sheet.open .mobile-sheet-inner{transform:translateY(0)}
 /* ── Commit 3: Catalog tab shows landing on first load ── */
 
 /* ══ ROLES ════════════════════════════════════════════════════ */
@@ -1273,13 +1288,14 @@ function renderNoteDetail(container,note){
   container.innerHTML=`<div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
-    ${inf.length?`<div class="np-frags">In catalog: <span id="_nfl"></span></div>`:''}`;
+    ${inf.length?`<div class="np-frags" style="margin-top:14px"><div style="font-size:.64rem;font-weight:600;color:var(--g450);letter-spacing:.02em;margin-bottom:6px">In catalog (${inf.length})</div><div id="_nfl"></div></div>`:''}`;
   if(inf.length){
     const span=container.querySelector('#_nfl');
-    inf.forEach((f,i)=>{
+    inf.forEach(f=>{
+      const row=document.createElement('div');row.style.cssText='margin:2px 0';
       const btn=document.createElement('button');btn.className='np-frag-link';btn.textContent=f.name;
-      btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f))});
-      span.appendChild(btn);if(i<inf.length-1)span.appendChild(document.createTextNode(', '));
+      btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
+      row.appendChild(btn);span.appendChild(row);
     });
   }
 }
@@ -1654,6 +1670,7 @@ function buildCatalog(roleFilter){
       const fm=FAM[frag.family]||{color:'#888'};
       if(checkEl){cycleState(id);if(isOwned(id))window.haptic?.('medium');renderCatRow(row,frag,fm);updBC(brand,key);updCC();syncDots(id);buildCapsule()}
       else if(nameEl){openFragDetail(frag)}
+      else if(!checkEl){openFragDetail(frag)}
     });
     frags.forEach(frag=>{
       const fm=FAM[frag.family]||{color:'#888'};
@@ -1813,9 +1830,13 @@ function buildConstellation(){
   const nodes=NI.map((n,i)=>({...n,id:i,freq:freq[n.name.toLowerCase()]||0,x:0.1+Math.random()*0.8,y:0.1+Math.random()*0.8,vx:0,vy:0}));
   function getR(n){return 4+Math.min(n.freq*2.8,16);}
   function draw(){
+    const dpr=window.devicePixelRatio||1;
     const W=canvas.offsetWidth||200,H=canvas.offsetHeight||200;
-    if(canvas.width!==W||canvas.height!==H){canvas.width=W;canvas.height=H;}
-    const ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);
+    if(canvas.width!==W*dpr||canvas.height!==H*dpr){
+      canvas.width=W*dpr;canvas.height=H*dpr;
+      canvas.style.width=W+'px';canvas.style.height=H+'px';
+    }
+    const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
     nodes.forEach(n=>{
       const r=getR(n),col=FAM_COLORS[n.family]||'#aaa',x=n.x*W,y=n.y*H;
       ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
@@ -1840,9 +1861,9 @@ function buildConstellation(){
     const W=canvas.width,H=canvas.height;let hit=null;
     nodes.forEach(n=>{const r=getR(n),dx=(n.x-mx)*W,dy=(n.y-my)*H;if(Math.sqrt(dx*dx+dy*dy)<r+6)hit=n;});
     if(hit){
-      const inCat=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||'').toLowerCase().split(',').map(s=>s.trim()).includes(hit.name.toLowerCase())));
+      const inCat=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||'').toLowerCase().split(',').map(s=>s.trim()).includes(hit.name.toLowerCase()))).sort((a,b)=>a.name.localeCompare(b.name));
       tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';
-      tip.innerHTML=`<strong>${hit.name}</strong><br>${hit.desc}<br><span style="opacity:.6;font-size:.6rem">${inCat.length} fragrance${inCat.length!==1?'s':''} in catalog</span>`;
+      tip.innerHTML=`<strong>${hit.name}</strong><br>${hit.desc}<br><span style="opacity:.6;font-size:.6rem">${inCat.length} fragrance${inCat.length!==1?'s':''}: ${inCat.map(f=>f.name).join(', ')}</span>`;
       canvas.style.cursor='pointer';
     } else {tip.style.display='none';canvas.style.cursor='grab';}
   });
@@ -1902,7 +1923,8 @@ function buildPairer(){
     const g=document.createElement('div');g.className='pairer-select-group';
     const lbl2=document.createElement('div');lbl2.className='pairer-select-label';lbl2.textContent=labelText;
     const sel=document.createElement('select');sel.className='pairer-select';
-    sel.innerHTML='<option value="">— Choose —</option>'+CAT.map(f=>`<option value="${f.id}">${f.name} · ${f.brand}</option>`).join('');
+    const sorted=[...CAT].sort((a,b)=>a.name.localeCompare(b.name));
+    sel.innerHTML='<option value="">— Choose —</option>'+sorted.map(f=>`<option value="${f.id}">${f.name} · ${f.brand}</option>`).join('');
     g.appendChild(lbl2);g.appendChild(sel);return{g,sel};
   }
   const A=makeSelect('First fragrance'),B=makeSelect('Second fragrance');
