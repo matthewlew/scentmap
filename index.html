@@ -1320,13 +1320,16 @@ function openNotePopup(note,triggerEl){
   document.getElementById('np-name').textContent=note.name;
   document.getElementById('np-family').textContent=fm.label;
   document.getElementById('np-desc').textContent=note.desc;
+  const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
-  if(inf.length){
-    fe.appendChild(document.createTextNode('In catalog: '));
-    inf.forEach((f,i)=>{
+  if(sortedInf.length){
+    const lbl=document.createElement('div');lbl.style.cssText='font-size:.64rem;font-weight:600;color:var(--g450);margin-bottom:5px';lbl.textContent=`In catalog (${sortedInf.length})`;
+    fe.appendChild(lbl);
+    sortedInf.forEach(f=>{
+      const row=document.createElement('div');row.style.cssText='margin:2px 0';
       const btn=document.createElement('button');btn.className='np-frag-link';btn.textContent=f.name;
       btn.addEventListener('click',e=>{e.stopPropagation();closeNotePopup();openFragDetail(f)});
-      fe.appendChild(btn);if(i<inf.length-1)fe.appendChild(document.createTextNode(', '));
+      row.appendChild(btn);fe.appendChild(row);
     });
   }
   const popup=document.getElementById('note-popup');
@@ -1625,7 +1628,7 @@ function buildRoleLanding(){
       <div class="rlc-desc">${role.desc}</div>
       <div class="rlc-count">${frags.length} fragrances</div>`;
     card.addEventListener('click',()=>{
-      document.getElementById('cat-role-filter').value=role.id;
+      document.getElementById('cat-role-filter')?.remove();
       buildCatalog(role.id);
     });
     grid.appendChild(card);
@@ -1669,8 +1672,7 @@ function buildCatalog(roleFilter){
       const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
       const fm=FAM[frag.family]||{color:'#888'};
       if(checkEl){cycleState(id);if(isOwned(id))window.haptic?.('medium');renderCatRow(row,frag,fm);updBC(brand,key);updCC();syncDots(id);buildCapsule()}
-      else if(nameEl){openFragDetail(frag)}
-      else if(!checkEl){openFragDetail(frag)}
+      else{openFragDetail(frag)}
     });
     frags.forEach(frag=>{
       const fm=FAM[frag.family]||{color:'#888'};
@@ -1826,7 +1828,7 @@ function buildConstellation(){
   wrap.appendChild(canvas);
   const freq={};
   CAT.forEach(f=>['top','mid','base'].forEach(tier=>(f[tier]||'').split(',').map(s=>s.trim().toLowerCase()).forEach(n=>{freq[n]=(freq[n]||0)+1;})));
-  const FAM_COLORS={woody:'#8B7355',floral:'#C8A4A5',amber:'#B8860B',citrus:'#D4A847',leather:'#5C4033',oud:'#3D1A24',green:'#6B7C5C',chypre:'#7A8B6F',gourmand:'#C4956A'};
+  const FAM_COLORS={woody:'#7C5C2E',floral:'#C2547A',amber:'#C98000',citrus:'#D4A000',leather:'#4A2010',oud:'#1A0A14',green:'#3A6B2C',chypre:'#5A7A3A',gourmand:'#A0522D'};
   const nodes=NI.map((n,i)=>({...n,id:i,freq:freq[n.name.toLowerCase()]||0,x:0.1+Math.random()*0.8,y:0.1+Math.random()*0.8,vx:0,vy:0}));
   function getR(n){return 4+Math.min(n.freq*2.8,16);}
   function draw(){
