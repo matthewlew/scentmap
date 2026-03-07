@@ -6,7 +6,7 @@
 <title>Scentmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
 <script>
   window._hapticImpl = type => { try { if(type==='medium')navigator.vibrate?.([25]); else if(type==='success')navigator.vibrate?.([15,50,30]); } catch(e){} };
   window.haptic = type => window._hapticImpl(type);
@@ -20,36 +20,45 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 button,input,select,textarea{font-family:inherit;font-size:inherit}
 :root{
-  --black:#0a0a0a;
-  --g700:#333;
-  --g600:#555;
-  --g500:#666;
-  --g450:#767676;
-  --g400:#888;
-  --g300:#bbb;
-  --g200:#e2e2e2;
-  --g100:#f4f4f4;
-  --white:#fff;
-  --wish:#9A4E10;
+  /* ── Rebrand B1: Warm paper palette ── */
+  --paper:   #F5F2EC;
+  --ink:     #0E0C09;
+  --stone:   #EAE6DE;
+  --warm-mid:#C4BC9E;
+  --resin:   #8C5E30;
+
+  --black:   #0E0C09;
+  --g700:    #2E2A22;
+  --g600:    #50493C;
+  --g500:    #6B6356;
+  --g450:    #7C7468;
+  --g400:    #9A9180;
+  --g300:    #C4BC9E;
+  --g200:    #DDD8CE;
+  --g100:    #EAE6DE;
+  --white:   #F5F2EC;
+  --wish:    #8C5E30;
+
   --col-capsule:280px;
   --col-detail:340px;
   --chart-max:520px;
 
   /* ── Commit 1: Semantic family color system ── */
-  --fam-woody:    #8B7355;
-  --fam-floral:   #C8A4A5;
-  --fam-amber:    #B8860B;
-  --fam-citrus:   #D4A847;
-  --fam-leather:  #5C4033;
-  --fam-oud:      #3D1A24;
-  --fam-green:    #6B7C5C;
-  --fam-chypre:   #7A8B6F;
-  --fam-gourmand: #C4956A;
+  --fam-woody:    #6B4E2A;
+  --fam-floral:   #B5536E;
+  --fam-amber:    #A06800;
+  --fam-citrus:   #8A7000;
+  --fam-leather:  #3E1A08;
+  --fam-oud:      #1E0A12;
+  --fam-green:    #2E5C20;
+  --fam-chypre:   #3C5C2A;
+  --fam-gourmand: #7C3E18;
 }
-html,body{background:#fff;color:#0a0a0a}
+html,body{background:var(--paper);color:var(--ink)}
 html{font-size:16px}
 body{font-family:"Source Serif 4",Georgia,serif;
-  line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+  line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh;
+  font-feature-settings:"onum" 1,"kern" 1;}
 
 /* ══ SHELL ═══════════════════════════════════════════════════ */
 .shell{display:flex;min-height:100vh;max-width:1400px;margin:0 auto}
@@ -67,7 +76,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .col-main-nav{
   display:flex;align-items:center;justify-content:space-between;
   padding:12px 20px 10px;border-bottom:1px solid var(--black);
-  position:sticky;top:0;background:#fff;z-index:50;
+  position:sticky;top:0;background:var(--paper);z-index:50;
 }
 .col-main-content{padding:20px 20px 80px}
 
@@ -77,9 +86,10 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .col-detail{
     width:0;flex-shrink:0;overflow:hidden;
     border-left:0px solid var(--black);
-    transition:width .28s cubic-bezier(.16,1,.3,1), border-left-width .28s;
+    transition:width .48s cubic-bezier(.16,1,.3,1), border-left-width .48s;
     position:sticky;top:0;height:100vh;overflow-y:auto;
     display:flex;flex-direction:column;
+    background:var(--paper);
   }
   .col-detail.open{
     width:var(--col-detail);
@@ -213,18 +223,113 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .detail-inner{padding:16px 18px 60px;flex:1;overflow-y:auto}
 
 /* ══ TABS (shared pattern) ════════════════════════════════════ */
-.tabs{display:flex;gap:2px;background:var(--g100);border-radius:8px;padding:3px}
+.tabs{display:flex;gap:2px;background:var(--stone);border-radius:8px;padding:3px}
 .tab{
   font-size:.76rem;font-weight:500;color:var(--g500);
   background:none;border:none;cursor:pointer;
   padding:5px 9px;border-radius:5px;white-space:nowrap;
-  transition:color .12s,background .12s;
+  transition:color .16s,background .16s;
 }
 .tab:hover{color:var(--black)}
-.tab.active{color:var(--black);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.tab.active{color:var(--black);background:var(--paper);box-shadow:0 1px 3px rgba(14,12,9,.1)}
 
 /* ══ NAV LOGO ═════════════════════════════════════════════════ */
-.logo{font-size:.82rem;font-weight:400;letter-spacing:.04em;font-style:italic}
+/* Rebrand B2: Editorial type hierarchy */
+.logo{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.72rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;font-style:normal;
+  color:var(--ink);
+}
+/* Rebrand B3: Capsule as object — larger sym, ghosted empties */
+.cap-cell.empty .cap-sym{opacity:.08;font-size:2rem;color:var(--ink)!important}
+.cap-cell.filled .cap-sym{font-size:1.6rem}
+.cap-role{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--g400);margin-bottom:2px;
+}
+.cap-desc-short{font-size:.6rem;color:var(--g450);margin-bottom:10px;line-height:1.35;font-style:italic}
+.cap-primary{font-size:.8rem;font-weight:600;line-height:1.25;margin-bottom:2px;letter-spacing:-.01em}
+.cap-frag-brand{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.6rem;color:var(--g450);letter-spacing:.04em;
+}
+.cap-assign-cta{
+  display:flex;align-items:center;gap:4px;
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--g400);margin-top:4px;
+}
+/* Rebrand B4: Detail panel field notes style */
+.dc-name{
+  font-size:1.5rem;font-weight:300;line-height:1.15;
+  letter-spacing:-.02em;margin-bottom:4px;
+}
+.dc-brand{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.64rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--g450);margin-bottom:20px;
+}
+.dc-nlbl{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.6rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--g400);margin:18px 0 10px;
+}
+.dc-note{
+  display:flex;gap:10px;padding:5px 0;
+  border-bottom:1px solid var(--g200);
+}
+.dc-note:last-of-type{border-bottom:none}
+.dc-nt{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.58rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--g400);
+  width:32px;flex-shrink:0;padding-top:2px;
+}
+.dc-nv{font-size:.82rem;color:var(--g600);line-height:1.5}
+.dc-ftag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 9px 3px 6px;border-radius:4px;
+  color:var(--paper);margin-bottom:18px;
+}
+.dc-slbl{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.6rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--g400);margin-bottom:6px;
+}
+.dc-fill{background:var(--ink);height:2px;border-radius:1px}
+.dc-bar{height:2px;background:var(--g200);border-radius:1px;margin-bottom:4px}
+.dc-sval{font-size:.72rem;color:var(--g500);font-style:italic}
+/* Rebrand B5: Resin accent — owned/assigned states */
+.scent-row.s-owned .s-name-btn{color:var(--ink)}
+.tab.active{color:var(--ink);background:var(--paper);box-shadow:0 1px 3px rgba(14,12,9,.1)}
+.np-frag-link,a{color:var(--ink);text-underline-offset:3px;text-decoration-color:var(--warm-mid)}
+.np-frag-link:hover,a:hover{text-decoration-color:var(--ink)}
+/* Picker and role cards use stone bg */
+.picker-header{background:var(--paper)}
+.picker-hero{background:var(--stone);border-radius:8px;padding:14px;margin-bottom:20px}
+.role-landing-card{
+  background:var(--paper);border:1px solid var(--g200);
+  border-radius:8px;padding:20px 16px;
+  text-align:left;cursor:pointer;
+  transition:background .2s,border-color .2s;
+}
+.role-landing-card:hover{background:var(--stone);border-color:var(--warm-mid)}
+.rlc-sym{font-size:1.8rem;margin-bottom:8px}
+.rlc-name{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.68rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink);margin-bottom:4px;
+}
+.rlc-desc{font-size:.78rem;font-style:italic;color:var(--g500);line-height:1.45;margin-bottom:8px}
+.rlc-count{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.6rem;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--resin);
+}
 
 /* ══ PANELS ═══════════════════════════════════════════════════ */
 .panel{display:none}
@@ -241,11 +346,16 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .changelog-body p{margin:0 0 10px;color:var(--g700)}
 .changelog-body strong{color:var(--black);font-weight:600}
 .sec-label{
-  font-size:.72rem;font-weight:600;letter-spacing:.02em;
-  color:var(--g450);margin-bottom:13px;
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.64rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--g400);margin-bottom:16px;
   display:flex;align-items:center;justify-content:space-between;
 }
-.sec-label .sub{font-weight:400;color:var(--g450);letter-spacing:0;text-transform:none;font-size:.74rem}
+.sec-label .sub{
+  font-family:"Source Serif 4",Georgia,serif;
+  font-weight:400;font-style:italic;color:var(--g450);
+  letter-spacing:0;text-transform:none;font-size:.74rem;
+}
 
 /* ══ CAPSULE ══════════════════════════════════════════════════ */
 .capsule-tagline{font-size:.7rem;color:var(--g500);line-height:1.45;margin-bottom:14px}
@@ -255,12 +365,13 @@ body{font-family:"Source Serif 4",Georgia,serif;
 }
 .cap-cell{
   border-right:1px solid var(--black);border-bottom:1px solid var(--black);
-  padding:11px 10px;display:flex;flex-direction:column;
-  align-items:center;text-align:center;min-height:130px;
-  background:#fff;cursor:pointer;transition:background .12s;
+  padding:14px 12px;display:flex;flex-direction:column;
+  align-items:center;text-align:center;min-height:148px;
+  background:var(--paper);cursor:pointer;
+  transition:background .2s;
   position:relative;
 }
-.cap-cell:hover{background:var(--g100)}
+.cap-cell:hover{background:var(--stone)}
 .cap-role{font-size:.68rem;font-weight:600;color:var(--g500);margin-bottom:1px}
 .cap-desc-short{font-size:.61rem;color:var(--g450);margin-bottom:7px;line-height:1.3}
 .cap-sym{font-size:1.25rem;line-height:1;margin-bottom:7px}
@@ -280,17 +391,21 @@ body{font-family:"Source Serif 4",Georgia,serif;
 /* ══ CATALOG ══════════════════════════════════════════════════ */
 .cat-section{margin-bottom:22px}
 .brand-hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:7px;border-bottom:1px solid var(--black);margin-bottom:9px}
-.brand-n{font-size:.72rem;font-weight:600;letter-spacing:.01em}
+.brand-n{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+}
 .brand-c{font-size:.7rem;color:var(--g450)}
 .scent-list{border:1px solid var(--black);border-radius:7px;overflow:hidden}
 .scent-row{
   display:flex;align-items:center;gap:8px;
-  padding:8px 11px;background:#fff;border-bottom:1px solid var(--g200);
-  transition:background .1s;
+  padding:9px 11px;background:var(--paper);border-bottom:1px solid var(--g200);
+  transition:background .18s;
   border-left:3px solid transparent;
+  cursor:pointer;
 }
 .scent-row:last-child{border-bottom:none}
-.scent-row:hover{background:var(--g100)}
+.scent-row:hover{background:var(--stone)}
 /* Commit 2: family accent border on catalog rows */
 .scent-row[data-family="woody"]  {border-left-color:var(--fam-woody)}
 .scent-row[data-family="floral"] {border-left-color:var(--fam-floral)}
@@ -315,9 +430,9 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .s-sym:hover .s-sym-tip{display:block}
 .s-check{
   width:14px;height:14px;flex-shrink:0;border-radius:3px;
-  border:1px solid var(--g300);background:#fff;
+  border:1px solid var(--g300);background:var(--paper);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .12s;
+  cursor:pointer;transition:all .16s;
   font-size:.66rem;font-weight:700;color:transparent;
 }
 .scent-row.s-wish .s-check{border-color:var(--wish);color:var(--wish)}
