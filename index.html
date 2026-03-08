@@ -936,6 +936,55 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .prof-empty-text{font-size:.84rem;color:var(--g500);margin-bottom:16px}
 .prof-empty-btn{font-size:.8rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:7px;padding:9px 18px;cursor:pointer}
 
+/* ── UX Pass: family/brand/role hover dim ── */
+.scent-row{transition:opacity .15s ease}
+.scent-row.fam-dim{opacity:.22;pointer-events:none}
+
+/* ── UX Pass: layer complexity chip in catalog rows ── */
+.s-layer-chip{font-size:.54rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:10px;background:var(--g100);color:var(--g500);margin-left:5px;flex-shrink:0;align-self:center}
+
+/* ── UX Pass: capsule auto-fill button ── */
+.capsule-auto-btn{display:block;width:100%;font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g500);border:1px solid var(--g200);border-radius:6px;padding:8px 12px;cursor:pointer;background:var(--paper);margin-bottom:12px;transition:border-color .15s,color .15s,background .15s;font-family:"DM Sans",system-ui,sans-serif}
+.capsule-auto-btn:hover{border-color:var(--black);color:var(--ink);background:var(--stone)}
+
+/* ── UX Pass: capsule role legend ── */
+.cap-legend-toggle{display:block;width:100%;text-align:center;font-size:.6rem;color:var(--g400);border:none;background:none;cursor:pointer;padding:10px 0 4px;letter-spacing:.03em;font-family:"DM Sans",system-ui,sans-serif}
+.cap-legend-toggle:hover{color:var(--g600)}
+.cap-legend{display:none;border:1px solid var(--g200);border-radius:8px;margin-top:10px;padding:12px 14px}
+.cap-legend.open{display:block}
+.cap-legend-row{display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid var(--g100)}
+.cap-legend-row:last-child{border-bottom:none}
+.cap-legend-sym{font-size:1rem;width:22px;flex-shrink:0;text-align:center;line-height:1.2}
+.cap-legend-text{flex:1}
+.cap-legend-name{font-size:.72rem;font-weight:600;color:var(--ink);margin-bottom:1px}
+.cap-legend-desc{font-size:.64rem;color:var(--g500);line-height:1.4}
+
+/* ── UX Pass: roles brand filter bar ── */
+.roles-brand-bar{display:flex;gap:5px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.roles-brand-bar::-webkit-scrollbar{display:none}
+.roles-brand-bar .tab{flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:.7rem;font-weight:500;border:1px solid var(--stone);background:transparent;color:var(--ink)}
+.roles-brand-bar .tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* ── UX Pass: profile — best for layering list ── */
+.prof-layer-list{display:flex;flex-direction:column;gap:8px}
+.prof-layer-row{display:flex;align-items:center;gap:10px}
+.prof-layer-rank{font-size:.62rem;color:var(--g400);width:14px;text-align:right;flex-shrink:0}
+.prof-layer-name{font-size:.8rem;flex:1;color:var(--g700)}
+.prof-layer-bar-wrap{width:64px;height:5px;background:var(--g100);border-radius:3px;overflow:hidden;flex-shrink:0}
+.prof-layer-bar{height:100%;border-radius:3px;background:var(--ink)}
+.prof-layer-lbl{font-size:.6rem;color:var(--g450);width:42px;text-align:right;flex-shrink:0}
+
+/* ── UX Pass: profile — pair cards ── */
+.prof-pair-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.prof-pair-card{border:1px solid var(--g200);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:3px}
+.prof-pair-tag{font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g400);margin-bottom:3px;font-family:"DM Sans",system-ui,sans-serif}
+.prof-pair-names{font-size:.76rem;font-weight:600;color:var(--ink);line-height:1.3}
+.prof-pair-why{font-size:.63rem;color:var(--g500);line-height:1.45;margin-top:3px}
+@media(max-width:480px){.prof-pair-cards{grid-template-columns:1fr}}
+
+/* ── UX Pass: pairer layering explainer ── */
+.pairer-explainer{font-size:.72rem;color:var(--g500);line-height:1.65;margin-bottom:16px;padding:10px 14px;background:var(--g100);border-radius:6px;border-left:2px solid var(--g300)}
+
 /* ══ CATALOG SEARCH & STATE FILTER ═══════════════════════════ */
 .cat-topbar{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
 .cat-search-wrap{position:relative}
@@ -1169,6 +1218,19 @@ function scoreSimilarity(a,b){
   const shRoles=a.roles.filter(r=>b.roles.includes(r)).length;
   const roleScore=Math.min(20,shRoles*7);
   return Math.round(famScore+noteScore+sillScore+roleScore);
+}
+
+/* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
+function scoreLayeringPair(a,b){
+  const famComp=FAM_COMPAT[a.family]?.[b.family]??0.5;
+  const famScore=famComp*35;
+  const sillDiff=Math.abs(a.sillage-b.sillage);
+  const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
+  const allA=[...a.top,...a.mid,...a.base].map(n=>n.toLowerCase());
+  const allB=[...b.top,...b.mid,...b.base].map(n=>n.toLowerCase());
+  const shared=allA.filter(n=>allB.includes(n)).length;
+  const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
+  return Math.round(famScore+sillScore+noteScore);
 }
 
 /* Classify how a candidate relates to a source frag for discover shelf */
@@ -1857,8 +1919,54 @@ function renderPicker(container,roleId){
   }
 }
 
+/* ══ AUTO-ASSIGN FROM OWNED ════════════════════════════════════════ */
+function autoAssignFromOwned(){
+  ROLES.forEach(r=>{
+    if(getPrimary(r.id))return; // skip if already assigned
+    const candidates=CAT
+      .filter(f=>f.roles.includes(r.id)&&isOwned(f.id))
+      .sort((a,b)=>b.layering-a.layering);
+    if(candidates[0])assignFrag(r.id,candidates[0].id);
+  });
+}
+
+/* ══ ROW HIGHLIGHT HELPER (family / brand / role hover) ════════════ */
+function highlightRows(attrKey,matchVal){
+  document.querySelectorAll('.scent-row').forEach(row=>{
+    if(matchVal===null){row.classList.remove('fam-dim');return;}
+    let match;
+    if(attrKey==='roles'){
+      const roles=row.dataset.roles||'';
+      match=roles.split(' ').includes(matchVal);
+    } else {
+      match=row.dataset[attrKey]===matchVal;
+    }
+    row.classList.toggle('fam-dim',!match);
+  });
+}
+
 /* ══ BUILD CAPSULE ══════════════════════════════════════════════════ */
 function buildCapsule(){
+  // Auto-fill button — show only if ≥1 role empty AND ≥1 owned frag
+  const scentmapPanel=document.getElementById('p-scentmap');
+  let autoBtn=document.getElementById('capsule-auto-btn');
+  if(!autoBtn){
+    autoBtn=document.createElement('button');
+    autoBtn.id='capsule-auto-btn';
+    autoBtn.className='capsule-auto-btn';
+    autoBtn.textContent='Auto-fill from collection ▸';
+    autoBtn.addEventListener('click',()=>{
+      autoAssignFromOwned();
+      buildCapsule();
+      buildRoles();
+    });
+    const grid=document.getElementById('capsule-grid');
+    scentmapPanel.insertBefore(autoBtn,grid);
+  }
+  const hasOwned=CAT.some(f=>isOwned(f.id));
+  const hasEmpty=ROLES.some(r=>!getPrimary(r.id));
+  autoBtn.style.display=(hasOwned&&hasEmpty)?'block':'none';
+
   const grid=document.getElementById('capsule-grid');grid.innerHTML='';
   ROLES.forEach(role=>{
     const assigned=getAssigned(role.id);
@@ -1870,7 +1978,7 @@ function buildCapsule(){
     cell.className='cap-cell '+(primaryFrag?'filled':'empty');
 
     let inner=`<div class="cap-role">${role.name}</div>
-      <div class="cap-desc-short">${role.desc}</div>
+      <div class="cap-desc-short" style="opacity:${primaryFrag?.55:.45}">${role.desc}</div>
       <div class="cap-sym" style="${symColor?`color:${symColor}`:''}">${role.sym}</div>`;
 
     if(primaryFrag){
@@ -1882,10 +1990,6 @@ function buildCapsule(){
         inner+=`<div class="cap-more">+${assigned.length-1} more</div>`;
       }
       inner+=`</div>`;
-      if(assigned.length>1){
-        const badge=document.createElement('div');
-        // Count badge shown inline above
-      }
     } else {
       inner+=`<div class="cap-assign-cta"><div class="cap-plus">+</div><span>Assign</span></div>`;
     }
@@ -1897,13 +2001,67 @@ function buildCapsule(){
     cell.addEventListener('click',()=>openPicker(role.id));
     grid.appendChild(cell);
   });
+
+  // Role legend — collapsible, below grid
+  let legend=document.getElementById('cap-role-legend');
+  if(!legend){
+    const toggleBtn=document.createElement('button');
+    toggleBtn.className='cap-legend-toggle';
+    toggleBtn.id='cap-legend-toggle';
+    toggleBtn.textContent='What are these roles? ▾';
+    legend=document.createElement('div');
+    legend.className='cap-legend';
+    legend.id='cap-role-legend';
+    legend.innerHTML=ROLES.map(r=>`
+      <div class="cap-legend-row">
+        <div class="cap-legend-sym">${r.sym}</div>
+        <div class="cap-legend-text">
+          <div class="cap-legend-name">${r.name}</div>
+          <div class="cap-legend-desc">${r.long||r.desc}</div>
+        </div>
+      </div>`).join('');
+    toggleBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      legend.classList.toggle('open');
+      toggleBtn.textContent=legend.classList.contains('open')?'Hide roles ▴':'What are these roles? ▾';
+    });
+    scentmapPanel.appendChild(toggleBtn);
+    scentmapPanel.appendChild(legend);
+  }
 }
 
 /* ══ BUILD ROLES ════════════════════════════════════════════════════ */
 function buildRoles(){
   const body=document.getElementById('roles-body');body.innerHTML='';
+
+  // Brand filter bar for roles view
+  const brandBar=document.createElement('div');brandBar.className='roles-brand-bar';
+  const allBrands=[...new Set(CAT.map(f=>f.brand))].sort();
+  const allRoleBtn=document.createElement('button');
+  allRoleBtn.className='tab'+(ROLES_BRAND_FILTER===null?' active':'');
+  allRoleBtn.textContent='All brands';
+  allRoleBtn.addEventListener('click',()=>{
+    ROLES_BRAND_FILTER=null;
+    brandBar.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===allRoleBtn));
+    buildRoles();
+  });
+  brandBar.appendChild(allRoleBtn);
+  allBrands.forEach(brand=>{
+    const btn=document.createElement('button');
+    btn.className='tab'+(ROLES_BRAND_FILTER===brand?' active':'');
+    btn.textContent=brand;
+    btn.addEventListener('click',()=>{
+      ROLES_BRAND_FILTER=brand;
+      brandBar.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));
+      buildRoles();
+    });
+    brandBar.appendChild(btn);
+  });
+  body.appendChild(brandBar);
+
   ROLES.forEach(role=>{
-    const frags=CAT.filter(f=>f.roles.includes(role.id));
+    let frags=CAT.filter(f=>f.roles.includes(role.id));
+    if(ROLES_BRAND_FILTER)frags=frags.filter(f=>f.brand===ROLES_BRAND_FILTER);
     const assigned=getAssigned(role.id);
     const oc=frags.filter(f=>isOwned(f.id)).length;
     const wc=frags.filter(f=>isWish(f.id)).length;
@@ -2009,6 +2167,8 @@ function buildRoleLanding(){
 let CAT_ROLE_FILTER=null;
 let CAT_STATE_FILTER=null;
 let CAT_BRAND_FILTER=null;
+let ROLES_BRAND_FILTER=null;
+let CAT_FAM_HOVER=null;
 
 function buildCatalog(roleFilter){
   CAT_ROLE_FILTER=(roleFilter===undefined?CAT_ROLE_FILTER:roleFilter);
@@ -2027,6 +2187,8 @@ function buildCatalog(roleFilter){
     btn.className='tab'+(roleFilter===r.id?' active':'');
     btn.innerHTML=`${r.sym} ${r.name}`;
     btn.addEventListener('click',()=>buildCatalog(r.id));
+    btn.addEventListener('mouseenter',()=>highlightRows('roles',r.id));
+    btn.addEventListener('mouseleave',()=>highlightRows('roles',null));
     filterBar.appendChild(btn);
   });
   body.appendChild(filterBar);
@@ -2115,6 +2277,8 @@ function initCatalogControls(){
       brandBar.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));
       buildCatalog();
     });
+    btn.addEventListener('mouseenter',()=>highlightRows('brand',brand));
+    btn.addEventListener('mouseleave',()=>highlightRows('brand',null));
     brandBar.appendChild(btn);
   });
   // Search input
@@ -2133,13 +2297,20 @@ function renderCatRow(row,frag,fm){
   const st=gst(frag.id);
   row.className=`scent-row s-${st}`;
   row.dataset.family=frag.family;
+  row.dataset.brand=frag.brand;
+  row.dataset.roles=frag.roles.join(' ');
   const syms=frag.roles.map(rid=>{
     const r=RM[rid];if(!r)return'';
     return `<span class="s-sym">${r.sym}<span class="s-sym-tip">${r.symLine}</span></span>`;
   }).join('');
+  const layerChip=frag.layering>=6?`<span class="s-layer-chip">${LW[frag.layering]}</span>`:'';
   row.innerHTML=`<div class="s-fdot" style="background:${fm.color}"></div>
     <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${frag.top.join(', ')}</div></div>
-    <div class="s-syms">${syms}</div>`;
+    <div class="s-syms">${syms}${layerChip}</div>`;
+  // Family hover via fdot
+  const fdot=row.querySelector('.s-fdot');
+  fdot.addEventListener('mouseenter',()=>highlightRows('family',frag.family));
+  fdot.addEventListener('mouseleave',()=>highlightRows('family',null));
 }
 function updBC(brand,key){
   const frags=CAT.filter(f=>f.brand===brand);
@@ -2180,7 +2351,7 @@ function buildNotes(){
 /* ══ NAV ════════════════════════════════════════════════════════════ */
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab)').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.roles-brand-bar .tab)').forEach(t=>t.classList.remove('active'));
   document.getElementById('p-'+id).classList.add('active');
   if(btn)btn.classList.add('active');
   closeDesktopDetail();
@@ -2253,6 +2424,77 @@ function buildProfile(){
       <div class="prof-sill-labels"><span>Skin-level</span><span>Moderate</span><span>Enormous</span></div>
     </div>
   `;
+
+  // — Best for Layering (top 5 owned by layering score)
+  if(owned.length>=1){
+    const layerSorted=[...owned].sort((a,b)=>b.layering-a.layering).slice(0,5);
+    const profEl=document.getElementById('profile-body');
+    const layerSec=document.createElement('div');layerSec.className='prof-section';
+    layerSec.innerHTML=`<div class="prof-section-label">Best for layering</div>`;
+    const list=document.createElement('div');list.className='prof-layer-list';
+    layerSorted.forEach((f,i)=>{
+      const row=document.createElement('div');row.className='prof-layer-row';
+      row.innerHTML=`<div class="prof-layer-rank">${i+1}</div>
+        <div class="prof-layer-name">${f.name}</div>
+        <div class="prof-layer-bar-wrap"><div class="prof-layer-bar" style="width:${f.layering*10}%"></div></div>
+        <div class="prof-layer-lbl">${LW[f.layering]||''}</div>`;
+      list.appendChild(row);
+    });
+    layerSec.appendChild(list);
+    profEl.appendChild(layerSec);
+  }
+
+  // — Similar + Layering Pairs (requires ≥2 owned)
+  if(owned.length>=2){
+    let bestSimScore=0,bestSimPair=null;
+    let bestLayerScore=0,bestLayerPair=null;
+    for(let i=0;i<owned.length;i++){
+      for(let j=i+1;j<owned.length;j++){
+        const a=owned[i],b=owned[j];
+        const ss=scoreSimilarity(a,b);
+        const ls=scoreLayeringPair(a,b);
+        if(ss>bestSimScore){bestSimScore=ss;bestSimPair=[a,b];}
+        if(ls>bestLayerScore){bestLayerScore=ls;bestLayerPair=[a,b];}
+      }
+    }
+    const pairSec=document.createElement('div');pairSec.className='prof-section';
+    pairSec.innerHTML=`<div class="prof-section-label">Collection pairings</div>`;
+    const cards=document.createElement('div');cards.className='prof-pair-cards';
+    if(bestSimPair){
+      const [a,b]=bestSimPair;
+      const shFam=a.family===b.family;
+      const shBase=[...a.base].filter(n=>b.base.includes(n));
+      const why=shFam?`Same ${FAM[a.family]?.label||a.family} family`
+        :shBase.length?`Shared base: ${shBase.slice(0,2).join(', ')}`
+        :`Compatible families`;
+      const card=document.createElement('div');card.className='prof-pair-card';
+      card.innerHTML=`<div class="prof-pair-tag">Most similar</div>
+        <div class="prof-pair-names">${a.name} + ${b.name}</div>
+        <div class="prof-pair-why">${why} · score ${bestSimScore}</div>`;
+      cards.appendChild(card);
+    }
+    if(bestLayerPair&&!(bestLayerPair[0].id===bestSimPair?.[0].id&&bestLayerPair[1].id===bestSimPair?.[1].id)){
+      const [a,b]=bestLayerPair;
+      const complexity=`${LW[a.layering]||a.layering} + ${LW[b.layering]||b.layering}`;
+      const card=document.createElement('div');card.className='prof-pair-card';
+      card.innerHTML=`<div class="prof-pair-tag">Best layering</div>
+        <div class="prof-pair-names">${a.name} + ${b.name}</div>
+        <div class="prof-pair-why">Apply ${a.layering>b.layering?a.name:b.name} first · ${complexity}</div>`;
+      cards.appendChild(card);
+    } else if(bestLayerPair&&cards.children.length<2){
+      // Same pair as most similar — show it in the layering card too
+      const [a,b]=bestLayerPair;
+      const card=document.createElement('div');card.className='prof-pair-card';
+      card.innerHTML=`<div class="prof-pair-tag">Best layering</div>
+        <div class="prof-pair-names">${a.name} + ${b.name}</div>
+        <div class="prof-pair-why">${LW[a.layering]||a.layering} meets ${LW[b.layering]||b.layering}</div>`;
+      cards.appendChild(card);
+    }
+    if(cards.children.length){
+      pairSec.appendChild(cards);
+      document.getElementById('profile-body').appendChild(pairSec);
+    }
+  }
 }
 
 /* ══ ONBOARDING ═════════════════════════════════════════════════════ */
@@ -2382,7 +2624,7 @@ function renderOnboardReveal(){
     </div>
   `;
   document.getElementById('ob-go-catalog').onclick=()=>{closeOnboard();buildCatalog();go('catalog',document.querySelector('.tab[onclick*="catalog"]'));};
-  document.getElementById('ob-go-roles').onclick=()=>{closeOnboard();buildCapsule();buildRoles();go('scentmap',null);};
+  document.getElementById('ob-go-roles').onclick=()=>{closeOnboard();autoAssignFromOwned();buildCapsule();buildRoles();go('scentmap',null);};
 }
 
 /* ══ INIT ═══════════════════════════════════════════════════════════ */
@@ -2505,6 +2747,10 @@ function buildPairer(){
   const lbl=document.createElement('div');lbl.className='sec-label';
   lbl.innerHTML='<span>Layering Pairer</span><span class="sub">Compatibility scored from pyramid & family</span>';
   wrap.appendChild(lbl);
+  const explainer=document.createElement('div');
+  explainer.className='pairer-explainer';
+  explainer.innerHTML='Layering score reflects how well a fragrance sits beneath or on top of another. <strong>High = complex structure</strong> that blends well with a second scent. <strong>Low = clean, linear</strong> — best worn solo. When pairing, apply the higher-complexity fragrance first as a base.';
+  wrap.appendChild(explainer);
   const selRow=document.createElement('div');selRow.className='pairer-selectors';
   function makeSelect(labelText){
     const g=document.createElement('div');g.className='pairer-select-group';
