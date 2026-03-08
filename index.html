@@ -956,6 +956,11 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cat-search-clear.visible{display:block}
 .cat-state-bar{display:flex;background:var(--stone);border-radius:8px;padding:3px;gap:2px}
 .cat-state-bar .tab{flex:1;text-align:center}
+.cat-brand-bar{display:flex;gap:5px;overflow-x:auto;padding:6px 0 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cat-brand-bar::-webkit-scrollbar{display:none}
+.cat-brand-bar .tab{flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:.7rem;font-weight:500;border:1px solid var(--stone);background:transparent;color:var(--ink)}
+.cat-brand-bar .tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.brand-count-chip{font-size:.82em;font-weight:400;opacity:.6;margin-left:3px}
 .cat-empty{padding:32px 0;text-align:center;color:var(--g500);font-size:.84rem}
 
 /* ══ MOBILE BOTTOM NAV ════════════════════════════════════════ */
@@ -1005,6 +1010,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
         <div class="cat-topbar">
           <div class="sec-label" style="margin-bottom:0">Catalog <span class="sub" id="cat-count"></span></div>
           <div class="cat-state-bar" id="cat-state-bar"></div>
+          <div class="cat-brand-bar" id="cat-brand-bar"></div>
           <div class="cat-search-wrap">
             <input type="search" id="cat-search" class="cat-search-input" placeholder="Search fragrances, brands, notes…" autocomplete="off">
             <button class="cat-search-clear" id="cat-search-clear" aria-label="Clear search">✕</button>
@@ -2002,6 +2008,7 @@ function buildRoleLanding(){
 /* ══ BUILD CATALOG ══════════════════════════════════════════════════ */
 let CAT_ROLE_FILTER=null;
 let CAT_STATE_FILTER=null;
+let CAT_BRAND_FILTER=null;
 
 function buildCatalog(roleFilter){
   CAT_ROLE_FILTER=(roleFilter===undefined?CAT_ROLE_FILTER:roleFilter);
@@ -2024,9 +2031,10 @@ function buildCatalog(roleFilter){
   });
   body.appendChild(filterBar);
 
-  // Apply filters: state + search
+  // Apply filters: brand + state + search
   const search=(document.getElementById('cat-search')?.value||'').toLowerCase().trim();
   let visibleCat=roleFilter?CAT.filter(f=>f.roles.includes(roleFilter)):CAT;
+  if(CAT_BRAND_FILTER)visibleCat=visibleCat.filter(f=>f.brand===CAT_BRAND_FILTER);
   if(CAT_STATE_FILTER==='owned')visibleCat=visibleCat.filter(f=>isOwned(f.id));
   else if(CAT_STATE_FILTER==='wish')visibleCat=visibleCat.filter(f=>isWish(f.id));
   if(search)visibleCat=visibleCat.filter(f=>
@@ -2084,6 +2092,30 @@ function initCatalogControls(){
       buildCatalog();
     });
     stateBar.appendChild(btn);
+  });
+  // Brand filter pills
+  const brandBar=document.getElementById('cat-brand-bar');
+  const brands=[...new Set(CAT.map(f=>f.brand))].sort();
+  const allBrandBtn=document.createElement('button');
+  allBrandBtn.className='tab'+(CAT_BRAND_FILTER===null?' active':'');
+  allBrandBtn.innerHTML=`All<span class="brand-count-chip">${CAT.length}</span>`;
+  allBrandBtn.addEventListener('click',()=>{
+    CAT_BRAND_FILTER=null;
+    brandBar.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===allBrandBtn));
+    buildCatalog();
+  });
+  brandBar.appendChild(allBrandBtn);
+  brands.forEach(brand=>{
+    const count=CAT.filter(f=>f.brand===brand).length;
+    const btn=document.createElement('button');
+    btn.className='tab'+(CAT_BRAND_FILTER===brand?' active':'');
+    btn.innerHTML=`${brand}<span class="brand-count-chip">${count}</span>`;
+    btn.addEventListener('click',()=>{
+      CAT_BRAND_FILTER=brand;
+      brandBar.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));
+      buildCatalog();
+    });
+    brandBar.appendChild(btn);
   });
   // Search input
   const searchEl=document.getElementById('cat-search');
@@ -2148,7 +2180,7 @@ function buildNotes(){
 /* ══ NAV ════════════════════════════════════════════════════════════ */
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab)').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab)').forEach(t=>t.classList.remove('active'));
   document.getElementById('p-'+id).classList.add('active');
   if(btn)btn.classList.add('active');
   closeDesktopDetail();

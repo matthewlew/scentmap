@@ -1,0 +1,644 @@
+[
+  {
+    "id": "tf-tobacco-vanille",
+    "brand": "Tom Ford",
+    "name": "Tobacco Vanille",
+    "family": "gourmand",
+    "sillage": 8,
+    "layering": 7,
+    "top": [
+      "Tobacco Leaf",
+      "Spices"
+    ],
+    "mid": [
+      "Tobacco Blossom",
+      "Jasmine"
+    ],
+    "base": [
+      "Vanilla",
+      "Tonka",
+      "Cacao",
+      "Dried Fruits"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "A richly indulgent tobacco wrapped in vanilla and cacao — opulent, warm, and unapologetically sweet."
+  },
+  {
+    "id": "tf-tuscan-leather",
+    "brand": "Tom Ford",
+    "name": "Tuscan Leather",
+    "family": "leather",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Raspberry",
+      "Saffron",
+      "Thyme"
+    ],
+    "mid": [
+      "Jasmine",
+      "Leather"
+    ],
+    "base": [
+      "Amber",
+      "Suede",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "A bold animalic leather sharpened by raspberry and saffron — assertive, polarizing, and unmistakably confident."
+  },
+  {
+    "id": "tf-oud-wood",
+    "brand": "Tom Ford",
+    "name": "Oud Wood",
+    "family": "oud",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Rosewood",
+      "Cardamom",
+      "Chinese Pepper"
+    ],
+    "mid": [
+      "Oud",
+      "Sandalwood",
+      "Vetiver"
+    ],
+    "base": [
+      "Tonka",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "A refined, smoky oud balanced with rosewood and cardamom — more wearable than most ouds, quietly luxurious."
+  },
+  {
+    "id": "tf-noir-de-noir",
+    "brand": "Tom Ford",
+    "name": "Noir de Noir",
+    "family": "floral",
+    "sillage": 8,
+    "layering": 8,
+    "top": [
+      "Black Truffle",
+      "Saffron",
+      "Black Pepper"
+    ],
+    "mid": [
+      "Rose",
+      "Oud",
+      "Vanilla"
+    ],
+    "base": [
+      "Patchouli",
+      "Oakmoss",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "An opulent nocturnal rose layered over black truffle and oud — dark, sensual, and ceremonialy rich."
+  },
+  {
+    "id": "tf-rose-prick",
+    "brand": "Tom Ford",
+    "name": "Rose Prick",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Berry",
+      "Ginger"
+    ],
+    "mid": [
+      "Rose",
+      "Cyclamen",
+      "Thorns"
+    ],
+    "base": [
+      "Patchouli",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A defiant modern rose — thorny and green, brightened by berry and given attitude by earthy patchouli."
+  },
+  {
+    "id": "tf-neroli-portofino",
+    "brand": "Tom Ford",
+    "name": "Neroli Portofino",
+    "family": "citrus",
+    "sillage": 6,
+    "layering": 4,
+    "top": [
+      "Neroli",
+      "Bergamot",
+      "Mandarin"
+    ],
+    "mid": [
+      "Thyme",
+      "Rosemary",
+      "Lavender"
+    ],
+    "base": [
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A sun-drenched Italian Riviera citrus — clean, airy, and instantly transporting, best worn in warm light."
+  },
+  {
+    "id": "tf-soleil-blanc",
+    "brand": "Tom Ford",
+    "name": "Soleil Blanc",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Cardamom"
+    ],
+    "mid": [
+      "Ylang-Ylang",
+      "Jasmine",
+      "Tiare"
+    ],
+    "base": [
+      "Sandalwood",
+      "Coconut",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "signature"
+    ],
+    "description": "A luminous, creamy solar scent with tiare and ylang over coconut sandalwood — sunlit, warm, and deeply seductive."
+  },
+  {
+    "id": "tf-costa-azzurra",
+    "brand": "Tom Ford",
+    "name": "Costa Azzurra",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Marine Accord",
+      "Oakmoss"
+    ],
+    "mid": [
+      "Mastic",
+      "Rosemary",
+      "Amber"
+    ],
+    "base": [
+      "Sandalwood",
+      "Cypress",
+      "Cedarwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A Mediterranean coastal woody — resinous mastic and oakmoss over dry cypress and sandalwood, salty and sun-warmed."
+  },
+  {
+    "id": "tf-sole-di-positano",
+    "brand": "Tom Ford",
+    "name": "Sole di Positano",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Lemon",
+      "Mandarin",
+      "Neroli"
+    ],
+    "mid": [
+      "Tiare",
+      "Jasmine"
+    ],
+    "base": [
+      "Coconut",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A bright Amalfi coast citrus lifted with tiare and jasmine over a tropical coconut base — effortless summer radiance."
+  },
+  {
+    "id": "tf-ombre-leather",
+    "brand": "Tom Ford",
+    "name": "Ombré Leather",
+    "family": "leather",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Cardamom",
+      "Jasmine"
+    ],
+    "mid": [
+      "Leather",
+      "Patchouli"
+    ],
+    "base": [
+      "Oakmoss",
+      "White Musk"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "A stark, metallic leather with cool jasmine and cardamom — austere and modern, less animalic than Tuscan Leather."
+  },
+  {
+    "id": "tf-santal-blush",
+    "brand": "Tom Ford",
+    "name": "Santal Blush",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cinnamon"
+    ],
+    "mid": [
+      "Rose",
+      "Ylang-Ylang"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "intimate"
+    ],
+    "description": "A soft, creamy sandalwood kissed with warm cinnamon and rose — smooth, understated, and skin-close."
+  },
+  {
+    "id": "tf-white-suede",
+    "brand": "Tom Ford",
+    "name": "White Suede",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cardamom",
+      "Freesia"
+    ],
+    "mid": [
+      "Rose",
+      "Orris"
+    ],
+    "base": [
+      "White Suede",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A powdery, delicate suede with a clean white floral heart — soft, clean, and quietly feminine."
+  },
+  {
+    "id": "tf-coffee-rose",
+    "brand": "Tom Ford",
+    "name": "Coffee Rose",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Coffee",
+      "Saffron",
+      "Cardamom"
+    ],
+    "mid": [
+      "Rose",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Oud",
+      "Vanilla",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Dark roasted coffee amplifies a rich rose over warm oud and vanilla — a deeply aromatic evening fragrance."
+  },
+  {
+    "id": "tf-fucking-fabulous",
+    "brand": "Tom Ford",
+    "name": "Fucking Fabulous",
+    "family": "leather",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Clary Sage",
+      "Orris"
+    ],
+    "mid": [
+      "Leather",
+      "Vetiver"
+    ],
+    "base": [
+      "Tonka",
+      "Almond",
+      "Vanilla"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A provocative leather-almond pairing that straddles masculine and feminine — confident, sweet, and entirely itself."
+  },
+  {
+    "id": "tf-lost-cherry",
+    "brand": "Tom Ford",
+    "name": "Lost Cherry",
+    "family": "gourmand",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Black Cherry",
+      "Bitter Almond"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine"
+    ],
+    "base": [
+      "Tonka",
+      "Sandalwood",
+      "Benzoin"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "A lush, boozy cherry with dark almond and warm benzoin — opulent, addictive, and unapologetically hedonistic."
+  },
+  {
+    "id": "tf-tobacco-oud",
+    "brand": "Tom Ford",
+    "name": "Tobacco Oud",
+    "family": "oud",
+    "sillage": 9,
+    "layering": 7,
+    "top": [
+      "Tobacco",
+      "Saffron"
+    ],
+    "mid": [
+      "Oud",
+      "Rose"
+    ],
+    "base": [
+      "Leather",
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A powerful marriage of raw tobacco and dark oud over rose and leather — dense, commanding, and built for cold evenings."
+  },
+  {
+    "id": "tf-amber-absolute",
+    "brand": "Tom Ford",
+    "name": "Amber Absolute",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 8,
+    "top": [
+      "Saffron",
+      "Ginger"
+    ],
+    "mid": [
+      "Labdanum",
+      "Rose"
+    ],
+    "base": [
+      "Amber",
+      "Myrrh",
+      "Oud"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A voluminous incense-laden amber with saffron and myrrh — near-religious in its richness and gravity."
+  },
+  {
+    "id": "tf-italian-cypress",
+    "brand": "Tom Ford",
+    "name": "Italian Cypress",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Italian Cypress",
+      "Cedar"
+    ],
+    "mid": [
+      "Juniper",
+      "Vetiver"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "heat",
+      "signature"
+    ],
+    "description": "A sharp, vertical green wood built around Mediterranean cypress — elemental, sun-bleached, and architectural."
+  },
+  {
+    "id": "tf-lavender-extreme",
+    "brand": "Tom Ford",
+    "name": "Lavender Extreme",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Lavender",
+      "Bergamot"
+    ],
+    "mid": [
+      "Lavender Absolute",
+      "Cardamom"
+    ],
+    "base": [
+      "Vetiver",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "An intensified lavender pushed toward the aromatic extreme — fuller and denser than a typical fougère, with a warm amber finish."
+  },
+  {
+    "id": "tf-beau-de-jour",
+    "brand": "Tom Ford",
+    "name": "Beau de Jour",
+    "family": "green",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Lavender",
+      "Eucalyptus"
+    ],
+    "mid": [
+      "Geranium",
+      "Thyme"
+    ],
+    "base": [
+      "Oakmoss",
+      "Vetiver",
+      "Amber"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A crisp, elegant fougère rooted in lavender and oakmoss — the quintessential clean barbershop-meets-outdoors masculine."
+  },
+  {
+    "id": "tf-noir-extreme",
+    "brand": "Tom Ford",
+    "name": "Noir Extreme",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Mandarin",
+      "Neroli",
+      "Nutmeg"
+    ],
+    "mid": [
+      "Rose",
+      "Cardamom",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Sandalwood",
+      "Amber",
+      "Vanilla",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A warm, honeyed oriental with creamy sandalwood and nutmeg — richer and more opulent than the standard Noir."
+  },
+  {
+    "id": "tf-black-orchid",
+    "brand": "Tom Ford",
+    "name": "Black Orchid",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 8,
+    "top": [
+      "Black Truffle",
+      "Bergamot",
+      "Ylang-Ylang"
+    ],
+    "mid": [
+      "Black Orchid",
+      "Jasmine",
+      "Spices"
+    ],
+    "base": [
+      "Amber",
+      "Patchouli",
+      "Sandalwood"
+    ],
+    "roles": [
+      "creative",
+      "formal"
+    ],
+    "description": "A dark, Gothic floral chypre — truffle, black orchid, and patchouli collide in Tom Ford's most theatrical signature."
+  },
+  {
+    "id": "tf-velvet-orchid",
+    "brand": "Tom Ford",
+    "name": "Velvet Orchid",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Rum",
+      "Citrus",
+      "Honey"
+    ],
+    "mid": [
+      "Orchid",
+      "Jasmine",
+      "Rose"
+    ],
+    "base": [
+      "Suede",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "A plush, after-dark orchid with rum and honey over velvety suede — sumptuous and seductive."
+  },
+  {
+    "id": "tf-grey-vetiver",
+    "brand": "Tom Ford",
+    "name": "Grey Vetiver",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Grapefruit",
+      "Sage",
+      "Petitgrain"
+    ],
+    "mid": [
+      "Orris",
+      "Geranium"
+    ],
+    "base": [
+      "Vetiver",
+      "Oakmoss",
+      "Amber"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A clean, tailored grey vetiver with sage and grapefruit — quietly authoritative, boardroom-ready without effort."
+  }
+]

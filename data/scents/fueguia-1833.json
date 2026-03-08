@@ -246,6 +246,32 @@
     "description": "Named for the god of wind — a spare, transparent green-citrus evoking Patagonian open air with nothing superfluous."
   },
   {
+    "id": "endeavour",
+    "brand": "Fueguia 1833",
+    "name": "Endeavour",
+    "family": "green",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Pink Pepper",
+      "Lemon"
+    ],
+    "mid": [
+      "Hinoki",
+      "Mint",
+      "Geranium"
+    ],
+    "base": [
+      "Palisander",
+      "Cedar"
+    ],
+    "roles": [
+      "signature",
+      "heat"
+    ],
+    "description": "A crisp botanical green — pink pepper and lemon spark over Japanese hinoki and cool mint, grounded by warm palisander. Named for the spirit of exploration."
+  },
+  {
     "id": "pampeana",
     "brand": "Fueguia 1833",
     "name": "Pampeana",

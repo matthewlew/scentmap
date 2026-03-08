@@ -1,98 +1,887 @@
 [
-  { "name": "African Violet", "family": "floral", "desc": "A soft, powdery violet with a delicate watery quality — warmer and rounder than common violet leaf." },
-  { "name": "Aldehydes", "family": "floral", "desc": "Synthetic molecules producing clean, soapy, waxy brightness — powdery and luminous." },
-  { "name": "Amber", "family": "amber", "desc": "A warm resinous accord of labdanum, benzoin, and vanilla. Rich, golden, slightly powdery." },
-  { "name": "Ambrette", "family": "floral", "desc": "Seed of the musk mallow. Musky, slightly nutty, subtly floral — a natural musk substitute." },
-  { "name": "Angelica", "family": "green", "desc": "Earthy, herbal root note with a slightly musky, bittersweet quality. Bridges green and woody accords." },
-  { "name": "Basil", "family": "green", "desc": "Fresh, anise-like, slightly sweet herbal note. Bright, aromatic, and unexpectedly elegant." },
-  { "name": "Bergamot", "family": "citrus", "desc": "Cold-pressed from a sour Italian citrus rind. Bright, clean, slightly floral." },
-  { "name": "Birch", "family": "woody", "desc": "Smoky, tar-like, and leathery. Used in small doses for a cool forest-smoke effect." },
-  { "name": "Black Currant", "family": "chypre", "desc": "Sharp, tart, slightly catty. The leaf is more vegetal — green and sulfurous." },
-  { "name": "Blackcurrant Leaf", "family": "chypre", "desc": "More vegetal and green than the fruit — sharp, slightly sulfurous, intensely natural." },
-  { "name": "Blood Orange", "family": "citrus", "desc": "Vibrant, tart citrus with a faint dark berry undertone that distinguishes it from standard orange." },
-  { "name": "Cardamom", "family": "amber", "desc": "Spicy, camphoraceous, slightly eucalyptus-like. Warm without being sweet." },
-  { "name": "Cedar", "family": "woody", "desc": "Clean, dry, pencil-shaving woody note. Virginia Cedar lighter; Atlas Cedar creamier." },
-  { "name": "Cedar Milk", "family": "woody", "desc": "A creamy, soft cedar variant — milky and smooth rather than dry and sharp." },
-  { "name": "Cedarwood", "family": "woody", "desc": "Deeper and warmer than cedar. Slightly sweet, balsamic, and smooth." },
-  { "name": "Clove", "family": "amber", "desc": "Spicy, sharp, eugenol-forward. Dense and slightly medicinal." },
-  { "name": "Copal Resin", "family": "amber", "desc": "Sacred tree resin burned as incense across Mesoamerica for millennia. Smoky, slightly piney, and deeply ceremonial — lighter than frankincense but with a similar ritual character." },
-  { "name": "Coconut Water", "family": "gourmand", "desc": "Light, slightly sweet aquatic note with tropical softness." },
-  { "name": "Coriander", "family": "amber", "desc": "Warm, slightly citrusy spice with a faintly earthy, dried-herb character. Drier than cardamom." },
-  { "name": "Cyclamen", "family": "floral", "desc": "Delicate, watery floral with a slightly metallic edge." },
-  { "name": "Cypress", "family": "woody", "desc": "Resinous, dry, slightly smoky. Austere, cool, bitter-green." },
-  { "name": "Driftwood", "family": "woody", "desc": "Sun-bleached, salt-worn wood. Dry, slightly marine." },
-  { "name": "Fig", "family": "green", "desc": "Ripe fig — sweet, milky, and slightly earthy. Rounder and more fruity than fig leaf or fig wood." },
-  { "name": "Fig Leaf", "family": "green", "desc": "Sharper and more vegetal than fig fruit — green, slightly tart, milky at the edges." },
-  { "name": "Fig Milk", "family": "green", "desc": "The milky sap of the fig tree — softly creamy, slightly bitter." },
-  { "name": "Fig Wood", "family": "woody", "desc": "Dry, slightly dusty woody note from the inner branches." },
-  { "name": "Freesia", "family": "floral", "desc": "Light, airy, slightly spiced floral. Clean and transparent with a faint citrus edge." },
-  { "name": "Geranium", "family": "floral", "desc": "Rose-like but sharper — minty, green, slightly metallic." },
-  { "name": "Ginger", "family": "amber", "desc": "Sharp, warm, slightly woody spice. Drier than cardamom." },
-  { "name": "Grapefruit", "family": "citrus", "desc": "Bright, bitter-sweet citrus with a slightly waxy quality." },
-  { "name": "Green Fig", "family": "green", "desc": "Unripe fig — crisp, tart, green. Less creamy than ripe fig." },
-  { "name": "Green Tea", "family": "green", "desc": "Dry, slightly tannic, clean with subtle grassiness. Cooling." },
-  { "name": "Hinoki", "family": "woody", "desc": "Japanese cypress wood. Warm, slightly lemony, and clean." },
-  { "name": "Honeysuckle", "family": "floral", "desc": "Nectar-sweet, light, and transparent floral. Clean, luminous, and effortlessly pretty." },
-  { "name": "Hyacinth", "family": "floral", "desc": "Intensely sweet, watery spring floral with a slightly green, powdery edge." },
-  { "name": "Incense", "family": "oud", "desc": "Smoky, resinous, slightly sweet. From burning resins — meditative and ancient." },
-  { "name": "Iris", "family": "floral", "desc": "Powdery, slightly earthy, and cool. From orris root." },
-  { "name": "Ivy", "family": "green", "desc": "Crisp, clean, slightly bitter green. Herbaceous and watery." },
-  { "name": "Ivy Leaf", "family": "green", "desc": "Cool, slightly metallic green with watery bitterness." },
-  { "name": "Jasmine", "family": "floral", "desc": "Rich, indolic white floral. Slightly animalic and dense." },
-  { "name": "Juniper", "family": "woody", "desc": "Dry, piney, slightly peppery. Northern forests, cold air." },
-  { "name": "Labdanum", "family": "amber", "desc": "A dark, resinous gum from cistus plants. Warm, animalic, amber-like." },
-  { "name": "Lavender", "family": "green", "desc": "Herbaceous, slightly camphorous, softly floral." },
-  { "name": "Leather", "family": "leather", "desc": "A dry, slightly smoky accord evocative of new leather." },
-  { "name": "Lemon", "family": "citrus", "desc": "Bright, sharp, clean citrus. One of the most universally used top notes." },
-  { "name": "Lily of the Valley", "family": "floral", "desc": "Cool, delicate white floral with a watery green stem. Clean, classic, and slightly dewy." },
-  { "name": "Lychee", "family": "gourmand", "desc": "Delicate tropical fruit — sweet, floral, slightly watery. Light and translucent." },
-  { "name": "Magnolia", "family": "floral", "desc": "Fresh, lightly spiced white floral with a hint of citrus." },
-  { "name": "Mandarin", "family": "citrus", "desc": "Sweeter and softer than orange — gentle citrus with a slightly floral undertone." },
-  { "name": "Marigold", "family": "floral", "desc": "Warm, slightly herbal floral with a tart, tomato-leaf edge." },
-  { "name": "Mate", "family": "green", "desc": "Dry, slightly smoky, tea-like. From yerba mate." },
-  { "name": "Mimosa", "family": "floral", "desc": "Soft, powdery, honey-like yellow floral. Warm, slightly solar, and gently animalic." },
-  { "name": "Mint", "family": "green", "desc": "Cool, camphoraceous, and sharp. Immediately refreshing." },
-  { "name": "Musk", "family": "floral", "desc": "A broad category of skin-like base notes — clean, animalic, or transparent." },
-  { "name": "Muslin", "family": "floral", "desc": "A soft, clean textile accord — lightly powdery, slightly soapy." },
-  { "name": "Narcissus", "family": "floral", "desc": "Heady, green-tinged floral — earthy, slightly animalic, and deeply complex." },
-  { "name": "Neroli", "family": "floral", "desc": "Orange blossom distillate — clean, slightly honeyed, gently spicy." },
-  { "name": "Oakmoss", "family": "chypre", "desc": "Damp, mossy, earthy — the defining base note of classic chypre compositions." },
-  { "name": "Orange Blossom", "family": "floral", "desc": "White floral, honeyed, slightly indolic. More intense and waxy than neroli." },
-  { "name": "Oud", "family": "oud", "desc": "Resinous heartwood of infected agarwood. Smoky, dark, and complex." },
-  { "name": "Palisander", "family": "woody", "desc": "Brazilian rosewood. Warm, slightly sweet, and smooth." },
-  { "name": "Papyrus", "family": "woody", "desc": "Dry, slightly dusty, reedy — evocative of aged paper and river grasses." },
-  { "name": "Patchouli", "family": "chypre", "desc": "Dark, earthy, slightly sweet. Improves with age." },
-  { "name": "Peach", "family": "gourmand", "desc": "Soft, ripe, slightly velvety. A gentle fruity modifier." },
-  { "name": "Pear", "family": "gourmand", "desc": "Soft, dewy, slightly floral fruit note. Gentler and more watery than apple." },
-  { "name": "Peony", "family": "floral", "desc": "Soft, rosy-fruity floral — lush but clean. Less dense than rose, more transparent." },
-  { "name": "Pepper", "family": "amber", "desc": "Sharp, dry, slightly smoky. Black pepper adds bite; pink fruitier." },
-  { "name": "Petitgrain", "family": "citrus", "desc": "From leaves and twigs of the bitter orange tree. Woody, green, slightly floral." },
-  { "name": "Pine", "family": "woody", "desc": "Resinous, fresh, slightly camphoraceous. Cold forests." },
-  { "name": "Pink Pepper", "family": "amber", "desc": "Fruity, slightly spicy, and rosy. Less harsh than black pepper." },
-  { "name": "Plum", "family": "gourmand", "desc": "Dark, jammy, slightly fermented. Adds depth to amber compositions." },
-  { "name": "Queen of the Night", "family": "floral", "desc": "A rare nocturnal cactus flower — intensely sweet, creamy, intoxicating." },
-  { "name": "Resin", "family": "amber", "desc": "Warm, sweet, and balsamic tree secretions. Adds richness and longevity." },
-  { "name": "Rhubarb", "family": "green", "desc": "Crisp, tart, slightly earthy stalk note. Unexpectedly elegant and floral in fine fragrance." },
-  { "name": "Rose", "family": "floral", "desc": "The most iconic floral. From fresh Turkish to dark Bulgarian absolute." },
-  { "name": "Rosewood", "family": "woody", "desc": "Sweet, slightly floral woody note with a rose-cedar character." },
-  { "name": "Rum", "family": "gourmand", "desc": "Warm, slightly sweet, and alcoholic. Adds boozy character to amber." },
-  { "name": "Saffron", "family": "amber", "desc": "Deeply warm, slightly sweet, leathery and honeyed. One of the most expensive naturals in perfumery." },
-  { "name": "Salted Amber", "family": "amber", "desc": "Amber with a mineral sea-salt accord — golden and resinous." },
-  { "name": "Sandalwood", "family": "woody", "desc": "Creamy, warm, slightly milky. Mysore sandalwood is most prized." },
-  { "name": "Sapodilla", "family": "gourmand", "desc": "A tropical fruit note — sweet, caramel-brown, slightly smoky." },
-  { "name": "Tangerine", "family": "citrus", "desc": "Sweet, warm citrus — gentler and more golden than lemon, with a soft floral quality." },
-  { "name": "Tea", "family": "green", "desc": "Dry, slightly tannic, clean. Green tea more vegetal; black tea warmer." },
-  { "name": "Thyme", "family": "green", "desc": "Dry, herbal, slightly medicinal. Aromatic and warm with a woody underpinning." },
-  { "name": "Tobacco", "family": "leather", "desc": "Warm, slightly sweet, hay-like. Dry tobacco austere; flower softer." },
-  { "name": "Tonka", "family": "amber", "desc": "Sweet, warm, coumarin-rich. Smells of vanilla, hay, and almond." },
-  { "name": "Tuberose", "family": "floral", "desc": "Dense, creamy, intensely indolic white floral. Heady and complex." },
-  { "name": "Vanilla", "family": "gourmand", "desc": "Sweet, warm, universally appealing. Natural absolute is more complex." },
-  { "name": "Vetiver", "family": "chypre", "desc": "Earthy, smoky, and woody root note. One of the most versatile base notes." },
-  { "name": "Violet", "family": "floral", "desc": "Powdery, slightly sweet, and delicate. Soft and nostalgic." },
-  { "name": "Violet Leaf", "family": "green", "desc": "Green, watery, slightly metallic. Sharper than the flower." },
-  { "name": "White Cedar", "family": "woody", "desc": "Lighter and more airy than standard cedar — clean, slightly resinous." },
-  { "name": "White Musk", "family": "floral", "desc": "The cleanest of musks — transparent, soapy, skin-like." },
-  { "name": "Yellow Oleander", "family": "floral", "desc": "A tropical flowering shrub — warm, honeyed floral, slightly waxy." },
-  { "name": "Ylang-Ylang", "family": "floral", "desc": "Intensely sweet tropical floral with banana and custard undertones. Can dominate a blend." },
-  { "name": "Yuzu", "family": "citrus", "desc": "Japanese citrus — tart, pithy, complex. Somewhere between grapefruit, lemon, and bergamot." }
+  {
+    "name": "African Violet",
+    "family": "floral",
+    "desc": "A soft, powdery violet with a delicate watery quality — warmer and rounder than common violet leaf."
+  },
+  {
+    "name": "Aldehydes",
+    "family": "floral",
+    "desc": "Synthetic molecules producing clean, soapy, waxy brightness — powdery and luminous."
+  },
+  {
+    "name": "Almond",
+    "family": "gourmand",
+    "desc": "Warm, sweet, slightly creamy nut note. A comforting, slightly powdery sweetness often used in gourmand compositions."
+  },
+  {
+    "name": "Amber",
+    "family": "amber",
+    "desc": "A warm resinous accord of labdanum, benzoin, and vanilla. Rich, golden, slightly powdery."
+  },
+  {
+    "name": "Amberwood",
+    "family": "amber",
+    "desc": "A warm, smooth woody amber accord — softer and less resinous than labdanum, with a clean, slightly sweet quality."
+  },
+  {
+    "name": "Ambrette",
+    "family": "floral",
+    "desc": "Seed of the musk mallow. Musky, slightly nutty, subtly floral — a natural musk substitute."
+  },
+  {
+    "name": "Angelica",
+    "family": "green",
+    "desc": "Earthy, herbal root note with a slightly musky, bittersweet quality. Bridges green and woody accords."
+  },
+  {
+    "name": "Apple",
+    "family": "gourmand",
+    "desc": "Fresh, crisp, lightly tart fruit note. Green apple is sharper; red apple sweeter and juicier."
+  },
+  {
+    "name": "Artemisia",
+    "family": "green",
+    "desc": "Bitter, herbaceous, slightly medicinal. From the wormwood family — dry, aromatic, and untamed."
+  },
+  {
+    "name": "Basil",
+    "family": "green",
+    "desc": "Fresh, anise-like, slightly sweet herbal note. Bright, aromatic, and unexpectedly elegant."
+  },
+  {
+    "name": "Bay Leaf",
+    "family": "green",
+    "desc": "Spicy, aromatic, slightly clove-like. Warm and herbal with a distinctive culinary character."
+  },
+  {
+    "name": "Beeswax",
+    "family": "amber",
+    "desc": "Warm, honeyed, lightly floral. The natural wax from honeycombs — golden, slightly sweet, deeply comforting."
+  },
+  {
+    "name": "Benzoin",
+    "family": "amber",
+    "desc": "A sweet, vanilla-like balsamic resin. Warm and powdery with a gentle cinnamon quality. Prized in oriental compositions."
+  },
+  {
+    "name": "Bergamot",
+    "family": "citrus",
+    "desc": "Cold-pressed from a sour Italian citrus rind. Bright, clean, slightly floral."
+  },
+  {
+    "name": "Birch",
+    "family": "woody",
+    "desc": "Smoky, tar-like, and leathery. Used in small doses for a cool forest-smoke effect."
+  },
+  {
+    "name": "Bitter Almond",
+    "family": "gourmand",
+    "desc": "Sharp, intensely almond, slightly medicinal. More forceful than sweet almond — contains a marzipan-like edge."
+  },
+  {
+    "name": "Black Cherry",
+    "family": "gourmand",
+    "desc": "Dark, jammy, slightly smoky cherry. Deeper and richer than fresh cherry, with a hint of wood and wine."
+  },
+  {
+    "name": "Black Currant",
+    "family": "chypre",
+    "desc": "Sharp, tart, slightly catty. The leaf is more vegetal — green and sulfurous."
+  },
+  {
+    "name": "Black Grape",
+    "family": "gourmand",
+    "desc": "Dark, slightly tannic fruit note. Less sweet than table grape — vinous, slightly fermented, with a wine-like quality."
+  },
+  {
+    "name": "Black Orchid",
+    "family": "floral",
+    "desc": "A rich, dark, exotic floral with spice and chocolate undertones. Opulent and somewhat mysterious."
+  },
+  {
+    "name": "Black Pepper",
+    "family": "amber",
+    "desc": "Sharp, forceful, slightly smoky spice. More assertive and darker than pink pepper — adds a dry, biting heat."
+  },
+  {
+    "name": "Black Tea",
+    "family": "green",
+    "desc": "Deeper and more tannic than green tea. Slightly smoky, malty, and warm — evokes a strong afternoon brew."
+  },
+  {
+    "name": "Blackberry",
+    "family": "gourmand",
+    "desc": "Dark, tart, slightly earthy berry. Less sweet than raspberry — more tannic, jammy, and complex."
+  },
+  {
+    "name": "Blackcurrant Leaf",
+    "family": "chypre",
+    "desc": "More vegetal and green than the fruit — sharp, slightly sulfurous, intensely natural."
+  },
+  {
+    "name": "Blood Orange",
+    "family": "citrus",
+    "desc": "Vibrant, tart citrus with a faint dark berry undertone that distinguishes it from standard orange."
+  },
+  {
+    "name": "Cacao",
+    "family": "gourmand",
+    "desc": "Raw, earthy chocolate. Less processed than cocoa — slightly bitter and vegetal with a dark richness."
+  },
+  {
+    "name": "Caramel",
+    "family": "gourmand",
+    "desc": "Sweet, slightly burnt sugar. Warm and indulgent — can range from delicate toffee to dark, almost savory burnt caramel."
+  },
+  {
+    "name": "Cardamom",
+    "family": "amber",
+    "desc": "Spicy, camphoraceous, slightly eucalyptus-like. Warm without being sweet."
+  },
+  {
+    "name": "Casablanca Lily",
+    "family": "floral",
+    "desc": "A full, creamy white lily — opulent, slightly heady, and intensely floral. More lush than standard lily."
+  },
+  {
+    "name": "Cashew",
+    "family": "gourmand",
+    "desc": "Warm, buttery, slightly sweet nut note. Creamy and mellow with a subtle toasted quality."
+  },
+  {
+    "name": "Cashmeran",
+    "family": "woody",
+    "desc": "A synthetic musk-wood with a soft, cozy quality — slightly spicy, woody, and skin-close. Used to add warmth and diffusion."
+  },
+  {
+    "name": "Cashmere",
+    "family": "woody",
+    "desc": "A soft, warm synthetic textile accord. Smooth, slightly powdery, and skin-like — evoking the feel of fine cashmere."
+  },
+  {
+    "name": "Cedar",
+    "family": "woody",
+    "desc": "Clean, dry, pencil-shaving woody note. Virginia Cedar lighter; Atlas Cedar creamier."
+  },
+  {
+    "name": "Cedar Milk",
+    "family": "woody",
+    "desc": "A creamy, soft cedar variant — milky and smooth rather than dry and sharp."
+  },
+  {
+    "name": "Cedarwood",
+    "family": "woody",
+    "desc": "Deeper and warmer than cedar. Slightly sweet, balsamic, and smooth."
+  },
+  {
+    "name": "Chestnut",
+    "family": "gourmand",
+    "desc": "Roasted, earthy, slightly sweet. Evokes autumn — warm and nutty with a slightly floury texture."
+  },
+  {
+    "name": "Chinese Pepper",
+    "family": "amber",
+    "desc": "More floral and citrusy than black pepper — lemony, slightly spicy, with a distinctive numbing quality."
+  },
+  {
+    "name": "Cinnamon",
+    "family": "amber",
+    "desc": "Warm, sweet, bark spice. Cassia-type is more forceful; Ceylon cinnamon is softer and more complex."
+  },
+  {
+    "name": "Clary Sage",
+    "family": "green",
+    "desc": "Herbaceous, slightly sweet and earthy. A more floral, aromatic sage — less medicinal than common sage."
+  },
+  {
+    "name": "Clove",
+    "family": "amber",
+    "desc": "Spicy, sharp, eugenol-forward. Dense and slightly medicinal."
+  },
+  {
+    "name": "Cocoa",
+    "family": "gourmand",
+    "desc": "Dark, roasted chocolate. Richer and more processed than cacao — warm, sweet, and deeply comforting."
+  },
+  {
+    "name": "Coconut",
+    "family": "gourmand",
+    "desc": "Sweet, tropical, creamy. Full and round — can be fresh and watery or rich and sunscreen-like depending on treatment."
+  },
+  {
+    "name": "Coconut Milk",
+    "family": "gourmand",
+    "desc": "Smooth, creamy, and tropical. Softer than fresh coconut — milky, slightly sweet, with an almost skin-like quality."
+  },
+  {
+    "name": "Coconut Water",
+    "family": "gourmand",
+    "desc": "Light, slightly sweet aquatic note with tropical softness."
+  },
+  {
+    "name": "Coffee",
+    "family": "gourmand",
+    "desc": "Roasted, bitter, warming. Can range from fresh-ground to dark espresso — rich, aromatic, and unmistakable."
+  },
+  {
+    "name": "Copal Resin",
+    "family": "amber",
+    "desc": "Sacred tree resin burned as incense across Mesoamerica for millennia. Smoky, slightly piney, and deeply ceremonial — lighter than frankincense but with a similar ritual character."
+  },
+  {
+    "name": "Coriander",
+    "family": "amber",
+    "desc": "Warm, slightly citrusy spice with a faintly earthy, dried-herb character. Drier than cardamom."
+  },
+  {
+    "name": "Cumin",
+    "family": "amber",
+    "desc": "Warm, earthy, slightly animalic spice. Adds depth and a somewhat sweaty character that's intensely human and sensual."
+  },
+  {
+    "name": "Cyclamen",
+    "family": "floral",
+    "desc": "Delicate, watery floral with a slightly metallic edge."
+  },
+  {
+    "name": "Cypress",
+    "family": "woody",
+    "desc": "Resinous, dry, slightly smoky. Austere, cool, bitter-green."
+  },
+  {
+    "name": "Cypriol",
+    "family": "oud",
+    "desc": "Smoky, earthy, rootsy wood from cyperus grass (nagarmotha). Used for depth and a slightly animalic smokiness in oriental compositions."
+  },
+  {
+    "name": "Dried Fruits",
+    "family": "gourmand",
+    "desc": "Concentrated, slightly fermented, plummy sweetness. Prune-like, figgy, and rich — adds complexity to amber and oud compositions."
+  },
+  {
+    "name": "Driftwood",
+    "family": "woody",
+    "desc": "Sun-bleached, salt-worn wood. Dry, slightly marine."
+  },
+  {
+    "name": "Elemi",
+    "family": "amber",
+    "desc": "A bright, piney resin with a lemony, slightly peppery quality. Lighter and more citrusy than frankincense."
+  },
+  {
+    "name": "Eucalyptus",
+    "family": "green",
+    "desc": "Cool, camphoraceous, medicinal. Fresh and astringent — used sparingly to add a bracing, clean quality."
+  },
+  {
+    "name": "Fig",
+    "family": "green",
+    "desc": "Ripe fig — sweet, milky, and slightly earthy. Rounder and more fruity than fig leaf or fig wood."
+  },
+  {
+    "name": "Fig Leaf",
+    "family": "green",
+    "desc": "Sharper and more vegetal than fig fruit — green, slightly tart, milky at the edges."
+  },
+  {
+    "name": "Fig Milk",
+    "family": "green",
+    "desc": "The milky sap of the fig tree — softly creamy, slightly bitter."
+  },
+  {
+    "name": "Fig Wood",
+    "family": "woody",
+    "desc": "Dry, slightly dusty woody note from the inner branches."
+  },
+  {
+    "name": "Fir Balsam",
+    "family": "woody",
+    "desc": "Resinous, piney, slightly sweet balsam. Evokes cold northern forests — fresh, clean, with a sticky resinous depth."
+  },
+  {
+    "name": "Frankincense",
+    "family": "amber",
+    "desc": "Sacred resin from the Boswellia tree. More piney and citrusy than incense — clean, slightly lemony, and meditative."
+  },
+  {
+    "name": "Freesia",
+    "family": "floral",
+    "desc": "Light, airy, slightly spiced floral. Clean and transparent with a faint citrus edge."
+  },
+  {
+    "name": "Gardenia",
+    "family": "floral",
+    "desc": "Creamy, intensely sweet white tropical flower. Slightly coconut-like, narcotic, and full — one of the most opulent florals."
+  },
+  {
+    "name": "Geranium",
+    "family": "floral",
+    "desc": "Rose-like but sharper — minty, green, slightly metallic."
+  },
+  {
+    "name": "Ginger",
+    "family": "amber",
+    "desc": "Sharp, warm, slightly woody spice. Drier than cardamom."
+  },
+  {
+    "name": "Grapefruit",
+    "family": "citrus",
+    "desc": "Bright, bitter-sweet citrus with a slightly waxy quality."
+  },
+  {
+    "name": "Grass",
+    "family": "green",
+    "desc": "Crisp, fresh, green-cut grass. Clean and natural with a slightly sweet, coumarin-touched quality when dry."
+  },
+  {
+    "name": "Green Fig",
+    "family": "green",
+    "desc": "Unripe fig — crisp, tart, green. Less creamy than ripe fig."
+  },
+  {
+    "name": "Green Leaves",
+    "family": "green",
+    "desc": "A generic fresh leaf note — watery, crisp, and green. Adds freshness and natural quality to many compositions."
+  },
+  {
+    "name": "Green Tea",
+    "family": "green",
+    "desc": "Dry, slightly tannic, clean with subtle grassiness. Cooling."
+  },
+  {
+    "name": "Guaiac Wood",
+    "family": "woody",
+    "desc": "Smoky, slightly rosy, dry resinous wood from South America. Adds a soft, diffuse smokiness to woody compositions."
+  },
+  {
+    "name": "Hay",
+    "family": "green",
+    "desc": "Dry, sun-warmed, coumarin-tinged. Sweet and slightly floral when dried — evokes warm summer fields."
+  },
+  {
+    "name": "Heliotrope",
+    "family": "floral",
+    "desc": "Sweet, almond-like, slightly powdery floral. Warm and round — a delicate vanilla-floral that bridges gourmand and floral families."
+  },
+  {
+    "name": "Hinoki",
+    "family": "woody",
+    "desc": "Japanese cypress wood. Warm, slightly lemony, and clean."
+  },
+  {
+    "name": "Honey",
+    "family": "amber",
+    "desc": "Warm, sweet, slightly animalic. Natural honey in perfumery has a waxy, slightly beeswax quality — golden and indulgent."
+  },
+  {
+    "name": "Honeysuckle",
+    "family": "floral",
+    "desc": "Nectar-sweet, light, and transparent floral. Clean, luminous, and effortlessly pretty."
+  },
+  {
+    "name": "Hyacinth",
+    "family": "floral",
+    "desc": "Intensely sweet, watery spring floral with a slightly green, powdery edge."
+  },
+  {
+    "name": "Incense",
+    "family": "oud",
+    "desc": "Smoky, resinous, slightly sweet. From burning resins — meditative and ancient."
+  },
+  {
+    "name": "Iris",
+    "family": "floral",
+    "desc": "Powdery, slightly earthy, and cool. From orris root."
+  },
+  {
+    "name": "Iso E Super",
+    "family": "woody",
+    "desc": "A synthetic molecule with a soft, cedar-like, diffuse woody character. Amplifies other notes and adds a quiet resonance."
+  },
+  {
+    "name": "Italian Cypress",
+    "family": "woody",
+    "desc": "Drier and more austere than standard cypress — dark, resinous, slightly medicinal, evoking Mediterranean landscapes."
+  },
+  {
+    "name": "Ivy",
+    "family": "green",
+    "desc": "Crisp, clean, slightly bitter green. Herbaceous and watery."
+  },
+  {
+    "name": "Ivy Leaf",
+    "family": "green",
+    "desc": "Cool, slightly metallic green with watery bitterness."
+  },
+  {
+    "name": "Jasmine",
+    "family": "floral",
+    "desc": "Rich, indolic white floral. Slightly animalic and dense."
+  },
+  {
+    "name": "Juniper",
+    "family": "woody",
+    "desc": "Dry, piney, slightly peppery. Northern forests, cold air."
+  },
+  {
+    "name": "Juniper Berry",
+    "family": "woody",
+    "desc": "Fresher and fruitier than juniper wood alone — bright, piney, slightly gin-like. Used to add a bracing, aromatic quality."
+  },
+  {
+    "name": "Labdanum",
+    "family": "amber",
+    "desc": "A dark, resinous gum from cistus plants. Warm, animalic, amber-like."
+  },
+  {
+    "name": "Lavender",
+    "family": "green",
+    "desc": "Herbaceous, slightly camphorous, softly floral."
+  },
+  {
+    "name": "Lavender Absolute",
+    "family": "green",
+    "desc": "Richer and more resinous than standard lavender — deeper, slightly sweet, with more complexity and longevity."
+  },
+  {
+    "name": "Leather",
+    "family": "leather",
+    "desc": "A dry, slightly smoky accord evocative of new leather."
+  },
+  {
+    "name": "Lemon",
+    "family": "citrus",
+    "desc": "Bright, sharp, clean citrus. One of the most universally used top notes."
+  },
+  {
+    "name": "Lily",
+    "family": "floral",
+    "desc": "Clean, slightly sweet white floral. Softer and less dense than tuberose or gardenia — fresh, dewy, and classic."
+  },
+  {
+    "name": "Lily of the Valley",
+    "family": "floral",
+    "desc": "Cool, delicate white floral with a watery green stem. Clean, classic, and slightly dewy."
+  },
+  {
+    "name": "Lychee",
+    "family": "gourmand",
+    "desc": "Delicate tropical fruit — sweet, floral, slightly watery. Light and translucent."
+  },
+  {
+    "name": "Magnolia",
+    "family": "floral",
+    "desc": "Fresh, lightly spiced white floral with a hint of citrus."
+  },
+  {
+    "name": "Mandarin",
+    "family": "citrus",
+    "desc": "Sweeter and softer than orange — gentle citrus with a slightly floral undertone."
+  },
+  {
+    "name": "Marigold",
+    "family": "floral",
+    "desc": "Warm, slightly herbal floral with a tart, tomato-leaf edge."
+  },
+  {
+    "name": "Marine Accord",
+    "family": "citrus",
+    "desc": "A synthetic aquatic freshness evoking sea spray and ocean air. Clean, slightly salty, and airy."
+  },
+  {
+    "name": "Mastic",
+    "family": "amber",
+    "desc": "Piney, aromatic resin from the mastic tree. Slightly sweet, fresh, and resinous — used in Mediterranean perfumery for centuries."
+  },
+  {
+    "name": "Matcha",
+    "family": "green",
+    "desc": "Earthy, grassy, subtly bitter green tea powder. More vegetal and robust than steeped green tea — deeply Japanese in character."
+  },
+  {
+    "name": "Mate",
+    "family": "green",
+    "desc": "Dry, slightly smoky, tea-like. From yerba mate."
+  },
+  {
+    "name": "Mimosa",
+    "family": "floral",
+    "desc": "Soft, powdery, honey-like yellow floral. Warm, slightly solar, and gently animalic."
+  },
+  {
+    "name": "Mineral Accord",
+    "family": "amber",
+    "desc": "A clean, dry, stone-like quality. Evoking wet rocks, limestone, or a cool cave — abstract and otherworldly."
+  },
+  {
+    "name": "Mint",
+    "family": "green",
+    "desc": "Cool, camphoraceous, and sharp. Immediately refreshing."
+  },
+  {
+    "name": "Moss",
+    "family": "chypre",
+    "desc": "Damp, earthy, lush forest floor. Distinct from oakmoss — more woodland and less structured, evoking rain on stones."
+  },
+  {
+    "name": "Musk",
+    "family": "floral",
+    "desc": "A broad category of skin-like base notes — clean, animalic, or transparent."
+  },
+  {
+    "name": "Muslin",
+    "family": "floral",
+    "desc": "A soft, clean textile accord — lightly powdery, slightly soapy."
+  },
+  {
+    "name": "Myrrh",
+    "family": "amber",
+    "desc": "Dark, balsamic, slightly medicinal resin. Warmer and earthier than frankincense — animalic, smoky, and ancient."
+  },
+  {
+    "name": "Narcissus",
+    "family": "floral",
+    "desc": "Heady, green-tinged floral — earthy, slightly animalic, and deeply complex."
+  },
+  {
+    "name": "Neroli",
+    "family": "floral",
+    "desc": "Orange blossom distillate — clean, slightly honeyed, gently spicy."
+  },
+  {
+    "name": "Night-Blooming Jasmine",
+    "family": "floral",
+    "desc": "More intense and indolic than standard jasmine — heady, slightly animalic, and intoxicating. Blooms only in darkness."
+  },
+  {
+    "name": "Nutmeg",
+    "family": "amber",
+    "desc": "Warm, slightly woody, mildly sweet spice. Softer than clove — adds a subtle, rounded warmth to oriental compositions."
+  },
+  {
+    "name": "Oakmoss",
+    "family": "chypre",
+    "desc": "Damp, mossy, earthy — the defining base note of classic chypre compositions."
+  },
+  {
+    "name": "Orange",
+    "family": "citrus",
+    "desc": "Warm, sweet citrus — less tart than lemon. Gentle and solar, it adds brightness without sharpness."
+  },
+  {
+    "name": "Orange Blossom",
+    "family": "floral",
+    "desc": "White floral, honeyed, slightly indolic. More intense and waxy than neroli."
+  },
+  {
+    "name": "Orchid",
+    "family": "floral",
+    "desc": "Sweet, tropical, lightly vanilla-like floral. More abstract and soft than other white florals — clean and slightly powdery."
+  },
+  {
+    "name": "Oud",
+    "family": "oud",
+    "desc": "Resinous heartwood of infected agarwood. Smoky, dark, and complex."
+  },
+  {
+    "name": "Palisander",
+    "family": "woody",
+    "desc": "Brazilian rosewood. Warm, slightly sweet, and smooth."
+  },
+  {
+    "name": "Palo Santo",
+    "family": "amber",
+    "desc": "Sacred South American wood burned as incense for millennia. Sweet, slightly minty, woody smoke — cleansing and deeply spiritual."
+  },
+  {
+    "name": "Paperwhite Accord",
+    "family": "floral",
+    "desc": "A clean, watery, slightly green narcissus-like floral. Crisp and transparent — evoking the freshness of spring paperwhite flowers."
+  },
+  {
+    "name": "Papyrus",
+    "family": "woody",
+    "desc": "Dry, slightly dusty, reedy — evocative of aged paper and river grasses."
+  },
+  {
+    "name": "Patchouli",
+    "family": "chypre",
+    "desc": "Dark, earthy, slightly sweet. Improves with age."
+  },
+  {
+    "name": "Peach",
+    "family": "gourmand",
+    "desc": "Soft, ripe, slightly velvety. A gentle fruity modifier."
+  },
+  {
+    "name": "Pear",
+    "family": "gourmand",
+    "desc": "Soft, dewy, slightly floral fruit note. Gentler and more watery than apple."
+  },
+  {
+    "name": "Peony",
+    "family": "floral",
+    "desc": "Soft, rosy-fruity floral — lush but clean. Less dense than rose, more transparent."
+  },
+  {
+    "name": "Pepper",
+    "family": "amber",
+    "desc": "Sharp, dry, slightly smoky. Black pepper adds bite; pink fruitier."
+  },
+  {
+    "name": "Petitgrain",
+    "family": "citrus",
+    "desc": "From leaves and twigs of the bitter orange tree. Woody, green, slightly floral."
+  },
+  {
+    "name": "Petrichor",
+    "family": "green",
+    "desc": "The clean, mineral smell of rain falling on dry earth. Earthy, slightly metallic, and deeply evocative of storms and renewal."
+  },
+  {
+    "name": "Pine",
+    "family": "woody",
+    "desc": "Resinous, fresh, slightly camphoraceous. Cold forests."
+  },
+  {
+    "name": "Pine Resin",
+    "family": "woody",
+    "desc": "Sticky, sharp, intensely resinous pine sap. More raw and forceful than pine needles — deeply forest, almost medicinal."
+  },
+  {
+    "name": "Pink Pepper",
+    "family": "amber",
+    "desc": "Fruity, slightly spicy, and rosy. Less harsh than black pepper."
+  },
+  {
+    "name": "Plum",
+    "family": "gourmand",
+    "desc": "Dark, jammy, slightly fermented. Adds depth to amber compositions."
+  },
+  {
+    "name": "Queen of the Night",
+    "family": "floral",
+    "desc": "A rare nocturnal cactus flower — intensely sweet, creamy, intoxicating."
+  },
+  {
+    "name": "Rain Accord",
+    "family": "green",
+    "desc": "A dewy, fresh synthetic accord evoking rain. Clean, slightly metallic, and atmospheric — a modern aquatic note."
+  },
+  {
+    "name": "Raspberry",
+    "family": "gourmand",
+    "desc": "Bright, tart, slightly floral berry. Sweeter and more delicate than blackberry — feminine, effervescent, and fresh."
+  },
+  {
+    "name": "Resin",
+    "family": "amber",
+    "desc": "Warm, sweet, and balsamic tree secretions. Adds richness and longevity."
+  },
+  {
+    "name": "Rhubarb",
+    "family": "green",
+    "desc": "Crisp, tart, slightly earthy stalk note. Unexpectedly elegant and floral in fine fragrance."
+  },
+  {
+    "name": "Rose",
+    "family": "floral",
+    "desc": "The most iconic floral. From fresh Turkish to dark Bulgarian absolute."
+  },
+  {
+    "name": "Rosemary",
+    "family": "green",
+    "desc": "Sharp, piney, herbal, slightly camphoraceous. One of the most recognizable aromatic herbs — clean, Mediterranean, and bracing."
+  },
+  {
+    "name": "Rosewood",
+    "family": "woody",
+    "desc": "Sweet, slightly floral woody note with a rose-cedar character."
+  },
+  {
+    "name": "Rum",
+    "family": "gourmand",
+    "desc": "Warm, slightly sweet, and alcoholic. Adds boozy character to amber."
+  },
+  {
+    "name": "Saffron",
+    "family": "amber",
+    "desc": "Deeply warm, slightly sweet, leathery and honeyed. One of the most expensive naturals in perfumery."
+  },
+  {
+    "name": "Sage",
+    "family": "green",
+    "desc": "Dry, herbal, slightly dusty and medicinal. Used sparingly to add an aromatic, almost camphoraceous quality."
+  },
+  {
+    "name": "Salt",
+    "family": "amber",
+    "desc": "A clean, mineral, slightly marine quality. Dry rather than aquatic — enhancing other notes with a subtle mineral brightness."
+  },
+  {
+    "name": "Salted Amber",
+    "family": "amber",
+    "desc": "Amber with a mineral sea-salt accord — golden and resinous."
+  },
+  {
+    "name": "Sandalwood",
+    "family": "woody",
+    "desc": "Creamy, warm, slightly milky. Mysore sandalwood is most prized."
+  },
+  {
+    "name": "Sapodilla",
+    "family": "gourmand",
+    "desc": "A tropical fruit note — sweet, caramel-brown, slightly smoky."
+  },
+  {
+    "name": "Sea Salt",
+    "family": "amber",
+    "desc": "A briny, oceanic saltiness. Adds a marine, slightly ozonic quality — evocative of sea spray and coastal air."
+  },
+  {
+    "name": "Shiso",
+    "family": "green",
+    "desc": "Japanese herb, clean, slightly minty with anise-like freshness. Used in perfumery to add a distinctly Asian herbal quality."
+  },
+  {
+    "name": "Smoke",
+    "family": "leather",
+    "desc": "A clean, slightly wood-ash smoky quality. Different from incense — drier, more austere, evoking embers and open fires."
+  },
+  {
+    "name": "Spearmint",
+    "family": "green",
+    "desc": "Sweeter and softer than peppermint — gently herbaceous with a mild, rounded coolness. Elegant rather than toothpaste-forward."
+  },
+  {
+    "name": "Styrax",
+    "family": "amber",
+    "desc": "Sweet, balsamic, slightly smoky resin. Similar to benzoin but warmer and slightly more leathery — adds richness to oriental bases."
+  },
+  {
+    "name": "Suede",
+    "family": "leather",
+    "desc": "A soft, powdery leather accord. Smoother and more diffuse than full leather — skin-close and slightly woody."
+  },
+  {
+    "name": "Tangerine",
+    "family": "citrus",
+    "desc": "Sweet, warm citrus — gentler and more golden than lemon, with a soft floral quality."
+  },
+  {
+    "name": "Tea",
+    "family": "green",
+    "desc": "Dry, slightly tannic, clean. Green tea more vegetal; black tea warmer."
+  },
+  {
+    "name": "Thorns",
+    "family": "green",
+    "desc": "A sharp, green, slightly metallic note evoking rose thorns and plant stems. Adds a tart, vegetal edge to floral compositions."
+  },
+  {
+    "name": "Thyme",
+    "family": "green",
+    "desc": "Dry, herbal, slightly medicinal. Aromatic and warm with a woody underpinning."
+  },
+  {
+    "name": "Tiare",
+    "family": "floral",
+    "desc": "Tahitian gardenia (Gardenia taitensis) — intensely sweet, creamy, and tropical. One of the most opulent white florals used in perfumery."
+  },
+  {
+    "name": "Tobacco",
+    "family": "leather",
+    "desc": "Warm, slightly sweet, hay-like. Dry tobacco austere; flower softer."
+  },
+  {
+    "name": "Tobacco Blossom",
+    "family": "leather",
+    "desc": "The soft, sweet flower of the tobacco plant. Far more floral and honeyed than cured tobacco — light, slightly animalic."
+  },
+  {
+    "name": "Tobacco Flower",
+    "family": "leather",
+    "desc": "Warm, floral, sweeter than cured tobacco leaf. A nectar-like quality that softens the harshness of tobacco into a fragrant bloom."
+  },
+  {
+    "name": "Tobacco Leaf",
+    "family": "leather",
+    "desc": "Dry, cured, hay-like. The raw, slightly bitter quality of dried tobacco — earthier and more austere than processed tobacco."
+  },
+  {
+    "name": "Tomato Leaf",
+    "family": "green",
+    "desc": "Sharp, vegetal, slightly sulfurous green note. Intensely natural and photorealistic — evokes a summer garden at its most vivid."
+  },
+  {
+    "name": "Tonka",
+    "family": "amber",
+    "desc": "Sweet, warm, coumarin-rich. Smells of vanilla, hay, and almond."
+  },
+  {
+    "name": "Tuberose",
+    "family": "floral",
+    "desc": "Dense, creamy, intensely indolic white floral. Heady and complex."
+  },
+  {
+    "name": "Tulip",
+    "family": "floral",
+    "desc": "Clean, slightly waxy, cool spring floral. Delicate and understated — less opulent than rose or tuberose, more transparent."
+  },
+  {
+    "name": "Vanilla",
+    "family": "gourmand",
+    "desc": "Sweet, warm, universally appealing. Natural absolute is more complex."
+  },
+  {
+    "name": "Vetiver",
+    "family": "chypre",
+    "desc": "Earthy, smoky, and woody root note. One of the most versatile base notes."
+  },
+  {
+    "name": "Violet",
+    "family": "floral",
+    "desc": "Powdery, slightly sweet, and delicate. Soft and nostalgic."
+  },
+  {
+    "name": "Violet Leaf",
+    "family": "green",
+    "desc": "Green, watery, slightly metallic. Sharper than the flower."
+  },
+  {
+    "name": "White Cedar",
+    "family": "woody",
+    "desc": "Lighter and more airy than standard cedar — clean, slightly resinous."
+  },
+  {
+    "name": "White Musk",
+    "family": "floral",
+    "desc": "The cleanest of musks — transparent, soapy, skin-like."
+  },
+  {
+    "name": "White Rose",
+    "family": "floral",
+    "desc": "Cleaner, cooler, and less opulent than red rose. Delicate and slightly dewy — fresh and classical rather than dense and sensual."
+  },
+  {
+    "name": "White Tea",
+    "family": "green",
+    "desc": "More delicate and floral than green tea. Light, slightly honeyed, and barely-there — the most ethereal of the tea family."
+  },
+  {
+    "name": "Yellow Oleander",
+    "family": "floral",
+    "desc": "A tropical flowering shrub — warm, honeyed floral, slightly waxy."
+  },
+  {
+    "name": "Ylang-Ylang",
+    "family": "floral",
+    "desc": "Intensely sweet tropical floral with banana and custard undertones. Can dominate a blend."
+  },
+  {
+    "name": "Yuzu",
+    "family": "citrus",
+    "desc": "Japanese citrus — tart, pithy, complex. Somewhere between grapefruit, lemon, and bergamot."
+  }
 ]

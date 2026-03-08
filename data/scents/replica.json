@@ -1,0 +1,538 @@
+[
+  {
+    "id": "rep-lazy-sunday-morning",
+    "brand": "Replica",
+    "name": "Lazy Sunday Morning",
+    "family": "floral",
+    "sillage": 3,
+    "layering": 4,
+    "top": [
+      "Pink Pepper",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Iris",
+      "Peony"
+    ],
+    "base": [
+      "White Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "intimate",
+      "casual"
+    ],
+    "description": "The scent of clean white linen on a slow, sunlit morning — powdery, soft, and deeply comforting."
+  },
+  {
+    "id": "rep-flower-market",
+    "brand": "Replica",
+    "name": "Flower Market",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Peach",
+      "Cyclamen"
+    ],
+    "mid": [
+      "Rose",
+      "Peony",
+      "Jasmine"
+    ],
+    "base": [
+      "White Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "A fresh, dewy armful of spring flowers — light, natural, and cheerfully alive without being sweet."
+  },
+  {
+    "id": "rep-beach-walk",
+    "brand": "Replica",
+    "name": "Beach Walk",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Lemon",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Coconut Milk",
+      "Heliotrope"
+    ],
+    "base": [
+      "Musk",
+      "Ambergris",
+      "Cedarwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "Sunscreen on warm skin, a gentle ocean breeze, and the feel of sand between your toes — a perfect beach day in a bottle."
+  },
+  {
+    "id": "rep-sailing-day",
+    "brand": "Replica",
+    "name": "Sailing Day",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Marine Accord",
+      "Cedarwood"
+    ],
+    "base": [
+      "Vetiver",
+      "Ambergris",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "The crisp, salty exhilaration of an open-water sail — citrus and sea spray over dry vetiver and driftwood."
+  },
+  {
+    "id": "rep-at-the-barbers",
+    "brand": "Replica",
+    "name": "At the Barber's",
+    "family": "green",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Lavender"
+    ],
+    "mid": [
+      "Iris",
+      "Vetiver"
+    ],
+    "base": [
+      "Suede",
+      "White Musk"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "The nostalgic smell of a classic barbershop — warm leather strop, lavender, and talc-dusted iris."
+  },
+  {
+    "id": "rep-lipstick-on",
+    "brand": "Replica",
+    "name": "Lipstick On",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Violet",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine",
+      "Iris"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "A vintage powdery lipstick worn on warm skin — retro, softly feminine, and deeply nostalgic."
+  },
+  {
+    "id": "rep-jazz-club",
+    "brand": "Replica",
+    "name": "Jazz Club",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Rum",
+      "Musk",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Tobacco Flower",
+      "Vetiver"
+    ],
+    "base": [
+      "Vanilla",
+      "Benzoin"
+    ],
+    "roles": [
+      "cold",
+      "creative"
+    ],
+    "description": "Dim lighting, leather booths, and late-night cigarette smoke at a jazz club — rum, tobacco, and vanilla."
+  },
+  {
+    "id": "rep-by-the-fireplace",
+    "brand": "Replica",
+    "name": "By the Fireplace",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Orange Blossom",
+      "Chestnut"
+    ],
+    "mid": [
+      "Guaiac Wood",
+      "Cashmeran"
+    ],
+    "base": [
+      "Vanilla",
+      "Musk",
+      "Benzoin"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "Crackling wood fire, roasted chestnuts, and vanilla smoke drifting through a winter room."
+  },
+  {
+    "id": "rep-when-the-rain-breaks",
+    "brand": "Replica",
+    "name": "When the Rain Breaks",
+    "family": "green",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Petrichor",
+      "Lemon"
+    ],
+    "mid": [
+      "Tea",
+      "Vetiver",
+      "Rain Accord"
+    ],
+    "base": [
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "The precise earthy-mineral smell of the first rain hitting dry pavement — petrichor, green tea, and clean wood."
+  },
+  {
+    "id": "rep-whispers-in-the-library",
+    "brand": "Replica",
+    "name": "Whispers in the Library",
+    "family": "woody",
+    "sillage": 3,
+    "layering": 5,
+    "top": [
+      "Paperwhite Accord",
+      "Sandalwood"
+    ],
+    "mid": [
+      "Iris",
+      "Orris"
+    ],
+    "base": [
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "work",
+      "creative"
+    ],
+    "description": "The dusty, contemplative smell of old paper and aged books in a quiet reading room — iris, white wood, and soft amber."
+  },
+  {
+    "id": "rep-on-a-date",
+    "brand": "Replica",
+    "name": "On a Date",
+    "family": "gourmand",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cashew",
+      "Raspberry"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine"
+    ],
+    "base": [
+      "Caramel",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "intimate",
+      "casual"
+    ],
+    "description": "A warm, sweetly romantic scent — the anticipation of a first date, with raspberry, rose, and caramel warmth."
+  },
+  {
+    "id": "rep-across-sands",
+    "brand": "Replica",
+    "name": "Across Sands",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Ambrette",
+      "Incense"
+    ],
+    "mid": [
+      "Myrrh",
+      "Amber"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "A dry, smoky amber evoking a desert under a vast open sky — incense and myrrh over warm sandalwood."
+  },
+  {
+    "id": "rep-under-the-lemon-trees",
+    "brand": "Replica",
+    "name": "Under the Lemon Trees",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Lemon",
+      "Peach"
+    ],
+    "mid": [
+      "Neroli",
+      "White Flowers"
+    ],
+    "base": [
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A sun-warmed afternoon under Italian lemon trees — bright citrus, neroli, and a whisper of peach."
+  },
+  {
+    "id": "rep-car-leather-1957",
+    "brand": "Replica",
+    "name": "Car Leather 1957",
+    "family": "leather",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Mint"
+    ],
+    "mid": [
+      "Rose",
+      "Leather"
+    ],
+    "base": [
+      "Vetiver",
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "The distinct smell of pristine leather upholstery in a classic automobile — cool, clean, and deliberately evocative."
+  },
+  {
+    "id": "rep-autumn-vibes",
+    "brand": "Replica",
+    "name": "Autumn Vibes",
+    "family": "gourmand",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cinnamon",
+      "Clove"
+    ],
+    "mid": [
+      "Cardamom",
+      "Vanilla"
+    ],
+    "base": [
+      "Amber",
+      "Benzoin"
+    ],
+    "roles": [
+      "cold",
+      "casual"
+    ],
+    "description": "A cozy, spiced autumnal warmth of mulled spices — cinnamon, cardamom, and vanilla over resinous amber."
+  },
+  {
+    "id": "rep-coffee-break",
+    "brand": "Replica",
+    "name": "Coffee Break",
+    "family": "gourmand",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Coffee",
+      "Bitter Almond"
+    ],
+    "mid": [
+      "White Musk"
+    ],
+    "base": [
+      "Sandalwood",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A mid-morning espresso pause — rich roasted coffee with a clean skin finish that's comforting rather than sweet."
+  },
+  {
+    "id": "rep-on-the-beach",
+    "brand": "Replica",
+    "name": "On the Beach",
+    "family": "citrus",
+    "sillage": 4,
+    "layering": 3,
+    "top": [
+      "Coconut Water",
+      "Neroli"
+    ],
+    "mid": [
+      "Jasmine",
+      "Sea Salt"
+    ],
+    "base": [
+      "Ambergris",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A lighter, more watery take on the beach — translucent coconut water and sea salt over a clean ambergris base."
+  },
+  {
+    "id": "rep-matcha-meditation",
+    "brand": "Replica",
+    "name": "Matcha Meditation",
+    "family": "green",
+    "sillage": 3,
+    "layering": 4,
+    "top": [
+      "Green Tea",
+      "Matcha"
+    ],
+    "mid": [
+      "White Flowers",
+      "Iris"
+    ],
+    "base": [
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A serene, zen-like green tea and matcha — clean, herbal, and quietly grounding for focused mornings."
+  },
+  {
+    "id": "rep-summer-on-the-terrace",
+    "brand": "Replica",
+    "name": "Summer on the Terrace",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Honeysuckle",
+      "Peach"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "Warm evenings on a Mediterranean terrace — bright citrus and honeysuckle with a soft peach warmth at dusk."
+  },
+  {
+    "id": "rep-from-the-garden",
+    "brand": "Replica",
+    "name": "From the Garden",
+    "family": "green",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Tomato Leaf",
+      "Green Leaves"
+    ],
+    "mid": [
+      "Rose",
+      "Peony"
+    ],
+    "base": [
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "creative"
+    ],
+    "description": "The raw, authentic smell of a working garden — sappy tomato leaf and cut greenery over a fresh rose heart."
+  },
+  {
+    "id": "rep-spring-summer-bottle",
+    "brand": "Replica",
+    "name": "Spring/Summer in a Bottle",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 3,
+    "top": [
+      "Bergamot",
+      "Peach"
+    ],
+    "mid": [
+      "Lily of the Valley",
+      "Rose"
+    ],
+    "base": [
+      "White Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A literal bottled season — breezy, sunny, and effortlessly cheerful, wearing like the first warm day of the year."
+  }
+]
