@@ -872,17 +872,45 @@ body{font-family:"Source Serif 4",Georgia,serif;
 
 /* ══ ONBOARDING ═══════════════════════════════════════════════ */
 .onboard-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.48);display:flex;align-items:flex-end;justify-content:center}
-.onboard-card{width:100%;max-width:500px;background:#fff;border-radius:18px 18px 0 0;padding:22px 20px 40px}
-.onboard-dots{display:flex;gap:5px;margin-bottom:16px}
-.onboard-dot{height:3px;border-radius:2px;background:var(--g200);flex:1;transition:background .2s}
-.onboard-dot.active{background:var(--black)}
-.onboard-icon{font-size:1.6rem;margin-bottom:8px;line-height:1}
-.onboard-head{font-size:.97rem;font-weight:700;letter-spacing:-.02em;margin-bottom:5px}
-.onboard-body{font-size:.82rem;color:var(--g600);line-height:1.6;margin-bottom:22px}
-.onboard-actions{display:flex;align-items:center;justify-content:space-between}
-.onboard-skip{font-size:.73rem;color:var(--g450);background:none;border:none;cursor:pointer}
-.onboard-next{font-size:.82rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:6px;padding:8px 18px;cursor:pointer;transition:opacity .12s}
-.onboard-next:hover{opacity:.85}
+.onboard-card{width:100%;max-width:500px;background:#fff;border-radius:18px 18px 0 0;padding:22px 20px 36px;max-height:86vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.onb-title{font-size:1.08rem;font-weight:700;letter-spacing:-.02em;margin-bottom:5px}
+.onb-sub{font-size:.82rem;color:var(--g600);line-height:1.5;margin-bottom:18px}
+.onb-paths{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.onb-path{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1.5px solid var(--g200);border-radius:10px;cursor:pointer;background:#fff;text-align:left;width:100%;transition:border-color .15s,background .15s}
+.onb-path:hover{border-color:var(--black);background:var(--g50)}
+.onb-path-icon{font-size:1.2rem;flex-shrink:0;width:22px;text-align:center}
+.onb-path-label{font-size:.86rem;font-weight:600;margin-bottom:2px}
+.onb-path-desc{font-size:.75rem;color:var(--g500);line-height:1.4}
+.onb-brand{margin-bottom:14px}
+.onb-brand-name{font-size:.73rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g450);margin-bottom:7px}
+.onb-frags{display:flex;flex-direction:column;gap:3px}
+.onb-frag{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;cursor:pointer;transition:background .1s,color .1s;background:var(--g50)}
+.onb-frag:hover{background:var(--g100)}
+.onb-frag.selected{background:var(--black);color:#fff}
+.onb-frag-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.onb-frag-name{font-size:.83rem;font-weight:500;flex:1}
+.onb-frag-check{font-size:.8rem;opacity:0;transition:opacity .1s;color:#fff}
+.onb-frag.selected .onb-frag-check{opacity:1}
+.onb-cta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--g100)}
+.onb-count{font-size:.78rem;color:var(--g500)}
+.onb-btn{font-size:.82rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:7px;padding:9px 18px;cursor:pointer;transition:opacity .12s}
+.onb-btn:disabled{opacity:.35;cursor:default}
+.onb-skip-link{font-size:.73rem;color:var(--g450);background:none;border:none;cursor:pointer;text-align:center;display:block;margin-top:10px}
+.onb-fam-bars{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.onb-fam-bar{display:flex;align-items:center;gap:8px}
+.onb-fam-label{font-size:.78rem;width:68px;flex-shrink:0;color:var(--g600)}
+.onb-fam-track{flex:1;height:7px;background:var(--g100);border-radius:4px;overflow:hidden}
+.onb-fam-fill{height:100%;border-radius:4px}
+.onb-fam-count{font-size:.72rem;color:var(--g450);width:18px;text-align:right}
+.onb-notes-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px}
+.onb-note-chip{font-size:.73rem;padding:3px 9px;border-radius:10px;background:var(--g100);color:var(--g600)}
+.onb-note-chip.hi{background:var(--black);color:#fff}
+.onb-reveal-actions{display:flex;flex-direction:column;gap:8px}
+.onb-reveal-btn{font-size:.83rem;font-weight:600;padding:10px 18px;border-radius:8px;cursor:pointer;text-align:center;transition:opacity .12s;border:none;width:100%}
+.onb-reveal-btn.primary{background:var(--black);color:#fff}
+.onb-reveal-btn.secondary{background:none;border:1.5px solid var(--g200);color:var(--g700)}
+.onb-reveal-btn:hover{opacity:.85}
+.onb-section-label{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g450);margin-bottom:8px}
 
 /* ══ MOBILE BOTTOM NAV ════════════════════════════════════════ */
 .mobile-bottomnav{display:none}
@@ -997,16 +1025,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 
 <!-- ONBOARDING -->
 <div class="onboard-overlay" id="onboard-overlay" style="display:none">
-  <div class="onboard-card">
-    <div class="onboard-dots" id="onboard-dots"></div>
-    <div class="onboard-icon" id="onboard-icon"></div>
-    <div class="onboard-head" id="onboard-head"></div>
-    <div class="onboard-body" id="onboard-body"></div>
-    <div class="onboard-actions">
-      <button class="onboard-skip" id="onboard-skip">Skip</button>
-      <button class="onboard-next" id="onboard-next">Next →</button>
-    </div>
-  </div>
+  <div class="onboard-card" id="onboard-card"></div>
 </div>
 
 <script>
@@ -1980,31 +1999,134 @@ function goMobile(id,btn){
 }
 
 /* ══ ONBOARDING ═════════════════════════════════════════════════════ */
-const ONBOARD_STEPS=[
-  {icon:'♥ ♠ ✿ ✦',head:'Assign fragrances to roles',body:'Your capsule has 8 role slots. Tap any slot to assign a fragrance — you can have a primary plus additional alternatives for each role.'},
-  {icon:'◉',head:'Analyse your distribution',body:'The Roles tab shows a scatter chart plotting sillage against layering complexity. Clusters reveal habits; gaps reveal opportunities.'},
-  {icon:'✓',head:'Track owned and wishlist',body:'In the Catalog, tap the checkbox to cycle: not tracked → wishlist (~) → owned (✓). Open any fragrance to manage its role assignments.'},
-];
-let onboardStep=0;
+const OB_SEL=new Set();
 function showOnboard(){
   if(localStorage.getItem('sm_onboarded'))return;
-  document.getElementById('onboard-overlay').style.display='flex';renderOnboardStep();
+  document.getElementById('onboard-overlay').style.display='flex';
+  renderOnboardWelcome();
 }
-function renderOnboardStep(){
-  const s=ONBOARD_STEPS[onboardStep];
-  document.getElementById('onboard-icon').textContent=s.icon;
-  document.getElementById('onboard-head').textContent=s.head;
-  document.getElementById('onboard-body').textContent=s.body;
-  document.getElementById('onboard-next').textContent=onboardStep<ONBOARD_STEPS.length-1?'Next →':'Get started';
-  document.getElementById('onboard-dots').innerHTML=ONBOARD_STEPS.map((_,i)=>`<div class="onboard-dot${i===onboardStep?' active':''}"></div>`).join('');
+function closeOnboard(){
+  localStorage.setItem('sm_onboarded','1');
+  document.getElementById('onboard-overlay').style.display='none';
 }
-document.getElementById('onboard-next').addEventListener('click',()=>{
-  if(onboardStep<ONBOARD_STEPS.length-1){onboardStep++;renderOnboardStep()}
-  else{localStorage.setItem('sm_onboarded','1');document.getElementById('onboard-overlay').style.display='none'}
-});
-document.getElementById('onboard-skip').addEventListener('click',()=>{
-  localStorage.setItem('sm_onboarded','1');document.getElementById('onboard-overlay').style.display='none';
-});
+function renderOnboardWelcome(){
+  document.getElementById('onboard-card').innerHTML=`
+    <div class="onb-title">Welcome to ScentMap</div>
+    <div class="onb-sub">Your personal fragrance wardrobe. How do you want to start?</div>
+    <div class="onb-paths">
+      <button class="onb-path" id="ob-own">
+        <span class="onb-path-icon">✓</span>
+        <div><div class="onb-path-label">I own fragrances</div><div class="onb-path-desc">Add your collection and discover what it says about your taste</div></div>
+      </button>
+      <button class="onb-path" id="ob-discover">
+        <span class="onb-path-icon">◎</span>
+        <div><div class="onb-path-label">I'm just discovering</div><div class="onb-path-desc">Browse the full catalog and find something new</div></div>
+      </button>
+      <button class="onb-path" id="ob-learn">
+        <span class="onb-path-icon">✦</span>
+        <div><div class="onb-path-label">I want to learn about scents</div><div class="onb-path-desc">Explore fragrance families and the notes that define them</div></div>
+      </button>
+    </div>
+    <button class="onb-skip-link" id="ob-skip">Skip for now</button>
+  `;
+  document.getElementById('ob-own').onclick=renderOnboardCollect;
+  document.getElementById('ob-discover').onclick=()=>{closeOnboard();go('catalog',document.querySelector('.tab[onclick*="catalog"]'));};
+  document.getElementById('ob-learn').onclick=()=>{closeOnboard();go('notes',document.querySelector('.tab[onclick*="notes"]'));};
+  document.getElementById('ob-skip').onclick=closeOnboard;
+}
+function renderOnboardCollect(){
+  const brands={};
+  CAT.forEach(f=>{if(!brands[f.brand])brands[f.brand]=[];brands[f.brand].push(f);});
+  const brandNames=Object.keys(brands).sort();
+  function refreshCTA(){
+    const cnt=document.getElementById('ob-sel-count');
+    const btn=document.getElementById('ob-reveal-btn');
+    if(cnt)cnt.textContent=`${OB_SEL.size} selected`;
+    if(btn)btn.disabled=OB_SEL.size<1;
+  }
+  document.getElementById('onboard-card').innerHTML=`
+    <div class="onb-title">Your collection</div>
+    <div class="onb-sub">Tap the fragrances you own. You can add more later.</div>
+    ${brandNames.map(b=>`
+      <div class="onb-brand">
+        <div class="onb-brand-name">${b}</div>
+        <div class="onb-frags">
+          ${brands[b].map(f=>`
+            <div class="onb-frag${OB_SEL.has(f.id)?' selected':''}" data-id="${f.id}">
+              <div class="onb-frag-dot" style="background:${FAM[f.family]?.color||'#888'}"></div>
+              <div class="onb-frag-name">${f.name}</div>
+              <div class="onb-frag-check">✓</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('')}
+    <div class="onb-cta">
+      <button class="onb-skip-link" style="margin:0" id="ob-back">← Back</button>
+      <span class="onb-count" id="ob-sel-count">${OB_SEL.size} selected</span>
+      <button class="onb-btn" id="ob-reveal-btn" ${OB_SEL.size<1?'disabled':''}>See my taste →</button>
+    </div>
+  `;
+  document.querySelectorAll('.onb-frag').forEach(el=>{
+    el.onclick=()=>{
+      const id=el.dataset.id;
+      OB_SEL.has(id)?OB_SEL.delete(id):OB_SEL.add(id);
+      el.classList.toggle('selected',OB_SEL.has(id));
+      refreshCTA();
+    };
+  });
+  document.getElementById('ob-back').onclick=()=>{OB_SEL.clear();renderOnboardWelcome();};
+  document.getElementById('ob-reveal-btn').onclick=()=>{
+    OB_SEL.forEach(id=>setState(id,'owned'));
+    renderOnboardReveal();
+  };
+}
+function buildProfileData(ids){
+  const frags=ids.map(id=>CAT_MAP[id]).filter(Boolean);
+  const famCount={};
+  frags.forEach(f=>{famCount[f.family]=(famCount[f.family]||0)+1;});
+  const famSorted=Object.entries(famCount).sort((a,b)=>b[1]-a[1]);
+  const noteCount={};
+  frags.forEach(f=>{
+    f.base.forEach(n=>{noteCount[n]=(noteCount[n]||0)+3;});
+    f.mid.forEach(n=>{noteCount[n]=(noteCount[n]||0)+2;});
+    f.top.forEach(n=>{noteCount[n]=(noteCount[n]||0)+1;});
+  });
+  const notesSorted=Object.entries(noteCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const roleCounts={};
+  frags.forEach(f=>f.roles.forEach(r=>{roleCounts[r]=(roleCounts[r]||0)+1;}));
+  const avgSillage=frags.length?Math.round(frags.reduce((s,f)=>s+f.sillage,0)/frags.length):0;
+  return {frags,famSorted,notesSorted,roleCounts,avgSillage};
+}
+function renderOnboardReveal(){
+  const ids=[...OB_SEL];
+  const {famSorted,notesSorted}=buildProfileData(ids);
+  const maxFam=famSorted[0]?.[1]||1;
+  document.getElementById('onboard-card').innerHTML=`
+    <div class="onb-title">Your taste profile</div>
+    <div class="onb-sub">Based on ${ids.length} fragrance${ids.length!==1?'s':''} you own</div>
+    <div class="onb-section-label">Family breakdown</div>
+    <div class="onb-fam-bars">
+      ${famSorted.map(([fam,cnt])=>`
+        <div class="onb-fam-bar">
+          <div class="onb-fam-label">${FAM[fam]?.label||fam}</div>
+          <div class="onb-fam-track"><div class="onb-fam-fill" style="width:${Math.round(cnt/maxFam*100)}%;background:${FAM[fam]?.color||'#888'}"></div></div>
+          <div class="onb-fam-count">${cnt}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="onb-section-label">Recurring notes</div>
+    <div class="onb-notes-row">
+      ${notesSorted.map(([note],i)=>`<span class="onb-note-chip${i<3?' hi':''}">${note}</span>`).join('')}
+    </div>
+    <div class="onb-reveal-actions">
+      <button class="onb-reveal-btn primary" id="ob-go-catalog">Explore similar fragrances →</button>
+      <button class="onb-reveal-btn secondary" id="ob-go-roles">Set up my capsule</button>
+    </div>
+  `;
+  document.getElementById('ob-go-catalog').onclick=()=>{closeOnboard();buildCatalog();go('catalog',document.querySelector('.tab[onclick*="catalog"]'));};
+  document.getElementById('ob-go-roles').onclick=()=>{closeOnboard();buildCapsule();buildRoles();go('scentmap',null);};
+}
 
 /* ══ INIT ═══════════════════════════════════════════════════════════ */
 // Load data from JSON files
