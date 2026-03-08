@@ -1,0 +1,37 @@
+[
+  {
+    "id": "byredo",
+    "name": "Byredo",
+    "desc": "Stockholm-born house blending modern contrasts — citrus, incense, and woods — into wearable, conceptual perfumes."
+  },
+  {
+    "id": "fueguia-1833",
+    "name": "Fueguia 1833",
+    "desc": "Buenos Aires-based house crafting botanical perfumes inspired by South American landscapes, using natural materials and minimal note pyramids."
+  },
+  {
+    "id": "xinu",
+    "name": "Xinú",
+    "desc": "Mexican perfume house focused on botanical ingredients native to the Americas, highlighting indigenous resins, woods, and plants."
+  },
+  {
+    "id": "diptyque",
+    "name": "Diptyque",
+    "desc": "Parisian house blending French perfumery with travel memories, natural materials, and artistic storytelling since 1961."
+  },
+  {
+    "id": "ds-durga",
+    "name": "D.S. & Durga",
+    "desc": "Brooklyn perfume house known for storytelling fragrances inspired by music, landscapes, and Americana."
+  },
+  {
+    "id": "le-labo",
+    "name": "Le Labo",
+    "desc": "New York house creating hand-blended perfumes centred on a single star ingredient, paired with raw woods, musks, and spices."
+  },
+  {
+    "id": "aesop",
+    "name": "Aesop",
+    "desc": "Australian brand with a botanical philosophy, blending woods, herbs, and resins with quiet, intellectual elegance."
+  }
+]

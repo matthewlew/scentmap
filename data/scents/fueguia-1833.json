@@ -1,0 +1,93 @@
+[
+  {
+    "id": "tierra-del-fuego",
+    "brand": "Fueguia 1833",
+    "name": "Tierra del Fuego",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": ["Pink Pepper"],
+    "mid": ["Cypress"],
+    "base": ["Amber"],
+    "roles": ["cold", "signature"],
+    "description": "A smoky amber with sharp pink pepper and cypress, evoking windswept southern forests and distant fires."
+  },
+  {
+    "id": "darwin",
+    "brand": "Fueguia 1833",
+    "name": "Darwin",
+    "family": "green",
+    "sillage": 5,
+    "layering": 6,
+    "top": ["Grapefruit"],
+    "mid": ["Jasmine"],
+    "base": ["Vetiver"],
+    "roles": ["heat", "signature"],
+    "description": "Bright grapefruit and airy jasmine drift into a crisp vetiver base, reminiscent of botanical exploration."
+  },
+  {
+    "id": "la-cautiva",
+    "brand": "Fueguia 1833",
+    "name": "La Cautiva",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 6,
+    "top": ["Black Currant"],
+    "mid": ["Tuberose"],
+    "base": ["Sandalwood"],
+    "roles": ["creative", "signature"],
+    "description": "A lush tuberose balanced by dark currant and soft sandalwood, rich but airy."
+  },
+  {
+    "id": "ballena-de-la-pampa",
+    "brand": "Fueguia 1833",
+    "name": "Ballena de la Pampa",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 6,
+    "top": ["Sea Salt"],
+    "mid": ["Orchid"],
+    "base": ["Ambergris"],
+    "roles": ["creative", "signature"],
+    "description": "A salty, musky ambergris scent inspired by whales drifting along the Patagonian coast."
+  },
+  {
+    "id": "alerce",
+    "brand": "Fueguia 1833",
+    "name": "Alerce",
+    "family": "woody",
+    "sillage": 4,
+    "layering": 6,
+    "top": ["Bergamot", "Pink Pepper"],
+    "mid": ["Cedar", "Cypress", "Juniper"],
+    "base": ["Vetiver", "Patchouli", "Moss"],
+    "roles": ["casual", "signature"],
+    "description": "Named after the ancient Patagonian larch — dense, resinous wood with cool juniper and earthy vetiver. Timeless and unhurried."
+  },
+  {
+    "id": "patagonia-fueguia",
+    "brand": "Fueguia 1833",
+    "name": "Patagonia",
+    "family": "green",
+    "sillage": 4,
+    "layering": 5,
+    "top": ["Grapefruit", "Bergamot"],
+    "mid": ["Geranium", "Green Leaves"],
+    "base": ["Cedarwood", "Vetiver", "Musk"],
+    "roles": ["heat", "casual"],
+    "description": "The open air of the Patagonian steppe — bright citrus, wild herbs, and dry grassy vetiver. Clean, spare, and expansive."
+  },
+  {
+    "id": "buenos-aires",
+    "brand": "Fueguia 1833",
+    "name": "Buenos Aires",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": ["Bergamot", "Lemon", "Petitgrain"],
+    "mid": ["Rose", "Jasmine"],
+    "base": ["Musk", "Sandalwood"],
+    "roles": ["casual", "heat"],
+    "description": "A sun-warmed Argentine citrus that blooms into soft florals before fading into clean skin musk — elegant and urbane."
+  }
+]

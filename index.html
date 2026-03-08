@@ -1294,10 +1294,10 @@ function pushDetail(renderFn){
 const SW=['','Skin','Skin','Subtle','Subtle','Moderate','Moderate','Strong','Strong','Enveloping','Enormous'];
 const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered','Layered','Complex','Deep'];
 
-function linkNotes(str){
-  return str.split(', ').map(n=>{
-    const key=n.trim().toLowerCase();const note=NI_MAP[key];
-    return note?`<button class="note-link" data-note="${n.trim()}">${n.trim()}</button>`:n.trim();
+function linkNotes(arr){
+  return arr.map(n=>{
+    const key=n.toLowerCase();const note=NI_MAP[key];
+    return note?`<button class="note-link" data-note="${n}">${n}</button>`:n;
   }).join(', ');
 }
 
@@ -1391,7 +1391,7 @@ function buildRoleChips(frag,chipsEl){
 function renderNoteDetail(container,note){
   const fm=FAM[note.family]||{label:note.family,color:'#888'};
   const nl=note.name.toLowerCase();
-  const inf=CAT.filter(f=>[f.top,f.mid,f.base].join(', ').toLowerCase().includes(nl));
+  const inf=CAT.filter(f=>[...f.top,...f.mid,...f.base].some(n=>n.toLowerCase()===nl));
   container.innerHTML=`<div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
@@ -1423,7 +1423,7 @@ function refreshAfterStateChange(id){
 function openNotePopup(note,triggerEl){
   const fm=FAM[note.family]||{label:note.family,color:'#888'};
   const nl=note.name.toLowerCase();
-  const inf=CAT.filter(f=>[f.top,f.mid,f.base].join(', ').toLowerCase().includes(nl));
+  const inf=CAT.filter(f=>[...f.top,...f.mid,...f.base].some(n=>n.toLowerCase()===nl));
   document.getElementById('np-name').textContent=note.name;
   document.getElementById('np-family').textContent=fm.label;
   document.getElementById('np-desc').textContent=note.desc;
@@ -1493,7 +1493,7 @@ function renderPicker(container,roleId){
       <div class="picker-hero-info">
         <div class="picker-hero-name${isW?' is-wish':''}">${primaryFrag.name}</div>
         <div class="picker-hero-brand">${primaryFrag.brand}</div>
-        <div class="picker-hero-notes"><strong>Top</strong>${primaryFrag.top}</div>
+        <div class="picker-hero-notes"><strong>Top</strong>${primaryFrag.top.join(', ')}</div>
       </div>
     </div>
     ${secHTML}
@@ -1804,7 +1804,7 @@ function renderCatRow(row,frag,fm){
     return `<span class="s-sym">${r.sym}<span class="s-sym-tip">${r.symLine}</span></span>`;
   }).join('');
   row.innerHTML=`<div class="s-fdot" style="background:${fm.color}"></div>
-    <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${frag.top}</div></div>
+    <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${frag.top.join(', ')}</div></div>
     <div class="s-syms">${syms}</div>${badge}`;
 }
 function updBC(brand,key){
@@ -1897,10 +1897,12 @@ document.getElementById('onboard-skip').addEventListener('click',()=>{
 // Load data from JSON files
 Promise.all([
   fetch('data/roles.json').then(r=>r.json()),
-  fetch('data/scents.json').then(r=>r.json()),
+  fetch('data/scents-index.json').then(r=>r.json()).then(idx=>
+    Promise.all(idx.brands.map(b=>fetch(`data/scents/${b}.json`).then(r=>r.json())))
+      .then(arrays=>arrays.flat())
+  ),
   fetch('data/notes.json').then(r=>r.json())
 ]).then(([roles, scents, notes])=>{
-  // Override the hardcoded arrays
   ROLES=roles;
   CAT=scents;
   NI=notes;
@@ -2038,8 +2040,8 @@ function buildPairer(){
     if(!fa||!fb||fa.id===fb.id){result.className='pairer-result';return;}
     const famScore=COMPAT[fa.family]?.[fb.family]??0.5;
     const layerScore=1-Math.abs(fa.layering-fb.layering)/9*0.5;
-    const baseA=fa.base.toLowerCase().split(',').map(s=>s.trim());
-    const baseB=fb.base.toLowerCase().split(',').map(s=>s.trim());
+    const baseA=fa.base.map(s=>s.toLowerCase());
+    const baseB=fb.base.map(s=>s.toLowerCase());
     const shared=baseA.filter(n=>baseB.some(m=>m.includes(n)||n.includes(m)));
     const score=Math.max(10,Math.min(99,Math.round((famScore*.55+layerScore*.45-Math.min(shared.length*.12,.3))*100)));
     const grade=score>=72?'high':score>=50?'mid':'low';

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "oronardo",
+    "brand": "Xinú",
+    "name": "OroNardo",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": ["Neroli"],
+    "mid": ["Tuberose"],
+    "base": ["Sandalwood"],
+    "roles": ["formal", "signature"],
+    "description": "Radiant tuberose wrapped in creamy sandalwood and citrus blossom, rich yet elegant."
+  },
+  {
+    "id": "copala",
+    "brand": "Xinú",
+    "name": "Copála",
+    "family": "resin",
+    "sillage": 7,
+    "layering": 8,
+    "top": ["Incense"],
+    "mid": ["Copal Resin"],
+    "base": ["Amber"],
+    "roles": ["formal", "cold"],
+    "description": "Sacred copal resin smoke with glowing amber warmth, reminiscent of ceremonial incense."
+  },
+  {
+    "id": "aguamadera",
+    "brand": "Xinú",
+    "name": "Aguamadera",
+    "family": "woody",
+    "sillage": 4,
+    "layering": 6,
+    "top": ["Grapefruit"],
+    "mid": ["Guaiac Wood"],
+    "base": ["Cedar"],
+    "roles": ["heat", "casual"],
+    "description": "A transparent citrus-wood scent with smooth guaiac and cedar warmth."
+  },
+  {
+    "id": "montecristo",
+    "brand": "Xinú",
+    "name": "Montecisto",
+    "family": "green",
+    "sillage": 5,
+    "layering": 6,
+    "top": ["Herbs"],
+    "mid": ["Fig Leaf"],
+    "base": ["Moss"],
+    "roles": ["creative", "signature"],
+    "description": "Green fig leaves and herbs over soft moss, evoking tropical gardens."
+  },
+  {
+    "id": "numero-uno",
+    "brand": "Xinú",
+    "name": "Número Uno",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": ["Bergamot", "Lime", "Petitgrain"],
+    "mid": ["Jasmine", "Neroli"],
+    "base": ["Vetiver", "Sandalwood", "Musk"],
+    "roles": ["casual", "heat"],
+    "description": "A clean, sparkling Mexican citrus anchored in vetiver and sandalwood — effortless to wear in any warm setting."
+  },
+  {
+    "id": "tulipe-xinu",
+    "brand": "Xinú",
+    "name": "Tulipe",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 5,
+    "top": ["Pink Pepper", "Bergamot"],
+    "mid": ["Tulip", "Iris"],
+    "base": ["Sandalwood", "Musk"],
+    "roles": ["casual", "creative"],
+    "description": "A delicate floral that captures the papery quality of a tulip petal — cool, slightly spicy, and architecturally precise."
+  },
+  {
+    "id": "ore-xinu",
+    "brand": "Xinú",
+    "name": "Ore",
+    "family": "resin",
+    "sillage": 6,
+    "layering": 7,
+    "top": ["Elemi"],
+    "mid": ["Copal Resin", "Frankincense"],
+    "base": ["Amber", "Sandalwood"],
+    "roles": ["formal", "cold"],
+    "description": "A blend of pre-Columbian resins — elemi, copal, and frankincense — slow-burning and ceremonial."
+  }
+]
