@@ -911,6 +911,33 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .onb-reveal-btn.secondary{background:none;border:1.5px solid var(--g200);color:var(--g700)}
 .onb-reveal-btn:hover{opacity:.85}
 .onb-section-label{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g450);margin-bottom:8px}
+/* Profile tab */
+.prof-section{margin-bottom:26px}
+.prof-section-label{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g450);margin-bottom:10px}
+.prof-fam-bars{display:flex;flex-direction:column;gap:9px}
+.prof-fam-bar{display:flex;align-items:center;gap:10px}
+.prof-fam-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.prof-fam-name{font-size:.8rem;width:72px;flex-shrink:0;color:var(--g700)}
+.prof-fam-track{flex:1;height:8px;background:var(--g100);border-radius:4px;overflow:hidden}
+.prof-fam-fill{height:100%;border-radius:4px}
+.prof-fam-count{font-size:.74rem;color:var(--g450);width:22px;text-align:right}
+.prof-notes{display:flex;flex-wrap:wrap;gap:5px}
+.prof-note{font-size:.76rem;padding:4px 10px;border-radius:10px;background:var(--g100);color:var(--g600)}
+.prof-note.hi{background:var(--black);color:#fff}
+.prof-roles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.prof-role{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px;border-radius:8px;background:var(--g50);text-align:center}
+.prof-role.filled{background:var(--black);color:#fff}
+.prof-role-sym{font-size:1rem;line-height:1}
+.prof-role-name{font-size:.67rem;line-height:1.2;color:inherit;opacity:.85}
+.prof-role-count{font-size:.62rem;opacity:.55}
+.prof-sill-track{position:relative;height:10px;background:var(--g100);border-radius:5px;margin-bottom:6px}
+.prof-sill-fill{position:absolute;left:0;top:0;height:100%;border-radius:5px;background:linear-gradient(to right,var(--g300),var(--black))}
+.prof-sill-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:var(--black);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.prof-sill-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--g450)}
+.prof-empty{padding:48px 0;text-align:center}
+.prof-empty-icon{font-size:2rem;margin-bottom:10px;color:var(--g300)}
+.prof-empty-text{font-size:.84rem;color:var(--g500);margin-bottom:16px}
+.prof-empty-btn{font-size:.8rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:7px;padding:9px 18px;cursor:pointer}
 
 /* ══ MOBILE BOTTOM NAV ════════════════════════════════════════ */
 .mobile-bottomnav{display:none}
@@ -951,6 +978,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
         <button class="tab active" onclick="go('catalog',this)">Catalog</button>
         <button class="tab" onclick="go('roles',this)">Roles</button>
         <button class="tab" onclick="go('notes',this)">Notes</button>
+        <button class="tab" onclick="go('profile',this)">Profile</button>
         <button class="tab" onclick="go('changelog',this)">Changelog</button>
       </div>
     </div>
@@ -973,6 +1001,10 @@ body{font-family:"Source Serif 4",Georgia,serif;
       <div class="panel" id="p-notes">
         <div class="sec-label">Notes <span class="sub" id="notes-count"></span></div>
         <div id="notes-body"></div>
+      </div>
+
+      <div class="panel" id="p-profile">
+        <div id="profile-body"></div>
       </div>
 
       <div class="panel" id="p-changelog">
@@ -1001,6 +1033,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   <button class="mbn-btn" onclick="goMobile('catalog',this)"><span class="mbn-icon">≡</span>Catalog</button>
   <button class="mbn-btn" onclick="goMobile('roles',this)"><span class="mbn-icon">♥</span>Roles</button>
   <button class="mbn-btn" onclick="goMobile('notes',this)"><span class="mbn-icon">✿</span>Notes</button>
+  <button class="mbn-btn" onclick="goMobile('profile',this)"><span class="mbn-icon">◈</span>Profile</button>
   <button class="mbn-btn" onclick="goMobile('changelog',this)"><span class="mbn-icon">✦</span>Changelog</button>
 </div>
 
@@ -1982,6 +2015,7 @@ function go(id,btn){
   document.getElementById('p-'+id).classList.add('active');
   if(btn)btn.classList.add('active');
   closeDesktopDetail();
+  if(id==='profile')buildProfile();
 }
 function goMobile(id,btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
@@ -1996,6 +2030,69 @@ function goMobile(id,btn){
     main.style.display='';
     go(id,null);
   }
+}
+
+/* ══ PROFILE TAB ════════════════════════════════════════════════════ */
+function buildProfile(){
+  const owned=CAT.filter(f=>isOwned(f.id));
+  const el=document.getElementById('profile-body');
+  if(!owned.length){
+    el.innerHTML=`
+      <div class="sec-label">Profile</div>
+      <div class="prof-empty">
+        <div class="prof-empty-icon">◎</div>
+        <div class="prof-empty-text">Add fragrances you own to see your taste profile.</div>
+        <button class="prof-empty-btn" onclick="localStorage.removeItem('sm_onboarded');OB_SEL.clear();renderOnboardWelcome();document.getElementById('onboard-overlay').style.display='flex'">Add my collection</button>
+      </div>
+    `;
+    return;
+  }
+  const {famSorted,notesSorted,roleCounts,avgSillage}=buildProfileData(owned.map(f=>f.id));
+  const maxFam=famSorted[0]?.[1]||1;
+  const sillPct=Math.round((avgSillage/10)*100);
+  const sillLabel=avgSillage<=3?'Quiet':avgSillage<=5?'Moderate':avgSillage<=7?'Assertive':'Enormous';
+  el.innerHTML=`
+    <div class="sec-label">Profile <span class="sub">${owned.length} owned</span></div>
+    <div class="prof-section">
+      <div class="prof-section-label">Family breakdown</div>
+      <div class="prof-fam-bars">
+        ${famSorted.map(([fam,cnt])=>`
+          <div class="prof-fam-bar">
+            <div class="prof-fam-dot" style="background:${FAM[fam]?.color||'#888'}"></div>
+            <div class="prof-fam-name">${FAM[fam]?.label||fam}</div>
+            <div class="prof-fam-track"><div class="prof-fam-fill" style="width:${Math.round(cnt/maxFam*100)}%;background:${FAM[fam]?.color||'#888'}"></div></div>
+            <div class="prof-fam-count">${cnt}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div class="prof-section">
+      <div class="prof-section-label">Recurring notes</div>
+      <div class="prof-notes">
+        ${notesSorted.map(([note],i)=>`<span class="prof-note${i<3?' hi':''}">${note}</span>`).join('')}
+      </div>
+    </div>
+    <div class="prof-section">
+      <div class="prof-section-label">Role coverage</div>
+      <div class="prof-roles">
+        ${ROLES.map(r=>`
+          <div class="prof-role${roleCounts[r.id]?' filled':''}">
+            <span class="prof-role-sym">${r.sym}</span>
+            <span class="prof-role-name">${r.name}</span>
+            ${roleCounts[r.id]?`<span class="prof-role-count">${roleCounts[r.id]}</span>`:''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div class="prof-section">
+      <div class="prof-section-label">Sillage sweet spot · avg ${avgSillage}/10 — ${sillLabel}</div>
+      <div class="prof-sill-track">
+        <div class="prof-sill-fill" style="width:${sillPct}%"></div>
+        <div class="prof-sill-marker" style="left:${sillPct}%"></div>
+      </div>
+      <div class="prof-sill-labels"><span>Skin-level</span><span>Moderate</span><span>Enormous</span></div>
+    </div>
+  `;
 }
 
 /* ══ ONBOARDING ═════════════════════════════════════════════════════ */
