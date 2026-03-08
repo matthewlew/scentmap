@@ -2387,13 +2387,14 @@ function renderOnboardReveal(){
 
 /* ══ INIT ═══════════════════════════════════════════════════════════ */
 // Load data from JSON files
+const _nc={cache:'no-store'};
 Promise.all([
-  fetch('data/roles.json').then(r=>r.json()),
-  fetch('data/scents-index.json').then(r=>r.json()).then(idx=>
-    Promise.all(idx.brands.map(b=>fetch(`data/scents/${b}.json`).then(r=>r.json())))
+  fetch('data/roles.json',_nc).then(r=>r.json()),
+  fetch('data/scents-index.json',_nc).then(r=>r.json()).then(idx=>
+    Promise.all(idx.brands.map(b=>fetch(`data/scents/${b}.json`,_nc).then(r=>r.json())))
       .then(arrays=>arrays.flat())
   ),
-  fetch('data/notes.json').then(r=>r.json())
+  fetch('data/notes.json',_nc).then(r=>r.json())
 ]).then(([roles, scents, notes])=>{
   ROLES=roles;
   CAT=scents;
