@@ -164,7 +164,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .cl-item{font-size:.79rem;gap:6px}
   .cl-box{width:16px;height:16px;font-size:.71rem}
   .scent-row{gap:10px;padding:12px 13px;min-height:62px}
-  .s-check{width:18px;height:18px;font-size:.72rem;flex-shrink:0}
+  .s-status{font-size:.56rem;padding:2px 5px}
   .s-fdot{width:8px;height:8px}
   .s-name-btn{font-size:.95rem;line-height:1.4}
   .s-meta{font-size:.76rem;margin-top:2px}
@@ -428,15 +428,8 @@ body{font-family:"Source Serif 4",Georgia,serif;
   pointer-events:none;
 }
 .s-sym:hover .s-sym-tip{display:block}
-.s-check{
-  width:14px;height:14px;flex-shrink:0;border-radius:3px;
-  border:1px solid var(--g300);background:var(--paper);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .16s;
-  font-size:.66rem;font-weight:700;color:transparent;
-}
-.scent-row.s-wish .s-check{border-color:var(--wish);color:var(--wish)}
-.scent-row.s-owned .s-check{border-color:var(--black);background:var(--black);color:#fff}
+.s-status{font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;padding:2px 6px;border-radius:3px;background:var(--stone);color:var(--g500)}
+.s-status-wish{color:var(--wish)}
 .s-fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .s-info{flex:1;min-width:0}
 .s-name-btn{
@@ -447,7 +440,6 @@ body{font-family:"Source Serif 4",Georgia,serif;
 }
 .s-name-btn:hover{text-decoration-color:var(--black)}
 .scent-row.s-wish  .s-name-btn{font-weight:600}
-.scent-row.s-wish  .s-name-btn::before{content:'~';color:var(--wish);margin-right:1px}
 .scent-row.s-owned .s-name-btn{font-weight:700}
 .s-meta{font-size:.68rem;color:var(--g500);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s-syms{display:flex;gap:2px;flex-shrink:0}
@@ -780,7 +772,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .sheet.visible{transform:translateY(0)}
   .sheet.under{transform:translateY(18px) scale(.97);border-radius:18px 18px 0 0}
   .sheet-inner{display:flex;flex-direction:column;flex:1;min-height:0;padding:0 18px 0}
-  .sheet-content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(52px + env(safe-area-inset-bottom,0px))}
+  .sheet-content{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(52px + env(safe-area-inset-bottom,0px))}
   .sheet-handle{width:38px;height:5px;border-radius:2px;background:var(--g300);margin:12px auto 0}
   .sheet-topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 0 15px}
   .sheet-back{display:flex;align-items:center;gap:4px;font-size:.82rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:0;transition:color .12s;min-width:56px;min-height:44px}
@@ -1781,13 +1773,9 @@ function buildCatalog(roleFilter){
     sec.innerHTML=`<div class="brand-hdr"><div class="brand-n">${brand}</div><div class="brand-c" id="bc-${key}"></div></div>`;
     const list=document.createElement('div');list.className='scent-list';
     list.addEventListener('click',e=>{
-      const checkEl=e.target.closest('.s-check');
-      const nameEl=e.target.closest('.s-name-btn');
       const row=e.target.closest('.scent-row');if(!row)return;
       const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
-      const fm=FAM[frag.family]||{color:'#888'};
-      if(checkEl){cycleState(id);if(isOwned(id))window.haptic?.('medium');renderCatRow(row,frag,fm);updBC(brand,key);updCC();syncDots(id);buildCapsule()}
-      else{openFragDetail(frag)}
+      openFragDetail(frag);
     });
     frags.forEach(frag=>{
       const fm=FAM[frag.family]||{color:'#888'};
@@ -1810,16 +1798,14 @@ function renderCatRow(row,frag,fm){
   const st=gst(frag.id);
   row.className=`scent-row s-${st}`;
   row.dataset.family=frag.family;
-  const cc=st==='owned'?'✓':st==='wish'?'~':'';
-  // Commit 2: role glyph with symLine tooltip
+  const badge=st==='owned'?'<span class="s-status">Owned</span>':st==='wish'?'<span class="s-status s-status-wish">Wishlist</span>':'';
   const syms=frag.roles.map(rid=>{
     const r=RM[rid];if(!r)return'';
     return `<span class="s-sym">${r.sym}<span class="s-sym-tip">${r.symLine}</span></span>`;
   }).join('');
-  row.innerHTML=`<div class="s-check">${cc}</div>
-    <div class="s-fdot" style="background:${fm.color}"></div>
+  row.innerHTML=`<div class="s-fdot" style="background:${fm.color}"></div>
     <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${frag.top}</div></div>
-    <div class="s-syms">${syms}</div>`;
+    <div class="s-syms">${syms}</div>${badge}`;
 }
 function updBC(brand,key){
   const frags=CAT.filter(f=>f.brand===brand);
