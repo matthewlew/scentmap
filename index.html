@@ -2015,8 +2015,12 @@ function buildRoleLanding(){
 }
 
 /* ══ BUILD CATALOG ══════════════════════════════════════════════════ */
+let CAT_ROLE_FILTER=null;
+let CAT_STATE_FILTER=null;
+
 function buildCatalog(roleFilter){
-  roleFilter=roleFilter||null;
+  CAT_ROLE_FILTER=(roleFilter===undefined?CAT_ROLE_FILTER:roleFilter);
+  roleFilter=CAT_ROLE_FILTER;
   const body=document.getElementById('cat-body');body.innerHTML='';
 
   // Role filter bar
@@ -2035,7 +2039,24 @@ function buildCatalog(roleFilter){
   });
   body.appendChild(filterBar);
 
+  // Apply filters: state + search
+  const search=(document.getElementById('cat-search')?.value||'').toLowerCase().trim();
   let visibleCat=roleFilter?CAT.filter(f=>f.roles.includes(roleFilter)):CAT;
+  if(CAT_STATE_FILTER==='owned')visibleCat=visibleCat.filter(f=>isOwned(f.id));
+  else if(CAT_STATE_FILTER==='wish')visibleCat=visibleCat.filter(f=>isWish(f.id));
+  if(search)visibleCat=visibleCat.filter(f=>
+    f.name.toLowerCase().includes(search)||
+    f.brand.toLowerCase().includes(search)||
+    [...(f.top||[]),...(f.mid||[]),...(f.base||[])].some(n=>n.toLowerCase().includes(search))
+  );
+
+  if(!visibleCat.length){
+    const empty=document.createElement('div');empty.className='cat-empty';
+    empty.textContent=search?`No matches for "${search}"`:'No fragrances in this view.';
+    body.appendChild(empty);
+    updCC();return;
+  }
+
   const brands=[...new Set(visibleCat.map(f=>f.brand))];
   brands.forEach(brand=>{
     const frags=visibleCat.filter(f=>f.brand===brand);
@@ -2063,6 +2084,32 @@ function buildCatalog(roleFilter){
   let sel=document.getElementById('cat-role-filter');
   if(!sel){sel=document.createElement('select');sel.id='cat-role-filter';sel.style.display='none';document.body.appendChild(sel);}
   sel.value=roleFilter||'';
+}
+
+function initCatalogControls(){
+  // State filter tabs
+  const stateBar=document.getElementById('cat-state-bar');
+  [['All',null],['Owned','owned'],['Wishlist','wish']].forEach(([label,val])=>{
+    const btn=document.createElement('button');
+    btn.className='tab'+(CAT_STATE_FILTER===val?' active':'');
+    btn.textContent=label;
+    btn.addEventListener('click',()=>{
+      CAT_STATE_FILTER=val;
+      stateBar.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));
+      buildCatalog();
+    });
+    stateBar.appendChild(btn);
+  });
+  // Search input
+  const searchEl=document.getElementById('cat-search');
+  const clearBtn=document.getElementById('cat-search-clear');
+  searchEl.addEventListener('input',()=>{
+    clearBtn.classList.toggle('visible',searchEl.value.length>0);
+    buildCatalog();
+  });
+  clearBtn.addEventListener('click',()=>{
+    searchEl.value='';clearBtn.classList.remove('visible');buildCatalog();
+  });
 }
 
 function renderCatRow(row,frag,fm){
