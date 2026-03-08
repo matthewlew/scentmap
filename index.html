@@ -80,6 +80,11 @@ body{font-family:"Source Serif 4",Georgia,serif;
 }
 .col-main-content{padding:20px 20px 80px}
 
+/* Desktop ≥1100px: bump base font size for readability */
+@media(min-width:1100px){
+  html{font-size:17px}
+}
+
 /* RIGHT: detail panel — desktop: in-flow third column */
 /* Desktop ≥1100px: true panel, no overlay */
 @media(min-width:1100px){
@@ -191,9 +196,10 @@ body{font-family:"Source Serif 4",Georgia,serif;
 
   /* Notes tab */
   .notes-family-row{padding:10px 0}
-  .nf-left{width:100px;gap:7px}
+  .nf-left{flex:1;padding-right:14px;gap:5px 7px}
   .nf-dot{width:9px;height:9px}
   .nf-name{font-size:.9rem}
+  .nf-desc{font-size:.76rem;padding-left:16px}
   .note-link{font-size:.9rem;line-height:1.85;padding:2px 0}
 
   /* Changelog */
@@ -396,6 +402,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
 }
 .brand-c{font-size:.7rem;color:var(--g450)}
+.brand-total{font-size:.6rem;font-weight:400;color:var(--g400);margin-left:5px;letter-spacing:0;text-transform:none}
 .scent-list{border:1px solid var(--black);border-radius:7px;overflow:hidden}
 .scent-row{
   display:flex;align-items:center;gap:8px;
@@ -613,9 +620,10 @@ body{font-family:"Source Serif 4",Georgia,serif;
 /* ══ NOTES ════════════════════════════════════════════════════ */
 .notes-family-row{display:flex;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--g200)}
 .notes-family-row:last-child{border-bottom:none}
-.nf-left{display:flex;align-items:center;gap:6px;width:90px;flex-shrink:0;padding-top:2px}
-.nf-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.nf-name{font-size:.8rem;font-weight:500}
+.nf-left{display:flex;align-items:flex-start;flex-wrap:wrap;gap:4px 6px;flex:1;padding-top:3px;padding-right:20px}
+.nf-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.nf-name{font-size:.8rem;font-weight:500;flex-shrink:0}
+.nf-desc{font-size:.68rem;color:var(--g500);line-height:1.5;width:100%;padding-left:14px}
 .nf-right{flex:1;display:flex;flex-direction:column}
 .note-link{
   font-size:.8rem;color:var(--black);
@@ -648,6 +656,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .dc-nv .note-link{font-size:.78rem}
 
 /* Role assignment chips */
+.dc-desc{font-size:.82rem;color:var(--g600);line-height:1.65;margin:10px 0 13px;font-style:italic}
 .dc-roles-lbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin:12px 0 7px}
 .dc-role-chips{display:flex;flex-wrap:wrap;gap:5px}
 .dc-role-chip{
@@ -921,11 +930,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 
       <div class="panel active" id="p-catalog">
         <div class="sec-label">Catalog <span class="sub" id="cat-count"></span></div>
-        <div class="cat-legend">
-          <div class="cl-item"><div class="cl-box"></div>Not tracked</div>
-          <div class="cl-item"><div class="cl-box" style="border-color:var(--wish);color:var(--wish)">~</div>Wishlist</div>
-          <div class="cl-item"><div class="cl-box" style="border-color:var(--black);background:var(--black);color:#fff">✓</div>Owned</div>
-        </div>
+
         <div id="cat-body"></div>
       </div>
 
@@ -1035,16 +1040,16 @@ let ROLES=[
 let RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
 
 const FAM={
-  citrus:  {label:'Citrus',  color:'#9A6800'},
-  green:   {label:'Green',   color:'#1A6030'},
-  floral:  {label:'Floral',  color:'#902050'},
-  woody:   {label:'Woody',   color:'#6E3210'},
-  amber:   {label:'Amber',   color:'#984000'},
-  chypre:  {label:'Chypre',  color:'#285438'},
-  aquatic: {label:'Aquatic', color:'#0A4880'},
-  leather: {label:'Leather', color:'#42200E'},
-  gourmand:{label:'Gourmand',color:'#7C4C00'},
-  oud:     {label:'Oud',     color:'#4A1850'},
+  citrus:  {label:'Citrus',  color:'#9A6800', desc:'Bright and fleeting. Pressed from rinds — bergamot, lemon, grapefruit. Often the first thing you smell, and the first to fade. Works in heat; rarely works alone.'},
+  green:   {label:'Green',   color:'#1A6030', desc:'Crisp, alive, and vegetal — cut grass, fig leaf, violet leaf. The smell of growing things rather than flowering ones. Fresh but rooted.'},
+  floral:  {label:'Floral',  color:'#902050', desc:'Derived from flowers — rose, jasmine, tuberose, iris. The broadest family. Ranges from powdery and romantic to bright and dewy. The backbone of most commercial perfumery.'},
+  woody:   {label:'Woody',   color:'#6E3210', desc:'Dry, earthy warmth from woods and roots — cedar, sandalwood, vetiver, patchouli. A broad family spanning cool dry cedar to rich creamy sandalwood.'},
+  amber:   {label:'Amber',   color:'#984000', desc:'Warm, resinous, and slightly sweet. Labdanum, benzoin, vanilla, resins. Rich base materials that linger for hours. The classic "oriental" register.'},
+  chypre:  {label:'Chypre',  color:'#285438', desc:'A structured accord: bergamot up top, labdanum at the base, oakmoss in the heart. Earthy, sophisticated, mossy. Named after Cyprus; backbone of classic perfumery.'},
+  aquatic: {label:'Aquatic', color:'#0A4880', desc:'Marine, watery, ozonic. Invented in the 1990s. The smell of imagined sea air — ozone, salt, and calone — rather than actual ocean. Fresh and weightless.'},
+  leather: {label:'Leather', color:'#42200E', desc:'Reconstructed from birch tar, labdanum, and castoreum. Dry, dark, slightly smoky. Evokes tanned hides, saddles, and worn books. Difficult to wear casually.'},
+  gourmand:{label:'Gourmand',color:'#7C4C00', desc:'Edible-smelling notes — vanilla, caramel, tonka, praline. Emerged in the 1990s. Warm, sweet, and comforting. Fragrance as food memory.'},
+  oud:     {label:'Oud',     color:'#4A1850', desc:'Dark, animalic resin from infected agarwood. Deep, smoky, and complex. The most prized raw material in Arabian perfumery — priced by weight, not volume. Polarising.'},
 };
 const FAM_ORDER=['floral','amber','citrus','woody','chypre','gourmand','green','oud','leather','aquatic'];
 
@@ -1383,6 +1388,7 @@ function renderFragDetail(container,frag){
     <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
     <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
     <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
+    ${frag.description?`<div class="dc-desc">${frag.description}</div>`:''}
     <div class="dc-roles-lbl">Assigned to roles</div>
     <div class="dc-role-chips" id="dc-chips-${frag.id}"></div>`;
 
@@ -1878,7 +1884,7 @@ function buildCatalog(roleFilter){
     const frags=visibleCat.filter(f=>f.brand===brand);
     const key=brand.replace(/\s+/g,'-')+(roleFilter||'');
     const sec=document.createElement('div');sec.className='cat-section';
-    sec.innerHTML=`<div class="brand-hdr"><div class="brand-n">${brand}</div><div class="brand-c" id="bc-${key}"></div></div>`;
+    sec.innerHTML=`<div class="brand-hdr"><div class="brand-n">${brand}<span class="brand-total">${frags.length}</span></div><div class="brand-c" id="bc-${key}"></div></div>`;
     const list=document.createElement('div');list.className='scent-list';
     list.addEventListener('click',e=>{
       const row=e.target.closest('.scent-row');if(!row)return;
@@ -1906,14 +1912,13 @@ function renderCatRow(row,frag,fm){
   const st=gst(frag.id);
   row.className=`scent-row s-${st}`;
   row.dataset.family=frag.family;
-  const badge=st==='owned'?'<span class="s-status">Owned</span>':st==='wish'?'<span class="s-status s-status-wish">Wishlist</span>':'';
   const syms=frag.roles.map(rid=>{
     const r=RM[rid];if(!r)return'';
     return `<span class="s-sym">${r.sym}<span class="s-sym-tip">${r.symLine}</span></span>`;
   }).join('');
   row.innerHTML=`<div class="s-fdot" style="background:${fm.color}"></div>
     <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${frag.top.join(', ')}</div></div>
-    <div class="s-syms">${syms}</div>${badge}`;
+    <div class="s-syms">${syms}</div>`;
 }
 function updBC(brand,key){
   const frags=CAT.filter(f=>f.brand===brand);
@@ -1939,7 +1944,7 @@ function buildNotes(){
     const fm=FAM[fk];if(!fm)return;
     const row=document.createElement('div');row.className='notes-family-row';
     const left=document.createElement('div');left.className='nf-left';
-    left.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>`;
+    left.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}` ;
     const right=document.createElement('div');right.className='nf-right';
     grouped[fk].forEach(note=>{
       const btn=document.createElement('button');btn.className='note-link';btn.textContent=note.name;

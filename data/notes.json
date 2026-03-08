@@ -15,6 +15,7 @@
   { "name": "Cedar Milk", "family": "woody", "desc": "A creamy, soft cedar variant — milky and smooth rather than dry and sharp." },
   { "name": "Cedarwood", "family": "woody", "desc": "Deeper and warmer than cedar. Slightly sweet, balsamic, and smooth." },
   { "name": "Clove", "family": "amber", "desc": "Spicy, sharp, eugenol-forward. Dense and slightly medicinal." },
+  { "name": "Copal Resin", "family": "amber", "desc": "Sacred tree resin burned as incense across Mesoamerica for millennia. Smoky, slightly piney, and deeply ceremonial — lighter than frankincense but with a similar ritual character." },
   { "name": "Coconut Water", "family": "gourmand", "desc": "Light, slightly sweet aquatic note with tropical softness." },
   { "name": "Coriander", "family": "amber", "desc": "Warm, slightly citrusy spice with a faintly earthy, dried-herb character. Drier than cardamom." },
   { "name": "Cyclamen", "family": "floral", "desc": "Delicate, watery floral with a slightly metallic edge." },
