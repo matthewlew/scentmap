@@ -1475,6 +1475,9 @@ function renderFragDetail(container,frag){
   // Role chips — all 8
   buildRoleChips(frag,container.querySelector(`#dc-chips-${frag.id}`));
 
+  // Layering suggestions
+  buildLayerSuggestions(frag,container);
+
   // Similar shelf — split into owned and discover sections
   const scored=CAT
     .filter(f=>f.id!==frag.id)
@@ -1530,6 +1533,55 @@ function renderFragDetail(container,frag){
     }
     container.appendChild(shelf);
   }
+}
+
+function buildLayerSuggestions(frag,container){
+  const owned=CAT.filter(f=>isOwned(f.id)&&f.id!==frag.id);
+  if(!owned.length)return;
+  function scoreLayering(a,b){
+    const famComp=FAM_COMPAT[a.family]?.[b.family]??0.5;
+    const famScore=famComp*35;
+    const sillDiff=Math.abs(a.sillage-b.sillage);
+    const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
+    const allA=[...a.top,...a.mid,...a.base].map(n=>n.toLowerCase());
+    const allB=[...b.top,...b.mid,...b.base].map(n=>n.toLowerCase());
+    const shared=allA.filter(n=>allB.includes(n)).length;
+    const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
+    return Math.round(famScore+sillScore+noteScore);
+  }
+  function layerReason(a,b){
+    const sillDiff=b.sillage-a.sillage;
+    if(Math.abs(sillDiff)>=3)return sillDiff>0?`Wear ${b.name} over — projects further`:`Wear ${b.name} under — anchors the blend`;
+    const allA=[...a.top,...a.mid,...a.base].map(n=>n.toLowerCase());
+    const uniqueB=[...b.base,...b.mid].find(n=>!allA.includes(n.toLowerCase()));
+    if(uniqueB)return`Adds ${uniqueB}`;
+    return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
+  }
+  const candidates=owned
+    .map(f=>({f,score:scoreLayering(frag,f)}))
+    .filter(x=>x.score>=40)
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,2);
+  if(!candidates.length)return;
+  const lbl=document.createElement('div');
+  lbl.className='dc-sim-lbl';lbl.textContent='Layer with what you own';
+  container.appendChild(lbl);
+  const shelf=document.createElement('div');shelf.className='dc-sim-shelf';
+  candidates.forEach(({f})=>{
+    const fm2=FAM[f.family]||{color:'#888'};
+    const reason=layerReason(frag,f);
+    const row=document.createElement('button');row.className='dc-sim-row';
+    row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
+      <span class="dc-sim-info">
+        <span class="dc-sim-name">${f.name}</span>
+        <span class="dc-sim-brand">${f.brand}</span>
+        ${reason?`<span class="dc-sim-reason">${reason}</span>`:''}
+      </span>
+      <span class="dc-sim-state is-owned">Owned</span>`;
+    row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
+    shelf.appendChild(row);
+  });
+  container.appendChild(shelf);
 }
 
 function buildRoleChips(frag,chipsEl){
