@@ -63,13 +63,8 @@ body{font-family:"Source Serif 4",Georgia,serif;
 /* ══ SHELL ═══════════════════════════════════════════════════ */
 .shell{display:flex;min-height:100vh;max-width:1400px;margin:0 auto}
 
-/* LEFT: capsule — no right border */
-.col-capsule{
-  width:var(--col-capsule);flex-shrink:0;
-  border-right:none;
-  position:sticky;top:0;height:100vh;overflow-y:auto;
-}
-.capsule-col-inner{padding:16px 16px 60px;border-right:1px solid var(--black)}
+/* LEFT: capsule — hidden; content lives in p-scentmap panel */
+.col-capsule{display:none!important}
 
 /* MIDDLE: main — always fills remaining width */
 .col-main{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -129,14 +124,6 @@ body{font-family:"Source Serif 4",Georgia,serif;
   body{line-height:1.7}
   /* Stack columns vertically */
   .shell{flex-direction:column;min-height:auto}
-  .col-capsule{
-    width:100%;height:auto;position:static;
-    border-right:none;overflow-y:visible;
-  }
-  .capsule-col-inner{
-    border-right:none;border-bottom:1px solid var(--black);
-    padding:18px 16px calc(80px + env(safe-area-inset-bottom,0px));
-  }
   .col-main{min-height:auto}
   .col-main-nav{padding:12px 16px 10px;position:sticky}
   .col-main-content{padding:18px 16px calc(80px + env(safe-area-inset-bottom,0px))}
@@ -994,19 +981,11 @@ body{font-family:"Source Serif 4",Georgia,serif;
 <body>
 <div class="shell">
 
-  <!-- LEFT: CAPSULE -->
-  <div class="col-capsule">
-    <div class="capsule-col-inner">
-      <div class="logo" style="margin-bottom:5px">Scentmap</div>
-      <div class="capsule-tagline">One fragrance per role. Tap to assign.</div>
-      <div class="capsule-grid" id="capsule-grid"></div>
-    </div>
-  </div>
-
   <!-- MIDDLE: MAIN -->
   <div class="col-main">
     <div class="col-main-nav">
       <div class="tabs">
+        <button class="tab" onclick="go('scentmap',this)">Scentmap</button>
         <button class="tab active" onclick="go('catalog',this)">Catalog</button>
         <button class="tab" onclick="go('roles',this)">Roles</button>
         <button class="tab" onclick="go('notes',this)">Notes</button>
@@ -1015,6 +994,12 @@ body{font-family:"Source Serif 4",Georgia,serif;
       </div>
     </div>
     <div class="col-main-content">
+
+      <div class="panel" id="p-scentmap">
+        <div class="logo" style="margin-bottom:6px">Scentmap</div>
+        <div class="capsule-tagline" style="margin-bottom:20px">One fragrance per role. Tap to assign.</div>
+        <div class="capsule-grid" id="capsule-grid"></div>
+      </div>
 
       <div class="panel active" id="p-catalog">
         <div class="cat-topbar">
@@ -2163,7 +2148,7 @@ function buildNotes(){
 /* ══ NAV ════════════════════════════════════════════════════════════ */
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab)').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab)').forEach(t=>t.classList.remove('active'));
   document.getElementById('p-'+id).classList.add('active');
   if(btn)btn.classList.add('active');
   closeDesktopDetail();
@@ -2172,16 +2157,7 @@ function go(id,btn){
 function goMobile(id,btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const capsule=document.querySelector('.col-capsule');
-  const main=document.querySelector('.col-main');
-  if(id==='scentmap'){
-    capsule.style.display='';
-    main.style.display='none';
-  } else {
-    capsule.style.display='none';
-    main.style.display='';
-    go(id,null);
-  }
+  go(id,null);
 }
 
 /* ══ PROFILE TAB ════════════════════════════════════════════════════ */
@@ -2395,7 +2371,7 @@ Promise.all([
   CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   // Now initialize
-  buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildConstellation();buildPairer();showOnboard();
+  buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildConstellation();buildPairer();initCatalogControls();showOnboard();
   if(window.innerWidth<768){
     const btn=document.querySelector('.mbn-btn');
     if(btn)goMobile('scentmap',btn);
@@ -2414,7 +2390,7 @@ function buildConstellation(){
   const canvas=document.createElement('canvas');canvas.className='constellation-canvas';
   wrap.appendChild(canvas);
   const freq={};
-  CAT.forEach(f=>['top','mid','base'].forEach(tier=>(f[tier]||'').split(',').map(s=>s.trim().toLowerCase()).forEach(n=>{freq[n]=(freq[n]||0)+1;})));
+  CAT.forEach(f=>['top','mid','base'].forEach(tier=>(f[tier]||[]).forEach(s=>{const n=s.trim().toLowerCase();freq[n]=(freq[n]||0)+1;})));
   const FAM_COLORS={woody:'#7C5C2E',floral:'#C2547A',amber:'#C98000',citrus:'#D4A000',leather:'#4A2010',oud:'#1A0A14',green:'#3A6B2C',chypre:'#5A7A3A',gourmand:'#A0522D'};
   const nodes=NI.map((n,i)=>({...n,id:i,freq:freq[n.name.toLowerCase()]||0,x:0.1+Math.random()*0.8,y:0.1+Math.random()*0.8,vx:0,vy:0}));
   function getR(n){return 4+Math.min(n.freq*2.8,16);}
@@ -2450,7 +2426,7 @@ function buildConstellation(){
     const W=canvas.width,H=canvas.height;let hit=null;
     nodes.forEach(n=>{const r=getR(n),dx=(n.x-mx)*W,dy=(n.y-my)*H;if(Math.sqrt(dx*dx+dy*dy)<r+6)hit=n;});
     if(hit){
-      const inCat=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||'').toLowerCase().split(',').map(s=>s.trim()).includes(hit.name.toLowerCase()))).sort((a,b)=>a.name.localeCompare(b.name));
+      const inCat=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||[]).some(s=>s.toLowerCase().trim()===hit.name.toLowerCase()))).sort((a,b)=>a.name.localeCompare(b.name));
       tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';
       tip.innerHTML=`<strong>${hit.name}</strong><br>${hit.desc}<br><span style="opacity:.6;font-size:.6rem">${inCat.length} fragrance${inCat.length!==1?'s':''}: ${inCat.map(f=>f.name).join(', ')}</span>`;
       canvas.style.cursor='pointer';
@@ -2468,7 +2444,7 @@ function buildConstellation(){
         const catTab=document.querySelector('[data-panel="catalog"]');
         if(catTab){catTab.classList.add('active');document.getElementById('p-catalog')?.classList.add('active');}
         const body=document.getElementById('cat-body');body.innerHTML='';
-        const matched=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||'').toLowerCase().split(',').map(s=>s.trim()).includes(n.name.toLowerCase())));
+        const matched=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||[]).some(s=>s.toLowerCase().trim()===n.name.toLowerCase())));
         const hdr=document.createElement('div');hdr.className='sec-label';
         hdr.innerHTML=`<span>Note: ${n.name}</span><span class="sub"><button class="tab" style="font-size:.65rem;padding:2px 8px" onclick="buildRoleLanding()">Clear ×</button></span>`;
         body.appendChild(hdr);
