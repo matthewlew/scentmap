@@ -670,6 +670,26 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .dc-role-chip .chip-sym{font-size:.88rem;line-height:1}
 .dc-role-chip .chip-order{font-size:.58rem;opacity:.7;margin-left:1px}
 
+/* Similar shelf */
+.dc-sim-lbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin:14px 0 7px}
+.dc-sim-shelf{display:flex;flex-direction:column;gap:4px}
+.dc-sim-sub{font-size:.6rem;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--g400);margin:8px 0 4px}
+.dc-sim-sub:first-child{margin-top:0}
+.dc-sim-row{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;
+  border:1px solid var(--g200);border-radius:6px;cursor:pointer;
+  background:#fff;transition:background .1s;text-align:left;width:100%;
+}
+.dc-sim-row:hover{background:var(--g100)}
+.dc-sim-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dc-sim-info{flex:1;min-width:0}
+.dc-sim-name{font-size:.82rem;font-weight:600;color:var(--black);line-height:1.2;display:block}
+.dc-sim-brand{font-size:.63rem;color:var(--g500);display:block;margin-top:1px}
+.dc-sim-reason{font-size:.63rem;color:var(--g450);display:block;margin-top:2px}
+.dc-sim-state{font-size:.63rem;font-weight:600;color:var(--g400);flex-shrink:0}
+.dc-sim-state.is-owned{color:var(--black)}
+.dc-sim-state.is-wish{color:var(--wish)}
+
 /* ══ PICKER HERO ══════════════════════════════════════════════ */
 .picker-hero{
   border:1px solid var(--g200);border-radius:8px;
@@ -798,6 +818,11 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .dc-roles-lbl{font-size:.7rem;margin:14px 0 8px}
   .dc-role-chip{padding:6px 12px;font-size:.82rem;min-height:40px}
   .dc-role-chip .chip-sym{font-size:.96rem}
+  .dc-sim-lbl{font-size:.7rem;margin:16px 0 8px}
+  .dc-sim-row{padding:10px 12px;min-height:44px}
+  .dc-sim-name{font-size:.9rem}
+  .dc-sim-brand{font-size:.72rem}
+  .dc-sim-reason{font-size:.7rem}
   .picker-title{font-size:1.04rem;margin-bottom:2px}
   .picker-sub{font-size:.8rem}
   .picker-hero{padding:16px 16px 14px;margin-bottom:16px}
@@ -1023,6 +1048,18 @@ const FAM={
 };
 const FAM_ORDER=['floral','amber','citrus','woody','chypre','gourmand','green','oud','leather','aquatic'];
 
+const FAM_COMPAT={
+  woody:   {woody:.7,floral:.8,amber:.9,citrus:.6,leather:.8,oud:.9,green:.6,chypre:.7,gourmand:.5},
+  floral:  {woody:.8,floral:.5,amber:.7,citrus:.7,leather:.5,oud:.6,green:.8,chypre:.8,gourmand:.5},
+  amber:   {woody:.9,floral:.7,amber:.5,citrus:.4,leather:.8,oud:.9,green:.4,chypre:.6,gourmand:.8},
+  citrus:  {woody:.6,floral:.7,amber:.4,citrus:.4,leather:.4,oud:.3,green:.9,chypre:.7,gourmand:.3},
+  leather: {woody:.8,floral:.5,amber:.8,citrus:.4,leather:.4,oud:.9,green:.5,chypre:.7,gourmand:.4},
+  oud:     {woody:.9,floral:.6,amber:.9,citrus:.3,leather:.9,oud:.3,green:.3,chypre:.5,gourmand:.6},
+  green:   {woody:.6,floral:.8,amber:.4,citrus:.9,leather:.5,oud:.3,green:.4,chypre:.9,gourmand:.3},
+  chypre:  {woody:.7,floral:.8,amber:.6,citrus:.7,leather:.7,oud:.5,green:.9,chypre:.4,gourmand:.4},
+  gourmand:{woody:.5,floral:.5,amber:.8,citrus:.3,leather:.4,oud:.6,green:.3,chypre:.4,gourmand:.4},
+};
+
 /* State */
 const ST={};
 function gst(id){return ST[id]||'none'}
@@ -1030,6 +1067,23 @@ function setState(id,s){ST[id]=s}
 function isOwned(id){return gst(id)==='owned'}
 function isWish(id){return gst(id)==='wish'}
 function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
+
+/* Similarity scoring: 0–100 across family, notes, sillage, roles */
+function scoreSimilarity(a,b){
+  if(a.id===b.id)return 0;
+  const famScore=(FAM_COMPAT[a.family]?.[b.family]??0.5)*40;
+  const al={top:a.top.map(n=>n.toLowerCase()),mid:a.mid.map(n=>n.toLowerCase()),base:a.base.map(n=>n.toLowerCase())};
+  const bl={top:b.top.map(n=>n.toLowerCase()),mid:b.mid.map(n=>n.toLowerCase()),base:b.base.map(n=>n.toLowerCase())};
+  const shBase=al.base.filter(n=>bl.base.includes(n)).length;
+  const shMid=al.mid.filter(n=>bl.mid.includes(n)).length;
+  const shTop=al.top.filter(n=>bl.top.includes(n)).length;
+  const noteScore=Math.min(30,shBase*5+shMid*3+shTop*2);
+  const sillDiff=Math.abs(a.sillage-b.sillage);
+  const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
+  const shRoles=a.roles.filter(r=>b.roles.includes(r)).length;
+  const roleScore=Math.min(20,shRoles*7);
+  return Math.round(famScore+noteScore+sillScore+roleScore);
+}
 
 /* Role assignments: roleId → ordered array of fragId (index 0 = primary) */
 const RA={};
@@ -1349,6 +1403,60 @@ function renderFragDetail(container,frag){
 
   // Role chips — all 8
   buildRoleChips(frag,container.querySelector(`#dc-chips-${frag.id}`));
+
+  // Similar shelf — split into owned and discover sections
+  const scored=CAT
+    .filter(f=>f.id!==frag.id)
+    .map(f=>({f,score:scoreSimilarity(frag,f)}))
+    .filter(x=>x.score>=30)
+    .sort((a,b)=>b.score-a.score);
+
+  const simOwned=scored.filter(x=>isOwned(x.f.id)).slice(0,3);
+  const simDiscover=scored.filter(x=>!isOwned(x.f.id)).slice(0,3);
+
+  if(simOwned.length||simDiscover.length){
+    const lbl=document.createElement('div');
+    lbl.className='dc-sim-lbl';lbl.textContent='More like this';
+    container.appendChild(lbl);
+    const shelf=document.createElement('div');shelf.className='dc-sim-shelf';
+
+    function simReason(a,b){
+      const shBase=a.base.filter(n=>b.base.map(s=>s.toLowerCase()).includes(n.toLowerCase()));
+      if(shBase.length)return`Shared base: ${shBase.slice(0,2).join(', ')}`;
+      if((FAM_COMPAT[a.family]?.[b.family]??0)>=.8)return`${a.family[0].toUpperCase()+a.family.slice(1)} × ${b.family}`;
+      return'';
+    }
+
+    function makeSimRow(f){
+      const fm2=FAM[f.family]||{color:'#888'};
+      const st=gst(f.id);
+      const stLabel=st==='owned'?'Owned':st==='wish'?'Wish':'';
+      const stCls=st==='owned'?' is-owned':st==='wish'?' is-wish':'';
+      const reason=simReason(frag,f);
+      const row=document.createElement('button');row.className='dc-sim-row';
+      row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
+        <span class="dc-sim-info">
+          <span class="dc-sim-name">${f.name}</span>
+          <span class="dc-sim-brand">${f.brand}</span>
+          ${reason?`<span class="dc-sim-reason">${reason}</span>`:''}
+        </span>
+        ${stLabel?`<span class="dc-sim-state${stCls}">${stLabel}</span>`:''}`;
+      row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
+      return row;
+    }
+
+    if(simOwned.length){
+      const sub=document.createElement('div');sub.className='dc-sim-sub';sub.textContent='In your collection';
+      shelf.appendChild(sub);
+      simOwned.forEach(({f})=>shelf.appendChild(makeSimRow(f)));
+    }
+    if(simDiscover.length){
+      const sub=document.createElement('div');sub.className='dc-sim-sub';sub.textContent='Discover';
+      shelf.appendChild(sub);
+      simDiscover.forEach(({f})=>shelf.appendChild(makeSimRow(f)));
+    }
+    container.appendChild(shelf);
+  }
 }
 
 function buildRoleChips(frag,chipsEl){
@@ -2006,17 +2114,6 @@ function buildConstellation(){
 
 /* ══ COMMIT 5: LAYERING PAIRER ═══════════════════════════════════ */
 function buildPairer(){
-  const COMPAT={
-    woody:  {woody:.7,floral:.8,amber:.9,citrus:.6,leather:.8,oud:.9,green:.6,chypre:.7,gourmand:.5},
-    floral: {woody:.8,floral:.5,amber:.7,citrus:.7,leather:.5,oud:.6,green:.8,chypre:.8,gourmand:.5},
-    amber:  {woody:.9,floral:.7,amber:.5,citrus:.4,leather:.8,oud:.9,green:.4,chypre:.6,gourmand:.8},
-    citrus: {woody:.6,floral:.7,amber:.4,citrus:.4,leather:.4,oud:.3,green:.9,chypre:.7,gourmand:.3},
-    leather:{woody:.8,floral:.5,amber:.8,citrus:.4,leather:.4,oud:.9,green:.5,chypre:.7,gourmand:.4},
-    oud:    {woody:.9,floral:.6,amber:.9,citrus:.3,leather:.9,oud:.3,green:.3,chypre:.5,gourmand:.6},
-    green:  {woody:.6,floral:.8,amber:.4,citrus:.9,leather:.5,oud:.3,green:.4,chypre:.9,gourmand:.3},
-    chypre: {woody:.7,floral:.8,amber:.6,citrus:.7,leather:.7,oud:.5,green:.9,chypre:.4,gourmand:.4},
-    gourmand:{woody:.5,floral:.5,amber:.8,citrus:.3,leather:.4,oud:.6,green:.3,chypre:.4,gourmand:.4},
-  };
   const rolesBody=document.getElementById('roles-body');
   if(!rolesBody)return;
   const wrap=document.createElement('div');wrap.className='pairer-wrap';
@@ -2038,7 +2135,7 @@ function buildPairer(){
   function computePair(){
     const fa=CAT_MAP[A.sel.value],fb=CAT_MAP[B.sel.value];
     if(!fa||!fb||fa.id===fb.id){result.className='pairer-result';return;}
-    const famScore=COMPAT[fa.family]?.[fb.family]??0.5;
+    const famScore=FAM_COMPAT[fa.family]?.[fb.family]??0.5;
     const layerScore=1-Math.abs(fa.layering-fb.layering)/9*0.5;
     const baseA=fa.base.map(s=>s.toLowerCase());
     const baseB=fb.base.map(s=>s.toLowerCase());
