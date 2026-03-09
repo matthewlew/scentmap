@@ -4,6 +4,17 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-09
+
+### Added
+- **Compare tab** — new panel (desktop nav + mobile bottom nav) for side-by-side fragrance comparison; search autocomplete for both slots with family-color-coded results; selected fragrances shown as dismissible chips
+- **Venn diagram** — SVG visualization showing the match score (0–100) between two fragrances; circle sizes and overlap reflect computed similarity; family accent colors for each fragrance
+- **Notes breakdown** — three-column grid showing notes unique to each fragrance vs. shared notes; each note tagged with layer badge (T = top, H = heart, B = base)
+- **Fragrance fingerprint** — SVG radar/spider chart per fragrance across 5 dimensions (freshness, sweetness, warmth, intensity, depth) derived from family profile and sillage/layering values; two fingerprints shown side-by-side for direct visual comparison
+- **Key metrics bars** — mirrored horizontal bars comparing sillage and layering values; shared roles highlighted in accent color
+- **Suggestions** — 4 "you might also like" cards below each comparison, ranked by maximum similarity score to either selected fragrance
+- **Archivo Black font** — added for display headings in the Compare panel; bold editorial feel per v2 design direction
+
 ## 2026-03-08 (4)
 
 ### Added

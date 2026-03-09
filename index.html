@@ -6,7 +6,7 @@
 <title>Scentmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
 <script>
   window._hapticImpl = type => { try { if(type==='medium')navigator.vibrate?.([25]); else if(type==='success')navigator.vibrate?.([15,50,30]); } catch(e){} };
   window.haptic = type => window._hapticImpl(type);
@@ -194,6 +194,154 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .changelog-body h2{font-size:.82rem;margin:30px 0 15px;padding-bottom:8px}
   .changelog-body h3{font-size:.84rem;margin:18px 0 9px}
   .changelog-body li{margin:5px 0}
+}
+
+/* ══ COMPARE PANEL ════════════════════════════════════════════ */
+#p-compare{padding-bottom:60px}
+.cmp-hero{padding:28px 0 24px}
+.cmp-hero-title{
+  font-family:"Archivo Black","DM Sans",system-ui,sans-serif;
+  font-size:3rem;line-height:1;color:var(--ink);letter-spacing:-.02em;
+}
+.cmp-hero-sub{font-size:.88rem;color:var(--g500);margin-top:8px}
+.cmp-pickers{display:flex;gap:16px;align-items:flex-start;margin-bottom:28px}
+.cmp-picker-wrap{flex:1;min-width:0}
+.cmp-picker-label{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--g400);margin-bottom:6px;
+}
+.cmp-vs-badge{
+  font-family:"Archivo Black","DM Sans",sans-serif;
+  font-size:.9rem;color:var(--g300);padding-top:30px;flex-shrink:0;letter-spacing:.06em;
+}
+.cmp-search-wrap{position:relative}
+.cmp-search{
+  width:100%;padding:10px 14px;border:1.5px solid var(--g200);border-radius:8px;
+  background:var(--paper);font-size:.92rem;outline:none;
+  transition:border-color .15s;color:var(--ink);font-family:inherit;
+}
+.cmp-search:focus{border-color:var(--ink)}
+.cmp-search::placeholder{color:var(--g400)}
+.cmp-dd{
+  position:absolute;top:calc(100% + 4px);left:0;right:0;
+  background:var(--paper);border:1px solid var(--g200);border-radius:8px;
+  z-index:200;max-height:260px;overflow-y:auto;
+  box-shadow:0 8px 24px rgba(14,12,9,.1);display:none;
+}
+.cmp-dd.open{display:block}
+.cmp-dd-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--g100);
+}
+.cmp-dd-item:last-child{border-bottom:none}
+.cmp-dd-item:hover{background:var(--stone)}
+.cmp-dd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cmp-dd-name{font-size:.88rem;font-weight:600}
+.cmp-dd-brand{font-size:.72rem;color:var(--g500);margin-top:1px}
+/* Selected chip */
+.cmp-chip{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border-radius:8px;border:1.5px solid transparent;margin-top:8px;
+}
+.cmp-chip-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cmp-chip-name{font-size:.9rem;font-weight:600}
+.cmp-chip-brand{font-size:.72rem;color:var(--g500);margin-top:1px}
+.cmp-chip-clear{
+  margin-left:auto;background:none;border:none;cursor:pointer;
+  color:var(--g400);font-size:.8rem;padding:2px 4px;transition:color .12s;
+}
+.cmp-chip-clear:hover{color:var(--ink)}
+/* Results */
+.cmp-header-row{display:flex;gap:12px;align-items:stretch;margin-bottom:24px}
+.cmp-frag-header{
+  flex:1;padding:16px;border-radius:10px;border:1px solid transparent;
+  display:flex;flex-direction:column;gap:6px;min-width:0;
+}
+.cmp-frag-fam-chip{
+  font-family:"DM Sans",sans-serif;font-size:.6rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;
+  display:inline-block;align-self:flex-start;
+}
+.cmp-frag-name{font-size:1.05rem;font-weight:700;line-height:1.2}
+.cmp-frag-brand{font-size:.78rem;color:var(--g500)}
+.cmp-header-center{
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:8px 0;
+}
+.cmp-venn-wrap{width:160px}
+/* Section label */
+.cmp-section-label{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.62rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin-bottom:12px;
+}
+/* Notes grid */
+.cmp-notes-grid{
+  display:flex;gap:0;border:1px solid var(--g200);border-radius:10px;
+  overflow:hidden;margin-bottom:28px;
+}
+.cmp-notes-col{flex:1;padding:14px 12px;min-width:0}
+.cmp-notes-col-shared{
+  border-left:1px solid var(--g200);border-right:1px solid var(--g200);
+  background:var(--stone);
+}
+.cmp-notes-col-head{
+  font-family:"DM Sans",sans-serif;font-size:.6rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;
+}
+.cmp-note-tag{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.cmp-note-layer{
+  font-size:.56rem;font-weight:700;padding:1px 4px;border-radius:3px;
+  font-family:"DM Sans",sans-serif;letter-spacing:.06em;flex-shrink:0;
+}
+.cmp-note-name{font-size:.82rem}
+.cmp-notes-empty{font-size:.78rem;color:var(--g400);font-style:italic}
+/* Metrics row */
+.cmp-metrics-row{display:flex;gap:16px;align-items:flex-start;margin-bottom:24px}
+.cmp-radar-wrap{flex-shrink:0;width:140px;text-align:center}
+.cmp-radar-wrap svg{width:140px;height:140px;display:block;margin:0 auto}
+.cmp-radar-label{
+  font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:6px;font-family:"DM Sans",sans-serif;
+}
+.cmp-metric-bars{flex:1;min-width:0}
+.cmp-metric-block{margin-bottom:14px}
+.cmp-metric-name{
+  font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--g400);margin-bottom:5px;font-family:"DM Sans",sans-serif;
+}
+.cmp-metric-row{display:flex;align-items:center;gap:8px}
+.cmp-bar-wrap{flex:1;height:6px;background:var(--g100);border-radius:3px;overflow:hidden;display:flex}
+.cmp-bar{height:100%;min-width:2px;transition:width .6s cubic-bezier(.16,1,.3,1)}
+.cmp-metric-nums{font-size:.72rem;color:var(--g500);width:36px;text-align:center;flex-shrink:0}
+.cmp-roles-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.cmp-role-chip{
+  font-size:.66rem;padding:2px 8px;border-radius:20px;
+  font-family:"DM Sans",sans-serif;font-weight:500;
+}
+/* Suggestions */
+.cmp-sug-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.cmp-sug-card{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:8px;
+  border:1.5px solid;background:var(--paper);cursor:pointer;text-align:left;
+  font-family:inherit;transition:background .15s;width:100%;
+}
+.cmp-sug-card:hover{background:var(--stone)}
+.cmp-sug-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cmp-sug-name{font-size:.85rem;font-weight:600}
+.cmp-sug-brand{font-size:.72rem;color:var(--g500);margin-top:1px}
+.cmp-sug-score{margin-left:auto;font-size:.78rem;font-weight:700;flex-shrink:0}
+/* Compare mobile */
+@media(max-width:767px){
+  .cmp-hero-title{font-size:2.2rem}
+  .cmp-pickers{flex-direction:column;gap:8px}
+  .cmp-vs-badge{padding-top:0;text-align:center}
+  .cmp-header-row{flex-direction:column}
+  .cmp-header-center{padding:0}
+  .cmp-venn-wrap{width:120px}
+  .cmp-metrics-row{flex-wrap:wrap}
+  .cmp-radar-wrap{width:calc(50% - 8px);flex-basis:calc(50% - 8px)}
+  .cmp-metric-bars{order:3;flex-basis:100%}
+  .cmp-sug-grid{grid-template-columns:1fr}
 }
 
 .detail-topbar{
@@ -1140,6 +1288,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
         <button class="tab" onclick="go('roles',this)">Roles</button>
         <button class="tab" onclick="go('notes',this)">Notes</button>
         <button class="tab" onclick="go('profile',this)">Profile</button>
+        <button class="tab" onclick="go('compare',this)">Compare</button>
         <button class="tab" onclick="go('changelog',this)">Changelog</button>
       </div>
     </div>
@@ -1207,6 +1356,33 @@ body{font-family:"Source Serif 4",Georgia,serif;
         <div id="changelog-body" class="changelog-body"></div>
       </div>
 
+      <div class="panel" id="p-compare">
+        <div class="cmp-hero">
+          <div class="cmp-hero-title">Compare</div>
+          <div class="cmp-hero-sub">Discover what two fragrances share — and what sets them apart.</div>
+        </div>
+        <div class="cmp-pickers">
+          <div class="cmp-picker-wrap">
+            <div class="cmp-picker-label">Fragrance One</div>
+            <div class="cmp-search-wrap">
+              <input class="cmp-search" id="cmp-search-a" type="text" placeholder="Search by name, brand, or note…" autocomplete="off">
+              <div class="cmp-dd" id="cmp-dd-a"></div>
+            </div>
+            <div class="cmp-chip" id="cmp-chip-a" style="display:none"></div>
+          </div>
+          <div class="cmp-vs-badge">VS</div>
+          <div class="cmp-picker-wrap">
+            <div class="cmp-picker-label">Fragrance Two</div>
+            <div class="cmp-search-wrap">
+              <input class="cmp-search" id="cmp-search-b" type="text" placeholder="Search by name, brand, or note…" autocomplete="off">
+              <div class="cmp-dd" id="cmp-dd-b"></div>
+            </div>
+            <div class="cmp-chip" id="cmp-chip-b" style="display:none"></div>
+          </div>
+        </div>
+        <div id="cmp-results"></div>
+      </div>
+
     </div>
   </div>
 
@@ -1229,6 +1405,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   <button class="mbn-btn" onclick="goMobile('catalog',this)"><span class="mbn-icon">≡</span>Fragrances</button>
   <button class="mbn-btn" onclick="goMobile('roles',this)"><span class="mbn-icon">♥</span>Roles</button>
   <button class="mbn-btn" onclick="goMobile('notes',this)"><span class="mbn-icon">✿</span>Notes</button>
+  <button class="mbn-btn" onclick="goMobile('compare',this)"><span class="mbn-icon">⊕</span>Compare</button>
   <button class="mbn-btn" onclick="goMobile('profile',this)"><span class="mbn-icon">◈</span>Profile</button>
 </div>
 
@@ -2802,6 +2979,253 @@ function renderOnboardReveal(){
   document.getElementById('ob-go-roles').onclick=()=>{closeOnboard();autoAssignFromOwned();buildCapsule();buildRoles();go('scentmap',null);};
 }
 
+/* ══ COMPARE ════════════════════════════════════════════════════════ */
+let CMP_A=null,CMP_B=null;
+
+const CMP_FAM={
+  woody:   {accent:'#8B4513',light:'#FDF5EE'},
+  floral:  {accent:'#B5366E',light:'#FFF4F9'},
+  amber:   {accent:'#B86A00',light:'#FFFBF0'},
+  citrus:  {accent:'#7A8A00',light:'#FAFDE8'},
+  leather: {accent:'#5A2D0C',light:'#FAF5F0'},
+  oud:     {accent:'#6E2080',light:'#F8F0FC'},
+  green:   {accent:'#1A6030',light:'#F0FAF2'},
+  chypre:  {accent:'#1E5A30',light:'#F0FAF2'},
+  gourmand:{accent:'#7C3E00',light:'#FDF6EE'},
+  aquatic: {accent:'#004A80',light:'#EEF8FF'},
+};
+function getCmpFam(fam){return CMP_FAM[fam]||{accent:'#6B6356',light:'#F5F2EC'};}
+
+// 5-dim profile: freshness, sweetness, warmth, intensity, complexity
+// [freshness, sweetness, warmth] from family; intensity from sillage; complexity from layering
+const FAM_PROFILE_BASE={
+  citrus:  [0.90,0.28,0.10],
+  green:   [0.82,0.18,0.20],
+  aquatic: [0.92,0.10,0.08],
+  floral:  [0.62,0.58,0.40],
+  chypre:  [0.58,0.30,0.50],
+  woody:   [0.30,0.30,0.72],
+  amber:   [0.18,0.72,0.88],
+  gourmand:[0.10,0.92,0.80],
+  leather: [0.18,0.20,0.82],
+  oud:     [0.08,0.40,1.00],
+};
+function computeProfile(frag){
+  const b=FAM_PROFILE_BASE[frag.family]||[0.5,0.5,0.5];
+  return{freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
+}
+
+function drawRadarSvg(frag,color){
+  const dims=['freshness','sweetness','warmth','intensity','complexity'];
+  const labels=['Fresh','Sweet','Warm','Intensity','Depth'];
+  const p=computeProfile(frag);
+  const cx=110,cy=110,r=76,n=5;
+  function ap(i,val){
+    const a=(Math.PI*2*i/n)-Math.PI/2;
+    return{x:cx+r*val*Math.cos(a),y:cy+r*val*Math.sin(a)};
+  }
+  const rings=[0.25,0.5,0.75,1.0].map(rv=>{
+    const pts=dims.map((_,i)=>ap(i,rv));
+    return`<polygon points="${pts.map(pt=>`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ')}" fill="none" stroke="${color}20" stroke-width="1"/>`;
+  }).join('');
+  const axes=dims.map((_,i)=>{const e=ap(i,1);return`<line x1="${cx}" y1="${cy}" x2="${e.x.toFixed(1)}" y2="${e.y.toFixed(1)}" stroke="${color}28" stroke-width="1"/>`;}).join('');
+  const dataPts=dims.map((d,i)=>ap(i,p[d]));
+  const poly=dataPts.map(pt=>`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ');
+  const lbls=dims.map((_,i)=>{
+    const lp=ap(i,1.32);
+    const anch=lp.x<cx-4?'end':lp.x>cx+4?'start':'middle';
+    return`<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle" font-size="8.5" fill="${color}99" font-family="DM Sans,system-ui,sans-serif" font-weight="700" letter-spacing="0.04em">${labels[i]}</text>`;
+  }).join('');
+  const dots=dataPts.map(pt=>`<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3" fill="${color}"/>`).join('');
+  return`<svg viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg">${rings}${axes}<polygon points="${poly}" fill="${color}1A" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/>${dots}${lbls}</svg>`;
+}
+
+function drawVennSvg(fa,fb){
+  const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
+  const sim=scoreSimilarity(fa,fb);
+  // overlap amount: more similarity = more overlap
+  const ov=Math.round(30+sim*0.55);
+  const r=90,W=340,H=190,cy=H/2;
+  const cx1=W/2-(r-ov/2),cx2=W/2+(r-ov/2);
+  const pct=Math.round(sim);
+  return`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+  <circle cx="${cx1.toFixed(1)}" cy="${cy}" r="${r}" fill="${ca.accent}" opacity="0.14"/>
+  <circle cx="${cx2.toFixed(1)}" cy="${cy}" r="${r}" fill="${cb.accent}" opacity="0.14"/>
+  <circle cx="${cx1.toFixed(1)}" cy="${cy}" r="${r}" fill="none" stroke="${ca.accent}" stroke-width="1.8" opacity="0.55"/>
+  <circle cx="${cx2.toFixed(1)}" cy="${cy}" r="${r}" fill="none" stroke="${cb.accent}" stroke-width="1.8" opacity="0.55"/>
+  <text x="${(W/2).toFixed(1)}" y="${(cy-7).toFixed(1)}" text-anchor="middle" font-size="21" font-weight="700" font-family="Archivo Black,DM Sans,sans-serif" fill="#0E0C09" opacity="0.82">${pct}</text>
+  <text x="${(W/2).toFixed(1)}" y="${(cy+13).toFixed(1)}" text-anchor="middle" font-size="7.5" font-family="DM Sans,system-ui,sans-serif" fill="#6B6356" letter-spacing="0.1em">MATCH</text>
+  </svg>`;
+}
+
+function renderCompareResults(fa,fb){
+  const res=document.getElementById('cmp-results');
+  if(!res)return;
+  const toL=arr=>(arr||[]).map(n=>n.toLowerCase());
+  const aN=[...toL(fa.top),...toL(fa.mid),...toL(fa.base)];
+  const bN=[...toL(fb.top),...toL(fb.mid),...toL(fb.base)];
+  const shared=[...new Set(aN.filter(n=>bN.includes(n)))];
+  const onlyA=[...new Set(aN.filter(n=>!bN.includes(n)))];
+  const onlyB=[...new Set(bN.filter(n=>!aN.includes(n)))];
+  const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
+  function noteLayer(frag,note){
+    const n=note.toLowerCase();
+    if(toL(frag.top).includes(n))return'T';
+    if(toL(frag.mid).includes(n))return'H';
+    return'B';
+  }
+  function noteTag(note,frag,accent){
+    const lyr=noteLayer(frag,note);
+    const cap=note.charAt(0).toUpperCase()+note.slice(1);
+    return`<div class="cmp-note-tag"><span class="cmp-note-layer" style="background:${accent}20;color:${accent}">${lyr}</span><span class="cmp-note-name">${cap}</span></div>`;
+  }
+  function sharedTag(note){
+    const cap=note.charAt(0).toUpperCase()+note.slice(1);
+    return`<div class="cmp-note-tag"><span class="cmp-note-name">${cap}</span></div>`;
+  }
+  // Suggestions
+  const sugs=CAT.filter(f=>f.id!==fa.id&&f.id!==fb.id)
+    .map(f=>({f,score:Math.max(scoreSimilarity(fa,f),scoreSimilarity(fb,f))}))
+    .sort((a,b)=>b.score-a.score).slice(0,4);
+  const sugHTML=sugs.map(({f,score})=>{
+    const sf=getCmpFam(f.family);
+    return`<button class="cmp-sug-card" style="border-color:${sf.accent}33" onclick="openFragDetail(CAT_MAP['${f.id}'])">
+      <div class="cmp-sug-dot" style="background:${sf.accent}"></div>
+      <div><div class="cmp-sug-name">${f.name}</div><div class="cmp-sug-brand">${f.brand}</div></div>
+      <div class="cmp-sug-score" style="color:${sf.accent}">${score}</div>
+    </button>`;
+  }).join('');
+  const famLabelA=(FAM[fa.family]||{label:fa.family}).label;
+  const famLabelB=(FAM[fb.family]||{label:fb.family}).label;
+  const shortName=n=>n.split(' ').slice(0,2).join(' ');
+  res.innerHTML=`
+    <div class="cmp-header-row">
+      <div class="cmp-frag-header" style="background:${ca.light};border-color:${ca.accent}22">
+        <div class="cmp-frag-fam-chip" style="background:${ca.accent};color:#fff">${famLabelA}</div>
+        <div class="cmp-frag-name">${fa.name}</div>
+        <div class="cmp-frag-brand">${fa.brand}</div>
+      </div>
+      <div class="cmp-header-center">
+        <div class="cmp-venn-wrap">${drawVennSvg(fa,fb)}</div>
+      </div>
+      <div class="cmp-frag-header" style="background:${cb.light};border-color:${cb.accent}22">
+        <div class="cmp-frag-fam-chip" style="background:${cb.accent};color:#fff">${famLabelB}</div>
+        <div class="cmp-frag-name">${fb.name}</div>
+        <div class="cmp-frag-brand">${fb.brand}</div>
+      </div>
+    </div>
+    <div class="cmp-section-label">Notes</div>
+    <div class="cmp-notes-grid">
+      <div class="cmp-notes-col">
+        <div class="cmp-notes-col-head" style="color:${ca.accent}">Only in ${shortName(fa.name)}</div>
+        ${onlyA.length?onlyA.map(n=>noteTag(n,fa,ca.accent)).join(''):'<div class="cmp-notes-empty">—</div>'}
+      </div>
+      <div class="cmp-notes-col cmp-notes-col-shared">
+        <div class="cmp-notes-col-head" style="color:var(--g500)">Shared</div>
+        ${shared.length?shared.map(n=>sharedTag(n)).join(''):'<div class="cmp-notes-empty">No shared notes</div>'}
+      </div>
+      <div class="cmp-notes-col">
+        <div class="cmp-notes-col-head" style="color:${cb.accent}">Only in ${shortName(fb.name)}</div>
+        ${onlyB.length?onlyB.map(n=>noteTag(n,fb,cb.accent)).join(''):'<div class="cmp-notes-empty">—</div>'}
+      </div>
+    </div>
+    <div class="cmp-metrics-row">
+      <div class="cmp-radar-wrap">
+        <div class="cmp-radar-label" style="color:${ca.accent}">${shortName(fa.name)}</div>
+        ${drawRadarSvg(fa,ca.accent)}
+      </div>
+      <div class="cmp-metric-bars">
+        <div class="cmp-section-label" style="margin-bottom:14px">Key Metrics</div>
+        ${['sillage','layering'].map(k=>{
+          const va=fa[k]||0,vb=fb[k]||0;
+          const label=k.charAt(0).toUpperCase()+k.slice(1);
+          return`<div class="cmp-metric-block">
+            <div class="cmp-metric-name">${label}</div>
+            <div class="cmp-metric-row">
+              <div class="cmp-bar-wrap" style="flex-direction:row-reverse">
+                <div class="cmp-bar" style="width:${va*10}%;background:${ca.accent};border-radius:3px 0 0 3px"></div>
+              </div>
+              <div class="cmp-metric-nums">${va} · ${vb}</div>
+              <div class="cmp-bar-wrap">
+                <div class="cmp-bar" style="width:${vb*10}%;background:${cb.accent};border-radius:0 3px 3px 0"></div>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+        <div class="cmp-metric-block" style="margin-top:12px">
+          <div class="cmp-metric-name">Roles</div>
+          <div class="cmp-roles-row">
+            ${(fa.roles||[]).map(rid=>{const r=RM[rid]||{};const inB=(fb.roles||[]).includes(rid);return`<span class="cmp-role-chip" style="background:${inB?ca.accent:ca.accent+'20'};color:${inB?'#fff':ca.accent}">${r.sym||''} ${r.name||rid}</span>`;}).join('')}
+          </div>
+          <div class="cmp-roles-row">
+            ${(fb.roles||[]).map(rid=>{const r=RM[rid]||{};const inA=(fa.roles||[]).includes(rid);return`<span class="cmp-role-chip" style="background:${inA?cb.accent:cb.accent+'20'};color:${inA?'#fff':cb.accent}">${r.sym||''} ${r.name||rid}</span>`;}).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="cmp-radar-wrap">
+        <div class="cmp-radar-label" style="color:${cb.accent}">${shortName(fb.name)}</div>
+        ${drawRadarSvg(fb,cb.accent)}
+      </div>
+    </div>
+    ${sugs.length?`<div class="cmp-section-label" style="margin-top:24px">You might also like</div><div class="cmp-sug-grid">${sugHTML}</div>`:''}
+  `;
+}
+
+function initCompare(){
+  ['a','b'].forEach(slot=>{
+    const input=document.getElementById(`cmp-search-${slot}`);
+    const dd=document.getElementById(`cmp-dd-${slot}`);
+    const chip=document.getElementById(`cmp-chip-${slot}`);
+    if(!input||!dd)return;
+    function closeDD(){dd.classList.remove('open');dd.innerHTML='';}
+    function setFrag(frag){
+      if(slot==='a')CMP_A=frag;else CMP_B=frag;
+      input.value='';closeDD();
+      const fc=getCmpFam(frag.family);
+      chip.style.display='flex';
+      chip.style.borderColor=fc.accent+'44';
+      chip.style.background=fc.light;
+      chip.innerHTML=`<div class="cmp-chip-dot" style="background:${fc.accent}"></div>
+        <div><div class="cmp-chip-name">${frag.name}</div><div class="cmp-chip-brand">${frag.brand}</div></div>
+        <button class="cmp-chip-clear" onclick="clearCmpSlot('${slot}')">✕</button>`;
+      if(CMP_A&&CMP_B)renderCompareResults(CMP_A,CMP_B);
+    }
+    input.addEventListener('input',()=>{
+      const q=input.value.trim().toLowerCase();
+      if(q.length<1){closeDD();return;}
+      const matches=CAT.filter(f=>
+        f.name.toLowerCase().includes(q)||
+        f.brand.toLowerCase().includes(q)||
+        (f.top||[]).some(n=>n.toLowerCase().includes(q))||
+        (f.mid||[]).some(n=>n.toLowerCase().includes(q))
+      ).slice(0,8);
+      if(!matches.length){closeDD();return;}
+      dd.innerHTML=matches.map(f=>{
+        const fc=getCmpFam(f.family);
+        return`<div class="cmp-dd-item" data-id="${f.id}">
+          <div class="cmp-dd-dot" style="background:${fc.accent}"></div>
+          <div><div class="cmp-dd-name">${f.name}</div><div class="cmp-dd-brand">${f.brand} · ${(FAM[f.family]||{}).label||f.family}</div></div>
+        </div>`;
+      }).join('');
+      dd.classList.add('open');
+      dd.querySelectorAll('.cmp-dd-item').forEach(item=>{
+        item.addEventListener('click',()=>{const f=CAT_MAP[item.dataset.id];if(f)setFrag(f);});
+      });
+    });
+    input.addEventListener('blur',()=>setTimeout(closeDD,200));
+    input.addEventListener('focus',()=>{if(input.value.trim())input.dispatchEvent(new Event('input'));});
+  });
+}
+window.clearCmpSlot=function(slot){
+  if(slot==='a')CMP_A=null;else CMP_B=null;
+  const chip=document.getElementById(`cmp-chip-${slot}`);
+  const input=document.getElementById(`cmp-search-${slot}`);
+  if(chip){chip.style.display='none';chip.innerHTML='';}
+  if(input)input.value='';
+  const res=document.getElementById('cmp-results');
+  if(res)res.innerHTML='';
+};
+
 /* ══ INIT ═══════════════════════════════════════════════════════════ */
 // Load data from JSON files
 const _nc={cache:'no-store'};
@@ -2821,7 +3245,7 @@ Promise.all([
   CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   // Now initialize
-  buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildMap3D();buildPairer();initCatalogControls();showOnboard();
+  buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildMap3D();buildPairer();initCatalogControls();initCompare();showOnboard();
   if(window.innerWidth<768){
     const btn=document.querySelector('.mbn-btn[onclick*="map"]');
     if(btn)goMobile('map',btn);
