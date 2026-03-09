@@ -1409,6 +1409,182 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .mbn-icon{font-size:1.15rem;line-height:1}
   .col-main-nav{display:none!important}
 }
+
+/* ══ MVP: COMPARE-ONLY LAYOUT ═══════════════════════════════════════ */
+/* Hide all archived nav — mobile bottom nav gone */
+.mobile-bottomnav{display:none!important}
+/* Show top nav on mobile */
+@media(max-width:767px){
+  .col-main-nav{display:flex!important}
+  .col-main-content{padding:18px 16px 40px}
+}
+
+/* ── NAV: minimal logo + settings ── */
+.nav-logo-text{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.72rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink);
+}
+.nav-right{display:flex;align-items:center;gap:4px;position:relative}
+.nav-back-btn{
+  background:none;border:none;cursor:pointer;padding:6px 8px;
+  font-family:"DM Sans",sans-serif;font-size:.72rem;font-weight:600;
+  letter-spacing:.04em;color:var(--g500);border-radius:6px;
+  transition:color .12s,background .12s;
+}
+.nav-back-btn:hover{color:var(--ink);background:var(--stone)}
+.settings-btn{
+  background:none;border:none;cursor:pointer;
+  font-size:1.1rem;color:var(--g500);padding:6px 8px;border-radius:6px;
+  transition:color .12s,background .12s;line-height:1;
+}
+.settings-btn:hover{color:var(--ink);background:var(--stone)}
+.settings-menu{
+  position:absolute;top:calc(100% + 8px);right:0;
+  background:var(--paper);border:1px solid var(--g200);
+  border-radius:10px;box-shadow:0 8px 28px rgba(14,12,9,.14);
+  min-width:168px;z-index:300;
+}
+.settings-menu[hidden]{display:none}
+.settings-menu-item{
+  display:flex;align-items:center;gap:10px;
+  width:100%;background:none;border:none;cursor:pointer;
+  padding:12px 14px;font-family:inherit;font-size:.84rem;color:var(--ink);
+  text-align:left;transition:background .1s;
+  border-bottom:1px solid var(--g100);
+}
+.settings-menu-item:first-child{border-radius:10px 10px 0 0}
+.settings-menu-item:last-child{border-bottom:none;border-radius:0 0 10px 10px}
+.settings-menu-item:hover{background:var(--stone)}
+.settings-menu-icon{font-size:.9rem;width:18px;text-align:center;flex-shrink:0;color:var(--g500)}
+
+/* ── COMPARE: Countrast-style slot pickers ── */
+.cmp-slots-bar{
+  display:flex;align-items:stretch;
+  border:1px solid var(--g200);border-radius:12px;
+  overflow:hidden;margin:20px 0 28px;
+}
+.cmp-slot{
+  flex:1;padding:24px 20px 20px;cursor:pointer;
+  background:var(--paper);transition:background .15s;
+  position:relative;min-width:0;
+}
+.cmp-slot:hover{background:var(--stone)}
+.cmp-slot-divider{
+  width:1px;background:var(--g200);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.cmp-slot-vs{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-family:"Archivo Black",sans-serif;font-size:.68rem;
+  color:var(--g300);letter-spacing:.1em;
+  background:var(--paper);padding:5px 0;z-index:1;white-space:nowrap;
+}
+.cmp-slot-label{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.6rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--g400);margin-bottom:10px;
+}
+.cmp-slot-name{
+  font-family:"Archivo Black",sans-serif;
+  font-size:1.45rem;line-height:1.1;letter-spacing:-.02em;
+  color:var(--g300);transition:color .15s;
+  white-space:normal;word-break:break-word;
+}
+.cmp-slot.filled .cmp-slot-name{color:var(--ink)}
+.cmp-slot-brand{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.72rem;color:var(--g500);margin-top:6px;
+  display:flex;align-items:center;gap:5px;
+}
+.cmp-slot-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.cmp-slot-hint{
+  font-size:.78rem;color:var(--g400);margin-top:8px;font-style:italic;
+  font-family:"DM Sans",sans-serif;
+}
+.cmp-slot-clear{
+  position:absolute;top:10px;right:10px;
+  background:none;border:none;cursor:pointer;
+  color:var(--g400);font-size:.78rem;padding:5px 7px;border-radius:6px;
+  opacity:0;transition:opacity .12s,color .12s,background .12s;
+}
+.cmp-slot:hover .cmp-slot-clear{opacity:1}
+.cmp-slot-clear:hover{color:var(--ink);background:var(--g100)}
+@media(max-width:767px){
+  .cmp-slots-bar{flex-direction:column}
+  .cmp-slot-divider{width:auto;height:1px}
+  .cmp-slot-vs{left:50%;top:50%;padding:0 8px}
+  .cmp-slot-name{font-size:1.2rem}
+  .cmp-slot{padding:18px 16px 16px}
+}
+
+/* ── FRAGRANCE PICKER MODAL ── */
+.frag-picker-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(14,12,9,.4);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .2s;
+}
+.frag-picker-overlay.open{opacity:1;pointer-events:all}
+.frag-picker-wrap{
+  background:var(--paper);border-radius:16px 16px 0 0;
+  width:100%;max-width:560px;max-height:80vh;
+  display:flex;flex-direction:column;
+  transform:translateY(20px);
+  transition:transform .28s cubic-bezier(.16,1,.3,1);
+  border:1px solid var(--g200);border-bottom:none;
+}
+.frag-picker-overlay.open .frag-picker-wrap{transform:translateY(0)}
+.frag-picker-header{
+  padding:18px 18px 12px;border-bottom:1px solid var(--g200);flex-shrink:0;
+}
+.frag-picker-title{
+  font-family:"DM Sans",system-ui,sans-serif;
+  font-size:.6rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--g400);margin-bottom:10px;
+}
+.frag-picker-search{
+  width:100%;padding:10px 14px;
+  border:1.5px solid var(--g200);border-radius:8px;
+  font-size:.88rem;background:var(--paper);color:var(--ink);
+  outline:none;font-family:inherit;transition:border-color .15s;
+}
+.frag-picker-search:focus{border-color:var(--ink)}
+.frag-picker-search::placeholder{color:var(--g400)}
+.frag-picker-list{flex:1;overflow-y:auto;padding:4px 0}
+.frag-picker-item{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 18px;cursor:pointer;
+  border-bottom:1px solid var(--g100);
+  transition:background .1s;
+}
+.frag-picker-item:last-child{border-bottom:none}
+.frag-picker-item:hover{background:var(--stone)}
+.frag-picker-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.frag-picker-item-name{font-size:.94rem;font-weight:600;line-height:1.2}
+.frag-picker-item-brand{
+  font-size:.72rem;color:var(--g500);margin-top:2px;
+  font-family:"DM Sans",sans-serif;
+}
+.frag-picker-footer{
+  padding:14px 18px;border-top:1px solid var(--g200);
+  flex-shrink:0;display:flex;justify-content:center;
+}
+.frag-picker-close{
+  background:none;border:1px solid var(--g300);cursor:pointer;
+  color:var(--g500);font-size:.82rem;padding:8px 32px;border-radius:20px;
+  font-family:inherit;transition:background .12s,color .12s,border-color .12s;
+}
+.frag-picker-close:hover{background:var(--stone);color:var(--ink);border-color:var(--g400)}
+@media(min-width:600px){
+  .frag-picker-overlay{align-items:center}
+  .frag-picker-wrap{
+    border-radius:12px;max-height:70vh;
+    border-bottom:1px solid var(--g200);
+  }
+}
 </style>
 </head>
 <body>
@@ -1417,21 +1593,19 @@ body{font-family:"Source Serif 4",Georgia,serif;
   <!-- MIDDLE: MAIN -->
   <div class="col-main">
     <div class="col-main-nav">
-      <div class="tabs">
-        <button class="tab active" onclick="go('map',this)">Map</button>
-        <button class="tab" onclick="go('scentmap',this)">Scentmap</button>
-        <button class="tab" onclick="go('catalog',this)">Fragrances</button>
-        <button class="tab" onclick="go('roles',this)">Roles</button>
-        <button class="tab" onclick="go('notes',this)">Notes</button>
-        <button class="tab" onclick="go('profile',this)">Profile</button>
-        <button class="tab" onclick="go('compare',this)">Compare</button>
-        <button class="tab" onclick="go('design',this)">Design</button>
-        <button class="tab" onclick="go('changelog',this)">Changelog</button>
+      <span class="nav-logo-text">Scentmap</span>
+      <div class="nav-right" id="nav-right">
+        <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()">← Compare</button>
+        <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings">⚙</button>
+        <div class="settings-menu" id="settings-menu" hidden>
+          <button class="settings-menu-item" onclick="settingsGo('design')"><span class="settings-menu-icon">◎</span>Design System</button>
+          <button class="settings-menu-item" onclick="settingsGo('changelog')"><span class="settings-menu-icon">↩</span>Changelog</button>
+        </div>
       </div>
     </div>
     <div class="col-main-content">
 
-      <div class="panel active" id="p-map">
+      <div class="panel" id="p-map">
         <!-- 3D HSL Cylinder Map — built by buildMap3D() -->
       </div>
 
@@ -1525,28 +1699,20 @@ body{font-family:"Source Serif 4",Georgia,serif;
         </div>
       </div>
 
-      <div class="panel" id="p-compare">
-        <div class="cmp-hero">
-          <div class="cmp-hero-title">Compare</div>
-          <div class="cmp-hero-sub">Discover what two fragrances share — and what sets them apart.</div>
-        </div>
-        <div class="cmp-pickers">
-          <div class="cmp-picker-wrap">
-            <div class="cmp-picker-label">Fragrance One</div>
-            <div class="cmp-search-wrap">
-              <input class="cmp-search" id="cmp-search-a" type="text" placeholder="Search by name, brand, or note…" autocomplete="off">
-              <div class="cmp-dd" id="cmp-dd-a"></div>
-            </div>
-            <div class="cmp-chip" id="cmp-chip-a" style="display:none"></div>
+      <div class="panel active" id="p-compare">
+        <div class="cmp-slots-bar" id="cmp-slots-bar">
+          <div class="cmp-slot" id="cmp-slot-a" data-slot="a">
+            <div class="cmp-slot-label">Fragrance One</div>
+            <div class="cmp-slot-name" id="cmp-slot-name-a">Select a fragrance</div>
+            <div class="cmp-slot-brand" id="cmp-slot-brand-a"></div>
+            <div class="cmp-slot-hint" id="cmp-slot-hint-a">Tap to browse all fragrances</div>
           </div>
-          <div class="cmp-vs-badge">VS</div>
-          <div class="cmp-picker-wrap">
-            <div class="cmp-picker-label">Fragrance Two</div>
-            <div class="cmp-search-wrap">
-              <input class="cmp-search" id="cmp-search-b" type="text" placeholder="Search by name, brand, or note…" autocomplete="off">
-              <div class="cmp-dd" id="cmp-dd-b"></div>
-            </div>
-            <div class="cmp-chip" id="cmp-chip-b" style="display:none"></div>
+          <div class="cmp-slot-divider"><span class="cmp-slot-vs">VS</span></div>
+          <div class="cmp-slot" id="cmp-slot-b" data-slot="b">
+            <div class="cmp-slot-label">Fragrance Two</div>
+            <div class="cmp-slot-name" id="cmp-slot-name-b">Select a fragrance</div>
+            <div class="cmp-slot-brand" id="cmp-slot-brand-b"></div>
+            <div class="cmp-slot-hint" id="cmp-slot-hint-b">Tap to browse all fragrances</div>
           </div>
         </div>
         <div id="cmp-results"></div>
@@ -1596,6 +1762,20 @@ body{font-family:"Source Serif 4",Georgia,serif;
 <!-- ONBOARDING -->
 <div class="onboard-overlay" id="onboard-overlay" style="display:none">
   <div class="onboard-card" id="onboard-card"></div>
+</div>
+
+<!-- FRAGRANCE PICKER MODAL -->
+<div class="frag-picker-overlay" id="frag-picker">
+  <div class="frag-picker-wrap">
+    <div class="frag-picker-header">
+      <div class="frag-picker-title" id="frag-picker-title">Select Fragrance</div>
+      <input class="frag-picker-search" id="frag-picker-search" type="text" placeholder="Search by name, brand, or note…" autocomplete="off">
+    </div>
+    <div class="frag-picker-list" id="frag-picker-list"></div>
+    <div class="frag-picker-footer">
+      <button class="frag-picker-close" id="frag-picker-close">✕  Close</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -2867,6 +3047,34 @@ function go(id,btn){
   if(id==='design')buildDesign();
   if(id==='map')_fm3StartLoop();else _fm3StopLoop();
 }
+
+/* ── Settings button ── */
+window.settingsGo=function(id){
+  const menu=document.getElementById('settings-menu');
+  if(menu)menu.hidden=true;
+  const backBtn=document.getElementById('nav-back-btn');
+  if(backBtn)backBtn.hidden=false;
+  go(id,null);
+};
+window.navBack=function(){
+  const backBtn=document.getElementById('nav-back-btn');
+  if(backBtn)backBtn.hidden=true;
+  go('compare',null);
+};
+document.addEventListener('DOMContentLoaded',function(){
+  const settingsBtn=document.getElementById('settings-btn');
+  const settingsMenu=document.getElementById('settings-menu');
+  if(settingsBtn&&settingsMenu){
+    settingsBtn.addEventListener('click',function(e){
+      e.stopPropagation();
+      settingsMenu.hidden=!settingsMenu.hidden;
+    });
+    document.addEventListener('click',function(){
+      if(settingsMenu)settingsMenu.hidden=true;
+    });
+    settingsMenu.addEventListener('click',function(e){e.stopPropagation();});
+  }
+});
 function goMobile(id,btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -3914,57 +4122,102 @@ function renderCompareResults(fa,fb){
   `;
 }
 
+/* ── Fragrance picker modal ── */
+let _pickerSlot=null;
+function _openFragPicker(slot){
+  _pickerSlot=slot;
+  const overlay=document.getElementById('frag-picker');
+  const title=document.getElementById('frag-picker-title');
+  const search=document.getElementById('frag-picker-search');
+  if(title)title.textContent=slot==='a'?'Fragrance One':'Fragrance Two';
+  if(search)search.value='';
+  _renderPickerList('');
+  overlay.classList.add('open');
+  setTimeout(()=>{if(search)search.focus();},200);
+}
+function _closeFragPicker(){
+  document.getElementById('frag-picker').classList.remove('open');
+  _pickerSlot=null;
+}
+function _renderPickerList(q){
+  const list=document.getElementById('frag-picker-list');
+  if(!list)return;
+  const lower=q.toLowerCase();
+  let frags=q.length<1?[...CAT]:CAT.filter(f=>{
+    const topArr=Array.isArray(f.top)?f.top:(f.top||'').split(',').map(s=>s.trim());
+    const midArr=Array.isArray(f.mid)?f.mid:(f.mid||'').split(',').map(s=>s.trim());
+    return f.name.toLowerCase().includes(lower)||
+      f.brand.toLowerCase().includes(lower)||
+      topArr.some(n=>n.toLowerCase().includes(lower))||
+      midArr.some(n=>n.toLowerCase().includes(lower));
+  });
+  frags.sort((a,b)=>a.brand.localeCompare(b.brand)||a.name.localeCompare(b.name));
+  list.innerHTML=frags.map(f=>{
+    const fc=getCmpFam(f.family);
+    return`<div class="frag-picker-item" data-id="${f.id}">
+      <div class="frag-picker-dot" style="background:${fc.accent}"></div>
+      <div>
+        <div class="frag-picker-item-name">${f.name}</div>
+        <div class="frag-picker-item-brand">${f.brand} · ${(FAM[f.family]||{}).label||f.family}</div>
+      </div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('.frag-picker-item').forEach(item=>{
+    item.addEventListener('click',()=>{
+      const f=CAT_MAP[item.dataset.id];
+      if(f){_selectFragForSlot(_pickerSlot,f);_closeFragPicker();}
+    });
+  });
+}
+function _selectFragForSlot(slot,frag){
+  if(slot==='a')CMP_A=frag;else CMP_B=frag;
+  const fc=getCmpFam(frag.family);
+  const slotEl=document.getElementById(`cmp-slot-${slot}`);
+  const nameEl=document.getElementById(`cmp-slot-name-${slot}`);
+  const brandEl=document.getElementById(`cmp-slot-brand-${slot}`);
+  const hintEl=document.getElementById(`cmp-slot-hint-${slot}`);
+  if(nameEl)nameEl.textContent=frag.name;
+  if(brandEl)brandEl.innerHTML=`<span class="cmp-slot-dot" style="background:${fc.accent}"></span>${frag.brand}`;
+  if(hintEl)hintEl.style.display='none';
+  if(slotEl){
+    slotEl.classList.add('filled');
+    // add clear button once
+    if(!slotEl.querySelector('.cmp-slot-clear')){
+      const cb=document.createElement('button');
+      cb.className='cmp-slot-clear';cb.innerHTML='✕';cb.title='Clear';
+      cb.addEventListener('click',e=>{e.stopPropagation();clearCmpSlot(slot);});
+      slotEl.appendChild(cb);
+    }
+  }
+  if(CMP_A&&CMP_B)renderCompareResults(CMP_A,CMP_B);
+}
 function initCompare(){
   ['a','b'].forEach(slot=>{
-    const input=document.getElementById(`cmp-search-${slot}`);
-    const dd=document.getElementById(`cmp-dd-${slot}`);
-    const chip=document.getElementById(`cmp-chip-${slot}`);
-    if(!input||!dd)return;
-    function closeDD(){dd.classList.remove('open');dd.innerHTML='';}
-    function setFrag(frag){
-      if(slot==='a')CMP_A=frag;else CMP_B=frag;
-      input.value='';closeDD();
-      const fc=getCmpFam(frag.family);
-      chip.style.display='flex';
-      chip.style.borderColor=fc.accent+'44';
-      chip.style.background=fc.light;
-      chip.innerHTML=`<div class="cmp-chip-dot" style="background:${fc.accent}"></div>
-        <div><div class="cmp-chip-name">${frag.name}</div><div class="cmp-chip-brand">${frag.brand}</div></div>
-        <button class="cmp-chip-clear" onclick="clearCmpSlot('${slot}')">✕</button>`;
-      if(CMP_A&&CMP_B)renderCompareResults(CMP_A,CMP_B);
-    }
-    input.addEventListener('input',()=>{
-      const q=input.value.trim().toLowerCase();
-      if(q.length<1){closeDD();return;}
-      const matches=CAT.filter(f=>
-        f.name.toLowerCase().includes(q)||
-        f.brand.toLowerCase().includes(q)||
-        (f.top||[]).some(n=>n.toLowerCase().includes(q))||
-        (f.mid||[]).some(n=>n.toLowerCase().includes(q))
-      ).slice(0,8);
-      if(!matches.length){closeDD();return;}
-      dd.innerHTML=matches.map(f=>{
-        const fc=getCmpFam(f.family);
-        return`<div class="cmp-dd-item" data-id="${f.id}">
-          <div class="cmp-dd-dot" style="background:${fc.accent}"></div>
-          <div><div class="cmp-dd-name">${f.name}</div><div class="cmp-dd-brand">${f.brand} · ${(FAM[f.family]||{}).label||f.family}</div></div>
-        </div>`;
-      }).join('');
-      dd.classList.add('open');
-      dd.querySelectorAll('.cmp-dd-item').forEach(item=>{
-        item.addEventListener('click',()=>{const f=CAT_MAP[item.dataset.id];if(f)setFrag(f);});
-      });
-    });
-    input.addEventListener('blur',()=>setTimeout(closeDD,200));
-    input.addEventListener('focus',()=>{if(input.value.trim())input.dispatchEvent(new Event('input'));});
+    const slotEl=document.getElementById(`cmp-slot-${slot}`);
+    if(!slotEl)return;
+    slotEl.addEventListener('click',()=>_openFragPicker(slot));
   });
+  const search=document.getElementById('frag-picker-search');
+  if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim()));
+  const closeBtn=document.getElementById('frag-picker-close');
+  if(closeBtn)closeBtn.addEventListener('click',_closeFragPicker);
+  const overlay=document.getElementById('frag-picker');
+  if(overlay)overlay.addEventListener('click',e=>{if(e.target===overlay)_closeFragPicker();});
 }
 window.clearCmpSlot=function(slot){
   if(slot==='a')CMP_A=null;else CMP_B=null;
-  const chip=document.getElementById(`cmp-chip-${slot}`);
-  const input=document.getElementById(`cmp-search-${slot}`);
-  if(chip){chip.style.display='none';chip.innerHTML='';}
-  if(input)input.value='';
+  const slotEl=document.getElementById(`cmp-slot-${slot}`);
+  const nameEl=document.getElementById(`cmp-slot-name-${slot}`);
+  const brandEl=document.getElementById(`cmp-slot-brand-${slot}`);
+  const hintEl=document.getElementById(`cmp-slot-hint-${slot}`);
+  if(nameEl)nameEl.textContent='Select a fragrance';
+  if(brandEl)brandEl.innerHTML='';
+  if(hintEl)hintEl.style.display='';
+  if(slotEl){
+    slotEl.classList.remove('filled');
+    const cb=slotEl.querySelector('.cmp-slot-clear');
+    if(cb)cb.remove();
+  }
   const res=document.getElementById('cmp-results');
   if(res)res.innerHTML='';
 };
@@ -3988,13 +4241,9 @@ Promise.all([
   CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   // Now initialize
-  buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildMap3D();buildPairer();initCatalogControls();initCompare();showOnboard();
-  if(window.innerWidth<768){
-    const btn=document.querySelector('.mbn-btn[onclick*="catalog"]');
-    if(btn)goMobile('catalog',btn);
-  }else{
-    go('map',document.querySelector('.tab[onclick*="map"]'));
-  }
+  buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildMap3D();buildPairer();initCatalogControls();initCompare();
+  // MVP: default to compare
+  go('compare',null);
 });
 
 /* ══ FRAGRANCE MAP (replaces constellation) ══════════════════════════ */

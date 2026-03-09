@@ -4,6 +4,18 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-09 (MVP)
+
+### Changed
+- **Compare-only MVP** — stripped app down to a single-focus compare tool; all other tabs (Map, Scentmap, Fragrances, Roles, Notes, Profile) archived in DOM for future use; no visible tab nav
+- **Countrast-inspired picker UI** — replaced search-box compare pickers with large clickable fragrance slots; clicking a slot opens a full-screen modal browser sorted alphabetically by brand
+- **Fragrance picker modal** — full-screen overlay with search (name, brand, note), scrollable list with family dot + brand label, close button at bottom center; matches Countrast country-list UX pattern
+- **Minimal nav bar** — replaced 9-tab nav with logo + settings gear (⚙) icon; shown on all breakpoints; mobile bottom nav removed
+- **Settings menu** — gear icon opens a popover with Design System and Changelog links; "← Compare" back button appears in nav when viewing settings pages
+- All fragrance data, render functions, and archived panels preserved intact
+
+---
+
 ## 2026-03-09
 
 ### Changed (design system pass)
