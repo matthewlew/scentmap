@@ -6,6 +6,16 @@ All notable changes to Scentmap are documented here.
 
 ## 2026-03-09
 
+### Changed (design system pass)
+- **Mobile nav consolidated to 3 tabs** — Fragrances, Compare, More; secondary destinations (Map, Capsule, Roles, Notes, Profile, Changelog) moved into a "More" bottom sheet accessed via the ⋯ tab; default landing on mobile changed from Map to Fragrances; mobile nav label font bumped to `.65rem` for legibility
+- **Family chips unified** — `.fam-chip` now uses filled pill style (solid family accent color background, white text, uppercase, `.65rem`) matching the Compare panel's `cmp-frag-fam-chip`; dot indicator removed; applied everywhere family is displayed
+- **Role chips refined** — `.dc-role-chip` border thickened to `1.5px`, uses `var(--paper)` background (was `#fff`), muted unassigned state; assigned-secondary now uses `var(--stone)` fill
+- **Border radius consolidated to 5 semantic values** — `2px` micro (badges, status labels), `6px` tabs/tooltips/inputs, `8px` standard cards, `16px` sheets/modals, `20px`/`50%` pills; eliminated 7px, 5px, 14px, 3px intermediate values
+- **Card and sheet borders unified** — all card containers switched from `var(--black)` to `var(--g200)` (`.carousel-card`, `.picker-list`, `.pairer-result`, `.scent-list`); sheets softened to `var(--g300)`; note popup gains box-shadow elevation instead of heavy border
+- **Search inputs unified** — `.cmp-search` updated to match `.cat-search-input`: `padding:9px 14px`, `font-size:.84rem`, `border:1.5px solid var(--g200)`, `border-radius:8px`; one pattern now used everywhere
+- **Font sizes consolidated** — 62 occurrences of near-identical micro sizes (`.61`–`.64rem`) merged to `.65rem`; `.66`/`.67rem` merged to `.68rem`; reduces distinct values from 30+ toward the 8-step scale
+- **`--warm-mid` token removed** — dead duplicate of `--g300` (#C4BC9E) removed from `:root`; 2 usages replaced with `var(--g300)`
+
 ### Added
 - **Design System page** — new "Design" tab (desktop nav) with sticky sidebar navigation; documents all design tokens, components, and interactions in a single living reference page; includes live WCAG contrast-ratio badges computed from actual palette hex values; sidebar scrollspy highlights active section
 - **Foundations section** — full neutral palette (13 tokens) + family accent palette (9 tokens) with pass/fail contrast badges; 8-step type scale table (proposed consolidation from 30+ current sizes); 4px spacing grid; 7 border patterns; border-radius inventory (9 current values) with proposed consolidation to 5

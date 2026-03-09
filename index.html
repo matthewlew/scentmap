@@ -24,7 +24,6 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --paper:   #F5F2EC;
   --ink:     #0E0C09;
   --stone:   #EAE6DE;
-  --warm-mid:#C4BC9E;
   --resin:   #8C5E30;
 
   --black:   #0E0C09;
@@ -169,14 +168,13 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .rs-meta{font-size:.76rem}
   .rs-tagline{font-size:.83rem;margin-bottom:8px}
   .rs-body{font-size:.83rem;line-height:1.72;padding-left:10px}
-  .fam-chip{font-size:.74rem;padding:3px 7px 3px 5px}
-  .fam-dot{width:7px;height:7px}
+  .fam-chip{font-size:.72rem}
   .chart-outer{margin-left:40px}
-  .y-title{left:-38px;font-size:.67rem}
+  .y-title{left:-38px;font-size:.68rem}
   .y-labels{left:-38px}
-  .y-lbl{font-size:.63rem;width:35px}
-  .x-labels{font-size:.63rem;padding:4px 0 3px}
-  .x-title{font-size:.67rem;margin-top:3px}
+  .y-lbl{font-size:.65rem;width:35px}
+  .x-labels{font-size:.65rem;padding:4px 0 3px}
+  .x-title{font-size:.68rem;margin-top:3px}
   .dot-c{width:11px;height:11px}
   .dot-lbl{font-size:.68rem}
   .axis-glossary{font-size:.83rem;line-height:1.75;margin-top:28px;padding-top:18px}
@@ -216,13 +214,13 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .ds-sb-nav{display:flex;flex-direction:column;padding:0 8px}
 .ds-sb-link{
   font-family:"DM Sans",sans-serif;font-size:.72rem;font-weight:500;color:var(--g500);
-  padding:5px 8px;border-radius:5px;display:block;cursor:pointer;
+  padding:5px 8px;border-radius:6px;display:block;cursor:pointer;
   transition:color .12s,background .12s;line-height:1.3;
   text-decoration:none;border:none;background:none;width:100%;text-align:left;
 }
 .ds-sb-link:hover{color:var(--ink);background:var(--stone)}
 .ds-sb-link.ds-active{color:var(--ink);background:var(--stone);font-weight:600}
-.ds-sb-link.ds-sub{font-size:.64rem;padding-left:16px;color:var(--g400)}
+.ds-sb-link.ds-sub{font-size:.65rem;padding-left:16px;color:var(--g400)}
 .ds-sb-link.ds-sub:hover{color:var(--g600)}
 .ds-sb-link.ds-sub.ds-active{color:var(--g600)}
 .ds-sb-divider{height:1px;background:var(--g100);margin:8px 8px}
@@ -276,7 +274,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .ds-demo-lbl{font-family:"DM Sans",sans-serif;font-size:.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin-bottom:14px}
 .ds-demo-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
 .ds-demo-row:last-child{margin-bottom:0}
-.ds-code{font-family:"SF Mono",Menlo,monospace;font-size:.66rem;background:rgba(14,12,9,.06);padding:1px 5px;border-radius:3px;color:var(--g700)}
+.ds-code{font-family:"SF Mono",Menlo,monospace;font-size:.68rem;background:rgba(14,12,9,.06);padding:1px 5px;border-radius:3px;color:var(--g700)}
 .ds-issues{display:flex;flex-direction:column;gap:10px}
 .ds-issue{padding:14px 16px;border-radius:8px;border:1px solid var(--g200);border-left:3px solid var(--g300)}
 .ds-issue.hi{border-left-color:#B91C1C;background:#FFFAFA}
@@ -324,7 +322,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .ds-sb-updated{display:none}
   .ds-sb-nav{flex-direction:row;overflow-x:auto;scrollbar-width:none;padding:0 12px 12px;gap:4px;white-space:nowrap}
   .ds-sb-nav::-webkit-scrollbar{display:none}
-  .ds-sb-link{font-size:.62rem;padding:4px 8px;display:inline-block;white-space:nowrap}
+  .ds-sb-link{font-size:.65rem;padding:4px 8px;display:inline-block;white-space:nowrap}
   .ds-sb-link.ds-sub{padding-left:8px}
   .ds-sb-divider{display:none}
   .ds-main{padding:20px 16px 60px}
@@ -348,7 +346,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cmp-picker-wrap{flex:1;min-width:0}
 .cmp-picker-label{
   font-family:"DM Sans",system-ui,sans-serif;
-  font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   color:var(--g400);margin-bottom:6px;
 }
 .cmp-vs-badge{
@@ -357,8 +355,8 @@ body{font-family:"Source Serif 4",Georgia,serif;
 }
 .cmp-search-wrap{position:relative}
 .cmp-search{
-  width:100%;padding:10px 14px;border:1.5px solid var(--g200);border-radius:8px;
-  background:var(--paper);font-size:.92rem;outline:none;
+  width:100%;padding:9px 14px;border:1.5px solid var(--g200);border-radius:8px;
+  background:var(--paper);font-size:.84rem;outline:none;
   transition:border-color .15s;color:var(--ink);font-family:inherit;
 }
 .cmp-search:focus{border-color:var(--ink)}
@@ -411,7 +409,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cmp-venn-wrap{width:160px}
 /* Section label */
 .cmp-section-label{
-  font-family:"DM Sans",system-ui,sans-serif;font-size:.62rem;font-weight:700;
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.65rem;font-weight:700;
   letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin-bottom:12px;
 }
 /* Notes grid */
@@ -440,7 +438,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cmp-radar-wrap{flex-shrink:0;width:140px;text-align:center}
 .cmp-radar-wrap svg{width:140px;height:140px;display:block;margin:0 auto}
 .cmp-radar-label{
-  font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
   margin-bottom:6px;font-family:"DM Sans",sans-serif;
 }
 .cmp-metric-bars{flex:1;min-width:0}
@@ -455,7 +453,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cmp-metric-nums{font-size:.72rem;color:var(--g500);width:36px;text-align:center;flex-shrink:0}
 .cmp-roles-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
 .cmp-role-chip{
-  font-size:.66rem;padding:2px 8px;border-radius:20px;
+  font-size:.68rem;padding:2px 8px;border-radius:20px;
   font-family:"DM Sans",sans-serif;font-weight:500;
 }
 /* Suggestions */
@@ -510,7 +508,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .tab{
   font-size:.76rem;font-weight:500;color:var(--g500);
   background:none;border:none;cursor:pointer;
-  padding:5px 9px;border-radius:5px;white-space:nowrap;
+  padding:5px 9px;border-radius:6px;white-space:nowrap;
   transition:color .16s,background .16s;
 }
 .tab:hover{color:var(--black)}
@@ -541,7 +539,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cap-assign-cta{
   display:flex;align-items:center;gap:4px;
   font-family:"DM Sans",system-ui,sans-serif;
-  font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;
   color:var(--g400);margin-top:4px;
 }
 /* Rebrand B4: Detail panel field notes style */
@@ -551,7 +549,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 }
 .dc-brand{
   font-family:"DM Sans",system-ui,sans-serif;
-  font-size:.64rem;font-weight:600;letter-spacing:.1em;
+  font-size:.65rem;font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;color:var(--g450);margin-bottom:20px;
 }
 .dc-nlbl{
@@ -574,7 +572,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .dc-ftag{
   display:inline-flex;align-items:center;gap:5px;
   font-family:"DM Sans",system-ui,sans-serif;
-  font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
   padding:3px 9px 3px 6px;border-radius:4px;
   color:var(--paper);margin-bottom:18px;
 }
@@ -589,7 +587,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 /* Rebrand B5: Resin accent — owned/assigned states */
 .scent-row.s-owned .s-name-btn{color:var(--ink)}
 .tab.active{color:var(--ink);background:var(--paper);box-shadow:0 1px 3px rgba(14,12,9,.1)}
-.np-frag-link,a{color:var(--ink);text-underline-offset:3px;text-decoration-color:var(--warm-mid)}
+.np-frag-link,a{color:var(--ink);text-underline-offset:3px;text-decoration-color:var(--g300)}
 .np-frag-link:hover,a:hover{text-decoration-color:var(--ink)}
 /* Picker and role cards use stone bg */
 .picker-header{background:var(--paper)}
@@ -600,7 +598,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   text-align:left;cursor:pointer;
   transition:background .2s,border-color .2s;
 }
-.role-landing-card:hover{background:var(--stone);border-color:var(--warm-mid)}
+.role-landing-card:hover{background:var(--stone);border-color:var(--g300)}
 .rlc-sym{font-size:1.8rem;margin-bottom:8px}
 .rlc-name{
   font-family:"DM Sans",system-ui,sans-serif;
@@ -630,7 +628,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .changelog-body strong{color:var(--black);font-weight:600}
 .sec-label{
   font-family:"DM Sans",system-ui,sans-serif;
-  font-size:.64rem;font-weight:700;letter-spacing:.1em;
+  font-size:.65rem;font-weight:700;letter-spacing:.1em;
   text-transform:uppercase;color:var(--g400);margin-bottom:16px;
   display:flex;align-items:center;justify-content:space-between;
 }
@@ -656,12 +654,12 @@ body{font-family:"Source Serif 4",Georgia,serif;
 }
 .cap-cell:hover{background:var(--stone)}
 .cap-role{font-size:.68rem;font-weight:600;color:var(--g500);margin-bottom:1px}
-.cap-desc-short{font-size:.61rem;color:var(--g450);margin-bottom:7px;line-height:1.3}
+.cap-desc-short{font-size:.65rem;color:var(--g450);margin-bottom:7px;line-height:1.3}
 .cap-sym{font-size:1.25rem;line-height:1;margin-bottom:7px}
 .cap-frag-wrap{width:100%}
 .cap-primary{font-size:.78rem;font-weight:600;line-height:1.2;margin-bottom:1px}
 .cap-primary.is-wish::before{content:'~';color:var(--wish);margin-right:1px}
-.cap-frag-brand{font-size:.63rem;color:var(--g450)}
+.cap-frag-brand{font-size:.65rem;color:var(--g450)}
 /* stacked secondary fragrances */
 .cap-more{font-size:.6rem;color:var(--g450);margin-top:3px;font-style:italic}
 .cap-cell.empty .cap-sym{opacity:.13;color:var(--g400)!important}
@@ -676,11 +674,11 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .brand-hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:7px;border-bottom:1px solid var(--black);margin-bottom:9px}
 .brand-n{
   font-family:"DM Sans",system-ui,sans-serif;
-  font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
 }
 .brand-c{font-size:.7rem;color:var(--g450)}
 .brand-total{font-size:.6rem;font-weight:400;color:var(--g400);margin-left:5px;letter-spacing:0;text-transform:none}
-.scent-list{border:1px solid var(--black);border-radius:7px;overflow:hidden}
+.scent-list{border:1px solid var(--g200);border-radius:8px;overflow:hidden}
 .scent-row{
   display:flex;align-items:center;gap:8px;
   padding:9px 11px;background:var(--paper);border-bottom:1px solid var(--g200);
@@ -706,13 +704,13 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .scent-row.s-wish  .s-sym{color:var(--wish)}
 .s-sym-tip{
   display:none;position:absolute;bottom:calc(100% + 6px);right:0;
-  background:var(--black);color:#fff;font-size:.62rem;line-height:1.4;
-  padding:5px 8px;border-radius:5px;white-space:nowrap;z-index:100;
+  background:var(--black);color:#fff;font-size:.65rem;line-height:1.4;
+  padding:5px 8px;border-radius:6px;white-space:nowrap;z-index:100;
   max-width:220px;white-space:normal;text-align:right;
   pointer-events:none;
 }
 .s-sym:hover .s-sym-tip{display:block}
-.s-status{font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;padding:2px 6px;border-radius:3px;background:var(--stone);color:var(--g500)}
+.s-status{font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;padding:2px 6px;border-radius:2px;background:var(--stone);color:var(--g500)}
 .s-status-wish{color:var(--wish)}
 .s-fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .s-info{flex:1;min-width:0}
@@ -744,15 +742,15 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .scent-row.s-wish  .s-sym{color:var(--wish)}
 .s-sym-tip{
   display:none;position:absolute;bottom:calc(100% + 7px);right:0;
-  background:var(--black);color:#fff;font-size:.62rem;line-height:1.45;
-  padding:5px 9px;border-radius:5px;z-index:200;
+  background:var(--black);color:#fff;font-size:.65rem;line-height:1.45;
+  padding:5px 9px;border-radius:6px;z-index:200;
   width:200px;text-align:left;pointer-events:none;
   box-shadow:0 2px 8px rgba(0,0,0,.18);
 }
 .s-sym:hover .s-sym-tip{display:block}
 .cat-legend{display:flex;gap:11px;margin-bottom:12px;flex-wrap:wrap}
 .cl-item{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--g500)}
-.cl-box{width:13px;height:13px;border-radius:3px;border:1px solid var(--g300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.63rem;font-weight:700}
+.cl-box{width:13px;height:13px;border-radius:3px;border:1px solid var(--g300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700}
 
 /* ── Commit 3: Role-first landing ── */
 .role-landing{padding:4px 0 20px}
@@ -767,7 +765,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .rlc-sym{font-size:1.5rem;line-height:1;margin-bottom:4px}
 .rlc-name{font-size:.82rem;font-weight:700;letter-spacing:-.01em}
 .rlc-desc{font-size:.68rem;color:var(--g500);line-height:1.35;flex:1}
-.rlc-count{font-size:.62rem;color:var(--g400);margin-top:6px}
+.rlc-count{font-size:.65rem;color:var(--g400);margin-top:6px}
 /* Commit 3: catalog filter bar */
 .cat-filter-bar{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:16px;background:var(--g100);border-radius:8px;padding:3px}
 /* ── Commit 4: Note constellation ── */
@@ -780,7 +778,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cl2-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .constellation-tooltip{
   position:fixed;background:var(--black);color:#fff;
-  font-size:.66rem;line-height:1.5;padding:7px 10px;border-radius:6px;
+  font-size:.68rem;line-height:1.5;padding:7px 10px;border-radius:6px;
   pointer-events:none;z-index:300;max-width:200px;
   box-shadow:0 2px 12px rgba(0,0,0,.22);display:none;
 }
@@ -788,16 +786,16 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .pairer-wrap{margin:0 0 32px}
 .pairer-selectors{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
 .pairer-select-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
-.pairer-select-label{font-size:.64rem;font-weight:600;color:var(--g450);letter-spacing:.02em}
+.pairer-select-label{font-size:.65rem;font-weight:600;color:var(--g450);letter-spacing:.02em}
 .pairer-select{
-  font-size:.78rem;padding:7px 10px;border:1px solid var(--black);
-  border-radius:6px;background:#fff;cursor:pointer;appearance:none;
+  font-size:.78rem;padding:7px 10px;border:1.5px solid var(--g200);
+  border-radius:6px;background:var(--paper);cursor:pointer;appearance:none;
   background-image:url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 9px center;
   padding-right:24px;
 }
 .pairer-result{
-  border:1px solid var(--black);border-radius:8px;padding:18px 18px 14px;
+  border:1px solid var(--g200);border-radius:8px;padding:18px 18px 14px;
   display:none;
 }
 .pairer-result.visible{display:block}
@@ -844,8 +842,8 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .rs-tagline{font-size:.74rem;color:var(--g500);font-style:italic;margin-bottom:6px}
 .rs-body{font-size:.74rem;color:var(--g500);line-height:1.65;margin-bottom:11px;border-left:2px solid var(--g200);padding-left:9px}
 .fam-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
-.fam-chip{display:flex;align-items:center;gap:3px;font-size:.66rem;color:var(--g600);padding:2px 6px 2px 4px;border-radius:20px;border:1px solid var(--g200)}
-.fam-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.fam-chip{display:inline-flex;align-items:center;font-size:.65rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:20px;color:#fff}
+.fam-dot{display:none}
 
 /* Chart — max-width on desktop */
 .chart-section{max-width:var(--chart-max)}
@@ -880,7 +878,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .dot.s-wish .dot-c{background:#fff!important}
 .dot-lbl{
   position:absolute;
-  font-size:.61rem;font-weight:500;color:var(--black);
+  font-size:.65rem;font-weight:500;color:var(--black);
   white-space:nowrap;background:rgba(255,255,255,.94);
   padding:1px 3px;border-radius:2px;
   pointer-events:none;z-index:1;line-height:1.3;
@@ -921,43 +919,41 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .dc-ftag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;color:#fff;margin-bottom:12px}
 .dc-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
 .dc-stat{background:var(--g100);border-radius:6px;padding:8px 10px}
-.dc-slbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin-bottom:4px}
+.dc-slbl{font-size:.65rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin-bottom:4px}
 .dc-bar{height:3px;background:var(--g200);border-radius:2px;margin-bottom:4px;overflow:hidden}
 .dc-fill{height:100%;background:var(--black);border-radius:2px}
 .dc-sval{font-size:.72rem;color:var(--g500)}
 .dc-div{height:1px;background:var(--g200);margin:11px 0}
-.dc-nlbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin-bottom:7px}
+.dc-nlbl{font-size:.65rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin-bottom:7px}
 .dc-note{display:flex;gap:6px;margin-bottom:5px}
-.dc-nt{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g400);width:24px;flex-shrink:0;padding-top:3px}
+.dc-nt{font-size:.65rem;font-weight:600;letter-spacing:.01em;color:var(--g400);width:24px;flex-shrink:0;padding-top:3px}
 .dc-nv{font-size:.78rem;color:var(--g600);line-height:1.7}
 .dc-nv .note-link{font-size:.78rem}
 
 /* Role assignment chips */
 .dc-desc{font-size:.82rem;color:var(--g600);line-height:1.65;margin:10px 0 13px;font-style:italic}
-.dc-roles-lbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin:12px 0 7px}
+.dc-roles-lbl{font-size:.65rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin:12px 0 7px}
 .dc-role-chips{display:flex;flex-wrap:wrap;gap:5px}
 .dc-role-chip{
   display:inline-flex;align-items:center;gap:4px;
-  border:1px solid var(--g200);border-radius:20px;
-  padding:4px 10px;font-size:.74rem;color:var(--g500);
-  background:#fff;cursor:pointer;transition:all .14s;
+  border:1.5px solid var(--g200);border-radius:20px;
+  padding:4px 10px;font-size:.72rem;font-weight:500;color:var(--g600);
+  background:var(--paper);cursor:pointer;transition:all .14s;
   user-select:none;
 }
-.dc-role-chip:hover{border-color:var(--g400);color:var(--black)}
-/* primary assignment */
+.dc-role-chip:hover{border-color:var(--g500);color:var(--black)}
 .dc-role-chip.assigned-primary{
   background:var(--black);color:#fff;border-color:var(--black);
 }
-/* secondary (2nd, 3rd) */
 .dc-role-chip.assigned-secondary{
-  background:var(--g100);color:var(--black);border-color:var(--g400);
+  background:var(--stone);color:var(--black);border-color:var(--g300);
   font-weight:600;
 }
 .dc-role-chip .chip-sym{font-size:.88rem;line-height:1}
 .dc-role-chip .chip-order{font-size:.58rem;opacity:.7;margin-left:1px}
 
 /* Similar shelf */
-.dc-sim-lbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin:14px 0 7px}
+.dc-sim-lbl{font-size:.65rem;font-weight:600;letter-spacing:.01em;color:var(--g500);margin:14px 0 7px}
 .dc-sim-shelf{display:flex;flex-direction:column;gap:4px}
 .dc-sim-sub{font-size:.6rem;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--g400);margin:8px 0 4px}
 .dc-sim-sub:first-child{margin-top:0}
@@ -970,9 +966,9 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .dc-sim-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .dc-sim-info{flex:1;min-width:0}
 .dc-sim-name{font-size:.82rem;font-weight:600;color:var(--black);line-height:1.2;display:block}
-.dc-sim-brand{font-size:.63rem;color:var(--g500);display:block;margin-top:1px}
-.dc-sim-reason{font-size:.63rem;color:var(--g450);display:block;margin-top:2px}
-.dc-sim-state{font-size:.63rem;font-weight:600;color:var(--g400);flex-shrink:0}
+.dc-sim-brand{font-size:.65rem;color:var(--g500);display:block;margin-top:1px}
+.dc-sim-reason{font-size:.65rem;color:var(--g450);display:block;margin-top:2px}
+.dc-sim-state{font-size:.65rem;font-weight:600;color:var(--g400);flex-shrink:0}
 .dc-sim-state.is-owned{color:var(--black)}
 .dc-sim-state.is-wish{color:var(--wish)}
 .dc-layer-score-badge{font-size:.6rem;font-weight:700;background:var(--g100);color:var(--g600);border:1px solid var(--g200);border-radius:4px;padding:1px 6px;flex-shrink:0;font-family:"DM Sans",system-ui,sans-serif}
@@ -1003,9 +999,9 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .picker-hero-name.is-wish::before{content:'~';color:var(--wish);margin-right:2px}
 .picker-hero-brand{font-size:.7rem;color:var(--g500);margin-bottom:5px}
 .picker-hero-notes{font-size:.7rem;color:var(--g600);line-height:1.5}
-.picker-hero-notes strong{color:var(--g500);font-weight:600;font-size:.62rem;letter-spacing:.01em;margin-right:4px}
+.picker-hero-notes strong{color:var(--g500);font-weight:600;font-size:.65rem;letter-spacing:.01em;margin-right:4px}
 .picker-hero-secondary{margin-top:8px;padding-top:8px;border-top:1px solid var(--g200)}
-.picker-hero-sec-label{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g450);margin-bottom:4px}
+.picker-hero-sec-label{font-size:.65rem;font-weight:600;letter-spacing:.01em;color:var(--g450);margin-bottom:4px}
 .picker-hero-sec-row{display:flex;align-items:center;gap:6px;padding:2px 0}
 .picker-hero-sec-idx{font-size:.6rem;color:var(--g450);width:12px;flex-shrink:0}
 .picker-hero-sec-name{font-size:.76rem;font-weight:500}
@@ -1017,23 +1013,23 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .picker-header{margin-bottom:10px}
 .picker-title{font-size:.92rem;font-weight:700;letter-spacing:-.01em;margin-bottom:1px}
 .picker-sub{font-size:.72rem;color:var(--g500)}
-.picker-sec-lbl{font-size:.63rem;font-weight:600;letter-spacing:.01em;color:var(--g450);margin:12px 0 5px}
+.picker-sec-lbl{font-size:.65rem;font-weight:600;letter-spacing:.01em;color:var(--g450);margin:12px 0 5px}
 .carousel-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1px 1px;padding-bottom:5px}
 .carousel-wrap::-webkit-scrollbar{height:3px}
 .carousel-wrap::-webkit-scrollbar-thumb{background:var(--g200);border-radius:2px}
 .carousel{display:flex;gap:7px;padding:1px 1px 3px}
 .carousel-card{
-  flex-shrink:0;width:118px;border:1px solid var(--black);border-radius:6px;
-  padding:9px 10px;cursor:pointer;background:#fff;transition:background .12s;text-align:left;
+  flex-shrink:0;width:118px;border:1px solid var(--g200);border-radius:6px;
+  padding:9px 10px;cursor:pointer;background:var(--paper);transition:background .12s;text-align:left;
 }
 .carousel-card:hover{background:var(--g100)}
 .carousel-card-name{
   font-size:.75rem;font-weight:600;margin-bottom:1px;line-height:1.25;
   text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--g300);
 }
-.carousel-card-brand{font-size:.62rem;color:var(--g500)}
+.carousel-card-brand{font-size:.65rem;color:var(--g500)}
 .carousel-card-family{display:flex;align-items:center;gap:3px;margin-top:5px}
-.picker-list{border:1px solid var(--black);border-radius:6px;overflow:hidden}
+.picker-list{border:1px solid var(--g200);border-radius:8px;overflow:hidden}
 .picker-row{
   display:flex;align-items:center;gap:7px;padding:8px 10px;
   background:#fff;border-bottom:1px solid var(--g200);transition:background .1s;
@@ -1051,9 +1047,9 @@ body{font-family:"Source Serif 4",Georgia,serif;
 }
 .picker-name-btn:hover{text-decoration-color:var(--black)}
 .picker-name-btn.is-wish::before{content:'~';color:var(--wish);margin-right:1px}
-.picker-brand-row{font-size:.66rem;color:var(--g500)}
+.picker-brand-row{font-size:.68rem;color:var(--g500)}
 .picker-order-badge{
-  font-size:.62rem;font-weight:600;color:var(--g450);
+  font-size:.65rem;font-weight:600;color:var(--g450);
   background:var(--g100);border:1px solid var(--g200);
   border-radius:3px;padding:1px 5px;flex-shrink:0;
 }
@@ -1075,8 +1071,8 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .sheet-stack-overlay.has-sheets .sheet-backdrop{background:rgba(0,0,0,.28);pointer-events:all;cursor:pointer}
   .sheet{
     position:absolute;bottom:0;left:0;right:0;max-width:500px;margin:0 auto;
-    background:#fff;border:1px solid var(--black);border-bottom:none;
-    border-radius:14px 14px 0 0;
+    background:var(--paper);border:1px solid var(--g300);border-bottom:none;
+    border-radius:16px 16px 0 0;
     transform:translateY(100%);transition:transform .32s cubic-bezier(.16,1,.3,1),filter .32s;
     max-height:88vh;overflow:hidden;display:flex;flex-direction:column;
     pointer-events:auto;
@@ -1084,7 +1080,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .sheet.visible{transform:translateY(0)}
   .sheet.under{transform:translateY(6px);filter:brightness(.94)}
   /* Sub-navigation: slide in from right instead of bottom */
-  .sheet.nav{transform:translateX(100%);border-radius:14px 14px 0 0}
+  .sheet.nav{transform:translateX(100%);border-radius:16px 16px 0 0}
   .sheet.nav.visible{transform:translateX(0)}
   .sheet.nav.under{transform:translateX(-22%);filter:brightness(.92)}
   .sheet-inner{display:flex;flex-direction:column;flex:1;min-height:0;padding:0 18px 0}
@@ -1146,8 +1142,8 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .note-float-bg{position:absolute;inset:0;pointer-events:none}
 .note-float-overlay.open .note-float-bg{pointer-events:all}
 .note-popup{
-  position:fixed;background:#fff;border:1px solid var(--black);
-  box-shadow:0 4px 20px rgba(0,0,0,.12);border-radius:7px;padding:12px 14px 14px;
+  position:fixed;background:var(--paper);border:1px solid var(--g200);
+  box-shadow:0 4px 24px rgba(0,0,0,.16);border-radius:8px;padding:12px 14px 14px;
   width:248px;max-width:calc(100vw - 32px);
   opacity:0;transform:scale(.95) translateY(4px);
   transition:opacity .13s,transform .13s;pointer-events:none;
@@ -1171,7 +1167,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .onb-brand{margin-bottom:14px}
 .onb-brand-name{font-size:.73rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g450);margin-bottom:7px}
 .onb-frags{display:flex;flex-direction:column;gap:3px}
-.onb-frag{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;cursor:pointer;transition:background .1s,color .1s;background:var(--g50)}
+.onb-frag{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;transition:background .1s,color .1s;background:var(--g100)}
 .onb-frag:hover{background:var(--g100)}
 .onb-frag.selected{background:var(--black);color:#fff}
 .onb-frag-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
@@ -1180,7 +1176,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .onb-frag.selected .onb-frag-check{opacity:1}
 .onb-cta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--g100)}
 .onb-count{font-size:.78rem;color:var(--g500)}
-.onb-btn{font-size:.82rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:7px;padding:9px 18px;cursor:pointer;transition:opacity .12s}
+.onb-btn{font-size:.82rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity .12s}
 .onb-btn:disabled{opacity:.35;cursor:default}
 .onb-skip-link{font-size:.73rem;color:var(--g450);background:none;border:none;cursor:pointer;text-align:center;display:block;margin-top:10px}
 .onb-fam-bars{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
@@ -1215,8 +1211,8 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .prof-role{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px;border-radius:8px;background:var(--g50);text-align:center}
 .prof-role.filled{background:var(--black);color:#fff}
 .prof-role-sym{font-size:1rem;line-height:1}
-.prof-role-name{font-size:.67rem;line-height:1.2;color:inherit;opacity:.85}
-.prof-role-count{font-size:.62rem;opacity:.55}
+.prof-role-name{font-size:.68rem;line-height:1.2;color:inherit;opacity:.85}
+.prof-role-count{font-size:.65rem;opacity:.55}
 .prof-sill-track{position:relative;height:10px;background:var(--g100);border-radius:5px;margin-bottom:6px}
 .prof-sill-fill{position:absolute;left:0;top:0;height:100%;border-radius:5px;background:linear-gradient(to right,var(--g300),var(--black))}
 .prof-sill-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:var(--black);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
@@ -1224,7 +1220,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .prof-empty{padding:48px 0;text-align:center}
 .prof-empty-icon{font-size:2rem;margin-bottom:10px;color:var(--g300)}
 .prof-empty-text{font-size:.84rem;color:var(--g500);margin-bottom:16px}
-.prof-empty-btn{font-size:.8rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:7px;padding:9px 18px;cursor:pointer}
+.prof-empty-btn{font-size:.8rem;font-weight:600;background:var(--black);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer}
 
 /* ── UX Pass: family/brand/role hover dim ── */
 .scent-row{transition:opacity .15s ease}
@@ -1234,7 +1230,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .s-layer-chip{font-size:.54rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:10px;background:var(--g100);color:var(--g500);margin-left:5px;flex-shrink:0;align-self:center}
 
 /* ── UX Pass: capsule auto-fill button ── */
-.capsule-auto-btn{display:block;width:100%;font-size:.64rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g500);border:1px solid var(--g200);border-radius:6px;padding:8px 12px;cursor:pointer;background:var(--paper);margin-bottom:12px;transition:border-color .15s,color .15s,background .15s;font-family:"DM Sans",system-ui,sans-serif}
+.capsule-auto-btn{display:block;width:100%;font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g500);border:1px solid var(--g200);border-radius:6px;padding:8px 12px;cursor:pointer;background:var(--paper);margin-bottom:12px;transition:border-color .15s,color .15s,background .15s;font-family:"DM Sans",system-ui,sans-serif}
 .capsule-auto-btn:hover{border-color:var(--black);color:var(--ink);background:var(--stone)}
 
 /* ── UX Pass: capsule role legend ── */
@@ -1247,7 +1243,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cap-legend-sym{font-size:1rem;width:22px;flex-shrink:0;text-align:center;line-height:1.2}
 .cap-legend-text{flex:1}
 .cap-legend-name{font-size:.72rem;font-weight:600;color:var(--ink);margin-bottom:1px}
-.cap-legend-desc{font-size:.64rem;color:var(--g500);line-height:1.4}
+.cap-legend-desc{font-size:.65rem;color:var(--g500);line-height:1.4}
 
 /* ── UX Pass: roles brand filter bar ── */
 .roles-brand-bar{display:flex;gap:5px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -1258,7 +1254,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 /* ── UX Pass: profile — best for layering list ── */
 .prof-layer-list{display:flex;flex-direction:column;gap:8px}
 .prof-layer-row{display:flex;align-items:center;gap:10px}
-.prof-layer-rank{font-size:.62rem;color:var(--g400);width:14px;text-align:right;flex-shrink:0}
+.prof-layer-rank{font-size:.65rem;color:var(--g400);width:14px;text-align:right;flex-shrink:0}
 .prof-layer-name{font-size:.8rem;flex:1;color:var(--g700)}
 .prof-layer-bar-wrap{width:64px;height:5px;background:var(--g100);border-radius:3px;overflow:hidden;flex-shrink:0}
 .prof-layer-bar{height:100%;border-radius:3px;background:var(--ink)}
@@ -1269,7 +1265,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .prof-pair-card{border:1px solid var(--g200);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:3px}
 .prof-pair-tag{font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g400);margin-bottom:3px;font-family:"DM Sans",system-ui,sans-serif}
 .prof-pair-names{font-size:.76rem;font-weight:600;color:var(--ink);line-height:1.3}
-.prof-pair-why{font-size:.63rem;color:var(--g500);line-height:1.45;margin-top:3px}
+.prof-pair-why{font-size:.65rem;color:var(--g500);line-height:1.45;margin-top:3px}
 @media(max-width:480px){.prof-pair-cards{grid-template-columns:1fr}}
 
 /* ── UX Pass: pairer layering explainer ── */
@@ -1282,7 +1278,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .fragmap-canvas:active{cursor:grabbing}
 .fragmap-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;flex-shrink:0}
 .fragmap-title{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.06em;text-transform:uppercase;font-family:"DM Sans",system-ui,sans-serif}
-.fragmap-hint{font-size:.63rem;color:rgba(255,255,255,.35);margin-top:2px}
+.fragmap-hint{font-size:.65rem;color:rgba(255,255,255,.35);margin-top:2px}
 .fragmap-close{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);border-radius:6px;padding:5px 13px;font-size:.72rem;cursor:pointer;font-family:"DM Sans",system-ui,sans-serif;transition:border-color .15s,color .15s}
 .fragmap-close:hover{border-color:rgba(255,255,255,.5);color:#fff}
 .fragmap-minimap{position:absolute;bottom:18px;right:18px;width:130px;height:96px;border:1px solid rgba(255,255,255,.12);border-radius:6px;overflow:hidden;pointer-events:none}
@@ -1292,13 +1288,13 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .fragmap-legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .fragmap-tooltip{position:fixed;z-index:9100;pointer-events:none;background:rgba(8,8,18,.93);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:10px 13px;max-width:220px;backdrop-filter:blur(10px)}
 .fragmap-tooltip-name{font-size:.82rem;font-weight:600;color:#fff;margin-bottom:2px}
-.fragmap-tooltip-brand{font-size:.67rem;color:rgba(255,255,255,.5);margin-bottom:5px}
-.fragmap-tooltip-notes{font-size:.62rem;color:rgba(255,255,255,.38);line-height:1.5}
+.fragmap-tooltip-brand{font-size:.68rem;color:rgba(255,255,255,.5);margin-bottom:5px}
+.fragmap-tooltip-notes{font-size:.65rem;color:rgba(255,255,255,.38);line-height:1.5}
 .fragmap-tooltip-sim{margin-top:5px;font-size:.59rem;color:rgba(255,255,255,.28);border-top:1px solid rgba(255,255,255,.08);padding-top:5px}
 .map-launch-btn{display:flex;align-items:center;gap:10px;background:none;border:1px solid var(--g200);border-radius:8px;padding:11px 15px;font-size:.74rem;color:var(--ink);cursor:pointer;font-family:"DM Sans",system-ui,sans-serif;width:100%;margin-top:14px;margin-bottom:4px;transition:border-color .15s,background .15s,color .15s}
 .map-launch-btn:hover{border-color:var(--ink);background:var(--stone);color:var(--black)}
 .map-launch-icon{font-size:1.1rem;flex-shrink:0;opacity:.6}
-.map-launch-meta{font-size:.62rem;color:var(--g400);margin-top:1px}
+.map-launch-meta{font-size:.65rem;color:var(--g400);margin-top:1px}
 
 /* ── Clickable top-note pills in catalog rows ── */
 .s-meta{display:flex;flex-wrap:wrap;gap:0;align-items:baseline}
@@ -1307,11 +1303,11 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .s-meta-sep{font-size:.68rem;color:var(--g400);pointer-events:none;margin:0 1px}
 
 /* ── + icon for unassigned role chips in detail ── */
-.chip-add{font-size:.62rem;color:var(--g300);margin-left:2px;transition:color .12s}
+.chip-add{font-size:.65rem;color:var(--g300);margin-left:2px;transition:color .12s}
 .dc-role-chip:not(.assigned-primary):not(.assigned-secondary):hover .chip-add{color:var(--ink)}
 
 /* ── Detail panel capsule CTA label ── */
-.dc-roles-cta{font-size:.63rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin:14px 0 7px;color:var(--g500)}
+.dc-roles-cta{font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin:14px 0 7px;color:var(--g500)}
 .dc-roles-cta.cta-action{color:var(--resin)}
 
 /* ── Carousel card with add button ── */
@@ -1345,7 +1341,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .frag-title-row{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
 .frag-title{font-size:.72rem;font-weight:700;letter-spacing:.06em;color:var(--g600);text-transform:uppercase}
 .frag-sb-head{font-size:.65rem;font-weight:700;letter-spacing:.06em;color:var(--g500);text-transform:uppercase;margin-bottom:4px}
-.frag-sb-label{font-size:.62rem;font-weight:700;letter-spacing:.04em;color:var(--g400);text-transform:uppercase;margin-top:4px}
+.frag-sb-label{font-size:.65rem;font-weight:700;letter-spacing:.04em;color:var(--g400);text-transform:uppercase;margin-top:4px}
 .frag-sb-divider{height:1px;background:var(--g200);margin:6px 0}
 .frag-filter-toggle{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;padding:5px 12px;border:1px solid var(--g200);border-radius:20px;background:transparent;cursor:pointer;color:var(--g600);transition:background .12s,border-color .12s;margin-top:4px}
 .frag-filter-toggle:hover{background:var(--g100);border-color:var(--g300)}
@@ -1573,13 +1569,9 @@ body{font-family:"Source Serif 4",Georgia,serif;
 
 <!-- MOBILE BOTTOM NAV -->
 <div class="mobile-bottomnav" id="mobile-bottomnav">
-  <button class="mbn-btn active" onclick="goMobile('map',this)"><span class="mbn-icon">✦</span>Map</button>
-  <button class="mbn-btn" onclick="goMobile('scentmap',this)"><span class="mbn-icon">◉</span>Capsule</button>
-  <button class="mbn-btn" onclick="goMobile('catalog',this)"><span class="mbn-icon">≡</span>Fragrances</button>
-  <button class="mbn-btn" onclick="goMobile('roles',this)"><span class="mbn-icon">♥</span>Roles</button>
-  <button class="mbn-btn" onclick="goMobile('notes',this)"><span class="mbn-icon">✿</span>Notes</button>
+  <button class="mbn-btn active" onclick="goMobile('catalog',this)"><span class="mbn-icon">≡</span>Fragrances</button>
   <button class="mbn-btn" onclick="goMobile('compare',this)"><span class="mbn-icon">⊕</span>Compare</button>
-  <button class="mbn-btn" onclick="goMobile('profile',this)"><span class="mbn-icon">◈</span>Profile</button>
+  <button class="mbn-btn mbn-more" onclick="openMoreSheet(this)"><span class="mbn-icon">⋯</span>More</button>
 </div>
 
 <!-- MOBILE SHEET STACK -->
@@ -2187,7 +2179,7 @@ function renderNoteDetail(container,note){
   container.innerHTML=`<div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
-    ${inf.length?`<div class="np-frags" style="margin-top:14px"><div style="font-size:.64rem;font-weight:600;color:var(--g450);letter-spacing:.02em;margin-bottom:6px">In catalog (${inf.length})</div><div id="_nfl"></div></div>`:''}`;
+    ${inf.length?`<div class="np-frags" style="margin-top:14px"><div style="font-size:.65rem;font-weight:600;color:var(--g450);letter-spacing:.02em;margin-bottom:6px">In catalog (${inf.length})</div><div id="_nfl"></div></div>`:''}`;
   if(inf.length){
     const span=container.querySelector('#_nfl');
     inf.forEach(f=>{
@@ -2222,7 +2214,7 @@ function openNotePopup(note,triggerEl){
   const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
   if(sortedInf.length){
-    const lbl=document.createElement('div');lbl.style.cssText='font-size:.64rem;font-weight:600;color:var(--g450);margin-bottom:5px';lbl.textContent=`In catalog (${sortedInf.length})`;
+    const lbl=document.createElement('div');lbl.style.cssText='font-size:.65rem;font-weight:600;color:var(--g450);margin-bottom:5px';lbl.textContent=`In catalog (${sortedInf.length})`;
     fe.appendChild(lbl);
     sortedInf.forEach(f=>{
       const row=document.createElement('div');row.style.cssText='margin:2px 0';
@@ -2318,7 +2310,7 @@ function renderPicker(container,roleId){
       info.appendChild(nameBtn);
       const br=document.createElement('div');br.className='picker-brand-row';br.textContent=f.brand;info.appendChild(br);
       const fdot=document.createElement('div');fdot.className='picker-fdot';fdot.style.background=fm.color;
-      const removeBtn=document.createElement('button');removeBtn.className='tab';removeBtn.style.cssText='font-size:.62rem;padding:3px 7px';removeBtn.textContent='Remove';
+      const removeBtn=document.createElement('button');removeBtn.className='tab';removeBtn.style.cssText='font-size:.65rem;padding:3px 7px';removeBtn.textContent='Remove';
       removeBtn.addEventListener('click',e=>{
         e.stopPropagation();
         removeFromRole(roleId,fid);
@@ -2358,7 +2350,7 @@ function renderPicker(container,roleId){
     info.appendChild(nameBtn);
     const br=document.createElement('div');br.className='picker-brand-row';br.textContent=frag.brand;info.appendChild(br);
     const fdot=document.createElement('div');fdot.className='picker-fdot';fdot.style.background=fm.color;
-    const addBtn=document.createElement('button');addBtn.className='tab active';addBtn.style.cssText='font-size:.62rem;padding:3px 7px;background:var(--black);color:#fff;box-shadow:none';addBtn.textContent='Add';
+    const addBtn=document.createElement('button');addBtn.className='tab active';addBtn.style.cssText='font-size:.65rem;padding:3px 7px;background:var(--black);color:#fff;box-shadow:none';addBtn.textContent='Add';
     addBtn.addEventListener('click',e=>{
       e.stopPropagation();
       assignFrag(roleId,frag.id);
@@ -2385,7 +2377,7 @@ function renderPicker(container,roleId){
       const lbl=document.createElement('div');lbl.className='picker-sec-lbl';
       lbl.innerHTML=`All fragrances for this role <span style="color:var(--g400);font-weight:400">(${roleAll.length})</span>`;
       container.appendChild(lbl);
-      const hint=document.createElement('div');hint.style.cssText='font-size:.66rem;color:var(--g400);margin-bottom:10px;line-height:1.5';
+      const hint=document.createElement('div');hint.style.cssText='font-size:.68rem;color:var(--g400);margin-bottom:10px;line-height:1.5';
       hint.textContent='Tap a fragrance to learn more, or add directly to your capsule.';
       container.appendChild(hint);
       const list=document.createElement('div');list.className='picker-list';
@@ -2557,7 +2549,7 @@ function buildRoles(){
 
     const fk=[...new Set(frags.map(f=>f.family))];
     const fr=document.createElement('div');fr.className='fam-chips';
-    fk.forEach(k=>{const fm=FAM[k];if(!fm)return;const ch=document.createElement('div');ch.className='fam-chip';ch.innerHTML=`<div class="fam-dot" style="background:${fm.color}"></div>${fm.label}`;fr.appendChild(ch)});
+    fk.forEach(k=>{const fm=FAM[k];if(!fm)return;const ch=document.createElement('div');ch.className='fam-chip';ch.dataset.fam=k;ch.style.background=fm.color;ch.textContent=fm.label;fr.appendChild(ch)});
     sec.appendChild(fr);
 
     // Chart section with max-width
@@ -2879,6 +2871,28 @@ function goMobile(id,btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   go(id,null);
+}
+function openMoreSheet(btn){
+  document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const items=[
+    {id:'map',      icon:'✦', label:'Fragrance Map'},
+    {id:'scentmap', icon:'◉', label:'My Capsule'},
+    {id:'roles',    icon:'♥', label:'Roles'},
+    {id:'notes',    icon:'✿', label:'Notes'},
+    {id:'profile',  icon:'◈', label:'Profile'},
+    {id:'changelog',icon:'↩', label:'Changelog'},
+  ];
+  pushSheet(el=>{
+    el.innerHTML=`<div style="padding:16px 0 8px">
+      <div style="font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);padding:0 16px 10px">More</div>
+      ${items.map(it=>`
+        <button onclick="closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
+          <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0">${it.icon}</span>
+          ${it.label}
+        </button>`).join('')}
+    </div>`;
+  });
 }
 
 /* ══ PROFILE TAB ════════════════════════════════════════════════════ */
@@ -3976,8 +3990,8 @@ Promise.all([
   // Now initialize
   buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildMap3D();buildPairer();initCatalogControls();initCompare();showOnboard();
   if(window.innerWidth<768){
-    const btn=document.querySelector('.mbn-btn[onclick*="map"]');
-    if(btn)goMobile('map',btn);
+    const btn=document.querySelector('.mbn-btn[onclick*="catalog"]');
+    if(btn)goMobile('catalog',btn);
   }else{
     go('map',document.querySelector('.tab[onclick*="map"]'));
   }
