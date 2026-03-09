@@ -7,6 +7,11 @@ All notable changes to Scentmap are documented here.
 ## 2026-03-09
 
 ### Added
+- **Design System page** — new "Design" tab (desktop nav) with sticky sidebar navigation; documents all design tokens, components, and interactions in a single living reference page; includes live WCAG contrast-ratio badges computed from actual palette hex values; sidebar scrollspy highlights active section
+- **Foundations section** — full neutral palette (13 tokens) + family accent palette (9 tokens) with pass/fail contrast badges; 8-step type scale table (proposed consolidation from 30+ current sizes); 4px spacing grid; 7 border patterns; border-radius inventory (9 current values) with proposed consolidation to 5
+- **Components section** — live demos of all button variants (primary, secondary, ghost, danger, icon, pill), tag/chip variants, card patterns (catalog row, scent card, note card, role card), form inputs, and navigation components (desktop tabs, mobile bottom bar, sheet stack); each demo annotated with inline inconsistency callouts
+- **Issues tracker** — 8 numbered issues with Hi/Mid/Lo priority: WCAG AA contrast failures on `--g400` (2.7:1) and `--g450` (3.7:1), 30+ unscoped font-size values, 9 border-radius values needing consolidation, missing sticky sheet headers, nav-bar height inconsistency across sheet levels, bottom-nav overlap of sheet content, inconsistent card border patterns, form input sizing variance
+- **Team guidelines** — do/don't/note rules for: color (always use palette tokens, never raw hex), typography (3-font-family rule, font-size from scale only), spacing (4px grid, named tokens), borders (2 approved styles), components (composition over custom), and accessibility (WCAG AA floor)
 - **Compare tab** — new panel (desktop nav + mobile bottom nav) for side-by-side fragrance comparison; search autocomplete for both slots with family-color-coded results; selected fragrances shown as dismissible chips
 - **Venn diagram** — SVG visualization showing the match score (0–100) between two fragrances; circle sizes and overlap reflect computed similarity; family accent colors for each fragrance
 - **Notes breakdown** — three-column grid showing notes unique to each fragrance vs. shared notes; each note tagged with layer badge (T = top, H = heart, B = base)

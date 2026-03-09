@@ -196,6 +196,146 @@ body{font-family:"Source Serif 4",Georgia,serif;
   .changelog-body li{margin:5px 0}
 }
 
+/* ══ DESIGN SYSTEM PAGE ══════════════════════════════════════ */
+#p-design{padding:0}
+.ds-layout{display:flex;min-height:calc(100vh - 50px)}
+.ds-sidebar{
+  width:178px;flex-shrink:0;border-right:1px solid var(--g200);
+  padding:24px 0 48px;position:sticky;top:0;
+  height:calc(100vh - 50px);overflow-y:auto;scrollbar-width:none;background:var(--paper);
+}
+.ds-sidebar::-webkit-scrollbar{display:none}
+.ds-sb-head{padding:0 14px 14px;border-bottom:1px solid var(--g100);margin-bottom:8px}
+.ds-sb-title{font-family:"Archivo Black","DM Sans",sans-serif;font-size:.78rem;color:var(--ink);letter-spacing:-.01em}
+.ds-sb-updated{font-family:"DM Sans",sans-serif;font-size:.58rem;color:var(--g450);margin-top:2px}
+.ds-sb-issues{
+  display:inline-flex;align-items:center;gap:3px;font-family:"DM Sans",sans-serif;
+  font-size:.56rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 6px;border-radius:3px;background:#FEE2E2;color:#991B1B;margin-top:6px;
+}
+.ds-sb-nav{display:flex;flex-direction:column;padding:0 8px}
+.ds-sb-link{
+  font-family:"DM Sans",sans-serif;font-size:.72rem;font-weight:500;color:var(--g500);
+  padding:5px 8px;border-radius:5px;display:block;cursor:pointer;
+  transition:color .12s,background .12s;line-height:1.3;
+  text-decoration:none;border:none;background:none;width:100%;text-align:left;
+}
+.ds-sb-link:hover{color:var(--ink);background:var(--stone)}
+.ds-sb-link.ds-active{color:var(--ink);background:var(--stone);font-weight:600}
+.ds-sb-link.ds-sub{font-size:.64rem;padding-left:16px;color:var(--g400)}
+.ds-sb-link.ds-sub:hover{color:var(--g600)}
+.ds-sb-link.ds-sub.ds-active{color:var(--g600)}
+.ds-sb-divider{height:1px;background:var(--g100);margin:8px 8px}
+.ds-main{flex:1;min-width:0;padding:32px 28px 80px}
+.ds-hero{padding-bottom:28px;border-bottom:2px solid var(--ink);margin-bottom:40px}
+.ds-hero-title{font-family:"Archivo Black","DM Sans",sans-serif;font-size:2.1rem;color:var(--ink);letter-spacing:-.02em;line-height:1;margin-bottom:8px}
+.ds-hero-sub{font-size:.86rem;color:var(--g500);line-height:1.6;max-width:520px}
+.ds-hero-stats{display:flex;gap:28px;margin-top:20px;flex-wrap:wrap}
+.ds-hero-stat-num{font-family:"Archivo Black","DM Sans",sans-serif;font-size:1.6rem;color:var(--ink);line-height:1}
+.ds-hero-stat-lbl{font-family:"DM Sans",sans-serif;font-size:.58rem;color:var(--g400);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.ds-badge{
+  display:inline-flex;align-items:center;gap:3px;font-family:"DM Sans",sans-serif;
+  font-size:.56rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 7px;border-radius:3px;vertical-align:middle;
+}
+.ds-bi{background:#FEE2E2;color:#991B1B}
+.ds-bw{background:#FEF3C7;color:#92400E}
+.ds-bo{background:#DCFCE7;color:#166534}
+.ds-bn{background:var(--stone);color:var(--g600)}
+.ds-section{margin-bottom:52px;scroll-margin-top:24px}
+.ds-section-hd{display:flex;align-items:baseline;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--g200);margin-bottom:20px}
+.ds-section-n{font-family:"DM Sans",sans-serif;font-size:.58rem;font-weight:700;color:var(--g400);letter-spacing:.1em}
+.ds-section-t{font-family:"Archivo Black","DM Sans",sans-serif;font-size:1rem;color:var(--ink)}
+.ds-sub-lbl{font-family:"DM Sans",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin-bottom:10px;margin-top:20px}
+.ds-swatches{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.ds-sw{width:86px}
+.ds-sw-color{height:36px;border-radius:6px;border:1px solid rgba(14,12,9,.07);margin-bottom:5px}
+.ds-sw-name{font-family:"DM Sans",sans-serif;font-size:.58rem;font-weight:700;color:var(--ink)}
+.ds-sw-hex{font-family:"SF Mono",Menlo,monospace;font-size:.54rem;color:var(--g500);margin:1px 0 2px}
+.ds-sw-role{font-family:"DM Sans",sans-serif;font-size:.54rem;color:var(--g400);line-height:1.3;margin-bottom:3px}
+.ds-cr{font-family:"DM Sans",sans-serif;font-size:.52rem;font-weight:700;padding:1px 4px;border-radius:2px}
+.ds-cr-ok{background:#DCFCE7;color:#166534}
+.ds-cr-w{background:#FEF3C7;color:#92400E}
+.ds-cr-f{background:#FEE2E2;color:#991B1B}
+.ds-type-tbl{width:100%;border-collapse:collapse}
+.ds-type-tbl tr{border-bottom:1px solid var(--g100)}
+.ds-type-tbl tr:last-child{border-bottom:none}
+.ds-type-tbl td{padding:9px 8px;vertical-align:middle}
+.ds-type-mono{font-family:"SF Mono",Menlo,monospace;font-size:.58rem;color:var(--g500);white-space:nowrap;vertical-align:middle!important}
+.ds-type-use{font-family:"DM Sans",sans-serif;font-size:.58rem;color:var(--g500);line-height:1.4;vertical-align:middle!important}
+.ds-space-row{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.ds-space-lbl{font-family:"SF Mono",Menlo,monospace;font-size:.58rem;color:var(--ink);width:32px;flex-shrink:0}
+.ds-space-bar{background:var(--ink);border-radius:2px;height:12px;opacity:.8}
+.ds-space-name{font-family:"DM Sans",sans-serif;font-size:.58rem;color:var(--g500)}
+.ds-radius-grid{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;margin-bottom:8px}
+.ds-radius-item{display:flex;flex-direction:column;align-items:center;gap:5px}
+.ds-radius-box{width:46px;height:46px;background:var(--stone);border:1.5px solid var(--g300)}
+.ds-radius-lbl{font-family:"SF Mono",Menlo,monospace;font-size:.54rem;color:var(--g600);text-align:center}
+.ds-radius-use{font-family:"DM Sans",sans-serif;font-size:.52rem;color:var(--g400);text-align:center;max-width:60px;line-height:1.3}
+.ds-demo{background:var(--stone);border-radius:8px;padding:18px 20px;margin-bottom:10px}
+.ds-demo-lbl{font-family:"DM Sans",sans-serif;font-size:.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin-bottom:14px}
+.ds-demo-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.ds-demo-row:last-child{margin-bottom:0}
+.ds-code{font-family:"SF Mono",Menlo,monospace;font-size:.66rem;background:rgba(14,12,9,.06);padding:1px 5px;border-radius:3px;color:var(--g700)}
+.ds-issues{display:flex;flex-direction:column;gap:10px}
+.ds-issue{padding:14px 16px;border-radius:8px;border:1px solid var(--g200);border-left:3px solid var(--g300)}
+.ds-issue.hi{border-left-color:#B91C1C;background:#FFFAFA}
+.ds-issue.mid{border-left-color:#D97706;background:#FFFDF5}
+.ds-issue-hd{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.ds-issue-id{font-family:"SF Mono",Menlo,monospace;font-size:.56rem;color:var(--g400)}
+.ds-issue-pri{font-family:"DM Sans",sans-serif;font-size:.56rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:2px}
+.ds-issue-pri.hi{background:#FEE2E2;color:#991B1B}
+.ds-issue-pri.mid{background:#FEF3C7;color:#92400E}
+.ds-issue-pri.lo{background:var(--stone);color:var(--g600)}
+.ds-issue-title{font-family:"DM Sans",sans-serif;font-size:.86rem;font-weight:700;color:var(--ink)}
+.ds-issue-body{font-size:.78rem;color:var(--g600);line-height:1.6;margin-top:5px}
+.ds-issue-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.ds-issue-tag{font-family:"DM Sans",sans-serif;font-size:.54rem;font-weight:600;padding:1px 7px;border-radius:3px;background:var(--stone);color:var(--g600)}
+.ds-rule{padding:12px 16px 12px 18px;border-left:2px solid var(--g200);margin-bottom:10px}
+.ds-rule.do{border-left-color:#22C55E}
+.ds-rule.dont{border-left-color:#EF4444}
+.ds-rule.note{border-left-color:var(--g300)}
+.ds-rule-kind{font-family:"DM Sans",sans-serif;font-size:.54rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.ds-rule-kind.do{color:#16A34A}
+.ds-rule-kind.dont{color:#DC2626}
+.ds-rule-kind.note{color:var(--g400)}
+.ds-rule-body{font-size:.80rem;color:var(--g600);line-height:1.6}
+.ds-rule-body code{font-family:"SF Mono",Menlo,monospace;font-size:.78rem;background:rgba(14,12,9,.06);padding:1px 4px;border-radius:3px}
+.ds-guide-cat{font-family:"DM Sans",sans-serif;font-size:.60rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--g100)}
+.ds-guide-cat:first-child{margin-top:0}
+.ds-flag{
+  display:inline-flex;align-items:center;gap:2px;font-family:"DM Sans",sans-serif;
+  font-size:.52rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:1px 5px;border-radius:2px;background:#FEE2E2;color:#991B1B;
+  vertical-align:middle;margin-left:5px;cursor:default;
+}
+.ds-contrast-pair{
+  display:flex;align-items:center;padding:10px 14px;
+  border-radius:8px;border:1px solid var(--g200);margin-bottom:6px;gap:12px;
+}
+.ds-cp-dot{width:28px;height:28px;border-radius:4px;border:1px solid rgba(0,0,0,.1);flex-shrink:0}
+.ds-cp-info{flex:1;min-width:0}
+.ds-cp-text{font-size:.78rem;font-weight:600}
+.ds-cp-sub{font-family:"DM Sans",sans-serif;font-size:.58rem;color:var(--g400);margin-top:1px}
+@media(max-width:767px){
+  .ds-layout{flex-direction:column}
+  .ds-sidebar{width:100%;height:auto;position:relative;border-right:none;border-bottom:1px solid var(--g200);padding:12px 0 0}
+  .ds-sb-head{display:flex;align-items:center;gap:12px;padding:0 14px 10px}
+  .ds-sb-updated{display:none}
+  .ds-sb-nav{flex-direction:row;overflow-x:auto;scrollbar-width:none;padding:0 12px 12px;gap:4px;white-space:nowrap}
+  .ds-sb-nav::-webkit-scrollbar{display:none}
+  .ds-sb-link{font-size:.62rem;padding:4px 8px;display:inline-block;white-space:nowrap}
+  .ds-sb-link.ds-sub{padding-left:8px}
+  .ds-sb-divider{display:none}
+  .ds-main{padding:20px 16px 60px}
+  .ds-swatches{gap:6px}
+  .ds-sw{width:72px}
+}
+@media(min-width:768px) and (max-width:1099px){
+  .ds-sidebar{top:0;height:auto;position:relative}
+  .ds-main{padding:24px 20px 80px}
+}
+
 /* ══ COMPARE PANEL ════════════════════════════════════════════ */
 #p-compare{padding-bottom:60px}
 .cmp-hero{padding:28px 0 24px}
@@ -1289,6 +1429,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
         <button class="tab" onclick="go('notes',this)">Notes</button>
         <button class="tab" onclick="go('profile',this)">Profile</button>
         <button class="tab" onclick="go('compare',this)">Compare</button>
+        <button class="tab" onclick="go('design',this)">Design</button>
         <button class="tab" onclick="go('changelog',this)">Changelog</button>
       </div>
     </div>
@@ -1354,6 +1495,38 @@ body{font-family:"Source Serif 4",Georgia,serif;
       <div class="panel" id="p-changelog">
         <div class="sec-label">Changelog</div>
         <div id="changelog-body" class="changelog-body"></div>
+      </div>
+
+      <div class="panel" id="p-design">
+        <div class="ds-layout">
+          <aside class="ds-sidebar">
+            <div class="ds-sb-head">
+              <div class="ds-sb-title">Design System</div>
+              <div class="ds-sb-updated">v1.0 · 2026-03-09</div>
+              <div class="ds-sb-issues">⚠ 8 issues</div>
+            </div>
+            <nav class="ds-sb-nav" id="ds-sb-nav">
+              <button class="ds-sb-link" onclick="dsGo('ds-foundations')">Foundations</button>
+              <button class="ds-sb-link ds-sub" onclick="dsGo('ds-colors')">Colors</button>
+              <button class="ds-sb-link ds-sub" onclick="dsGo('ds-type')">Typography</button>
+              <button class="ds-sb-link ds-sub" onclick="dsGo('ds-spacing')">Spacing</button>
+              <button class="ds-sb-link ds-sub" onclick="dsGo('ds-borders')">Borders & Radius</button>
+              <div class="ds-sb-divider"></div>
+              <button class="ds-sb-link" onclick="dsGo('ds-components')">Components</button>
+              <button class="ds-sb-link ds-sub" onclick="dsGo('ds-buttons')">Buttons</button>
+              <button class="ds-sb-link ds-sub" onclick="dsGo('ds-tags')">Tags & Chips</button>
+              <button class="ds-sb-link ds-sub" onclick="dsGo('ds-cards')">Cards</button>
+              <button class="ds-sb-link ds-sub" onclick="dsGo('ds-forms')">Forms</button>
+              <button class="ds-sb-link ds-sub" onclick="dsGo('ds-navsec')">Navigation</button>
+              <div class="ds-sb-divider"></div>
+              <button class="ds-sb-link" onclick="dsGo('ds-issues')" style="color:#991B1B">⚠ Issues</button>
+              <button class="ds-sb-link" onclick="dsGo('ds-guidelines')">Guidelines</button>
+            </nav>
+          </aside>
+          <main class="ds-main">
+            <div id="design-body"></div>
+          </main>
+        </div>
       </div>
 
       <div class="panel" id="p-compare">
@@ -2699,6 +2872,7 @@ function go(id,btn){
   if(btn)btn.classList.add('active');
   closeDesktopDetail();
   if(id==='profile')buildProfile();
+  if(id==='design')buildDesign();
   if(id==='map')_fm3StartLoop();else _fm3StopLoop();
 }
 function goMobile(id,btn){
@@ -2977,6 +3151,561 @@ function renderOnboardReveal(){
   `;
   document.getElementById('ob-go-catalog').onclick=()=>{closeOnboard();buildCatalog();go('catalog',document.querySelector('.tab[onclick*="catalog"]'));};
   document.getElementById('ob-go-roles').onclick=()=>{closeOnboard();autoAssignFromOwned();buildCapsule();buildRoles();go('scentmap',null);};
+}
+
+/* ══ DESIGN SYSTEM ══════════════════════════════════════════════════ */
+window.dsGo=function(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.ds-sb-link').forEach(b=>{
+    const target=b.getAttribute('onclick')?.match(/dsGo\('([^']+)'\)/)?.[1];
+    b.classList.toggle('ds-active',target===id);
+  });
+};
+
+function buildDesign(){
+  const el=document.getElementById('design-body');
+  if(!el||el.dataset.built)return;
+  el.dataset.built='1';
+
+  // ── Contrast helpers
+  function lum(h){
+    const r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255;
+    const f=c=>c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);
+    return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b);
+  }
+  function cr(a,b){const la=lum(a),lb=lum(b);return((Math.max(la,lb)+0.05)/(Math.min(la,lb)+0.05));}
+  function crBadge(fg,bg){
+    const r=cr(fg,bg),s=r.toFixed(1);
+    const[cls,lbl]=r>=4.5?['ds-cr-ok','AA ✓']:r>=3?['ds-cr-w','AA Large']:['ds-cr-f','Fail ✗'];
+    return`<span class="ds-cr ${cls}">${s}:1 ${lbl}</span>`;
+  }
+  const BG='#F5F2EC';
+
+  // ── Section builder
+  function sec(id,num,title,content){
+    return`<div class="ds-section" id="${id}"><div class="ds-section-hd"><span class="ds-section-n">§${num}</span><span class="ds-section-t">${title}</span></div>${content}</div>`;
+  }
+  function sublbl(t){return`<div class="ds-sub-lbl">${t}</div>`;}
+  function demo(lbl,content){return`<div class="ds-demo"><div class="ds-demo-lbl">${lbl}</div>${content}</div>`;}
+  function issue(id,pri,title,body,...tags){
+    const p=pri.toLowerCase();
+    return`<div class="ds-issue ${p}">
+      <div class="ds-issue-hd">
+        <span class="ds-issue-id">${id}</span>
+        <span class="ds-issue-pri ${p}">${pri}</span>
+        <span class="ds-issue-title">${title}</span>
+      </div>
+      <div class="ds-issue-body">${body}</div>
+      <div class="ds-issue-tags">${tags.map(t=>`<span class="ds-issue-tag">${t}</span>`).join('')}</div>
+    </div>`;
+  }
+  function rule(type,head,body){return`<div class="ds-rule ${type}"><div class="ds-rule-kind ${type}">${type==='do'?'✓ Do':type==='dont'?'✗ Don\'t':'Note'}</div><div class="ds-rule-body"><strong style="color:var(--ink)">${head}</strong> — ${body}</div></div>`;}
+
+  // ── Palette data
+  const PAL=[
+    ['--paper',   '#F5F2EC','Page background, cards'],
+    ['--ink',     '#0E0C09','Primary text, borders, icons'],
+    ['--stone',   '#EAE6DE','Tab bars, secondary backgrounds'],
+    ['--g700',    '#2E2A22','Near-black headings'],
+    ['--g600',    '#50493C','Secondary headings'],
+    ['--g500',    '#6B6356','Secondary text — minimum for body'],
+    ['--g450',    '#7C7468','⚠ 3.7:1 — avoid for text'],
+    ['--g400',    '#9A9180','⚠ 2.7:1 — borders/placeholders only'],
+    ['--g300',    '#C4BC9E','Decorative/strong borders'],
+    ['--g200',    '#DDD8CE','Standard borders'],
+    ['--g100',    '#EAE6DE','Subtle separators'],
+    ['--resin',   '#8C5E30','Save/wishlist accent'],
+    ['--warm-mid','#C4BC9E','⚠ Duplicate of --g300 — remove'],
+  ];
+  const FAM_PAL=[
+    ['--fam-woody','#6B4E2A'],['--fam-floral','#B5536E'],['--fam-amber','#A06800'],
+    ['--fam-citrus','#8A7000'],['--fam-leather','#3E1A08'],['--fam-oud','#1E0A12'],
+    ['--fam-green','#2E5C20'],['--fam-chypre','#3C5C2A'],['--fam-gourmand','#7C3E18'],
+  ];
+
+  // ── Type scale
+  const TYPE_SCALE=[
+    ['.54rem / 8.6px','Micro — minimum','Layer badges (T/H/B) only','<span class="s-layer-chip" style="display:inline-block;padding:1px 5px;background:#8B451322;color:#8B4513;font-size:.54rem;font-weight:700;letter-spacing:.05em;border-radius:3px">T</span>'],
+    ['.60rem / 9.6px','Caption','Role label, family abbreviation','<span style="font-family:\'DM Sans\',sans-serif;font-size:.60rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)">CASUAL ROLE</span>'],
+    ['.72rem / 11.5px','Label','Tabs, chips, brand bar','<button class="tab active" style="pointer-events:none">Active</button>'],
+    ['.82rem / 13.1px','Body small','Secondary descriptions, meta','<span style="font-size:.82rem;color:var(--g500)">Byredo · Woody · Sillage 7</span>'],
+    ['.92rem / 14.7px','Body','Primary catalog text, inputs','<span style="font-size:.92rem">Gypsy Water</span>'],
+    ['1.05rem / 16.8px','Emphasis','Detail panel names, headings','<span style="font-size:1.05rem;font-weight:700;letter-spacing:-.01em">Eleventh Hour</span>'],
+    ['1.5rem / 24px','Display small','Capsule symbols, section heroes','<span style="font-size:1.5rem">♠</span>'],
+    ['2.1rem+','Display','Hero headings (Archivo Black only)','<span style="font-family:\'Archivo Black\',sans-serif;font-size:1.8rem;letter-spacing:-.02em;line-height:1">Compare</span>'],
+  ];
+
+  // ── Spacing scale
+  const SPACING=[4,8,12,16,20,24,32,48];
+
+  // ── Borders
+  const BORDERS=[
+    ['1px solid var(--g100)','Subtle: separators within panels'],
+    ['1px solid var(--g200)','Standard: card borders, inputs default'],
+    ['1px solid var(--stone)','Alternative: brand pills, filter tabs'],
+    ['1px solid var(--black)','Strong: main nav bar, catalog rows'],
+    ['1.5px solid var(--g200)','Emphasis: inputs focus-ready state'],
+    ['1.5px solid transparent','Selection: chips before color applied'],
+    ['2px solid var(--ink)','Assert: pairer role chip selected'],
+  ];
+
+  // ── Radius values in codebase vs proposed
+  const RADII=[
+    ['3px','badges, micro tags','Micro'],
+    ['5px','tabs (current)','Tab — propose 6px for consistency'],
+    ['6px','capsule auto-btn, minimap','Small action'],
+    ['7px','onboarding CTAs','Propose → 8px'],
+    ['8px','cards, inputs, dropdowns','Card / Input — ✓ standard'],
+    ['10px','compare headers, sheet notes','Propose → 8px'],
+    ['14px','bottom sheets','Sheet'],
+    ['20px','pill chips, brand bar','Pill'],
+    ['50%','dot indicators','Circle'],
+  ];
+
+  el.innerHTML=`
+  <!-- Hero -->
+  <div class="ds-hero">
+    <div class="ds-hero-title">Design System</div>
+    <div class="ds-hero-sub">Single source of truth for tokens, components, and interaction patterns. All engineers must reference this page before introducing new styles. Flag inconsistencies here, not in Slack.</div>
+    <div class="ds-hero-stats">
+      <div><div class="ds-hero-stat-num">13</div><div class="ds-hero-stat-lbl">Color tokens</div></div>
+      <div><div class="ds-hero-stat-num">30+</div><div class="ds-hero-stat-lbl">Font sizes <span class="ds-badge ds-bi">needs audit</span></div></div>
+      <div><div class="ds-hero-stat-num">9</div><div class="ds-hero-stat-lbl">Border radii</div></div>
+      <div><div class="ds-hero-stat-num">8</div><div class="ds-hero-stat-lbl">Open issues</div></div>
+    </div>
+  </div>
+
+  <!-- §1 Foundations -->
+  ${sec('ds-foundations','1','Foundations',`
+
+    <!-- Colors -->
+    <div class="ds-section" id="ds-colors">
+      <div class="ds-section-hd"><span class="ds-section-n">§1.1</span><span class="ds-section-t">Colors</span></div>
+
+      ${sublbl('Neutral Palette — all values on --paper background')}
+      <div class="ds-swatches">
+        ${PAL.map(([name,hex,role])=>{
+          const ratio=cr(hex,BG);
+          const isText=!role.includes('⚠')&&!role.includes('border')&&!role.includes('Back')&&!role.includes('separator')&&!role.includes('Subtle');
+          return`<div class="ds-sw">
+            <div class="ds-sw-color" style="background:${hex}"></div>
+            <div class="ds-sw-name">${name}</div>
+            <div class="ds-sw-hex">${hex}</div>
+            <div class="ds-sw-role">${role}</div>
+            ${crBadge(hex,BG)}
+          </div>`;
+        }).join('')}
+      </div>
+
+      ${sublbl('Family Accent Colors — context use only')}
+      <div class="ds-swatches">
+        ${FAM_PAL.map(([name,hex])=>`<div class="ds-sw">
+          <div class="ds-sw-color" style="background:${hex}"></div>
+          <div class="ds-sw-name">${name}</div>
+          <div class="ds-sw-hex">${hex}</div>
+          ${crBadge(hex,BG)}
+        </div>`).join('')}
+      </div>
+
+      ${sublbl('Contrast Pairs in active use')}
+      <div class="ds-contrast-pair">
+        <div class="ds-cp-dot" style="background:var(--g400)"></div>
+        <div class="ds-cp-info">
+          <div class="ds-cp-text" style="color:var(--g400)">--g400 on --paper</div>
+          <div class="ds-cp-sub">Used in: section labels, picker labels, placeholder text, icon fills</div>
+        </div>
+        ${crBadge('#9A9180',BG)}
+        <span class="ds-badge ds-bi">Fails AA</span>
+      </div>
+      <div class="ds-contrast-pair">
+        <div class="ds-cp-dot" style="background:var(--g450)"></div>
+        <div class="ds-cp-info">
+          <div class="ds-cp-text" style="color:var(--g450)">--g450 on --paper</div>
+          <div class="ds-cp-sub">Used in: cap-desc-short, brand labels, chart axis labels, dc-brand</div>
+        </div>
+        ${crBadge('#7C7468',BG)}
+        <span class="ds-badge ds-bi">Fails AA</span>
+      </div>
+      <div class="ds-contrast-pair">
+        <div class="ds-cp-dot" style="background:var(--g500)"></div>
+        <div class="ds-cp-info">
+          <div class="ds-cp-text" style="color:var(--g500)">--g500 on --paper</div>
+          <div class="ds-cp-sub">Minimum acceptable for body text — use this, not --g450/g400</div>
+        </div>
+        ${crBadge('#6B6356',BG)}
+        <span class="ds-badge ds-bo">Passes AA</span>
+      </div>
+    </div>
+
+    <!-- Typography -->
+    <div class="ds-section" id="ds-type">
+      <div class="ds-section-hd"><span class="ds-section-n">§1.2</span><span class="ds-section-t">Typography <span class="ds-badge ds-bi">30+ sizes in use</span></span></div>
+
+      ${sublbl('Font Families')}
+      ${demo('Font families — 3 max, each with a specific role',`
+        <div style="margin-bottom:14px">
+          <div style="font-family:'Archivo Black',sans-serif;font-size:1.5rem;letter-spacing:-.02em;line-height:1.1">Archivo Black</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-top:4px">Display only — hero headings, "Compare", onboarding titles</div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-family:'DM Sans',sans-serif;font-size:1.1rem;font-weight:600">DM Sans — UI System Font</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-top:4px">All labels, tabs, chips, badges, buttons, navigation</div>
+        </div>
+        <div>
+          <div style="font-family:'Source Serif 4',Georgia,serif;font-size:1rem;font-style:italic">Source Serif 4 — Body &amp; Content</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-top:4px">Descriptions, long-form text, fragrance notes body copy</div>
+        </div>
+      `)}
+
+      ${sublbl('Type Scale — proposed consolidation (current: 30+ values)')}
+      <table class="ds-type-tbl">
+        <tr style="background:var(--stone)"><td class="ds-type-mono" style="font-weight:700;color:var(--ink)">Size</td><td class="ds-type-mono" style="font-weight:700;color:var(--ink)">Step</td><td class="ds-type-use" style="font-weight:700;color:var(--ink)">Current usage</td><td></td></tr>
+        ${TYPE_SCALE.map(([sz,step,use,ex])=>`<tr>
+          <td class="ds-type-mono">${sz}</td>
+          <td class="ds-type-mono" style="color:var(--g700)">${step}</td>
+          <td class="ds-type-use">${use}</td>
+          <td style="white-space:nowrap">${ex}</td>
+        </tr>`).join('')}
+      </table>
+      <div style="margin-top:12px;font-size:.78rem;color:var(--g600);line-height:1.6">
+        <strong>Problem:</strong> Current codebase has 30+ distinct font-size values between <span class="ds-code">.54rem</span> and <span class="ds-code">.94rem</span> — with sizes like <span class="ds-code">.58rem</span>, <span class="ds-code">.59rem</span>, <span class="ds-code">.60rem</span>, <span class="ds-code">.62rem</span>, <span class="ds-code">.63rem</span>, <span class="ds-code">.64rem</span>, <span class="ds-code">.65rem</span>, <span class="ds-code">.66rem</span> — these are visually indistinguishable. Consolidate to the 8 steps above.
+      </div>
+
+      ${sublbl('Letter-spacing — current 10+ values, propose 4')}
+      ${demo('Tracking scale',`
+        <div class="ds-demo-row">
+          <span style="font-family:'DM Sans',sans-serif;font-size:.72rem;letter-spacing:0;font-weight:500">No tracking — body text</span>
+          <span class="ds-code">0</span>
+        </div>
+        <div class="ds-demo-row">
+          <span style="font-family:'DM Sans',sans-serif;font-size:.72rem;letter-spacing:.04em;font-weight:600">Slight — chip text</span>
+          <span class="ds-code">.04em</span>
+        </div>
+        <div class="ds-demo-row">
+          <span style="font-family:'DM Sans',sans-serif;font-size:.60rem;letter-spacing:.1em;font-weight:700;text-transform:uppercase">Section Label</span>
+          <span class="ds-code">.10em uppercase</span>
+        </div>
+        <div class="ds-demo-row">
+          <span style="font-family:'DM Sans',sans-serif;font-size:.72rem;letter-spacing:.18em;font-weight:700;text-transform:uppercase">SCENTMAP LOGO</span>
+          <span class="ds-code">.18em uppercase</span>
+          <span class="ds-badge ds-bn">Logo only</span>
+        </div>
+      `)}
+    </div>
+
+    <!-- Spacing -->
+    <div class="ds-section" id="ds-spacing">
+      <div class="ds-section-hd"><span class="ds-section-n">§1.3</span><span class="ds-section-t">Spacing</span></div>
+      <div style="margin-bottom:16px;font-size:.80rem;color:var(--g600)">All spacing uses a <strong>4px base grid.</strong> Never use arbitrary values. Approved tokens: 4, 8, 12, 16, 20, 24, 32, 48px.</div>
+      ${SPACING.map(s=>`<div class="ds-space-row">
+        <span class="ds-space-lbl">${s}px</span>
+        <div class="ds-space-bar" style="width:${s*3}px"></div>
+        <span class="ds-space-name">${s===4?'Gap between inline elements':s===8?'Tight internal padding':s===12?'Component internal padding (dense)':s===16?'Component internal padding (standard)':s===20?'Section padding, page inset':s===24?'Section gap':s===32?'Large section gap':s===48?'Page section margin':''}</span>
+      </div>`).join('')}
+    </div>
+
+    <!-- Borders -->
+    <div class="ds-section" id="ds-borders">
+      <div class="ds-section-hd"><span class="ds-section-n">§1.4</span><span class="ds-section-t">Borders &amp; Radius <span class="ds-badge ds-bw">9 radius values</span></span></div>
+
+      ${sublbl('Border Styles in codebase')}
+      <table class="ds-type-tbl">
+        ${BORDERS.map(([val,use])=>`<tr>
+          <td style="padding:10px 8px"><div style="width:100%;height:0;${val.replace('1px','border-top:1px').replace('1.5px','border-top:1.5px').replace('2px','border-top:2px')}"></div></td>
+          <td class="ds-type-mono">${val}</td>
+          <td class="ds-type-use">${use}</td>
+        </tr>`).join('')}
+      </table>
+
+      ${sublbl('Border Radius — current 9 values, propose 5 <span class="ds-badge ds-bw">consolidate</span>')}
+      <div class="ds-radius-grid">
+        ${RADII.map(([val,where,name])=>`<div class="ds-radius-item">
+          <div class="ds-radius-box" style="border-radius:${val}"></div>
+          <div class="ds-radius-lbl">${val}</div>
+          <div class="ds-radius-use">${name}</div>
+        </div>`).join('')}
+      </div>
+      <div style="margin-top:12px;padding:12px 16px;border-radius:8px;background:var(--stone);font-size:.78rem;color:var(--g600);line-height:1.6">
+        <strong>Proposed 5-value scale:</strong> <span class="ds-code">3px</span> micro badges · <span class="ds-code">6px</span> tabs, small actions · <span class="ds-code">8px</span> cards, inputs, dropdowns · <span class="ds-code">20px</span> pill chips · <span class="ds-code">50%</span> dots<br>
+        <strong>Consolidate:</strong> 5px → 6px, 7px → 8px, 10px → 8px, 14px stays (sheets), 16/18px (onboarding) → 14px
+      </div>
+    </div>
+  `)}
+
+  <!-- §2 Components -->
+  ${sec('ds-components','2','Components',`
+
+    <!-- Buttons -->
+    <div class="ds-section" id="ds-buttons">
+      <div class="ds-section-hd"><span class="ds-section-n">§2.1</span><span class="ds-section-t">Buttons <span class="ds-badge ds-bi">15+ patterns</span></span></div>
+      <div style="margin-bottom:16px;font-size:.78rem;color:var(--g600)">Current codebase has 15+ distinct button classes with no consistent hierarchy. Proposed consolidation below.</div>
+
+      ${demo('Primary CTA — <span class="ds-code">.btn-primary</span> (proposed)',`
+        <div class="ds-demo-row">
+          <button style="font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;background:var(--ink);color:var(--paper);padding:9px 18px;border:none;border-radius:8px;cursor:pointer">Confirm</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;background:var(--ink);color:var(--paper);padding:9px 18px;border:none;border-radius:8px;cursor:pointer;opacity:.4" disabled>Disabled</button>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">Examples: <span class="ds-code">.onb-btn</span>, <span class="ds-code">.prof-empty-btn</span> — already consistent</div>
+      `)}
+
+      ${demo('Secondary / Ghost — <span class="ds-code">.btn-ghost</span> (proposed)',`
+        <div class="ds-demo-row">
+          <button style="font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;background:none;color:var(--g700);padding:9px 18px;border:1.5px solid var(--g200);border-radius:8px;cursor:pointer">Browse all</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;background:none;color:var(--g600);padding:5px 12px;border:1px solid var(--g200);border-radius:20px;cursor:pointer">⊞ Filters</button>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">Examples: <span class="ds-code">.onb-reveal-btn.secondary</span>, <span class="ds-code">.frag-filter-toggle</span></div>
+      `)}
+
+      ${demo('Navigation Tabs — <span class="ds-code">.tab</span>',`
+        <div class="ds-demo-row">
+          <div class="tabs" style="pointer-events:none">
+            <button class="tab active">Active</button>
+            <button class="tab">Inactive</button>
+            <button class="tab">Inactive</button>
+          </div>
+        </div>
+        <div class="ds-demo-row">
+          <div style="display:flex;gap:5px;padding:4px;overflow-x:auto">
+            <button class="tab active" style="flex-shrink:0;border-radius:20px;border:1px solid var(--ink);font-size:.70rem;padding:4px 11px">Byredo</button>
+            <button class="tab" style="flex-shrink:0;border-radius:20px;border:1px solid var(--stone);font-size:.70rem;padding:4px 11px">Le Labo</button>
+          </div>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">⚠ Brand bar tabs use <span class="ds-code">border-radius:20px</span> while nav tabs use <span class="ds-code">border-radius:5px</span> — inconsistent</div>
+      `)}
+
+      ${demo('Action / Icon Buttons',`
+        <div class="ds-demo-row">
+          <button class="detail-back visible" style="pointer-events:none">← Back</button>
+          <button class="detail-close-btn" style="pointer-events:none">✕ Close</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--g500);background:none;border:none;padding:4px 8px;cursor:pointer">Cancel</button>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px"><span class="ds-code">.detail-back</span> and <span class="ds-code">.sheet-back</span> have different min-widths (52px vs 56px) and font sizes (.78rem vs .82rem)</div>
+      `)}
+    </div>
+
+    <!-- Tags & Chips -->
+    <div class="ds-section" id="ds-tags">
+      <div class="ds-section-hd"><span class="ds-section-n">§2.2</span><span class="ds-section-t">Tags &amp; Chips</span></div>
+
+      ${demo('Status badges — <span class="ds-code">.s-status</span>',`
+        <div class="ds-demo-row">
+          <span class="s-status s-owned">Owned</span>
+          <span class="s-status s-wish">Wishlist</span>
+          <span class="s-code">border-radius: 3px · font-size: .58rem</span>
+        </div>
+      `)}
+
+      ${demo('Layer badges — <span class="ds-code">.s-layer-chip</span> · <span class="ds-code">.cmp-note-layer</span>',`
+        <div class="ds-demo-row">
+          <span class="s-layer-chip" style="background:#8B451320;color:#8B4513;padding:1px 5px;border-radius:3px;font-size:.54rem;font-weight:700;letter-spacing:.05em">SILLAGE</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:700;padding:1px 4px;border-radius:3px;background:#1A603020;color:#1A6030">T</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:700;padding:1px 4px;border-radius:3px;background:#B5366E20;color:#B5366E">H</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:700;padding:1px 4px;border-radius:3px;background:#7C3E0020;color:#7C3E00">B</span>
+          <span class="ds-badge ds-bw">.54rem below 8.6px guideline</span>
+        </div>
+      `)}
+
+      ${demo('Family chips — used in Compare, detail panel',`
+        <div class="ds-demo-row">
+          <span style="font-family:'DM Sans',sans-serif;font-size:.60rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#8B4513;color:#fff">Woody</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.60rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#B5366E;color:#fff">Floral</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.60rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#A06800;color:#fff">Amber</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.66rem;color:var(--g500);padding:3px 0">vs.</span>
+          <span class="fam-chip" style="display:inline-flex;align-items:center;gap:5px;font-size:.66rem;padding:3px 7px 3px 5px;border-radius:20px;background:var(--stone)"><span style="width:7px;height:7px;border-radius:50%;background:#8B4513;display:inline-block"></span>Woody</span>
+          <span class="ds-badge ds-bw">2 patterns in use</span>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">Detail panel uses <span class="ds-code">.fam-chip</span> (stone bg, dot + text). Compare uses filled colored pill. Should be unified.</div>
+      `)}
+
+      ${demo('Role chips — multiple variants',`
+        <div class="ds-demo-row">
+          <span style="font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:500;padding:2px 8px;border-radius:20px;background:#8B451320;color:#8B4513">♥ Casual</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:500;padding:2px 8px;border-radius:20px;background:#8B4513;color:#fff">♥ Shared role</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:600;padding:3px 9px;border-radius:20px;border:2px solid var(--ink)">♠ Signature</span>
+          <span class="ds-badge ds-bw">3 variants</span>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">Pairer uses <span class="ds-code">border:2px solid var(--ink)</span> for selected state. Compare uses filled. Capsule uses border:1px. Consolidate to 2 states: default (light bg) + active (filled).</div>
+      `)}
+    </div>
+
+    <!-- Cards -->
+    <div class="ds-section" id="ds-cards">
+      <div class="ds-section-hd"><span class="ds-section-n">§2.3</span><span class="ds-section-t">Cards</span></div>
+
+      ${demo('List row — <span class="ds-code">.scent-row</span> — border-bottom only',`
+        <div style="border:1px solid var(--g200);border-radius:8px;overflow:hidden;background:var(--paper)">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 13px;border-bottom:1px solid var(--g100)">
+            <div style="width:8px;height:8px;border-radius:50%;background:#8B4513;flex-shrink:0"></div>
+            <div style="flex:1"><div style="font-size:.95rem;font-weight:500">Gypsy Water</div><div style="font-size:.76rem;color:var(--g500);margin-top:2px">Juniper · Bergamot · Lemon</div></div>
+            <span style="font-size:.56rem;font-weight:700;padding:2px 5px;border-radius:3px;background:#e8f0e8;color:#2a622a">Owned</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 13px">
+            <div style="width:8px;height:8px;border-radius:50%;background:#B5366E;flex-shrink:0"></div>
+            <div style="flex:1"><div style="font-size:.95rem;font-weight:500">Bal d'Afrique</div><div style="font-size:.76rem;color:var(--g500);margin-top:2px">Bergamot · Marigold · Violet</div></div>
+          </div>
+        </div>
+      `)}
+
+      ${demo('Card — border all sides + radius — <span class="ds-code">.prof-pair-card</span>, <span class="ds-code">.cmp-sug-card</span>',`
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="cmp-sug-card" style="border-color:#8B451333;max-width:200px;width:100%;pointer-events:none">
+            <div class="cmp-sug-dot" style="background:#8B4513"></div>
+            <div><div class="cmp-sug-name">Santal 26</div><div class="cmp-sug-brand">Le Labo</div></div>
+            <div class="cmp-sug-score" style="color:#8B4513">68</div>
+          </button>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:.72rem;color:var(--g500)">
+            <div><span class="ds-code">border-radius: 8px</span> ✓</div>
+            <div><span class="ds-code">border: 1.5px solid</span></div>
+            <div><span class="ds-code">padding: 12px 14px</span></div>
+          </div>
+        </div>
+      `)}
+
+      ${demo('Capsule cell — grid layout, no hover state on empty',`
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--black);border-radius:0;max-width:320px">
+          <div style="padding:16px 13px;border-right:1px solid var(--black);border-bottom:1px solid var(--black);min-height:100px">
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)">CASUAL</div>
+            <div style="font-size:1.6rem;opacity:.08;margin:6px 0 4px">♥</div>
+            <div style="font-size:.6rem;font-style:italic;color:var(--g450)">Reach for it without thinking</div>
+          </div>
+          <div style="padding:16px 13px;border-bottom:1px solid var(--black);min-height:100px">
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)">SIGNATURE</div>
+            <div style="font-size:1.6rem;margin:4px 0 2px">♠</div>
+            <div style="font-size:.8rem;font-weight:600;letter-spacing:-.01em">Gypsy Water</div>
+            <div style="font-size:.6rem;color:var(--g450);margin-top:1px">Byredo</div>
+          </div>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:8px">⚠ Capsule uses <span class="ds-code">border:1px solid var(--black)</span> — heavier than card standard. Also: no border-radius. Intentional or inconsistency?</div>
+      `)}
+    </div>
+
+    <!-- Forms -->
+    <div class="ds-section" id="ds-forms">
+      <div class="ds-section-hd"><span class="ds-section-n">§2.4</span><span class="ds-section-t">Forms</span></div>
+
+      ${demo('Search input — <span class="ds-code">.cat-search-input</span> vs <span class="ds-code">.cmp-search</span>',`
+        <div class="ds-demo-row" style="flex-direction:column;align-items:flex-start;gap:10px">
+          <div style="position:relative;max-width:300px;width:100%">
+            <input type="text" placeholder="Search fragrances, brands, notes…" style="width:100%;padding:9px 14px;border:1px solid var(--g200);border-radius:6px;background:var(--paper);font-size:.84rem;font-family:inherit;outline:none;color:var(--ink)">
+            <div style="font-size:.60rem;color:var(--g400);margin-top:4px"><span class="ds-code">.cat-search-input</span> — border-radius: 6px, border: 1px, font-size: .84rem</div>
+          </div>
+          <div style="position:relative;max-width:300px;width:100%">
+            <input type="text" placeholder="Search by name, brand, or note…" style="width:100%;padding:10px 14px;border:1.5px solid var(--g200);border-radius:8px;background:var(--paper);font-size:.92rem;font-family:inherit;outline:none;color:var(--ink)">
+            <div style="font-size:.60rem;color:var(--g400);margin-top:4px"><span class="ds-code">.cmp-search</span> — border-radius: 8px, border: 1.5px, font-size: .92rem</div>
+          </div>
+          <span class="ds-badge ds-bi">Inconsistent — should use 1 pattern</span>
+        </div>
+      `)}
+    </div>
+
+    <!-- Navigation -->
+    <div class="ds-section" id="ds-navsec">
+      <div class="ds-section-hd"><span class="ds-section-n">§2.5</span><span class="ds-section-t">Navigation <span class="ds-badge ds-bi">height inconsistencies</span></span></div>
+
+      ${demo('Desktop nav bar — <span class="ds-code">.col-main-nav</span>',`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px 10px;border-bottom:1px solid var(--ink);background:var(--paper)">
+          <div class="tabs" style="pointer-events:none">
+            <button class="tab active">Map</button>
+            <button class="tab">Fragrances</button>
+            <button class="tab">Compare</button>
+          </div>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Padding: <span class="ds-code">12px 20px 10px</span> — asymmetric top/bottom. Height ~42px.</div>
+      `)}
+
+      ${demo('Detail panel topbar — <span class="ds-code">.detail-topbar</span>',`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--g200);background:var(--paper)">
+          <button style="font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:0">← Back</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:3px 0">✕ Close</button>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Same padding <span class="ds-code">12px 16px 10px</span> but smaller horizontal inset (16px vs 20px). Border is <span class="ds-code">--g200</span> not <span class="ds-code">--black</span>. <span class="ds-badge ds-bw">inconsistent border weight</span></div>
+      `)}
+
+      ${demo('Mobile bottom nav — <span class="ds-code">.mobile-bottomnav</span>',`
+        <div style="display:flex;border-top:1px solid var(--black);background:#fff;overflow:hidden;border-radius:0 0 8px 8px">
+          ${['✦ Map','◉ Capsule','≡ Frags','♥ Roles','✿ Notes','⊕ Compare','◈ Profile'].map((label,i)=>`
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 2px 6px;font-family:'DM Sans',sans-serif;font-size:.52rem;color:${i===0?'var(--ink)':'var(--g500)'};gap:2px;min-height:52px;${i===0?'font-weight:600':''}">
+              <span style="font-size:1.1rem;line-height:1">${label.split(' ')[0]}</span>
+              <span>${label.split(' ')[1]||''}</span>
+            </div>`).join('')}
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">7 items at <span class="ds-code">.58rem</span> on 375px screen = ~53px per item. Each label is truncated. <span class="ds-badge ds-bi">Overflow risk on small devices</span></div>
+      `)}
+
+      <div style="margin-top:16px;padding:12px 16px;border-radius:8px;border:1px solid #FDE68A;background:#FFFDF5;font-size:.78rem;color:#78350F;line-height:1.6">
+        <strong>⚠ Known issue — sheet scroll under header:</strong> Content in bottom sheets and the detail panel has no sticky section header. As the user scrolls, content passes behind the topbar without a visual anchor. The <span class="ds-code">.sheet-topbar</span> is sticky within the sheet but has no backdrop blur or border when content scrolls behind it, causing the content to bleed through.
+      </div>
+    </div>
+  `)}
+
+  <!-- §3 Issues -->
+  ${sec('ds-issues','3','Open Issues',`
+    <div class="ds-issues">
+      ${issue('ISS-001','HI','g400/g450 used as text color — fails WCAG AA',
+        '<strong>--g400 (#9A9180)</strong> has 2.7:1 contrast on --paper. <strong>--g450 (#7C7468)</strong> has 3.7:1. Both fail WCAG AA (4.5:1 required for normal text). Both are used in 25+ places including: <span class="ds-code">.cap-role</span>, <span class="ds-code">.cap-assign-cta</span>, <span class="ds-code">.dc-brand</span>, <span class="ds-code">.dc-nlbl</span>, <span class="ds-code">.rs-meta</span>, chart axis labels. Minimum for text is <strong>--g500 (4.7:1 ✓)</strong>. g400/g450 are acceptable for borders, placeholders, and purely decorative elements only.',
+        'Accessibility','WCAG AA','High impact')}
+      ${issue('ISS-002','HI','Font sizes: 30+ distinct values — consolidate to 8',
+        'Current codebase has over 30 distinct font-size values between .54rem and .94rem. Values like .58, .59, .60, .62, .63, .64, .65, .66rem are visually indistinguishable at render time and create unnecessary code branching. Consolidate to the 8-step scale shown in §1.2. This single change would reduce ~150 lines of CSS.',
+        'Typography','Code complexity','Scalability')}
+      ${issue('ISS-003','HI','Mobile bottom nav: 7 items is too many',
+        'With 7 nav items on a 375px screen each item is ~53px wide. At .58rem the text is already at the accessibility minimum. Adding Compare pushed it to 7 — this breaks established mobile nav UX conventions (max 5 items per Material/HIG guidelines). Consider: moving Changelog to a settings/info sheet, and ensuring Compare/Design are the only recent additions in primary nav.',
+        'Mobile UX','Navigation','Accessibility')}
+      ${issue('ISS-004','MID','Border radius: 9 values, no clear semantic rule',
+        'Values in active use: 1, 2, 3, 4, 5, 6, 7, 8, 10, 14, 16, 18, 20, 50% — 14+ values. There is no documented rule for which radius to use for which component type. Result: compare headers use 10px while catalog inputs use 6px; onboarding CTAs use 7px while other CTAs use 8px. Propose 5-value scale documented in §1.4.',
+        'Visual consistency','Design tokens')}
+      ${issue('ISS-005','MID','Sheet content has no sticky header visibility',
+        'When scrolling within a bottom sheet (mobile) or the detail panel (desktop), content passes behind the topbar header without visual separation. The topbar has no backdrop filter or scroll-aware border intensification. Users lose reading position. Fix: add <span class="ds-code">border-bottom: 1px solid var(--g200)</span> to topbar that only appears after scroll (JS scroll listener or CSS scroll-driven animations).',
+        'Navigation','UX','Sheets')}
+      ${issue('ISS-006','MID','Two search input patterns with different metrics',
+        '<span class="ds-code">.cat-search-input</span>: border-radius 6px, border 1px, font-size .84rem, padding 9px 14px. <span class="ds-code">.cmp-search</span>: border-radius 8px, border 1.5px, font-size .92rem, padding 10px 14px. These are the same semantic component (text search) with different treatment. Pick one pattern and apply globally.',
+        'Forms','Visual consistency')}
+      ${issue('ISS-007','MID','Family chip: 2 incompatible patterns',
+        'The detail panel uses <span class="ds-code">.fam-chip</span> (stone background, colored dot, text). The Compare panel uses a filled pill (solid color background, white text). Both represent "family classification" but look completely different. Unified proposal: use the filled pill everywhere — it has better color communication and higher contrast.',
+        'Tags','Visual consistency')}
+      ${issue('ISS-008','LO','Token redundancy: --warm-mid duplicates --g300',
+        'Both <span class="ds-code">--warm-mid</span> and <span class="ds-code">--g300</span> resolve to <span class="ds-code">#C4BC9E</span>. This is a dead token. Remove <span class="ds-code">--warm-mid</span> from :root and replace all 4 usages with <span class="ds-code">--g300</span>.',
+        'Design tokens','Code cleanup')}
+    </div>
+  `)}
+
+  <!-- §4 Guidelines -->
+  ${sec('ds-guidelines','4','Guidelines for Engineers',`
+    <div style="font-size:.82rem;color:var(--g600);line-height:1.6;margin-bottom:20px">
+      These rules exist to keep the codebase maintainable and the UI consistent. When in doubt, use a token from this document — never introduce a hardcoded color or arbitrary pixel value. If you need something that doesn't exist in the system, <strong>add it to the Issues section first</strong> before writing the CSS.
+    </div>
+
+    <div class="ds-guide-cat">Colors</div>
+    ${rule('dont','Never use --g400 or --g450 for text','Both fail WCAG AA at 4.5:1. Use <code>--g500</code> as the minimum for any text that conveys information, including labels, descriptions, and metadata.')}
+    ${rule('do','Use semantic tokens, never raw hex values','Always reference <code>var(--g200)</code>, not <code>#DDD8CE</code>. This allows global theme changes without find-and-replace.')}
+    ${rule('do','Use family accent colors only in context-specific components','Family colors (<code>--fam-woody</code> etc.) are only for fragrance family indicators — dots, filled chips, radar charts. Never use them for generic UI chrome.')}
+    ${rule('note','--paper vs #fff — use --paper for all surfaces','Most components use <code>--paper: #F5F2EC</code>. The mobile nav uses raw <code>#fff</code> as an exception. Do not add new #fff surfaces — use --paper.')}
+
+    <div class="ds-guide-cat">Typography</div>
+    ${rule('do','Use DM Sans for all UI text — labels, buttons, tabs, chips','Only use Source Serif 4 for body descriptions and longform content. Only use Archivo Black for display/hero headings.')}
+    ${rule('dont','Do not introduce new font sizes outside the 8-step scale','The 8 approved sizes are documented in §1.2. If a new size is needed, justify it here first. The current proliferation of 30+ sizes is a maintenance burden.')}
+    ${rule('dont','Do not use letter-spacing on body text','Tracking is only for: <code>0</code> (body), <code>.04em</code> (chip text), <code>.10em uppercase</code> (section labels), <code>.18em uppercase</code> (logo only).')}
+    ${rule('do','Always pair text-transform:uppercase with letter-spacing:.10em','Uppercase text without tracking looks cramped. This is the only approved uppercase tracking value.')}
+
+    <div class="ds-guide-cat">Spacing</div>
+    ${rule('do','Use the 4px grid: 4, 8, 12, 16, 20, 24, 32, 48px','Never introduce arbitrary values like 13px, 15px, 18px, 22px. Round to the nearest grid step. The codebase currently has 13px, 15px padding values that should be cleaned up.')}
+
+    <div class="ds-guide-cat">Borders & Radius</div>
+    ${rule('do','Use the 5-value radius scale','<code>3px</code> badges · <code>6px</code> small actions · <code>8px</code> cards + inputs · <code>20px</code> pills · <code>50%</code> dots. Do not introduce new values.')}
+    ${rule('do','Use --g200 for card/input borders, --black for structural nav borders','Structural means: the main nav bar, the catalog row separator. Everything else is --g200. Never use --g300, --stone, or --black for card borders.')}
+
+    <div class="ds-guide-cat">Components</div>
+    ${rule('do','Before writing a new component, check if one already exists','Scentmap has: list rows, cards, chips, badges, modals (sheets). Check this page. Building a 5th button pattern because the existing ones weren\'t found is how we got to 15.')}
+    ${rule('dont','Do not style components with inline styles unless context-specific','The only accepted inline styles are for dynamic colors (family accent colors injected by JS) and layout micro-corrections. Never hardcode colors or font-sizes inline.')}
+    ${rule('note','Adding to this design system','When you build a new component: (1) document it in §2, (2) define tokens needed in §1, (3) close any related issue in §3, (4) get a design review before shipping.')}
+
+    <div class="ds-guide-cat">Accessibility</div>
+    ${rule('do','All interactive elements must have visible focus states','Current: many buttons have no <code>:focus-visible</code> style — only the default browser outline. Add focus rings using <code>outline: 2px solid var(--ink); outline-offset: 2px</code>.')}
+    ${rule('do','Minimum touch target size: 44×44px','All tappable elements on mobile must meet this threshold. Check: <code>.sheet-back</code> has min-height 44px ✓. <code>.detail-back</code> has min-width 52px but no explicit min-height — verify.')}
+    ${rule('dont','Do not use font-size below .60rem for informational text','Current violations: layer badges at <code>.54rem</code>, some status chips at <code>.56rem</code>. These fail minimum legibility at normal viewing distance on mobile.')}
+  `)}
+  `;
 }
 
 /* ══ COMPARE ════════════════════════════════════════════════════════ */
