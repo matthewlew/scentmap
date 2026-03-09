@@ -985,6 +985,49 @@ body{font-family:"Source Serif 4",Georgia,serif;
 /* ── UX Pass: pairer layering explainer ── */
 .pairer-explainer{font-size:.72rem;color:var(--g500);line-height:1.65;margin-bottom:16px;padding:10px 14px;background:var(--g100);border-radius:6px;border-left:2px solid var(--g300)}
 
+/* ── Fragrance Map overlay ── */
+.fragmap-overlay{position:fixed;inset:0;background:#0d0d14;z-index:9000;display:flex;flex-direction:column;overflow:hidden}
+.fragmap-overlay.hidden{display:none}
+.fragmap-canvas{flex:1;width:100%;cursor:grab;display:block}
+.fragmap-canvas:active{cursor:grabbing}
+.fragmap-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;flex-shrink:0}
+.fragmap-title{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.06em;text-transform:uppercase;font-family:"DM Sans",system-ui,sans-serif}
+.fragmap-hint{font-size:.63rem;color:rgba(255,255,255,.35);margin-top:2px}
+.fragmap-close{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);border-radius:6px;padding:5px 13px;font-size:.72rem;cursor:pointer;font-family:"DM Sans",system-ui,sans-serif;transition:border-color .15s,color .15s}
+.fragmap-close:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.fragmap-minimap{position:absolute;bottom:18px;right:18px;width:130px;height:96px;border:1px solid rgba(255,255,255,.12);border-radius:6px;overflow:hidden;pointer-events:none}
+.fragmap-minimap canvas{width:100%;height:100%;display:block}
+.fragmap-legend{position:absolute;bottom:18px;left:18px;display:flex;flex-direction:column;gap:4px}
+.fragmap-legend-item{display:flex;align-items:center;gap:6px;font-size:.56rem;color:rgba(255,255,255,.45);font-family:"DM Sans",system-ui,sans-serif}
+.fragmap-legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.fragmap-tooltip{position:fixed;z-index:9100;pointer-events:none;background:rgba(8,8,18,.93);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:10px 13px;max-width:220px;backdrop-filter:blur(10px)}
+.fragmap-tooltip-name{font-size:.82rem;font-weight:600;color:#fff;margin-bottom:2px}
+.fragmap-tooltip-brand{font-size:.67rem;color:rgba(255,255,255,.5);margin-bottom:5px}
+.fragmap-tooltip-notes{font-size:.62rem;color:rgba(255,255,255,.38);line-height:1.5}
+.fragmap-tooltip-sim{margin-top:5px;font-size:.59rem;color:rgba(255,255,255,.28);border-top:1px solid rgba(255,255,255,.08);padding-top:5px}
+.map-launch-btn{display:flex;align-items:center;gap:10px;background:none;border:1px solid var(--g200);border-radius:8px;padding:11px 15px;font-size:.74rem;color:var(--ink);cursor:pointer;font-family:"DM Sans",system-ui,sans-serif;width:100%;margin-top:14px;margin-bottom:4px;transition:border-color .15s,background .15s,color .15s}
+.map-launch-btn:hover{border-color:var(--ink);background:var(--stone);color:var(--black)}
+.map-launch-icon{font-size:1.1rem;flex-shrink:0;opacity:.6}
+.map-launch-meta{font-size:.62rem;color:var(--g400);margin-top:1px}
+
+/* ── Clickable top-note pills in catalog rows ── */
+.s-meta{display:flex;flex-wrap:wrap;gap:0;align-items:baseline}
+.s-meta-note{display:inline;background:none;border:none;padding:0;font-size:.68rem;color:var(--g500);cursor:pointer;font-family:inherit;line-height:inherit}
+.s-meta-note:hover{text-decoration:underline;text-underline-offset:2px;color:var(--ink)}
+.s-meta-sep{font-size:.68rem;color:var(--g400);pointer-events:none;margin:0 1px}
+
+/* ── + icon for unassigned role chips in detail ── */
+.chip-add{font-size:.62rem;color:var(--g300);margin-left:2px;transition:color .12s}
+.dc-role-chip:not(.assigned-primary):not(.assigned-secondary):hover .chip-add{color:var(--ink)}
+
+/* ── Detail panel capsule CTA label ── */
+.dc-roles-cta{font-size:.63rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin:14px 0 7px;color:var(--g500)}
+.dc-roles-cta.cta-action{color:var(--resin)}
+
+/* ── Carousel card with add button ── */
+.carousel-card-add-btn{display:block;width:100%;margin-top:7px;font-size:.6rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--g200);border-radius:5px;padding:3px 0;cursor:pointer;background:transparent;color:var(--g500);font-family:"DM Sans",system-ui,sans-serif;transition:border-color .12s,color .12s,background .12s}
+.carousel-card-add-btn:hover{border-color:var(--black);color:var(--black);background:var(--g100)}
+
 /* ══ CATALOG SEARCH & STATE FILTER ═══════════════════════════ */
 .cat-topbar{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
 .cat-search-wrap{position:relative}
@@ -1520,6 +1563,7 @@ function renderFragDetail(container,frag){
   const st=gst(frag.id);
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
   const roleStatus=getAllRolesForFrag(frag.id);
+  const anyAssigned=ROLES.some(r=>{const s=getFragRoleStatus(frag.id,r.id);return s&&s!=='none';});
 
   container.innerHTML=`
     <div class="dc-name">${frag.name}</div>
@@ -1545,7 +1589,7 @@ function renderFragDetail(container,frag){
     <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
     <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
     ${frag.description?`<div class="dc-desc">${frag.description}</div>`:''}
-    <div class="dc-roles-lbl">Assigned to roles</div>
+    <div class="dc-roles-cta${anyAssigned?'':' cta-action'}">${anyAssigned?'In your scentmap':'Add to your scentmap'}</div>
     <div class="dc-role-chips" id="dc-chips-${frag.id}"></div>`;
 
   // State tabs
@@ -1687,7 +1731,8 @@ function buildRoleChips(frag,chipsEl){
     let orderLabel='';
     if(isPrimary)orderLabel='<span class="chip-order">✓</span>';
     else if(isSecondary)orderLabel=`<span class="chip-order">${status}</span>`;
-    chip.innerHTML=`<span class="chip-sym">${role.sym}</span> ${role.name}${orderLabel}`;
+    const addIcon=(!isPrimary&&!isSecondary)?'<span class="chip-add">+</span>':'';
+    chip.innerHTML=`<span class="chip-sym">${role.sym}</span> ${role.name}${orderLabel}${addIcon}`;
     chip.title=isPrimary?`Remove ${frag.name} from ${role.name}`
       :isSecondary?`Make ${frag.name} primary for ${role.name}`
       :`Assign ${frag.name} to ${role.name}`;
@@ -1870,11 +1915,20 @@ function renderPicker(container,roleId){
     const row=document.createElement('div');row.className='carousel';
     carousel.forEach(frag=>{
       const fm=FAM[frag.family]||{color:'#888'};
-      const card=document.createElement('button');card.className='carousel-card';
+      const card=document.createElement('div');card.className='carousel-card';
       card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
         <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
       card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag))});
+      const addBtn=document.createElement('button');addBtn.className='carousel-card-add-btn';addBtn.textContent='+ Add to capsule';
+      addBtn.addEventListener('click',e=>{
+        e.stopPropagation();
+        assignFrag(roleId,frag.id);
+        window.haptic?.('success');
+        buildCapsule();buildRoles();
+        container.innerHTML='';renderPicker(container,roleId);
+      });
+      card.appendChild(addBtn);
       row.appendChild(card);
     });
     wrap.appendChild(row);container.appendChild(wrap);
@@ -1911,7 +1965,21 @@ function renderPicker(container,roleId){
     const list=document.createElement('div');list.className='picker-list';ownedOther.forEach(f=>list.appendChild(makeRow(f)));container.appendChild(list);
   }
   if(!ownedTagged.length&&!ownedOther.length&&!assigned.length){
-    const msg=document.createElement('div');msg.className='picker-empty';msg.textContent='No owned fragrances yet — mark fragrances as owned in the Catalog.';container.appendChild(msg);
+    // New user: show all frags for this role with Add buttons so they can build their capsule
+    const roleAll=CAT.filter(f=>f.roles.includes(roleId));
+    if(roleAll.length){
+      const lbl=document.createElement('div');lbl.className='picker-sec-lbl';
+      lbl.innerHTML=`All fragrances for this role <span style="color:var(--g400);font-weight:400">(${roleAll.length})</span>`;
+      container.appendChild(lbl);
+      const hint=document.createElement('div');hint.style.cssText='font-size:.66rem;color:var(--g400);margin-bottom:10px;line-height:1.5';
+      hint.textContent='Tap a fragrance to learn more, or add directly to your capsule.';
+      container.appendChild(hint);
+      const list=document.createElement('div');list.className='picker-list';
+      roleAll.forEach(f=>list.appendChild(makeRow(f)));
+      container.appendChild(list);
+    } else {
+      const msg=document.createElement('div');msg.className='picker-empty';msg.textContent='No fragrances found for this role.';container.appendChild(msg);
+    }
   }
   if(wished.length){
     const lbl=document.createElement('div');lbl.className='picker-sec-lbl';lbl.textContent=`Wishlist (${wished.length})`;container.appendChild(lbl);
@@ -2304,13 +2372,22 @@ function renderCatRow(row,frag,fm){
     return `<span class="s-sym">${r.sym}<span class="s-sym-tip">${r.symLine}</span></span>`;
   }).join('');
   const layerChip=frag.layering>=6?`<span class="s-layer-chip">${LW[frag.layering]}</span>`:'';
+  const topNoteHTML=(frag.top||[]).map((n,i)=>`<button class="s-meta-note" data-note="${n.toLowerCase()}">${n}</button>${i<frag.top.length-1?'<span class="s-meta-sep">, </span>':''}`).join('');
   row.innerHTML=`<div class="s-fdot" style="background:${fm.color}"></div>
-    <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${frag.top.join(', ')}</div></div>
+    <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${topNoteHTML}</div></div>
     <div class="s-syms">${syms}${layerChip}</div>`;
   // Family hover via fdot
   const fdot=row.querySelector('.s-fdot');
   fdot.addEventListener('mouseenter',()=>highlightRows('family',frag.family));
   fdot.addEventListener('mouseleave',()=>highlightRows('family',null));
+  // Clickable top notes
+  row.querySelectorAll('.s-meta-note').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const note=NI_MAP[btn.dataset.note];
+      if(note)openNotePopup(note,btn);
+    });
+  });
 }
 function updBC(brand,key){
   const frags=CAT.filter(f=>f.brand===brand);
@@ -2653,90 +2730,309 @@ Promise.all([
   }
 });
 
-/* ══ COMMIT 4: NOTE CONSTELLATION ═══════════════════════════════════ */
+/* ══ FRAGRANCE MAP (replaces constellation) ══════════════════════════ */
+// Globals for fragrance map
+let _fmOverlay=null,_fmCanvas=null,_fmCtx=null,_fmMini=null,_fmMiniCtx=null;
+let _fmCamX=0,_fmCamY=0,_fmZoom=0.45;
+let _fmDragging=false,_fmDragLX=0,_fmDragLY=0,_fmDidDrag=false;
+let _fmHover=null,_fmPositions=null,_fmRaf=null;
+const _FM_FAMS=['woody','floral','amber','citrus','leather','oud','green','chypre','gourmand'];
+const _FM_R=1400;
+// Brighter dot colors for the dark canvas
+const _FM_DOT_COLORS={woody:'#D06A2A',floral:'#E85090',amber:'#E88000',citrus:'#E0B800',leather:'#A05030',oud:'#9E50B0',green:'#30B060',chypre:'#50A870',gourmand:'#D08820'};
+function _fmColor(fk){return _FM_DOT_COLORS[fk]||FAM[fk]?.color||'#888';}
+
+function _fmBuildPositions(){
+  if(_fmPositions)return;
+  _fmPositions=CAT.map(frag=>{
+    const fi=_FM_FAMS.indexOf(frag.family);
+    const angle=fi>=0?(fi/_FM_FAMS.length)*Math.PI*2-Math.PI/2:0;
+    const cx=Math.cos(angle)*_FM_R,cy=Math.sin(angle)*_FM_R;
+    // Scatter within cluster by sillage (x) and layering (y)
+    const ox=(frag.sillage-5)*38,oy=(frag.layering-5)*32;
+    // Deterministic jitter from id hash
+    let h=0;for(let i=0;i<frag.id.length;i++)h=Math.imul(h^frag.id.charCodeAt(i),0x9e3779b9)|0;
+    const jx=((h&0xff)-128)*0.28,jy=(((h>>8)&0xff)-128)*0.28;
+    return{frag,wx:cx+ox+jx,wy:cy+oy+jy};
+  });
+}
+
+function _fmW2S(wx,wy,W,H){return{sx:(wx-_fmCamX)*_fmZoom+W/2,sy:(wy-_fmCamY)*_fmZoom+H/2};}
+function _fmS2W(sx,sy,W,H){return{wx:(sx-W/2)/_fmZoom+_fmCamX,wy:(sy-H/2)/_fmZoom+_fmCamY};}
+
+function _fmDraw(){
+  if(!_fmCanvas||!_fmCtx)return;
+  const dpr=window.devicePixelRatio||1;
+  const W=_fmCanvas.offsetWidth,H=_fmCanvas.offsetHeight;
+  if(!W||!H)return;
+  if(_fmCanvas.width!==W*dpr){_fmCanvas.width=W*dpr;_fmCanvas.style.width=W+'px';}
+  if(_fmCanvas.height!==H*dpr){_fmCanvas.height=H*dpr;_fmCanvas.style.height=H+'px';}
+  const ctx=_fmCtx;ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+
+  // Family cluster halos
+  _FM_FAMS.forEach((fk,fi)=>{
+    const angle=(fi/_FM_FAMS.length)*Math.PI*2-Math.PI/2;
+    const s=_fmW2S(Math.cos(angle)*_FM_R,Math.sin(angle)*_FM_R,W,H);
+    const fm=FAM[fk];if(!fm)return;
+    // Soft glow
+    const col=_fmColor(fk);
+    const g=ctx.createRadialGradient(s.sx,s.sy,0,s.sx,s.sy,140*_fmZoom);
+    g.addColorStop(0,col+'30');g.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(s.sx,s.sy,140*_fmZoom,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    // Label
+    ctx.fillStyle=col+'88';
+    ctx.font=`${Math.max(9,Math.min(13,11*_fmZoom))}px "DM Sans",system-ui,sans-serif`;
+    ctx.textAlign='center';ctx.textBaseline='bottom';
+    ctx.fillText(fm.label,s.sx,s.sy-75*_fmZoom);
+  });
+
+  // Similarity lines from hovered frag
+  if(_fmHover){
+    const sim=_fmPositions
+      .filter(p=>p.frag.id!==_fmHover.frag.id)
+      .map(p=>({p,score:scoreSimilarity(_fmHover.frag,p.frag)}))
+      .filter(x=>x.score>=52)
+      .sort((a,b)=>b.score-a.score).slice(0,6);
+    const hs=_fmW2S(_fmHover.wx,_fmHover.wy,W,H);
+    sim.forEach(({p,score})=>{
+      const ps=_fmW2S(p.wx,p.wy,W,H);
+      ctx.beginPath();ctx.moveTo(hs.sx,hs.sy);ctx.lineTo(ps.sx,ps.sy);
+      const alpha=(score-52)/48*0.28+0.06;
+      ctx.strokeStyle=`rgba(255,255,255,${alpha.toFixed(2)})`;
+      ctx.lineWidth=1;ctx.stroke();
+    });
+  }
+
+  // Dots
+  const dotR=_fmZoom>=1.4?5:_fmZoom>=0.7?3.5:2.5;
+  _fmPositions.forEach(p=>{
+    const s=_fmW2S(p.wx,p.wy,W,H);
+    if(s.sx<-20||s.sx>W+20||s.sy<-20||s.sy>H+20)return;
+    const dotCol=_fmColor(p.frag.family);
+    const isH=_fmHover&&_fmHover.frag.id===p.frag.id;
+    const isOwn=isOwned(p.frag.id);
+    const r=isH?dotR*2:dotR;
+    ctx.beginPath();ctx.arc(s.sx,s.sy,r,0,Math.PI*2);
+    if(isH){ctx.fillStyle='#fff';}
+    else if(isOwn){ctx.fillStyle=dotCol;}
+    else{ctx.fillStyle=dotCol+'66';}
+    ctx.fill();
+    if(isOwn&&!isH){ctx.strokeStyle=dotCol+'cc';ctx.lineWidth=.8;ctx.stroke();}
+    // Labels at high zoom or on hover
+    if(isH||_fmZoom>=1.9){
+      ctx.fillStyle=isH?'rgba(255,255,255,.95)':'rgba(255,255,255,.5)';
+      ctx.font=isH?`bold 11px "DM Sans",system-ui,sans-serif`:`9px "DM Sans",system-ui,sans-serif`;
+      ctx.textAlign='center';ctx.textBaseline='top';
+      ctx.fillText(p.frag.name,s.sx,s.sy+r+2);
+    }
+  });
+
+  _fmDrawMini(W,H);
+}
+
+function _fmDrawMini(mainW,mainH){
+  if(!_fmMini||!_fmMiniCtx)return;
+  const dpr=window.devicePixelRatio||1;
+  const mW=_fmMini.offsetWidth||130,mH=_fmMini.offsetHeight||96;
+  if(_fmMini.width!==mW*dpr){_fmMini.width=mW*dpr;_fmMini.style.width=mW+'px';}
+  if(_fmMini.height!==mH*dpr){_fmMini.height=mH*dpr;_fmMini.style.height=mH+'px';}
+  const ctx=_fmMiniCtx;ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.fillStyle='#0d0d14';ctx.fillRect(0,0,mW,mH);
+  // World bounds: family ring + padding
+  const pad=500,wx0=-(_FM_R+pad),wy0=-(_FM_R+pad),wspan=(_FM_R+pad)*2;
+  function w2m(wx,wy){return{mx:(wx-wx0)/wspan*mW,my:(wy-wy0)/wspan*mH};}
+  _fmPositions.forEach(p=>{
+    const mc=_fmColor(p.frag.family);
+    const m=w2m(p.wx,p.wy);
+    ctx.beginPath();ctx.arc(m.mx,m.my,1.3,0,Math.PI*2);
+    ctx.fillStyle=mc+(isOwned(p.frag.id)?'cc':'55');ctx.fill();
+  });
+  // Viewport rect
+  const vp0=_fmS2W(0,0,mainW,mainH),vp1=_fmS2W(mainW,mainH,mainW,mainH);
+  const m0=w2m(vp0.wx,vp0.wy),m1=w2m(vp1.wx,vp1.wy);
+  ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=1;
+  ctx.strokeRect(m0.mx,m0.my,m1.mx-m0.mx,m1.my-m0.my);
+}
+
+function _fmScheduleDraw(){
+  if(_fmRaf)return;
+  _fmRaf=requestAnimationFrame(()=>{_fmRaf=null;_fmDraw();});
+}
+
+function openFragMap(){
+  _fmBuildPositions();
+  if(!_fmOverlay){
+    // Build overlay DOM once
+    _fmOverlay=document.createElement('div');_fmOverlay.className='fragmap-overlay hidden';
+    _fmOverlay.innerHTML=`<div class="fragmap-bar">
+      <div><div class="fragmap-title">✦ Fragrance Map</div>
+        <div class="fragmap-hint">Scroll to zoom · drag to pan · click a dot to open detail</div></div>
+      <button class="fragmap-close">Close ✕</button>
+    </div>`;
+    _fmCanvas=document.createElement('canvas');_fmCanvas.className='fragmap-canvas';
+    _fmOverlay.appendChild(_fmCanvas);_fmCtx=_fmCanvas.getContext('2d');
+
+    // Minimap
+    const mmWrap=document.createElement('div');mmWrap.className='fragmap-minimap';
+    _fmMini=document.createElement('canvas');mmWrap.appendChild(_fmMini);
+    _fmOverlay.appendChild(mmWrap);_fmMiniCtx=_fmMini.getContext('2d');
+
+    // Legend
+    const leg=document.createElement('div');leg.className='fragmap-legend';
+    _FM_FAMS.forEach(fk=>{
+      const fm=FAM[fk];if(!fm)return;
+      const item=document.createElement('div');item.className='fragmap-legend-item';
+      item.innerHTML=`<div class="fragmap-legend-dot" style="background:${_fmColor(fk)}"></div>${fm.label}`;
+      leg.appendChild(item);
+    });
+    _fmOverlay.appendChild(leg);
+
+    // Tooltip
+    const tip=document.createElement('div');tip.className='fragmap-tooltip';tip.style.display='none';
+    _fmOverlay.appendChild(tip);
+
+    // Close
+    _fmOverlay.querySelector('.fragmap-close').addEventListener('click',closeFragMap);
+
+    // ESC key
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&_fmOverlay&&!_fmOverlay.classList.contains('hidden'))closeFragMap();});
+
+    // Wheel zoom (zoom toward cursor)
+    _fmCanvas.addEventListener('wheel',e=>{
+      e.preventDefault();
+      const W=_fmCanvas.offsetWidth,H=_fmCanvas.offsetHeight;
+      const before=_fmS2W(e.offsetX,e.offsetY,W,H);
+      _fmZoom=Math.max(0.2,Math.min(6,_fmZoom*Math.exp(-e.deltaY*0.0008)));
+      const after=_fmS2W(e.offsetX,e.offsetY,W,H);
+      _fmCamX+=before.wx-after.wx;_fmCamY+=before.wy-after.wy;
+      _fmScheduleDraw();
+    },{passive:false});
+
+    // Mouse drag pan
+    _fmCanvas.addEventListener('mousedown',e=>{
+      _fmDragging=true;_fmDidDrag=false;
+      _fmDragLX=e.clientX;_fmDragLY=e.clientY;
+    });
+    const _fmMM=e=>{
+      if(_fmDragging){
+        const dx=e.clientX-_fmDragLX,dy=e.clientY-_fmDragLY;
+        if(Math.abs(dx)+Math.abs(dy)>3)_fmDidDrag=true;
+        _fmCamX-=dx/_fmZoom;_fmCamY-=dy/_fmZoom;
+        _fmDragLX=e.clientX;_fmDragLY=e.clientY;
+        _fmScheduleDraw();
+        return;
+      }
+      if(!_fmCanvas||_fmOverlay.classList.contains('hidden'))return;
+      // Hover detection
+      const rect=_fmCanvas.getBoundingClientRect();
+      const ex=e.clientX-rect.left,ey=e.clientY-rect.top;
+      const W=_fmCanvas.offsetWidth,H=_fmCanvas.offsetHeight;
+      const hitR=Math.max(8,6/_fmZoom);
+      let closest=null,bestD=hitR;
+      _fmPositions.forEach(p=>{
+        const s=_fmW2S(p.wx,p.wy,W,H);
+        const d=Math.hypot(s.sx-ex,s.sy-ey);
+        if(d<bestD){bestD=d;closest=p;}
+      });
+      const tipEl=_fmOverlay.querySelector('.fragmap-tooltip');
+      if(closest!==_fmHover){
+        _fmHover=closest;
+        if(closest){
+          _fmCanvas.style.cursor='pointer';
+          const simNames=_fmPositions
+            .filter(p=>p.frag.id!==closest.frag.id)
+            .map(p=>({name:p.frag.name,score:scoreSimilarity(closest.frag,p.frag)}))
+            .filter(x=>x.score>=50).sort((a,b)=>b.score-a.score).slice(0,3)
+            .map(x=>x.name).join(', ');
+          const st=gst(closest.frag.id);
+          const stBadge=st==='owned'?'<span style="color:#7fdf8f;margin-left:4px">● Owned</span>':st==='wish'?'<span style="color:#dfcf7f;margin-left:4px">● Wishlist</span>':'';
+          tipEl.innerHTML=`<div class="fragmap-tooltip-name">${closest.frag.name}${stBadge}</div>
+            <div class="fragmap-tooltip-brand">${closest.frag.brand}</div>
+            <div class="fragmap-tooltip-notes">${closest.frag.top.slice(0,5).join(' · ')}</div>
+            ${simNames?`<div class="fragmap-tooltip-sim">Similar: ${simNames}</div>`:''}`;
+          tipEl.style.display='block';
+        } else {
+          _fmCanvas.style.cursor='grab';tipEl.style.display='none';
+        }
+        _fmScheduleDraw();
+      }
+      if(closest){
+        tipEl.style.left=Math.min(e.clientX+16,window.innerWidth-230)+'px';
+        tipEl.style.top=Math.max(8,e.clientY-14)+'px';
+      }
+    };
+    window.addEventListener('mousemove',_fmMM);
+    window.addEventListener('mouseup',()=>{_fmDragging=false;});
+
+    // Click → open detail
+    _fmCanvas.addEventListener('click',()=>{
+      if(_fmDidDrag)return;
+      if(!_fmHover)return;
+      const f=_fmHover.frag;
+      closeFragMap();
+      setTimeout(()=>openFragDetail(f),120);
+    });
+
+    // Touch support
+    let _fmT=[];
+    _fmCanvas.addEventListener('touchstart',e=>{e.preventDefault();_fmT=[...e.touches];_fmDidDrag=false;},{passive:false});
+    _fmCanvas.addEventListener('touchmove',e=>{
+      e.preventDefault();
+      if(e.touches.length===1&&_fmT.length===1){
+        const dx=e.touches[0].clientX-_fmT[0].clientX,dy=e.touches[0].clientY-_fmT[0].clientY;
+        if(Math.abs(dx)+Math.abs(dy)>4)_fmDidDrag=true;
+        _fmCamX-=dx/_fmZoom;_fmCamY-=dy/_fmZoom;
+        _fmT=[...e.touches];_fmScheduleDraw();
+      } else if(e.touches.length===2&&_fmT.length>=2){
+        const d0=Math.hypot(_fmT[1].clientX-_fmT[0].clientX,_fmT[1].clientY-_fmT[0].clientY)||1;
+        const d1=Math.hypot(e.touches[1].clientX-e.touches[0].clientX,e.touches[1].clientY-e.touches[0].clientY);
+        _fmZoom=Math.max(0.2,Math.min(6,_fmZoom*d1/d0));
+        _fmT=[...e.touches];_fmScheduleDraw();
+      }
+    },{passive:false});
+    _fmCanvas.addEventListener('touchend',e=>{
+      e.preventDefault();
+      if(!_fmDidDrag&&e.changedTouches.length===1&&_fmT.length<=1){
+        const rect=_fmCanvas.getBoundingClientRect();
+        const ex=e.changedTouches[0].clientX-rect.left,ey=e.changedTouches[0].clientY-rect.top;
+        const W=_fmCanvas.offsetWidth,H=_fmCanvas.offsetHeight;
+        const hitR=Math.max(14,8/_fmZoom);
+        let closest=null,bestD=hitR;
+        _fmPositions.forEach(p=>{const s=_fmW2S(p.wx,p.wy,W,H);const d=Math.hypot(s.sx-ex,s.sy-ey);if(d<bestD){bestD=d;closest=p;}});
+        if(closest){closeFragMap();setTimeout(()=>openFragDetail(closest.frag),120);}
+      }
+      _fmT=[...e.touches];
+    },{passive:false});
+
+    // Resize
+    window.addEventListener('resize',()=>{if(_fmOverlay&&!_fmOverlay.classList.contains('hidden'))_fmScheduleDraw();});
+
+    document.body.appendChild(_fmOverlay);
+  }
+
+  _fmOverlay.classList.remove('hidden');
+  _fmCamX=0;_fmCamY=0;_fmZoom=0.155;
+  _fmHover=null;
+  requestAnimationFrame(()=>_fmDraw());
+}
+
+function closeFragMap(){
+  if(_fmOverlay)_fmOverlay.classList.add('hidden');
+  _fmHover=null;
+}
+
 function buildConstellation(){
   const notesBody=document.getElementById('notes-body');
   if(!notesBody)return;
-  const tip=document.createElement('div');tip.className='constellation-tooltip';document.body.appendChild(tip);
-  const wrap=document.createElement('div');wrap.className='constellation-wrap';
-  const lbl=document.createElement('div');lbl.className='sec-label';
-  lbl.innerHTML='<span>Note Constellation</span><span class="sub">Size = catalog frequency — click any node to filter</span>';
-  wrap.appendChild(lbl);
-  const canvas=document.createElement('canvas');canvas.className='constellation-canvas';
-  wrap.appendChild(canvas);
-  const freq={};
-  CAT.forEach(f=>['top','mid','base'].forEach(tier=>(f[tier]||[]).forEach(s=>{const n=s.trim().toLowerCase();freq[n]=(freq[n]||0)+1;})));
-  const FAM_COLORS={woody:'#7C5C2E',floral:'#C2547A',amber:'#C98000',citrus:'#D4A000',leather:'#4A2010',oud:'#1A0A14',green:'#3A6B2C',chypre:'#5A7A3A',gourmand:'#A0522D'};
-  const nodes=NI.map((n,i)=>({...n,id:i,freq:freq[n.name.toLowerCase()]||0,x:0.1+Math.random()*0.8,y:0.1+Math.random()*0.8,vx:0,vy:0}));
-  function getR(n){return 4+Math.min(n.freq*2.8,16);}
-  function draw(){
-    const dpr=window.devicePixelRatio||1;
-    const W=canvas.offsetWidth||200,H=canvas.offsetHeight||200;
-    if(canvas.width!==W*dpr||canvas.height!==H*dpr){
-      canvas.width=W*dpr;canvas.height=H*dpr;
-      canvas.style.width=W+'px';canvas.style.height=H+'px';
-    }
-    const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
-    nodes.forEach(n=>{
-      const r=getR(n),col=FAM_COLORS[n.family]||'#aaa',x=n.x*W,y=n.y*H;
-      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
-      ctx.fillStyle=col+'bb';ctx.fill();
-      ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.stroke();
-      if(r>=9){ctx.fillStyle='#0a0a0a';ctx.font=`${Math.max(9,Math.min(r*0.9,13))}px "Source Serif 4",Georgia,serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n.name,x,y);}
-    });
-  }
-  let tc=0;
-  function tick(){
-    nodes.forEach(a=>nodes.forEach(b=>{
-      if(a===b)return;
-      const dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy)||.001,minD=0.1;
-      if(dist<minD){const f=(minD-dist)/dist*0.07;a.vx+=dx*f;a.vy+=dy*f;}
-    }));
-    nodes.forEach(a=>{a.x=Math.max(.02,Math.min(.98,a.x+a.vx*.7));a.y=Math.max(.02,Math.min(.98,a.y+a.vy*.7));a.vx*=.78;a.vy*=.78;});
-    draw();if(++tc<90)requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-  canvas.addEventListener('mousemove',e=>{
-    const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
-    const W=canvas.width,H=canvas.height;let hit=null;
-    nodes.forEach(n=>{const r=getR(n),dx=(n.x-mx)*W,dy=(n.y-my)*H;if(Math.sqrt(dx*dx+dy*dy)<r+6)hit=n;});
-    if(hit){
-      const inCat=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||[]).some(s=>s.toLowerCase().trim()===hit.name.toLowerCase()))).sort((a,b)=>a.name.localeCompare(b.name));
-      tip.style.display='block';tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';
-      tip.innerHTML=`<strong>${hit.name}</strong><br>${hit.desc}<br><span style="opacity:.6;font-size:.6rem">${inCat.length} fragrance${inCat.length!==1?'s':''}: ${inCat.map(f=>f.name).join(', ')}</span>`;
-      canvas.style.cursor='pointer';
-    } else {tip.style.display='none';canvas.style.cursor='grab';}
-  });
-  canvas.addEventListener('mouseleave',()=>{tip.style.display='none';canvas.style.cursor='grab';});
-  canvas.addEventListener('click',e=>{
-    const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
-    const W=canvas.width,H=canvas.height;
-    nodes.forEach(n=>{
-      const r=getR(n),dx=(n.x-mx)*W,dy=(n.y-my)*H;
-      if(Math.sqrt(dx*dx+dy*dy)<r+6){
-        document.querySelectorAll('[data-panel]').forEach(t=>t.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-        const catTab=document.querySelector('[data-panel="catalog"]');
-        if(catTab){catTab.classList.add('active');document.getElementById('p-catalog')?.classList.add('active');}
-        const body=document.getElementById('cat-body');body.innerHTML='';
-        const matched=CAT.filter(f=>['top','mid','base'].some(t=>(f[t]||[]).some(s=>s.toLowerCase().trim()===n.name.toLowerCase())));
-        const hdr=document.createElement('div');hdr.className='sec-label';
-        hdr.innerHTML=`<span>Note: ${n.name}</span><span class="sub"><button class="tab" style="font-size:.65rem;padding:2px 8px" onclick="buildRoleLanding()">Clear ×</button></span>`;
-        body.appendChild(hdr);
-        const list=document.createElement('div');list.className='scent-list';
-        matched.forEach(frag=>{const fm=FAM[frag.family]||{color:'#888'};const row=document.createElement('div');row.dataset.id=frag.id;renderCatRow(row,frag,fm);list.appendChild(row);});
-        body.appendChild(list);
-      }
-    });
-  });
-  const legend=document.createElement('div');legend.className='constellation-legend';
-  [['woody','Woody'],['floral','Floral'],['amber','Amber'],['citrus','Citrus'],['leather','Leather'],['oud','Oud'],['green','Green'],['chypre','Chypre'],['gourmand','Gourmand']].forEach(([k,label])=>{
-    const item=document.createElement('div');item.className='cl2-item';
-    item.innerHTML=`<div class="cl2-dot" style="background:${FAM_COLORS[k]}"></div>${label}`;
-    legend.appendChild(item);
-  });
-  wrap.appendChild(legend);
-  notesBody.insertBefore(wrap,notesBody.firstChild);
+  // Add "Open Fragrance Map" launch button at the top of notes
+  const launchBtn=document.createElement('button');
+  launchBtn.className='map-launch-btn';
+  launchBtn.innerHTML=`<span class="map-launch-icon">✦</span>
+    <div><div>Open Fragrance Map</div>
+    <div class="map-launch-meta">Pan &amp; zoom all ${CAT.length} fragrances by family · click to explore</div></div>`;
+  launchBtn.addEventListener('click',openFragMap);
+  notesBody.insertBefore(launchBtn,notesBody.firstChild);
 }
 
 /* ══ COMMIT 5: LAYERING PAIRER ═══════════════════════════════════ */
