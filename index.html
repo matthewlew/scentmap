@@ -1585,6 +1585,287 @@ body{font-family:"Source Serif 4",Georgia,serif;
     border-bottom:1px solid var(--g200);
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   COMPARE REDESIGN v2 — Design System Upgrade
+══════════════════════════════════════════════════════════════ */
+
+/* ── Typescale classes ── */
+.t-display{font-family:"Archivo Black",sans-serif;font-size:3rem;line-height:1;letter-spacing:-.02em;font-weight:900}
+.t-title-lg{font-family:"Source Serif 4",Georgia,serif;font-size:1.4rem;line-height:1.2;font-weight:700}
+.t-title-sm{font-family:"Source Serif 4",Georgia,serif;font-size:1.1rem;line-height:1.3;font-weight:600}
+.t-body{font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.6;font-weight:400}
+.t-ui{font-family:"DM Sans",system-ui,sans-serif;font-size:.875rem;line-height:1.4;font-weight:500}
+.t-label{font-family:"DM Sans",system-ui,sans-serif;font-size:.75rem;line-height:1.3;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.t-caption{font-family:"DM Sans",system-ui,sans-serif;font-size:.8125rem;line-height:1.4;font-weight:400}
+.t-data{font-family:"DM Sans",system-ui,sans-serif;font-size:.875rem;line-height:1.2;font-weight:600}
+
+/* ── Buttons ── */
+.btn-primary,.btn-ghost{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 20px;border-radius:8px;cursor:pointer;
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.875rem;font-weight:600;
+  transition:background .15s,transform .1s;line-height:1.2;
+}
+.btn-primary{background:var(--ink);color:var(--paper);border:none}
+.btn-primary:hover{background:var(--g700)}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn-ghost:hover{background:var(--stone)}
+.btn-primary:active,.btn-ghost:active{transform:scale(.98)}
+
+/* ── Global fixes: no italics in Source Serif 4 ── */
+em,i{font-style:normal;font-weight:600}
+
+/* ── STICKY BAR ── */
+#cmp-sticky-bar{
+  position:sticky;top:0;z-index:200;
+  background:var(--paper);border-bottom:1px solid var(--g200);
+  padding:8px 14px;
+  display:flex;align-items:center;gap:8px;
+  opacity:0;pointer-events:none;
+  transition:opacity .22s;
+}
+#cmp-sticky-bar.visible{opacity:1;pointer-events:all}
+.cmp-sticky-slot{
+  display:flex;align-items:center;gap:7px;flex:1;min-width:0;cursor:pointer;
+  padding:5px 8px;border-radius:8px;transition:background .12s;
+}
+.cmp-sticky-slot:hover{background:var(--stone)}
+.cmp-sticky-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cmp-sticky-name{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.875rem;font-weight:600;
+  color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.cmp-sticky-vs{
+  font-family:"Archivo Black",sans-serif;font-size:.65rem;letter-spacing:.1em;
+  color:var(--g400);flex-shrink:0;
+}
+
+/* ── SCORE CARDS ── */
+.cmp-scores-wrap{margin:20px 0 8px}
+.cmp-score-cards{display:flex;gap:10px;margin-bottom:14px}
+.cmp-score-card{
+  flex:1;padding:18px 12px 14px;border-radius:12px;
+  border:1px solid var(--g200);background:var(--paper);
+  cursor:pointer;transition:background .15s,border-color .15s;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  -webkit-tap-highlight-color:transparent;
+}
+.cmp-score-card:hover{background:var(--stone);border-color:var(--g300)}
+.cmp-score-card:active{transform:scale(.97)}
+.cmp-score-pct{font-family:"Archivo Black",sans-serif;font-size:2.8rem;line-height:1;letter-spacing:-.03em}
+.cmp-score-label{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.68rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);
+}
+.cmp-score-tap{font-family:"DM Sans",system-ui,sans-serif;font-size:.68rem;color:var(--g400);margin-top:2px}
+.cmp-verdict{
+  font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.65;
+  color:var(--g700);padding:14px 16px;border-radius:8px;
+  background:var(--stone);border:1px solid var(--g200);
+}
+
+/* ── EDUCATIONAL OVERLAY ── */
+.cmp-edu-overlay{
+  position:fixed;inset:0;z-index:600;
+  background:rgba(14,12,9,.45);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.cmp-edu-overlay.open{opacity:1;pointer-events:all}
+.cmp-edu-wrap{
+  background:var(--paper);border-radius:24px 24px 0 0;
+  width:100%;max-width:560px;max-height:82vh;overflow-y:auto;
+  transform:translateY(24px);
+  transition:transform .3s cubic-bezier(.16,1,.3,1);
+  border:1px solid var(--g200);border-bottom:none;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.cmp-edu-overlay.open .cmp-edu-wrap{transform:translateY(0)}
+.cmp-edu-header{
+  padding:20px 20px 14px;border-bottom:1px solid var(--g200);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  position:sticky;top:0;background:var(--paper);z-index:1;
+}
+.cmp-edu-header-left{display:flex;flex-direction:column;gap:3px}
+.cmp-edu-label{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.68rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);
+}
+.cmp-edu-num{font-family:"Archivo Black",sans-serif;font-size:2.6rem;line-height:1;letter-spacing:-.03em;color:var(--ink)}
+.cmp-edu-close{
+  background:none;border:1px solid var(--g300);cursor:pointer;
+  color:var(--g600);font-size:.82rem;padding:7px 20px;border-radius:24px;
+  font-family:inherit;transition:background .12s;flex-shrink:0;margin-top:4px;
+}
+.cmp-edu-close:hover{background:var(--stone)}
+.cmp-edu-body{padding:16px 20px 28px}
+.cmp-edu-intro{
+  font-family:"Source Serif 4",Georgia,serif;font-size:.95rem;line-height:1.6;
+  color:var(--g600);margin-bottom:16px;
+}
+.cmp-edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cmp-edu-quad{padding:14px;border-radius:10px;border:1px solid var(--g200)}
+.cmp-edu-quad.highlight{border-color:var(--ink);background:var(--stone)}
+.cmp-edu-quad-tag{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.62rem;
+  font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g400);margin-bottom:5px;
+}
+.cmp-edu-quad-title{font-size:.88rem;font-weight:600;color:var(--ink);margin-bottom:4px}
+.cmp-edu-quad-desc{font-family:"DM Sans",system-ui,sans-serif;font-size:.77rem;line-height:1.5;color:var(--g600)}
+@media(max-width:479px){.cmp-edu-grid{grid-template-columns:1fr}}
+@media(min-width:600px){.cmp-edu-wrap{border-radius:24px;max-height:70vh;border-bottom:1px solid var(--g200)}}
+
+/* ── COMPARE HEADER CARDS ── */
+.cmp-header-v2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.cmp-frag-card{padding:14px;border-radius:12px;border:1px solid var(--g200)}
+.cmp-frag-card-fam{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 9px 3px 6px;border-radius:24px;
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.65rem;
+  font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:#fff;margin-bottom:10px;
+}
+.cmp-frag-card-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);flex-shrink:0}
+.cmp-frag-card-name{
+  font-family:"Archivo Black",sans-serif;font-size:1.1rem;
+  line-height:1.1;letter-spacing:-.01em;color:var(--ink);margin-bottom:3px;
+}
+.cmp-frag-card-brand{font-family:"DM Sans",system-ui,sans-serif;font-size:.75rem;color:var(--g500);margin-bottom:8px}
+.cmp-frag-card-desc{font-family:"Source Serif 4",Georgia,serif;font-size:.875rem;line-height:1.55;color:var(--g600)}
+@media(max-width:479px){
+  .cmp-header-v2{grid-template-columns:1fr}
+  .cmp-frag-card-name{font-size:.98rem}
+}
+
+/* ── 3×3 NOTES GRID ── */
+.cmp-notes-v2{margin:20px 0}
+.cmp-notes-v2-label{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:10px;
+}
+.cmp-grid-col-heads{display:grid;grid-template-columns:42px 1fr 1fr 1fr;margin-bottom:2px}
+.cmp-grid-col-head{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.62rem;
+  font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  text-align:center;padding:5px 4px;color:var(--g500);
+}
+.cmp-grid-3x3{border:1px solid var(--g200);border-radius:12px;overflow:hidden}
+.cmp-grid-row{display:grid;grid-template-columns:42px 1fr 1fr 1fr;border-bottom:1px solid var(--g200)}
+.cmp-grid-row:last-child{border-bottom:none}
+.cmp-grid-row-lbl{
+  padding:10px 4px;display:flex;align-items:flex-start;justify-content:center;
+  background:var(--stone);border-right:1px solid var(--g200);
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.58rem;
+  font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--g400);padding-top:12px;
+}
+.cmp-grid-cell{
+  padding:8px 6px;min-height:40px;
+  border-right:1px solid var(--g200);
+  display:flex;flex-wrap:wrap;gap:3px;align-content:flex-start;
+}
+.cmp-grid-cell:last-child{border-right:none}
+.cmp-grid-cell.cell-center{background:var(--stone);justify-content:center}
+.cmp-note-pill{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;font-weight:500;
+  padding:2px 7px;border-radius:24px;background:var(--g100);color:var(--g700);white-space:nowrap;
+}
+.cmp-note-pill.shared{background:var(--ink);color:var(--paper)}
+.cmp-grid-empty{color:var(--g400);font-family:"DM Sans",sans-serif;font-size:.7rem}
+@media(max-width:479px){
+  .cmp-grid-col-heads{grid-template-columns:32px 1fr 1fr 1fr}
+  .cmp-grid-row{grid-template-columns:32px 1fr 1fr 1fr}
+  .cmp-grid-row-lbl{width:32px;font-size:.54rem}
+  .cmp-note-pill{font-size:.65rem;padding:1px 5px}
+}
+
+/* ── UNIFIED RADAR ── */
+.cmp-radar-v2{margin:20px 0}
+.cmp-radar-v2-label{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:10px;
+}
+.cmp-radar-v2-wrap svg{width:100%;display:block;max-width:320px;margin:0 auto}
+.cmp-radar-legend{display:flex;justify-content:center;gap:18px;margin-top:10px}
+.cmp-radar-legend-item{
+  display:flex;align-items:center;gap:6px;
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.75rem;color:var(--g600);
+}
+.cmp-radar-legend-line{width:20px;height:2px;border-radius:1px;flex-shrink:0}
+.cmp-radar-legend-line.dashed{height:0;border-top:2px dashed;border-radius:0}
+
+/* ── SCATTER PLOT ── */
+.cmp-scatter-v2{margin:20px 0}
+.cmp-scatter-v2-label{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:10px;
+}
+.cmp-scatter-v2-wrap svg{width:100%;display:block;max-width:320px;margin:0 auto}
+
+/* ── SUGGESTIONS v2 ── */
+.cmp-sug-v2{margin:20px 0 4px}
+.cmp-sug-v2-label{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:12px;
+}
+.cmp-sug-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cmp-sug-col-head{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.63rem;
+  font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:8px;text-align:center;
+}
+.cmp-sug-col-items{display:flex;flex-direction:column;gap:8px}
+.cmp-sug-card-v2{
+  padding:11px;border-radius:12px;border:1px solid var(--g200);
+  background:var(--paper);cursor:pointer;text-align:left;
+  width:100%;transition:background .12s,border-color .12s;
+  -webkit-tap-highlight-color:transparent;
+}
+.cmp-sug-card-v2:hover{background:var(--stone);border-color:var(--g300)}
+.cmp-sug-card-v2:active{transform:scale(.98)}
+.cmp-sug-card-v2-head{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.cmp-sug-card-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cmp-sug-card-name{font-size:.88rem;font-weight:600;line-height:1.2;flex:1;min-width:0}
+.cmp-sug-card-brand{font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;color:var(--g500);margin-top:2px}
+.cmp-attr-group{margin-bottom:6px}
+.cmp-attr-group:last-child{margin-bottom:0}
+.cmp-attr-label{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.6rem;
+  font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g400);margin-bottom:3px;
+}
+.cmp-attr-pills{display:flex;flex-wrap:wrap;gap:3px}
+.cmp-attr-pill{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.68rem;font-weight:500;
+  padding:2px 6px;border-radius:24px;background:var(--g100);color:var(--g700);white-space:nowrap;
+}
+@media(max-width:479px){.cmp-sug-columns{grid-template-columns:1fr}}
+
+/* ── DETAIL: Description + Compare CTAs ── */
+.dc-description{
+  font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.65;
+  color:var(--g700);padding:0;margin:10px 0 14px;
+}
+.dc-cmp-ctas{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.dc-cmp-cta-label{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:6px;
+}
+.dc-cmp-btn{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;border-radius:8px;border:1px solid var(--g200);
+  background:var(--paper);cursor:pointer;width:100%;text-align:left;
+  transition:background .12s,border-color .12s;
+}
+.dc-cmp-btn:hover{background:var(--stone);border-color:var(--g300)}
+.dc-cmp-btn-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dc-cmp-btn-text{flex:1;min-width:0}
+.dc-cmp-btn-lbl{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.65rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:2px;
+}
+.dc-cmp-btn-name{font-size:.9rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dc-cmp-btn-empty{color:var(--g400)}
+.dc-cmp-btn-arrow{color:var(--g400);font-size:.85rem;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -2156,25 +2437,18 @@ function linkNotes(arr){
 }
 
 function renderFragDetail(container,frag){
-  const st=gst(frag.id);
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
-  const roleStatus=getAllRolesForFrag(frag.id);
-  const anyAssigned=ROLES.some(r=>{const s=getFragRoleStatus(frag.id,r.id);return s&&s!=='none';});
 
   container.innerHTML=`
     <div class="dc-name">${frag.name}</div>
     <div class="dc-brand">${frag.brand}</div>
-    <div class="dc-state-wrap">
-      <div class="tabs" style="display:inline-flex">
-        <button class="tab${st==='none'?' active':''}" data-s="none">Not tracked</button>
-        <button class="tab${st==='wish'?' active':''}" data-s="wish">Wishlist</button>
-        <button class="tab${st==='owned'?' active':''}" data-s="owned">Owned</button>
-      </div>
-    </div>
     <div class="dc-ftag" style="background:${fm.color}">
       <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
       ${fm.label}
     </div>
+    ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
+    <div class="dc-cmp-cta-label">Compare with</div>
+    <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
     <div class="dc-stats">
       <div class="dc-stat"><div class="dc-slbl">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${SW[frag.sillage]}</div></div>
       <div class="dc-stat"><div class="dc-slbl">Layering</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${LW[frag.layering]}</div></div>
@@ -2183,43 +2457,25 @@ function renderFragDetail(container,frag){
     <div class="dc-nlbl">Notes</div>
     <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
     <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
-    <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
-    ${frag.description?`<div class="dc-desc">${frag.description}</div>`:''}
-    <div class="dc-roles-cta${anyAssigned?'':' cta-action'}">${anyAssigned?'In your scentmap':'Add to your scentmap'}</div>
-    <div class="dc-role-chips" id="dc-chips-${frag.id}"></div>`;
-
-  // State tabs
-  container.querySelectorAll('.dc-state-wrap .tab').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      setState(frag.id,btn.dataset.s);
-      if(btn.dataset.s==='owned') window.haptic?.('medium');
-      container.querySelectorAll('.dc-state-wrap .tab').forEach(b=>b.classList.toggle('active',b===btn));
-      refreshAfterStateChange(frag.id);
-    });
-  });
+    <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>`;
 
   // Note links
   container.querySelectorAll('.note-link').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note))});
   });
 
-  // Role chips — all 8
-  buildRoleChips(frag,container.querySelector(`#dc-chips-${frag.id}`));
+  // Compare CTAs
+  _buildCompareCTAs(frag,container.querySelector(`#dc-ctas-${frag.id}`));
 
-  // Layering suggestions
-  buildLayerSuggestions(frag,container);
-
-  // Similar shelf — split into owned and discover sections
+  // Similar shelf
   const scored=CAT
     .filter(f=>f.id!==frag.id)
     .map(f=>({f,score:scoreSimilarity(frag,f)}))
     .filter(x=>x.score>=30)
-    .sort((a,b)=>b.score-a.score);
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,5);
 
-  const simOwned=scored.filter(x=>isOwned(x.f.id)).slice(0,3);
-  const simDiscover=scored.filter(x=>!isOwned(x.f.id)).slice(0,3);
-
-  if(simOwned.length||simDiscover.length){
+  if(scored.length){
     const lbl=document.createElement('div');
     lbl.className='dc-sim-lbl';lbl.textContent='More like this';
     container.appendChild(lbl);
@@ -2232,37 +2488,56 @@ function renderFragDetail(container,frag){
       return'';
     }
 
-    function makeSimRow(f,isDiscover){
+    scored.forEach(({f})=>{
       const fm2=FAM[f.family]||{color:'#888'};
-      const st=gst(f.id);
-      const stLabel=st==='owned'?'Owned':st==='wish'?'Wish':'';
-      const stCls=st==='owned'?' is-owned':st==='wish'?' is-wish':'';
       const reason=simReason(frag,f);
-      const badge=isDiscover?classifyDiscovery(frag,f):null;
+      const badge=classifyDiscovery(frag,f);
       const row=document.createElement('button');row.className='dc-sim-row';
       const namePart=reason
         ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
         :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand">${f.brand}</span>`;
       row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
         <span class="dc-sim-info">${namePart}</span>
-        ${badge?`<span class="dc-badge ${badge.type}">${badge.label}</span>`:''}
-        ${stLabel?`<span class="dc-sim-state${stCls}">${stLabel}</span>`:''}`;
+        ${badge?`<span class="dc-badge ${badge.type}">${badge.label}</span>`:''}`;
       row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
-      return row;
-    }
-
-    if(simOwned.length){
-      const sub=document.createElement('div');sub.className='dc-sim-sub';sub.textContent='In your collection';
-      shelf.appendChild(sub);
-      simOwned.forEach(({f})=>shelf.appendChild(makeSimRow(f,false)));
-    }
-    if(simDiscover.length){
-      const sub=document.createElement('div');sub.className='dc-sim-sub';sub.textContent='Discover';
-      shelf.appendChild(sub);
-      simDiscover.forEach(({f})=>shelf.appendChild(makeSimRow(f,true)));
-    }
+      shelf.appendChild(row);
+    });
     container.appendChild(shelf);
   }
+}
+
+/* ── Compare CTAs in detail panel ── */
+function _buildCompareCTAs(frag,container){
+  if(!container)return;
+  function makeBtn(existingFrag,targetSlot){
+    const fc=existingFrag?getCmpFam(existingFrag.family):null;
+    const slotNum=targetSlot==='a'?'One':'Two';
+    const btn=document.createElement('button');
+    btn.className='dc-cmp-btn';
+    btn.innerHTML=`
+      <span class="dc-cmp-btn-dot" style="background:${fc?fc.accent:'var(--g300)'}"></span>
+      <span class="dc-cmp-btn-text">
+        <span class="dc-cmp-btn-lbl">Fragrance ${slotNum}</span>
+        <span class="dc-cmp-btn-name${existingFrag?'':' dc-cmp-btn-empty'}">${existingFrag?existingFrag.name:'Set as Fragrance '+slotNum}</span>
+      </span>
+      <span class="dc-cmp-btn-arrow">→</span>`;
+    btn.addEventListener('click',()=>{
+      window.haptic?.('medium');
+      if(existingFrag){
+        // Put current frag in the OTHER slot, keep existing in targetSlot
+        const otherSlot=targetSlot==='a'?'b':'a';
+        _selectFragForSlot(otherSlot,frag);
+      }else{
+        _selectFragForSlot(targetSlot,frag);
+      }
+      go('compare',null);
+      closeDesktopDetail?.();
+      closeAllSheets?.();
+    });
+    return btn;
+  }
+  container.appendChild(makeBtn(CMP_A,'a'));
+  container.appendChild(makeBtn(CMP_B,'b'));
 }
 
 function buildLayerSuggestions(frag,container){
@@ -3941,8 +4216,8 @@ const CMP_FAM={
   leather: {accent:'#5A2D0C',light:'#FAF5F0'},
   oud:     {accent:'#6E2080',light:'#F8F0FC'},
   green:   {accent:'#1A6030',light:'#F0FAF2'},
-  chypre:  {accent:'#1E5A30',light:'#F0FAF2'},
-  gourmand:{accent:'#7C3E00',light:'#FDF6EE'},
+  chypre:  {accent:'#2A5C50',light:'#EEF8F5'},
+  gourmand:{accent:'#6B2030',light:'#FAF0F2'},
   aquatic: {accent:'#004A80',light:'#EEF8FF'},
 };
 function getCmpFam(fam){return CMP_FAM[fam]||{accent:'#6B6356',light:'#F5F2EC'};}
@@ -3966,165 +4241,340 @@ function computeProfile(frag){
   return{freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
 }
 
-function drawRadarSvg(frag,color){
-  const dims=['freshness','sweetness','warmth','intensity','complexity'];
-  const labels=['Fresh','Sweet','Warm','Intensity','Depth'];
-  const p=computeProfile(frag);
-  const cx=110,cy=110,r=76,n=5;
-  function ap(i,val){
-    const a=(Math.PI*2*i/n)-Math.PI/2;
-    return{x:cx+r*val*Math.cos(a),y:cy+r*val*Math.sin(a)};
-  }
-  const rings=[0.25,0.5,0.75,1.0].map(rv=>{
-    const pts=dims.map((_,i)=>ap(i,rv));
-    return`<polygon points="${pts.map(pt=>`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ')}" fill="none" stroke="${color}20" stroke-width="1"/>`;
-  }).join('');
-  const axes=dims.map((_,i)=>{const e=ap(i,1);return`<line x1="${cx}" y1="${cy}" x2="${e.x.toFixed(1)}" y2="${e.y.toFixed(1)}" stroke="${color}28" stroke-width="1"/>`;}).join('');
-  const dataPts=dims.map((d,i)=>ap(i,p[d]));
-  const poly=dataPts.map(pt=>`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ');
-  const lbls=dims.map((_,i)=>{
-    const lp=ap(i,1.32);
-    const anch=lp.x<cx-4?'end':lp.x>cx+4?'start':'middle';
-    return`<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle" font-size="8.5" fill="${color}99" font-family="DM Sans,system-ui,sans-serif" font-weight="700" letter-spacing="0.04em">${labels[i]}</text>`;
-  }).join('');
-  const dots=dataPts.map(pt=>`<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3" fill="${color}"/>`).join('');
-  return`<svg viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg">${rings}${axes}<polygon points="${poly}" fill="${color}1A" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/>${dots}${lbls}</svg>`;
+/* ── Scoring helpers ── */
+function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
+
+function getVerdict(matchPct,layerPct,fa,fb){
+  const shortA=fa.name.split(' ')[0],shortB=fb.name.split(' ')[0];
+  if(matchPct>=70&&layerPct>=65)return`${shortA} and ${shortB} are genuinely kindred spirits — they share DNA at the note level and project beautifully together.`;
+  if(matchPct>=70)return`${shortA} and ${shortB} smell remarkably alike. Better as alternates than a layering pair — their overlap is too high for interesting contrast.`;
+  if(layerPct>=65&&matchPct<50)return`${shortA} and ${shortB} layer beautifully. Their differences in family and sillage create depth without competing.`;
+  if(matchPct>=50&&layerPct>=50)return`A solid pairing. ${shortA} and ${shortB} share enough character to feel cohesive, with enough contrast to layer interestingly.`;
+  if(matchPct<35&&layerPct<35)return`${shortA} and ${shortB} are quite different — they may feel unrelated or clash if layered.`;
+  if(matchPct>=50)return`${shortA} and ${shortB} share similar character and work well as alternates. They won't layer in unexpected ways but feel consistent.`;
+  return`${shortA} and ${shortB} are distinct enough to explore separately. Treat them as contrasts rather than complements.`;
 }
 
-function drawVennSvg(fa,fb){
-  const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
-  const sim=scoreSimilarity(fa,fb);
-  // overlap amount: more similarity = more overlap
-  const ov=Math.round(30+sim*0.55);
-  const r=90,W=340,H=190,cy=H/2;
-  const cx1=W/2-(r-ov/2),cx2=W/2+(r-ov/2);
-  const pct=Math.round(sim);
-  return`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
-  <circle cx="${cx1.toFixed(1)}" cy="${cy}" r="${r}" fill="${ca.accent}" opacity="0.14"/>
-  <circle cx="${cx2.toFixed(1)}" cy="${cy}" r="${r}" fill="${cb.accent}" opacity="0.14"/>
-  <circle cx="${cx1.toFixed(1)}" cy="${cy}" r="${r}" fill="none" stroke="${ca.accent}" stroke-width="1.8" opacity="0.55"/>
-  <circle cx="${cx2.toFixed(1)}" cy="${cy}" r="${r}" fill="none" stroke="${cb.accent}" stroke-width="1.8" opacity="0.55"/>
-  <text x="${(W/2).toFixed(1)}" y="${(cy-7).toFixed(1)}" text-anchor="middle" font-size="21" font-weight="700" font-family="Archivo Black,DM Sans,sans-serif" fill="#0E0C09" opacity="0.82">${pct}</text>
-  <text x="${(W/2).toFixed(1)}" y="${(cy+13).toFixed(1)}" text-anchor="middle" font-size="7.5" font-family="DM Sans,system-ui,sans-serif" fill="#6B6356" letter-spacing="0.1em">MATCH</text>
-  </svg>`;
+/* ── Combined radar (solid + dashed overlay) ── */
+function drawCombinedRadarSvg(fa,fb,caAccent,cbAccent){
+  const dims=['freshness','sweetness','warmth','intensity','complexity'];
+  const labels=['Fresh','Sweet','Warm','Intensity','Depth'];
+  const pa=computeProfile(fa),pb=computeProfile(fb);
+  const cx=110,cy=110,r=76,n=5;
+  function ap(i,val){const a=(Math.PI*2*i/n)-Math.PI/2;return{x:cx+r*val*Math.cos(a),y:cy+r*val*Math.sin(a)};}
+  const rings=[0.25,0.5,0.75,1.0].map(rv=>{
+    const pts=dims.map((_,i)=>ap(i,rv));
+    return`<polygon points="${pts.map(pt=>`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ')}" fill="none" stroke="#0E0C0912" stroke-width="1"/>`;
+  }).join('');
+  const axes=dims.map((_,i)=>{const e=ap(i,1);return`<line x1="${cx}" y1="${cy}" x2="${e.x.toFixed(1)}" y2="${e.y.toFixed(1)}" stroke="#0E0C0912" stroke-width="1"/>`;}).join('');
+  const polyA=dims.map((d,i)=>{const pt=ap(i,pa[d]);return`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`;}).join(' ');
+  const polyB=dims.map((d,i)=>{const pt=ap(i,pb[d]);return`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`;}).join(' ');
+  const dotsA=dims.map((d,i)=>{const pt=ap(i,pa[d]);return`<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3" fill="${caAccent}"/>`;}).join('');
+  const dotsB=dims.map((d,i)=>{const pt=ap(i,pb[d]);return`<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3" fill="${cbAccent}"/>`;}).join('');
+  const lbls=dims.map((_,i)=>{
+    const lp=ap(i,1.32);const anch=lp.x<cx-4?'end':lp.x>cx+4?'start':'middle';
+    return`<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle" font-size="8.5" fill="#6B635699" font-family="DM Sans,system-ui,sans-serif" font-weight="700" letter-spacing="0.04em">${labels[i]}</text>`;
+  }).join('');
+  return`<div class="cmp-radar-v2">
+    <div class="cmp-radar-v2-label">Character</div>
+    <div class="cmp-radar-v2-wrap"><svg viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg">
+      ${rings}${axes}
+      <polygon points="${polyA}" fill="${caAccent}20" stroke="${caAccent}" stroke-width="1.8" stroke-linejoin="round"/>
+      <polygon points="${polyB}" fill="${cbAccent}18" stroke="${cbAccent}" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="5,3"/>
+      ${dotsA}${dotsB}${lbls}
+    </svg></div>
+    <div class="cmp-radar-legend">
+      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line" style="background:${caAccent}"></div><span>${fa.name.split(' ')[0]}</span></div>
+      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line dashed" style="border-color:${cbAccent}"></div><span>${fb.name.split(' ')[0]}</span></div>
+    </div>
+  </div>`;
+}
+
+/* ── Scatter plot: sillage × layering with 4 zones ── */
+function drawScatterSvg(fa,fb,caAccent,cbAccent){
+  const W=300,H=260,padL=50,padB=40,padT=14,padR=22;
+  const pw=W-padL-padR,ph=H-padB-padT;
+  const ox=padL,oy=H-padB;
+  const px=v=>ox+(v-1)/9*pw,py=v=>oy-(v-1)/9*ph;
+  const xA=px(fa.sillage||5),yA=py(fa.layering||5);
+  const xB=px(fb.sillage||5),yB=py(fb.layering||5);
+  const qx=ox+pw/2,qy=oy-ph/2;
+  const zones=[
+    {x:ox,y:padT,w:pw/2,h:ph/2,label:'Personal',sub:'journey'},
+    {x:qx,y:padT,w:pw/2,h:ph/2,label:'Room',sub:'presence'},
+    {x:ox,y:qy,w:pw/2,h:ph/2,label:'Skin',sub:'scent'},
+    {x:qx,y:qy,w:pw/2,h:ph/2,label:'Statement',sub:''},
+  ];
+  const zRects=zones.map(z=>`<rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" fill="#0E0C09" opacity="0.035"/>`).join('');
+  const zLabels=zones.map(z=>`<text x="${(z.x+z.w/2).toFixed(1)}" y="${(z.y+11).toFixed(1)}" text-anchor="middle" font-size="7" fill="#0E0C0945" font-family="DM Sans,sans-serif" font-weight="700" letter-spacing="0.06em">${z.label}</text>${z.sub?`<text x="${(z.x+z.w/2).toFixed(1)}" y="${(z.y+20).toFixed(1)}" text-anchor="middle" font-size="7" fill="#0E0C0945" font-family="DM Sans,sans-serif" font-weight="700" letter-spacing="0.06em">${z.sub}</text>`:''}`).join('');
+  const grid=`<line x1="${qx.toFixed(1)}" y1="${padT}" x2="${qx.toFixed(1)}" y2="${oy}" stroke="#0E0C0918" stroke-width="1" stroke-dasharray="3,3"/><line x1="${ox}" y1="${qy.toFixed(1)}" x2="${(ox+pw)}" y2="${qy.toFixed(1)}" stroke="#0E0C0918" stroke-width="1" stroke-dasharray="3,3"/>`;
+  const axes=`<line x1="${ox}" y1="${oy}" x2="${ox+pw}" y2="${oy}" stroke="#0E0C0928" stroke-width="1.2"/><line x1="${ox}" y1="${oy}" x2="${ox}" y2="${padT}" stroke="#0E0C0928" stroke-width="1.2"/>`;
+  const xLbl=`<text x="${(ox+pw/2).toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="7.5" fill="#6B6356" font-family="DM Sans,sans-serif" font-weight="700" letter-spacing="0.06em">SILLAGE →</text>`;
+  const yLbl=`<text x="14" y="${(oy-ph/2).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="#6B6356" font-family="DM Sans,sans-serif" font-weight="700" letter-spacing="0.06em" transform="rotate(-90,14,${(oy-ph/2).toFixed(1)})">LAYERING</text>`;
+  const close=Math.abs(xA-xB)<18&&Math.abs(yA-yB)<18;
+  const ptA=`<circle cx="${xA.toFixed(1)}" cy="${yA.toFixed(1)}" r="8" fill="${caAccent}" opacity="0.88"/>`;
+  const ptB=`<circle cx="${xB.toFixed(1)}" cy="${yB.toFixed(1)}" r="8" fill="${cbAccent}" opacity="0.88"/>`;
+  const lA=`<text x="${(xA+11).toFixed(1)}" y="${yA.toFixed(1)}" dominant-baseline="middle" font-size="7.5" fill="${caAccent}" font-family="DM Sans,sans-serif" font-weight="700">${fa.name.split(' ')[0]}</text>`;
+  const lBY=close?(yB-14):yB;
+  const lB=`<text x="${(xB+11).toFixed(1)}" y="${lBY.toFixed(1)}" dominant-baseline="middle" font-size="7.5" fill="${cbAccent}" font-family="DM Sans,sans-serif" font-weight="700">${fb.name.split(' ')[0]}</text>`;
+  return`<div class="cmp-scatter-v2">
+    <div class="cmp-scatter-v2-label">Sillage &amp; Complexity</div>
+    <div class="cmp-scatter-v2-wrap"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+      ${zRects}${zLabels}${grid}${axes}${xLbl}${yLbl}${ptA}${ptB}${lA}${lB}
+    </svg></div>
+  </div>`;
+}
+
+/* ── 3×3 notes grid (rows=Top/Mid/Base, cols=A only|Shared|B only) ── */
+function render3x3Notes(fa,fb,caAccent,cbAccent){
+  const toL=arr=>(arr||[]).map(n=>n.toLowerCase().trim());
+  const aTop=toL(fa.top),aMid=toL(fa.mid),aBase=toL(fa.base);
+  const bTop=toL(fb.top),bMid=toL(fb.mid),bBase=toL(fb.base);
+  const shTop=aTop.filter(n=>bTop.includes(n));
+  const shMid=aMid.filter(n=>bMid.includes(n));
+  const shBase=aBase.filter(n=>bBase.includes(n));
+  const cap=n=>n.charAt(0).toUpperCase()+n.slice(1);
+  const pills=(notes,cls='')=>notes.length?notes.map(n=>`<span class="cmp-note-pill${cls}">${cap(n)}</span>`).join(''):`<span class="cmp-grid-empty">—</span>`;
+  const shortA=fa.name.split(' ').slice(0,2).join(' ');
+  const shortB=fb.name.split(' ').slice(0,2).join(' ');
+  const onlyATop=aTop.filter(n=>!bTop.includes(n)),onlyAMid=aMid.filter(n=>!bMid.includes(n)),onlyABase=aBase.filter(n=>!bBase.includes(n));
+  const onlyBTop=bTop.filter(n=>!aTop.includes(n)),onlyBMid=bMid.filter(n=>!aMid.includes(n)),onlyBBase=bBase.filter(n=>!aBase.includes(n));
+  return`<div class="cmp-notes-v2">
+    <div class="cmp-notes-v2-label">Notes</div>
+    <div class="cmp-grid-col-heads">
+      <div></div>
+      <div class="cmp-grid-col-head" style="color:${caAccent}">${shortA}</div>
+      <div class="cmp-grid-col-head" style="color:var(--g400)">Shared</div>
+      <div class="cmp-grid-col-head" style="color:${cbAccent}">${shortB}</div>
+    </div>
+    <div class="cmp-grid-3x3">
+      <div class="cmp-grid-row">
+        <div class="cmp-grid-row-lbl">Top</div>
+        <div class="cmp-grid-cell">${pills(onlyATop)}</div>
+        <div class="cmp-grid-cell cell-center">${pills(shTop,' shared')}</div>
+        <div class="cmp-grid-cell">${pills(onlyBTop)}</div>
+      </div>
+      <div class="cmp-grid-row">
+        <div class="cmp-grid-row-lbl">Mid</div>
+        <div class="cmp-grid-cell">${pills(onlyAMid)}</div>
+        <div class="cmp-grid-cell cell-center">${pills(shMid,' shared')}</div>
+        <div class="cmp-grid-cell">${pills(onlyBMid)}</div>
+      </div>
+      <div class="cmp-grid-row">
+        <div class="cmp-grid-row-lbl">Base</div>
+        <div class="cmp-grid-cell">${pills(onlyABase)}</div>
+        <div class="cmp-grid-cell cell-center">${pills(shBase,' shared')}</div>
+        <div class="cmp-grid-cell">${pills(onlyBBase)}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── Suggestions v2: two columns, attribute tags ── */
+function renderSuggestionsV2(fa,fb,ca,cb){
+  function getSugs(anchor,other){
+    return CAT.filter(f=>f.id!==anchor.id&&f.id!==other.id)
+      .map(f=>({f,score:scoreSimilarity(anchor,f)}))
+      .sort((a,b)=>b.score-a.score).slice(0,3);
+  }
+  function getAttrs(candidate,ref){
+    const cNotes=[...new Set([...(candidate.top||[]),...(candidate.mid||[]),...(candidate.base||[])].map(n=>n.toLowerCase()))];
+    const rNotes=[...new Set([...(ref.top||[]),...(ref.mid||[]),...(ref.base||[])].map(n=>n.toLowerCase()))];
+    const similar=cNotes.filter(n=>rNotes.includes(n)).slice(0,3).map(n=>n.charAt(0).toUpperCase()+n.slice(1));
+    const different=[];
+    const sillDiff=Math.abs(candidate.sillage-ref.sillage);
+    if(sillDiff>=3)different.push(candidate.sillage>ref.sillage?'Stronger sillage':'Softer sillage');
+    if(candidate.family!==ref.family)different.push((FAM[candidate.family]||{label:candidate.family}).label+' family');
+    const contrastScore=1-(FAM_COMPAT[candidate.family]?.[ref.family]??0.5);
+    const contrasting=contrastScore>0.5?[(FAM[candidate.family]||{label:candidate.family}).label+' contrast']:[];
+    return{similar,different:different.slice(0,2),contrasting};
+  }
+  function sugCard(frag,attrs){
+    const fc=getCmpFam(frag.family);
+    const grp=(label,items)=>items.length?`<div class="cmp-attr-group"><div class="cmp-attr-label">${label}</div><div class="cmp-attr-pills">${items.map(a=>`<span class="cmp-attr-pill">${a}</span>`).join('')}</div></div>`:'';
+    const body=grp('≈ Similar',attrs.similar)+grp('↑ Different',attrs.different)+grp('≠ Contrasting',attrs.contrasting)||'<span style="font-size:.7rem;color:var(--g400)">—</span>';
+    return`<button class="cmp-sug-card-v2" data-fid="${frag.id}">
+      <div class="cmp-sug-card-v2-head">
+        <span class="cmp-sug-card-dot" style="background:${fc.accent}"></span>
+        <div><div class="cmp-sug-card-name">${frag.name}</div><div class="cmp-sug-card-brand">${frag.brand}</div></div>
+      </div>${body}
+    </button>`;
+  }
+  const sugsA=getSugs(fa,fb),sugsB=getSugs(fb,fa);
+  const shortA=fa.name.split(' ').slice(0,2).join(' ');
+  const shortB=fb.name.split(' ').slice(0,2).join(' ');
+  return`<div class="cmp-sug-v2">
+    <div class="cmp-sug-v2-label">Swap suggestions</div>
+    <div class="cmp-sug-columns">
+      <div>
+        <div class="cmp-sug-col-head" style="color:${ca.accent}">Swap ${shortA}</div>
+        <div class="cmp-sug-col-items">${sugsA.map(({f})=>sugCard(f,getAttrs(f,fa))).join('')}</div>
+      </div>
+      <div>
+        <div class="cmp-sug-col-head" style="color:${cb.accent}">Swap ${shortB}</div>
+        <div class="cmp-sug-col-items">${sugsB.map(({f})=>sugCard(f,getAttrs(f,fb))).join('')}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── Score educational overlay ── */
+function openScoreEdu(type,matchPct,layerPct,fa,fb){
+  let overlay=document.getElementById('cmp-edu-overlay');
+  if(!overlay){overlay=document.createElement('div');overlay.id='cmp-edu-overlay';overlay.className='cmp-edu-overlay';document.body.appendChild(overlay);}
+  const isMatch=type==='match';
+  const pct=isMatch?matchPct:layerPct;
+  const label=isMatch?'Match':'Layers Well';
+  const quads=isMatch?[
+    {tag:'High match ≥ 70',title:'Kindred spirits',desc:'Same family, many shared notes. Great as alternates for the same occasion.',hi:matchPct>=70},
+    {tag:'Good match 50–69',title:'Cohesive pair',desc:'Enough DNA in common to feel related. Alternate or layer lightly.',hi:matchPct>=50&&matchPct<70},
+    {tag:'Low match 30–49',title:'Distinct contrast',desc:'Different enough to complement. Explore separately or layer for depth.',hi:matchPct>=30&&matchPct<50},
+    {tag:'Very low < 30',title:'Different worlds',desc:'Little in common. May feel jarring together but powerful as a contrast.',hi:matchPct<30},
+  ]:[
+    {tag:'Great ≥ 65',title:'Complementary pair',desc:'Different sillage + compatible families + unique note sets. A layering dream.',hi:layerPct>=65},
+    {tag:'Good 45–64',title:'Works together',desc:'Some contrast in projection and notes. Interesting but not always balanced.',hi:layerPct>=45&&layerPct<65},
+    {tag:'Moderate 25–44',title:'Possible, with care',desc:'Similar sillage or competing notes. Layer sparingly to avoid muddiness.',hi:layerPct>=25&&layerPct<45},
+    {tag:'Low < 25',title:'Better as alternates',desc:'Very similar projection or note profiles. Better worn separately.',hi:layerPct<25},
+  ];
+  overlay.innerHTML=`<div class="cmp-edu-wrap">
+    <div class="cmp-edu-header">
+      <div class="cmp-edu-header-left">
+        <div class="cmp-edu-label">${label}</div>
+        <div class="cmp-edu-num">${pct}%</div>
+      </div>
+      <button class="cmp-edu-close" id="cmp-edu-close">✕ Close</button>
+    </div>
+    <div class="cmp-edu-body">
+      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
+      <div class="cmp-edu-grid">
+        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+  overlay.classList.add('open');
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closeScoreEdu();});
+  document.getElementById('cmp-edu-close')?.addEventListener('click',closeScoreEdu);
+}
+function closeScoreEdu(){const o=document.getElementById('cmp-edu-overlay');if(o)o.classList.remove('open');}
+
+/* ── Sticky bar scroll watcher ── */
+function _initStickyScroll(){
+  const slotsBar=document.getElementById('cmp-slots-bar');
+  const stickyBar=document.getElementById('cmp-sticky-bar');
+  if(!slotsBar||!stickyBar)return;
+  if(window._cmpStickyObs)window._cmpStickyObs.disconnect();
+  window._cmpStickyObs=new IntersectionObserver(entries=>{
+    const visible=entries[0].isIntersecting;
+    if(!visible){
+      stickyBar.classList.add('visible');
+      if(!stickyBar._hapticDone){window.haptic?.('selection');stickyBar._hapticDone=true;}
+    }else{
+      stickyBar.classList.remove('visible');
+      stickyBar._hapticDone=false;
+    }
+  },{threshold:0.1});
+  window._cmpStickyObs.observe(slotsBar);
 }
 
 function renderCompareResults(fa,fb){
   const res=document.getElementById('cmp-results');
   if(!res)return;
-  const toL=arr=>(arr||[]).map(n=>n.toLowerCase());
-  const aN=[...toL(fa.top),...toL(fa.mid),...toL(fa.base)];
-  const bN=[...toL(fb.top),...toL(fb.mid),...toL(fb.base)];
-  const shared=[...new Set(aN.filter(n=>bN.includes(n)))];
-  const onlyA=[...new Set(aN.filter(n=>!bN.includes(n)))];
-  const onlyB=[...new Set(bN.filter(n=>!aN.includes(n)))];
+  window.haptic?.('success');
   const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
-  function noteLayer(frag,note){
-    const n=note.toLowerCase();
-    if(toL(frag.top).includes(n))return'T';
-    if(toL(frag.mid).includes(n))return'H';
-    return'B';
-  }
-  function noteTag(note,frag,accent){
-    const lyr=noteLayer(frag,note);
-    const cap=note.charAt(0).toUpperCase()+note.slice(1);
-    return`<div class="cmp-note-tag"><span class="cmp-note-layer" style="background:${accent}20;color:${accent}">${lyr}</span><span class="cmp-note-name">${cap}</span></div>`;
-  }
-  function sharedTag(note){
-    const cap=note.charAt(0).toUpperCase()+note.slice(1);
-    return`<div class="cmp-note-tag"><span class="cmp-note-name">${cap}</span></div>`;
-  }
-  // Suggestions
-  const sugs=CAT.filter(f=>f.id!==fa.id&&f.id!==fb.id)
-    .map(f=>({f,score:Math.max(scoreSimilarity(fa,f),scoreSimilarity(fb,f))}))
-    .sort((a,b)=>b.score-a.score).slice(0,4);
-  const sugHTML=sugs.map(({f,score})=>{
-    const sf=getCmpFam(f.family);
-    return`<button class="cmp-sug-card" style="border-color:${sf.accent}33" onclick="openFragDetail(CAT_MAP['${f.id}'])">
-      <div class="cmp-sug-dot" style="background:${sf.accent}"></div>
-      <div><div class="cmp-sug-name">${f.name}</div><div class="cmp-sug-brand">${f.brand}</div></div>
-      <div class="cmp-sug-score" style="color:${sf.accent}">${score}</div>
-    </button>`;
-  }).join('');
   const famLabelA=(FAM[fa.family]||{label:fa.family}).label;
   const famLabelB=(FAM[fb.family]||{label:fb.family}).label;
-  const shortName=n=>n.split(' ').slice(0,2).join(' ');
+  const matchPct=Math.round(scoreSimilarity(fa,fb));
+  const layerPct=scoreLayeringPct(fa,fb);
+  const verdict=getVerdict(matchPct,layerPct,fa,fb);
+  const matchColor=matchPct>=60?ca.accent:matchPct>=30?'var(--g700)':'var(--g500)';
+  const layerColor=layerPct>=60?cb.accent:layerPct>=30?'var(--g700)':'var(--g500)';
+
   res.innerHTML=`
-    <div class="cmp-header-row">
-      <div class="cmp-frag-header" style="background:${ca.light};border-color:${ca.accent}22">
-        <div class="cmp-frag-fam-chip" style="background:${ca.accent};color:#fff">${famLabelA}</div>
-        <div class="cmp-frag-name">${fa.name}</div>
-        <div class="cmp-frag-brand">${fa.brand}</div>
+    <div id="cmp-sticky-bar">
+      <div class="cmp-sticky-slot" data-slot-sticky="a">
+        <span class="cmp-sticky-dot" style="background:${ca.accent}"></span>
+        <span class="cmp-sticky-name">${fa.name}</span>
       </div>
-      <div class="cmp-header-center">
-        <div class="cmp-venn-wrap">${drawVennSvg(fa,fb)}</div>
-      </div>
-      <div class="cmp-frag-header" style="background:${cb.light};border-color:${cb.accent}22">
-        <div class="cmp-frag-fam-chip" style="background:${cb.accent};color:#fff">${famLabelB}</div>
-        <div class="cmp-frag-name">${fb.name}</div>
-        <div class="cmp-frag-brand">${fb.brand}</div>
+      <span class="cmp-sticky-vs">VS</span>
+      <div class="cmp-sticky-slot" data-slot-sticky="b" style="justify-content:flex-end">
+        <span class="cmp-sticky-name">${fb.name}</span>
+        <span class="cmp-sticky-dot" style="background:${cb.accent}"></span>
       </div>
     </div>
-    <div class="cmp-section-label">Notes</div>
-    <div class="cmp-notes-grid">
-      <div class="cmp-notes-col">
-        <div class="cmp-notes-col-head" style="color:${ca.accent}">Only in ${shortName(fa.name)}</div>
-        ${onlyA.length?onlyA.map(n=>noteTag(n,fa,ca.accent)).join(''):'<div class="cmp-notes-empty">—</div>'}
-      </div>
-      <div class="cmp-notes-col cmp-notes-col-shared">
-        <div class="cmp-notes-col-head" style="color:var(--g500)">Shared</div>
-        ${shared.length?shared.map(n=>sharedTag(n)).join(''):'<div class="cmp-notes-empty">No shared notes</div>'}
-      </div>
-      <div class="cmp-notes-col">
-        <div class="cmp-notes-col-head" style="color:${cb.accent}">Only in ${shortName(fb.name)}</div>
-        ${onlyB.length?onlyB.map(n=>noteTag(n,fb,cb.accent)).join(''):'<div class="cmp-notes-empty">—</div>'}
-      </div>
-    </div>
-    <div class="cmp-metrics-row">
-      <div class="cmp-radar-wrap">
-        <div class="cmp-radar-label" style="color:${ca.accent}">${shortName(fa.name)}</div>
-        ${drawRadarSvg(fa,ca.accent)}
-      </div>
-      <div class="cmp-metric-bars">
-        <div class="cmp-section-label" style="margin-bottom:14px">Key Metrics</div>
-        ${['sillage','layering'].map(k=>{
-          const va=fa[k]||0,vb=fb[k]||0;
-          const label=k.charAt(0).toUpperCase()+k.slice(1);
-          return`<div class="cmp-metric-block">
-            <div class="cmp-metric-name">${label}</div>
-            <div class="cmp-metric-row">
-              <div class="cmp-bar-wrap" style="flex-direction:row-reverse">
-                <div class="cmp-bar" style="width:${va*10}%;background:${ca.accent};border-radius:3px 0 0 3px"></div>
-              </div>
-              <div class="cmp-metric-nums">${va} · ${vb}</div>
-              <div class="cmp-bar-wrap">
-                <div class="cmp-bar" style="width:${vb*10}%;background:${cb.accent};border-radius:0 3px 3px 0"></div>
-              </div>
-            </div>
-          </div>`;
-        }).join('')}
-        <div class="cmp-metric-block" style="margin-top:12px">
-          <div class="cmp-metric-name">Roles</div>
-          <div class="cmp-roles-row">
-            ${(fa.roles||[]).map(rid=>{const r=RM[rid]||{};const inB=(fb.roles||[]).includes(rid);return`<span class="cmp-role-chip" style="background:${inB?ca.accent:ca.accent+'20'};color:${inB?'#fff':ca.accent}">${r.sym||''} ${r.name||rid}</span>`;}).join('')}
-          </div>
-          <div class="cmp-roles-row">
-            ${(fb.roles||[]).map(rid=>{const r=RM[rid]||{};const inA=(fa.roles||[]).includes(rid);return`<span class="cmp-role-chip" style="background:${inA?cb.accent:cb.accent+'20'};color:${inA?'#fff':cb.accent}">${r.sym||''} ${r.name||rid}</span>`;}).join('')}
-          </div>
+
+    <div class="cmp-header-v2">
+      <div class="cmp-frag-card" style="border-color:${ca.accent}30">
+        <div class="cmp-frag-card-fam" style="background:${ca.accent}">
+          <span class="cmp-frag-card-dot"></span>${famLabelA}
         </div>
+        <div class="cmp-frag-card-name">${fa.name}</div>
+        <div class="cmp-frag-card-brand">${fa.brand}</div>
+        ${fa.description?`<div class="cmp-frag-card-desc">${fa.description}</div>`:''}
       </div>
-      <div class="cmp-radar-wrap">
-        <div class="cmp-radar-label" style="color:${cb.accent}">${shortName(fb.name)}</div>
-        ${drawRadarSvg(fb,cb.accent)}
+      <div class="cmp-frag-card" style="border-color:${cb.accent}30">
+        <div class="cmp-frag-card-fam" style="background:${cb.accent}">
+          <span class="cmp-frag-card-dot"></span>${famLabelB}
+        </div>
+        <div class="cmp-frag-card-name">${fb.name}</div>
+        <div class="cmp-frag-card-brand">${fb.brand}</div>
+        ${fb.description?`<div class="cmp-frag-card-desc">${fb.description}</div>`:''}
       </div>
     </div>
-    ${sugs.length?`<div class="cmp-section-label" style="margin-top:24px">You might also like</div><div class="cmp-sug-grid">${sugHTML}</div>`:''}
+
+    <div class="cmp-scores-wrap">
+      <div class="cmp-score-cards">
+        <button class="cmp-score-card" id="cmp-score-match">
+          <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
+          <div class="cmp-score-label">Match</div>
+          <div class="cmp-score-tap">Tap to learn more ↗</div>
+        </button>
+        <button class="cmp-score-card" id="cmp-score-layer">
+          <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
+          <div class="cmp-score-label">Layers Well</div>
+          <div class="cmp-score-tap">Tap to learn more ↗</div>
+        </button>
+      </div>
+      <div class="cmp-verdict">${verdict}</div>
+    </div>
+
+    ${render3x3Notes(fa,fb,ca.accent,cb.accent)}
+    ${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}
+    ${drawScatterSvg(fa,fb,ca.accent,cb.accent)}
+    ${renderSuggestionsV2(fa,fb,ca,cb)}
   `;
+
+  // Wire score taps
+  document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
+    window.haptic?.('selection');
+    openScoreEdu('match',matchPct,layerPct,fa,fb);
+  });
+  document.getElementById('cmp-score-layer')?.addEventListener('click',()=>{
+    window.haptic?.('selection');
+    openScoreEdu('layer',matchPct,layerPct,fa,fb);
+  });
+
+  // Wire suggestion taps
+  res.querySelectorAll('.cmp-sug-card-v2').forEach(card=>{
+    card.addEventListener('click',()=>{
+      window.haptic?.('light');
+      const f=CAT_MAP[card.dataset.fid];
+      if(f)openFragDetail(f);
+    });
+  });
+
+  // Wire sticky slot taps
+  res.querySelectorAll('[data-slot-sticky]').forEach(el=>{
+    el.addEventListener('click',()=>_openFragPicker(el.dataset.slotSticky));
+  });
+
+  // Start sticky scroll observer
+  _initStickyScroll();
 }
 
 /* ── Fragrance picker modal ── */
 let _pickerSlot=null;
 function _openFragPicker(slot){
+  window.haptic?.('light');
   _pickerSlot=slot;
   const overlay=document.getElementById('frag-picker');
   const title=document.getElementById('frag-picker-title');
@@ -4136,6 +4586,7 @@ function _openFragPicker(slot){
   setTimeout(()=>{if(search)search.focus();},200);
 }
 function _closeFragPicker(){
+  window.haptic?.('light');
   document.getElementById('frag-picker').classList.remove('open');
   _pickerSlot=null;
 }
@@ -4170,6 +4621,7 @@ function _renderPickerList(q){
   });
 }
 function _selectFragForSlot(slot,frag){
+  window.haptic?.('medium');
   if(slot==='a')CMP_A=frag;else CMP_B=frag;
   const fc=getCmpFam(frag.family);
   const slotEl=document.getElementById(`cmp-slot-${slot}`);
@@ -4205,6 +4657,7 @@ function initCompare(){
   if(overlay)overlay.addEventListener('click',e=>{if(e.target===overlay)_closeFragPicker();});
 }
 window.clearCmpSlot=function(slot){
+  window.haptic?.('nudge')||window.haptic?.('selection');
   if(slot==='a')CMP_A=null;else CMP_B=null;
   const slotEl=document.getElementById(`cmp-slot-${slot}`);
   const nameEl=document.getElementById(`cmp-slot-name-${slot}`);
@@ -4220,6 +4673,7 @@ window.clearCmpSlot=function(slot){
   }
   const res=document.getElementById('cmp-results');
   if(res)res.innerHTML='';
+  if(window._cmpStickyObs)window._cmpStickyObs.disconnect();
 };
 
 /* ══ INIT ═══════════════════════════════════════════════════════════ */

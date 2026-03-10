@@ -4,6 +4,27 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-10
+
+### Added
+- **Score cards** — replaced Venn diagram with two tappable score cards: `Match %` and `Layers Well %`; tap either to open an educational overlay explaining 4 score ranges with the current pair's range highlighted
+- **3×3 notes grid** — replaced flat note columns with a structured grid (rows = Top/Mid/Base, columns = Frag A only / Shared / Frag B only); "shared" is strict same-note same-layer; shared notes use a filled dark pill
+- **Overlapping radar chart** — single unified pentagon showing both fragrances; Frag A = solid fill + solid stroke, Frag B = dashed stroke + lighter fill; legend below with first-word labels
+- **Scatter plot** — Sillage × Layering 2-axis chart with 4 named quadrant zones (Skin scent / Personal journey / Statement / Room presence); each fragrance shown as a colored dot with name label
+- **Swap suggestions v2** — two-column layout ("Swap Frag A" | "Swap Frag B"); each card shows attribute groups ≈ Similar / ↑ Different / ≠ Contrasting; no score, purely qualitative
+- **Sticky compare bar** — `position:sticky; top:0` bar with `● Name VS Name ●` appears when the slot picker cards scroll out of view; tapping either slot opens the picker; IntersectionObserver-driven
+- **Plain-language verdict** — sentence below score cards synthesising match and layering scores into plain English
+- **Educational score overlay** — full-screen bottom sheet with 4 quadrant explanations; current pair's range highlighted; opened by tapping either score card
+- **Haptics** — 9 new moments: picker open (light), picker close (light), fragrance selected (medium), both slots filled (success), slot cleared (nudge), sticky bar appears (selection), score card tapped (selection), suggestion tapped (light), detail compare CTA tapped (medium)
+
+### Changed
+- **Detail panel redesigned** — removed all ownership UI (state tabs, scentmap CTAs, layering-with-owned section); description now always visible below family chip; new "Compare with" section showing two explicit CTAs to compare current frag with whichever fragrance is in slot A or B
+- **Family colors updated** — Chypre: `#1E5A30` → `#2A5C50` (teal-moss); Gourmand: `#7C3E00` → `#6B2030` (burgundy)
+- **Design system additions** — typescale classes (`.t-display` through `.t-label`); button system (`.btn-primary`, `.btn-ghost`); corner radius scale: 4px micro / 8px inputs+cards / 12px slot cards+notes / 24px modals+sheets; `em,i` no longer italic in Source Serif 4
+- **Similar shelf simplified** — removed "In your collection" owned section from detail panel; shows top 5 by similarity score with classifyDiscovery badge
+
+---
+
 ## 2026-03-09 (MVP)
 
 ### Changed
