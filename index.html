@@ -69,7 +69,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .col-main{flex:1;min-width:0;display:flex;flex-direction:column}
 .col-main-nav{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 20px 10px;border-bottom:1px solid var(--black);
+  padding:12px 20px 10px;
   position:sticky;top:0;background:var(--paper);z-index:50;
 }
 .col-main-content{padding:20px 20px 80px}
@@ -1597,7 +1597,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 @media(min-width:768px){
   .frag-picker-overlay{background:transparent;align-items:flex-start;justify-content:flex-start}
   .frag-picker-wrap{
-    position:fixed;width:320px;max-height:65vh;max-width:none;
+    position:fixed;max-width:none;
     border-radius:12px;border:1px solid var(--g200);
     box-shadow:0 8px 32px rgba(14,12,9,.14);
     transform:none!important;
@@ -1661,7 +1661,7 @@ em,i{font-style:normal;font-weight:600}
 
 /* ── SCORE CARDS ── */
 .cmp-scores-wrap{margin:20px 0 8px}
-.cmp-score-cards{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+.cmp-score-cards{display:flex;gap:10px;margin-bottom:14px;align-items:stretch}
 .cmp-score-center{flex:1;min-width:0}
 .cmp-score-card{
   flex:1;padding:18px 12px 14px;border-radius:12px;
@@ -1710,16 +1710,16 @@ em,i{font-style:normal;font-weight:600}
 .cmp-grid-col-heads.three{grid-template-columns:1fr 1fr 1fr}
 .cmp-grid-row.three{grid-template-columns:1fr 1fr 1fr}
 .cmp-grid-layer-lbl{
-  font-family:"DM Sans",system-ui,sans-serif;font-size:.62rem;font-weight:700;
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.58rem;font-weight:700;
   letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:4px;
 }
 .cmp-grid-cell{text-align:center}
 .cmp-grid-cell .note-link{
-  font-family:"DM Sans",system-ui,sans-serif;font-size:.78rem;color:var(--ink);
+  font-size:.78rem;color:var(--g600);
   background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;
-  text-decoration-color:var(--g400);text-underline-offset:2px;
+  text-decoration-color:var(--g300);text-underline-offset:2px;line-height:1.7;
 }
-.cmp-grid-cell .note-link:hover{text-decoration-color:var(--black)}
+.cmp-grid-cell .note-link:hover{text-decoration-color:var(--black);color:var(--ink)}
 .cmp-grid-cell .note-link.shared{font-weight:700;color:var(--g700)}
 .cmp-grid-cell-a{text-align:right}
 .cmp-grid-cell-b{text-align:left}
@@ -1819,6 +1819,26 @@ em,i{font-style:normal;font-weight:600}
 /* ── COMPARE HEADER CARDS ── */
 .cmp-header-v2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
 .cmp-frag-card{padding:14px;border-radius:12px;border:1px solid var(--g200)}
+/* Slot card — clickable selector variant */
+.cmp-card-slot{
+  position:relative;cursor:pointer;
+  transition:background .15s,border-color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.cmp-card-slot:hover{background:var(--stone)}
+.cmp-card-slot.filled:hover{background:var(--paper)}
+.cmp-card-empty{padding:16px 0 8px;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.cmp-card-empty-lbl{font-family:"DM Sans",system-ui,sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)}
+.cmp-card-empty-hint{font-family:"DM Sans",system-ui,sans-serif;font-size:.82rem;color:var(--g500);font-style:italic}
+.cmp-card-chevron{position:absolute;bottom:12px;right:12px;color:var(--g400);pointer-events:none}
+.cmp-card-slot.filled .cmp-card-chevron{color:var(--g300)}
+.cmp-card-clear{
+  position:absolute;top:8px;right:8px;background:none;border:none;cursor:pointer;
+  padding:4px 6px;border-radius:4px;color:var(--g400);font-size:.8rem;line-height:1;
+  opacity:0;transition:opacity .12s,color .12s,background .12s;pointer-events:none;
+}
+.cmp-card-slot:hover .cmp-card-clear{opacity:1;pointer-events:all}
+.cmp-card-clear:hover{color:var(--ink);background:var(--g100)}
 .cmp-frag-card-fam{
   display:inline-flex;align-items:center;gap:5px;
   padding:3px 9px 3px 6px;border-radius:24px;
@@ -1841,8 +1861,8 @@ em,i{font-style:normal;font-weight:600}
 /* ── 3×3 NOTES GRID ── */
 .cmp-notes-v2{margin:20px 0}
 .cmp-notes-v2-label{
-  font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;
-  font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:10px;
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.6rem;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin:18px 0 10px;
 }
 .cmp-grid-col-heads{display:grid;grid-template-columns:42px 1fr 1fr 1fr;margin-bottom:2px}
 .cmp-grid-col-head{
@@ -1946,6 +1966,7 @@ em,i{font-style:normal;font-weight:600}
   font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:2px;
 }
 .dc-cmp-btn-name{font-size:.9rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dc-cmp-btn-vs{font-size:.82rem;font-weight:400;color:var(--g400);margin:0 3px;flex-shrink:0}
 .dc-cmp-btn-empty{color:var(--g400)}
 .dc-cmp-btn-arrow{color:var(--g400);font-size:.85rem;flex-shrink:0}
 </style>
@@ -2063,21 +2084,14 @@ em,i{font-style:normal;font-weight:600}
       </div>
 
       <div class="panel active" id="p-compare">
-        <div class="cmp-slots-bar" id="cmp-slots-bar">
-          <div class="cmp-slot" id="cmp-slot-a" data-slot="a">
-            <div class="cmp-slot-label">Fragrance One</div>
-            <div class="cmp-slot-name" id="cmp-slot-name-a"><span class="cmp-slot-name-dot" id="cmp-slot-ndot-a"></span><span id="cmp-slot-ntext-a">Select a fragrance</span></div>
-            <div class="cmp-slot-brand" id="cmp-slot-brand-a"></div>
-            <div class="cmp-slot-hint" id="cmp-slot-hint-a">Tap to browse all fragrances</div>
-            <span class="cmp-slot-chevron"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="cmp-header-v2" id="cmp-header">
+          <div class="cmp-frag-card cmp-card-slot" id="cmp-card-a" data-slot="a">
+            <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance One</div><div class="cmp-card-empty-hint">Tap to select</div></div>
+            <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
-          <div class="cmp-slot-divider"><span class="cmp-slot-vs">vs</span></div>
-          <div class="cmp-slot" id="cmp-slot-b" data-slot="b">
-            <div class="cmp-slot-label">Fragrance Two</div>
-            <div class="cmp-slot-name" id="cmp-slot-name-b"><span class="cmp-slot-name-dot" id="cmp-slot-ndot-b"></span><span id="cmp-slot-ntext-b">Select a fragrance</span></div>
-            <div class="cmp-slot-brand" id="cmp-slot-brand-b"></div>
-            <div class="cmp-slot-hint" id="cmp-slot-hint-b">Tap to browse all fragrances</div>
-            <span class="cmp-slot-chevron"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div class="cmp-frag-card cmp-card-slot" id="cmp-card-b" data-slot="b">
+            <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance Two</div><div class="cmp-card-empty-hint">Tap to select</div></div>
+            <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </div>
         <div id="cmp-results"></div>
@@ -2594,17 +2608,20 @@ function renderFragDetail(container,frag){
 function _buildCompareCTAs(frag,container){
   if(!container)return;
   function makeBtn(existingFrag,targetSlot){
-    const fc=existingFrag?getCmpFam(existingFrag.family):null;
+    const fcSelf=getCmpFam(frag.family);
+    const fcOther=existingFrag?getCmpFam(existingFrag.family):null;
     const btn=document.createElement('button');
     btn.className='dc-cmp-btn';
-    const label=existingFrag
-      ?`${frag.name} vs ${existingFrag.name}`
-      :`Compare with ${frag.name}`;
+    const inner=existingFrag
+      ?`<span class="dc-cmp-btn-dot" style="background:${fcSelf.accent}"></span>
+        <span class="dc-cmp-btn-name">${frag.name}</span>
+        <span class="dc-cmp-btn-vs">vs</span>
+        <span class="dc-cmp-btn-dot" style="background:${fcOther.accent}"></span>
+        <span class="dc-cmp-btn-name">${existingFrag.name}</span>`
+      :`<span class="dc-cmp-btn-dot" style="background:${fcSelf.accent}"></span>
+        <span class="dc-cmp-btn-name dc-cmp-btn-empty">Compare with ${frag.name}</span>`;
     btn.innerHTML=`
-      <span class="dc-cmp-btn-dot" style="background:${fc?fc.accent:'var(--g300)'}"></span>
-      <span class="dc-cmp-btn-text">
-        <span class="dc-cmp-btn-name${existingFrag?'':' dc-cmp-btn-empty'}">${label}</span>
-      </span>
+      <span class="dc-cmp-btn-text" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden">${inner}</span>
       <span class="dc-cmp-btn-arrow">→</span>`;
     btn.addEventListener('click',()=>{
       window.haptic?.('medium');
@@ -2718,14 +2735,15 @@ function renderNoteDetail(container,note){
   container.innerHTML=`<div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
-    ${inf.length?`<div class="np-frags" style="margin-top:14px"><div style="font-size:.65rem;font-weight:600;color:var(--g450);letter-spacing:.02em;margin-bottom:6px">In catalog (${inf.length})</div><div id="_nfl"></div></div>`:''}`;
+    ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
   if(inf.length){
     const span=container.querySelector('#_nfl');
-    inf.forEach(f=>{
-      const row=document.createElement('div');row.style.cssText='margin:2px 0';
-      const btn=document.createElement('button');btn.className='np-frag-link';btn.textContent=f.name;
+    [...inf].sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
+      const fc=getCmpFam(f.family);
+      const btn=document.createElement('button');btn.className='frag-picker-item';
+      btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
-      row.appendChild(btn);span.appendChild(row);
+      span.appendChild(btn);
     });
   }
 }
@@ -2776,14 +2794,17 @@ function openNotePopup(note,triggerEl){
   const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
   if(sortedInf.length){
-    const lbl=document.createElement('div');lbl.style.cssText='font-size:.65rem;font-weight:600;color:var(--g450);margin-bottom:5px';lbl.textContent=`In catalog (${sortedInf.length})`;
+    const lbl=document.createElement('div');lbl.className='dc-nlbl';lbl.style.marginBottom='6px';lbl.textContent=`In catalog (${sortedInf.length})`;
     fe.appendChild(lbl);
+    const list=document.createElement('div');list.style.cssText='border:1px solid var(--g200);border-radius:8px;overflow:hidden';
     sortedInf.forEach(f=>{
-      const row=document.createElement('div');row.style.cssText='margin:2px 0';
-      const btn=document.createElement('button');btn.className='np-frag-link';btn.textContent=f.name;
+      const fc=getCmpFam(f.family);
+      const btn=document.createElement('button');btn.className='frag-picker-item';
+      btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();closeNotePopup();openFragDetail(f)});
-      row.appendChild(btn);fe.appendChild(row);
+      list.appendChild(btn);
     });
+    fe.appendChild(list);
   }
   const popup=document.getElementById('note-popup');
   const rect=triggerEl.getBoundingClientRect();
@@ -4662,9 +4683,9 @@ function closeScoreEdu(){const o=document.getElementById('cmp-edu-overlay');if(o
 
 /* ── Sticky bar scroll watcher ── */
 function _initStickyScroll(){
-  const slotsBar=document.getElementById('cmp-slots-bar');
+  const header=document.getElementById('cmp-header');
   const stickyBar=document.getElementById('cmp-sticky-bar');
-  if(!slotsBar||!stickyBar)return;
+  if(!header||!stickyBar)return;
   if(window._cmpStickyObs)window._cmpStickyObs.disconnect();
   window._cmpStickyObs=new IntersectionObserver(entries=>{
     const visible=entries[0].isIntersecting;
@@ -4676,7 +4697,7 @@ function _initStickyScroll(){
       stickyBar._hapticDone=false;
     }
   },{threshold:0.1});
-  window._cmpStickyObs.observe(slotsBar);
+  window._cmpStickyObs.observe(header);
 }
 
 function renderCompareResults(fa,fb){
@@ -4692,6 +4713,9 @@ function renderCompareResults(fa,fb){
   const matchColor=matchPct>=60?ca.accent:matchPct>=30?'var(--g700)':'var(--g500)';
   const layerColor=layerPct>=60?cb.accent:layerPct>=30?'var(--g700)':'var(--g500)';
 
+  // Update permanent header cards
+  _fillCard('a',fa);_fillCard('b',fb);
+
   res.innerHTML=`
     <div id="cmp-sticky-bar">
       <div class="cmp-sticky-slot" data-slot-sticky="a">
@@ -4702,25 +4726,6 @@ function renderCompareResults(fa,fb){
       <div class="cmp-sticky-slot" data-slot-sticky="b" style="justify-content:flex-end">
         <span class="cmp-sticky-name">${fb.name}</span>
         <span class="cmp-sticky-dot" style="background:${cb.accent}"></span>
-      </div>
-    </div>
-
-    <div class="cmp-header-v2">
-      <div class="cmp-frag-card" style="border-color:${ca.accent}30">
-        <div class="cmp-frag-card-fam" style="background:${ca.accent}">
-          <span class="cmp-frag-card-dot"></span>${famLabelA}
-        </div>
-        <div class="cmp-frag-card-name">${fa.name}</div>
-        <div class="cmp-frag-card-brand">${fa.brand}</div>
-        ${fa.description?`<div class="cmp-frag-card-desc">${fa.description}</div>`:''}
-      </div>
-      <div class="cmp-frag-card" style="border-color:${cb.accent}30">
-        <div class="cmp-frag-card-fam" style="background:${cb.accent}">
-          <span class="cmp-frag-card-dot"></span>${famLabelB}
-        </div>
-        <div class="cmp-frag-card-name">${fb.name}</div>
-        <div class="cmp-frag-card-brand">${fb.brand}</div>
-        ${fb.description?`<div class="cmp-frag-card-desc">${fb.description}</div>`:''}
       </div>
     </div>
 
@@ -4790,9 +4795,9 @@ function renderCompareResults(fa,fb){
     });
   });
 
-  // Wire sticky slot taps
+  // Wire sticky slot taps — pass el as sourceEl so picker anchors below it
   res.querySelectorAll('[data-slot-sticky]').forEach(el=>{
-    el.addEventListener('click',()=>_openFragPicker(el.dataset.slotSticky));
+    el.addEventListener('click',()=>_openFragPicker(el.dataset.slotSticky,el));
   });
 
   // Start sticky scroll observer
@@ -4801,7 +4806,7 @@ function renderCompareResults(fa,fb){
 
 /* ── Fragrance picker modal ── */
 let _pickerSlot=null;
-function _openFragPicker(slot){
+function _openFragPicker(slot,sourceEl){
   window.haptic?.('light');
   _pickerSlot=slot;
   const overlay=document.getElementById('frag-picker');
@@ -4810,13 +4815,16 @@ function _openFragPicker(slot){
   if(title)title.textContent=slot==='a'?'Fragrance One':'Fragrance Two';
   if(search)search.value='';
   _renderPickerList('');
-  // Desktop ≥768px: anchor dropdown to slot column
+  // Desktop ≥768px: anchor dropdown below trigger element
   if(window.innerWidth>=768){
-    const slotEl=document.getElementById(`cmp-slot-${slot}`);
+    const anchor=sourceEl||document.getElementById(`cmp-card-${slot}`);
     const wrap=overlay.querySelector('.frag-picker-wrap');
-    if(slotEl&&wrap){
-      const r=slotEl.getBoundingClientRect();
+    if(anchor&&wrap){
+      const r=anchor.getBoundingClientRect();
+      const avail=window.innerHeight-r.bottom-12;
       wrap.style.top=(r.bottom+6)+'px';
+      wrap.style.width=r.width+'px';
+      wrap.style.maxHeight=Math.max(200,avail)+'px';
       if(slot==='a'){wrap.style.left=r.left+'px';wrap.style.right='auto';}
       else{wrap.style.right=(window.innerWidth-r.right)+'px';wrap.style.left='auto';}
     }
@@ -4862,34 +4870,45 @@ function _renderPickerList(q){
 function _selectFragForSlot(slot,frag){
   window.haptic?.('medium');
   if(slot==='a')CMP_A=frag;else CMP_B=frag;
-  const fc=getCmpFam(frag.family);
-  const slotEl=document.getElementById(`cmp-slot-${slot}`);
-  const nameEl=document.getElementById(`cmp-slot-name-${slot}`);
-  const brandEl=document.getElementById(`cmp-slot-brand-${slot}`);
-  const hintEl=document.getElementById(`cmp-slot-hint-${slot}`);
-  const ndotEl=document.getElementById(`cmp-slot-ndot-${slot}`);
-  const ntextEl=document.getElementById(`cmp-slot-ntext-${slot}`);
-  if(ndotEl)ndotEl.style.background=fc.accent;
-  if(ntextEl)ntextEl.textContent=frag.name;
-  if(brandEl)brandEl.innerHTML=`<span class="cmp-slot-dot" style="background:${fc.accent}"></span>${frag.brand}`;
-  if(hintEl)hintEl.style.display='none';
-  if(slotEl){
-    slotEl.classList.add('filled');
-    // add clear button once
-    if(!slotEl.querySelector('.cmp-slot-clear')){
-      const cb=document.createElement('button');
-      cb.className='cmp-slot-clear';cb.innerHTML='✕';cb.title='Clear';
-      cb.addEventListener('click',e=>{e.stopPropagation();clearCmpSlot(slot);});
-      slotEl.appendChild(cb);
-    }
-  }
+  _fillCard(slot,frag);
+  // Re-wire the new card's click to open picker
+  const card=document.getElementById(`cmp-card-${slot}`);
+  if(card)card.addEventListener('click',()=>_openFragPicker(slot,card));
   if(CMP_A&&CMP_B)renderCompareResults(CMP_A,CMP_B);
+}
+function _fillCard(slot,frag){
+  const card=document.getElementById(`cmp-card-${slot}`);
+  if(!card)return;
+  const fc=getCmpFam(frag.family);
+  const famLabel=(FAM[frag.family]||{label:frag.family}).label;
+  card.classList.add('filled');
+  card.style.borderColor=`${fc.accent}40`;
+  card.innerHTML=`
+    <div class="cmp-frag-card-fam" style="background:${fc.accent}">
+      <span class="cmp-frag-card-dot"></span>${famLabel}
+    </div>
+    <div class="cmp-frag-card-name">${frag.name}</div>
+    <div class="cmp-frag-card-brand">${frag.brand}</div>
+    ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
+    <button class="cmp-card-clear" data-slot="${slot}">✕</button>
+    <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+  card.querySelector('.cmp-card-clear')?.addEventListener('click',e=>{e.stopPropagation();clearCmpSlot(slot);});
+}
+function _resetCard(slot){
+  const card=document.getElementById(`cmp-card-${slot}`);
+  if(!card)return;
+  card.classList.remove('filled');
+  card.style.borderColor='';
+  const label=slot==='a'?'Fragrance One':'Fragrance Two';
+  card.innerHTML=`
+    <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">${label}</div><div class="cmp-card-empty-hint">Tap to select</div></div>
+    <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 }
 function initCompare(){
   ['a','b'].forEach(slot=>{
-    const slotEl=document.getElementById(`cmp-slot-${slot}`);
-    if(!slotEl)return;
-    slotEl.addEventListener('click',()=>_openFragPicker(slot));
+    const card=document.getElementById(`cmp-card-${slot}`);
+    if(!card)return;
+    card.addEventListener('click',()=>_openFragPicker(slot,card));
   });
   const search=document.getElementById('frag-picker-search');
   if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim()));
@@ -4901,21 +4920,7 @@ function initCompare(){
 window.clearCmpSlot=function(slot){
   window.haptic?.('nudge')||window.haptic?.('selection');
   if(slot==='a')CMP_A=null;else CMP_B=null;
-  const slotEl=document.getElementById(`cmp-slot-${slot}`);
-  const nameEl=document.getElementById(`cmp-slot-name-${slot}`);
-  const brandEl=document.getElementById(`cmp-slot-brand-${slot}`);
-  const hintEl=document.getElementById(`cmp-slot-hint-${slot}`);
-  const ntextEl2=document.getElementById(`cmp-slot-ntext-${slot}`);
-  const ndotEl2=document.getElementById(`cmp-slot-ndot-${slot}`);
-  if(ntextEl2)ntextEl2.textContent='Select a fragrance';
-  if(ndotEl2)ndotEl2.style.background='';
-  if(brandEl)brandEl.innerHTML='';
-  if(hintEl)hintEl.style.display='';
-  if(slotEl){
-    slotEl.classList.remove('filled');
-    const cb=slotEl.querySelector('.cmp-slot-clear');
-    if(cb)cb.remove();
-  }
+  _resetCard(slot);
   const res=document.getElementById('cmp-results');
   if(res)res.innerHTML='';
   if(window._cmpStickyObs)window._cmpStickyObs.disconnect();

@@ -4,6 +4,16 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-10 (pass 4)
+
+### Fixed
+- **Picker dropdown width** — picker panel now inherits the exact pixel width of its anchor element (card or sticky slot) instead of a hardcoded 320px, so it always aligns flush with the selector
+- **Picker `maxHeight` constrained** — available viewport height below the anchor is calculated at open time (`window.innerHeight − anchor.bottom − 12`); prevents picker from rendering off-screen at shorter viewport heights
+- **Picker anchors to source element** — `_openFragPicker` now accepts a `sourceEl` argument; card clicks and sticky-slot taps both pass their own element, so the dropdown anchors to whichever trigger is visible (the card when at top, the sticky slot when scrolled)
+- **Sticky scroll observer** — `_initStickyScroll` was observing the removed `#cmp-slots-bar` element; updated to observe `#cmp-header` (the persistent card row), restoring the sticky-bar show/hide behaviour on scroll
+
+---
+
 ## 2026-03-10 (pass 3)
 
 ### Added
