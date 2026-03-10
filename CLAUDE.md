@@ -7,7 +7,12 @@ This file describes the development workflow and conventions for the Scentmap pr
 ## Project structure
 
 ```
-index.html          Single-file app (all HTML, CSS, JS inline)
+index.html          HTML structure and inline JS
+styles/
+  design-system.css Design tokens (colors, spacing, typography, breakpoints)
+  components.css    Component styles
+  layout.css        Layout and panel styles
+  responsive.css    Responsive design overrides
 data/
   roles.json        8 fragrance roles (id, name, sym, desc)
   notes.json        Note reference index (~96 entries)
@@ -31,6 +36,7 @@ The preview server serves from `/tmp/scentmap-copy/` on port 3000.
 **Sync after every edit before testing:**
 ```bash
 cp /Users/matthewlewair/Documents/scentmap/index.html /tmp/scentmap-copy/index.html
+cp -r /Users/matthewlewair/Documents/scentmap/styles /tmp/scentmap-copy/
 ```
 
 **Cache-bust the browser after syncing:**
@@ -46,20 +52,25 @@ Use `preview_eval` with `location.href = 'http://localhost:3000/?v=' + Date.now(
 
 **Every commit must include a CHANGELOG.md update.** No exceptions.
 
-1. Make and test changes in `index.html`
-2. Sync to dev server: `cp index.html /tmp/scentmap-copy/index.html`
-3. Verify in preview (screenshot + functional checks)
+1. Make and test changes in `index.html` and/or `styles/`
+2. Sync to dev server:
+   ```bash
+   cp /Users/matthewlewair/Documents/scentmap/index.html /tmp/scentmap-copy/index.html
+   cp -r /Users/matthewlewair/Documents/scentmap/styles /tmp/scentmap-copy/
+   ```
+3. Cache-bust and verify in preview (screenshot + functional checks)
 4. **Update `CHANGELOG.md`** — add entries under a dated `## YYYY-MM-DD` section:
    - `### Added` for new features
    - `### Changed` for behaviour/visual changes
    - `### Fixed` for bug fixes
-5. Commit both `index.html` and `CHANGELOG.md` together
+5. Commit changed files (`index.html`, `styles/*`, `CHANGELOG.md`)
 
 ---
 
 ## Architecture notes
 
-- **Single HTML file** — all CSS and JS are inline in `index.html`. Do not split into separate files.
+- **HTML + separate CSS** — `index.html` contains HTML structure and inline JS. All styling is in `styles/` directory organized by concern (design system, components, layout, responsive).
+- **CSS organization** — See "CSS conventions" below for design tokens. Use semantic variables instead of hard-coded values. Consolidate duplicate rules using CSS custom properties.
 - **Data is arrays** — `f.top`, `f.mid`, `f.base` in scent objects are string arrays, not comma-separated strings. Use `(f.top||[]).forEach(...)` not `.split(',')`.
 - **Sheet stack** — mobile bottom sheets use `pushSheet(renderFn)` / `popSheet()` / `closeAllSheets()`. First sheet slides up from bottom; subsequent (sub-nav) sheets get class `.nav` and slide in from the right.
 - **Desktop detail panel** — `pushDesktopDetail(renderFn)` / `openDesktopDetail(renderFn)` / `closeDesktopDetail()`. Use `_renderDeskDetail(true)` to animate on push.
@@ -72,7 +83,17 @@ Use `preview_eval` with `location.href = 'http://localhost:3000/?v=' + Date.now(
 
 ## CSS conventions
 
+**Design tokens (in `styles/design-system.css`):**
 - Palette variables: `--paper`, `--ink`, `--stone`, `--black`, `--g700`…`--g100`, `--resin`, `--wish`
 - Family colors: `--fam-woody`, `--fam-floral`, etc.
+- Spacing scale: 4px grid (`--sp-xs`, `--sp-sm`, `--sp-md`, `--sp-lg`, etc.)
+- Typography: `--font-serif`, `--font-sans`, with semantic sizes (`--text-sm`, `--text-md`, `--text-lg`)
+- Transitions: `--ease-spring: cubic-bezier(.16,1,.3,1)` at `--dur-sm` (0.28s), `--dur-md` (0.36s), `--dur-lg` (0.48s)
 - Breakpoints: mobile `<768px`, tablet `768–1099px`, desktop `≥1100px`
-- All transitions use `cubic-bezier(.16,1,.3,1)` (spring-like) at `.28s`–`.48s`
+
+**Guidelines:**
+- Always use CSS custom properties instead of hard-coded values
+- Define all colors, spacing, sizing, and timing in design-system.css
+- Use semantic variable names (e.g., `--text-label` instead of `--font-11px`)
+- Consolidate duplicate rules — if a style appears multiple times, extract to a reusable class or variable
+- No magic numbers — all dimensions should relate to the 4px grid or defined scale
