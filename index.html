@@ -1483,7 +1483,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 }
 .cmp-slot-vs{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  font-family:"Archivo Black",sans-serif;font-size:.68rem;
+  font-family:"DM Sans",system-ui,sans-serif;font-weight:400;font-size:.68rem;color:var(--g400);
   color:var(--g300);letter-spacing:.1em;
   background:var(--paper);padding:5px 0;z-index:1;white-space:nowrap;
 }
@@ -1505,6 +1505,9 @@ body{font-family:"Source Serif 4",Georgia,serif;
   display:flex;align-items:center;gap:5px;
 }
 .cmp-slot-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.cmp-slot-name{display:flex;align-items:center;gap:8px}
+.cmp-slot-name-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;display:none}
+.cmp-slot.filled .cmp-slot-name-dot{display:inline-block}
 .cmp-slot-hint{
   font-size:.78rem;color:var(--g400);margin-top:8px;font-style:italic;
   font-family:"DM Sans",sans-serif;
@@ -1518,11 +1521,11 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cmp-slot:hover .cmp-slot-clear{opacity:1}
 .cmp-slot-clear:hover{color:var(--ink);background:var(--g100)}
 @media(max-width:767px){
-  .cmp-slots-bar{flex-direction:column}
-  .cmp-slot-divider{width:auto;height:1px}
-  .cmp-slot-vs{left:50%;top:50%;padding:0 8px}
   .cmp-slot-name{font-size:1.2rem}
   .cmp-slot{padding:18px 16px 16px}
+}
+@media(max-width:480px){
+  .cmp-slot{padding:14px 12px}
 }
 
 /* ── FRAGRANCE PICKER MODAL ── */
@@ -1591,6 +1594,15 @@ body{font-family:"Source Serif 4",Georgia,serif;
     border-bottom:1px solid var(--g200);
   }
 }
+@media(min-width:768px){
+  .frag-picker-overlay{background:transparent;align-items:flex-start;justify-content:flex-start}
+  .frag-picker-wrap{
+    position:fixed;width:320px;max-height:65vh;max-width:none;
+    border-radius:12px;border:1px solid var(--g200);
+    box-shadow:0 8px 32px rgba(14,12,9,.14);
+    transform:none!important;
+  }
+}
 
 /* ══════════════════════════════════════════════════════════════
    COMPARE REDESIGN v2 — Design System Upgrade
@@ -1649,7 +1661,8 @@ em,i{font-style:normal;font-weight:600}
 
 /* ── SCORE CARDS ── */
 .cmp-scores-wrap{margin:20px 0 8px}
-.cmp-score-cards{display:flex;gap:10px;margin-bottom:14px}
+.cmp-score-cards{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+.cmp-score-center{flex:1;min-width:0}
 .cmp-score-card{
   flex:1;padding:18px 12px 14px;border-radius:12px;
   border:1px solid var(--g200);background:var(--paper);
@@ -1704,9 +1717,9 @@ em,i{font-style:normal;font-weight:600}
 .cmp-grid-cell .note-link{
   font-family:"DM Sans",system-ui,sans-serif;font-size:.78rem;color:var(--ink);
   background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;
-  text-decoration-color:var(--g200);text-underline-offset:2px;
+  text-decoration-color:var(--g400);text-underline-offset:2px;
 }
-.cmp-grid-cell .note-link:hover{text-decoration-color:var(--ink)}
+.cmp-grid-cell .note-link:hover{text-decoration-color:var(--black)}
 .cmp-grid-cell .note-link.shared{font-weight:700;color:var(--g700)}
 .cmp-grid-cell-a{text-align:right}
 .cmp-grid-cell-b{text-align:left}
@@ -1869,7 +1882,8 @@ em,i{font-style:normal;font-weight:600}
 }
 
 /* ── UNIFIED RADAR ── */
-.cmp-radar-v2{margin:20px 0}
+.cmp-radar-v2{margin:0}
+.cmp-score-center .cmp-radar-v2{margin:0}
 .cmp-radar-v2-label{
   font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;
   font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:10px;
@@ -2052,15 +2066,15 @@ em,i{font-style:normal;font-weight:600}
         <div class="cmp-slots-bar" id="cmp-slots-bar">
           <div class="cmp-slot" id="cmp-slot-a" data-slot="a">
             <div class="cmp-slot-label">Fragrance One</div>
-            <div class="cmp-slot-name" id="cmp-slot-name-a">Select a fragrance</div>
+            <div class="cmp-slot-name" id="cmp-slot-name-a"><span class="cmp-slot-name-dot" id="cmp-slot-ndot-a"></span><span id="cmp-slot-ntext-a">Select a fragrance</span></div>
             <div class="cmp-slot-brand" id="cmp-slot-brand-a"></div>
             <div class="cmp-slot-hint" id="cmp-slot-hint-a">Tap to browse all fragrances</div>
             <span class="cmp-slot-chevron"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
-          <div class="cmp-slot-divider"><span class="cmp-slot-vs">VS</span></div>
+          <div class="cmp-slot-divider"><span class="cmp-slot-vs">vs</span></div>
           <div class="cmp-slot" id="cmp-slot-b" data-slot="b">
             <div class="cmp-slot-label">Fragrance Two</div>
-            <div class="cmp-slot-name" id="cmp-slot-name-b">Select a fragrance</div>
+            <div class="cmp-slot-name" id="cmp-slot-name-b"><span class="cmp-slot-name-dot" id="cmp-slot-ndot-b"></span><span id="cmp-slot-ntext-b">Select a fragrance</span></div>
             <div class="cmp-slot-brand" id="cmp-slot-brand-b"></div>
             <div class="cmp-slot-hint" id="cmp-slot-hint-b">Tap to browse all fragrances</div>
             <span class="cmp-slot-chevron"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -4215,6 +4229,108 @@ function buildDesign(){
         <strong>⚠ Known issue — sheet scroll under header:</strong> Content in bottom sheets and the detail panel has no sticky section header. As the user scrolls, content passes behind the topbar without a visual anchor. The <span class="ds-code">.sheet-topbar</span> is sticky within the sheet but has no backdrop blur or border when content scrolls behind it, causing the content to bleed through.
       </div>
     </div>
+
+    <!-- Compare Components -->
+    <div class="ds-section" id="ds-compare">
+      <div class="ds-section-hd"><span class="ds-section-n">§2.6</span><span class="ds-section-t">Compare Components</span></div>
+
+      ${demo('Score meter — <span class="ds-code">.cmp-score-card</span> · <span class="ds-code">.cmp-score-meter</span>',`
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:140px;max-width:200px;padding:18px 12px 14px;border-radius:12px;border:1px solid var(--g200);background:var(--paper);display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="font-family:'Archivo Black',sans-serif;font-size:2.8rem;line-height:1;letter-spacing:-.03em;color:#8B4513">72%</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)">Similarity</div>
+            <div style="width:100%;padding:6px 0 2px">
+              <div style="position:relative;height:4px;background:var(--g100);border-radius:4px;margin:0 4px">
+                <div style="position:absolute;left:0;top:0;height:100%;width:72%;border-radius:4px;background:#8B4513"></div>
+                <div style="position:absolute;top:50%;left:72%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:#8B4513;border:2px solid var(--paper)"></div>
+                <div style="position:absolute;top:-3px;left:25%;width:1px;height:10px;background:var(--g200)"></div>
+                <div style="position:absolute;top:-3px;left:50%;width:1px;height:10px;background:var(--g200)"></div>
+                <div style="position:absolute;top:-3px;left:75%;width:1px;height:10px;background:var(--g200)"></div>
+              </div>
+            </div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:600;color:var(--g600)">Fairly similar</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--g400)">Tap to learn more ↗</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:.72rem;color:var(--g500);padding-top:4px">
+            <div>Range labels: 0–25 Very different</div>
+            <div>26–50 Notably different</div>
+            <div>51–75 Fairly similar</div>
+            <div>76–100 Nearly identical</div>
+            <div style="margin-top:4px"><span class="ds-code">border-radius: 12px</span></div>
+            <div><span class="ds-code">padding: 18px 12px 14px</span></div>
+          </div>
+        </div>
+      `)}
+
+      ${demo('3-col notes grid — <span class="ds-code">.cmp-grid-3x3</span> · <span class="ds-code">.cmp-grid-row.three</span>',`
+        <div style="max-width:420px">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;margin-bottom:2px">
+            <div style="font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:5px 4px;color:#8B4513">Gypsy Water</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:5px 4px;color:var(--g400)">Shared</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:5px 4px;color:#B5366E">Bal d'Afrique</div>
+          </div>
+          <div style="border:1px solid var(--g200);border-radius:12px;overflow:hidden">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--g200)">
+              <div style="padding:8px 6px;text-align:right;display:flex;flex-wrap:wrap;gap:3px;justify-content:flex-end"><button style="font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--ink);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--g400);text-underline-offset:2px">Bergamot</button></div>
+              <div style="padding:8px 6px;background:var(--stone);display:flex;flex-wrap:wrap;gap:3px;justify-content:center;flex-direction:column;align-items:center"><div style="font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400)">Top</div><button style="font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;color:var(--g700);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--g400);text-underline-offset:2px">Lemon</button></div>
+              <div style="padding:8px 6px;text-align:left;display:flex;flex-wrap:wrap;gap:3px"><button style="font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--ink);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--g400);text-underline-offset:2px">Marigold</button></div>
+            </div>
+          </div>
+          <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Only-A left-aligned · Shared centered (stone bg) · Only-B left-aligned. Note links use <span class="ds-code">text-decoration-color:var(--g400)</span>.</div>
+        </div>
+      `)}
+
+      ${demo('Frag-picker item — <span class="ds-code">.frag-picker-item</span> — used in catalog + picker modal',`
+        <div style="border:1px solid var(--g200);border-radius:8px;overflow:hidden;background:var(--paper);max-width:340px">
+          <div style="display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--g100)">
+            <div style="width:9px;height:9px;border-radius:50%;background:#8B4513;flex-shrink:0"></div>
+            <div><div style="font-size:.94rem;font-weight:600;line-height:1.2">Gypsy Water</div><div style="font-size:.72rem;color:var(--g500);font-family:'DM Sans',sans-serif">Byredo · Woody</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;padding:10px 18px">
+            <div style="width:9px;height:9px;border-radius:50%;background:#B5366E;flex-shrink:0"></div>
+            <div><div style="font-size:.94rem;font-weight:600;line-height:1.2">Bal d'Afrique</div><div style="font-size:.72rem;color:var(--g500);font-family:'DM Sans',sans-serif">Byredo · Floral</div></div>
+          </div>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px"><span class="ds-code">gap: 14px · padding: 10px 18px · border-bottom: 1px solid var(--g100)</span>. Shared by catalog rows and picker modal lists.</div>
+      `)}
+
+      ${demo('House detail panel — <span class="ds-code">.house-detail-wrap</span>',`
+        <div style="max-width:300px;padding:0 4px">
+          <div style="font-family:'Archivo Black',sans-serif;font-size:1.6rem;line-height:1;letter-spacing:-.02em;margin-bottom:4px">Byredo</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--g400);margin-bottom:20px">12 fragrances</div>
+          <div style="display:flex;flex-direction:column;gap:0;border:1px solid var(--g200);border-radius:8px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--g100)">
+              <div style="width:9px;height:9px;border-radius:50%;background:#8B4513;flex-shrink:0"></div>
+              <div><div style="font-size:.94rem;font-weight:600">Gypsy Water</div><div style="font-size:.72rem;color:var(--g500);font-family:'DM Sans',sans-serif">Woody</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;padding:10px 18px">
+              <div style="width:9px;height:9px;border-radius:50%;background:#B5366E;flex-shrink:0"></div>
+              <div><div style="font-size:.94rem;font-weight:600">Bal d'Afrique</div><div style="font-size:.72rem;color:var(--g500);font-family:'DM Sans',sans-serif">Floral</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Brand name: <span class="ds-code">Archivo Black 1.6rem</span>. Count meta: <span class="ds-code">DM Sans .8rem --g400</span>. Row list reuses <span class="ds-code">.frag-picker-item</span> pattern.</div>
+      `)}
+
+      ${demo('Mini radar in swap suggestions — <span class="ds-code">.cmp-sug-card-v2</span> · <span class="ds-code">.cmp-sug-mini-radar</span>',`
+        <div style="max-width:280px">
+          <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:var(--paper);border:1px solid var(--g200);border-radius:8px;cursor:default">
+            <svg width="36" height="36" viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:.6">
+              <polygon points="110,12 196,68 163,174 57,174 24,68" fill="none" stroke="var(--g200)" stroke-width="1"/>
+              <polygon points="110,51 163,87 141,157 79,157 57,87" fill="none" stroke="var(--g200)" stroke-width="1"/>
+              <polygon points="110,90 130,106 119,140 101,140 90,106" fill="none" stroke="var(--g200)" stroke-width="1"/>
+              <polygon points="110,34 185,78 155,168 65,168 35,78" fill="#8B451315" stroke="#8B4513" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+            <div>
+              <div style="font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:20px;background:#8B451318;color:#8B4513;display:inline-block;margin-bottom:5px">Woody</div>
+              <div style="font-size:.9rem;font-weight:600;line-height:1.2">Santal 26</div>
+              <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--g500)">Le Labo · Bergamot, Sandalwood</div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Mini radar is 36×36px SVG, <span class="ds-code">opacity:.6</span> default, fades to 1 on hover. Card: <span class="ds-code">padding:10px 12px, border-radius:8px, gap:8px</span>.</div>
+      `)}
+    </div>
   `)}
 
   <!-- §3 Issues -->
@@ -4323,7 +4439,7 @@ function computeProfile(frag){
 
 /* ── Scoring helpers ── */
 function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
-function _simLabel(pct){if(pct<25)return'Very different';if(pct<50)return'Contrast well';if(pct<75)return'Related';return'Almost the same';}
+function _simLabel(pct){if(pct<26)return'Very different';if(pct<51)return'Notably different';if(pct<76)return'Fairly similar';return'Nearly identical';}
 function _layLabel(pct){if(pct<25)return"Don't layer";if(pct<50)return'Not ideal';if(pct<75)return'Ok together';return'Great together';}
 
 function getVerdict(matchPct,layerPct,fa,fb){
@@ -4511,7 +4627,7 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
   if(!overlay){overlay=document.createElement('div');overlay.id='cmp-edu-overlay';overlay.className='cmp-edu-overlay';document.body.appendChild(overlay);}
   const isMatch=type==='match';
   const pct=isMatch?matchPct:layerPct;
-  const label=isMatch?'Match':'Layers Well';
+  const label=isMatch?'Similarity':'Layers Well';
   const quads=isMatch?[
     {tag:'High match ≥ 70',title:'Kindred spirits',desc:'Same family, many shared notes. Great as alternates for the same occasion.',hi:matchPct>=70},
     {tag:'Good match 50–69',title:'Cohesive pair',desc:'Enough DNA in common to feel related. Alternate or layer lightly.',hi:matchPct>=50&&matchPct<70},
@@ -4612,7 +4728,7 @@ function renderCompareResults(fa,fb){
       <div class="cmp-score-cards">
         <button class="cmp-score-card" id="cmp-score-match">
           <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
-          <div class="cmp-score-label">Similar</div>
+          <div class="cmp-score-label">Similarity</div>
           <div class="cmp-score-meter">
             <div class="cmp-score-meter-track">
               <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
@@ -4625,6 +4741,7 @@ function renderCompareResults(fa,fb){
           <div class="cmp-score-range">${_simLabel(matchPct)}</div>
           <div class="cmp-score-tap">Tap to learn more ↗</div>
         </button>
+        <div class="cmp-score-center">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
         <button class="cmp-score-card" id="cmp-score-layer">
           <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
           <div class="cmp-score-label">Layers Well</div>
@@ -4645,7 +4762,6 @@ function renderCompareResults(fa,fb){
     </div>
 
     ${render3x3Notes(fa,fb,ca.accent,cb.accent)}
-    ${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}
     ${drawScatterSvg(fa,fb,ca.accent,cb.accent)}
     ${renderSuggestionsV2(fa,fb,ca,cb)}
   `;
@@ -4694,6 +4810,17 @@ function _openFragPicker(slot){
   if(title)title.textContent=slot==='a'?'Fragrance One':'Fragrance Two';
   if(search)search.value='';
   _renderPickerList('');
+  // Desktop ≥768px: anchor dropdown to slot column
+  if(window.innerWidth>=768){
+    const slotEl=document.getElementById(`cmp-slot-${slot}`);
+    const wrap=overlay.querySelector('.frag-picker-wrap');
+    if(slotEl&&wrap){
+      const r=slotEl.getBoundingClientRect();
+      wrap.style.top=(r.bottom+6)+'px';
+      if(slot==='a'){wrap.style.left=r.left+'px';wrap.style.right='auto';}
+      else{wrap.style.right=(window.innerWidth-r.right)+'px';wrap.style.left='auto';}
+    }
+  }
   overlay.classList.add('open');
   setTimeout(()=>{if(search)search.focus();},200);
 }
@@ -4740,7 +4867,10 @@ function _selectFragForSlot(slot,frag){
   const nameEl=document.getElementById(`cmp-slot-name-${slot}`);
   const brandEl=document.getElementById(`cmp-slot-brand-${slot}`);
   const hintEl=document.getElementById(`cmp-slot-hint-${slot}`);
-  if(nameEl)nameEl.textContent=frag.name;
+  const ndotEl=document.getElementById(`cmp-slot-ndot-${slot}`);
+  const ntextEl=document.getElementById(`cmp-slot-ntext-${slot}`);
+  if(ndotEl)ndotEl.style.background=fc.accent;
+  if(ntextEl)ntextEl.textContent=frag.name;
   if(brandEl)brandEl.innerHTML=`<span class="cmp-slot-dot" style="background:${fc.accent}"></span>${frag.brand}`;
   if(hintEl)hintEl.style.display='none';
   if(slotEl){
@@ -4775,7 +4905,10 @@ window.clearCmpSlot=function(slot){
   const nameEl=document.getElementById(`cmp-slot-name-${slot}`);
   const brandEl=document.getElementById(`cmp-slot-brand-${slot}`);
   const hintEl=document.getElementById(`cmp-slot-hint-${slot}`);
-  if(nameEl)nameEl.textContent='Select a fragrance';
+  const ntextEl2=document.getElementById(`cmp-slot-ntext-${slot}`);
+  const ndotEl2=document.getElementById(`cmp-slot-ndot-${slot}`);
+  if(ntextEl2)ntextEl2.textContent='Select a fragrance';
+  if(ndotEl2)ndotEl2.style.background='';
   if(brandEl)brandEl.innerHTML='';
   if(hintEl)hintEl.style.display='';
   if(slotEl){

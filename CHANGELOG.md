@@ -4,6 +4,23 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-10 (pass 3)
+
+### Added
+- **Colored dot before slot name** — each filled slot in the compare slot bar now shows a family-accent dot before the fragrance name (matches the dot shown in the brand row)
+- **Radar between score cards** — character radar chart moved from below the notes grid to a center column between the Similarity and Layers Well score cards; stacks cleanly at any width
+- **Picker anchored to column (≥768px)** — at tablet/desktop widths the fragrance picker drops down as a fixed 320px panel anchored below the clicked slot: left-aligned for slot A, right-aligned for slot B; mobile keeps full-screen centered overlay
+- **Design system §2.6 Compare Components** — new section documents: score meter, 3-col notes grid, frag-picker-item, house detail panel, mini radar in swap suggestions
+
+### Changed
+- **"vs" divider** — slot bar "VS" changed to lowercase "vs", DM Sans 400 weight, `--g400` color (lighter, less dominant)
+- **"Similar" → "Similarity"** — score card label updated for grammatical consistency; edu overlay title updated to match
+- **Similarity meter range labels** — updated to plain-language scale: 0–25 "Very different", 26–50 "Notably different", 51–75 "Fairly similar", 76–100 "Nearly identical"
+- **Note-link underline in compare grid** — `text-decoration-color` changed from `--g200` (invisible) to `--g400` (visible); hover matches detail sheet (`--black`)
+- **Slot bar at 480px** — removed `flex-direction:column` from `@media(max-width:767px)` so the slot bar stays horizontal at all widths; added `@media(max-width:480px)` padding reduction to `14px 12px`
+
+---
+
 ## 2026-03-10 (pass 2)
 
 ### Added
