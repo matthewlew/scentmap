@@ -4,6 +4,28 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-10 (pass 2)
+
+### Added
+- **Default pair on load** — compare page pre-fills a high-layering-compatibility pair on first load instead of showing blank slots (samples first 40 fragrances, picks max `scoreLayeringPair`)
+- **Score meter** — each score card now shows a thin track with a dot indicator at the exact percentage and tick marks at 25 / 50 / 75%; fills in the accent color
+- **Range labels** — category label beneath each meter; Similar: "Very different / Contrast well / Related / Almost the same"; Layers Well: "Don't layer / Not ideal / Ok together / Great together"
+- **House detail view** — clicking any brand name in catalog opens a detail panel: brand name, fragrance count, alphabetical list of all house fragrances in frag-picker-item style
+- **Slot chevron** — small ▾ indicator in bottom-right of each slot card signals it's tappable
+- **Note-links in compare** — notes in the 3×3 grid are now `<button class="note-link">` hyperlinks; clicking opens the note detail panel (same as fragrance detail sheet)
+
+### Changed
+- **Score card label** — "Match" renamed to "Similar" for clearer plain-language meaning
+- **Notes grid** — removed 42px row-label column; Top/Mid/Base labels moved into the shared center column as inline section headers; all cells center-aligned
+- **Swap suggestions** — removed ≈ Similar / ↑ Different / ≠ Contrasting attribute groups; replaced with family name + top 3 notes + mini radar polygon (56×56 SVG); mini radar opacity lifts on hover
+- **Detail compare CTAs** — removed "Fragrance One / Fragrance Two" labels; buttons now read "Frag vs [CMP_A.name]" / "Frag vs [CMP_B.name]" with actual fragrance names
+- **Catalog rows** — `renderCatRow` now outputs `frag-picker-item` structure (round dot, name, brand · family); removed top-note chips and role symbols from list view
+- **Catalog sort** — brands sorted alphabetically; fragrances within each brand sorted alphabetically
+- **Back/close buttons** — ← replaced with SVG chevron-left `<path d="M9 3L5 7l4 4">`; sheet and detail close buttons read "Close" (not "✕")
+- **Verdict font** — increased slightly to 1.05rem
+- **`.cmp-slots-bar` margin** — removed top/bottom margin (was `20px 0 28px`)
+- **Frag picker item height** — padding reduced to `10px 18px`; brand margin-top removed → ~64px row height
+
 ## 2026-03-10
 
 ### Added

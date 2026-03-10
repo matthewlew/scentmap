@@ -60,7 +60,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
   font-feature-settings:"onum" 1,"kern" 1;}
 
 /* ══ SHELL ═══════════════════════════════════════════════════ */
-.shell{display:flex;min-height:100vh;max-width:1400px;margin:0 auto}
+.shell{display:flex;min-height:100vh;margin:0 auto}
 
 /* LEFT: capsule — hidden; content lives in p-scentmap panel */
 .col-capsule{display:none!important}
@@ -676,6 +676,12 @@ body{font-family:"Source Serif 4",Georgia,serif;
   font-family:"DM Sans",system-ui,sans-serif;
   font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
 }
+.brand-hdr-btn{
+  background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;gap:0;
+  font-family:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;
+  transition:color .12s;
+}
+.brand-hdr-btn:hover{color:var(--resin)}
 .brand-c{font-size:.7rem;color:var(--g450)}
 .brand-total{font-size:.6rem;font-weight:400;color:var(--g400);margin-left:5px;letter-spacing:0;text-transform:none}
 .scent-list{border:1px solid var(--g200);border-radius:8px;overflow:hidden}
@@ -1462,7 +1468,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .cmp-slots-bar{
   display:flex;align-items:stretch;
   border:1px solid var(--g200);border-radius:12px;
-  overflow:hidden;margin:20px 0 28px;
+  overflow:hidden;margin:0;
 }
 .cmp-slot{
   flex:1;padding:24px 20px 20px;cursor:pointer;
@@ -1556,7 +1562,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .frag-picker-list{flex:1;overflow-y:auto;padding:4px 0}
 .frag-picker-item{
   display:flex;align-items:center;gap:14px;
-  padding:13px 18px;cursor:pointer;
+  padding:10px 18px;cursor:pointer;
   border-bottom:1px solid var(--g100);
   transition:background .1s;
 }
@@ -1565,7 +1571,7 @@ body{font-family:"Source Serif 4",Georgia,serif;
 .frag-picker-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .frag-picker-item-name{font-size:.94rem;font-weight:600;line-height:1.2}
 .frag-picker-item-brand{
-  font-size:.72rem;color:var(--g500);margin-top:2px;
+  font-size:.72rem;color:var(--g500);
   font-family:"DM Sans",sans-serif;
 }
 .frag-picker-footer{
@@ -1659,11 +1665,92 @@ em,i{font-style:normal;font-weight:600}
   font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);
 }
 .cmp-score-tap{font-family:"DM Sans",system-ui,sans-serif;font-size:.68rem;color:var(--g400);margin-top:2px}
+.cmp-score-meter{width:100%;padding:6px 0 2px}
+.cmp-score-meter-track{
+  position:relative;height:4px;background:var(--g100);border-radius:4px;
+  margin:0 4px;
+}
+.cmp-score-meter-fill{
+  position:absolute;left:0;top:0;height:100%;border-radius:4px;
+  transition:width .4s cubic-bezier(.16,1,.3,1);
+}
+.cmp-score-meter-dot{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  width:10px;height:10px;border-radius:50%;
+  border:2px solid var(--paper);box-shadow:0 0 0 1.5px currentColor;
+  transition:left .4s cubic-bezier(.16,1,.3,1);
+}
+.cmp-score-meter-tick{
+  position:absolute;top:-3px;width:1px;height:10px;background:var(--g200);
+  transform:translateX(-50%);
+}
+.cmp-score-range{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;font-weight:600;
+  color:var(--g600);letter-spacing:.01em;margin-top:4px;
+}
 .cmp-verdict{
-  font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.65;
+  font-family:"Source Serif 4",Georgia,serif;font-size:1.05rem;line-height:1.65;
   color:var(--g700);padding:14px 16px;border-radius:8px;
   background:var(--stone);border:1px solid var(--g200);
 }
+/* Notes grid — 3 columns (no left label col) */
+.cmp-grid-col-heads.three{grid-template-columns:1fr 1fr 1fr}
+.cmp-grid-row.three{grid-template-columns:1fr 1fr 1fr}
+.cmp-grid-layer-lbl{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.62rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:4px;
+}
+.cmp-grid-cell{text-align:center}
+.cmp-grid-cell .note-link{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.78rem;color:var(--ink);
+  background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;
+  text-decoration-color:var(--g200);text-underline-offset:2px;
+}
+.cmp-grid-cell .note-link:hover{text-decoration-color:var(--ink)}
+.cmp-grid-cell .note-link.shared{font-weight:700;color:var(--g700)}
+.cmp-grid-cell-a{text-align:right}
+.cmp-grid-cell-b{text-align:left}
+/* Slot chevron */
+.cmp-slot-chevron{
+  position:absolute;bottom:12px;right:14px;
+  color:var(--g400);pointer-events:none;
+}
+.cmp-slot.filled .cmp-slot-chevron{color:var(--g300)}
+/* Swap suggestion cards — compact */
+.cmp-sug-card-v2{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:10px 12px;background:var(--paper);border:1px solid var(--g200);
+  border-radius:8px;cursor:pointer;width:100%;text-align:left;
+  transition:background .12s,border-color .12s;
+  -webkit-tap-highlight-color:transparent;
+}
+.cmp-sug-card-v2:hover{background:var(--stone);border-color:var(--g300)}
+.cmp-sug-mini-radar{flex-shrink:0;opacity:.6;transition:opacity .15s}
+.cmp-sug-card-v2:hover .cmp-sug-mini-radar{opacity:1}
+.cmp-sug-card-info{min-width:0}
+.cmp-sug-card-fam{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.65rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--g400);margin-bottom:2px;
+}
+.cmp-sug-card-notes{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.72rem;color:var(--g500);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+/* Back/close buttons — sans serif */
+.nav-back-btn,.detail-back,.detail-close-btn{
+  font-family:"DM Sans",system-ui,sans-serif!important;
+}
+/* House detail */
+.house-detail-wrap{padding:0 4px}
+.house-detail-name{
+  font-family:"Archivo Black",sans-serif;font-size:1.6rem;line-height:1;
+  letter-spacing:-.02em;margin-bottom:4px;
+}
+.house-detail-count{
+  font-family:"DM Sans",system-ui,sans-serif;font-size:.8rem;color:var(--g400);
+  margin-bottom:20px;
+}
+.house-detail-list{display:flex;flex-direction:column;gap:0}
 
 /* ── EDUCATIONAL OVERLAY ── */
 .cmp-edu-overlay{
@@ -1774,7 +1861,9 @@ em,i{font-style:normal;font-weight:600}
 .cmp-grid-empty{color:var(--g400);font-family:"DM Sans",sans-serif;font-size:.7rem}
 @media(max-width:479px){
   .cmp-grid-col-heads{grid-template-columns:32px 1fr 1fr 1fr}
+  .cmp-grid-col-heads.three{grid-template-columns:1fr 1fr 1fr}
   .cmp-grid-row{grid-template-columns:32px 1fr 1fr 1fr}
+  .cmp-grid-row.three{grid-template-columns:1fr 1fr 1fr}
   .cmp-grid-row-lbl{width:32px;font-size:.54rem}
   .cmp-note-pill{font-size:.65rem;padding:1px 5px}
 }
@@ -1815,29 +1904,8 @@ em,i{font-style:normal;font-weight:600}
   color:var(--g500);margin-bottom:8px;text-align:center;
 }
 .cmp-sug-col-items{display:flex;flex-direction:column;gap:8px}
-.cmp-sug-card-v2{
-  padding:11px;border-radius:12px;border:1px solid var(--g200);
-  background:var(--paper);cursor:pointer;text-align:left;
-  width:100%;transition:background .12s,border-color .12s;
-  -webkit-tap-highlight-color:transparent;
-}
-.cmp-sug-card-v2:hover{background:var(--stone);border-color:var(--g300)}
-.cmp-sug-card-v2:active{transform:scale(.98)}
-.cmp-sug-card-v2-head{display:flex;align-items:center;gap:7px;margin-bottom:8px}
-.cmp-sug-card-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.cmp-sug-card-name{font-size:.88rem;font-weight:600;line-height:1.2;flex:1;min-width:0}
-.cmp-sug-card-brand{font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;color:var(--g500);margin-top:2px}
-.cmp-attr-group{margin-bottom:6px}
-.cmp-attr-group:last-child{margin-bottom:0}
-.cmp-attr-label{
-  font-family:"DM Sans",system-ui,sans-serif;font-size:.6rem;
-  font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g400);margin-bottom:3px;
-}
-.cmp-attr-pills{display:flex;flex-wrap:wrap;gap:3px}
-.cmp-attr-pill{
-  font-family:"DM Sans",system-ui,sans-serif;font-size:.68rem;font-weight:500;
-  padding:2px 6px;border-radius:24px;background:var(--g100);color:var(--g700);white-space:nowrap;
-}
+.cmp-sug-card-name{font-size:.88rem;font-weight:600;line-height:1.2}
+.cmp-sug-card-brand{font-family:"DM Sans",system-ui,sans-serif;font-size:.7rem;color:var(--g500)}
 @media(max-width:479px){.cmp-sug-columns{grid-template-columns:1fr}}
 
 /* ── DETAIL: Description + Compare CTAs ── */
@@ -1876,7 +1944,7 @@ em,i{font-style:normal;font-weight:600}
     <div class="col-main-nav">
       <span class="nav-logo-text">Scentmap</span>
       <div class="nav-right" id="nav-right">
-        <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()">← Compare</button>
+        <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
         <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings">⚙</button>
         <div class="settings-menu" id="settings-menu" hidden>
           <button class="settings-menu-item" onclick="settingsGo('design')"><span class="settings-menu-icon">◎</span>Design System</button>
@@ -1987,6 +2055,7 @@ em,i{font-style:normal;font-weight:600}
             <div class="cmp-slot-name" id="cmp-slot-name-a">Select a fragrance</div>
             <div class="cmp-slot-brand" id="cmp-slot-brand-a"></div>
             <div class="cmp-slot-hint" id="cmp-slot-hint-a">Tap to browse all fragrances</div>
+            <span class="cmp-slot-chevron"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
           <div class="cmp-slot-divider"><span class="cmp-slot-vs">VS</span></div>
           <div class="cmp-slot" id="cmp-slot-b" data-slot="b">
@@ -1994,6 +2063,7 @@ em,i{font-style:normal;font-weight:600}
             <div class="cmp-slot-name" id="cmp-slot-name-b">Select a fragrance</div>
             <div class="cmp-slot-brand" id="cmp-slot-brand-b"></div>
             <div class="cmp-slot-hint" id="cmp-slot-hint-b">Tap to browse all fragrances</div>
+            <span class="cmp-slot-chevron"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </div>
         <div id="cmp-results"></div>
@@ -2005,8 +2075,8 @@ em,i{font-style:normal;font-weight:600}
   <!-- RIGHT: DETAIL PANEL/SIDESHEET -->
   <div class="col-detail" id="col-detail">
     <div class="detail-topbar">
-      <button class="detail-back" id="detail-back">← Back</button>
-      <button class="detail-close-btn" id="detail-close-btn">✕ Close</button>
+      <button class="detail-back" id="detail-back"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <button class="detail-close-btn" id="detail-close-btn">Close</button>
     </div>
     <div class="detail-inner" id="detail-inner"></div>
   </div>
@@ -2377,8 +2447,8 @@ function pushSheet(renderFn){
   el.className='sheet'+(isSubNav?' nav':'');
   el.innerHTML=`<div class="sheet-inner"><div class="sheet-handle"></div>
     <div class="sheet-topbar">
-      <button class="sheet-back hidden">← Back</button>
-      <button class="sheet-close">✕</button>
+      <button class="sheet-back hidden"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <button class="sheet-close">Close</button>
     </div>
     <div class="sheet-content"></div></div>`;
   const handle=el.querySelector('.sheet-handle');
@@ -2511,20 +2581,20 @@ function _buildCompareCTAs(frag,container){
   if(!container)return;
   function makeBtn(existingFrag,targetSlot){
     const fc=existingFrag?getCmpFam(existingFrag.family):null;
-    const slotNum=targetSlot==='a'?'One':'Two';
     const btn=document.createElement('button');
     btn.className='dc-cmp-btn';
+    const label=existingFrag
+      ?`${frag.name} vs ${existingFrag.name}`
+      :`Compare with ${frag.name}`;
     btn.innerHTML=`
       <span class="dc-cmp-btn-dot" style="background:${fc?fc.accent:'var(--g300)'}"></span>
       <span class="dc-cmp-btn-text">
-        <span class="dc-cmp-btn-lbl">Fragrance ${slotNum}</span>
-        <span class="dc-cmp-btn-name${existingFrag?'':' dc-cmp-btn-empty'}">${existingFrag?existingFrag.name:'Set as Fragrance '+slotNum}</span>
+        <span class="dc-cmp-btn-name${existingFrag?'':' dc-cmp-btn-empty'}">${label}</span>
       </span>
       <span class="dc-cmp-btn-arrow">→</span>`;
     btn.addEventListener('click',()=>{
       window.haptic?.('medium');
       if(existingFrag){
-        // Put current frag in the OTHER slot, keep existing in targetSlot
         const otherSlot=targetSlot==='a'?'b':'a';
         _selectFragForSlot(otherSlot,frag);
       }else{
@@ -2647,6 +2717,29 @@ function renderNoteDetail(container,note){
 }
 
 function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag))}
+
+function renderHouseDetail(container,brand){
+  const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
+  container.innerHTML=`<div class="house-detail-wrap">
+    <div class="house-detail-name">${brand}</div>
+    <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
+    <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
+  </div>`;
+  const list=container.querySelector('.house-detail-list');
+  frags.forEach(frag=>{
+    const fc=getCmpFam(frag.family);
+    const btn=document.createElement('button');
+    btn.className='frag-picker-item';
+    btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div>
+      <div>
+        <div class="frag-picker-item-name">${frag.name}</div>
+        <div class="frag-picker-item-brand">${(FAM[frag.family]||{}).label||frag.family}</div>
+      </div>`;
+    btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag));});
+    list.appendChild(btn);
+  });
+}
+function openHouseDetail(brand){openDetail(c=>renderHouseDetail(c,brand))}
 
 function refreshAfterStateChange(id){
   buildCapsule();buildRoles();
@@ -3141,12 +3234,14 @@ function buildCatalog(roleFilter){
     updCC();return;
   }
 
-  const brands=[...new Set(visibleCat.map(f=>f.brand))];
+  const brands=[...new Set(visibleCat.map(f=>f.brand))].sort((a,b)=>a.localeCompare(b));
   brands.forEach(brand=>{
-    const frags=visibleCat.filter(f=>f.brand===brand);
+    const frags=visibleCat.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
     const key=brand.replace(/\s+/g,'-')+(roleFilter||'');
     const sec=document.createElement('div');sec.className='cat-section';
-    sec.innerHTML=`<div class="brand-hdr"><div class="brand-n">${brand}<span class="brand-total">${frags.length}</span></div><div class="brand-c" id="bc-${key}"></div></div>`;
+    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n brand-hdr-btn" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
+    // Brand header → house detail
+    sec.querySelector('.brand-hdr-btn')?.addEventListener('click',()=>openHouseDetail(brand));
     const list=document.createElement('div');list.className='scent-list';
     list.addEventListener('click',e=>{
       const row=e.target.closest('.scent-row');if(!row)return;
@@ -3249,31 +3344,16 @@ function initCatalogControls(){
 
 function renderCatRow(row,frag,fm){
   const st=gst(frag.id);
-  row.className=`scent-row s-${st}`;
+  row.className=`scent-row frag-picker-item s-${st}`;
   row.dataset.family=frag.family;
   row.dataset.brand=frag.brand;
   row.dataset.roles=frag.roles.join(' ');
-  const syms=frag.roles.map(rid=>{
-    const r=RM[rid];if(!r)return'';
-    return `<span class="s-sym">${r.sym}<span class="s-sym-tip">${r.symLine}</span></span>`;
-  }).join('');
-  const layerChip=frag.layering>=6?`<span class="s-layer-chip">${LW[frag.layering]}</span>`:'';
-  const topNoteHTML=(frag.top||[]).map((n,i)=>`<button class="s-meta-note" data-note="${n.toLowerCase()}">${n}</button>${i<frag.top.length-1?'<span class="s-meta-sep">, </span>':''}`).join('');
-  row.innerHTML=`<div class="s-fdot" style="background:${fm.color}"></div>
-    <div class="s-info"><button class="s-name-btn">${frag.name}</button><div class="s-meta">${topNoteHTML}</div></div>
-    <div class="s-syms">${syms}${layerChip}</div>`;
-  // Family hover via fdot
-  const fdot=row.querySelector('.s-fdot');
-  fdot.addEventListener('mouseenter',()=>highlightRows('family',frag.family));
-  fdot.addEventListener('mouseleave',()=>highlightRows('family',null));
-  // Clickable top notes
-  row.querySelectorAll('.s-meta-note').forEach(btn=>{
-    btn.addEventListener('click',e=>{
-      e.stopPropagation();
-      const note=NI_MAP[btn.dataset.note];
-      if(note)openNotePopup(note,btn);
-    });
-  });
+  const famLabel=(FAM[frag.family]||{label:frag.family}).label;
+  row.innerHTML=`<div class="frag-picker-dot" style="background:${fm.color}"></div>
+    <div>
+      <div class="frag-picker-item-name">${frag.name}</div>
+      <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
+    </div>`;
 }
 function updBC(brand,key){
   const frags=CAT.filter(f=>f.brand===brand);
@@ -4243,6 +4323,8 @@ function computeProfile(frag){
 
 /* ── Scoring helpers ── */
 function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
+function _simLabel(pct){if(pct<25)return'Very different';if(pct<50)return'Contrast well';if(pct<75)return'Related';return'Almost the same';}
+function _layLabel(pct){if(pct<25)return"Don't layer";if(pct<50)return'Not ideal';if(pct<75)return'Ok together';return'Great together';}
 
 function getVerdict(matchPct,layerPct,fa,fb){
   const shortA=fa.name.split(' ')[0],shortB=fb.name.split(' ')[0];
@@ -4334,70 +4416,75 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
   const shMid=aMid.filter(n=>bMid.includes(n));
   const shBase=aBase.filter(n=>bBase.includes(n));
   const cap=n=>n.charAt(0).toUpperCase()+n.slice(1);
-  const pills=(notes,cls='')=>notes.length?notes.map(n=>`<span class="cmp-note-pill${cls}">${cap(n)}</span>`).join(''):`<span class="cmp-grid-empty">—</span>`;
   const shortA=fa.name.split(' ').slice(0,2).join(' ');
   const shortB=fb.name.split(' ').slice(0,2).join(' ');
   const onlyATop=aTop.filter(n=>!bTop.includes(n)),onlyAMid=aMid.filter(n=>!bMid.includes(n)),onlyABase=aBase.filter(n=>!bBase.includes(n));
   const onlyBTop=bTop.filter(n=>!aTop.includes(n)),onlyBMid=bMid.filter(n=>!aMid.includes(n)),onlyBBase=bBase.filter(n=>!aBase.includes(n));
+  // Render notes as hyperlinks (same style as detail sheet)
+  const links=(notes,isSh=false)=>notes.length
+    ?notes.map(n=>{const key=n;const ni=NI_MAP[key];return ni?`<button class="note-link${isSh?' shared':''}" data-note="${cap(n)}">${cap(n)}</button>`:cap(n);}).join(', ')
+    :'<span style="color:var(--g300);font-size:.75rem">—</span>';
+  function noteRow(layerLabel,onlyA,shared,onlyB){
+    return`<div class="cmp-grid-row three">
+      <div class="cmp-grid-cell cmp-grid-cell-a">${links(onlyA)}</div>
+      <div class="cmp-grid-cell cell-center">
+        <div class="cmp-grid-layer-lbl">${layerLabel}</div>
+        ${links(shared,true)}
+      </div>
+      <div class="cmp-grid-cell cmp-grid-cell-b">${links(onlyB)}</div>
+    </div>`;
+  }
   return`<div class="cmp-notes-v2">
     <div class="cmp-notes-v2-label">Notes</div>
-    <div class="cmp-grid-col-heads">
-      <div></div>
+    <div class="cmp-grid-col-heads three">
       <div class="cmp-grid-col-head" style="color:${caAccent}">${shortA}</div>
       <div class="cmp-grid-col-head" style="color:var(--g400)">Shared</div>
       <div class="cmp-grid-col-head" style="color:${cbAccent}">${shortB}</div>
     </div>
     <div class="cmp-grid-3x3">
-      <div class="cmp-grid-row">
-        <div class="cmp-grid-row-lbl">Top</div>
-        <div class="cmp-grid-cell">${pills(onlyATop)}</div>
-        <div class="cmp-grid-cell cell-center">${pills(shTop,' shared')}</div>
-        <div class="cmp-grid-cell">${pills(onlyBTop)}</div>
-      </div>
-      <div class="cmp-grid-row">
-        <div class="cmp-grid-row-lbl">Mid</div>
-        <div class="cmp-grid-cell">${pills(onlyAMid)}</div>
-        <div class="cmp-grid-cell cell-center">${pills(shMid,' shared')}</div>
-        <div class="cmp-grid-cell">${pills(onlyBMid)}</div>
-      </div>
-      <div class="cmp-grid-row">
-        <div class="cmp-grid-row-lbl">Base</div>
-        <div class="cmp-grid-cell">${pills(onlyABase)}</div>
-        <div class="cmp-grid-cell cell-center">${pills(shBase,' shared')}</div>
-        <div class="cmp-grid-cell">${pills(onlyBBase)}</div>
-      </div>
+      ${noteRow('Top',onlyATop,shTop,onlyBTop)}
+      ${noteRow('Mid',onlyAMid,shMid,onlyBMid)}
+      ${noteRow('Base',onlyABase,shBase,onlyBBase)}
     </div>
   </div>`;
 }
 
-/* ── Suggestions v2: two columns, attribute tags ── */
+/* ── Mini radar SVG for swap suggestions ── */
+function _miniRadarSvg(frag,accent){
+  const dims=['freshness','sweetness','warmth','intensity','complexity'];
+  const p=computeProfile(frag);
+  const cx=28,cy=28,r=20,n=5;
+  function ap(i,val){const a=(Math.PI*2*i/n)-Math.PI/2;return{x:cx+r*val*Math.cos(a),y:cy+r*val*Math.sin(a)};}
+  const ring=dims.map((_,i)=>ap(i,1));
+  const ringPts=ring.map(pt=>`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ');
+  const midPts=dims.map((_,i)=>ap(i,0.5)).map(pt=>`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ');
+  const polyPts=dims.map((d,i)=>{const pt=ap(i,p[d]);return`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`;}).join(' ');
+  return`<svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="${midPts}" fill="none" stroke="#0E0C0918" stroke-width="0.8"/>
+    <polygon points="${ringPts}" fill="none" stroke="#0E0C0918" stroke-width="0.8"/>
+    <polygon points="${polyPts}" fill="${accent}28" stroke="${accent}" stroke-width="1.4" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+/* ── Suggestions v2: two columns, family + notes + mini radar ── */
 function renderSuggestionsV2(fa,fb,ca,cb){
   function getSugs(anchor,other){
     return CAT.filter(f=>f.id!==anchor.id&&f.id!==other.id)
       .map(f=>({f,score:scoreSimilarity(anchor,f)}))
       .sort((a,b)=>b.score-a.score).slice(0,3);
   }
-  function getAttrs(candidate,ref){
-    const cNotes=[...new Set([...(candidate.top||[]),...(candidate.mid||[]),...(candidate.base||[])].map(n=>n.toLowerCase()))];
-    const rNotes=[...new Set([...(ref.top||[]),...(ref.mid||[]),...(ref.base||[])].map(n=>n.toLowerCase()))];
-    const similar=cNotes.filter(n=>rNotes.includes(n)).slice(0,3).map(n=>n.charAt(0).toUpperCase()+n.slice(1));
-    const different=[];
-    const sillDiff=Math.abs(candidate.sillage-ref.sillage);
-    if(sillDiff>=3)different.push(candidate.sillage>ref.sillage?'Stronger sillage':'Softer sillage');
-    if(candidate.family!==ref.family)different.push((FAM[candidate.family]||{label:candidate.family}).label+' family');
-    const contrastScore=1-(FAM_COMPAT[candidate.family]?.[ref.family]??0.5);
-    const contrasting=contrastScore>0.5?[(FAM[candidate.family]||{label:candidate.family}).label+' contrast']:[];
-    return{similar,different:different.slice(0,2),contrasting};
-  }
-  function sugCard(frag,attrs){
+  function sugCard(frag,accent){
     const fc=getCmpFam(frag.family);
-    const grp=(label,items)=>items.length?`<div class="cmp-attr-group"><div class="cmp-attr-label">${label}</div><div class="cmp-attr-pills">${items.map(a=>`<span class="cmp-attr-pill">${a}</span>`).join('')}</div></div>`:'';
-    const body=grp('≈ Similar',attrs.similar)+grp('↑ Different',attrs.different)+grp('≠ Contrasting',attrs.contrasting)||'<span style="font-size:.7rem;color:var(--g400)">—</span>';
+    const famLabel=(FAM[frag.family]||{label:frag.family}).label;
+    const topNotes=[...(frag.top||[])].slice(0,3).join(', ');
     return`<button class="cmp-sug-card-v2" data-fid="${frag.id}">
-      <div class="cmp-sug-card-v2-head">
-        <span class="cmp-sug-card-dot" style="background:${fc.accent}"></span>
-        <div><div class="cmp-sug-card-name">${frag.name}</div><div class="cmp-sug-card-brand">${frag.brand}</div></div>
-      </div>${body}
+      <div class="cmp-sug-mini-radar">${_miniRadarSvg(frag,fc.accent)}</div>
+      <div class="cmp-sug-card-info">
+        <div class="cmp-sug-card-name">${frag.name}</div>
+        <div class="cmp-sug-card-brand">${frag.brand}</div>
+        <div class="cmp-sug-card-fam">${famLabel}</div>
+        ${topNotes?`<div class="cmp-sug-card-notes">${topNotes}</div>`:''}
+      </div>
     </button>`;
   }
   const sugsA=getSugs(fa,fb),sugsB=getSugs(fb,fa);
@@ -4408,11 +4495,11 @@ function renderSuggestionsV2(fa,fb,ca,cb){
     <div class="cmp-sug-columns">
       <div>
         <div class="cmp-sug-col-head" style="color:${ca.accent}">Swap ${shortA}</div>
-        <div class="cmp-sug-col-items">${sugsA.map(({f})=>sugCard(f,getAttrs(f,fa))).join('')}</div>
+        <div class="cmp-sug-col-items">${sugsA.map(({f})=>sugCard(f,ca.accent)).join('')}</div>
       </div>
       <div>
         <div class="cmp-sug-col-head" style="color:${cb.accent}">Swap ${shortB}</div>
-        <div class="cmp-sug-col-items">${sugsB.map(({f})=>sugCard(f,getAttrs(f,fb))).join('')}</div>
+        <div class="cmp-sug-col-items">${sugsB.map(({f})=>sugCard(f,cb.accent)).join('')}</div>
       </div>
     </div>
   </div>`;
@@ -4525,12 +4612,32 @@ function renderCompareResults(fa,fb){
       <div class="cmp-score-cards">
         <button class="cmp-score-card" id="cmp-score-match">
           <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
-          <div class="cmp-score-label">Match</div>
+          <div class="cmp-score-label">Similar</div>
+          <div class="cmp-score-meter">
+            <div class="cmp-score-meter-track">
+              <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
+              <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,matchPct))}%;background:${matchColor}"></div>
+              <div class="cmp-score-meter-tick" style="left:25%"></div>
+              <div class="cmp-score-meter-tick" style="left:50%"></div>
+              <div class="cmp-score-meter-tick" style="left:75%"></div>
+            </div>
+          </div>
+          <div class="cmp-score-range">${_simLabel(matchPct)}</div>
           <div class="cmp-score-tap">Tap to learn more ↗</div>
         </button>
         <button class="cmp-score-card" id="cmp-score-layer">
           <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
           <div class="cmp-score-label">Layers Well</div>
+          <div class="cmp-score-meter">
+            <div class="cmp-score-meter-track">
+              <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
+              <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,layerPct))}%;background:${layerColor}"></div>
+              <div class="cmp-score-meter-tick" style="left:25%"></div>
+              <div class="cmp-score-meter-tick" style="left:50%"></div>
+              <div class="cmp-score-meter-tick" style="left:75%"></div>
+            </div>
+          </div>
+          <div class="cmp-score-range">${_layLabel(layerPct)}</div>
           <div class="cmp-score-tap">Tap to learn more ↗</div>
         </button>
       </div>
@@ -4551,6 +4658,11 @@ function renderCompareResults(fa,fb){
   document.getElementById('cmp-score-layer')?.addEventListener('click',()=>{
     window.haptic?.('selection');
     openScoreEdu('layer',matchPct,layerPct,fa,fb);
+  });
+
+  // Wire note-link taps in notes grid
+  res.querySelectorAll('.cmp-notes-v2 .note-link').forEach(btn=>{
+    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note));});
   });
 
   // Wire suggestion taps
@@ -4696,6 +4808,18 @@ Promise.all([
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   // Now initialize
   buildCapsule();buildRoles();buildRoleLanding();buildNotes();buildMap3D();buildPairer();initCatalogControls();initCompare();
+  // Pre-fill a high-layering pair so compare isn't blank on load
+  (function(){
+    const sample=CAT.slice(0,40);
+    let bestScore=-1,bestA=null,bestB=null;
+    for(let i=0;i<sample.length;i++){
+      for(let j=i+1;j<sample.length;j++){
+        const s=scoreLayeringPair(sample[i],sample[j]);
+        if(s>bestScore){bestScore=s;bestA=sample[i];bestB=sample[j];}
+      }
+    }
+    if(bestA&&bestB){_selectFragForSlot('a',bestA);_selectFragForSlot('b',bestB);}
+  })();
   // MVP: default to compare
   go('compare',null);
 });
