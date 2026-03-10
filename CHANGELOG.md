@@ -4,6 +4,18 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-10 (pass 6 — CSS cleanup)
+
+### Changed
+- **11-token semantic type scale** — all 69 unique `font-size` values replaced with `var(--fs-*)` tokens (`--fs-caption` through `--fs-hero`) defined in `:root`; rem values chosen so the responsive base (16/17/18px) scales all text automatically
+- **Font-family standardised** — two DM Sans fallback variants collapsed to `"DM Sans",system-ui,sans-serif`; Archivo Black fallback changed from `"DM Sans",sans-serif` to `"Archivo Black",sans-serif` (no secondary face)
+- **4px grid enforced** — all `padding`, `margin`, and `gap` values now divisible by 4; micro-adjustments (2px, 3px) snapped to 0 or nearest 4px step; off-grid values 5px, 6px, 14px, 18px corrected
+- **Duplicate `.cmp-slot-name` rule merged** — two separate declarations for the same selector merged into one; `display:flex;align-items:center;gap:8px` folded into the primary rule
+- **Dead `color:var(--g400)` removed from `.cmp-slot-vs`** — property was immediately overridden on the next line by `color:var(--g300)`
+- **Dead `--col-capsule` variable and `.col-capsule` rule removed** — element no longer exists in HTML
+
+---
+
 ## 2026-03-10 (pass 5)
 
 ### Added
