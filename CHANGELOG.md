@@ -4,6 +4,25 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-10 (pass 5)
+
+### Added
+- **Fragrance 1 / Fragrance 2 labels** — persistent uppercase labels above the picker cards so context is always visible, even after a fragrance is selected
+
+### Changed
+- **cmp-frag-card-name size** — increased from `1.1rem` to `1.4rem` (responsive fallback raised from `.98rem` to `1.15rem`)
+- **"Layers Well" → "Layering"** — score card label and edu overlay updated to the clearer term
+- **Notes grid now uses pills** — all notes in the 3×3 comparison grid render as `.cmp-note-pill` chips (consistent shape/size); notes in the index are tappable buttons, others are non-interactive spans — replaces the previous mixed `note-link` / plain-text pattern
+- **Radar "Character" label centered** — `text-align:center` added to `.cmp-radar-v2-label`
+- **Score cards vertically centered** — added `justify-content:center` to `.cmp-score-card` flex column
+
+### Fixed
+- **Same fragrance blocked in both slots** — `_renderPickerList` now filters out whichever fragrance is already selected in the other slot
+- **Verdict family awareness** — `getVerdict` now checks `fa.family === fb.family`; branches that previously hardcoded "differences in family" now produce contextually correct copy when both fragrances share a family
+- **cmp-sticky-bar ghost space** — bar was `opacity:0` but still occupied ~50px of height; replaced with `max-height:0; overflow:hidden; padding:0` approach so no layout space is consumed when not visible
+
+---
+
 ## 2026-03-10 (pass 4)
 
 ### Fixed
