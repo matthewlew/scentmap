@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   buildCatalog(null);
   buildNotes();
   initCatalogControls();
+  go('catalog');
 
   // 5. Init compare picker if module exists
   import('./compare.js').then(m => m.initComparePicker?.()).catch(() => {});
