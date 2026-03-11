@@ -29,7 +29,7 @@
     <div class="col-main-nav">
       <span class="nav-logo-text">Scentmap</span>
       <div class="nav-right" id="nav-right">
-        <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
+        <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
         <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings">⚙</button>
         <div class="settings-menu" id="settings-menu" hidden>
           <button class="settings-menu-item" onclick="settingsGo('design')"><span class="settings-menu-icon">◎</span>Design System</button>
@@ -139,13 +139,13 @@
           <span class="cmp-picker-label-txt">Fragrance 2</span>
         </div>
         <div class="cmp-header-v2" id="cmp-header">
-          <div class="cmp-frag-card cmp-card-slot" id="cmp-card-a" data-slot="a">
+          <div class="cmp-frag-card cmp-card-slot" id="cmp-card-a" data-slot="a" role="button" tabindex="0" aria-label="Select fragrance one">
             <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance One</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-            <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
-          <div class="cmp-frag-card cmp-card-slot" id="cmp-card-b" data-slot="b">
+          <div class="cmp-frag-card cmp-card-slot" id="cmp-card-b" data-slot="b" role="button" tabindex="0" aria-label="Select fragrance two">
             <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance Two</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-            <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </div>
         <div id="cmp-results"></div>
@@ -157,7 +157,7 @@
   <!-- RIGHT: DETAIL PANEL/SIDESHEET -->
   <div class="col-detail" id="col-detail">
     <div class="detail-topbar">
-      <button class="detail-back" id="detail-back"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <button class="detail-back" id="detail-back"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
       <button class="detail-close-btn" id="detail-close-btn">Close</button>
     </div>
     <div class="detail-inner" id="detail-inner"></div>
@@ -167,10 +167,10 @@
 <div class="detail-scrim" id="detail-scrim"></div>
 
 <!-- MOBILE BOTTOM NAV -->
-<div class="mobile-bottomnav" id="mobile-bottomnav">
-  <button class="mbn-btn active" onclick="goMobile('catalog',this)"><span class="mbn-icon">≡</span>Fragrances</button>
-  <button class="mbn-btn" onclick="goMobile('compare',this)"><span class="mbn-icon">⊕</span>Compare</button>
-  <button class="mbn-btn mbn-more" onclick="openMoreSheet(this)"><span class="mbn-icon">⋯</span>More</button>
+<div class="mobile-bottomnav" id="mobile-bottomnav" role="navigation" aria-label="Main navigation">
+  <button class="mbn-btn active" onclick="goMobile('catalog',this)" aria-label="Fragrances"><span class="mbn-icon" aria-hidden="true">≡</span>Fragrances</button>
+  <button class="mbn-btn" onclick="goMobile('compare',this)" aria-label="Compare"><span class="mbn-icon" aria-hidden="true">⊕</span>Compare</button>
+  <button class="mbn-btn mbn-more" onclick="openMoreSheet(this)" aria-label="More"><span class="mbn-icon" aria-hidden="true">⋯</span>More</button>
 </div>
 
 <!-- MOBILE SHEET STACK -->
@@ -179,12 +179,12 @@
 </div>
 
 <!-- NOTE FLOAT -->
-<div class="note-float-overlay" id="note-float-overlay">
+<div class="note-float-overlay" id="note-float-overlay" role="dialog" aria-modal="true" aria-labelledby="np-name">
   <div class="note-float-bg" id="note-float-bg"></div>
   <div class="note-popup" id="note-popup">
     <div class="nfp-header">
       <div class="np-name" id="np-name"></div>
-      <button class="nfp-close" id="nfp-close">✕</button>
+      <button class="nfp-close" id="nfp-close" aria-label="Close note">✕</button>
     </div>
     <div class="np-family" id="np-family"></div>
     <div class="np-desc"   id="np-desc"></div>
@@ -193,20 +193,20 @@
 </div>
 
 <!-- ONBOARDING -->
-<div class="onboard-overlay" id="onboard-overlay" style="display:none">
+<div class="onboard-overlay" id="onboard-overlay" style="display:none" role="dialog" aria-modal="true" aria-label="Welcome to Scentmap">
   <div class="onboard-card" id="onboard-card"></div>
 </div>
 
 <!-- FRAGRANCE PICKER MODAL -->
-<div class="frag-picker-overlay" id="frag-picker">
+<div class="frag-picker-overlay" id="frag-picker" role="dialog" aria-modal="true" aria-labelledby="frag-picker-title">
   <div class="frag-picker-wrap">
     <div class="frag-picker-header">
       <div class="frag-picker-title" id="frag-picker-title">Select Fragrance</div>
-      <input class="frag-picker-search" id="frag-picker-search" type="text" placeholder="Search by name, brand, or note…" autocomplete="off">
+      <input class="frag-picker-search" id="frag-picker-search" type="text" placeholder="Search by name, brand, or note…" autocomplete="off" aria-label="Search fragrances">
     </div>
-    <div class="frag-picker-list" id="frag-picker-list"></div>
+    <div class="frag-picker-list" id="frag-picker-list" role="listbox"></div>
     <div class="frag-picker-footer">
-      <button class="frag-picker-close" id="frag-picker-close">✕  Close</button>
+      <button class="frag-picker-close" id="frag-picker-close" aria-label="Close fragrance picker">✕  Close</button>
     </div>
   </div>
 </div>
@@ -527,10 +527,10 @@ function pushSheet(renderFn){
   const overlay=document.getElementById('sheet-stack');
   const el=document.createElement('div');
   el.className='sheet'+(isSubNav?' nav':'');
-  el.innerHTML=`<div class="sheet-inner"><div class="sheet-handle"></div>
+  el.innerHTML=`<div class="sheet-inner"><div class="sheet-handle" aria-hidden="true"></div>
     <div class="sheet-topbar">
-      <button class="sheet-back hidden"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
-      <button class="sheet-close">Close</button>
+      <button class="sheet-back hidden"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <button class="sheet-close" aria-label="Close">Close</button>
     </div>
     <div class="sheet-content"></div></div>`;
   const handle=el.querySelector('.sheet-handle');
@@ -598,6 +598,7 @@ function renderFragDetail(container,frag){
       <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
       ${fm.label}
     </div>
+    <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
     ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
     <div class="dc-cmp-cta-label">Compare with</div>
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
@@ -615,6 +616,23 @@ function renderFragDetail(container,frag){
   container.querySelectorAll('.note-link').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note))});
   });
+
+  // Collection action row
+  function renderCollectRow(){
+    const el=container.querySelector(`#dc-collect-${frag.id}`);if(!el)return;
+    const st=gst(frag.id);
+    el.innerHTML='';
+    const wishBtn=document.createElement('button');
+    wishBtn.className='dc-collect-btn'+(st==='wish'?' active':'');
+    wishBtn.innerHTML=`<span class="dc-collect-icon">${st==='wish'?'♥':'♡'}</span> Wishlist`;
+    wishBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='wish'?'none':'wish');refreshAfterStateChange(frag.id);renderCollectRow();});
+    const ownBtn=document.createElement('button');
+    ownBtn.className='dc-collect-btn'+(st==='owned'?' active':'');
+    ownBtn.innerHTML=`<span class="dc-collect-icon">${st==='owned'?'✓':''}</span> ${st==='owned'?'Owned':'Mark owned'}`;
+    ownBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='owned'?'none':'owned');refreshAfterStateChange(frag.id);renderCollectRow();});
+    el.appendChild(wishBtn);el.appendChild(ownBtn);
+  }
+  renderCollectRow();
 
   // Compare CTAs
   _buildCompareCTAs(frag,container.querySelector(`#dc-ctas-${frag.id}`));
@@ -1438,10 +1456,12 @@ function renderCatRow(row,frag,fm){
   row.dataset.brand=frag.brand;
   row.dataset.roles=frag.roles.join(' ');
   const famLabel=(FAM[frag.family]||{label:frag.family}).label;
+  const topNotes=(frag.top||[]).slice(0,3).join(', ');
   row.innerHTML=`<div class="frag-picker-dot" style="background:${fm.color}"></div>
-    <div>
+    <div class="frag-picker-info">
       <div class="frag-picker-item-name">${frag.name}</div>
       <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
+      ${topNotes?`<div class="frag-picker-item-notes">${topNotes}</div>`:''}
     </div>`;
 }
 function updBC(brand,key){
@@ -2955,15 +2975,16 @@ function _fillCard(slot,frag){
   const famLabel=(FAM[frag.family]||{label:frag.family}).label;
   card.classList.add('filled');
   card.style.borderColor=`${fc.accent}40`;
+  card.setAttribute('aria-label',`${frag.name} by ${frag.brand} — tap to change`);
   card.innerHTML=`
     <div class="cmp-frag-card-fam" style="background:${fc.accent}">
-      <span class="cmp-frag-card-dot"></span>${famLabel}
+      <span class="cmp-frag-card-dot" aria-hidden="true"></span>${famLabel}
     </div>
     <div class="cmp-frag-card-name">${frag.name}</div>
     <div class="cmp-frag-card-brand">${frag.brand}</div>
     ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
-    <button class="cmp-card-clear" data-slot="${slot}">✕</button>
-    <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    <button class="cmp-card-clear" data-slot="${slot}" aria-label="Remove ${frag.name}">✕</button>
+    <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
   card.querySelector('.cmp-card-clear')?.addEventListener('click',e=>{e.stopPropagation();clearCmpSlot(slot);});
 }
 function _resetCard(slot){
@@ -2972,9 +2993,10 @@ function _resetCard(slot){
   card.classList.remove('filled');
   card.style.borderColor='';
   const label=slot==='a'?'Fragrance One':'Fragrance Two';
+  card.setAttribute('aria-label',`Select ${label}`);
   card.innerHTML=`
     <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">${label}</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-    <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 }
 function initCompare(){
   ['a','b'].forEach(slot=>{
@@ -2997,6 +3019,64 @@ window.clearCmpSlot=function(slot){
   if(res)res.innerHTML='';
   if(window._cmpStickyObs)window._cmpStickyObs.disconnect();
 };
+
+/* ══ KEYBOARD & FOCUS MANAGEMENT ═══════════════════════════════════ */
+// Track last focused element before opening overlays, for focus return
+let _lastFocusedEl=null;
+
+function _trapFocus(el){
+  const focusable=el.querySelectorAll('button,input,select,textarea,[tabindex]:not([tabindex="-1"])');
+  if(!focusable.length)return;
+  _lastFocusedEl=document.activeElement;
+  focusable[0].focus();
+}
+function _returnFocus(){
+  if(_lastFocusedEl&&typeof _lastFocusedEl.focus==='function'){
+    _lastFocusedEl.focus();
+    _lastFocusedEl=null;
+  }
+}
+
+// Augment open/close functions to manage focus
+const _origOpenNotePopup=window.openNoteFloat;
+const _origCloseNotePopup=closeNotePopup;
+
+// Patch note popup to trap focus and return on close
+(function(){
+  const nfpClose=document.getElementById('nfp-close');
+  const orig=nfpClose._closeHandler;
+  // Override closeNotePopup to also return focus
+  const _origClose=closeNotePopup;
+  window.closeNotePopup=function(){
+    _origClose();
+    _returnFocus();
+  };
+  nfpClose.removeEventListener('click',_origClose);
+  nfpClose.addEventListener('click',window.closeNotePopup);
+  document.getElementById('note-float-bg').removeEventListener('click',_origClose);
+  document.getElementById('note-float-bg').addEventListener('click',window.closeNotePopup);
+})();
+
+// Global Escape key handler — closes topmost open modal/overlay
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  // Score edu overlay (highest z-index)
+  const edu=document.getElementById('cmp-edu-overlay');
+  if(edu&&edu.classList.contains('open')){closeScoreEdu();return;}
+  // Fragrance picker
+  const picker=document.getElementById('frag-picker');
+  if(picker&&picker.classList.contains('open')){_closeFragPicker();_returnFocus();return;}
+  // Note popup
+  const noteOverlay=document.getElementById('note-float-overlay');
+  if(noteOverlay&&noteOverlay.classList.contains('open')){
+    (window.closeNotePopup||closeNotePopup)();return;
+  }
+  // Mobile sheet stack
+  if(sheetStack.length>0){popSheet();return;}
+  // Desktop detail panel
+  const detail=document.getElementById('col-detail');
+  if(detail&&detail.classList.contains('open')){closeDesktopDetail();return;}
+});
 
 /* ══ INIT ═══════════════════════════════════════════════════════════ */
 // Load data from JSON files
