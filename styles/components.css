@@ -2260,3 +2260,327 @@ button.cmp-note-pill:hover {
   color: var(--text-secondary);
   line-height: var(--lh-normal);
 }
+
+/* ══ ONBOARDING OVERLAY ══ */
+
+.onboard-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: var(--scrim-dark);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.onboard-card {
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  padding: 32px 28px;
+  max-width: 460px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
+}
+
+.onboard-card::-webkit-scrollbar {
+  display: none;
+}
+
+/* Onboarding typography */
+.onb-title {
+  font-size: var(--fs-heading);
+  font-weight: 300;
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+  margin-bottom: 8px;
+}
+
+.onb-sub {
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--lh-relaxed);
+  margin-bottom: 24px;
+}
+
+/* Welcome screen paths */
+.onb-paths {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+  margin-bottom: 20px;
+}
+
+.onb-path {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: border-color var(--dur-fast) var(--ease-spring), background var(--dur-fast) var(--ease-spring);
+}
+
+.onb-path:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-primary);
+}
+
+.onb-path-icon {
+  font-size: var(--fs-ui);
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.onb-path-label {
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+  color: var(--text-primary);
+}
+
+.onb-path-desc {
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.onb-skip-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--fs-body-sm);
+  color: var(--text-tertiary);
+  padding: 4px 0;
+  display: block;
+  margin: 8px auto 0;
+  transition: color var(--dur-fast) var(--ease-spring);
+}
+
+.onb-skip-link:hover {
+  color: var(--text-secondary);
+}
+
+/* Collection screen */
+.onb-brand {
+  margin-bottom: 20px;
+}
+
+.onb-brand-name {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.onb-frags {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.onb-frag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-spring);
+  border: 1px solid transparent;
+}
+
+.onb-frag:hover {
+  background: var(--bg-secondary);
+}
+
+.onb-frag.selected {
+  background: var(--bg-secondary);
+  border-color: var(--border-strong);
+}
+
+.onb-frag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+}
+
+.onb-frag-name {
+  flex: 1;
+  font-size: var(--fs-body-sm);
+  color: var(--text-primary);
+}
+
+.onb-frag-check {
+  font-size: var(--fs-caption);
+  color: var(--text-tertiary);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-spring);
+}
+
+.onb-frag.selected .onb-frag-check {
+  opacity: 1;
+}
+
+.onb-cta {
+  position: sticky;
+  bottom: -32px;
+  margin: 16px -28px -32px;
+  padding: 12px 28px;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-standard);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-sm);
+}
+
+.onb-count {
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+}
+
+.onb-btn {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 8px 16px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-spring);
+}
+
+.onb-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Reveal screen */
+.onb-section-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 20px 0 10px;
+}
+
+.onb-fam-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.onb-fam-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.onb-fam-label {
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.onb-fam-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border-standard);
+  border-radius: var(--radius-micro);
+  overflow: hidden;
+}
+
+.onb-fam-fill {
+  height: 100%;
+  border-radius: var(--radius-micro);
+  transition: width 0.4s var(--ease-spring);
+}
+
+.onb-fam-count {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--text-tertiary);
+  width: 16px;
+  text-align: right;
+}
+
+.onb-notes-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.onb-note-chip {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  padding: 3px 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+}
+
+.onb-note-chip.hi {
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--bg-primary));
+  border-color: color-mix(in srgb, var(--accent-primary) 25%, transparent);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.onb-reveal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.onb-reveal-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-spring);
+}
+
+.onb-reveal-btn.primary {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: none;
+}
+
+.onb-reveal-btn.secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border-standard);
+}
+
+.onb-reveal-btn:hover {
+  opacity: 0.82;
+}

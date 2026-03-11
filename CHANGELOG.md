@@ -4,6 +4,14 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (onboarding CSS)
+
+### Fixed
+- **Onboarding overlay CSS** — `onboard-overlay` and `onboard-card` had no CSS (rendered in-flow as a transparent static element); added full stylesheet: overlay is now a fixed full-screen modal with dark scrim; card has border-radius, shadow, and scroll
+- **Onboarding all screens** — all `onb-*` classes were unstyled; added CSS for: `onb-title`, `onb-sub`, `onb-paths`, `onb-path` (with icon/label/desc), `onb-skip-link`; collection screen: `onb-brand`, `onb-frag` (selected state + checkmark), `onb-cta` (sticky bottom bar), `onb-btn` (primary action); reveal screen: `onb-fam-bars` (colored bar chart), `onb-note-chip` (`.hi` highlighted chips), `onb-reveal-btn` (primary/secondary variants)
+
+---
+
 ## 2026-03-11 (detail panel CSS + catalog layout)
 
 ### Fixed
