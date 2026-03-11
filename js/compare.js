@@ -65,6 +65,7 @@ function _fillList(slot, query) {
     btn.addEventListener('click', () => {
       _selectFragForSlot(slot, frag);
       _updateSlotCard(slot, frag);
+      _closePicker();
       _fillList(slot, ''); // refresh to show new selection highlight
       buildCompare();
     });
@@ -226,6 +227,7 @@ function _renderEmpty(results) {
       <div class="cmp-sug-score" style="color:${fc.accent}">${bestScore}</div>`;
     card.addEventListener('click', () => {
       _selectFragForSlot(i === 0 ? 'a' : 'b', f);
+      _closePicker();
       buildCompare();
     });
     sugWrap.appendChild(card);
