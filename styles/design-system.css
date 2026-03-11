@@ -1,0 +1,251 @@
+/* ══════════════════════════════════════════════════════════════
+   SCENTMAP DESIGN SYSTEM
+
+   Organizational structure:
+   1. Reset & base resets
+   2. Primitive color tokens (base palette)
+   3. Family color tokens (fragrance-semantic colors)
+   4. Typography scale & tokens
+   5. Spacing scale (4px grid)
+   6. Border-radius scale
+   7. Transition/animation tokens
+   8. Overlay & transparency tokens
+   9. Semantic color tokens (derived from primitives)
+   10. Base styles (html, body, button, input)
+   11. Semantic utility classes (text, transitions)
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── 1. RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:inherit}
+
+/* ── 2. PRIMITIVE COLOR TOKENS ── */
+:root{
+  /* Warm paper palette */
+  --paper:   #F5F2EC;
+  --ink:     #0E0C09;
+  --stone:   #EAE6DE;
+  --resin:   #8C5E30;
+
+  /* Grayscale 8-step */
+  --g700:    #2E2A22;
+  --g600:    #50493C;
+  --g500:    #6B6356;
+  --g450:    #7C7468;
+  --g400:    #9A9180;
+  --g300:    #C4BC9E;
+  --g200:    #DDD8CE;
+  --g100:    #EAE6DE;
+
+  /* Layout sizing */
+  --col-detail: 340px;
+  --chart-max:  520px;
+}
+
+/* ── 3. FAMILY COLOR TOKENS ── */
+:root{
+  /* Fragrance family semantic colors */
+  --fam-woody:    #6B4E2A;
+  --fam-floral:   #B5536E;
+  --fam-amber:    #A06800;
+  --fam-citrus:   #8A7000;
+  --fam-leather:  #3E1A08;
+  --fam-oud:      #1E0A12;
+  --fam-green:    #2E5C20;
+  --fam-chypre:   #3C5C2A;
+  --fam-gourmand: #7C3E18;
+  --fam-default:  #888;          /* Fallback for undefined families */
+}
+
+/* ── 4. TYPOGRAPHY TOKENS ── */
+:root{
+  /* Font families */
+  --font-serif:   "Source Serif 4", Georgia, serif;
+  --font-sans:    "DM Sans", system-ui, sans-serif;
+  --font-mono:    "SF Mono", Menlo, monospace;
+  --font-display: "Archivo Black", sans-serif;
+
+  /* Font sizes (base: 16px desktop / 17px tablet / 18px mobile) */
+  --fs-caption:   0.6rem;    /* 9.6–10.8px */
+  --fs-label:     0.65rem;   /* 10.4–11.7px */
+  --fs-meta:      0.72rem;   /* 11.5–13px */
+  --fs-body-sm:   0.78rem;   /* 12.5–14px */
+  --fs-body:      0.875rem;  /* 14–15.8px */
+  --fs-ui:        1rem;      /* 16–18px */
+  --fs-title:     1.4rem;    /* 22.4–25.2px */
+  --fs-display:   1.6rem;    /* 25.6–28.8px */
+  --fs-heading:   2rem;      /* 32–36px */
+  --fs-score:     2.8rem;    /* 44.8–50.4px */
+  --fs-hero:      3rem;      /* 48–54px */
+
+  /* Line heights */
+  --lh-tight:     1;
+  --lh-normal:    1.55;
+  --lh-relaxed:   1.7;
+  --lh-spacious:  1.75;
+
+  /* Letter spacing */
+  --ls-tight:     -0.02em;
+  --ls-normal:    0;
+  --ls-wide:      0.1em;    /* UI label uppercase */
+}
+
+/* ── 5. SPACING SCALE (4px grid) ── */
+:root{
+  --sp-xs:   4px;
+  --sp-sm:   8px;
+  --sp-md:   12px;
+  --sp-lg:   16px;
+  --sp-xl:   20px;
+  --sp-2xl:  24px;
+  --sp-3xl:  32px;
+  --sp-4xl:  48px;
+}
+
+/* ── 6. BORDER-RADIUS SCALE ── */
+:root{
+  --radius-micro:  2px;    /* Fine details, borders */
+  --radius-small:  3px;    /* Badges, chips, code blocks */
+  --radius-sm:     5px;    /* Tab pills */
+  --radius:        6px;    /* Standard buttons, inputs */
+  --radius-lg:     8px;    /* Cards, panels */
+  --radius-xl:     10px;   /* Large cards, sections */
+  --radius-pill:   20px;   /* Pill buttons, role chips */
+  --radius-circle: 50%;    /* Circular dots, indicators */
+}
+
+/* ── 7. TRANSITION/ANIMATION TOKENS ── */
+:root{
+  --ease-spring:  cubic-bezier(0.16, 1, 0.3, 1);
+
+  --dur-micro:    0.1s;     /* Instant feedback (hover) */
+  --dur-fast:     0.15s;    /* Quick interactions (border, bg) */
+  --dur-standard: 0.28s;    /* Panel open/close, transform */
+  --dur-slow:     0.48s;    /* Detail panel expand, major animation */
+}
+
+/* ── 8. OVERLAY & TRANSPARENCY TOKENS ── */
+:root{
+  --scrim-dark:    rgba(0, 0, 0, 0.18);
+  --scrim-tooltip: rgba(8, 8, 18, 0.93);
+
+  --fade-subtle:   rgba(14, 12, 9, 0.06);     /* Code background */
+  --fade-light:    rgba(14, 12, 9, 0.07);     /* Border */
+  --fade-medium:   rgba(14, 12, 9, 0.1);      /* Shadow */
+  --fade-strong:   rgba(14, 12, 9, 0.14);     /* Strong shadow */
+}
+
+/* ── 9. SEMANTIC COLOR TOKENS (derived from primitives) ── */
+:root{
+  /* Text colors */
+  --text-primary:     var(--ink);
+  --text-secondary:   var(--g500);
+  --text-tertiary:    var(--g400);
+  --text-disabled:    var(--g300);
+
+  /* Background colors */
+  --bg-primary:       var(--paper);
+  --bg-secondary:     var(--stone);
+  --bg-tertiary:      var(--g100);
+
+  /* Mobile-specific backgrounds */
+  --mobile-nav-bg:    var(--paper);
+
+  /* Surface & border colors */
+  --surface-bg:       var(--paper);
+  --border-strong:    var(--ink);
+  --border-standard:  var(--g200);
+  --border-subtle:    var(--g100);
+
+  /* Accent colors */
+  --accent-primary:   var(--resin);
+  --accent-default:   var(--fam-default);
+}
+
+/* ── 10. BASE STYLES ── */
+html {
+  font-size: 16px;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  font-feature-settings: "onum" 1, "kern" 1;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 11. SEMANTIC UTILITY CLASSES ── */
+
+/* Typography utilities */
+.text-caption {
+  font-size: var(--fs-caption);
+}
+
+.text-label {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+
+.text-meta {
+  font-size: var(--fs-meta);
+}
+
+.text-body-sm {
+  font-size: var(--fs-body-sm);
+}
+
+.text-body {
+  font-size: var(--fs-body);
+}
+
+.text-ui {
+  font-size: var(--fs-ui);
+}
+
+.text-title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+}
+
+.text-display {
+  font-size: var(--fs-display);
+  font-weight: 600;
+}
+
+.text-heading {
+  font-size: var(--fs-heading);
+  font-weight: 900;
+  font-family: var(--font-display);
+}
+
+/* Transition utilities */
+.tr-fast {
+  transition: color var(--dur-fast) var(--ease-spring), background var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
+}
+
+.tr-standard {
+  transition: all var(--dur-standard) var(--ease-spring);
+}
+
+/* Shadow utilities */
+.shadow-sm {
+  box-shadow: 0 1px 3px var(--fade-medium);
+}
+
+.shadow-md {
+  box-shadow: 0 8px 24px var(--fade-medium);
+}
+
+.shadow-lg {
+  box-shadow: 0 8px 32px var(--fade-strong);
+}
