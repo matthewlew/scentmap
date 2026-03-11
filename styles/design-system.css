@@ -102,6 +102,11 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --sp-4xl:  48px;
 }
 
+/* ── 5b. LAYOUT DIMENSIONS ── */
+:root{
+  --col-nav-h: 50px;  /* Height of .col-main-nav sticky header (sp-md + line + sp-sm) */
+}
+
 /* ── 6. BORDER-RADIUS SCALE ── */
 :root{
   --radius-micro:  2px;    /* Fine details, borders */

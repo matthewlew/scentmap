@@ -1724,26 +1724,32 @@ mark.note-match {
 
 #cmp-sticky-bar {
   position: sticky;
-  top: 0;
+  top: var(--col-nav-h);
   z-index: 40;
   display: flex;
   align-items: center;
   gap: var(--sp-sm);
-  padding: var(--sp-sm) 0;
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: var(--sp-lg);
+  /* collapsed — zero layout space when not visible */
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin-bottom: 0;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-4px);
-  transition: opacity var(--dur-fast) var(--ease-spring),
-              transform var(--dur-fast) var(--ease-spring);
+  transition: max-height var(--dur-fast) ease,
+              padding var(--dur-fast) ease,
+              margin-bottom var(--dur-fast) ease,
+              opacity var(--dur-fast) var(--ease-spring);
 }
 
 #cmp-sticky-bar.visible {
+  max-height: 56px;
+  padding: var(--sp-sm) 0;
+  margin-bottom: var(--sp-lg);
   opacity: 1;
   pointer-events: all;
-  transform: translateY(0);
 }
 
 .cmp-sticky-slot {

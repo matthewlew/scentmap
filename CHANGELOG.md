@@ -4,6 +4,12 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (fix: cmp-sticky-bar ghost space and scroll trigger)
+
+### Fixed
+- **cmp-sticky-bar ghost space** — bar was `opacity:0` but still occupied ~50px of height; replaced with `max-height:0; overflow:hidden; padding:0; margin-bottom:0` collapsed state so no layout space is consumed when not visible.
+- **cmp-sticky-bar hidden behind nav** — bar used `top:0` but `.col-main-nav` is also sticky at `top:0` with `z-index:50`; added `--col-nav-h: 50px` layout token to `design-system.css` and set `top: var(--col-nav-h)` so the bar sticks just below the nav when visible.
+
 ## 2026-03-11 (fix: spacing consistency — mobile margins, design token coverage)
 
 ### Fixed
