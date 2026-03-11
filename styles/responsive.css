@@ -273,6 +273,37 @@
     font-size: var(--fs-body-sm);
   }
 
+  /* Catalog layout mobile */
+  .frag-layout {
+    flex-direction: column;
+  }
+
+  .frag-sidebar {
+    display: none;
+  }
+
+  .frag-filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius);
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+
+  .frag-main-top {
+    position: sticky;
+    top: 0;
+  }
+
   /* Catalog section */
   .sec-label {
     font-size: var(--fs-body-sm);
@@ -506,6 +537,62 @@
   }
 
   .cmp-sug-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Compare v2 mobile */
+  .cmp-header-v2 {
+    gap: var(--sp-sm);
+    margin-bottom: var(--sp-xl);
+  }
+
+  .cmp-frag-card {
+    min-height: 100px;
+  }
+
+  .cmp-frag-card-desc {
+    display: none; /* too cramped on mobile */
+  }
+
+  .cmp-score-cards {
+    flex-wrap: wrap;
+    gap: var(--sp-sm);
+  }
+
+  .cmp-score-card {
+    flex: 1;
+    min-width: calc(50% - var(--sp-sm));
+    padding: var(--sp-md) var(--sp-sm);
+  }
+
+  .cmp-score-center {
+    order: 3;
+    flex-basis: 100%;
+    padding: var(--sp-sm) 0;
+  }
+
+  .cmp-score-pct {
+    font-size: var(--fs-heading);
+  }
+
+  .cmp-grid-row.three {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .cmp-grid-cell {
+    padding: var(--sp-sm) var(--sp-xs);
+  }
+
+  .cmp-note-pill {
+    font-size: var(--fs-caption);
+  }
+
+  .cmp-sug-columns {
+    grid-template-columns: 1fr;
+    gap: var(--sp-md);
+  }
+
+  .cmp-edu-grid {
     grid-template-columns: 1fr;
   }
 
