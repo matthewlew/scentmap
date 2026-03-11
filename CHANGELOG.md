@@ -4,6 +4,13 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (profile panel CSS)
+
+### Fixed
+- **Profile panel CSS** — all `prof-*` classes were unstyled; added: `prof-section` (with dividers), `prof-section-label`, `prof-empty` (empty state with CTA), `prof-fam-bars` (colored bar chart), `prof-notes` with `.hi` highlighted chips, `prof-roles` grid (filled vs empty states), `prof-sill-track` with marker dot, `prof-layer-list` (ranked bars), `prof-pair-cards` (insight cards for most-similar and best-layering pairs)
+
+---
+
 ## 2026-03-11 (onboarding CSS)
 
 ### Fixed
