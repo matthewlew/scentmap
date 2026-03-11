@@ -273,6 +273,37 @@
     font-size: var(--fs-body-sm);
   }
 
+  /* Catalog layout mobile */
+  .frag-layout {
+    flex-direction: column;
+  }
+
+  .frag-sidebar {
+    display: none;
+  }
+
+  .frag-filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-sans);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius);
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+
+  .frag-main-top {
+    position: sticky;
+    top: 0;
+  }
+
   /* Catalog section */
   .sec-label {
     font-size: var(--fs-body-sm);

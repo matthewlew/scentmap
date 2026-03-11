@@ -4,6 +4,18 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (catalog layout CSS + filter sidebar)
+
+### Fixed
+- **Catalog layout CSS** — `frag-layout`, `frag-sidebar`, `frag-main`, `frag-main-top`, `frag-title-row`, `frag-mobile-panel`, `frag-filter-toggle`, `cat-search-wrap`, `brand-hdr-btn`, `brand-count-chip`, `brand-n`, `brand-c`, `cat-empty`, `frag-picker-dot`, `frag-picker-item-name`, `frag-picker-item-brand` all had no CSS; the catalog panel now renders a proper two-column layout with sidebar filters on desktop
+- **Sidebar filter tabs** — `cat-state-bar` and `cat-brand-bar` inside `frag-sidebar` are overridden to stack vertically (vs horizontal pill row) with transparent background
+- **Brand count chip spacing** — added `margin-left: 3px` to `brand-count-chip` so counts no longer run directly into brand names
+
+### Added
+- **Responsive catalog filters** — `frag-sidebar` hidden on mobile; `frag-filter-toggle` button visible; `frag-mobile-panel` shows All/Owned/Wishlist + brand tabs on toggle
+
+---
+
 ## 2026-03-11 (accessibility + compare CSS)
 
 ### Fixed
