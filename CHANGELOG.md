@@ -4,6 +4,14 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (fix: spacing consistency — mobile margins, design token coverage)
+
+### Fixed
+- **Critical mobile wide-margin bug.** `responsive.css` was using a 2-value `padding` shorthand (`16px calc(80px + env(...))`) which applied the 80 px nav-clearance value to *both* left and right sides, leaving only 215 px of usable content width on a 375 px screen. Fixed to 3-value shorthand: `var(--sp-md) var(--sp-lg) calc(80px + ...)` — content is now 343 px wide.
+- **Detail panel excessive horizontal padding.** `.detail-inner` had `padding: 16px 60px`; corrected to `var(--sp-lg) var(--sp-2xl)` (16 px / 24 px).
+- **Off-grid spacing values snapped to 4px scale.** Replaced 28 px, 30 px, 6 px, 5 px, 10 px values throughout `components.css` with adjacent design tokens (`--sp-3xl`, `--sp-md`, `--sp-sm`, `--sp-xs`).
+- **Token coverage.** Converted ~60 inline `px` spacing values across `components.css` and `responsive.css` to use design-system tokens (`--sp-*`), eliminating drift between components.
+
 ## 2026-03-11 (ux: drum-roller picker — independent columns, auto-select on center)
 
 ### Changed
