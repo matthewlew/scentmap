@@ -4,6 +4,21 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (refactor: extract JS, clean up project structure)
+
+### Changed
+- Extracted ~2,076 lines of inline JS from `index.html` to `js/app.js` — `index.html` is now HTML-only (~180 lines)
+- Removed 246 lines of dead inline data arrays (`ROLES[]`, `CAT[]`, `NI[]`) — data is loaded exclusively from JSON files at startup
+- Removed dev seed `setState` call that pre-populated owned state in-memory
+- Updated `CLAUDE.md` to reflect new structure, corrected data format notes and state persistence docs
+
+### Removed
+- Root `app.js` (3,947-line stale extraction attempt, never linked to the page)
+- Empty directories `src/`, `css/`, `design-system/` from an abandoned restructure
+- `data/scents.json` (72-entry flat file superseded by `data/scents/` per-brand files with 183 total entries)
+
+---
+
 ## 2026-03-11 (refactor: remove unused panels and dead code)
 
 ### Removed

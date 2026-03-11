@@ -7,7 +7,9 @@ This file describes the development workflow and conventions for the Scentmap pr
 ## Project structure
 
 ```
-index.html          HTML structure and inline JS
+index.html          HTML structure only (~180 lines, no inline JS)
+js/
+  app.js            All application logic (~1,950 lines)
 styles/
   design-system.css Design tokens (colors, spacing, typography, breakpoints)
   components.css    Component styles
@@ -15,10 +17,10 @@ styles/
   responsive.css    Responsive design overrides
 data/
   roles.json        8 fragrance roles (id, name, sym, desc)
-  notes.json        Note reference index (~96 entries)
+  notes.json        Note reference index (177 entries)
   scents-index.json Brand list used to fan out scent fetches
   scents/
-    byredo.json     Per-brand fragrance arrays
+    byredo.json     Per-brand fragrance arrays (183 total across all brands)
     diptyque.json
     ...
 CHANGELOG.md        Feature log — updated on every commit
@@ -37,6 +39,7 @@ The preview server serves from `/tmp/scentmap-copy/` on port 3000.
 ```bash
 cp /Users/matthewlewair/Documents/scentmap/index.html /tmp/scentmap-copy/index.html
 cp -r /Users/matthewlewair/Documents/scentmap/styles /tmp/scentmap-copy/
+cp -r /Users/matthewlewair/Documents/scentmap/js /tmp/scentmap-copy/
 ```
 
 **Cache-bust the browser after syncing:**
@@ -52,31 +55,32 @@ Use `preview_eval` with `location.href = 'http://localhost:3000/?v=' + Date.now(
 
 **Every commit must include a CHANGELOG.md update.** No exceptions.
 
-1. Make and test changes in `index.html` and/or `styles/`
+1. Make and test changes in `index.html`, `js/app.js`, and/or `styles/`
 2. Sync to dev server:
    ```bash
    cp /Users/matthewlewair/Documents/scentmap/index.html /tmp/scentmap-copy/index.html
    cp -r /Users/matthewlewair/Documents/scentmap/styles /tmp/scentmap-copy/
+   cp -r /Users/matthewlewair/Documents/scentmap/js /tmp/scentmap-copy/
    ```
 3. Cache-bust and verify in preview (screenshot + functional checks)
 4. **Update `CHANGELOG.md`** — add entries under a dated `## YYYY-MM-DD` section:
    - `### Added` for new features
    - `### Changed` for behaviour/visual changes
    - `### Fixed` for bug fixes
-5. Commit changed files (`index.html`, `styles/*`, `CHANGELOG.md`)
+5. Commit changed files (`index.html`, `js/app.js`, `styles/*`, `CHANGELOG.md`)
 
 ---
 
 ## Architecture notes
 
-- **HTML + separate CSS** — `index.html` contains HTML structure and inline JS. All styling is in `styles/` directory organized by concern (design system, components, layout, responsive).
+- **HTML + JS + CSS separated** — `index.html` is HTML structure only (~180 lines). All JS is in `js/app.js`. All styling is in `styles/` organized by concern (design system, components, layout, responsive).
 - **CSS organization** — See "CSS conventions" below for design tokens. Use semantic variables instead of hard-coded values. Consolidate duplicate rules using CSS custom properties.
-- **Data is arrays** — `f.top`, `f.mid`, `f.base` in scent objects are string arrays, not comma-separated strings. Use `(f.top||[]).forEach(...)` not `.split(',')`.
+- **Data is fetched from JSON** — on startup, `js/app.js` fetches `data/roles.json`, `data/notes.json`, and per-brand files from `data/scents/` (via `data/scents-index.json`). `f.top`, `f.mid`, `f.base` are comma-separated strings; split them with `.split(',').map(s=>s.trim())` when you need arrays.
 - **Sheet stack** — mobile bottom sheets use `pushSheet(renderFn)` / `popSheet()` / `closeAllSheets()`. First sheet slides up from bottom; subsequent (sub-nav) sheets get class `.nav` and slide in from the right.
 - **Desktop detail panel** — `pushDesktopDetail(renderFn)` / `openDesktopDetail(renderFn)` / `closeDesktopDetail()`. Use `_renderDeskDetail(true)` to animate on push.
 - **Nav** — `go(id, btn)` for desktop tab navigation; `goMobile(id, btn)` for mobile bottom nav. Both activate the corresponding `#p-{id}` panel.
 - **Catalog controls** — `initCatalogControls()` must be called once during init (after data loads) to wire up All/Owned/Wishlist tabs and the search input. State is tracked in `CAT_STATE_FILTER` and `CAT_ROLE_FILTER`.
-- **Persistence** — `localStorage` keys: `sm_owned` (owned set), `sm_wish` (wishlist set), `sm_roles` (role assignments), `sm_onboarded` (onboarding flag).
+- **State** — Fragrance state (owned/wishlist) is tracked in the in-memory `ST{}` object via `gst(id)` / `setState(id, s)` / `cycleState(id)`. Role assignments are in `RA{}`. No localStorage persistence in current build.
 - **go() tab selector** — the `.tab` deactivation selector excludes `.dc-state-wrap .tab`, `.picker-row .tab`, and `.cat-state-bar .tab` to avoid clearing filter UI on nav.
 
 ---
