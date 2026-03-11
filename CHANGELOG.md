@@ -4,6 +4,14 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (house detail + note popup CSS)
+
+### Fixed
+- **House detail panel** — `house-detail-wrap`, `house-detail-name`, `house-detail-count`, `house-detail-list` had no CSS; panel now shows brand in display type, uppercase count, and a bordered fragrance list
+- **Note popup** — `note-float-overlay`, `note-float-bg`, `note-popup`, `nfp-header`, `nfp-close`, `np-name`, `np-family`, `np-desc`, `np-frags` had no CSS; popup now renders as a positioned floating card (248px) with border, shadow, and catalog list; also styles `np-*` classes reused in note detail push view
+
+---
+
 ## 2026-03-11 (profile panel CSS)
 
 ### Fixed
