@@ -983,9 +983,10 @@ export function buildProfile() {
     `;
     el.querySelector('#prof-add-collection-btn').addEventListener('click', () => {
       localStorage.removeItem('sm_onboarded');
-      OB_SEL.clear();
-      renderOnboardWelcome();
-      document.getElementById('onboard-overlay').style.display = 'flex';
+      import('./onboarding.js').then(({ renderOnboardWelcome }) => {
+        renderOnboardWelcome();
+        document.getElementById('onboard-overlay').style.display = 'flex';
+      });
     });
     return;
   }
