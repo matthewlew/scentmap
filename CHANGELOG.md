@@ -4,6 +4,11 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (style: cmp-frag-card-name display small)
+
+### Changed
+- **cmp-frag-card-name** — switched from `--fs-body` / `font-weight:700` to `--font-display` (Archivo Black) at `--fs-title` (1.4rem) with `--lh-tight` and `--ls-tight` for an editorial display-small treatment.
+
 ## 2026-03-11 (fix: cmp-sticky-bar ghost space and scroll trigger)
 
 ### Fixed
