@@ -4,19 +4,6 @@ All notable changes to Scentmap are documented here.
 
 ---
 
-## 2026-03-10 (pass 7 — CSS consolidation)
-
-### Changed
-- **One dot component** — 6 separate dot class definitions (`.cmp-dd-dot`, `.cmp-chip-dot`, `.cmp-sug-dot`, `.picker-fdot`, `.s-fdot`, `.nf-dot`) collapsed into one shared 8×8px rule; size normalized to 8px across all uses
-- **One search input** — removed dead `.cmp-search` / `.cmp-search-wrap` (old compare UI, only referenced in design system demo); `.cat-search-input` is the sole search pattern
-- **One list row base** — `display:flex; align-items:center; gap:var(--sp-sm); cursor:pointer` extracted into a single shared selector for `.scent-row`, `.picker-row`, `.cmp-dd-item`; each class now only declares its unique properties
-- **Letter-spacing standardised** — all hardcoded `0.06em` and `0.08em` values in uppercase label classes replaced with `var(--ls-wide)` (`.cmp-notes-col-head`, `.cmp-note-layer`, `.cmp-radar-label`, `.dc-nt`, `.dc-ftag`, `.dc-slbl`, `.rlc-count`)
-- **Duplicate rules removed** — `.sec-label`, `.sec-label .sub`, `.brand-hdr`, `.brand-hdr-title`, `.brand-total` removed from `components.css`; authoritative definitions kept in `layout.css`
-- **4px grid fixes** — `.tabs { padding: 3px }` → `var(--sp-xs)` (4px); `.brand-hdr { padding-bottom: 7px }` → `var(--sp-sm)` (8px) in both `layout.css` and `components.css`
-- **components.css reduced** by ~95 lines (1174 → 1079)
-
----
-
 ## 2026-03-10 (pass 6 — CSS cleanup)
 
 ### Changed
