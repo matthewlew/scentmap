@@ -4,6 +4,14 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (UX: collection quick-actions + top notes preview)
+
+### Added
+- **Collection quick-actions in detail panel** — Wishlist and Mark owned buttons now appear directly in the fragrance detail panel (below the family tag). Buttons toggle between inactive (outlined) and active (filled) states and immediately update catalog counts, dots, and capsule. Previously there was no way to add fragrances to owned/wishlist from the detail view.
+- **Top notes preview on catalog rows** — Each fragrance row in the catalog now shows up to 3 top notes as a third line in a muted caption style. Provides at-a-glance context without opening the detail panel.
+
+---
+
 ## 2026-03-11 (picker, carousel, role-landing, modifier CSS)
 
 ### Fixed

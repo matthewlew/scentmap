@@ -598,6 +598,7 @@ function renderFragDetail(container,frag){
       <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
       ${fm.label}
     </div>
+    <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
     ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
     <div class="dc-cmp-cta-label">Compare with</div>
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
@@ -615,6 +616,23 @@ function renderFragDetail(container,frag){
   container.querySelectorAll('.note-link').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note))});
   });
+
+  // Collection action row
+  function renderCollectRow(){
+    const el=container.querySelector(`#dc-collect-${frag.id}`);if(!el)return;
+    const st=gst(frag.id);
+    el.innerHTML='';
+    const wishBtn=document.createElement('button');
+    wishBtn.className='dc-collect-btn'+(st==='wish'?' active':'');
+    wishBtn.innerHTML=`<span class="dc-collect-icon">${st==='wish'?'♥':'♡'}</span> Wishlist`;
+    wishBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='wish'?'none':'wish');refreshAfterStateChange(frag.id);renderCollectRow();});
+    const ownBtn=document.createElement('button');
+    ownBtn.className='dc-collect-btn'+(st==='owned'?' active':'');
+    ownBtn.innerHTML=`<span class="dc-collect-icon">${st==='owned'?'✓':''}</span> ${st==='owned'?'Owned':'Mark owned'}`;
+    ownBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='owned'?'none':'owned');refreshAfterStateChange(frag.id);renderCollectRow();});
+    el.appendChild(wishBtn);el.appendChild(ownBtn);
+  }
+  renderCollectRow();
 
   // Compare CTAs
   _buildCompareCTAs(frag,container.querySelector(`#dc-ctas-${frag.id}`));
@@ -1438,10 +1456,12 @@ function renderCatRow(row,frag,fm){
   row.dataset.brand=frag.brand;
   row.dataset.roles=frag.roles.join(' ');
   const famLabel=(FAM[frag.family]||{label:frag.family}).label;
+  const topNotes=(frag.top||[]).slice(0,3).join(', ');
   row.innerHTML=`<div class="frag-picker-dot" style="background:${fm.color}"></div>
-    <div>
+    <div class="frag-picker-info">
       <div class="frag-picker-item-name">${frag.name}</div>
       <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
+      ${topNotes?`<div class="frag-picker-item-notes">${topNotes}</div>`:''}
     </div>`;
 }
 function updBC(brand,key){
