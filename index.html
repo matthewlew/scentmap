@@ -1359,7 +1359,7 @@ function buildCatalog(roleFilter){
     frags.forEach(frag=>{
       const fm=FAM[frag.family]||{color:'#888'};
       const row=document.createElement('div');row.dataset.id=frag.id;
-      renderCatRow(row,frag,fm);list.appendChild(row);
+      renderCatRow(row,frag,fm,search);list.appendChild(row);
     });
     sec.appendChild(list);body.appendChild(sec);
     // update brand count
@@ -1450,19 +1450,47 @@ function initCatalogControls(){
   }
 }
 
-function renderCatRow(row,frag,fm){
+function renderCatRow(row,frag,fm,search){
   const st=gst(frag.id);
   row.className=`scent-row frag-picker-item s-${st}`;
   row.dataset.family=frag.family;
   row.dataset.brand=frag.brand;
   row.dataset.roles=frag.roles.join(' ');
   const famLabel=(FAM[frag.family]||{label:frag.family}).label;
-  const topNotes=(frag.top||[]).slice(0,3).join(', ');
+
+  // Build notes line — when searching, surface WHERE the match lives
+  let notesHtml='';
+  if(search){
+    const q=search.toLowerCase();
+    const topMatch=(frag.top||[]).find(n=>n.toLowerCase().includes(q));
+    const midMatch=(frag.mid||[]).find(n=>n.toLowerCase().includes(q));
+    const baseMatch=(frag.base||[]).find(n=>n.toLowerCase().includes(q));
+    if(topMatch){
+      // Highlight the matching top note, show others normally
+      const rendered=(frag.top||[]).slice(0,3).map(n=>
+        n.toLowerCase().includes(q)?`<mark class="note-match">${n}</mark>`:n
+      ).join(', ');
+      notesHtml=`<div class="frag-picker-item-notes">${rendered}</div>`;
+    } else if(midMatch||baseMatch){
+      // Replace notes line with a "why matched" badge
+      const tier=midMatch?'Mid':'Base';
+      const note=midMatch||baseMatch;
+      notesHtml=`<div class="frag-picker-item-notes"><span class="match-badge">↳ ${tier} · ${note}</span></div>`;
+    } else {
+      // Name or brand match — show top notes as normal
+      const topNotes=(frag.top||[]).slice(0,3).join(', ');
+      if(topNotes)notesHtml=`<div class="frag-picker-item-notes">${topNotes}</div>`;
+    }
+  } else {
+    const topNotes=(frag.top||[]).slice(0,3).join(', ');
+    if(topNotes)notesHtml=`<div class="frag-picker-item-notes">${topNotes}</div>`;
+  }
+
   row.innerHTML=`<div class="frag-picker-dot" style="background:${fm.color}"></div>
     <div class="frag-picker-info">
       <div class="frag-picker-item-name">${frag.name}</div>
       <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
-      ${topNotes?`<div class="frag-picker-item-notes">${topNotes}</div>`:''}
+      ${notesHtml}
     </div>`;
 }
 function updBC(brand,key){

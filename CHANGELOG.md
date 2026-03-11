@@ -4,6 +4,13 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (ux: search match context in catalog rows)
+
+### Changed
+- **Catalog search now shows where a match was found.** When a query matches a top note, that note is highlighted in accent colour inline with the other top notes. When the match is in a mid or base note (previously invisible), the notes line is replaced with `↳ Mid · NoteName` or `↳ Base · NoteName` so users understand exactly why a result appeared. Name and brand matches continue to show top notes normally. Implemented by passing `search` into `renderCatRow()` and adding `.note-match` / `.match-badge` CSS rules.
+
+---
+
 ## 2026-03-11 (accuracy: note-level radar + label clarity + data confidence)
 
 ### Changed
