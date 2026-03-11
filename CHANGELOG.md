@@ -4,6 +4,22 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (a11y: focus rings, token cleanup, picker modal)
+
+### Added
+- **Keyboard focus ring system** — global `:focus-visible` rule in `design-system.css` uses a double `box-shadow` ring (paper-color gap + resin accent) that respects `border-radius` on all interactive shapes. Inputs override with border-based focus instead. Motivated by accessibility persona: **Nadia, 28, low vision + keyboard navigator** (20/80 corrected vision, Tab/Enter navigation) — previously had zero visible focus indicators.
+- **Focus tokens** — `--focus-ring-color` (`var(--accent-primary)`), `--focus-ring-width` (2px), `--focus-ring-offset` (3px) added to design-system.css section 8.
+- **On-dark overlay tokens** — `--on-dark-text`, `--on-dark-subtle`, `--scrim-control`, `--scrim-control-hover`, `--scrim-control-text` added to replace hardcoded `rgba()` values throughout compare card components.
+- **State color token** — `--wish: var(--fam-floral)` added to semantic tokens; was previously used in three components but never defined, causing silent fallback.
+- **Fragrance picker modal CSS** — `.frag-picker-overlay`, `.frag-picker-wrap`, `.frag-picker-header`, `.frag-picker-title`, `.frag-picker-search`, `.frag-picker-list`, `.frag-picker-footer`, `.frag-picker-close`, `.frag-picker-item` had no styles; picker now renders as a properly contained overlay with dark scrim, card border, and scrollable list. Mobile override positions it as a bottom sheet.
+
+### Fixed
+- **`outline: none` removed from base styles** — `cat-search-input` was stripping all focus styles globally; moved to `:focus-visible` override that uses border-based focus instead.
+- **Hardcoded `rgba()` replaced** — `cmp-frag-card-fam`, `cmp-frag-card-dot`, `cmp-card-clear`, `cmp-note-pill.shared`, `note-popup` box-shadow, `onboard-card` box-shadow all now reference design tokens.
+- **`font-size: 11px` magic number** on `.cmp-card-clear` replaced with `var(--fs-caption)`.
+
+---
+
 ## 2026-03-11 (UX: collection quick-actions + top notes preview)
 
 ### Added

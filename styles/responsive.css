@@ -604,4 +604,17 @@
   .ds-sw {
     width: 72px;
   }
+
+  /* Fragrance picker — bottom sheet on mobile */
+  .frag-picker-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 85vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+  }
 }

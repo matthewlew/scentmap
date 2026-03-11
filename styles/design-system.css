@@ -133,6 +133,18 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --fade-light:    rgba(14, 12, 9, 0.07);     /* Border */
   --fade-medium:   rgba(14, 12, 9, 0.1);      /* Shadow */
   --fade-strong:   rgba(14, 12, 9, 0.14);     /* Strong shadow */
+
+  /* On-dark overlay tokens (text/controls on family-color headers) */
+  --on-dark-text:          rgba(255, 255, 255, 0.92);   /* Primary text on dark bg */
+  --on-dark-subtle:        rgba(255, 255, 255, 0.35);   /* Decorative dot on dark bg */
+  --scrim-control:         rgba(0, 0, 0, 0.12);         /* Overlay button background */
+  --scrim-control-hover:   rgba(0, 0, 0, 0.25);         /* Overlay button hover */
+  --scrim-control-text:    rgba(255, 255, 255, 0.85);   /* Text on overlay button */
+
+  /* Keyboard focus ring tokens */
+  --focus-ring-color:  var(--accent-primary);   /* Resin brown — thematic + sufficient contrast */
+  --focus-ring-width:  2px;
+  --focus-ring-offset: 3px;
 }
 
 /* ── 9. SEMANTIC COLOR TOKENS (derived from primitives) ── */
@@ -160,6 +172,9 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   /* Accent colors */
   --accent-primary:   var(--resin);
   --accent-default:   var(--fam-default);
+
+  /* State colors */
+  --wish:             var(--fam-floral);  /* Wishlist indicator — warm rose */
 }
 
 /* ── 10. BASE STYLES ── */
@@ -226,6 +241,19 @@ html, body {
   font-size: var(--fs-heading);
   font-weight: 900;
   font-family: var(--font-display);
+}
+
+/* ── Keyboard focus ring ──
+   Persona: keyboard-first users with low vision need a visible
+   indicator of which element has focus. Box-shadow approach
+   respects border-radius on all interactive shapes.
+   Individual overrides below replace this with border-based
+   focus for elements that already express state via border.
+*/
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--bg-primary),
+              0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
 }
 
 /* Transition utilities */

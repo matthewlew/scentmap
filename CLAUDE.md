@@ -91,9 +91,21 @@ Use `preview_eval` with `location.href = 'http://localhost:3000/?v=' + Date.now(
 - Transitions: `--ease-spring: cubic-bezier(.16,1,.3,1)` at `--dur-sm` (0.28s), `--dur-md` (0.36s), `--dur-lg` (0.48s)
 - Breakpoints: mobile `<768px`, tablet `768–1099px`, desktop `≥1100px`
 
+**Focus & accessibility tokens:**
+- `--focus-ring-color` (`var(--accent-primary)`), `--focus-ring-width` (2px), `--focus-ring-offset` (3px)
+- Global `:focus-visible` in `design-system.css` uses `box-shadow` double-ring (bg gap + accent ring) — respects `border-radius`
+- Inputs override with border-based focus: `outline: none; box-shadow: none; border-color: var(--border-strong)`
+- On-dark overlay tokens: `--on-dark-text`, `--on-dark-subtle`, `--scrim-control`, `--scrim-control-hover`, `--scrim-control-text`
+- State color: `--wish: var(--fam-floral)` (rose/pink wishlist indicator)
+
+**Accessibility persona (Nadia, 28):**
+Low vision (20/80 corrected), keyboard-first navigator. Relies on Tab/Enter, needs strong focus rings. This persona drives the focus ring system and minimum tap target sizing decisions.
+
 **Guidelines:**
 - Always use CSS custom properties instead of hard-coded values
 - Define all colors, spacing, sizing, and timing in design-system.css
 - Use semantic variable names (e.g., `--text-label` instead of `--font-11px`)
 - Consolidate duplicate rules — if a style appears multiple times, extract to a reusable class or variable
 - No magic numbers — all dimensions should relate to the 4px grid or defined scale
+- Never use raw `rgba()` — use the overlay/transparency tokens from design-system.css
+- Never use `outline: none` on a base style — use `:focus-visible` overrides only where border-based focus replaces the ring
