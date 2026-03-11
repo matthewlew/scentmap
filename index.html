@@ -44,7 +44,7 @@
       </div>
 
       <div class="panel" id="p-scentmap">
-        <div class="logo" style="margin-bottom:8px">Scentmap</div>
+        <div class="logo" style="margin-bottom:6px">Scentmap</div>
         <div class="capsule-tagline" style="margin-bottom:20px">One fragrance per role. Tap to assign.</div>
         <div class="capsule-grid" id="capsule-grid"></div>
       </div>
@@ -693,7 +693,7 @@ function _buildCompareCTAs(frag,container){
       :`<span class="dc-cmp-btn-dot" style="background:${fcSelf.accent}"></span>
         <span class="dc-cmp-btn-name dc-cmp-btn-empty">Compare with ${frag.name}</span>`;
     btn.innerHTML=`
-      <span class="dc-cmp-btn-text" style="display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden">${inner}</span>
+      <span class="dc-cmp-btn-text" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden">${inner}</span>
       <span class="dc-cmp-btn-arrow">→</span>`;
     btn.addEventListener('click',()=>{
       window.haptic?.('medium');
@@ -807,7 +807,7 @@ function renderNoteDetail(container,note){
   container.innerHTML=`<div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
-    ${inf.length?`<div class="np-frags" style="margin-top:16px"><div class="dc-nlbl" style="margin:0 0 8px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
+    ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
   if(inf.length){
     const span=container.querySelector('#_nfl');
     [...inf].sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
@@ -866,7 +866,7 @@ function openNotePopup(note,triggerEl){
   const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
   if(sortedInf.length){
-    const lbl=document.createElement('div');lbl.className='dc-nlbl';lbl.style.marginBottom='8px';lbl.textContent=`In catalog (${sortedInf.length})`;
+    const lbl=document.createElement('div');lbl.className='dc-nlbl';lbl.style.marginBottom='6px';lbl.textContent=`In catalog (${sortedInf.length})`;
     fe.appendChild(lbl);
     const list=document.createElement('div');list.style.cssText='border:1px solid var(--g200);border-radius:8px;overflow:hidden';
     sortedInf.forEach(f=>{
@@ -965,7 +965,7 @@ function renderPicker(container,roleId){
       info.appendChild(nameBtn);
       const br=document.createElement('div');br.className='picker-brand-row';br.textContent=f.brand;info.appendChild(br);
       const fdot=document.createElement('div');fdot.className='picker-fdot';fdot.style.background=fm.color;
-      const removeBtn=document.createElement('button');removeBtn.className='tab';removeBtn.style.cssText='font-size:var(--fs-label);padding:4px 8px';removeBtn.textContent='Remove';
+      const removeBtn=document.createElement('button');removeBtn.className='tab';removeBtn.style.cssText='font-size:.65rem;padding:3px 7px';removeBtn.textContent='Remove';
       removeBtn.addEventListener('click',e=>{
         e.stopPropagation();
         removeFromRole(roleId,fid);
@@ -988,7 +988,7 @@ function renderPicker(container,roleId){
       const card=document.createElement('div');card.className='carousel-card';
       card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
-        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:var(--fs-caption);color:var(--g500)">${fm.label}</span></div>`;
+        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
       card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag))});
       row.appendChild(card);
     });
@@ -1005,7 +1005,7 @@ function renderPicker(container,roleId){
     info.appendChild(nameBtn);
     const br=document.createElement('div');br.className='picker-brand-row';br.textContent=frag.brand;info.appendChild(br);
     const fdot=document.createElement('div');fdot.className='picker-fdot';fdot.style.background=fm.color;
-    const addBtn=document.createElement('button');addBtn.className='tab active';addBtn.style.cssText='font-size:var(--fs-label);padding:4px 8px;background:var(--black);color:#fff;box-shadow:none';addBtn.textContent='Add';
+    const addBtn=document.createElement('button');addBtn.className='tab active';addBtn.style.cssText='font-size:.65rem;padding:3px 7px;background:var(--black);color:#fff;box-shadow:none';addBtn.textContent='Add';
     addBtn.addEventListener('click',e=>{
       e.stopPropagation();
       assignFrag(roleId,frag.id);
@@ -1032,7 +1032,7 @@ function renderPicker(container,roleId){
       const lbl=document.createElement('div');lbl.className='picker-sec-lbl';
       lbl.innerHTML=`All fragrances for this role <span style="color:var(--g400);font-weight:400">(${roleAll.length})</span>`;
       container.appendChild(lbl);
-      const hint=document.createElement('div');hint.style.cssText='font-size:var(--fs-meta);color:var(--g400);margin-bottom:8px;line-height:1.5';
+      const hint=document.createElement('div');hint.style.cssText='font-size:.68rem;color:var(--g400);margin-bottom:10px;line-height:1.5';
       hint.textContent='Tap a fragrance to learn more, or add directly to your capsule.';
       container.appendChild(hint);
       const list=document.createElement('div');list.className='picker-list';
@@ -1200,7 +1200,7 @@ function buildRoles(){
     sec.innerHTML=`<div class="rs-head"><span class="rs-sym">${role.sym}</span><span class="rs-name">${role.name}</span><span class="rs-meta">${meta}</span></div>
       <div class="rs-tagline">${role.desc}</div>
       <div class="rs-body">${role.long}</div>`;
-    if(!frags.length){sec.innerHTML+=`<div style="font-size:var(--fs-body-sm);color:var(--g450);padding:3px 0">No fragrances catalogued for this role.</div>`;body.appendChild(sec);return}
+    if(!frags.length){sec.innerHTML+=`<div style="font-size:.76rem;color:var(--g450);padding:3px 0">No fragrances catalogued for this role.</div>`;body.appendChild(sec);return}
 
     const fk=[...new Set(frags.map(f=>f.family))];
     const fr=document.createElement('div');fr.className='fam-chips';
@@ -1557,10 +1557,10 @@ function openMoreSheet(btn){
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:16px 0 8px">
-      <div style="font-size:var(--fs-label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);padding:0 16px 8px">More</div>
+      <div style="font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);padding:0 16px 10px">More</div>
       ${items.map(it=>`
-        <button onclick="closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))" style="display:flex;align-items:center;gap:16px;width:100%;background:none;border:none;padding:16px;cursor:pointer;font-family:inherit;font-size:var(--fs-body);color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
-          <span style="font-size:var(--fs-title);width:24px;text-align:center;flex-shrink:0">${it.icon}</span>
+        <button onclick="closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
+          <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0">${it.icon}</span>
           ${it.label}
         </button>`).join('')}
     </div>`;
@@ -1705,7 +1705,7 @@ function buildProfile(){
   clSec.className='prof-section';
   clSec.style.cssText='margin-top:24px;border-top:1px solid var(--g200);padding-top:16px';
   clSec.innerHTML=`<div class="prof-section-label">What's new</div>
-    <button style="background:none;border:none;cursor:pointer;font-size:var(--fs-body-sm);color:var(--resin);padding:0;font-family:inherit;font-weight:600" onclick="go('changelog',document.querySelector('.tab[onclick*=changelog]'))">View changelog →</button>`;
+    <button style="background:none;border:none;cursor:pointer;font-size:.78rem;color:var(--resin);padding:0;font-family:inherit;font-weight:600" onclick="go('changelog',document.querySelector('.tab[onclick*=changelog]'))">View changelog →</button>`;
   document.getElementById('profile-body').appendChild(clSec);
 }
 
@@ -1913,14 +1913,14 @@ function buildDesign(){
 
   // ── Type scale
   const TYPE_SCALE=[
-    ['.54rem / 8.6px','Micro — minimum','Layer badges (T/H/B) only','<span class="s-layer-chip" style="display:inline-block;padding:0 4px;background:#8B451322;color:#8B4513;font-size:var(--fs-caption);font-weight:700;letter-spacing:.05em;border-radius:3px">T</span>'],
-    ['.60rem / 9.6px','Caption','Role label, family abbreviation','<span style="font-family:\'DM Sans\',sans-serif;font-size:var(--fs-caption);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)">CASUAL ROLE</span>'],
+    ['.54rem / 8.6px','Micro — minimum','Layer badges (T/H/B) only','<span class="s-layer-chip" style="display:inline-block;padding:1px 5px;background:#8B451322;color:#8B4513;font-size:.54rem;font-weight:700;letter-spacing:.05em;border-radius:3px">T</span>'],
+    ['.60rem / 9.6px','Caption','Role label, family abbreviation','<span style="font-family:\'DM Sans\',sans-serif;font-size:.60rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)">CASUAL ROLE</span>'],
     ['.72rem / 11.5px','Label','Tabs, chips, brand bar','<button class="tab active" style="pointer-events:none">Active</button>'],
-    ['.82rem / 13.1px','Body small','Secondary descriptions, meta','<span style="font-size:var(--fs-body-sm);color:var(--g500)">Byredo · Woody · Sillage 7</span>'],
-    ['.92rem / 14.7px','Body','Primary catalog text, inputs','<span style="font-size:var(--fs-body)">Gypsy Water</span>'],
-    ['1.05rem / 16.8px','Emphasis','Detail panel names, headings','<span style="font-size:var(--fs-ui);font-weight:700;letter-spacing:-.01em">Eleventh Hour</span>'],
-    ['1.5rem / 24px','Display small','Capsule symbols, section heroes','<span style="font-size:var(--fs-display)">♠</span>'],
-    ['2.1rem+','Display','Hero headings (Archivo Black only)','<span style="font-family:\'Archivo Black\',sans-serif;font-size:var(--fs-display);letter-spacing:-.02em;line-height:1">Compare</span>'],
+    ['.82rem / 13.1px','Body small','Secondary descriptions, meta','<span style="font-size:.82rem;color:var(--g500)">Byredo · Woody · Sillage 7</span>'],
+    ['.92rem / 14.7px','Body','Primary catalog text, inputs','<span style="font-size:.92rem">Gypsy Water</span>'],
+    ['1.05rem / 16.8px','Emphasis','Detail panel names, headings','<span style="font-size:1.05rem;font-weight:700;letter-spacing:-.01em">Eleventh Hour</span>'],
+    ['1.5rem / 24px','Display small','Capsule symbols, section heroes','<span style="font-size:1.5rem">♠</span>'],
+    ['2.1rem+','Display','Hero headings (Archivo Black only)','<span style="font-family:\'Archivo Black\',sans-serif;font-size:1.8rem;letter-spacing:-.02em;line-height:1">Compare</span>'],
   ];
 
   // ── Spacing scale
@@ -2031,17 +2031,17 @@ function buildDesign(){
 
       ${sublbl('Font Families')}
       ${demo('Font families — 3 max, each with a specific role',`
-        <div style="margin-bottom:16px">
-          <div style="font-family:'Archivo Black',sans-serif;font-size:var(--fs-display);letter-spacing:-.02em;line-height:1.1">Archivo Black</div>
-          <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-top:4px">Display only — hero headings, "Compare", onboarding titles</div>
+        <div style="margin-bottom:14px">
+          <div style="font-family:'Archivo Black',sans-serif;font-size:1.5rem;letter-spacing:-.02em;line-height:1.1">Archivo Black</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-top:4px">Display only — hero headings, "Compare", onboarding titles</div>
         </div>
-        <div style="margin-bottom:16px">
-          <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-ui);font-weight:600">DM Sans — UI System Font</div>
-          <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-top:4px">All labels, tabs, chips, badges, buttons, navigation</div>
+        <div style="margin-bottom:14px">
+          <div style="font-family:'DM Sans',sans-serif;font-size:1.1rem;font-weight:600">DM Sans — UI System Font</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-top:4px">All labels, tabs, chips, badges, buttons, navigation</div>
         </div>
         <div>
-          <div style="font-family:'Source Serif 4',Georgia,serif;font-size:var(--fs-ui);font-style:italic">Source Serif 4 — Body &amp; Content</div>
-          <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-top:4px">Descriptions, long-form text, fragrance notes body copy</div>
+          <div style="font-family:'Source Serif 4',Georgia,serif;font-size:1rem;font-style:italic">Source Serif 4 — Body &amp; Content</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-top:4px">Descriptions, long-form text, fragrance notes body copy</div>
         </div>
       `)}
 
@@ -2055,26 +2055,26 @@ function buildDesign(){
           <td style="white-space:nowrap">${ex}</td>
         </tr>`).join('')}
       </table>
-      <div style="margin-top:12px;font-size:var(--fs-body-sm);color:var(--g600);line-height:1.6">
+      <div style="margin-top:12px;font-size:.78rem;color:var(--g600);line-height:1.6">
         <strong>Problem:</strong> Current codebase has 30+ distinct font-size values between <span class="ds-code">.54rem</span> and <span class="ds-code">.94rem</span> — with sizes like <span class="ds-code">.58rem</span>, <span class="ds-code">.59rem</span>, <span class="ds-code">.60rem</span>, <span class="ds-code">.62rem</span>, <span class="ds-code">.63rem</span>, <span class="ds-code">.64rem</span>, <span class="ds-code">.65rem</span>, <span class="ds-code">.66rem</span> — these are visually indistinguishable. Consolidate to the 8 steps above.
       </div>
 
       ${sublbl('Letter-spacing — current 10+ values, propose 4')}
       ${demo('Tracking scale',`
         <div class="ds-demo-row">
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);letter-spacing:0;font-weight:500">No tracking — body text</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.72rem;letter-spacing:0;font-weight:500">No tracking — body text</span>
           <span class="ds-code">0</span>
         </div>
         <div class="ds-demo-row">
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);letter-spacing:.04em;font-weight:600">Slight — chip text</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.72rem;letter-spacing:.04em;font-weight:600">Slight — chip text</span>
           <span class="ds-code">.04em</span>
         </div>
         <div class="ds-demo-row">
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-caption);letter-spacing:.1em;font-weight:700;text-transform:uppercase">Section Label</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.60rem;letter-spacing:.1em;font-weight:700;text-transform:uppercase">Section Label</span>
           <span class="ds-code">.10em uppercase</span>
         </div>
         <div class="ds-demo-row">
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);letter-spacing:.18em;font-weight:700;text-transform:uppercase">SCENTMAP LOGO</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.72rem;letter-spacing:.18em;font-weight:700;text-transform:uppercase">SCENTMAP LOGO</span>
           <span class="ds-code">.18em uppercase</span>
           <span class="ds-badge ds-bn">Logo only</span>
         </div>
@@ -2084,7 +2084,7 @@ function buildDesign(){
     <!-- Spacing -->
     <div class="ds-section" id="ds-spacing">
       <div class="ds-section-hd"><span class="ds-section-n">§1.3</span><span class="ds-section-t">Spacing</span></div>
-      <div style="margin-bottom:16px;font-size:var(--fs-body-sm);color:var(--g600)">All spacing uses a <strong>4px base grid.</strong> Never use arbitrary values. Approved tokens: 4, 8, 12, 16, 20, 24, 32, 48px.</div>
+      <div style="margin-bottom:16px;font-size:.80rem;color:var(--g600)">All spacing uses a <strong>4px base grid.</strong> Never use arbitrary values. Approved tokens: 4, 8, 12, 16, 20, 24, 32, 48px.</div>
       ${SPACING.map(s=>`<div class="ds-space-row">
         <span class="ds-space-lbl">${s}px</span>
         <div class="ds-space-bar" style="width:${s*3}px"></div>
@@ -2099,7 +2099,7 @@ function buildDesign(){
       ${sublbl('Border Styles in codebase')}
       <table class="ds-type-tbl">
         ${BORDERS.map(([val,use])=>`<tr>
-          <td style="padding:8px"><div style="width:100%;height:0;${val.replace('1px','border-top:1px').replace('1.5px','border-top:1.5px').replace('2px','border-top:2px')}"></div></td>
+          <td style="padding:10px 8px"><div style="width:100%;height:0;${val.replace('1px','border-top:1px').replace('1.5px','border-top:1.5px').replace('2px','border-top:2px')}"></div></td>
           <td class="ds-type-mono">${val}</td>
           <td class="ds-type-use">${use}</td>
         </tr>`).join('')}
@@ -2113,7 +2113,7 @@ function buildDesign(){
           <div class="ds-radius-use">${name}</div>
         </div>`).join('')}
       </div>
-      <div style="margin-top:12px;padding:12px 16px;border-radius:8px;background:var(--stone);font-size:var(--fs-body-sm);color:var(--g600);line-height:1.6">
+      <div style="margin-top:12px;padding:12px 16px;border-radius:8px;background:var(--stone);font-size:.78rem;color:var(--g600);line-height:1.6">
         <strong>Proposed 5-value scale:</strong> <span class="ds-code">3px</span> micro badges · <span class="ds-code">6px</span> tabs, small actions · <span class="ds-code">8px</span> cards, inputs, dropdowns · <span class="ds-code">20px</span> pill chips · <span class="ds-code">50%</span> dots<br>
         <strong>Consolidate:</strong> 5px → 6px, 7px → 8px, 10px → 8px, 14px stays (sheets), 16/18px (onboarding) → 14px
       </div>
@@ -2126,22 +2126,22 @@ function buildDesign(){
     <!-- Buttons -->
     <div class="ds-section" id="ds-buttons">
       <div class="ds-section-hd"><span class="ds-section-n">§2.1</span><span class="ds-section-t">Buttons <span class="ds-badge ds-bi">15+ patterns</span></span></div>
-      <div style="margin-bottom:16px;font-size:var(--fs-body-sm);color:var(--g600)">Current codebase has 15+ distinct button classes with no consistent hierarchy. Proposed consolidation below.</div>
+      <div style="margin-bottom:16px;font-size:.78rem;color:var(--g600)">Current codebase has 15+ distinct button classes with no consistent hierarchy. Proposed consolidation below.</div>
 
       ${demo('Primary CTA — <span class="ds-code">.btn-primary</span> (proposed)',`
         <div class="ds-demo-row">
-          <button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);font-weight:600;background:var(--ink);color:var(--paper);padding:8px 16px;border:none;border-radius:8px;cursor:pointer">Confirm</button>
-          <button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);font-weight:600;background:var(--ink);color:var(--paper);padding:8px 16px;border:none;border-radius:8px;cursor:pointer;opacity:.4" disabled>Disabled</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;background:var(--ink);color:var(--paper);padding:9px 18px;border:none;border-radius:8px;cursor:pointer">Confirm</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;background:var(--ink);color:var(--paper);padding:9px 18px;border:none;border-radius:8px;cursor:pointer;opacity:.4" disabled>Disabled</button>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:4px">Examples: <span class="ds-code">.onb-btn</span>, <span class="ds-code">.prof-empty-btn</span> — already consistent</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">Examples: <span class="ds-code">.onb-btn</span>, <span class="ds-code">.prof-empty-btn</span> — already consistent</div>
       `)}
 
       ${demo('Secondary / Ghost — <span class="ds-code">.btn-ghost</span> (proposed)',`
         <div class="ds-demo-row">
-          <button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);font-weight:600;background:none;color:var(--g700);padding:8px 16px;border:1.5px solid var(--g200);border-radius:8px;cursor:pointer">Browse all</button>
-          <button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);font-weight:600;background:none;color:var(--g600);padding:4px 12px;border:1px solid var(--g200);border-radius:20px;cursor:pointer">⊞ Filters</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;background:none;color:var(--g700);padding:9px 18px;border:1.5px solid var(--g200);border-radius:8px;cursor:pointer">Browse all</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;background:none;color:var(--g600);padding:5px 12px;border:1px solid var(--g200);border-radius:20px;cursor:pointer">⊞ Filters</button>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:4px">Examples: <span class="ds-code">.onb-reveal-btn.secondary</span>, <span class="ds-code">.frag-filter-toggle</span></div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">Examples: <span class="ds-code">.onb-reveal-btn.secondary</span>, <span class="ds-code">.frag-filter-toggle</span></div>
       `)}
 
       ${demo('Navigation Tabs — <span class="ds-code">.tab</span>',`
@@ -2153,21 +2153,21 @@ function buildDesign(){
           </div>
         </div>
         <div class="ds-demo-row">
-          <div style="display:flex;gap:4px;padding:4px;overflow-x:auto">
-            <button class="tab active" style="flex-shrink:0;border-radius:20px;border:1px solid var(--ink);font-size:var(--fs-meta);padding:4px 12px">Byredo</button>
-            <button class="tab" style="flex-shrink:0;border-radius:20px;border:1px solid var(--stone);font-size:var(--fs-meta);padding:4px 12px">Le Labo</button>
+          <div style="display:flex;gap:5px;padding:4px;overflow-x:auto">
+            <button class="tab active" style="flex-shrink:0;border-radius:20px;border:1px solid var(--ink);font-size:.70rem;padding:4px 11px">Byredo</button>
+            <button class="tab" style="flex-shrink:0;border-radius:20px;border:1px solid var(--stone);font-size:.70rem;padding:4px 11px">Le Labo</button>
           </div>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:4px">⚠ Brand bar tabs use <span class="ds-code">border-radius:20px</span> while nav tabs use <span class="ds-code">border-radius:5px</span> — inconsistent</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">⚠ Brand bar tabs use <span class="ds-code">border-radius:20px</span> while nav tabs use <span class="ds-code">border-radius:5px</span> — inconsistent</div>
       `)}
 
       ${demo('Action / Icon Buttons',`
         <div class="ds-demo-row">
           <button class="detail-back visible" style="pointer-events:none">← Back</button>
           <button class="detail-close-btn" style="pointer-events:none">✕ Close</button>
-          <button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);color:var(--g500);background:none;border:none;padding:4px 8px;cursor:pointer">Cancel</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--g500);background:none;border:none;padding:4px 8px;cursor:pointer">Cancel</button>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:4px"><span class="ds-code">.detail-back</span> and <span class="ds-code">.sheet-back</span> have different min-widths (52px vs 56px) and font sizes (.78rem vs .82rem)</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px"><span class="ds-code">.detail-back</span> and <span class="ds-code">.sheet-back</span> have different min-widths (52px vs 56px) and font sizes (.78rem vs .82rem)</div>
       `)}
     </div>
 
@@ -2185,34 +2185,34 @@ function buildDesign(){
 
       ${demo('Layer badges — <span class="ds-code">.s-layer-chip</span> · <span class="ds-code">.cmp-note-layer</span>',`
         <div class="ds-demo-row">
-          <span class="s-layer-chip" style="background:#8B451320;color:#8B4513;padding:0 4px;border-radius:3px;font-size:var(--fs-caption);font-weight:700;letter-spacing:.05em">SILLAGE</span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-caption);font-weight:700;padding:1px 4px;border-radius:3px;background:#1A603020;color:#1A6030">T</span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-caption);font-weight:700;padding:1px 4px;border-radius:3px;background:#B5366E20;color:#B5366E">H</span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-caption);font-weight:700;padding:1px 4px;border-radius:3px;background:#7C3E0020;color:#7C3E00">B</span>
+          <span class="s-layer-chip" style="background:#8B451320;color:#8B4513;padding:1px 5px;border-radius:3px;font-size:.54rem;font-weight:700;letter-spacing:.05em">SILLAGE</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:700;padding:1px 4px;border-radius:3px;background:#1A603020;color:#1A6030">T</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:700;padding:1px 4px;border-radius:3px;background:#B5366E20;color:#B5366E">H</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:700;padding:1px 4px;border-radius:3px;background:#7C3E0020;color:#7C3E00">B</span>
           <span class="ds-badge ds-bw">.54rem below 8.6px guideline</span>
         </div>
       `)}
 
       ${demo('Family chips — used in Compare, detail panel',`
         <div class="ds-demo-row">
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-caption);font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#8B4513;color:#fff">Woody</span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-caption);font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#B5366E;color:#fff">Floral</span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-caption);font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#A06800;color:#fff">Amber</span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-label);color:var(--g500);padding:3px 0">vs.</span>
-          <span class="fam-chip" style="display:inline-flex;align-items:center;gap:4px;font-size:var(--fs-label);padding:4px 8px;border-radius:20px;background:var(--stone)"><span style="width:7px;height:7px;border-radius:50%;background:#8B4513;display:inline-block"></span>Woody</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.60rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#8B4513;color:#fff">Woody</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.60rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#B5366E;color:#fff">Floral</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.60rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:#A06800;color:#fff">Amber</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.66rem;color:var(--g500);padding:3px 0">vs.</span>
+          <span class="fam-chip" style="display:inline-flex;align-items:center;gap:5px;font-size:.66rem;padding:3px 7px 3px 5px;border-radius:20px;background:var(--stone)"><span style="width:7px;height:7px;border-radius:50%;background:#8B4513;display:inline-block"></span>Woody</span>
           <span class="ds-badge ds-bw">2 patterns in use</span>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:4px">Detail panel uses <span class="ds-code">.fam-chip</span> (stone bg, dot + text). Compare uses filled colored pill. Should be unified.</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">Detail panel uses <span class="ds-code">.fam-chip</span> (stone bg, dot + text). Compare uses filled colored pill. Should be unified.</div>
       `)}
 
       ${demo('Role chips — multiple variants',`
         <div class="ds-demo-row">
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-label);font-weight:500;padding:2px 8px;border-radius:20px;background:#8B451320;color:#8B4513">♥ Casual</span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-label);font-weight:500;padding:2px 8px;border-radius:20px;background:#8B4513;color:#fff">♥ Shared role</span>
-          <span style="font-family:'DM Sans',sans-serif;font-size:var(--fs-label);font-weight:600;padding:4px 8px;border-radius:20px;border:2px solid var(--ink)">♠ Signature</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:500;padding:2px 8px;border-radius:20px;background:#8B451320;color:#8B4513">♥ Casual</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:500;padding:2px 8px;border-radius:20px;background:#8B4513;color:#fff">♥ Shared role</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:600;padding:3px 9px;border-radius:20px;border:2px solid var(--ink)">♠ Signature</span>
           <span class="ds-badge ds-bw">3 variants</span>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:4px">Pairer uses <span class="ds-code">border:2px solid var(--ink)</span> for selected state. Compare uses filled. Capsule uses border:1px. Consolidate to 2 states: default (light bg) + active (filled).</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:4px">Pairer uses <span class="ds-code">border:2px solid var(--ink)</span> for selected state. Compare uses filled. Capsule uses border:1px. Consolidate to 2 states: default (light bg) + active (filled).</div>
       `)}
     </div>
 
@@ -2222,26 +2222,26 @@ function buildDesign(){
 
       ${demo('List row — <span class="ds-code">.scent-row</span> — border-bottom only',`
         <div style="border:1px solid var(--g200);border-radius:8px;overflow:hidden;background:var(--paper)">
-          <div style="display:flex;align-items:center;gap:8px;padding:12px;border-bottom:1px solid var(--g100)">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 13px;border-bottom:1px solid var(--g100)">
             <div style="width:8px;height:8px;border-radius:50%;background:#8B4513;flex-shrink:0"></div>
-            <div style="flex:1"><div style="font-size:var(--fs-body);font-weight:500">Gypsy Water</div><div style="font-size:var(--fs-body-sm);color:var(--g500);margin-top:2px">Juniper · Bergamot · Lemon</div></div>
-            <span style="font-size:var(--fs-caption);font-weight:700;padding:0 4px;border-radius:3px;background:#e8f0e8;color:#2a622a">Owned</span>
+            <div style="flex:1"><div style="font-size:.95rem;font-weight:500">Gypsy Water</div><div style="font-size:.76rem;color:var(--g500);margin-top:2px">Juniper · Bergamot · Lemon</div></div>
+            <span style="font-size:.56rem;font-weight:700;padding:2px 5px;border-radius:3px;background:#e8f0e8;color:#2a622a">Owned</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;padding:12px">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 13px">
             <div style="width:8px;height:8px;border-radius:50%;background:#B5366E;flex-shrink:0"></div>
-            <div style="flex:1"><div style="font-size:var(--fs-body);font-weight:500">Bal d'Afrique</div><div style="font-size:var(--fs-body-sm);color:var(--g500);margin-top:2px">Bergamot · Marigold · Violet</div></div>
+            <div style="flex:1"><div style="font-size:.95rem;font-weight:500">Bal d'Afrique</div><div style="font-size:.76rem;color:var(--g500);margin-top:2px">Bergamot · Marigold · Violet</div></div>
           </div>
         </div>
       `)}
 
       ${demo('Card — border all sides + radius — <span class="ds-code">.prof-pair-card</span>, <span class="ds-code">.cmp-sug-card</span>',`
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="cmp-sug-card" style="border-color:#8B451333;max-width:200px;width:100%;pointer-events:none">
             <div class="cmp-sug-dot" style="background:#8B4513"></div>
             <div><div class="cmp-sug-name">Santal 26</div><div class="cmp-sug-brand">Le Labo</div></div>
             <div class="cmp-sug-score" style="color:#8B4513">68</div>
           </button>
-          <div style="display:flex;flex-direction:column;gap:8px;font-size:var(--fs-meta);color:var(--g500)">
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:.72rem;color:var(--g500)">
             <div><span class="ds-code">border-radius: 8px</span> ✓</div>
             <div><span class="ds-code">border: 1.5px solid</span></div>
             <div><span class="ds-code">padding: 12px 14px</span></div>
@@ -2251,19 +2251,19 @@ function buildDesign(){
 
       ${demo('Capsule cell — grid layout, no hover state on empty',`
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--black);border-radius:0;max-width:320px">
-          <div style="padding:16px 12px;border-right:1px solid var(--black);border-bottom:1px solid var(--black);min-height:100px">
-            <div style="font-size:var(--fs-caption);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)">CASUAL</div>
-            <div style="font-size:var(--fs-display);opacity:.08;margin:8px 0 4px">♥</div>
-            <div style="font-size:var(--fs-caption);font-style:italic;color:var(--g450)">Reach for it without thinking</div>
+          <div style="padding:16px 13px;border-right:1px solid var(--black);border-bottom:1px solid var(--black);min-height:100px">
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)">CASUAL</div>
+            <div style="font-size:1.6rem;opacity:.08;margin:6px 0 4px">♥</div>
+            <div style="font-size:.6rem;font-style:italic;color:var(--g450)">Reach for it without thinking</div>
           </div>
-          <div style="padding:16px 12px;border-bottom:1px solid var(--black);min-height:100px">
-            <div style="font-size:var(--fs-caption);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)">SIGNATURE</div>
-            <div style="font-size:var(--fs-display);margin:4px 0">♠</div>
-            <div style="font-size:var(--fs-body-sm);font-weight:600;letter-spacing:-.01em">Gypsy Water</div>
-            <div style="font-size:var(--fs-caption);color:var(--g450);margin-top:1px">Byredo</div>
+          <div style="padding:16px 13px;border-bottom:1px solid var(--black);min-height:100px">
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)">SIGNATURE</div>
+            <div style="font-size:1.6rem;margin:4px 0 2px">♠</div>
+            <div style="font-size:.8rem;font-weight:600;letter-spacing:-.01em">Gypsy Water</div>
+            <div style="font-size:.6rem;color:var(--g450);margin-top:1px">Byredo</div>
           </div>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:8px">⚠ Capsule uses <span class="ds-code">border:1px solid var(--black)</span> — heavier than card standard. Also: no border-radius. Intentional or inconsistency?</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:8px">⚠ Capsule uses <span class="ds-code">border:1px solid var(--black)</span> — heavier than card standard. Also: no border-radius. Intentional or inconsistency?</div>
       `)}
     </div>
 
@@ -2272,14 +2272,14 @@ function buildDesign(){
       <div class="ds-section-hd"><span class="ds-section-n">§2.4</span><span class="ds-section-t">Forms</span></div>
 
       ${demo('Search input — <span class="ds-code">.cat-search-input</span> vs <span class="ds-code">.cmp-search</span>',`
-        <div class="ds-demo-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <div class="ds-demo-row" style="flex-direction:column;align-items:flex-start;gap:10px">
           <div style="position:relative;max-width:300px;width:100%">
-            <input type="text" placeholder="Search fragrances, brands, notes…" style="width:100%;padding:8px 16px;border:1px solid var(--g200);border-radius:6px;background:var(--paper);font-size:var(--fs-body);font-family:inherit;outline:none;color:var(--ink)">
-            <div style="font-size:var(--fs-caption);color:var(--g400);margin-top:4px"><span class="ds-code">.cat-search-input</span> — border-radius: 6px, border: 1px, font-size: .84rem</div>
+            <input type="text" placeholder="Search fragrances, brands, notes…" style="width:100%;padding:9px 14px;border:1px solid var(--g200);border-radius:6px;background:var(--paper);font-size:.84rem;font-family:inherit;outline:none;color:var(--ink)">
+            <div style="font-size:.60rem;color:var(--g400);margin-top:4px"><span class="ds-code">.cat-search-input</span> — border-radius: 6px, border: 1px, font-size: .84rem</div>
           </div>
           <div style="position:relative;max-width:300px;width:100%">
-            <input type="text" placeholder="Search by name, brand, or note…" style="width:100%;padding:8px 16px;border:1.5px solid var(--g200);border-radius:8px;background:var(--paper);font-size:var(--fs-body);font-family:inherit;outline:none;color:var(--ink)">
-            <div style="font-size:var(--fs-caption);color:var(--g400);margin-top:4px"><span class="ds-code">.cmp-search</span> — border-radius: 8px, border: 1.5px, font-size: .92rem</div>
+            <input type="text" placeholder="Search by name, brand, or note…" style="width:100%;padding:10px 14px;border:1.5px solid var(--g200);border-radius:8px;background:var(--paper);font-size:.92rem;font-family:inherit;outline:none;color:var(--ink)">
+            <div style="font-size:.60rem;color:var(--g400);margin-top:4px"><span class="ds-code">.cmp-search</span> — border-radius: 8px, border: 1.5px, font-size: .92rem</div>
           </div>
           <span class="ds-badge ds-bi">Inconsistent — should use 1 pattern</span>
         </div>
@@ -2291,36 +2291,36 @@ function buildDesign(){
       <div class="ds-section-hd"><span class="ds-section-n">§2.5</span><span class="ds-section-t">Navigation <span class="ds-badge ds-bi">height inconsistencies</span></span></div>
 
       ${demo('Desktop nav bar — <span class="ds-code">.col-main-nav</span>',`
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px 8px;border-bottom:1px solid var(--ink);background:var(--paper)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px 10px;border-bottom:1px solid var(--ink);background:var(--paper)">
           <div class="tabs" style="pointer-events:none">
             <button class="tab active">Map</button>
             <button class="tab">Fragrances</button>
             <button class="tab">Compare</button>
           </div>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:8px">Padding: <span class="ds-code">12px 20px 10px</span> — asymmetric top/bottom. Height ~42px.</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Padding: <span class="ds-code">12px 20px 10px</span> — asymmetric top/bottom. Height ~42px.</div>
       `)}
 
       ${demo('Detail panel topbar — <span class="ds-code">.detail-topbar</span>',`
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 8px;border-bottom:1px solid var(--g200);background:var(--paper)">
-          <button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);color:var(--g500);background:none;border:none;cursor:pointer;padding:0">← Back</button>
-          <button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);color:var(--g500);background:none;border:none;cursor:pointer;padding:3px 0">✕ Close</button>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--g200);background:var(--paper)">
+          <button style="font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:0">← Back</button>
+          <button style="font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:3px 0">✕ Close</button>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:8px">Same padding <span class="ds-code">12px 16px 10px</span> but smaller horizontal inset (16px vs 20px). Border is <span class="ds-code">--g200</span> not <span class="ds-code">--black</span>. <span class="ds-badge ds-bw">inconsistent border weight</span></div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Same padding <span class="ds-code">12px 16px 10px</span> but smaller horizontal inset (16px vs 20px). Border is <span class="ds-code">--g200</span> not <span class="ds-code">--black</span>. <span class="ds-badge ds-bw">inconsistent border weight</span></div>
       `)}
 
       ${demo('Mobile bottom nav — <span class="ds-code">.mobile-bottomnav</span>',`
         <div style="display:flex;border-top:1px solid var(--black);background:#fff;overflow:hidden;border-radius:0 0 8px 8px">
           ${['✦ Map','◉ Capsule','≡ Frags','♥ Roles','✿ Notes','⊕ Compare','◈ Profile'].map((label,i)=>`
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;font-family:'DM Sans',sans-serif;font-size:var(--fs-caption);color:${i===0?'var(--ink)':'var(--g500)'};gap:2px;min-height:52px;${i===0?'font-weight:600':''}">
-              <span style="font-size:var(--fs-ui);line-height:1">${label.split(' ')[0]}</span>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 2px 6px;font-family:'DM Sans',sans-serif;font-size:.52rem;color:${i===0?'var(--ink)':'var(--g500)'};gap:2px;min-height:52px;${i===0?'font-weight:600':''}">
+              <span style="font-size:1.1rem;line-height:1">${label.split(' ')[0]}</span>
               <span>${label.split(' ')[1]||''}</span>
             </div>`).join('')}
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:8px">7 items at <span class="ds-code">.58rem</span> on 375px screen = ~53px per item. Each label is truncated. <span class="ds-badge ds-bi">Overflow risk on small devices</span></div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">7 items at <span class="ds-code">.58rem</span> on 375px screen = ~53px per item. Each label is truncated. <span class="ds-badge ds-bi">Overflow risk on small devices</span></div>
       `)}
 
-      <div style="margin-top:16px;padding:12px 16px;border-radius:8px;border:1px solid #FDE68A;background:#FFFDF5;font-size:var(--fs-body-sm);color:#78350F;line-height:1.6">
+      <div style="margin-top:16px;padding:12px 16px;border-radius:8px;border:1px solid #FDE68A;background:#FFFDF5;font-size:.78rem;color:#78350F;line-height:1.6">
         <strong>⚠ Known issue — sheet scroll under header:</strong> Content in bottom sheets and the detail panel has no sticky section header. As the user scrolls, content passes behind the topbar without a visual anchor. The <span class="ds-code">.sheet-topbar</span> is sticky within the sheet but has no backdrop blur or border when content scrolls behind it, causing the content to bleed through.
       </div>
     </div>
@@ -2330,11 +2330,11 @@ function buildDesign(){
       <div class="ds-section-hd"><span class="ds-section-n">§2.6</span><span class="ds-section-t">Compare Components</span></div>
 
       ${demo('Score meter — <span class="ds-code">.cmp-score-card</span> · <span class="ds-code">.cmp-score-meter</span>',`
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <div style="flex:1;min-width:140px;max-width:200px;padding:16px 12px 16px;border-radius:12px;border:1px solid var(--g200);background:var(--paper);display:flex;flex-direction:column;align-items:center;gap:4px">
-            <div style="font-family:'Archivo Black',sans-serif;font-size:var(--fs-score);line-height:1;letter-spacing:-.03em;color:#8B4513">72%</div>
-            <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)">Similarity</div>
-            <div style="width:100%;padding:8px 0">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:140px;max-width:200px;padding:18px 12px 14px;border-radius:12px;border:1px solid var(--g200);background:var(--paper);display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="font-family:'Archivo Black',sans-serif;font-size:2.8rem;line-height:1;letter-spacing:-.03em;color:#8B4513">72%</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)">Similarity</div>
+            <div style="width:100%;padding:6px 0 2px">
               <div style="position:relative;height:4px;background:var(--g100);border-radius:4px;margin:0 4px">
                 <div style="position:absolute;left:0;top:0;height:100%;width:72%;border-radius:4px;background:#8B4513"></div>
                 <div style="position:absolute;top:50%;left:72%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:#8B4513;border:2px solid var(--paper)"></div>
@@ -2343,10 +2343,10 @@ function buildDesign(){
                 <div style="position:absolute;top:-3px;left:75%;width:1px;height:10px;background:var(--g200)"></div>
               </div>
             </div>
-            <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);font-weight:600;color:var(--g600)">Fairly similar</div>
-            <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);color:var(--g400)">Tap to learn more ↗</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:600;color:var(--g600)">Fairly similar</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--g400)">Tap to learn more ↗</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:4px;font-size:var(--fs-meta);color:var(--g500);padding-top:4px">
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:.72rem;color:var(--g500);padding-top:4px">
             <div>Range labels: 0–25 Very different</div>
             <div>26–50 Notably different</div>
             <div>51–75 Fairly similar</div>
@@ -2359,57 +2359,57 @@ function buildDesign(){
 
       ${demo('3-col notes grid — <span class="ds-code">.cmp-grid-3x3</span> · <span class="ds-code">.cmp-grid-row.three</span>',`
         <div style="max-width:420px">
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;margin-bottom:4px">
-            <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-label);font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:4px;color:#8B4513">Gypsy Water</div>
-            <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-label);font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:4px;color:var(--g400)">Shared</div>
-            <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-label);font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:4px;color:#B5366E">Bal d'Afrique</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;margin-bottom:2px">
+            <div style="font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:5px 4px;color:#8B4513">Gypsy Water</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:5px 4px;color:var(--g400)">Shared</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:5px 4px;color:#B5366E">Bal d'Afrique</div>
           </div>
           <div style="border:1px solid var(--g200);border-radius:12px;overflow:hidden">
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--g200)">
-              <div style="padding:8px;text-align:right;display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end"><button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);color:var(--ink);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--g400);text-underline-offset:2px">Bergamot</button></div>
-              <div style="padding:8px;background:var(--stone);display:flex;flex-wrap:wrap;gap:4px;justify-content:center;flex-direction:column;align-items:center"><div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400)">Top</div><button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);font-weight:700;color:var(--g700);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--g400);text-underline-offset:2px">Lemon</button></div>
-              <div style="padding:8px;text-align:left;display:flex;flex-wrap:wrap;gap:4px"><button style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);color:var(--ink);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--g400);text-underline-offset:2px">Marigold</button></div>
+              <div style="padding:8px 6px;text-align:right;display:flex;flex-wrap:wrap;gap:3px;justify-content:flex-end"><button style="font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--ink);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--g400);text-underline-offset:2px">Bergamot</button></div>
+              <div style="padding:8px 6px;background:var(--stone);display:flex;flex-wrap:wrap;gap:3px;justify-content:center;flex-direction:column;align-items:center"><div style="font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400)">Top</div><button style="font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;color:var(--g700);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--g400);text-underline-offset:2px">Lemon</button></div>
+              <div style="padding:8px 6px;text-align:left;display:flex;flex-wrap:wrap;gap:3px"><button style="font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--ink);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--g400);text-underline-offset:2px">Marigold</button></div>
             </div>
           </div>
-          <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:8px">Only-A left-aligned · Shared centered (stone bg) · Only-B left-aligned. Note links use <span class="ds-code">text-decoration-color:var(--g400)</span>.</div>
+          <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Only-A left-aligned · Shared centered (stone bg) · Only-B left-aligned. Note links use <span class="ds-code">text-decoration-color:var(--g400)</span>.</div>
         </div>
       `)}
 
       ${demo('Frag-picker item — <span class="ds-code">.frag-picker-item</span> — used in catalog + picker modal',`
         <div style="border:1px solid var(--g200);border-radius:8px;overflow:hidden;background:var(--paper);max-width:340px">
-          <div style="display:flex;align-items:center;gap:16px;padding:8px 16px;border-bottom:1px solid var(--g100)">
+          <div style="display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--g100)">
             <div style="width:9px;height:9px;border-radius:50%;background:#8B4513;flex-shrink:0"></div>
-            <div><div style="font-size:var(--fs-body);font-weight:600;line-height:1.2">Gypsy Water</div><div style="font-size:var(--fs-meta);color:var(--g500);font-family:'DM Sans',sans-serif">Byredo · Woody</div></div>
+            <div><div style="font-size:.94rem;font-weight:600;line-height:1.2">Gypsy Water</div><div style="font-size:.72rem;color:var(--g500);font-family:'DM Sans',sans-serif">Byredo · Woody</div></div>
           </div>
-          <div style="display:flex;align-items:center;gap:16px;padding:8px 16px">
+          <div style="display:flex;align-items:center;gap:14px;padding:10px 18px">
             <div style="width:9px;height:9px;border-radius:50%;background:#B5366E;flex-shrink:0"></div>
-            <div><div style="font-size:var(--fs-body);font-weight:600;line-height:1.2">Bal d'Afrique</div><div style="font-size:var(--fs-meta);color:var(--g500);font-family:'DM Sans',sans-serif">Byredo · Floral</div></div>
+            <div><div style="font-size:.94rem;font-weight:600;line-height:1.2">Bal d'Afrique</div><div style="font-size:.72rem;color:var(--g500);font-family:'DM Sans',sans-serif">Byredo · Floral</div></div>
           </div>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:8px"><span class="ds-code">gap: 14px · padding: 10px 18px · border-bottom: 1px solid var(--g100)</span>. Shared by catalog rows and picker modal lists.</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px"><span class="ds-code">gap: 14px · padding: 10px 18px · border-bottom: 1px solid var(--g100)</span>. Shared by catalog rows and picker modal lists.</div>
       `)}
 
       ${demo('House detail panel — <span class="ds-code">.house-detail-wrap</span>',`
         <div style="max-width:300px;padding:0 4px">
-          <div style="font-family:'Archivo Black',sans-serif;font-size:var(--fs-display);line-height:1;letter-spacing:-.02em;margin-bottom:4px">Byredo</div>
-          <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-body-sm);color:var(--g400);margin-bottom:20px">12 fragrances</div>
+          <div style="font-family:'Archivo Black',sans-serif;font-size:1.6rem;line-height:1;letter-spacing:-.02em;margin-bottom:4px">Byredo</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--g400);margin-bottom:20px">12 fragrances</div>
           <div style="display:flex;flex-direction:column;gap:0;border:1px solid var(--g200);border-radius:8px;overflow:hidden">
-            <div style="display:flex;align-items:center;gap:16px;padding:8px 16px;border-bottom:1px solid var(--g100)">
+            <div style="display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--g100)">
               <div style="width:9px;height:9px;border-radius:50%;background:#8B4513;flex-shrink:0"></div>
-              <div><div style="font-size:var(--fs-body);font-weight:600">Gypsy Water</div><div style="font-size:var(--fs-meta);color:var(--g500);font-family:'DM Sans',sans-serif">Woody</div></div>
+              <div><div style="font-size:.94rem;font-weight:600">Gypsy Water</div><div style="font-size:.72rem;color:var(--g500);font-family:'DM Sans',sans-serif">Woody</div></div>
             </div>
-            <div style="display:flex;align-items:center;gap:16px;padding:8px 16px">
+            <div style="display:flex;align-items:center;gap:14px;padding:10px 18px">
               <div style="width:9px;height:9px;border-radius:50%;background:#B5366E;flex-shrink:0"></div>
-              <div><div style="font-size:var(--fs-body);font-weight:600">Bal d'Afrique</div><div style="font-size:var(--fs-meta);color:var(--g500);font-family:'DM Sans',sans-serif">Floral</div></div>
+              <div><div style="font-size:.94rem;font-weight:600">Bal d'Afrique</div><div style="font-size:.72rem;color:var(--g500);font-family:'DM Sans',sans-serif">Floral</div></div>
             </div>
           </div>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:8px">Brand name: <span class="ds-code">Archivo Black 1.6rem</span>. Count meta: <span class="ds-code">DM Sans .8rem --g400</span>. Row list reuses <span class="ds-code">.frag-picker-item</span> pattern.</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Brand name: <span class="ds-code">Archivo Black 1.6rem</span>. Count meta: <span class="ds-code">DM Sans .8rem --g400</span>. Row list reuses <span class="ds-code">.frag-picker-item</span> pattern.</div>
       `)}
 
       ${demo('Mini radar in swap suggestions — <span class="ds-code">.cmp-sug-card-v2</span> · <span class="ds-code">.cmp-sug-mini-radar</span>',`
         <div style="max-width:280px">
-          <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 12px;background:var(--paper);border:1px solid var(--g200);border-radius:8px;cursor:default">
+          <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:var(--paper);border:1px solid var(--g200);border-radius:8px;cursor:default">
             <svg width="36" height="36" viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:.6">
               <polygon points="110,12 196,68 163,174 57,174 24,68" fill="none" stroke="var(--g200)" stroke-width="1"/>
               <polygon points="110,51 163,87 141,157 79,157 57,87" fill="none" stroke="var(--g200)" stroke-width="1"/>
@@ -2417,13 +2417,13 @@ function buildDesign(){
               <polygon points="110,34 185,78 155,168 65,168 35,78" fill="#8B451315" stroke="#8B4513" stroke-width="1.8" stroke-linejoin="round"/>
             </svg>
             <div>
-              <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-label);font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border-radius:20px;background:#8B451318;color:#8B4513;display:inline-block;margin-bottom:4px">Woody</div>
-              <div style="font-size:var(--fs-body);font-weight:600;line-height:1.2">Santal 26</div>
-              <div style="font-family:'DM Sans',sans-serif;font-size:var(--fs-meta);color:var(--g500)">Le Labo · Bergamot, Sandalwood</div>
+              <div style="font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:20px;background:#8B451318;color:#8B4513;display:inline-block;margin-bottom:5px">Woody</div>
+              <div style="font-size:.9rem;font-weight:600;line-height:1.2">Santal 26</div>
+              <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--g500)">Le Labo · Bergamot, Sandalwood</div>
             </div>
           </div>
         </div>
-        <div style="font-size:var(--fs-meta);color:var(--g500);margin-top:8px">Mini radar is 36×36px SVG, <span class="ds-code">opacity:.6</span> default, fades to 1 on hover. Card: <span class="ds-code">padding:8px 12px, border-radius:8px, gap:8px</span>.</div>
+        <div style="font-size:.72rem;color:var(--g500);margin-top:6px">Mini radar is 36×36px SVG, <span class="ds-code">opacity:.6</span> default, fades to 1 on hover. Card: <span class="ds-code">padding:10px 12px, border-radius:8px, gap:8px</span>.</div>
       `)}
     </div>
   `)}
@@ -2460,7 +2460,7 @@ function buildDesign(){
 
   <!-- §4 Guidelines -->
   ${sec('ds-guidelines','4','Guidelines for Engineers',`
-    <div style="font-size:var(--fs-body-sm);color:var(--g600);line-height:1.6;margin-bottom:20px">
+    <div style="font-size:.82rem;color:var(--g600);line-height:1.6;margin-bottom:20px">
       These rules exist to keep the codebase maintainable and the UI consistent. When in doubt, use a token from this document — never introduce a hardcoded color or arbitrary pixel value. If you need something that doesn't exist in the system, <strong>add it to the Issues section first</strong> before writing the CSS.
     </div>
 
