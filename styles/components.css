@@ -3044,3 +3044,133 @@ button.cmp-note-pill:hover {
 .np-frags {
   margin-top: 12px;
 }
+
+/* ══ CAPSULE / SCENTMAP ══ */
+
+.capsule-tagline {
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--lh-normal);
+  margin-bottom: 20px;
+}
+
+.capsule-auto-btn {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius);
+  padding: 6px 12px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: color var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
+}
+
+.capsule-auto-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.cap-frag-wrap {
+  order: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cap-more {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  color: var(--text-tertiary);
+  letter-spacing: 0.01em;
+  margin-top: 2px;
+}
+
+.cap-count {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  color: var(--text-tertiary);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-circle);
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cap cell needs position:relative for cap-count */
+.cap-cell {
+  position: relative;
+}
+
+/* Role legend */
+.cap-legend-toggle {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text-tertiary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+  display: block;
+  margin-top: 12px;
+  transition: color var(--dur-fast) var(--ease-spring);
+}
+
+.cap-legend-toggle:hover {
+  color: var(--text-secondary);
+}
+
+.cap-legend {
+  display: none;
+  flex-direction: column;
+  gap: var(--sp-md);
+  padding: var(--sp-md) 0;
+  border-top: 1px solid var(--border-standard);
+  margin-top: var(--sp-xs);
+}
+
+.cap-legend.open {
+  display: flex;
+}
+
+.cap-legend-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cap-legend-sym {
+  font-size: var(--fs-ui);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.cap-legend-text {
+  flex: 1;
+}
+
+.cap-legend-name {
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: var(--text-primary);
+}
+
+.cap-legend-desc {
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}

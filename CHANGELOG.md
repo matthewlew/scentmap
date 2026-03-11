@@ -4,6 +4,13 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (capsule/scentmap panel CSS)
+
+### Fixed
+- **Capsule panel missing CSS** — `capsule-tagline`, `capsule-auto-btn`, `cap-frag-wrap`, `cap-more`, `cap-count`, `cap-legend-toggle`, `cap-legend` (collapsible), `cap-legend-row/sym/text/name/desc` all had no styles; scentmap panel now shows styled tagline, auto-fill button, count badge on filled cells, and collapsible role legend
+
+---
+
 ## 2026-03-11 (house detail + note popup CSS)
 
 ### Fixed
