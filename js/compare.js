@@ -10,6 +10,7 @@ import {
   openFragDetail, renderFragDetail,
 } from './renderers.js';
 import { openDetail, pushDetail, closeDesktopDetail, closeAllSheets } from './ui.js';
+import * as Renderers from './renderers.js';
 
 // ── Picker state ─────────────────────────────────────────────────────
 let _pickerSlot = null; // 'a' | 'b' | null
@@ -79,7 +80,7 @@ function renderPickerList(query) {
 function renderPickerSheet(container, slot) {
   container.innerHTML = `<div style="padding:4px 0 10px;font-size:.88rem;font-weight:600;color:var(--g700)">Choose fragrance ${slot.toUpperCase()}</div>`;
   const search = document.createElement('input');
-  search.placeholder = 'Search…';
+  search.placeholder = 'Search\u2026';
   search.style.cssText = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--g200);border-radius:8px;font-size:.88rem;font-family:inherit;margin-bottom:10px;background:var(--paper)';
   container.appendChild(search);
   const list = document.createElement('div');
@@ -118,12 +119,11 @@ export function buildCompare() {
   const panel = document.getElementById('p-compare');
   if (!panel) return;
 
-  // Re-read live values from renderers module (they're mutable lets)
-  import('./renderers.js').then(r => {
-    const fragA = r.CMP_A;
-    const fragB = r.CMP_B;
-    _render(panel, fragA, fragB);
-  });
+  // Read live CMP_A/CMP_B synchronously via namespace import to avoid
+  // async timing issues on mobile with dynamic import().then()
+  const fragA = Renderers.CMP_A;
+  const fragB = Renderers.CMP_B;
+  _render(panel, fragA, fragB);
 }
 
 function _render(panel, fragA, fragB) {
@@ -316,7 +316,7 @@ function _render(panel, fragA, fragB) {
   [{ frag: fragA, fc: fcA }, { frag: fragB, fc: fcB }].forEach(({ frag, fc }) => {
     const btn = document.createElement('button');
     btn.className = 'cmp-detail-btn';
-    btn.innerHTML = `<span class="cmp-detail-dot" style="background:${fc.accent}"></span> ${frag.name} detail →`;
+    btn.innerHTML = `<span class="cmp-detail-dot" style="background:${fc.accent}"></span> ${frag.name} detail \u2192`;
     btn.addEventListener('click', () => openFragDetail(frag));
     detailBtns.appendChild(btn);
   });
