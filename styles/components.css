@@ -632,6 +632,219 @@
   font-style: italic;
 }
 
+.dc-description {
+  font-size: var(--fs-body-sm);
+  color: var(--g600);
+  line-height: 1.65;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+/* Compare CTAs in detail panel */
+.dc-cmp-cta-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 20px 0 6px;
+}
+
+.dc-cmp-ctas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+  margin-bottom: 20px;
+}
+
+.dc-cmp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: border-color var(--dur-fast) var(--ease-spring), background var(--dur-fast) var(--ease-spring);
+  gap: var(--sp-xs);
+}
+
+.dc-cmp-btn:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-primary);
+}
+
+.dc-cmp-btn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+}
+
+.dc-cmp-btn-name {
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+}
+
+.dc-cmp-btn-empty {
+  color: var(--text-secondary);
+  font-weight: 400;
+  max-width: none;
+}
+
+.dc-cmp-btn-vs {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.dc-cmp-btn-arrow {
+  font-size: var(--fs-body-sm);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: color var(--dur-fast) var(--ease-spring);
+}
+
+.dc-cmp-btn:hover .dc-cmp-btn-arrow {
+  color: var(--text-secondary);
+}
+
+/* Similar shelf */
+.dc-sim-lbl {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 20px 0 6px;
+}
+
+.dc-sim-shelf {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.dc-sim-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: 8px 12px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-standard);
+  border: none;
+  border-bottom: 1px solid var(--border-standard);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  width: 100%;
+  transition: background var(--dur-fast) var(--ease-spring);
+}
+
+.dc-sim-row:last-child {
+  border-bottom: none;
+}
+
+.dc-sim-row:hover {
+  background: var(--bg-secondary);
+}
+
+.dc-sim-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+}
+
+.dc-sim-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dc-sim-name {
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.dc-sim-name-brand {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.dc-sim-reason {
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.dc-sim-brand {
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+}
+
+.dc-sim-state {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+.dc-sim-state.is-owned {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+/* Discovery badges */
+.dc-badge {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.dc-badge.similar {
+  background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+  color: var(--text-secondary);
+}
+
+.dc-badge.contrasts {
+  background: color-mix(in srgb, var(--g500) 12%, transparent);
+  color: var(--text-secondary);
+}
+
+.dc-badge.complements {
+  background: color-mix(in srgb, var(--g400) 15%, transparent);
+  color: var(--text-secondary);
+}
+
 /* ── 4. CARDS & SURFACES ── */
 
 .picker-header {

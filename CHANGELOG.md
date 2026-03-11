@@ -4,6 +4,13 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (detail panel CSS + catalog layout)
+
+### Fixed
+- **Detail panel missing CSS** — `dc-description`, `dc-cmp-cta-label`, `dc-cmp-ctas`, `dc-cmp-btn` (and variants: dot, name, empty, vs, arrow, text), `dc-sim-lbl`, `dc-sim-shelf`, `dc-sim-row`, `dc-sim-dot`, `dc-sim-info`, `dc-sim-name`, `dc-sim-name-brand`, `dc-sim-reason`, `dc-sim-brand`, `dc-sim-state`, `dc-badge` (similar/contrasts/complements) all had no CSS rules; detail panel now shows description, compare CTAs, and similar-fragrance shelf with discovery badges
+
+---
+
 ## 2026-03-11 (catalog layout CSS + filter sidebar)
 
 ### Fixed
