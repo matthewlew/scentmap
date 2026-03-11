@@ -4,6 +4,25 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (accessibility + compare CSS)
+
+### Fixed
+- **Compare panel v2 CSS** — the compare panel was redesigned (new HTML/JS) but CSS was never written; added full stylesheet for all new classes: `cmp-header-v2`, `cmp-frag-card`, `cmp-score-card`, `cmp-score-meter`, `cmp-sticky-bar`, `cmp-notes-v2`, `cmp-grid-3x3`, `cmp-note-pill`, `cmp-sug-v2`, `cmp-edu-overlay` and all variants; the compare panel now renders correctly on desktop and mobile
+- **Accessibility: aria-labels** — added `aria-label` to all icon-only buttons: note popup close (✕), compare slot clear buttons (✕), fragrance picker close; dynamically-generated clear buttons set label to "Remove [fragrance name]"
+- **Accessibility: dialog roles** — added `role="dialog"`, `aria-modal="true"`, and `aria-labelledby`/`aria-label` to note float overlay, fragrance picker modal, and onboarding overlay
+- **Accessibility: decorative SVGs** — added `aria-hidden="true"` to all purely decorative SVG icons (back arrow, chevrons, sheet handle)
+- **Accessibility: nav landmark** — added `role="navigation"` and `aria-label="Main navigation"` to mobile bottom nav; icon spans marked `aria-hidden="true"`
+- **Compare card role** — compare slot cards (`div[role=button]`) now have `aria-label` describing their state ("Select fragrance one" / "Name by Brand — tap to change")
+- **Fragrance picker search** — added `aria-label` and `role="listbox"` to picker list
+
+### Added
+- **Escape key closes modals** — global `keydown` handler dismisses topmost open overlay on Escape: score edu overlay → fragrance picker → note popup → mobile sheet stack → desktop detail panel; closes in priority order so nested overlays close one at a time
+- **Focus management** — `_trapFocus()` moves keyboard focus into modals when opened; `_returnFocus()` restores focus to the trigger element on close; note popup close (button + backdrop) now returns focus
+- **Mobile score layout** — on `<768px`, score cards stack in a 2-column row and the character radar moves below full-width; removes overflow/clipping of the layering score card
+- **Mobile fragrance card** — description text hidden on mobile (`display:none`) to keep cards compact; minimum card height reduced to 100px
+
+---
+
 ## 2026-03-10 (pass 7 — CSS consolidation)
 
 ### Changed
