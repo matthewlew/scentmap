@@ -8,7 +8,6 @@ import { initNav, registerGoHook, go } from './nav.js';
 import {
   buildCapsule, buildRoles, buildCatalog, buildNotes,
   buildProfile, initCatalogControls, getCmpFam,
-  buildCompare, initComparePicker,
 } from './renderers.js';
 import { showOnboard } from './onboarding.js';
 
@@ -16,8 +15,8 @@ window.go = go; // expose for inline onclick attributes still in HTML
 
 registerGoHook(id => {
   if (id === 'profile')  buildProfile();
+  if (id === 'compare')  import('./compare.js').then(m => m.buildCompare?.());
   if (id === 'design')   import('./design.js').then(m => m.buildDesign());
-  // 'map' panel removed — 3D map code deleted
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -37,8 +36,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   buildCatalog(null);
   buildNotes();
   initCatalogControls();
-  initComparePicker();
 
-  // 5. Onboarding (skipped if already seen)
+  // 5. Init compare picker if module exists
+  import('./compare.js').then(m => m.initComparePicker?.()).catch(() => {});
+
+  // 6. Onboarding (skipped if already seen)
   showOnboard();
 });
