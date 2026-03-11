@@ -1,4 +1,4 @@
-import { FAM, FAM_ORDER, FAM_COMPAT, ROLES, RM, CAT, CAT_MAP, NI_MAP } from './data.js';
+import { FAM, FAM_ORDER, FAM_COMPAT, ROLES, RM, CAT, CAT_MAP, NI, NI_MAP } from './data.js';
 import { gst, setState, isOwned, isWish, getAssigned, getPrimary, assignFrag, makePrimary, removeFromRole, getFragRoleStatus, getAllRolesForFrag } from './state.js';
 import { scoreSimilarity, scoreLayeringPair, classifyDiscovery } from './scoring.js';
 import { openDetail, pushDetail, closeDesktopDetail, closeAllSheets } from './ui.js';
@@ -931,25 +931,23 @@ export function renderCatRow(row, frag, fm, search) {
 export function buildNotes() {
   const body = document.getElementById('notes-body'); body.innerHTML = '';
   const grouped = {};
-  import('./data.js').then(({ NI }) => {
-    NI.forEach(n => { if (!grouped[n.family]) grouped[n.family] = []; grouped[n.family].push(n); });
-    Object.values(grouped).forEach(arr => arr.sort((a, b) => a.name.localeCompare(b.name)));
-    FAM_ORDER.forEach(fk => {
-      if (!grouped[fk]?.length) return;
-      const fm = FAM[fk]; if (!fm) return;
-      const row = document.createElement('div'); row.className = 'notes-family-row';
-      const left = document.createElement('div'); left.className = 'nf-left';
-      left.innerHTML = `<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>${fm.desc ? `<div class="nf-desc">${fm.desc}</div>` : ''}`;
-      const right = document.createElement('div'); right.className = 'nf-right';
-      grouped[fk].forEach(note => {
-        const btn = document.createElement('button'); btn.className = 'note-link'; btn.textContent = note.name;
-        btn.addEventListener('click', e => { e.stopPropagation(); openNotePopup(note, btn); });
-        right.appendChild(btn);
-      });
-      row.appendChild(left); row.appendChild(right); body.appendChild(row);
+  NI.forEach(n => { if (!grouped[n.family]) grouped[n.family] = []; grouped[n.family].push(n); });
+  Object.values(grouped).forEach(arr => arr.sort((a, b) => a.name.localeCompare(b.name)));
+  FAM_ORDER.forEach(fk => {
+    if (!grouped[fk]?.length) return;
+    const fm = FAM[fk]; if (!fm) return;
+    const row = document.createElement('div'); row.className = 'notes-family-row';
+    const left = document.createElement('div'); left.className = 'nf-left';
+    left.innerHTML = `<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>${fm.desc ? `<div class="nf-desc">${fm.desc}</div>` : ''}`;
+    const right = document.createElement('div'); right.className = 'nf-right';
+    grouped[fk].forEach(note => {
+      const btn = document.createElement('button'); btn.className = 'note-link'; btn.textContent = note.name;
+      btn.addEventListener('click', e => { e.stopPropagation(); openNotePopup(note, btn); });
+      right.appendChild(btn);
     });
-    document.getElementById('notes-count').textContent = `${NI.length} notes`;
+    row.appendChild(left); row.appendChild(right); body.appendChild(row);
   });
+  document.getElementById('notes-count').textContent = `${NI.length} notes`;
 }
 
 /* ══ PROFILE ════════════════════════════════════════════════════════ */
@@ -980,9 +978,15 @@ export function buildProfile() {
       <div class="prof-empty">
         <div class="prof-empty-icon">◎</div>
         <div class="prof-empty-text">Add fragrances you own to see your taste profile.</div>
-        <button class="prof-empty-btn" onclick="localStorage.removeItem('sm_onboarded');OB_SEL.clear();renderOnboardWelcome();document.getElementById('onboard-overlay').style.display='flex'">Add my collection</button>
+        <button class="prof-empty-btn" id="prof-add-collection-btn">Add my collection</button>
       </div>
     `;
+    el.querySelector('#prof-add-collection-btn').addEventListener('click', () => {
+      localStorage.removeItem('sm_onboarded');
+      OB_SEL.clear();
+      renderOnboardWelcome();
+      document.getElementById('onboard-overlay').style.display = 'flex';
+    });
     return;
   }
   const { famSorted, notesSorted, roleCounts, avgSillage } = buildProfileData(owned.map(f => f.id));
@@ -1103,7 +1107,11 @@ export function buildProfile() {
   const clSec = document.createElement('div');
   clSec.className = 'prof-section';
   clSec.style.cssText = 'margin-top:24px;border-top:1px solid var(--g200);padding-top:16px';
-  clSec.innerHTML = `<div class="prof-section-label">What's new</div>
-    <button style="background:none;border:none;cursor:pointer;font-size:.78rem;color:var(--resin);padding:0;font-family:inherit;font-weight:600" onclick="import('./nav.js').then(({go})=>go('changelog',null))">View changelog →</button>`;
+  clSec.innerHTML = `<div class="prof-section-label">What's new</div>`;
+  const clBtn = document.createElement('button');
+  clBtn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:.78rem;color:var(--resin);padding:0;font-family:inherit;font-weight:600';
+  clBtn.textContent = 'View changelog →';
+  clBtn.addEventListener('click', () => import('./nav.js').then(({ go }) => go('changelog', null)));
+  clSec.appendChild(clBtn);
   document.getElementById('profile-body').appendChild(clSec);
 }
