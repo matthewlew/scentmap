@@ -4,6 +4,16 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (picker, carousel, role-landing, modifier CSS)
+
+### Fixed
+- **Picker panel missing CSS** — `picker-header`, `picker-title`, `picker-sub`, `picker-hero`, `picker-hero-sym-empty`, `picker-role-sym-line`, `picker-hero-sec-row/idx/name`, `picker-sec-lbl`, `picker-list`, `picker-row`, `picker-fdot`, `picker-info`, `picker-name-btn`, `picker-brand-row`, `picker-order-badge`, `primary-badge`, `picker-empty` all had no styles; picker panel now shows styled role header, empty/filled hero state, assigned list with Primary badge, and Remove buttons
+- **Carousel missing CSS** — `carousel-wrap`, `carousel` (horizontal scroll snap), `carousel-card`, `carousel-card-name/brand/family`, `fam-dot` had no styles; "Explore for this role" carousel now renders as horizontally scrollable cards with family color dots
+- **Role-landing missing CSS** — `role-landing`, `role-landing-grid` (2-col), `role-landing-card`, `rlc-sym/name/desc/count` had no styles; catalog landing (no role filter selected) now shows a styled 2×4 role grid with symbol, name, description, and fragrance count
+- **Modifier/chip classes** — `dc-role-chip`, `assigned-primary`, `assigned-secondary`, `chip-sym`, `chip-order`, `chip-add`, `is-wish` had no styles; role assignment chips in detail panel now render as styled interactive badges with primary (filled), secondary (outlined), and unassigned states
+
+---
+
 ## 2026-03-11 (capsule/scentmap panel CSS)
 
 ### Fixed
