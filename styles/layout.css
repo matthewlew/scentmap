@@ -28,7 +28,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px 8px;
+  padding: var(--sp-md) var(--sp-xl) var(--sp-sm);
   position: sticky;
   top: 0;
   background: var(--mobile-nav-bg);
@@ -36,7 +36,7 @@
 }
 
 .col-main-content {
-  padding: 20px 20px 80px;
+  padding: var(--sp-xl) var(--sp-xl) 80px; /* 80px = mobile nav bar clearance, intentional */
 }
 
 /* RIGHT: detail panel — desktop: in-flow third column */
@@ -158,7 +158,7 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  padding: 0 16px;
+  padding: 0 var(--sp-lg);
 }
 
 .sheet-content {
@@ -175,20 +175,20 @@
   height: 5px;
   border-radius: 2px;
   background: var(--g300);
-  margin: 12px auto 0;
+  margin: var(--sp-md) auto 0;
 }
 
 .sheet-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0 16px;
+  padding: var(--sp-md) 0 var(--sp-lg);
 }
 
 .sheet-back {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--sp-xs);
   font-size: var(--fs-body-sm);
   color: var(--text-secondary);
   background: none;
@@ -214,7 +214,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 3px 0 3px 8px;
+  padding: 3px 0 3px var(--sp-sm); /* 3px is intentional fine-tuning for optical alignment */
   transition: color var(--dur-fast) var(--ease-spring);
   min-height: 44px;
 }
@@ -236,7 +236,7 @@
   flex-direction: column;
   background: var(--bg-primary);
   border: 1px solid var(--text-primary);
-  padding: 16px;
+  padding: var(--sp-lg);
   text-align: left;
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-spring);
@@ -258,7 +258,7 @@
 .cap-sym {
   font-size: var(--fs-display);
   line-height: var(--lh-tight);
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-sm);
   order: 1;
 }
 
@@ -276,7 +276,7 @@
 .cap-desc-short {
   font-size: var(--fs-caption);
   color: var(--g450);
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-sm);
   line-height: 1.35;
   font-style: italic;
   order: 3;
@@ -302,13 +302,13 @@
 .cap-assign-cta {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--sp-xs);
   font-family: var(--font-sans);
   font-size: var(--fs-label);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin-top: 4px;
+  margin-top: var(--sp-xs);
   background: none;
   border: none;
   cursor: pointer;
@@ -328,32 +328,32 @@
   display: flex;
   background: var(--bg-secondary);
   border-radius: var(--radius-lg);
-  padding: 3px;
-  gap: 2px;
-  margin-bottom: 16px;
+  padding: 3px; /* 3px is intentional optical fine-tuning for segment pill */
+  gap: 2px;     /* 2px gap between segment options, intentional */
+  margin-bottom: var(--sp-lg);
 }
 
 .cat-filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 16px;
+  gap: var(--sp-xs);
+  margin-bottom: var(--sp-lg);
   background: var(--bg-tertiary);
   border-radius: var(--radius-lg);
-  padding: 3px;
+  padding: 3px; /* 3px is intentional optical fine-tuning for segment pill */
 }
 
 .cat-legend {
   display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: var(--sp-md);
+  margin-bottom: var(--sp-md);
   flex-wrap: wrap;
 }
 
 .cl-item {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--sp-xs);
   font-size: var(--fs-meta);
   color: var(--text-secondary);
 }
@@ -374,7 +374,7 @@
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin-bottom: 16px;
+  margin-bottom: var(--sp-lg);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -390,7 +390,7 @@
   justify-content: space-between;
   padding-bottom: var(--sp-sm);
   border-bottom: 1px solid var(--text-primary);
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-sm);
 }
 
 .brand-hdr-title {
@@ -404,7 +404,7 @@
   font-size: var(--fs-caption);
   font-weight: 400;
   color: var(--text-tertiary);
-  margin-left: 4px;
+  margin-left: var(--sp-xs);
   letter-spacing: var(--ls-normal);
   text-transform: none;
 }
@@ -448,13 +448,13 @@
   display: flex;
   justify-content: space-between;
   font-size: var(--fs-label);
-  padding: 4px 0;
-  margin-top: 8px;
+  padding: var(--sp-xs) 0;
+  margin-top: var(--sp-sm);
 }
 
 .x-title {
   font-size: var(--fs-meta);
-  margin-top: 4px;
+  margin-top: var(--sp-xs);
   text-align: center;
 }
 
@@ -471,52 +471,52 @@
 .axis-glossary {
   font-size: var(--fs-body-sm);
   line-height: 1.75;
-  margin-top: 28px;
-  padding-top: 16px;
+  margin-top: 28px; /* 28px intentional — larger visual break before glossary */
+  padding-top: var(--sp-lg);
   border-top: 1px solid var(--border-standard);
 }
 
 /* ── ROLE SECTION ── */
 
 .rs {
-  padding: 20px 0 24px;
+  padding: var(--sp-xl) 0 var(--sp-2xl);
 }
 
 .rs-sym {
   font-size: var(--fs-ui);
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-sm);
 }
 
 .rs-name {
   font-size: var(--fs-ui);
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-sm);
 }
 
 .rs-meta {
   font-size: var(--fs-body-sm);
   color: var(--text-secondary);
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-sm);
 }
 
 .rs-tagline {
   font-size: var(--fs-body-sm);
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-sm);
   line-height: 1.55;
 }
 
 .rs-body {
   font-size: var(--fs-body-sm);
   line-height: 1.72;
-  padding-left: 8px;
+  padding-left: var(--sp-sm);
   color: var(--g600);
 }
 
 .fam-chip {
   font-size: var(--fs-meta);
   display: inline-block;
-  margin-right: 4px;
-  margin-bottom: 4px;
+  margin-right: var(--sp-xs);
+  margin-bottom: var(--sp-xs);
 }
 
 /* ── DESIGN SYSTEM PAGE LAYOUT ── */
@@ -534,7 +534,7 @@
   width: 178px;
   flex-shrink: 0;
   border-right: 1px solid var(--border-standard);
-  padding: 24px 0 48px;
+  padding: var(--sp-2xl) 0 var(--sp-4xl);
   position: sticky;
   top: 0;
   height: calc(100vh - 50px);
@@ -550,7 +550,7 @@
 .ds-main {
   flex: 1;
   min-width: 0;
-  padding: 32px 28px 80px;
+  padding: var(--sp-3xl) 28px 80px; /* 28px and 80px are intentional: 28px matches ds-sidebar rhythm; 80px is clearance */
 }
 
 /* ── PICKER HERO ── */
@@ -560,14 +560,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 32px 20px;
-  gap: 8px;
+  padding: var(--sp-3xl) var(--sp-xl);
+  gap: var(--sp-sm);
 }
 
 .picker-hero-empty-label {
   font-size: var(--fs-body-sm);
   color: var(--text-secondary);
-  margin-bottom: 4px;
+  margin-bottom: var(--sp-xs);
   font-weight: 500;
 }
 
@@ -580,7 +580,7 @@
 .picker-hero-filled {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--sp-md);
 }
 
 .picker-hero-sym {
@@ -606,7 +606,7 @@
 .picker-hero-brand {
   font-size: var(--fs-meta);
   color: var(--text-secondary);
-  margin-bottom: 4px;
+  margin-bottom: var(--sp-xs);
 }
 
 .picker-hero-notes {
@@ -620,12 +620,12 @@
   font-weight: 600;
   font-size: var(--fs-label);
   letter-spacing: 0.01em;
-  margin-right: 4px;
+  margin-right: var(--sp-xs);
 }
 
 .picker-hero-secondary {
-  margin-top: 8px;
-  padding-top: 8px;
+  margin-top: var(--sp-sm);
+  padding-top: var(--sp-sm);
   border-top: 1px solid var(--border-standard);
 }
 
@@ -634,5 +634,5 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--g450);
-  margin-bottom: 4px;
+  margin-bottom: var(--sp-xs);
 }

@@ -3032,7 +3032,7 @@ button.cmp-note-pill:hover {
   background: var(--bg-secondary);
 }
 
-/* ══ FRAGRANCE PICKER MODAL ══ */
+/* ══ FRAGRANCE PICKER MODAL — DUAL COLUMN ══ */
 
 .frag-picker-overlay {
   position: fixed;
@@ -3055,28 +3055,61 @@ button.cmp-note-pill:hover {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-width: 200px;
+  min-width: 320px;
+  max-height: min(480px, 62vh);
 }
 
-.frag-picker-header {
-  padding: var(--sp-md) var(--sp-md) var(--sp-sm);
+/* ── Dual-column layout ── */
+.frag-picker-cols {
+  display: flex;
+  flex: 1;
+  min-height: 0;   /* allow flex children to shrink below content height */
+  overflow: hidden;
+}
+
+.frag-picker-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Subtle active-column left accent line on the label */
+.frag-picker-col.active .frag-picker-col-lbl {
+  color: var(--accent-primary);
+}
+
+.frag-picker-col-hdr {
+  padding: var(--sp-sm) var(--sp-md);
   border-bottom: 1px solid var(--border-standard);
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
 }
 
-.frag-picker-title {
+.frag-picker-col-lbl {
   font-family: var(--font-sans);
   font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin-bottom: var(--sp-sm);
+  transition: color var(--dur-fast) var(--ease-spring);
 }
 
+/* Vertical divider between columns */
+.frag-picker-col-divider {
+  width: 1px;
+  background: var(--border-standard);
+  flex-shrink: 0;
+}
+
+/* Search input — kept generic so both columns share styles */
 .frag-picker-search {
   width: 100%;
-  padding: 6px 10px;
+  padding: var(--sp-xs) var(--sp-sm);
   border: 1px solid var(--border-standard);
   border-radius: var(--radius);
   background: var(--bg-secondary);
@@ -3086,25 +3119,29 @@ button.cmp-note-pill:hover {
   transition: border-color var(--dur-fast) var(--ease-spring);
 }
 
-/* Border-based focus for this input — override global ring */
+/* Border-based focus for picker inputs — override global ring */
 .frag-picker-search:focus-visible {
   outline: none;
   box-shadow: none;
   border-color: var(--border-strong);
 }
 
+/* Scrollable list — scroll-snap keeps items snappy while scrolling */
 .frag-picker-list {
   flex: 1;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border-standard) transparent;
   overscroll-behavior: contain;
+  scroll-snap-type: y proximity;
 }
 
 .frag-picker-footer {
   padding: var(--sp-xs) var(--sp-md);
   border-top: 1px solid var(--border-standard);
   flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .frag-picker-close {
@@ -3116,9 +3153,7 @@ button.cmp-note-pill:hover {
   background: none;
   border: none;
   cursor: pointer;
-  padding: var(--sp-xs) 0;
-  width: 100%;
-  text-align: left;
+  padding: var(--sp-xs) var(--sp-sm);
   transition: color var(--dur-fast) var(--ease-spring);
 }
 
@@ -3126,20 +3161,22 @@ button.cmp-note-pill:hover {
   color: var(--text-primary);
 }
 
-/* Picker list items */
+/* ── Picker list items ── */
 .frag-picker-item {
   display: flex;
   align-items: center;
   gap: var(--sp-sm);
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--sp-sm) var(--sp-md);
   background: var(--bg-primary);
   border: none;
-  border-bottom: 1px solid var(--border-standard);
+  border-bottom: 1px solid var(--border-subtle);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
   transition: background var(--dur-fast) var(--ease-spring);
+  scroll-snap-align: start;
+  position: relative;
 }
 
 .frag-picker-item:last-child {
@@ -3148,6 +3185,59 @@ button.cmp-note-pill:hover {
 
 .frag-picker-item:hover {
   background: var(--bg-secondary);
+}
+
+/* Selected (currently chosen for that slot) */
+.frag-picker-item.selected {
+  background: var(--bg-secondary);
+}
+
+.frag-picker-item.selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent-primary);
+  border-radius: 0 var(--radius-micro) var(--radius-micro) 0;
+}
+
+/* Keyboard focus — distinct from hover, replaces the outline ring inside a listbox */
+.frag-picker-item.kbd-focus {
+  background: var(--bg-tertiary);
+  outline: none;
+}
+
+/* Text container — allows name/brand to truncate cleanly */
+.frag-picker-item-text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Checkmark shown for selected item */
+.frag-picker-item-check {
+  margin-left: auto;
+  padding-left: var(--sp-xs);
+  font-size: var(--fs-body-sm);
+  color: var(--accent-primary);
+  font-weight: 700;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+/* Mobile — wrap becomes a bottom sheet */
+@media (max-width: 767px) {
+  .frag-picker-wrap {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 72vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    border-bottom: none;
+  }
 }
 
 /* ══ NOTE POPUP ══ */

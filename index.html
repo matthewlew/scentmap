@@ -197,16 +197,28 @@
   <div class="onboard-card" id="onboard-card"></div>
 </div>
 
-<!-- FRAGRANCE PICKER MODAL -->
-<div class="frag-picker-overlay" id="frag-picker" role="dialog" aria-modal="true" aria-labelledby="frag-picker-title">
+<!-- FRAGRANCE PICKER — dual-column rolodex -->
+<div class="frag-picker-overlay" id="frag-picker" role="dialog" aria-modal="true" aria-label="Select fragrances">
   <div class="frag-picker-wrap">
-    <div class="frag-picker-header">
-      <div class="frag-picker-title" id="frag-picker-title">Select Fragrance</div>
-      <input class="frag-picker-search" id="frag-picker-search" type="text" placeholder="Search by name, brand, or note…" autocomplete="off" aria-label="Search fragrances">
+    <div class="frag-picker-cols">
+      <div class="frag-picker-col" id="frag-picker-col-a" data-slot="a">
+        <div class="frag-picker-col-hdr">
+          <span class="frag-picker-col-lbl">Fragrance 1</span>
+          <input class="frag-picker-search" id="frag-picker-search-a" type="text" placeholder="Search…" autocomplete="off" aria-label="Search fragrance one">
+        </div>
+        <div class="frag-picker-list" id="frag-picker-list-a" role="listbox" tabindex="0"></div>
+      </div>
+      <div class="frag-picker-col-divider"></div>
+      <div class="frag-picker-col" id="frag-picker-col-b" data-slot="b">
+        <div class="frag-picker-col-hdr">
+          <span class="frag-picker-col-lbl">Fragrance 2</span>
+          <input class="frag-picker-search" id="frag-picker-search-b" type="text" placeholder="Search…" autocomplete="off" aria-label="Search fragrance two">
+        </div>
+        <div class="frag-picker-list" id="frag-picker-list-b" role="listbox" tabindex="0"></div>
+      </div>
     </div>
-    <div class="frag-picker-list" id="frag-picker-list" role="listbox"></div>
     <div class="frag-picker-footer">
-      <button class="frag-picker-close" id="frag-picker-close" aria-label="Close fragrance picker">✕  Close</button>
+      <button class="frag-picker-close" id="frag-picker-close" aria-label="Close fragrance picker">Done</button>
     </div>
   </div>
 </div>
@@ -3048,81 +3060,128 @@ function renderCompareResults(fa,fb){
   _initStickyScroll();
 }
 
-/* ── Fragrance picker modal ── */
+/* ── Fragrance picker — dual-column rolodex ── */
 let _pickerSlot=null;
-function _openFragPicker(slot,sourceEl){
+
+function _openFragPicker(slot){
   window.haptic?.('light');
   _pickerSlot=slot;
+  // Render both columns fresh
+  _renderPickerList('',slot);
+  // Set active column
+  document.getElementById('frag-picker-col-a')?.classList.toggle('active',slot==='a');
+  document.getElementById('frag-picker-col-b')?.classList.toggle('active',slot==='b');
+  // Position wrap below the header on desktop
   const overlay=document.getElementById('frag-picker');
-  const title=document.getElementById('frag-picker-title');
-  const search=document.getElementById('frag-picker-search');
-  if(title)title.textContent=slot==='a'?'Fragrance One':'Fragrance Two';
-  if(search)search.value='';
-  _renderPickerList('');
-  // Desktop ≥768px: anchor dropdown below trigger element
-  if(window.innerWidth>=768){
-    const anchor=sourceEl||document.getElementById(`cmp-card-${slot}`);
-    const wrap=overlay.querySelector('.frag-picker-wrap');
-    if(anchor&&wrap){
-      const r=anchor.getBoundingClientRect();
-      const avail=window.innerHeight-r.bottom-12;
+  const wrap=overlay?.querySelector('.frag-picker-wrap');
+  if(wrap&&window.innerWidth>=768){
+    const header=document.getElementById('cmp-header');
+    if(header){
+      const r=header.getBoundingClientRect();
       wrap.style.top=(r.bottom+6)+'px';
+      wrap.style.left=r.left+'px';
       wrap.style.width=r.width+'px';
-      wrap.style.maxHeight=Math.max(200,avail)+'px';
-      if(slot==='a'){wrap.style.left=r.left+'px';wrap.style.right='auto';}
-      else{wrap.style.right=(window.innerWidth-r.right)+'px';wrap.style.left='auto';}
+      wrap.style.right='auto';
     }
   }
-  overlay.classList.add('open');
-  setTimeout(()=>{if(search)search.focus();},200);
+  overlay?.classList.add('open');
+  // Focus the search for the active slot
+  setTimeout(()=>document.getElementById(`frag-picker-search-${slot}`)?.focus(),120);
 }
+
 function _closeFragPicker(){
   window.haptic?.('light');
-  document.getElementById('frag-picker').classList.remove('open');
+  document.getElementById('frag-picker')?.classList.remove('open');
   _pickerSlot=null;
 }
-function _renderPickerList(q){
-  const list=document.getElementById('frag-picker-list');
+
+function _renderPickerList(q,slot){
+  const list=document.getElementById(`frag-picker-list-${slot}`);
   if(!list)return;
   const lower=q.toLowerCase();
+  const otherFrag=slot==='a'?CMP_B:CMP_A;
   let frags=q.length<1?[...CAT]:CAT.filter(f=>{
-    const topArr=Array.isArray(f.top)?f.top:(f.top||'').split(',').map(s=>s.trim());
-    const midArr=Array.isArray(f.mid)?f.mid:(f.mid||'').split(',').map(s=>s.trim());
+    const allNotes=[...(f.top||[]),...(f.mid||[]),...(f.base||[])];
     return f.name.toLowerCase().includes(lower)||
       f.brand.toLowerCase().includes(lower)||
-      topArr.some(n=>n.toLowerCase().includes(lower))||
-      midArr.some(n=>n.toLowerCase().includes(lower));
+      allNotes.some(n=>n.toLowerCase().includes(lower));
   });
-  // Exclude whichever frag is already selected in the other slot
-  const otherFrag=_pickerSlot==='a'?CMP_B:CMP_A;
   if(otherFrag)frags=frags.filter(f=>f.id!==otherFrag.id);
   frags.sort((a,b)=>a.brand.localeCompare(b.brand)||a.name.localeCompare(b.name));
+  // Mark currently selected
+  const curFrag=slot==='a'?CMP_A:CMP_B;
   list.innerHTML=frags.map(f=>{
     const fc=getCmpFam(f.family);
-    return`<div class="frag-picker-item" data-id="${f.id}">
+    const isCur=curFrag&&curFrag.id===f.id;
+    return`<div class="frag-picker-item${isCur?' selected':''}" data-id="${f.id}" role="option" aria-selected="${isCur}">
       <div class="frag-picker-dot" style="background:${fc.accent}"></div>
-      <div>
+      <div class="frag-picker-item-text">
         <div class="frag-picker-item-name">${f.name}</div>
         <div class="frag-picker-item-brand">${f.brand} · ${(FAM[f.family]||{}).label||f.family}</div>
       </div>
+      ${isCur?'<div class="frag-picker-item-check">✓</div>':''}
     </div>`;
   }).join('');
   list.querySelectorAll('.frag-picker-item').forEach(item=>{
     item.addEventListener('click',()=>{
       const f=CAT_MAP[item.dataset.id];
-      if(f){_selectFragForSlot(_pickerSlot,f);_closeFragPicker();}
+      if(!f)return;
+      window.haptic?.('medium');
+      _selectFragForSlot(slot,f);
+      // Re-render both lists to update selected marks + exclusions
+      ['a','b'].forEach(s=>_renderPickerList(
+        document.getElementById(`frag-picker-search-${s}`)?.value.trim()||'',s
+      ));
+      // Scroll selected item into view
+      requestAnimationFrame(()=>{
+        list.querySelector('.selected')?.scrollIntoView({block:'nearest'});
+      });
     });
   });
+  // Scroll to current selection
+  requestAnimationFrame(()=>{
+    list.querySelector('.selected')?.scrollIntoView({block:'nearest'});
+  });
 }
+
+/* Arrow-key / Enter navigation within a picker list */
+function _initPickerKeyNav(listEl,slot){
+  listEl.addEventListener('keydown',e=>{
+    const items=Array.from(listEl.querySelectorAll('.frag-picker-item'));
+    if(!items.length)return;
+    const focused=listEl.querySelector('.kbd-focus');
+    let idx=focused?items.indexOf(focused):-1;
+    if(e.key==='ArrowDown'){
+      e.preventDefault();
+      idx=Math.min(idx+1,items.length-1);
+    } else if(e.key==='ArrowUp'){
+      e.preventDefault();
+      idx=Math.max(idx-1,0);
+    } else if(e.key==='Enter'&&focused){
+      e.preventDefault();
+      focused.click();return;
+    } else if(e.key==='Escape'){
+      e.preventDefault();
+      _closeFragPicker();return;
+    } else return;
+    items.forEach(it=>it.classList.remove('kbd-focus'));
+    items[idx].classList.add('kbd-focus');
+    items[idx].scrollIntoView({block:'nearest'});
+  });
+  // Clear kbd-focus on mouse interaction
+  listEl.addEventListener('mousemove',()=>{
+    listEl.querySelectorAll('.kbd-focus').forEach(el=>el.classList.remove('kbd-focus'));
+  });
+}
+
 function _selectFragForSlot(slot,frag){
-  window.haptic?.('medium');
   if(slot==='a')CMP_A=frag;else CMP_B=frag;
   _fillCard(slot,frag);
-  // Re-wire the new card's click to open picker
   const card=document.getElementById(`cmp-card-${slot}`);
-  if(card)card.addEventListener('click',()=>_openFragPicker(slot,card));
+  if(card)card.addEventListener('click',()=>_openFragPicker(slot));
   if(CMP_A&&CMP_B)renderCompareResults(CMP_A,CMP_B);
 }
+
 function _fillCard(slot,frag){
   const card=document.getElementById(`cmp-card-${slot}`);
   if(!card)return;
@@ -3142,6 +3201,7 @@ function _fillCard(slot,frag){
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
   card.querySelector('.cmp-card-clear')?.addEventListener('click',e=>{e.stopPropagation();clearCmpSlot(slot);});
 }
+
 function _resetCard(slot){
   const card=document.getElementById(`cmp-card-${slot}`);
   if(!card)return;
@@ -3153,14 +3213,16 @@ function _resetCard(slot){
     <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">${label}</div><div class="cmp-card-empty-hint">Tap to select</div></div>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 }
+
 function initCompare(){
   ['a','b'].forEach(slot=>{
     const card=document.getElementById(`cmp-card-${slot}`);
-    if(!card)return;
-    card.addEventListener('click',()=>_openFragPicker(slot,card));
+    if(card)card.addEventListener('click',()=>_openFragPicker(slot));
+    const search=document.getElementById(`frag-picker-search-${slot}`);
+    if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim(),slot));
+    const list=document.getElementById(`frag-picker-list-${slot}`);
+    if(list)_initPickerKeyNav(list,slot);
   });
-  const search=document.getElementById('frag-picker-search');
-  if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim()));
   const closeBtn=document.getElementById('frag-picker-close');
   if(closeBtn)closeBtn.addEventListener('click',_closeFragPicker);
   const overlay=document.getElementById('frag-picker');
