@@ -40,16 +40,6 @@
     display: none !important;
   }
 
-  /* Design system sidebar */
-  .ds-sidebar {
-    top: 0;
-    height: auto;
-    position: relative;
-  }
-
-  .ds-main {
-    padding: var(--sp-2xl) var(--sp-xl) 80px;
-  }
 }
 
 /* ── TABLET: 768–1099px ── */
@@ -95,16 +85,6 @@
     pointer-events: all;
   }
 
-  /* Design system sidebar */
-  .ds-sidebar {
-    top: 0;
-    height: auto;
-    position: relative;
-  }
-
-  .ds-main {
-    padding: var(--sp-2xl) var(--sp-xl) 80px;
-  }
 }
 
 /* ── MOBILE: <768px ── */
@@ -145,63 +125,6 @@
     display: none !important;
   }
 
-  /* Design system layout */
-  .ds-layout {
-    flex-direction: column;
-  }
-
-  .ds-sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    border-right: none;
-    border-bottom: 1px solid var(--border-standard);
-    padding: var(--sp-md) 0 0;
-  }
-
-  .ds-sb-head {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-md);
-    padding: 0 var(--sp-lg) var(--sp-sm);
-  }
-
-  .ds-sb-updated {
-    display: none;
-  }
-
-  .ds-sb-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding: 0 var(--sp-md) var(--sp-md);
-    gap: var(--sp-xs);
-    white-space: nowrap;
-  }
-
-  .ds-sb-nav::-webkit-scrollbar {
-    display: none;
-  }
-
-  .ds-sb-link {
-    font-size: var(--fs-label);
-    padding: var(--sp-xs) var(--sp-sm);
-    display: inline-block;
-    white-space: nowrap;
-  }
-
-  .ds-sb-link.ds-sub {
-    padding-left: var(--sp-sm);
-  }
-
-  .ds-sb-divider {
-    display: none;
-  }
-
-  .ds-main {
-    padding: var(--sp-xl) var(--sp-lg) 60px;
-  }
-
   /* Tap targets (44px minimum) */
   .tab {
     font-size: var(--fs-body);
@@ -218,59 +141,6 @@
 
   .logo {
     font-size: var(--fs-body);
-  }
-
-  .capsule-tagline {
-    font-size: var(--fs-body-sm);
-    line-height: var(--lh-normal);
-    margin-bottom: var(--sp-lg);
-  }
-
-  /* Capsule grid */
-  .capsule-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-  }
-
-  .cap-cell {
-    min-height: 160px;
-    padding: var(--sp-lg) var(--sp-md);
-  }
-
-  .cap-role {
-    font-size: var(--fs-body-sm);
-    letter-spacing: 0.01em;
-  }
-
-  .cap-desc-short {
-    font-size: var(--fs-meta);
-    margin-bottom: var(--sp-sm);
-    line-height: 1.35;
-  }
-
-  .cap-sym {
-    font-size: var(--fs-display);
-    margin-bottom: var(--sp-sm);
-  }
-
-  .cap-primary {
-    font-size: var(--fs-body);
-  }
-
-  .cap-frag-brand {
-    font-size: var(--fs-body-sm);
-  }
-
-  .cap-assign-cta {
-    font-size: var(--fs-body-sm);
-    gap: var(--sp-xs);
-    margin-top: var(--sp-xs);
-  }
-
-  .cap-plus {
-    width: 17px;
-    height: 17px;
-    font-size: var(--fs-body-sm);
   }
 
   /* Catalog layout mobile */
@@ -365,82 +235,6 @@
 
   .s-sym {
     font-size: var(--fs-body);
-  }
-
-  /* Roles tab */
-  .rs {
-    padding: var(--sp-xl) 0 var(--sp-2xl);
-  }
-
-  .rs-sym {
-    font-size: var(--fs-ui);
-  }
-
-  .rs-name {
-    font-size: var(--fs-ui);
-  }
-
-  .rs-meta {
-    font-size: var(--fs-body-sm);
-  }
-
-  .rs-tagline {
-    font-size: var(--fs-body-sm);
-    margin-bottom: var(--sp-sm);
-  }
-
-  .rs-body {
-    font-size: var(--fs-body-sm);
-    line-height: 1.72;
-    padding-left: var(--sp-sm);
-  }
-
-  .fam-chip {
-    font-size: var(--fs-meta);
-  }
-
-  .chart-outer {
-    margin-left: 40px;
-  }
-
-  .y-title {
-    left: -38px;
-    font-size: var(--fs-meta);
-  }
-
-  .y-labels {
-    left: -38px;
-  }
-
-  .y-lbl {
-    font-size: var(--fs-label);
-    width: 35px;
-  }
-
-  .x-labels {
-    font-size: var(--fs-label);
-    padding: var(--sp-xs) 0;
-  }
-
-  .x-title {
-    font-size: var(--fs-meta);
-    margin-top: var(--sp-xs);
-  }
-
-  .dot-c {
-    width: 11px;
-    height: 11px;
-  }
-
-  .dot-lbl {
-    font-size: var(--fs-meta);
-  }
-
-  .axis-glossary {
-    font-size: var(--fs-body-sm);
-    line-height: 1.75;
-    margin-top: var(--sp-3xl);
-    padding-top: var(--sp-lg);
   }
 
   /* Notes tab */
@@ -594,15 +388,6 @@
 
   .cmp-edu-grid {
     grid-template-columns: 1fr;
-  }
-
-  /* Design system swatches */
-  .ds-swatches {
-    gap: var(--sp-sm);
-  }
-
-  .ds-sw {
-    width: 72px;
   }
 
   /* Fragrance picker — bottom sheet on mobile */
