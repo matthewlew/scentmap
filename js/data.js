@@ -17,7 +17,7 @@ export const ROLES = [
     symLine:'✦ signals curiosity — something unusual enough to prompt a question.',
     long:"Worn when the fragrance itself is the point — unusual materials, unexpected progressions, compositions that refuse easy categorisation. The emotional register is curiosity and confidence. Unlike Signature, it isn't worn often; unlike Formal, it doesn't need to be appropriate — it needs to be interesting." },
   { id:'work',      sym:'♣', name:'Professional', desc:'Present but never imposing',
-    symLine:'♣ signals restraint — respect for shared space you didn\'t choose.',
+    symLine:"♣ signals restraint — respect for shared space you didn't choose.",
     long:'Calibrated for shared spaces where consent to smell it has not been given. It projects just enough to be noticed as grooming rather than statement. The intention is respect: your fragrance should not enter a meeting before you do. Differs from Casual in restraint, and from Signature in that legibility matters less than courtesy.' },
   { id:'heat',      sym:'♦', name:'Summer',       desc:'Survives warmth, stays fresh',
     symLine:'♦ signals adaptation — chemistry chosen for what heat does to it.',
@@ -66,21 +66,25 @@ function parseNotes(str) {
   return str.split(',').map(s => s.trim()).filter(Boolean);
 }
 
-// CAT is loaded async from data/scents.json.
-// Call initData() once on startup; await it before rendering anything.
-export let CAT = [];
-export let CAT_MAP = {};
+// CAT and CAT_MAP are mutated in place by initData() so that all modules
+// that import them as live bindings see the populated data after await.
+export const CAT = [];
+export const CAT_MAP = {};
 
 export async function initData() {
   const res = await fetch('data/scents.json');
   const raw = await res.json();
-  CAT = raw.map(f => ({
+  const parsed = raw.map(f => ({
     ...f,
     top:  parseNotes(f.top),
     mid:  parseNotes(f.mid),
     base: parseNotes(f.base),
   }));
-  CAT_MAP = Object.fromEntries(CAT.map(f => [f.id, f]));
+  // Mutate in place — never reassign, so imported references stay valid
+  CAT.length = 0;
+  CAT.push(...parsed);
+  Object.keys(CAT_MAP).forEach(k => delete CAT_MAP[k]);
+  parsed.forEach(f => { CAT_MAP[f.id] = f; });
 }
 
 // Note index — static, not loaded from JSON
