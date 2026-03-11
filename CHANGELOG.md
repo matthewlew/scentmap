@@ -4,6 +4,20 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (refactor: remove unused panels and dead code)
+
+### Removed
+- **Panels**: p-map (3D fragrance map), p-scentmap (capsule), p-roles (scatter chart), p-profile (analytics), p-design (design system), onboarding overlay — removed from HTML, JS, and all CSS.
+- **JS functions**: `buildCapsule`, `buildRoles`, `buildRoleLanding`, `buildProfile`, `buildProfileData`, `renderOnboardReveal`, `dsGo`, `buildDesign`, `_fm2*` (2D map), `_fm3*` (3D map), `buildPairer`, `autoAssignFromOwned`, `syncDots` — ~1,847 lines removed.
+- **Dead CSS**: capsule grid, chart/visualization containers, role section, design system page layout, onboarding overlay, profile panel, capsule/scentmap component, role landing, DS sidebar/main responsive overrides — removed across all four CSS files.
+
+### Changed
+- Init block simplified to `buildCatalog(); buildNotes(); initCatalogControls(); initCompare();`
+- "More" sheet now shows only Notes and Changelog (was 6 items)
+- `go()` function cleaned of removed-panel branches
+
+---
+
 ## 2026-03-11 (style: cmp-frag-card-name display small)
 
 ### Changed
