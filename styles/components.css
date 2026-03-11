@@ -3056,32 +3056,69 @@ button.cmp-note-pill:hover {
   flex-direction: column;
   overflow: hidden;
   min-width: 320px;
-  max-height: min(480px, 62vh);
+  max-height: min(540px, 68vh);
 }
 
-/* ── Dual-column layout ── */
-.frag-picker-cols {
-  display: flex;
-  flex: 1;
-  min-height: 0;   /* allow flex children to shrink below content height */
-  overflow: hidden;
-}
-
-.frag-picker-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
-}
-
-/* Subtle active-column left accent line on the label */
-.frag-picker-col.active .frag-picker-col-lbl {
-  color: var(--accent-primary);
-}
-
-.frag-picker-col-hdr {
+/* ── Top section: sort bar only ── */
+.frag-picker-top {
   padding: var(--sp-sm) var(--sp-md);
+  border-bottom: 1px solid var(--border-standard);
+  flex-shrink: 0;
+}
+
+/* Sliding-pill sort bar */
+.frag-picker-sort-bar {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  padding: 3px;
+}
+
+.frag-picker-sort-btn {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  padding: 5px var(--sp-xs);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-spring);
+  white-space: nowrap;
+}
+
+.frag-picker-sort-btn.active {
+  color: var(--text-primary);
+}
+
+.frag-picker-sort-btn:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: -1px;
+}
+
+/* Pill slides behind active button */
+.frag-picker-sort-pill {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  background: var(--bg-primary);
+  border-radius: calc(var(--radius) - 2px);
+  box-shadow: 0 1px 3px var(--fade-subtle);
+  pointer-events: none;
+  transition: left var(--dur-standard) var(--ease-spring),
+              width var(--dur-standard) var(--ease-spring);
+}
+
+/* Per-column header: label + search input */
+.frag-picker-col-hdr {
+  padding: var(--sp-xs) var(--sp-md) var(--sp-sm);
   border-bottom: 1px solid var(--border-standard);
   flex-shrink: 0;
   display: flex;
@@ -3099,14 +3136,11 @@ button.cmp-note-pill:hover {
   transition: color var(--dur-fast) var(--ease-spring);
 }
 
-/* Vertical divider between columns */
-.frag-picker-col-divider {
-  width: 1px;
-  background: var(--border-standard);
-  flex-shrink: 0;
+.frag-picker-col.active .frag-picker-col-lbl {
+  color: var(--accent-primary);
 }
 
-/* Search input — kept generic so both columns share styles */
+/* Per-column search input */
 .frag-picker-search {
   width: 100%;
   padding: var(--sp-xs) var(--sp-sm);
@@ -3119,21 +3153,87 @@ button.cmp-note-pill:hover {
   transition: border-color var(--dur-fast) var(--ease-spring);
 }
 
-/* Border-based focus for picker inputs — override global ring */
 .frag-picker-search:focus-visible {
   outline: none;
   box-shadow: none;
   border-color: var(--border-strong);
 }
 
-/* Scrollable list — scroll-snap keeps items snappy while scrolling */
-.frag-picker-list {
+/* ── Dual-column layout ── */
+.frag-picker-cols {
+  display: flex;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.frag-picker-col {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Vertical divider between columns */
+.frag-picker-col-divider {
+  width: 1px;
+  background: var(--border-standard);
+  flex-shrink: 0;
+}
+
+/* ── Drum window: fixed height, center groove, fade edges ── */
+.frag-picker-list-outer {
+  position: relative;
+  height: 300px;   /* shows 5 items — matches padding calc below */
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Center selection groove — renders behind the scrolling list */
+.frag-picker-list-outer::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60px;   /* matches PICKER_ITEM_H */
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-standard);
+  border-bottom: 1px solid var(--border-standard);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top + bottom fades — render above the list */
+.frag-picker-list-outer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, var(--bg-primary) 0%, transparent 32%),
+    linear-gradient(to top,    var(--bg-primary) 0%, transparent 32%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Scrollable drum — transparent so groove shows through */
+.frag-picker-list {
+  position: relative;
+  z-index: 2;
+  height: 100%;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-standard) transparent;
+  overflow-x: hidden;
+  scrollbar-width: none;
   overscroll-behavior: contain;
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
+  /* padding centers first/last items in the groove: (300 - 60) / 2 = 120px */
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+
+.frag-picker-list::-webkit-scrollbar {
+  display: none;
 }
 
 .frag-picker-footer {
@@ -3141,7 +3241,15 @@ button.cmp-note-pill:hover {
   border-top: 1px solid var(--border-standard);
   flex-shrink: 0;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.frag-picker-swipe-hint {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  color: var(--text-disabled);
+  letter-spacing: 0.01em;
 }
 
 .frag-picker-close {
@@ -3161,69 +3269,47 @@ button.cmp-note-pill:hover {
   color: var(--text-primary);
 }
 
-/* ── Picker list items ── */
+/* ── Picker list items — drum/rolodex style ── */
 .frag-picker-item {
   display: flex;
   align-items: center;
   gap: var(--sp-sm);
   width: 100%;
-  padding: var(--sp-sm) var(--sp-md);
-  background: var(--bg-primary);
+  height: 60px;          /* must match PICKER_ITEM_H in JS and groove height in CSS */
+  flex-shrink: 0;
+  padding: 0 var(--sp-md);
+  background: transparent;   /* groove shows through */
   border: none;
-  border-bottom: 1px solid var(--border-subtle);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  transition: background var(--dur-fast) var(--ease-spring);
-  scroll-snap-align: start;
-  position: relative;
+  opacity: 0.32;
+  transition: opacity var(--dur-fast) var(--ease-spring);
+  scroll-snap-align: center;
 }
 
-.frag-picker-item:last-child {
-  border-bottom: none;
+/* Centered item — sits in the groove, full opacity */
+.frag-picker-item.centered {
+  opacity: 1;
 }
 
-.frag-picker-item:hover {
-  background: var(--bg-secondary);
+.frag-picker-item.centered .frag-picker-item-name {
+  font-weight: 700;
 }
 
-/* Selected (currently chosen for that slot) */
-.frag-picker-item.selected {
-  background: var(--bg-secondary);
+/* Item chosen in the other column — always dim even when centered */
+.frag-picker-item.other-sel {
+  opacity: 0.22;
 }
 
-.frag-picker-item.selected::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--accent-primary);
-  border-radius: 0 var(--radius-micro) var(--radius-micro) 0;
-}
-
-/* Keyboard focus — distinct from hover, replaces the outline ring inside a listbox */
-.frag-picker-item.kbd-focus {
-  background: var(--bg-tertiary);
-  outline: none;
+.frag-picker-item.other-sel.centered {
+  opacity: 0.55;
 }
 
 /* Text container — allows name/brand to truncate cleanly */
 .frag-picker-item-text {
   flex: 1;
   min-width: 0;
-}
-
-/* Checkmark shown for selected item */
-.frag-picker-item-check {
-  margin-left: auto;
-  padding-left: var(--sp-xs);
-  font-size: var(--fs-body-sm);
-  color: var(--accent-primary);
-  font-weight: 700;
-  flex-shrink: 0;
-  line-height: 1;
 }
 
 /* Mobile — wrap becomes a bottom sheet */
@@ -3234,7 +3320,6 @@ button.cmp-note-pill:hover {
     left: 0;
     right: 0;
     width: 100%;
-    max-height: 72vh;
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     border-bottom: none;
   }

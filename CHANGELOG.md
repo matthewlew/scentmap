@@ -4,6 +4,25 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (ux: drum-roller picker — independent columns, auto-select on center)
+
+### Changed
+- **Redesigned picker as a true drum-roller.** Each column now scrolls independently and auto-selects the item centred in the groove — no tap required. The centre selection zone is rendered as a fixed 300 px drum window with a `::before` groove (border lines + `--bg-secondary` fill) and `::after` top/bottom fade-out gradients, giving the physical feeling of a wheel stopping on a choice. Items use `scroll-snap-align: center` with symmetric `padding-top/bottom: 120px` so the first and last items can reach the groove.
+- **Haptic tick per item.** `window.haptic('selection')` fires each time the centred index changes, matching one physical "click" per notch of the wheel. Selection is debounced 180 ms so the comparison only updates once scrolling settles.
+- **Per-column independent search inputs** restored. Each side has its own search field so users can filter the two drums entirely independently (e.g. search "le labo" on the left and "byredo" on the right simultaneously).
+- **Tap-to-centre.** Tapping any item smooth-scrolls it to the groove centre; the scroll handler then finalises the selection — consistent behaviour whether the user scrolls or taps.
+- **Live comparison update.** As soon as a new item snaps to centre and the debounce fires, `renderCompareResults` reruns and the scores/radar update in real time without closing the picker.
+- **Other-slot dimming.** An item already selected in the opposite column renders at 22 % opacity by default; if it is also the centred item it renders at 55 % with a distinct visual cue.
+
+## 2026-03-11 (ux: rolodex picker — sync scroll, sort bar, haptic ticks)
+
+### Added
+- **Rolodex-style fragrance picker.** Both columns now scroll in synchrony — scrolling either list moves the other, so users can browse the full catalog side-by-side without losing their place. Items snap to a fixed 52 px height via `scroll-snap-type: y mandatory`, giving each scroll unit a physical "tick" feel. Haptic feedback fires on each tick crossing via `window.haptic('selection')`.
+- **Horizontal-swipe sort.** A three-mode sort bar (Brand / Name / Family) replaces the per-column search headers. Swiping left/right on the list area cycles through sort modes; tapping a button jumps directly. A CSS spring-animated pill slides behind the active button. Subtitle text adapts per sort mode to avoid repeating the primary sort key.
+- **Shared search input.** A single search field above both columns filters both lists simultaneously, replacing the previous per-column inputs.
+- **Cross-column dim.** An item already selected in the opposite column is rendered at 38% opacity so users instantly see which fragrances are in use.
+- **Fade-edge rolodex effect.** Top and bottom gradient overlays on each list column create the visual illusion of items entering and leaving a "window," reinforcing the scroll-wheel metaphor.
+
 ## 2026-03-11 (ux: search match context in catalog rows)
 
 ### Changed

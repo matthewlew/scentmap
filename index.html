@@ -16,10 +16,10 @@
   const _h = new WebHaptics();
   window._hapticImpl = type => { try { _h.trigger(type); } catch(e) {} };
 </script>
-<link rel="stylesheet" href="styles/design-system.css?v=20260311c">
-<link rel="stylesheet" href="styles/components.css?v=20260311c">
-<link rel="stylesheet" href="styles/layout.css?v=20260311c">
-<link rel="stylesheet" href="styles/responsive.css?v=20260311c">
+<link rel="stylesheet" href="styles/design-system.css?v=20260311d">
+<link rel="stylesheet" href="styles/components.css?v=20260311d">
+<link rel="stylesheet" href="styles/layout.css?v=20260311d">
+<link rel="stylesheet" href="styles/responsive.css?v=20260311d">
 </head>
 <body>
 <div class="shell">
@@ -197,16 +197,26 @@
   <div class="onboard-card" id="onboard-card"></div>
 </div>
 
-<!-- FRAGRANCE PICKER — dual-column rolodex -->
+<!-- FRAGRANCE PICKER — dual-column drum rolodex -->
 <div class="frag-picker-overlay" id="frag-picker" role="dialog" aria-modal="true" aria-label="Select fragrances">
   <div class="frag-picker-wrap">
-    <div class="frag-picker-cols">
+    <div class="frag-picker-top">
+      <div class="frag-picker-sort-bar" id="frag-picker-sort-bar" role="group" aria-label="Sort order">
+        <button class="frag-picker-sort-btn active" data-sort="brand" aria-pressed="true">Brand</button>
+        <button class="frag-picker-sort-btn" data-sort="name" aria-pressed="false">Name</button>
+        <button class="frag-picker-sort-btn" data-sort="family" aria-pressed="false">Family</button>
+        <div class="frag-picker-sort-pill" id="frag-picker-sort-pill" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="frag-picker-cols" id="frag-picker-cols">
       <div class="frag-picker-col" id="frag-picker-col-a" data-slot="a">
         <div class="frag-picker-col-hdr">
           <span class="frag-picker-col-lbl">Fragrance 1</span>
           <input class="frag-picker-search" id="frag-picker-search-a" type="text" placeholder="Search…" autocomplete="off" aria-label="Search fragrance one">
         </div>
-        <div class="frag-picker-list" id="frag-picker-list-a" role="listbox" tabindex="0"></div>
+        <div class="frag-picker-list-outer">
+          <div class="frag-picker-list" id="frag-picker-list-a" role="listbox" tabindex="0" aria-label="Fragrance 1 options"></div>
+        </div>
       </div>
       <div class="frag-picker-col-divider"></div>
       <div class="frag-picker-col" id="frag-picker-col-b" data-slot="b">
@@ -214,7 +224,9 @@
           <span class="frag-picker-col-lbl">Fragrance 2</span>
           <input class="frag-picker-search" id="frag-picker-search-b" type="text" placeholder="Search…" autocomplete="off" aria-label="Search fragrance two">
         </div>
-        <div class="frag-picker-list" id="frag-picker-list-b" role="listbox" tabindex="0"></div>
+        <div class="frag-picker-list-outer">
+          <div class="frag-picker-list" id="frag-picker-list-b" role="listbox" tabindex="0" aria-label="Fragrance 2 options"></div>
+        </div>
       </div>
     </div>
     <div class="frag-picker-footer">
@@ -3060,15 +3072,20 @@ function renderCompareResults(fa,fb){
   _initStickyScroll();
 }
 
-/* ── Fragrance picker — dual-column rolodex ── */
+/* ── Fragrance picker — dual-column drum rolodex ── */
 let _pickerSlot=null;
+let _pickerSort='brand'; // 'brand' | 'name' | 'family'
+const PICKER_ITEM_H=60; // must match CSS --picker-item-h
 
 function _openFragPicker(slot){
   window.haptic?.('light');
   _pickerSlot=slot;
-  // Render both columns fresh
-  _renderPickerList('',slot);
-  // Set active column
+  // Each column has its own search; render each with its own current query
+  ['a','b'].forEach(s=>{
+    const q=document.getElementById(`frag-picker-search-${s}`)?.value.trim()||'';
+    _renderPickerList(q,s);
+  });
+  // Highlight the initiating column
   document.getElementById('frag-picker-col-a')?.classList.toggle('active',slot==='a');
   document.getElementById('frag-picker-col-b')?.classList.toggle('active',slot==='b');
   // Position wrap below the header on desktop
@@ -3085,7 +3102,8 @@ function _openFragPicker(slot){
     }
   }
   overlay?.classList.add('open');
-  // Focus the search for the active slot
+  requestAnimationFrame(()=>_updatePickerSort());
+  // Focus the search input for the initiating slot
   setTimeout(()=>document.getElementById(`frag-picker-search-${slot}`)?.focus(),120);
 }
 
@@ -3095,82 +3113,173 @@ function _closeFragPicker(){
   _pickerSlot=null;
 }
 
+/* Re-render both columns keeping each slot's own search query (used after sort change) */
+function _renderPickerLists(){
+  ['a','b'].forEach(s=>{
+    const q=document.getElementById(`frag-picker-search-${s}`)?.value.trim()||'';
+    _renderPickerList(q,s);
+  });
+}
+
 function _renderPickerList(q,slot){
   const list=document.getElementById(`frag-picker-list-${slot}`);
   if(!list)return;
   const lower=q.toLowerCase();
-  const otherFrag=slot==='a'?CMP_B:CMP_A;
   let frags=q.length<1?[...CAT]:CAT.filter(f=>{
     const allNotes=[...(f.top||[]),...(f.mid||[]),...(f.base||[])];
     return f.name.toLowerCase().includes(lower)||
       f.brand.toLowerCase().includes(lower)||
       allNotes.some(n=>n.toLowerCase().includes(lower));
   });
-  if(otherFrag)frags=frags.filter(f=>f.id!==otherFrag.id);
-  frags.sort((a,b)=>a.brand.localeCompare(b.brand)||a.name.localeCompare(b.name));
-  // Mark currently selected
+  if(_pickerSort==='name'){
+    frags.sort((a,b)=>a.name.localeCompare(b.name));
+  } else if(_pickerSort==='family'){
+    frags.sort((a,b)=>a.family.localeCompare(b.family)||a.name.localeCompare(b.name));
+  } else {
+    frags.sort((a,b)=>a.brand.localeCompare(b.brand)||a.name.localeCompare(b.name));
+  }
   const curFrag=slot==='a'?CMP_A:CMP_B;
+  const otherFrag=slot==='a'?CMP_B:CMP_A;
   list.innerHTML=frags.map(f=>{
     const fc=getCmpFam(f.family);
-    const isCur=curFrag&&curFrag.id===f.id;
-    return`<div class="frag-picker-item${isCur?' selected':''}" data-id="${f.id}" role="option" aria-selected="${isCur}">
+    const isOther=otherFrag&&otherFrag.id===f.id;
+    let sub;
+    if(_pickerSort==='name') sub=`${f.brand} · ${(FAM[f.family]||{}).label||f.family}`;
+    else if(_pickerSort==='family') sub=f.brand;
+    else sub=(FAM[f.family]||{}).label||f.family;
+    return`<div class="frag-picker-item${isOther?' other-sel':''}" data-id="${f.id}" role="option" aria-selected="false">
       <div class="frag-picker-dot" style="background:${fc.accent}"></div>
       <div class="frag-picker-item-text">
         <div class="frag-picker-item-name">${f.name}</div>
-        <div class="frag-picker-item-brand">${f.brand} · ${(FAM[f.family]||{}).label||f.family}</div>
+        <div class="frag-picker-item-brand">${sub}</div>
       </div>
-      ${isCur?'<div class="frag-picker-item-check">✓</div>':''}
     </div>`;
   }).join('');
-  list.querySelectorAll('.frag-picker-item').forEach(item=>{
+  // Tapping an item smooth-scrolls it to center — scroll handler finalises selection
+  list.querySelectorAll('.frag-picker-item').forEach((item,i)=>{
     item.addEventListener('click',()=>{
-      const f=CAT_MAP[item.dataset.id];
-      if(!f)return;
-      window.haptic?.('medium');
-      _selectFragForSlot(slot,f);
-      // Re-render both lists to update selected marks + exclusions
-      ['a','b'].forEach(s=>_renderPickerList(
-        document.getElementById(`frag-picker-search-${s}`)?.value.trim()||'',s
-      ));
-      // Scroll selected item into view
-      requestAnimationFrame(()=>{
-        list.querySelector('.selected')?.scrollIntoView({block:'nearest'});
-      });
+      list.scrollTo({top:i*PICKER_ITEM_H,behavior:'smooth'});
     });
   });
-  // Scroll to current selection
+  // Scroll to current selection, or top; mark the centered item immediately
   requestAnimationFrame(()=>{
-    list.querySelector('.selected')?.scrollIntoView({block:'nearest'});
+    const items=Array.from(list.querySelectorAll('.frag-picker-item'));
+    let targetIdx=0;
+    if(curFrag){
+      const found=items.findIndex(it=>it.dataset.id===curFrag.id);
+      if(found>=0)targetIdx=found;
+    }
+    list.dataset.scrolling='1';
+    list.scrollTop=targetIdx*PICKER_ITEM_H;
+    items.forEach((it,i)=>it.classList.toggle('centered',i===targetIdx));
+    requestAnimationFrame(()=>{ delete list.dataset.scrolling; });
   });
 }
 
-/* Arrow-key / Enter navigation within a picker list */
+/* Per-list drum scroll: auto-selects the centered item, fires haptic per tick */
+function _initPickerDrumScroll(listEl,slot){
+  let _lastIdx=-1,_snapTimer=null;
+  listEl.addEventListener('scroll',()=>{
+    const items=Array.from(listEl.querySelectorAll('.frag-picker-item'));
+    if(!items.length)return;
+    const idx=Math.max(0,Math.min(Math.round(listEl.scrollTop/PICKER_ITEM_H),items.length-1));
+    // Always update visual centering
+    items.forEach((it,i)=>it.classList.toggle('centered',i===idx));
+    // Haptic + selection only on user-initiated scrolls
+    if(listEl.dataset.scrolling)return;
+    if(idx!==_lastIdx){
+      _lastIdx=idx;
+      window.haptic?.('selection');
+    }
+    clearTimeout(_snapTimer);
+    _snapTimer=setTimeout(()=>{
+      const f=items[idx]?CAT_MAP[items[idx].dataset.id]:null;
+      const curFrag=slot==='a'?CMP_A:CMP_B;
+      if(f&&f.id!==curFrag?.id){
+        _selectFragForSlot(slot,f);
+        _updateOtherSelMarking(slot);
+      }
+    },180);
+  },{passive:true});
+}
+
+/* Lightweight: update only the other-sel class on the opposite list */
+function _updateOtherSelMarking(slot){
+  const newFrag=slot==='a'?CMP_A:CMP_B;
+  const otherList=document.getElementById(`frag-picker-list-${slot==='a'?'b':'a'}`);
+  if(!otherList)return;
+  otherList.querySelectorAll('.frag-picker-item').forEach(it=>{
+    it.classList.toggle('other-sel',!!(newFrag&&it.dataset.id===newFrag.id));
+  });
+}
+
+/* Sort bar buttons + horizontal swipe to cycle sort modes */
+function _initPickerSortSwipe(){
+  const sorts=['brand','name','family'];
+  document.querySelectorAll('.frag-picker-sort-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      _pickerSort=btn.dataset.sort;
+      window.haptic?.('selection');
+      _updatePickerSort();
+      _renderPickerLists();
+    });
+  });
+  const cols=document.getElementById('frag-picker-cols');
+  if(!cols)return;
+  let _sx=0,_sy=0;
+  cols.addEventListener('touchstart',e=>{
+    _sx=e.touches[0].clientX;
+    _sy=e.touches[0].clientY;
+  },{passive:true});
+  cols.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-_sx;
+    const dy=e.changedTouches[0].clientY-_sy;
+    if(Math.abs(dx)>44&&Math.abs(dy)<36){
+      const idx=sorts.indexOf(_pickerSort);
+      _pickerSort=dx<0
+        ?sorts[(idx+1)%sorts.length]
+        :sorts[(idx-1+sorts.length)%sorts.length];
+      window.haptic?.('medium');
+      _updatePickerSort();
+      _renderPickerLists();
+    }
+  },{passive:true});
+}
+
+/* Slide the sort pill to the active button */
+function _updatePickerSort(){
+  const bar=document.getElementById('frag-picker-sort-bar');
+  const pill=document.getElementById('frag-picker-sort-pill');
+  if(!bar||!pill)return;
+  document.querySelectorAll('.frag-picker-sort-btn').forEach(btn=>{
+    const active=btn.dataset.sort===_pickerSort;
+    btn.classList.toggle('active',active);
+    btn.setAttribute('aria-pressed',active?'true':'false');
+    if(active){
+      const r=btn.getBoundingClientRect();
+      const barR=bar.getBoundingClientRect();
+      pill.style.left=(r.left-barR.left)+'px';
+      pill.style.width=r.width+'px';
+    }
+  });
+}
+
+/* Arrow keys scroll the drum; Escape closes */
 function _initPickerKeyNav(listEl,slot){
   listEl.addEventListener('keydown',e=>{
     const items=Array.from(listEl.querySelectorAll('.frag-picker-item'));
     if(!items.length)return;
-    const focused=listEl.querySelector('.kbd-focus');
-    let idx=focused?items.indexOf(focused):-1;
+    const curIdx=Math.max(0,Math.min(Math.round(listEl.scrollTop/PICKER_ITEM_H),items.length-1));
     if(e.key==='ArrowDown'){
       e.preventDefault();
-      idx=Math.min(idx+1,items.length-1);
+      listEl.scrollTo({top:Math.min(curIdx+1,items.length-1)*PICKER_ITEM_H,behavior:'smooth'});
     } else if(e.key==='ArrowUp'){
       e.preventDefault();
-      idx=Math.max(idx-1,0);
-    } else if(e.key==='Enter'&&focused){
-      e.preventDefault();
-      focused.click();return;
+      listEl.scrollTo({top:Math.max(curIdx-1,0)*PICKER_ITEM_H,behavior:'smooth'});
     } else if(e.key==='Escape'){
       e.preventDefault();
-      _closeFragPicker();return;
-    } else return;
-    items.forEach(it=>it.classList.remove('kbd-focus'));
-    items[idx].classList.add('kbd-focus');
-    items[idx].scrollIntoView({block:'nearest'});
-  });
-  // Clear kbd-focus on mouse interaction
-  listEl.addEventListener('mousemove',()=>{
-    listEl.querySelectorAll('.kbd-focus').forEach(el=>el.classList.remove('kbd-focus'));
+      _closeFragPicker();
+    }
   });
 }
 
@@ -3221,12 +3330,16 @@ function initCompare(){
     const search=document.getElementById(`frag-picker-search-${slot}`);
     if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim(),slot));
     const list=document.getElementById(`frag-picker-list-${slot}`);
-    if(list)_initPickerKeyNav(list,slot);
+    if(list){
+      _initPickerKeyNav(list,slot);
+      _initPickerDrumScroll(list,slot);
+    }
   });
   const closeBtn=document.getElementById('frag-picker-close');
   if(closeBtn)closeBtn.addEventListener('click',_closeFragPicker);
   const overlay=document.getElementById('frag-picker');
   if(overlay)overlay.addEventListener('click',e=>{if(e.target===overlay)_closeFragPicker();});
+  _initPickerSortSwipe();
 }
 window.clearCmpSlot=function(slot){
   window.haptic?.('nudge')||window.haptic?.('selection');
