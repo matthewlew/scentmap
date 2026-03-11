@@ -4,6 +4,19 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (accuracy: note-level radar + label clarity + data confidence)
+
+### Changed
+- **Radar chart now derived from actual notes** — `computeProfile()` previously returned identical shapes for all fragrances in the same family (pure family-lookup). Now blends a 100-entry `NOTE_PROFILE` table (60% weight, tier-weighted: base×1.5, mid×1.0, top×0.5) with the family anchor (40%). Four woody fragrances now produce four distinct radar polygons.
+- **"Layering" → "Structure" in the detail panel** — the per-fragrance stat describes structural complexity (Linear → Deep), not pairwise blend compatibility. Renamed to avoid confusion with the Compare panel's Pairing score.
+- **"Layering" → "Pairing" in the compare panel** — the pairwise blend score is now labelled accurately. Descriptor text updated throughout: "Great together" → "Good pairing", "Don't layer" → "Poor pairing", etc. Edu-overlay quad labels and `getVerdict()` sentences updated to match.
+- **Structure score explainer updated** in Roles Pairer — clarifies that the score reflects a fragrance's internal complexity, not compatibility with a specific partner.
+
+### Added
+- **Data confidence caption** — a small italic line ("Key materials only — simplified pyramid") appears below the TOP/MID/BASE note pyramid in every fragrance detail panel, signalling that note data is curated rather than exhaustive.
+
+---
+
 ## 2026-03-11 (UX: collection quick-actions + top notes preview)
 
 ### Added

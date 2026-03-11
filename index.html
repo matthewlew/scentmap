@@ -604,13 +604,14 @@ function renderFragDetail(container,frag){
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
     <div class="dc-stats">
       <div class="dc-stat"><div class="dc-slbl">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${SW[frag.sillage]}</div></div>
-      <div class="dc-stat"><div class="dc-slbl">Layering</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${LW[frag.layering]}</div></div>
+      <div class="dc-stat"><div class="dc-slbl">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${LW[frag.layering]}</div></div>
     </div>
     <div class="dc-div"></div>
     <div class="dc-nlbl">Notes</div>
     <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
     <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
-    <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>`;
+    <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
+    <p class="dc-notes-caveat">Key materials only — simplified pyramid</p>`;
 
   // Note links
   container.querySelectorAll('.note-link').forEach(btn=>{
@@ -2514,7 +2515,7 @@ const CMP_FAM={
 function getCmpFam(fam){return CMP_FAM[fam]||{accent:'#6B6356',light:'#F5F2EC'};}
 
 // 5-dim profile: freshness, sweetness, warmth, intensity, complexity
-// [freshness, sweetness, warmth] from family; intensity from sillage; complexity from layering
+// [freshness, sweetness, warmth] family anchors; intensity from sillage; complexity from structure
 const FAM_PROFILE_BASE={
   citrus:  [0.90,0.28,0.10],
   green:   [0.82,0.18,0.20],
@@ -2527,15 +2528,141 @@ const FAM_PROFILE_BASE={
   leather: [0.18,0.20,0.82],
   oud:     [0.08,0.40,1.00],
 };
+// Per-note sensory profiles [freshness, sweetness, warmth] 0–1
+// Blended into computeProfile() at 60% weight; family base anchors at 40%
+const NOTE_PROFILE={
+  'agarwood':          [0.10,0.22,0.90],
+  'aldehydes':         [0.72,0.20,0.38],
+  'almond':            [0.10,0.85,0.60],
+  'amber':             [0.10,0.62,0.90],
+  'ambergris':         [0.20,0.35,0.65],
+  'ambrette':          [0.32,0.50,0.52],
+  'apple':             [0.65,0.55,0.12],
+  'atlas cedar':       [0.35,0.10,0.65],
+  'basil':             [0.72,0.10,0.30],
+  'benzoin':           [0.10,0.65,0.80],
+  'bergamot':          [0.92,0.25,0.10],
+  'birch tar':         [0.15,0.10,0.75],
+  'black currant':     [0.68,0.42,0.22],
+  'black orchid':      [0.20,0.50,0.60],
+  'black pepper':      [0.50,0.10,0.55],
+  'blood orange':      [0.80,0.48,0.12],
+  'caramel':           [0.05,0.90,0.70],
+  'cardamom':          [0.42,0.28,0.78],
+  'casablanca lily':   [0.52,0.38,0.30],
+  'castoreum':         [0.10,0.22,0.80],
+  'cedar':             [0.32,0.10,0.65],
+  'cedarwood':         [0.32,0.10,0.65],
+  'cinnamon':          [0.22,0.50,0.82],
+  'cistus':            [0.25,0.30,0.72],
+  'clove':             [0.20,0.35,0.85],
+  'coconut':           [0.15,0.80,0.55],
+  'coffee':            [0.18,0.50,0.72],
+  'cyclamen':          [0.65,0.28,0.20],
+  'cypriol':           [0.18,0.15,0.75],
+  'driftwood':         [0.35,0.05,0.52],
+  'elemi':             [0.38,0.12,0.68],
+  'eucalyptus':        [0.80,0.05,0.15],
+  'fig':               [0.42,0.50,0.38],
+  'fir':               [0.58,0.05,0.40],
+  'frankincense':      [0.32,0.20,0.75],
+  'freesia':           [0.70,0.35,0.22],
+  'galbanum':          [0.70,0.05,0.22],
+  'gardenia':          [0.42,0.50,0.40],
+  'geranium':          [0.65,0.20,0.35],
+  'ginger':            [0.55,0.20,0.65],
+  'grapefruit':        [0.90,0.20,0.05],
+  'grass':             [0.80,0.10,0.12],
+  'green tea':         [0.75,0.15,0.22],
+  'guaiac wood':       [0.22,0.15,0.70],
+  'heliotrope':        [0.30,0.70,0.50],
+  'honey':             [0.10,0.85,0.65],
+  'honeysuckle':       [0.55,0.55,0.30],
+  'hyacinth':          [0.60,0.30,0.22],
+  'incense':           [0.25,0.15,0.80],
+  'iris':              [0.48,0.32,0.38],
+  'jasmine':           [0.40,0.52,0.55],
+  'labdanum':          [0.10,0.42,0.90],
+  'lapsang':           [0.20,0.10,0.72],
+  'lavender':          [0.70,0.15,0.35],
+  'leather':           [0.10,0.10,0.75],
+  'lemon':             [0.92,0.20,0.05],
+  'lily':              [0.55,0.30,0.30],
+  'lily of the valley':[0.72,0.25,0.20],
+  'lime':              [0.88,0.15,0.05],
+  'magnolia':          [0.52,0.38,0.30],
+  'mandarin':          [0.82,0.45,0.15],
+  'mate':              [0.60,0.10,0.30],
+  'mimosa':            [0.55,0.50,0.40],
+  'mint':              [0.85,0.10,0.10],
+  'musk':              [0.25,0.30,0.50],
+  'myrrh':             [0.15,0.28,0.85],
+  'narcissus':         [0.42,0.38,0.45],
+  'neroli':            [0.75,0.35,0.30],
+  'nutmeg':            [0.30,0.30,0.75],
+  'oakmoss':           [0.30,0.10,0.60],
+  'orange blossom':    [0.60,0.52,0.40],
+  'orchid':            [0.40,0.45,0.42],
+  'oud':               [0.05,0.38,0.95],
+  'palisander':        [0.22,0.18,0.70],
+  'papyrus':           [0.42,0.10,0.35],
+  'patchouli':         [0.10,0.28,0.85],
+  'peach':             [0.55,0.72,0.20],
+  'peony':             [0.60,0.42,0.30],
+  'pepper':            [0.50,0.10,0.55],
+  'pine':              [0.55,0.05,0.45],
+  'pineapple':         [0.65,0.68,0.12],
+  'pink pepper':       [0.58,0.18,0.50],
+  'praline':           [0.05,0.90,0.65],
+  'rose':              [0.50,0.50,0.45],
+  'rosemary':          [0.68,0.08,0.35],
+  'rosewood':          [0.35,0.22,0.60],
+  'saffron':           [0.22,0.30,0.80],
+  'sandalwood':        [0.20,0.32,0.78],
+  'smoke':             [0.15,0.08,0.72],
+  'suede':             [0.22,0.22,0.60],
+  'tea':               [0.62,0.12,0.28],
+  'tiare':             [0.45,0.55,0.50],
+  'tobacco':           [0.12,0.40,0.78],
+  'tonka bean':        [0.10,0.80,0.70],
+  'tuberose':          [0.35,0.55,0.60],
+  'tulip':             [0.60,0.30,0.25],
+  'vanilla':           [0.05,0.90,0.70],
+  'vetiver':           [0.25,0.10,0.72],
+  'violet':            [0.50,0.30,0.35],
+  'violet leaf':       [0.65,0.15,0.20],
+  'waterlily':         [0.80,0.20,0.12],
+  'white musk':        [0.32,0.35,0.42],
+  'ylang-ylang':       [0.30,0.60,0.65],
+  'yuzu':              [0.88,0.20,0.08],
+};
 function computeProfile(frag){
   const b=FAM_PROFILE_BASE[frag.family]||[0.5,0.5,0.5];
-  return{freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
+  // Collect notes with tier weights: top=0.5, mid=1.0, base=1.5
+  const weighted=[
+    ...(frag.top||[]).map(n=>({n:n.toLowerCase(),w:0.5})),
+    ...(frag.mid||[]).map(n=>({n:n.toLowerCase(),w:1.0})),
+    ...(frag.base||[]).map(n=>({n:n.toLowerCase(),w:1.5})),
+  ].filter(({n})=>NOTE_PROFILE[n]);
+  if(weighted.length===0){
+    return{freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
+  }
+  const totalW=weighted.reduce((s,{w})=>s+w,0);
+  const avg=weighted.reduce((acc,{n,w})=>{const p=NOTE_PROFILE[n];acc[0]+=p[0]*w;acc[1]+=p[1]*w;acc[2]+=p[2]*w;return acc;},[0,0,0]).map(v=>v/totalW);
+  // 60% note-derived, 40% family anchor
+  return{
+    freshness:avg[0]*0.6+b[0]*0.4,
+    sweetness:avg[1]*0.6+b[1]*0.4,
+    warmth:   avg[2]*0.6+b[2]*0.4,
+    intensity:(frag.sillage||5)/10,
+    complexity:(frag.layering||5)/10,
+  };
 }
 
 /* ── Scoring helpers ── */
 function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
 function _simLabel(pct){if(pct<26)return'Very different';if(pct<51)return'Notably different';if(pct<76)return'Fairly similar';return'Nearly identical';}
-function _layLabel(pct){if(pct<25)return"Don't layer";if(pct<50)return'Not ideal';if(pct<75)return'Ok together';return'Great together';}
+function _layLabel(pct){if(pct<25)return'Poor pairing';if(pct<50)return'Uneasy together';if(pct<75)return'Workable pair';return'Good pairing';}
 
 function getVerdict(matchPct,layerPct,fa,fb){
   const shortA=fa.name.split(' ')[0],shortB=fb.name.split(' ')[0];
@@ -2545,7 +2672,7 @@ function getVerdict(matchPct,layerPct,fa,fb){
   if(matchPct>=70)return`${shortA} and ${shortB} smell remarkably alike. Better as alternates than a layering pair — their overlap is too high for interesting contrast.`;
   if(layerPct>=65&&matchPct<50){
     if(sameFam)return`${shortA} and ${shortB} share a ${famLabel} character but diverge enough in their notes to layer with real depth.`;
-    return`${shortA} and ${shortB} layer beautifully. Their contrast in character and sillage creates depth without competing.`;
+    return`${shortA} and ${shortB} pair well. Their contrast in character and sillage creates depth without competing.`;
   }
   if(matchPct>=50&&layerPct>=50)return`A solid pairing. ${shortA} and ${shortB} share enough character to feel cohesive, with enough contrast to layer interestingly.`;
   if(matchPct<35&&layerPct<35){
@@ -2612,7 +2739,7 @@ function drawScatterSvg(fa,fb,caAccent,cbAccent){
   const grid=`<line x1="${qx.toFixed(1)}" y1="${padT}" x2="${qx.toFixed(1)}" y2="${oy}" stroke="#0E0C0918" stroke-width="1" stroke-dasharray="3,3"/><line x1="${ox}" y1="${qy.toFixed(1)}" x2="${(ox+pw)}" y2="${qy.toFixed(1)}" stroke="#0E0C0918" stroke-width="1" stroke-dasharray="3,3"/>`;
   const axes=`<line x1="${ox}" y1="${oy}" x2="${ox+pw}" y2="${oy}" stroke="#0E0C0928" stroke-width="1.2"/><line x1="${ox}" y1="${oy}" x2="${ox}" y2="${padT}" stroke="#0E0C0928" stroke-width="1.2"/>`;
   const xLbl=`<text x="${(ox+pw/2).toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="7.5" fill="#6B6356" font-family="DM Sans,sans-serif" font-weight="700" letter-spacing="0.06em">SILLAGE →</text>`;
-  const yLbl=`<text x="14" y="${(oy-ph/2).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="#6B6356" font-family="DM Sans,sans-serif" font-weight="700" letter-spacing="0.06em" transform="rotate(-90,14,${(oy-ph/2).toFixed(1)})">LAYERING</text>`;
+  const yLbl=`<text x="14" y="${(oy-ph/2).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="#6B6356" font-family="DM Sans,sans-serif" font-weight="700" letter-spacing="0.06em" transform="rotate(-90,14,${(oy-ph/2).toFixed(1)})">STRUCTURE</text>`;
   const close=Math.abs(xA-xB)<18&&Math.abs(yA-yB)<18;
   const ptA=`<circle cx="${xA.toFixed(1)}" cy="${yA.toFixed(1)}" r="8" fill="${caAccent}" opacity="0.88"/>`;
   const ptB=`<circle cx="${xB.toFixed(1)}" cy="${yB.toFixed(1)}" r="8" fill="${cbAccent}" opacity="0.88"/>`;
@@ -2737,17 +2864,17 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
   if(!overlay){overlay=document.createElement('div');overlay.id='cmp-edu-overlay';overlay.className='cmp-edu-overlay';document.body.appendChild(overlay);}
   const isMatch=type==='match';
   const pct=isMatch?matchPct:layerPct;
-  const label=isMatch?'Similarity':'Layering';
+  const label=isMatch?'Similarity':'Pairing';
   const quads=isMatch?[
     {tag:'High match ≥ 70',title:'Kindred spirits',desc:'Same family, many shared notes. Great as alternates for the same occasion.',hi:matchPct>=70},
     {tag:'Good match 50–69',title:'Cohesive pair',desc:'Enough DNA in common to feel related. Alternate or layer lightly.',hi:matchPct>=50&&matchPct<70},
     {tag:'Low match 30–49',title:'Distinct contrast',desc:'Different enough to complement. Explore separately or layer for depth.',hi:matchPct>=30&&matchPct<50},
     {tag:'Very low < 30',title:'Different worlds',desc:'Little in common. May feel jarring together but powerful as a contrast.',hi:matchPct<30},
   ]:[
-    {tag:'Great ≥ 65',title:'Complementary pair',desc:'Different sillage + compatible families + unique note sets. A layering dream.',hi:layerPct>=65},
-    {tag:'Good 45–64',title:'Works together',desc:'Some contrast in projection and notes. Interesting but not always balanced.',hi:layerPct>=45&&layerPct<65},
-    {tag:'Moderate 25–44',title:'Possible, with care',desc:'Similar sillage or competing notes. Layer sparingly to avoid muddiness.',hi:layerPct>=25&&layerPct<45},
-    {tag:'Low < 25',title:'Better as alternates',desc:'Very similar projection or note profiles. Better worn separately.',hi:layerPct<25},
+    {tag:'Good pairing ≥ 65',title:'Complementary pair',desc:'Different sillage + compatible families + unique note sets. Wear together with confidence.',hi:layerPct>=65},
+    {tag:'Workable 45–64',title:'Works together',desc:'Some contrast in projection and notes. Interesting but not always balanced.',hi:layerPct>=45&&layerPct<65},
+    {tag:'Uneasy 25–44',title:'Possible, with care',desc:'Similar sillage or competing notes. Layer sparingly to avoid muddiness.',hi:layerPct>=25&&layerPct<45},
+    {tag:'Poor pairing < 25',title:'Better as alternates',desc:'Very similar projection or note profiles. Better worn separately.',hi:layerPct<25},
   ];
   overlay.innerHTML=`<div class="cmp-edu-wrap">
     <div class="cmp-edu-header">
@@ -2838,7 +2965,7 @@ function renderCompareResults(fa,fb){
         <div class="cmp-score-center">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
         <button class="cmp-score-card" id="cmp-score-layer">
           <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
-          <div class="cmp-score-label">Layering</div>
+          <div class="cmp-score-label">Pairing</div>
           <div class="cmp-score-meter">
             <div class="cmp-score-meter-track">
               <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
@@ -3776,7 +3903,7 @@ function buildPairer(){
   wrap.appendChild(lbl);
   const explainer=document.createElement('div');
   explainer.className='pairer-explainer';
-  explainer.innerHTML='Layering score reflects how well a fragrance sits beneath or on top of another. <strong>High = complex structure</strong> that blends well with a second scent. <strong>Low = clean, linear</strong> — best worn solo. When pairing, apply the higher-complexity fragrance first as a base.';
+  explainer.innerHTML='Structure score reflects the internal complexity of a fragrance — how many distinct layers unfold over time. <strong>High = multi-layered</strong>, evolves on skin and blends well with a second scent. <strong>Low = linear</strong> — clean and direct, best worn solo. When layering two fragrances, apply the more structured one first as a base.';
   wrap.appendChild(explainer);
   const selRow=document.createElement('div');selRow.className='pairer-selectors';
   function makeSelect(labelText){

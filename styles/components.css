@@ -588,6 +588,16 @@
   line-height: 1.5;
 }
 
+.dc-notes-caveat {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs, 10px);
+  color: var(--text-tertiary);
+  font-style: italic;
+  letter-spacing: 0.01em;
+  margin-top: var(--sp-sm);
+  line-height: 1.4;
+}
+
 .dc-ftag {
   display: inline-flex;
   align-items: center;
