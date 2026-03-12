@@ -30,6 +30,7 @@
       <span class="nav-logo-text">Scentmap</span>
       <div class="nav-right" id="nav-right">
         <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
+        <button class="nav-btn" onclick="go('notes', this)" style="background: none; border: none; font-family: var(--font-sans); font-size: var(--fs-body-sm); font-weight: 600; color: var(--text-secondary); cursor: pointer; padding: var(--sp-xs) var(--sp-sm);">Notes</button>
         <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings" aria-haspopup="true" aria-expanded="false">⚙</button>
         <div class="settings-menu" id="settings-menu" hidden>
           <button class="settings-menu-item" onclick="settingsGo('changelog')"><span class="settings-menu-icon">↩</span>Changelog</button>
@@ -69,7 +70,22 @@
       </div>
 
       <div class="panel" id="p-notes">
-        <div class="sec-label">Notes <span class="sub" id="notes-count"></span></div>
+        <div class="frag-main-top" style="margin-bottom: var(--sp-lg); border-bottom: none;">
+          <div class="frag-title-row">
+            <span class="frag-title" style="font-size: var(--fs-title);">Notes Directory</span>
+            <span class="sub" id="notes-count"></span>
+          </div>
+          <div class="cat-search-wrap" style="margin-top: var(--sp-md);">
+            <input type="search" id="notes-search" class="cat-search-input" placeholder="Search notes by name or family…" autocomplete="off">
+            <button class="cat-search-clear" id="notes-search-clear" aria-label="Clear search">✕</button>
+          </div>
+          <div class="notes-tier-bar" id="notes-tier-bar" style="display: flex; gap: var(--sp-xs); margin-top: var(--sp-md); padding-bottom: var(--sp-sm); overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
+            <button class="tab active" data-tier="all">All Tiers</button>
+            <button class="tab" data-tier="top">Top Notes</button>
+            <button class="tab" data-tier="mid">Heart Notes</button>
+            <button class="tab" data-tier="base">Base Notes</button>
+          </div>
+        </div>
         <div id="notes-body"></div>
       </div>
 
@@ -115,6 +131,7 @@
 <div class="mobile-bottomnav" id="mobile-bottomnav" role="navigation" aria-label="Main navigation">
   <button class="mbn-btn active" onclick="goMobile('catalog',this)" aria-label="Fragrances"><span class="mbn-icon" aria-hidden="true">≡</span>Fragrances</button>
   <button class="mbn-btn" onclick="goMobile('compare',this)" aria-label="Compare"><span class="mbn-icon" aria-hidden="true">⊕</span>Compare</button>
+  <button class="mbn-btn" onclick="goMobile('notes',this)" aria-label="Notes"><span class="mbn-icon" aria-hidden="true">✦</span>Notes</button>
   <button class="mbn-btn mbn-more" onclick="openMoreSheet(this)" aria-label="More"><span class="mbn-icon" aria-hidden="true">⋯</span>More</button>
 </div>
 

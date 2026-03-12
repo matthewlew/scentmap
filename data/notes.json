@@ -923,5 +923,270 @@
     "desc": "Powdery violet root.",
     "insider_fact": "Orris root (iris) must be harvested, peeled, and then left to dry and age for three to five years before distillation. The fresh root smells like nothing; the aging process creates the irones that give it its powdery violet scent.",
     "extraction_method": "Steam Distillation (after aging)"
+  },
+  {
+    "name": "Herbs",
+    "family": "herbal",
+    "desc": "A herbal note."
+  },
+  {
+    "name": "Citrus",
+    "family": "citrus",
+    "desc": "A citrus note."
+  },
+  {
+    "name": "White Flowers",
+    "family": "floral",
+    "desc": "A floral note."
+  },
+  {
+    "name": "Lime",
+    "family": "citrus",
+    "desc": "A citrus note."
+  },
+  {
+    "name": "Green Notes",
+    "family": "green",
+    "desc": "A green note."
+  },
+  {
+    "name": "Mahogany",
+    "family": "woods",
+    "desc": "A woods note."
+  },
+  {
+    "name": "Maple",
+    "family": "woods",
+    "desc": "A woods note."
+  },
+  {
+    "name": "Galbanum",
+    "family": "green",
+    "desc": "A green note."
+  },
+  {
+    "name": "Bayou Grass",
+    "family": "green",
+    "desc": "A green note."
+  },
+  {
+    "name": "Marine",
+    "family": "aquatic",
+    "desc": "A aquatic note."
+  },
+  {
+    "name": "Wild Grass",
+    "family": "green",
+    "desc": "A green note."
+  },
+  {
+    "name": "Spices",
+    "family": "spicy",
+    "desc": "A spicy note."
+  },
+  {
+    "name": "Black Truffle",
+    "family": "earthy",
+    "desc": "A earthy note."
+  },
+  {
+    "name": "Berry",
+    "family": "fruity",
+    "desc": "A fruity note."
+  },
+  {
+    "name": "White Suede",
+    "family": "leather",
+    "desc": "A leather note."
+  },
+  {
+    "name": "Litchi",
+    "family": "fruity",
+    "desc": "A fruity note."
+  },
+  {
+    "name": "Sea Notes",
+    "family": "aquatic",
+    "desc": "A aquatic note."
+  },
+  {
+    "name": "Blood Mandarin",
+    "family": "citrus",
+    "desc": "A citrus note."
+  },
+  {
+    "name": "Tonka Bean",
+    "family": "gourmand",
+    "desc": "A gourmand note."
+  },
+  {
+    "name": "Quince",
+    "family": "fruity",
+    "desc": "A fruity note."
+  },
+  {
+    "name": "Virginia Cedar",
+    "family": "woods",
+    "desc": "A woods note."
+  },
+  {
+    "name": "Bitter Orange",
+    "family": "citrus",
+    "desc": "A citrus note."
+  },
+  {
+    "name": "White Chocolate",
+    "family": "gourmand",
+    "desc": "A gourmand note."
+  },
+  {
+    "name": "Blackcurrant",
+    "family": "fruity",
+    "desc": "A fruity note."
+  },
+  {
+    "name": "Sichuan Pepper",
+    "family": "spicy",
+    "desc": "A spicy note."
+  },
+  {
+    "name": "Ambroxan",
+    "family": "musk",
+    "desc": "A musk note."
+  },
+  {
+    "name": "Melon",
+    "family": "fruity",
+    "desc": "A fruity note."
+  },
+  {
+    "name": "Lily-of-the-Valley",
+    "family": "floral",
+    "desc": "A floral note."
+  },
+  {
+    "name": "Apricot",
+    "family": "fruity",
+    "desc": "A fruity note."
+  },
+  {
+    "name": "Chamomile",
+    "family": "herbal",
+    "desc": "A herbal note."
+  },
+  {
+    "name": "Hawthorn",
+    "family": "floral",
+    "desc": "A floral note."
+  },
+  {
+    "name": "Carnation",
+    "family": "spicy",
+    "desc": "A spicy note."
+  },
+  {
+    "name": "Woody Notes",
+    "family": "woods",
+    "desc": "A woods note."
+  },
+  {
+    "name": "Resins",
+    "family": "amber",
+    "desc": "A amber note."
+  },
+  {
+    "name": "Turkish Rose",
+    "family": "floral",
+    "desc": "A floral note."
+  },
+  {
+    "name": "Brazilian Rosewood",
+    "family": "woods",
+    "desc": "A woods note."
+  },
+  {
+    "name": "Caraway",
+    "family": "spicy",
+    "desc": "A spicy note."
+  },
+  {
+    "name": "Orris Root",
+    "family": "earthy",
+    "desc": "A earthy note."
+  },
+  {
+    "name": "Carrot Seeds",
+    "family": "earthy",
+    "desc": "A earthy note."
+  },
+  {
+    "name": "Italian Tangerine",
+    "family": "citrus",
+    "desc": "A citrus note."
+  },
+  {
+    "name": "Egyptian Jasmine",
+    "family": "floral",
+    "desc": "A floral note."
+  },
+  {
+    "name": "Linen",
+    "family": "aldehyde",
+    "desc": "A aldehyde note."
+  },
+  {
+    "name": "Frangipani",
+    "family": "floral",
+    "desc": "A floral note."
+  },
+  {
+    "name": "Bourbon Vanilla",
+    "family": "gourmand",
+    "desc": "A gourmand note."
+  },
+  {
+    "name": "Tarragon",
+    "family": "herbal",
+    "desc": "A herbal note."
+  },
+  {
+    "name": "Pine Needles",
+    "family": "woods",
+    "desc": "A woods note."
+  },
+  {
+    "name": "Fir",
+    "family": "woods",
+    "desc": "A woods note."
+  },
+  {
+    "name": "Guava",
+    "family": "fruity",
+    "desc": "A fruity note."
+  },
+  {
+    "name": "Costus",
+    "family": "animalic",
+    "desc": "A animalic note."
+  },
+  {
+    "name": "Anise",
+    "family": "spicy",
+    "desc": "A spicy note."
+  },
+  {
+    "name": "Spicy Notes",
+    "family": "spicy",
+    "desc": "A spicy note."
+  },
+  {
+    "name": "White Pepper",
+    "family": "spicy",
+    "desc": "A spicy note."
+  },
+  {
+    "name": "Truffle",
+    "family": "earthy",
+    "desc": "A earthy note."
   }
 ]

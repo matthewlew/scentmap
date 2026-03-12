@@ -949,6 +949,41 @@ function initCatalogControls(){
     if(stateBarM)makeStateBtn(label,val,stateBarM);
   });
 
+  const notesSearch = document.getElementById('notes-search');
+  const notesSearchClear = document.getElementById('notes-search-clear');
+  const notesTierBar = document.getElementById('notes-tier-bar');
+  let currentNoteQuery = '';
+  let currentNoteTier = 'all';
+
+  if (notesSearch) {
+    notesSearch.addEventListener('input', (e) => {
+      currentNoteQuery = e.target.value;
+      notesSearchClear.style.display = currentNoteQuery ? 'block' : 'none';
+      buildNotes(currentNoteQuery, currentNoteTier);
+    });
+  }
+
+  if (notesSearchClear) {
+    notesSearchClear.addEventListener('click', () => {
+      currentNoteQuery = '';
+      notesSearch.value = '';
+      notesSearchClear.style.display = 'none';
+      buildNotes(currentNoteQuery, currentNoteTier);
+    });
+  }
+
+  if (notesTierBar) {
+    const tabs = notesTierBar.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentNoteTier = tab.dataset.tier;
+        buildNotes(currentNoteQuery, currentNoteTier);
+      });
+    });
+  }
+
   // Helper: build brand tabs into a container; allBrandBtns for sync
   const allBrandBtns=[];
   function makeBrandBtn(label,val,html,container){
@@ -1121,26 +1156,191 @@ function updCC(){
 }
 
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
-function buildNotes(){
-  const body=document.getElementById('notes-body');body.innerHTML='';
-  const grouped={};
-  NI.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
-  Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
-  FAM_ORDER.forEach(fk=>{
-    if(!grouped[fk]?.length)return;
-    const fm=FAM[fk];if(!fm)return;
-    const row=document.createElement('div');row.className='notes-family-row';
-    const left=document.createElement('div');left.className='nf-left';
-    left.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}` ;
-    const right=document.createElement('div');right.className='nf-right';
-    grouped[fk].forEach(note=>{
-      const btn=document.createElement('button');btn.className='note-link';btn.textContent=note.name;
-      btn.addEventListener('click',e=>{e.stopPropagation();openNotePopup(note,btn)});
+function computeNoteTiers() {
+  NI.forEach(n => {
+    n._tierCounts = { top: 0, mid: 0, base: 0 };
+    n._primaryTier = 'mid'; // default fallback
+  });
+
+  CAT.forEach(f => {
+    f._nTop.forEach(nl => { if (NI_MAP[nl]) NI_MAP[nl]._tierCounts.top++; });
+    f._nMid.forEach(nl => { if (NI_MAP[nl]) NI_MAP[nl]._tierCounts.mid++; });
+    f._nBase.forEach(nl => { if (NI_MAP[nl]) NI_MAP[nl]._tierCounts.base++; });
+  });
+
+  NI.forEach(n => {
+    const c = n._tierCounts;
+    const t = c.top + c.mid + c.base;
+    if (t === 0) return;
+
+    // assign primary tier based on highest occurrence
+    if (c.top >= c.mid && c.top >= c.base) n._primaryTier = 'top';
+    else if (c.mid >= c.top && c.mid >= c.base) n._primaryTier = 'mid';
+    else n._primaryTier = 'base';
+  });
+}
+
+function renderNoteDetail(container, note) {
+  const fm = FAM[note.family] || { label: note.family, color: '#888' };
+  const nl = note.name.toLowerCase();
+  const inf = CAT.filter(f => f._nAll.includes(nl));
+
+  let reaction = null;
+
+  const renderContent = () => {
+    container.innerHTML = `
+      <div class="note-detail-header" style="padding: var(--sp-xl) var(--sp-xl) var(--sp-lg); border-bottom: 1px solid var(--border-subtle); margin-bottom: var(--sp-lg);">
+        <div style="font-size: var(--fs-heading); font-family: var(--font-display); font-weight: 700; margin-bottom: var(--sp-xs); color: var(--text-primary);">${note.name}</div>
+        <div style="font-size: var(--fs-label); text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: var(--sp-md);">${fm.label}</div>
+        <div style="font-size: var(--fs-body); color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--sp-lg);">${note.desc}</div>
+
+        <div style="display: flex; gap: var(--sp-sm); margin-bottom: var(--sp-md);">
+          <button id="note-btn-like" style="flex: 1; padding: var(--sp-sm); border: 1px solid ${reaction === 'like' ? 'var(--text-primary)' : 'var(--border-subtle)'}; border-radius: var(--radius-lg); background: ${reaction === 'like' ? 'var(--text-primary)' : 'var(--bg-primary)'}; color: ${reaction === 'like' ? 'var(--bg-primary)' : 'var(--text-secondary)'}; font-size: var(--fs-body-sm); font-family: var(--font-sans); font-weight: 500; cursor: pointer; transition: all 0.2s;">
+            <span style="margin-right: 6px;">👍</span> Like
+          </button>
+          <button id="note-btn-dislike" style="flex: 1; padding: var(--sp-sm); border: 1px solid ${reaction === 'dislike' ? 'var(--text-primary)' : 'var(--border-subtle)'}; border-radius: var(--radius-lg); background: ${reaction === 'dislike' ? 'var(--text-primary)' : 'var(--bg-primary)'}; color: ${reaction === 'dislike' ? 'var(--bg-primary)' : 'var(--text-secondary)'}; font-size: var(--fs-body-sm); font-family: var(--font-sans); font-weight: 500; cursor: pointer; transition: all 0.2s;">
+            <span style="margin-right: 6px;">👎</span> Dislike
+          </button>
+        </div>
+
+        <div id="note-reaction-suggestions" style="display: ${reaction ? 'block' : 'none'}; padding-top: var(--sp-md); border-top: 1px dashed var(--border-subtle);">
+          <div style="font-size: var(--fs-meta); font-weight: 600; color: var(--text-tertiary); margin-bottom: var(--sp-sm); text-transform: uppercase; letter-spacing: 0.05em;">
+            ${reaction === 'like' ? 'You might also like' : 'Try these instead'}
+          </div>
+          <div id="note-suggestion-list" style="display: flex; flex-wrap: wrap; gap: var(--sp-xs);"></div>
+        </div>
+      </div>
+
+      <div style="padding: 0 var(--sp-xl) var(--sp-xl);">
+        ${note.extraction_method ? `<div style="margin-bottom: var(--sp-md); padding: var(--sp-md); background: var(--bg-secondary); border-radius: var(--radius-lg);"><div style="font-size: var(--fs-label); font-weight: 600; color: var(--text-tertiary); margin-bottom: var(--sp-xs); letter-spacing: 0.05em; text-transform: uppercase;">Extraction Method</div><div style="font-size: var(--fs-body-sm); color: var(--text-secondary); line-height: 1.5;">${note.extraction_method}</div></div>` : ''}
+        ${note.insider_fact ? `<div style="margin-bottom: var(--sp-xl); padding: var(--sp-md); background: var(--bg-secondary); border-radius: var(--radius-lg);"><div style="font-size: var(--fs-label); font-weight: 600; color: var(--text-tertiary); margin-bottom: var(--sp-xs); letter-spacing: 0.05em; text-transform: uppercase;">Perfumer's Insight</div><div style="font-size: var(--fs-body-sm); color: var(--text-secondary); line-height: 1.5;">${note.insider_fact}</div></div>` : ''}
+
+        ${inf.length ? `<div style="margin-top: var(--sp-xl);"><div style="font-size: var(--fs-label); font-weight: 600; color: var(--text-tertiary); margin-bottom: var(--sp-sm); text-transform: uppercase; letter-spacing: 0.05em;">In Catalog (${inf.length})</div><div id="_nfl" style="border: 1px solid var(--border-standard); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-primary);"></div></div>` : ''}
+      </div>
+    `;
+
+    const btnLike = container.querySelector('#note-btn-like');
+    const btnDislike = container.querySelector('#note-btn-dislike');
+
+    if (btnLike && btnDislike) {
+      btnLike.addEventListener('click', (e) => {
+        e.stopPropagation();
+        reaction = reaction === 'like' ? null : 'like';
+        renderContent();
+      });
+      btnDislike.addEventListener('click', (e) => {
+        e.stopPropagation();
+        reaction = reaction === 'dislike' ? null : 'dislike';
+        renderContent();
+      });
+    }
+
+    if (reaction) {
+      const sugList = container.querySelector('#note-suggestion-list');
+      const familyNotes = NI.filter(n => n.family === note.family && n.name !== note.name);
+
+      for (let i = familyNotes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [familyNotes[i], familyNotes[j]] = [familyNotes[j], familyNotes[i]];
+      }
+
+      const suggestions = familyNotes.slice(0, 3);
+
+      if (suggestions.length === 0) {
+        sugList.innerHTML = '<span style="font-size: var(--fs-meta); color: var(--g400);">No other notes in this family.</span>';
+      } else {
+        suggestions.forEach(s => {
+          const sbtn = document.createElement('button');
+          sbtn.style.cssText = 'padding: var(--sp-xs) var(--sp-sm); border-radius: var(--radius-lg); background: var(--bg-tertiary); border: 1px solid var(--border-standard); font-size: var(--fs-meta); color: var(--text-secondary); cursor: pointer; transition: background 0.2s; font-family: var(--font-sans);';
+          sbtn.textContent = s.name;
+          sbtn.addEventListener('mouseover', () => sbtn.style.background = 'var(--bg-secondary)');
+          sbtn.addEventListener('mouseout', () => sbtn.style.background = 'var(--bg-tertiary)');
+          sbtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            pushDetail(c => renderNoteDetail(c, s), s.name);
+          });
+          sugList.appendChild(sbtn);
+        });
+      }
+    }
+
+    if (inf.length) {
+      const span = container.querySelector('#_nfl');
+      [...inf].sort((a, b) => a.name.localeCompare(b.name)).forEach((f, idx) => {
+        const fc = getCmpFam(f.family);
+        const btn = document.createElement('button');
+        btn.className = 'frag-picker-item';
+        btn.style.borderBottom = '1px solid var(--border-standard)';
+        if (idx === inf.length - 1) btn.style.borderBottom = 'none';
+        btn.innerHTML = `<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
+        btn.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, f), f.name); });
+        span.appendChild(btn);
+      });
+    }
+  };
+
+  renderContent();
+}
+
+function buildNotes(q = '', activeTier = 'all') {
+  const body = document.getElementById('notes-body');
+  body.innerHTML = '';
+  const qt = q.toLowerCase().trim();
+
+  let filtered = NI;
+  if (qt) {
+    filtered = filtered.filter(n => n.name.toLowerCase().includes(qt) || n.family.toLowerCase().includes(qt));
+  }
+
+  if (activeTier !== 'all') {
+    filtered = filtered.filter(n => n._primaryTier === activeTier);
+  }
+
+  const grouped = {};
+  filtered.forEach(n => {
+    if (!grouped[n.family]) grouped[n.family] = [];
+    grouped[n.family].push(n);
+  });
+
+  Object.values(grouped).forEach(arr => arr.sort((a, b) => a.name.localeCompare(b.name)));
+
+  FAM_ORDER.forEach(fk => {
+    if (!grouped[fk]?.length) return;
+    const fm = FAM[fk]; if (!fm) return;
+
+    const row = document.createElement('div');
+    row.className = 'notes-family-row';
+
+    const left = document.createElement('div');
+    left.className = 'nf-left';
+    left.innerHTML = `<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>${fm.desc ? `<div class="nf-desc">${fm.desc}</div>` : ''}`;
+
+    const right = document.createElement('div');
+    right.className = 'nf-right';
+    right.style.display = 'flex';
+    right.style.flexWrap = 'wrap';
+    right.style.gap = 'var(--sp-xs)';
+    right.style.paddingLeft = '0';
+
+    grouped[fk].forEach(note => {
+      const btn = document.createElement('button');
+      btn.className = 'cmp-note-pill';
+      btn.dataset.note = note.name;
+      btn.textContent = note.name;
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        openDetail(c => renderNoteDetail(c, note), note.name);
+      });
       right.appendChild(btn);
     });
-    row.appendChild(left);row.appendChild(right);body.appendChild(row);
+
+    row.appendChild(left);
+    row.appendChild(right);
+    body.appendChild(row);
   });
-  document.getElementById('notes-count').textContent=`${NI.length} notes`;
+
+  const countEl = document.getElementById('notes-count');
+  if (countEl) countEl.textContent = `${filtered.length} notes`;
 }
 
 /* ── QUICK PEEK ── */
@@ -2330,6 +2530,7 @@ Promise.all([
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   BRANDS=brands;
   BRANDS_MAP=Object.fromEntries(BRANDS.map(b=>[b.name.toLowerCase(),b]));
+  computeNoteTiers();
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
   // Pre-fill a high-layering pair so compare isn't blank on load
