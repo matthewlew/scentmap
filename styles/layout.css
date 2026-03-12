@@ -348,7 +348,7 @@
 .picker-hero-empty-desc {
   font-size: var(--fs-meta);
   color: var(--g450);
-  line-height: 1.5;
+  line-height: var(--lh-relaxed);
 }
 
 .picker-hero-filled {
@@ -386,7 +386,7 @@
 .picker-hero-notes {
   font-size: var(--fs-meta);
   color: var(--g600);
-  line-height: 1.5;
+  line-height: var(--lh-relaxed);
 }
 
 .picker-hero-notes strong {

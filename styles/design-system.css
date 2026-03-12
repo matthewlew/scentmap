@@ -65,29 +65,29 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --font-mono:    "SF Mono", Menlo, monospace;
   --font-display: "Archivo Black", sans-serif;
 
-  /* Font sizes (base: 16px desktop / 17px tablet / 18px mobile) */
-  --fs-caption:   0.6rem;    /* 9.6–10.8px */
-  --fs-label:     0.65rem;   /* 10.4–11.7px */
-  --fs-meta:      0.72rem;   /* 11.5–13px */
-  --fs-body-sm:   0.78rem;   /* 12.5–14px */
-  --fs-body:      0.875rem;  /* 14–15.8px */
-  --fs-ui:        1rem;      /* 16–18px */
-  --fs-title:     1.4rem;    /* 22.4–25.2px */
-  --fs-display:   1.6rem;    /* 25.6–28.8px */
-  --fs-heading:   2rem;      /* 32–36px */
-  --fs-score:     2.8rem;    /* 44.8–50.4px */
-  --fs-hero:      3rem;      /* 48–54px */
+  /* Font sizes (base: 16px desktop / 17px tablet / 18px mobile). Using an approximate 1.250 (Major Third) scale. */
+  --fs-caption:   0.64rem;   /* ~10px */
+  --fs-label:     0.75rem;   /* ~12px */
+  --fs-meta:      0.8rem;    /* ~12.8px */
+  --fs-body-sm:   0.9rem;    /* ~14.4px */
+  --fs-body:      1rem;      /* 16px */
+  --fs-ui:        1.1rem;    /* ~17.6px */
+  --fs-title:     1.25rem;   /* 20px */
+  --fs-display:   1.563rem;  /* ~25px */
+  --fs-heading:   1.953rem;  /* ~31px */
+  --fs-score:     2.441rem;  /* ~39px */
+  --fs-hero:      3.052rem;  /* ~49px */
 
   /* Line heights */
-  --lh-tight:     1;
-  --lh-normal:    1.55;
-  --lh-relaxed:   1.7;
-  --lh-spacious:  1.75;
+  --lh-tight:     1.1;     /* Display and headings */
+  --lh-normal:    1.5;     /* Body copy */
+  --lh-relaxed:   1.65;    /* Relaxed body copy or small text */
+  --lh-spacious:  1.8;     /* Very spacious */
 
   /* Letter spacing */
-  --ls-tight:     -0.02em;
+  --ls-tight:     -0.02em; /* Display and headings */
   --ls-normal:    0;
-  --ls-wide:      0.1em;    /* UI label uppercase */
+  --ls-wide:      0.06em;  /* UI label uppercase - refined from 0.1em for better readability */
 }
 
 /* ── 5. SPACING SCALE (4px grid) ── */
