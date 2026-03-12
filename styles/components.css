@@ -1296,6 +1296,88 @@
 
 /* ── 9. MISCELLANEOUS ── */
 
+/* Settings dropdown menu */
+.nav-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+.settings-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--fs-title);
+  color: var(--text-secondary);
+  padding: var(--sp-xs);
+  line-height: 1;
+  transition: color var(--dur-fast) var(--ease-spring);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-btn:hover {
+  color: var(--text-primary);
+}
+
+.settings-menu {
+  position: absolute;
+  top: calc(100% + var(--sp-sm));
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px var(--fade-strong);
+  z-index: 200;
+  min-width: 200px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-menu[hidden] {
+  display: none;
+}
+
+.settings-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-md);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-standard);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  transition: background var(--dur-fast) var(--ease-spring);
+  width: 100%;
+}
+
+.settings-menu-item:last-child {
+  border-bottom: none;
+}
+
+.settings-menu-item:hover {
+  background: var(--bg-secondary);
+}
+
+.settings-menu-icon {
+  font-size: var(--fs-body);
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+}
+
 .panel {
   display: none;
 }
