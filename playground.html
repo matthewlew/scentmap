@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Typography Playground</title>
+  <link rel="stylesheet" href="styles/design-system.css">
+  <style>
+    body {
+      background-color: var(--bg-main);
+      color: var(--g800);
+      font-family: var(--font-body);
+      padding: var(--sp-xl);
+    }
+    .playground-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      padding: var(--sp-xl);
+      border-radius: var(--br-lg);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      align-items: baseline;
+      padding: var(--sp-md) 0;
+      border-bottom: 1px solid var(--g300);
+    }
+
+    .row:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: var(--g500);
+      font-size: var(--fs-meta);
+      font-family: monospace;
+    }
+
+    h1.pg-heading {
+      font-family: var(--font-display);
+      font-size: var(--fs-heading);
+      letter-spacing: var(--ls-tight);
+      line-height: var(--lh-tight);
+      margin: 0;
+    }
+
+    h2.pg-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-title);
+      letter-spacing: var(--ls-tight);
+      line-height: var(--lh-tight);
+      margin: 0;
+    }
+
+    .pg-ui {
+      font-family: var(--font-display);
+      font-size: var(--fs-ui);
+      letter-spacing: var(--ls-normal);
+      line-height: var(--lh-normal);
+      text-transform: uppercase;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .pg-body {
+      font-size: var(--fs-body);
+      line-height: var(--lh-relaxed);
+      margin: 0;
+    }
+
+    .pg-meta {
+      font-size: var(--fs-meta);
+      line-height: var(--lh-normal);
+      color: var(--g600);
+      margin: 0;
+    }
+
+    .header {
+      margin-bottom: var(--sp-xl);
+    }
+  </style>
+</head>
+<body>
+
+<div class="playground-container">
+  <div class="header">
+    <h1 class="pg-heading" style="margin-bottom: var(--sp-sm)">Typography Scale (5 Tokens)</h1>
+    <p class="pg-body" style="color: var(--g600)">Showcasing the simplified 5-step typography system with minimum 14px size and AA-compliant contrast.</p>
+  </div>
+
+  <div class="row">
+    <div class="label">--fs-heading</div>
+    <h1 class="pg-heading">The quick brown fox jumps over the lazy dog.</h1>
+  </div>
+
+  <div class="row">
+    <div class="label">--fs-title</div>
+    <h2 class="pg-title">The quick brown fox jumps over the lazy dog.</h2>
+  </div>
+
+  <div class="row">
+    <div class="label">--fs-ui</div>
+    <div class="pg-ui">The quick brown fox jumps over the lazy dog.</div>
+  </div>
+
+  <div class="row">
+    <div class="label">--fs-body</div>
+    <p class="pg-body">The quick brown fox jumps over the lazy dog.</p>
+  </div>
+
+  <div class="row">
+    <div class="label">--fs-meta</div>
+    <p class="pg-meta">The quick brown fox jumps over the lazy dog.</p>
+  </div>
+</div>
+
+</body>
+</html>
