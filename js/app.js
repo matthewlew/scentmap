@@ -40,11 +40,9 @@ function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'
 function scoreSimilarity(a,b){
   if(a.id===b.id)return 0;
   const famScore=(FAM_COMPAT[a.family]?.[b.family]??0.5)*40;
-  const al={top:a.top.map(n=>n.toLowerCase()),mid:a.mid.map(n=>n.toLowerCase()),base:a.base.map(n=>n.toLowerCase())};
-  const bl={top:b.top.map(n=>n.toLowerCase()),mid:b.mid.map(n=>n.toLowerCase()),base:b.base.map(n=>n.toLowerCase())};
-  const shBase=al.base.filter(n=>bl.base.includes(n)).length;
-  const shMid=al.mid.filter(n=>bl.mid.includes(n)).length;
-  const shTop=al.top.filter(n=>bl.top.includes(n)).length;
+  const shBase=a._nBase.filter(n=>b._nBase.includes(n)).length;
+  const shMid=a._nMid.filter(n=>b._nMid.includes(n)).length;
+  const shTop=a._nTop.filter(n=>b._nTop.includes(n)).length;
   const noteScore=Math.min(30,shBase*5+shMid*3+shTop*2);
   const sillDiff=Math.abs(a.sillage-b.sillage);
   const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
@@ -59,9 +57,7 @@ function scoreLayeringPair(a,b){
   const famScore=famComp*35;
   const sillDiff=Math.abs(a.sillage-b.sillage);
   const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
-  const allA=[...a.top,...a.mid,...a.base].map(n=>n.toLowerCase());
-  const allB=[...b.top,...b.mid,...b.base].map(n=>n.toLowerCase());
-  const shared=allA.filter(n=>allB.includes(n)).length;
+  const shared=a._nAll.filter(n=>b._nAll.includes(n)).length;
   const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
   return Math.round(famScore+sillScore+noteScore);
 }
@@ -310,7 +306,7 @@ function renderFragDetail(container,frag){
     const shelf=document.createElement('div');shelf.className='dc-sim-shelf';
 
     function simReason(a,b){
-      const shBase=a.base.filter(n=>b.base.map(s=>s.toLowerCase()).includes(n.toLowerCase()));
+      const shBase=a.base.filter((n,i)=>b._nBase.includes(a._nBase[i]));
       if(shBase.length)return`Shared base: ${shBase.slice(0,2).join(', ')}`;
       if((FAM_COMPAT[a.family]?.[b.family]??0)>=.8)return`${a.family[0].toUpperCase()+a.family.slice(1)} × ${b.family}`;
       return'';
@@ -377,8 +373,8 @@ function buildLayerSuggestions(frag,container){
   function layerReason(a,b){
     const sillDiff=b.sillage-a.sillage;
     if(Math.abs(sillDiff)>=3)return sillDiff>0?`Wear ${b.name} over — projects further`:`Wear ${b.name} under — anchors the blend`;
-    const allA=[...a.top,...a.mid,...a.base].map(n=>n.toLowerCase());
-    const uniqueB=[...b.base,...b.mid].find(n=>!allA.includes(n.toLowerCase()));
+    const allA=a._nAll;
+    const uniqueB=[...b.base,...b.mid].find((n,i)=>!allA.includes(i<b.base.length?b._nBase[i]:b._nMid[i-b.base.length]));
     if(uniqueB)return`Adds ${uniqueB}`;
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
@@ -449,10 +445,12 @@ function buildRoleChips(frag,chipsEl){
 function renderNoteDetail(container,note){
   const fm=FAM[note.family]||{label:note.family,color:'#888'};
   const nl=note.name.toLowerCase();
-  const inf=CAT.filter(f=>[...f.top,...f.mid,...f.base].some(n=>n.toLowerCase()===nl));
+  const inf=CAT.filter(f=>f._nAll.includes(nl));
   container.innerHTML=`<div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
+    ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
+    ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
     ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
   if(inf.length){
     const span=container.querySelector('#_nfl');
@@ -505,10 +503,27 @@ function refreshAfterStateChange(id){
 function openNotePopup(note,triggerEl){
   const fm=FAM[note.family]||{label:note.family,color:'#888'};
   const nl=note.name.toLowerCase();
-  const inf=CAT.filter(f=>[...f.top,...f.mid,...f.base].some(n=>n.toLowerCase()===nl));
+  const inf=CAT.filter(f=>f._nAll.includes(nl));
   document.getElementById('np-name').textContent=note.name;
   document.getElementById('np-family').textContent=fm.label;
   document.getElementById('np-desc').textContent=note.desc;
+
+  const extEl = document.getElementById('np-extraction');
+  if(note.extraction_method) {
+    document.getElementById('np-extraction-text').textContent = note.extraction_method;
+    extEl.style.display = 'block';
+  } else {
+    extEl.style.display = 'none';
+  }
+
+  const factEl = document.getElementById('np-fact');
+  if(note.insider_fact) {
+    document.getElementById('np-fact-text').textContent = note.insider_fact;
+    factEl.style.display = 'block';
+  } else {
+    factEl.style.display = 'none';
+  }
+
   const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
   if(sortedInf.length){
@@ -746,7 +761,7 @@ function buildCatalog(roleFilter){
   if(search)visibleCat=visibleCat.filter(f=>
     f.name.toLowerCase().includes(search)||
     f.brand.toLowerCase().includes(search)||
-    [...(f.top||[]),...(f.mid||[]),...(f.base||[])].some(n=>n.toLowerCase().includes(search))
+    f._nAll.some(n=>n.includes(search))
   );
 
   if(!visibleCat.length){
@@ -876,19 +891,19 @@ function renderCatRow(row,frag,fm,search){
   let notesHtml='';
   if(search){
     const q=search.toLowerCase();
-    const topMatch=(frag.top||[]).find(n=>n.toLowerCase().includes(q));
-    const midMatch=(frag.mid||[]).find(n=>n.toLowerCase().includes(q));
-    const baseMatch=(frag.base||[]).find(n=>n.toLowerCase().includes(q));
-    if(topMatch){
+    const topIdx=(frag._nTop||[]).findIndex(n=>n.includes(q));
+    const midIdx=(frag._nMid||[]).findIndex(n=>n.includes(q));
+    const baseIdx=(frag._nBase||[]).findIndex(n=>n.includes(q));
+    if(topIdx!==-1){
       // Highlight the matching top note, show others normally
-      const rendered=(frag.top||[]).slice(0,3).map(n=>
-        n.toLowerCase().includes(q)?`<mark class="note-match">${n}</mark>`:n
+      const rendered=(frag.top||[]).slice(0,3).map((n,i)=>
+        (i===topIdx||frag._nTop[i].includes(q))?`<mark class="note-match">${n}</mark>`:n
       ).join(', ');
       notesHtml=`<div class="frag-picker-item-notes">${rendered}</div>`;
-    } else if(midMatch||baseMatch){
+    } else if(midIdx!==-1||baseIdx!==-1){
       // Replace notes line with a "why matched" badge
-      const tier=midMatch?'Mid':'Base';
-      const note=midMatch||baseMatch;
+      const tier=midIdx!==-1?'Mid':'Base';
+      const note=midIdx!==-1?frag.mid[midIdx]:frag.base[baseIdx];
       notesHtml=`<div class="frag-picker-item-notes"><span class="match-badge">↳ ${tier} · ${note}</span></div>`;
     } else {
       // Name or brand match — show top notes as normal
@@ -955,7 +970,11 @@ function go(id,btn){
 /* ── Settings button ── */
 window.settingsGo=function(id){
   const menu=document.getElementById('settings-menu');
-  if(menu)menu.hidden=true;
+  if(menu){
+    menu.hidden=true;
+    const btn=document.getElementById('settings-btn');
+    if(btn)btn.setAttribute('aria-expanded', 'false');
+  }
   const backBtn=document.getElementById('nav-back-btn');
   if(backBtn)backBtn.hidden=false;
   go(id,null);
@@ -972,9 +991,13 @@ document.addEventListener('DOMContentLoaded',function(){
     settingsBtn.addEventListener('click',function(e){
       e.stopPropagation();
       settingsMenu.hidden=!settingsMenu.hidden;
+      settingsBtn.setAttribute('aria-expanded', !settingsMenu.hidden);
     });
     document.addEventListener('click',function(){
-      if(settingsMenu)settingsMenu.hidden=true;
+      if(settingsMenu){
+        settingsMenu.hidden=true;
+        settingsBtn.setAttribute('aria-expanded', 'false');
+      }
     });
     settingsMenu.addEventListener('click',function(e){e.stopPropagation();});
   }
@@ -1146,9 +1169,9 @@ function computeProfile(frag){
   const b=FAM_PROFILE_BASE[frag.family]||[0.5,0.5,0.5];
   // Collect notes with tier weights: top=0.5, mid=1.0, base=1.5
   const weighted=[
-    ...(frag.top||[]).map(n=>({n:n.toLowerCase(),w:0.5})),
-    ...(frag.mid||[]).map(n=>({n:n.toLowerCase(),w:1.0})),
-    ...(frag.base||[]).map(n=>({n:n.toLowerCase(),w:1.5})),
+    ...(frag._nTop||[]).map(n=>({n,w:0.5})),
+    ...(frag._nMid||[]).map(n=>({n,w:1.0})),
+    ...(frag._nBase||[]).map(n=>({n,w:1.5})),
   ].filter(({n})=>NOTE_PROFILE[n]);
   if(weighted.length===0){
     return{freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
@@ -1262,9 +1285,8 @@ function drawScatterSvg(fa,fb,caAccent,cbAccent){
 
 /* ── 3×3 notes grid (rows=Top/Mid/Base, cols=A only|Shared|B only) ── */
 function render3x3Notes(fa,fb,caAccent,cbAccent){
-  const toL=arr=>(arr||[]).map(n=>n.toLowerCase().trim());
-  const aTop=toL(fa.top),aMid=toL(fa.mid),aBase=toL(fa.base);
-  const bTop=toL(fb.top),bMid=toL(fb.mid),bBase=toL(fb.base);
+  const aTop=fa._nTop||[],aMid=fa._nMid||[],aBase=fa._nBase||[];
+  const bTop=fb._nTop||[],bMid=fb._nMid||[],bBase=fb._nBase||[];
   const shTop=aTop.filter(n=>bTop.includes(n));
   const shMid=aMid.filter(n=>bMid.includes(n));
   const shBase=aBase.filter(n=>bBase.includes(n));
@@ -1583,10 +1605,9 @@ function _renderPickerList(q,slot){
   if(!list)return;
   const lower=q.toLowerCase();
   let frags=q.length<1?[...CAT]:CAT.filter(f=>{
-    const allNotes=[...(f.top||[]),...(f.mid||[]),...(f.base||[])];
     return f.name.toLowerCase().includes(lower)||
       f.brand.toLowerCase().includes(lower)||
-      allNotes.some(n=>n.toLowerCase().includes(lower));
+      f._nAll.some(n=>n.includes(lower));
   });
   if(_pickerSort==='name'){
     frags.sort((a,b)=>a.name.localeCompare(b.name));
@@ -1880,7 +1901,13 @@ Promise.all([
   fetch('data/brands.json',_nc).then(r=>r.json())
 ]).then(([roles, scents, notes, brands])=>{
   ROLES=roles;
-  CAT=scents;
+  CAT=scents.map(f=>{
+    f._nTop=(f.top||[]).map(n=>n.toLowerCase().trim());
+    f._nMid=(f.mid||[]).map(n=>n.toLowerCase().trim());
+    f._nBase=(f.base||[]).map(n=>n.toLowerCase().trim());
+    f._nAll=[...f._nTop,...f._nMid,...f._nBase];
+    return f;
+  });
   NI=notes;
   BRANDS=brands;
   // Rebuild derived objects

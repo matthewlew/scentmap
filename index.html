@@ -30,7 +30,7 @@
       <span class="nav-logo-text">Scentmap</span>
       <div class="nav-right" id="nav-right">
         <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
-        <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings">⚙</button>
+        <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings" aria-haspopup="true" aria-expanded="false">⚙</button>
         <div class="settings-menu" id="settings-menu" hidden>
           <button class="settings-menu-item" onclick="settingsGo('changelog')"><span class="settings-menu-icon">↩</span>Changelog</button>
         </div>
@@ -133,6 +133,13 @@
     </div>
     <div class="np-family" id="np-family"></div>
     <div class="np-desc"   id="np-desc"></div>
+    <div class="np-extraction" id="np-extraction" style="display:none; margin-top:10px; font-size:12px; color:var(--g500);">
+      <strong>Extraction:</strong> <span id="np-extraction-text"></span>
+    </div>
+    <div class="np-fact" id="np-fact" style="display:none; margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);">
+      <strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>
+      <span id="np-fact-text"></span>
+    </div>
     <div class="np-frags"  id="np-frags"></div>
   </div>
 </div>

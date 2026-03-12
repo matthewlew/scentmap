@@ -7,7 +7,9 @@
   {
     "name": "Aldehydes",
     "family": "floral",
-    "desc": "Synthetic molecules producing clean, soapy, waxy brightness — powdery and luminous."
+    "desc": "Synthetic molecules producing clean, soapy, waxy brightness — powdery and luminous.",
+    "insider_fact": "While naturally occurring in tiny amounts in citrus and rose, aldehydes used in perfumery are synthesized in labs. Ernest Beaux's famed 'overdose' of them in Chanel No. 5 was actually a laboratory mistake by his assistant.",
+    "extraction_method": "Chemical Synthesis"
   },
   {
     "name": "Almond",
@@ -67,7 +69,9 @@
   {
     "name": "Bergamot",
     "family": "citrus",
-    "desc": "Cold-pressed from a sour Italian citrus rind. Bright, clean, slightly floral."
+    "desc": "Cold-pressed from a sour Italian citrus rind. Bright, clean, slightly floral.",
+    "insider_fact": "Almost all the world's bergamot for perfumery comes from a narrow coastal strip in Calabria, Italy. It takes about 100 bergamot oranges to yield just 3 ounces of essential oil.",
+    "extraction_method": "Cold Expression"
   },
   {
     "name": "Birch",
@@ -417,7 +421,9 @@
   {
     "name": "Jasmine",
     "family": "floral",
-    "desc": "Rich, indolic white floral. Slightly animalic and dense."
+    "desc": "Rich, indolic white floral. Slightly animalic and dense.",
+    "insider_fact": "Jasmine contains indole, a molecule also found in human feces and decaying flesh. In small, diluted amounts, it's what gives jasmine its narcotic, intensely floral, and deeply 'human' sensual quality.",
+    "extraction_method": "Solvent Extraction (Enfleurage historically)"
   },
   {
     "name": "Juniper",
@@ -527,7 +533,9 @@
   {
     "name": "Musk",
     "family": "floral",
-    "desc": "A broad category of skin-like base notes — clean, animalic, or transparent."
+    "desc": "A broad category of skin-like base notes — clean, animalic, or transparent.",
+    "insider_fact": "Many people are 'anosmic' (unable to smell) certain types of large synthetic musk molecules. Perfumers often use a cocktail of 3 or 4 different musks to ensure everyone can smell the base.",
+    "extraction_method": "Chemical Synthesis (Historically from Musk Deer)"
   },
   {
     "name": "Muslin",
@@ -562,7 +570,9 @@
   {
     "name": "Oakmoss",
     "family": "chypre",
-    "desc": "Damp, mossy, earthy — the defining base note of classic chypre compositions."
+    "desc": "Damp, mossy, earthy — the defining base note of classic chypre compositions.",
+    "insider_fact": "Oakmoss extraction yields a thick, dark green paste. Strict modern IFRA regulations have severely restricted natural oakmoss use due to skin sensitization, forcing perfumers to use 'fractionated' moss or synthetics to recreate classic chypres.",
+    "extraction_method": "Solvent Extraction"
   },
   {
     "name": "Orange",
@@ -582,7 +592,9 @@
   {
     "name": "Oud",
     "family": "oud",
-    "desc": "Resinous heartwood of infected agarwood. Smoky, dark, and complex."
+    "desc": "Resinous heartwood of infected agarwood. Smoky, dark, and complex.",
+    "insider_fact": "Oud is actually a defense mechanism. The Aquilaria tree only produces the fragrant resin when infected by a specific mold (Phialophora parasitica). Healthy wood is completely odorless.",
+    "extraction_method": "Hydro-Distillation or Steam Distillation"
   },
   {
     "name": "Palisander",
@@ -607,7 +619,9 @@
   {
     "name": "Patchouli",
     "family": "chypre",
-    "desc": "Dark, earthy, slightly sweet. Improves with age."
+    "desc": "Dark, earthy, slightly sweet. Improves with age.",
+    "insider_fact": "Patchouli leaves are almost odorless when freshly picked. They must be dried and slightly fermented before distillation to release the deep, earthy scent profile.",
+    "extraction_method": "Steam Distillation"
   },
   {
     "name": "Peach",
@@ -687,7 +701,9 @@
   {
     "name": "Rose",
     "family": "floral",
-    "desc": "The most iconic floral. From fresh Turkish to dark Bulgarian absolute."
+    "desc": "The most iconic floral. From fresh Turkish to dark Bulgarian absolute.",
+    "insider_fact": "It takes about 10,000 pounds of rose petals to produce just one pound of rose essential oil. The petals must be picked by hand before sunrise, as the sun evaporates the delicate oils.",
+    "extraction_method": "Steam Distillation (Otto) or Solvent Extraction (Absolute)"
   },
   {
     "name": "Rosemary",
@@ -727,7 +743,9 @@
   {
     "name": "Sandalwood",
     "family": "woody",
-    "desc": "Creamy, warm, slightly milky. Mysore sandalwood is most prized."
+    "desc": "Creamy, warm, slightly milky. Mysore sandalwood is most prized.",
+    "insider_fact": "A sandalwood tree must grow for at least 15-20 years (often 30+) before the heartwood is rich enough in essential oils to be harvested for fine perfumery.",
+    "extraction_method": "Steam Distillation"
   },
   {
     "name": "Sapodilla",
@@ -822,7 +840,9 @@
   {
     "name": "Tuberose",
     "family": "floral",
-    "desc": "Dense, creamy, intensely indolic white floral. Heady and complex."
+    "desc": "Dense, creamy, intensely indolic white floral. Heady and complex.",
+    "insider_fact": "Tuberose flowers continue to produce scent for up to 48 hours after being picked. In the Victorian era, young girls were forbidden from walking through tuberose fields at night for fear the narcotic scent would induce spontaneous orgasms.",
+    "extraction_method": "Solvent Extraction"
   },
   {
     "name": "Tulip",
@@ -832,12 +852,16 @@
   {
     "name": "Vanilla",
     "family": "gourmand",
-    "desc": "Sweet, warm, universally appealing. Natural absolute is more complex."
+    "desc": "Sweet, warm, universally appealing. Natural absolute is more complex.",
+    "insider_fact": "The vanilla orchid blooms for only one day a year and must be hand-pollinated within a 12-hour window. Real vanilla absolute is so expensive that 99% of vanilla-scented products use synthetic vanillin.",
+    "extraction_method": "Solvent Extraction or Maceration"
   },
   {
     "name": "Vetiver",
     "family": "chypre",
-    "desc": "Earthy, smoky, and woody root note. One of the most versatile base notes."
+    "desc": "Earthy, smoky, and woody root note. One of the most versatile base notes.",
+    "insider_fact": "Vetiver isn't a wood, but a grass. The scent doesn't come from the leaves, but from the massive, tangled root system that can grow up to 10 feet deep, making it incredibly difficult to harvest.",
+    "extraction_method": "Steam Distillation"
   },
   {
     "name": "Violet",
@@ -877,11 +901,27 @@
   {
     "name": "Ylang-Ylang",
     "family": "floral",
-    "desc": "Intensely sweet tropical floral with banana and custard undertones. Can dominate a blend."
+    "desc": "Intensely sweet tropical floral with banana and custard undertones. Can dominate a blend.",
+    "insider_fact": "Ylang-Ylang is distilled in 'fractions' (Extra, I, II, III). 'Ylang-Ylang Extra' is collected in the first 1-2 hours of distillation and is the most ethereal and prized; later fractions are heavier and often used in soaps.",
+    "extraction_method": "Fractional Steam Distillation"
   },
   {
     "name": "Yuzu",
     "family": "citrus",
     "desc": "Japanese citrus — tart, pithy, complex. Somewhere between grapefruit, lemon, and bergamot."
+  },
+  {
+    "name": "Ambergris",
+    "family": "amber",
+    "desc": "A sweet, marine, musky scent.",
+    "insider_fact": "Fresh ambergris smells like feces. It only develops its prized sweet, marine, musky scent after floating in the ocean and baking in the sun for years, where photodegradation and oxidation transform it.",
+    "extraction_method": "Natural Secretion (Aged)"
+  },
+  {
+    "name": "Orris",
+    "family": "floral",
+    "desc": "Powdery violet root.",
+    "insider_fact": "Orris root (iris) must be harvested, peeled, and then left to dry and age for three to five years before distillation. The fresh root smells like nothing; the aging process creates the irones that give it its powdery violet scent.",
+    "extraction_method": "Steam Distillation (after aging)"
   }
 ]
