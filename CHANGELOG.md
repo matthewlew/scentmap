@@ -4,6 +4,21 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-11 (fix: picker UX polish)
+
+### Fixed
+- Haptic feedback no longer fires spuriously when typing in picker search — set `dataset.scrolling` guard before `innerHTML` rebuild and extended flag lifetime with `setTimeout(150ms)` to cover scroll-event settling
+- Brand names now visible in picker sub-text when sorting by Brand (was showing family label instead)
+- Both "Fragrance 1" and "Fragrance 2" column labels now render the same colour (removed active-state accent override)
+
+### Changed
+- Picker item height reduced from 60px → 48px (JS constant + CSS groove + padding updated); shows ~6 items instead of 5
+- Drum fade gradients reduced from 32% → 20% coverage; more items readable at edges
+- Picker search input enlarged to match catalog search sizing (`padding: 8px 12px`, `bg-primary` background)
+- Sort bar now shows "Sort by" label prefix; button labels renamed to "Brand", "Fragrance Title", "Note Family"
+
+---
+
 ## 2026-03-11 (refactor: extract JS, clean up project structure)
 
 ### Changed

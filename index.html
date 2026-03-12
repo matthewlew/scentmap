@@ -141,11 +141,14 @@
 <div class="frag-picker-overlay" id="frag-picker" role="dialog" aria-modal="true" aria-label="Select fragrances">
   <div class="frag-picker-wrap">
     <div class="frag-picker-top">
-      <div class="frag-picker-sort-bar" id="frag-picker-sort-bar" role="group" aria-label="Sort order">
-        <button class="frag-picker-sort-btn active" data-sort="brand" aria-pressed="true">Brand</button>
-        <button class="frag-picker-sort-btn" data-sort="name" aria-pressed="false">Name</button>
-        <button class="frag-picker-sort-btn" data-sort="family" aria-pressed="false">Family</button>
-        <div class="frag-picker-sort-pill" id="frag-picker-sort-pill" aria-hidden="true"></div>
+      <div class="frag-picker-sort-row">
+        <span class="frag-picker-sort-label">Sort by</span>
+        <div class="frag-picker-sort-bar" id="frag-picker-sort-bar" role="group" aria-label="Sort order">
+          <button class="frag-picker-sort-btn active" data-sort="brand" aria-pressed="true">Brand</button>
+          <button class="frag-picker-sort-btn" data-sort="name" aria-pressed="false">Fragrance Title</button>
+          <button class="frag-picker-sort-btn" data-sort="family" aria-pressed="false">Note Family</button>
+          <div class="frag-picker-sort-pill" id="frag-picker-sort-pill" aria-hidden="true"></div>
+        </div>
       </div>
     </div>
     <div class="frag-picker-cols" id="frag-picker-cols">

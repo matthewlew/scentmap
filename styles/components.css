@@ -2435,6 +2435,21 @@ button.cmp-note-pill:hover {
   flex-shrink: 0;
 }
 
+.frag-picker-sort-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+.frag-picker-sort-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* Sliding-pill sort bar */
 .frag-picker-sort-bar {
   position: relative;
@@ -2506,16 +2521,16 @@ button.cmp-note-pill:hover {
 }
 
 .frag-picker-col.active .frag-picker-col-lbl {
-  color: var(--accent-primary);
+  color: var(--text-secondary);
 }
 
 /* Per-column search input */
 .frag-picker-search {
   width: 100%;
-  padding: var(--sp-xs) var(--sp-sm);
+  padding: 8px 12px;
   border: 1px solid var(--border-standard);
   border-radius: var(--radius);
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   font-size: var(--fs-body-sm);
   color: var(--text-primary);
   font-family: inherit;
@@ -2553,7 +2568,7 @@ button.cmp-note-pill:hover {
 /* ── Drum window: fixed height, center groove, fade edges ── */
 .frag-picker-list-outer {
   position: relative;
-  height: 300px;   /* shows 5 items — matches padding calc below */
+  height: 300px;   /* shows ~6 items at 48px each — matches padding calc below */
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -2566,7 +2581,7 @@ button.cmp-note-pill:hover {
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  height: 60px;   /* matches PICKER_ITEM_H */
+  height: 48px;   /* matches PICKER_ITEM_H */
   background: var(--bg-secondary);
   border-top: 1px solid var(--border-standard);
   border-bottom: 1px solid var(--border-standard);
@@ -2580,8 +2595,8 @@ button.cmp-note-pill:hover {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, var(--bg-primary) 0%, transparent 32%),
-    linear-gradient(to top,    var(--bg-primary) 0%, transparent 32%);
+    linear-gradient(to bottom, var(--bg-primary) 0%, transparent 20%),
+    linear-gradient(to top,    var(--bg-primary) 0%, transparent 20%);
   pointer-events: none;
   z-index: 3;
 }
@@ -2596,9 +2611,9 @@ button.cmp-note-pill:hover {
   scrollbar-width: none;
   overscroll-behavior: contain;
   scroll-snap-type: y mandatory;
-  /* padding centers first/last items in the groove: (300 - 60) / 2 = 120px */
-  padding-top: 120px;
-  padding-bottom: 120px;
+  /* padding centers first/last items in the groove: (300 - 48) / 2 = 126px */
+  padding-top: 126px;
+  padding-bottom: 126px;
 }
 
 .frag-picker-list::-webkit-scrollbar {
@@ -2644,7 +2659,7 @@ button.cmp-note-pill:hover {
   align-items: center;
   gap: var(--sp-sm);
   width: 100%;
-  height: 60px;          /* must match PICKER_ITEM_H in JS and groove height in CSS */
+  height: 48px;          /* must match PICKER_ITEM_H in JS and groove height in CSS */
   flex-shrink: 0;
   padding: 0 var(--sp-md);
   background: transparent;   /* groove shows through */

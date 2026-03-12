@@ -1537,7 +1537,7 @@ function renderCompareResults(fa,fb){
 /* ── Fragrance picker — dual-column drum rolodex ── */
 let _pickerSlot=null;
 let _pickerSort='brand'; // 'brand' | 'name' | 'family'
-const PICKER_ITEM_H=60; // must match CSS --picker-item-h
+const PICKER_ITEM_H=48; // must match CSS --picker-item-h
 
 function _openFragPicker(slot){
   window.haptic?.('light');
@@ -1602,13 +1602,15 @@ function _renderPickerList(q,slot){
   }
   const curFrag=slot==='a'?CMP_A:CMP_B;
   const otherFrag=slot==='a'?CMP_B:CMP_A;
+  // Suppress scroll events (and haptic) triggered by innerHTML reset / scrollTop change
+  list.dataset.scrolling='1';
   list.innerHTML=frags.map(f=>{
     const fc=getCmpFam(f.family);
     const isOther=otherFrag&&otherFrag.id===f.id;
     let sub;
     if(_pickerSort==='name') sub=`${f.brand} · ${(FAM[f.family]||{}).label||f.family}`;
     else if(_pickerSort==='family') sub=f.brand;
-    else sub=(FAM[f.family]||{}).label||f.family;
+    else sub=f.brand;
     return`<div class="frag-picker-item${isOther?' other-sel':''}" data-id="${f.id}" role="option" aria-selected="false">
       <div class="frag-picker-dot" style="background:${fc.accent}"></div>
       <div class="frag-picker-item-text">
@@ -1631,10 +1633,10 @@ function _renderPickerList(q,slot){
       const found=items.findIndex(it=>it.dataset.id===curFrag.id);
       if(found>=0)targetIdx=found;
     }
-    list.dataset.scrolling='1';
     list.scrollTop=targetIdx*PICKER_ITEM_H;
     items.forEach((it,i)=>it.classList.toggle('centered',i===targetIdx));
-    requestAnimationFrame(()=>{ delete list.dataset.scrolling; });
+    // Keep flag set until after scroll events settle
+    setTimeout(()=>{ delete list.dataset.scrolling; },150);
   });
 }
 
