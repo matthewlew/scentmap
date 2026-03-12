@@ -1281,16 +1281,21 @@ function openMoreSheet(btn){
   btn.classList.add('active');
   const items=[
     {id:'notes',    icon:'✿', label:'Notes'},
+    {id:'playground',icon:'⚗', label:'Playground'},
     {id:'changelog',icon:'↩', label:'Changelog'},
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:16px 0 8px">
       <div style="font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);padding:0 16px 10px">More</div>
-      ${items.map(it=>`
-        <button onclick="closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
+      ${items.map(it=>{
+        const onclick = it.id === 'playground'
+          ? "window.location.href='playground.html'"
+          : `closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))`;
+        return `<button onclick="${onclick}" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
           <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0">${it.icon}</span>
           ${it.label}
-        </button>`).join('')}
+        </button>`;
+      }).join('')}
     </div>`;
   });
 }
