@@ -104,7 +104,14 @@
   <div class="col-detail" id="col-detail">
     <div class="detail-topbar">
       <button class="detail-back" id="detail-back"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
-      <button class="detail-close-btn" id="detail-close-btn">Close</button>
+      <div style="display: flex; align-items: center; gap: var(--sp-xs); position: relative;">
+        <button class="settings-btn" id="settings-btn-detail" aria-label="Settings" title="Settings" aria-haspopup="true" aria-expanded="false">⚙</button>
+        <div class="settings-menu" id="settings-menu-detail" hidden>
+          <button class="settings-menu-item" onclick="settingsGo('changelog')"><span class="settings-menu-icon">↩</span>Changelog</button>
+          <a class="settings-menu-item" href="playground.html"><span class="settings-menu-icon">🎨</span>Design System</a>
+        </div>
+        <button class="detail-close-btn" id="detail-close-btn">Close</button>
+      </div>
     </div>
     <div class="detail-inner" id="detail-inner"></div>
   </div>

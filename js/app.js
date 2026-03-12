@@ -1229,10 +1229,16 @@ function _setupDetailSwipe(container, currentFrag) {
 /* ── Settings button ── */
 window.settingsGo=function(id){
   const menu=document.getElementById('settings-menu');
+  const menuDetail=document.getElementById('settings-menu-detail');
   if(menu){
     menu.hidden=true;
     const btn=document.getElementById('settings-btn');
     if(btn)btn.setAttribute('aria-expanded', 'false');
+  }
+  if(menuDetail){
+    menuDetail.hidden=true;
+    const btnD=document.getElementById('settings-btn-detail');
+    if(btnD)btnD.setAttribute('aria-expanded', 'false');
   }
   const backBtn=document.getElementById('nav-back-btn');
   if(backBtn)backBtn.hidden=false;
@@ -1244,22 +1250,26 @@ window.navBack=function(){
   go('compare',null);
 };
 document.addEventListener('DOMContentLoaded',function(){
-  const settingsBtn=document.getElementById('settings-btn');
-  const settingsMenu=document.getElementById('settings-menu');
-  if(settingsBtn&&settingsMenu){
-    settingsBtn.addEventListener('click',function(e){
-      e.stopPropagation();
-      settingsMenu.hidden=!settingsMenu.hidden;
-      settingsBtn.setAttribute('aria-expanded', !settingsMenu.hidden);
-    });
-    document.addEventListener('click',function(){
-      if(settingsMenu){
-        settingsMenu.hidden=true;
-        settingsBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-    settingsMenu.addEventListener('click',function(e){e.stopPropagation();});
+  function setupMenu(btnId, menuId) {
+    const btn=document.getElementById(btnId);
+    const menu=document.getElementById(menuId);
+    if(btn&&menu){
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        menu.hidden=!menu.hidden;
+        btn.setAttribute('aria-expanded', !menu.hidden);
+      });
+      document.addEventListener('click',function(){
+        if(menu){
+          menu.hidden=true;
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      menu.addEventListener('click',function(e){e.stopPropagation();});
+    }
   }
+  setupMenu('settings-btn', 'settings-menu');
+  setupMenu('settings-btn-detail', 'settings-menu-detail');
 });
 function goMobile(id,btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
