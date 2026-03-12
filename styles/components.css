@@ -2252,10 +2252,19 @@ button.cmp-note-pill:hover {
 .cmp-sug-card-notes {
   font-size: var(--fs-caption);
   color: var(--text-tertiary);
-  font-style: italic;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.cmp-sug-card-reason {
+  margin-top: var(--sp-xs);
+  padding: var(--sp-xs) var(--sp-sm);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-caption);
+  color: var(--text-primary);
+  line-height: var(--lh-tight);
 }
 
 /* ── QUICK PEEK ── */
