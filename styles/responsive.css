@@ -271,7 +271,7 @@
   /* Changelog */
   .changelog-body {
     font-size: var(--fs-body);
-    line-height: var(--lh-spacious);
+    line-height: 1.72;
   }
 
   .changelog-body h2 {

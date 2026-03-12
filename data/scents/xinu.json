@@ -62,7 +62,7 @@
     "mid": ["Jasmine", "Neroli"],
     "base": ["Vetiver", "Sandalwood", "Musk"],
     "roles": ["casual", "heat"],
-    "description": "A clean, sparkling Mexican citrus anchored in vetiver and sandalwood—effortless to wear in any warm setting."
+    "description": "A clean, sparkling Mexican citrus anchored in vetiver and sandalwood — effortless to wear in any warm setting."
   },
   {
     "id": "tulipe-xinu",
@@ -75,7 +75,7 @@
     "mid": ["Tulip", "Iris"],
     "base": ["Sandalwood", "Musk"],
     "roles": ["casual", "creative"],
-    "description": "A delicate floral that captures the papery quality of a tulip petal—cool, slightly spicy, and architecturally precise."
+    "description": "A delicate floral that captures the papery quality of a tulip petal — cool, slightly spicy, and architecturally precise."
   },
   {
     "id": "ore-xinu",
@@ -88,6 +88,6 @@
     "mid": ["Copal Resin", "Frankincense"],
     "base": ["Amber", "Sandalwood"],
     "roles": ["formal", "cold"],
-    "description": "A blend of pre-Columbian resins—elemi, copal, and frankincense—slow-burning and ceremonial."
+    "description": "A blend of pre-Columbian resins — elemi, copal, and frankincense — slow-burning and ceremonial."
   }
 ]

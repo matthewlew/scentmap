@@ -10,7 +10,7 @@
     "mid": ["Iso E Super"],
     "base": ["Vetiver"],
     "roles": ["signature", "casual"],
-    "description": "A transparent woody enhancer built around Iso E Super—it amplifies other fragrances and skin chemistry rather than standing alone."
+    "description": "A transparent woody enhancer built around Iso E Super — it amplifies other fragrances and skin chemistry rather than standing alone."
   },
   {
     "id": "debaser",
@@ -62,7 +62,7 @@
     "mid": ["Jasmine", "Sandalwood"],
     "base": ["Vetiver", "Incense", "Smoke"],
     "roles": ["creative", "signature"],
-    "description": "Spiced sandalwood and cardamom drifting through jasmine smoke—a cinematic, Bollywood-radio scent that lodges itself in memory."
+    "description": "Spiced sandalwood and cardamom drifting through jasmine smoke — a cinematic, Bollywood-radio scent that lodges itself in memory."
   },
   {
     "id": "mississippi-medicine",
@@ -75,7 +75,7 @@
     "mid": ["Bayou Grass", "Basil"],
     "base": ["Tobacco", "Vetiver", "Moss"],
     "roles": ["creative", "signature"],
-    "description": "Swampy medicinal herbs over tobacco and earthy moss—the American South distilled into a bottle. Unusual and unmistakable."
+    "description": "Swampy medicinal herbs over tobacco and earthy moss — the American South distilled into a bottle. Unusual and unmistakable."
   },
   {
     "id": "ds-durga-sundazed",
@@ -90,7 +90,7 @@
     "mid": ["Coconut Water", "Marine"],
     "base": ["Musk", "Driftwood"],
     "roles": ["heat", "casual"],
-    "description": "A bright, hazy citrus with a coconut-water softness—feels like lying in the sun with your eyes closed."
+    "description": "A bright, hazy citrus with a coconut-water softness — feels like lying in the sun with your eyes closed."
   },
   {
     "id": "big-sur-after-rain",
@@ -103,6 +103,6 @@
     "mid": ["Sage", "Petrichor"],
     "base": ["Cedarwood", "Sandalwood"],
     "roles": ["casual", "creative"],
-    "description": "The California coastline after rainfall—eucalyptus and sage over wet stone and cedar. Meditative and singular."
+    "description": "The California coastline after rainfall — eucalyptus and sage over wet stone and cedar. Meditative and singular."
   }
 ]

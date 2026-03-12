@@ -966,7 +966,7 @@
   border: 1px solid var(--border-standard);
   border-radius: var(--radius);
   background: var(--bg-primary);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-primary);
   font-family: inherit;
   transition: border-color var(--dur-fast) var(--ease-spring);
@@ -1068,7 +1068,6 @@
   border-bottom: 1px solid var(--border-standard);
   border-left: 3px solid transparent;
   transition: opacity var(--dur-fast) ease;
-  line-height: var(--lh-relaxed);
 }
 
 .scent-row:last-child {
@@ -1307,7 +1306,6 @@
 .changelog-body p {
   margin: 0 0 8px;
   color: var(--g700);
-  line-height: var(--lh-relaxed);
 }
 
 .changelog-body strong {
@@ -2532,7 +2530,7 @@ button.cmp-note-pill:hover {
   border: 1px solid var(--border-standard);
   border-radius: var(--radius);
   background: var(--bg-primary);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-primary);
   font-family: inherit;
   transition: border-color var(--dur-fast) var(--ease-spring);
