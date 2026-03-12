@@ -1551,13 +1551,16 @@ function _openFragPicker(slot){
   // Highlight the initiating column
   document.getElementById('frag-picker-col-a')?.classList.toggle('active',slot==='a');
   document.getElementById('frag-picker-col-b')?.classList.toggle('active',slot==='b');
-  // Position wrap below the header on desktop
+  // Position wrap below the header on desktop; use sticky bar if header is scrolled off screen
   const overlay=document.getElementById('frag-picker');
   const wrap=overlay?.querySelector('.frag-picker-wrap');
   if(wrap&&window.innerWidth>=768){
     const header=document.getElementById('cmp-header');
-    if(header){
-      const r=header.getBoundingClientRect();
+    const stickyBar=document.getElementById('cmp-sticky-bar');
+    const headerRect=header?.getBoundingClientRect();
+    const anchor=(headerRect&&headerRect.bottom>0)?header:stickyBar;
+    if(anchor){
+      const r=anchor.getBoundingClientRect();
       wrap.style.top=(r.bottom+6)+'px';
       wrap.style.left=r.left+'px';
       wrap.style.width=r.width+'px';

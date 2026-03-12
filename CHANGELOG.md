@@ -4,6 +4,13 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-12 (fix: compare picker anchors to sticky bar when scrolled)
+
+### Fixed
+- When the compare page is scrolled and the condensed sticky bar is visible, opening the fragrance picker dropdown now positions the rolodex below the sticky bar instead of the (off-screen) main header. Previously `_openFragPicker` always anchored to `#cmp-header`; now it checks `cmp-header.getBoundingClientRect().bottom` and falls back to `#cmp-sticky-bar` when the header has scrolled out of view.
+
+---
+
 ## 2026-03-12 (fix: note detail catalog list opacity)
 
 ### Fixed
