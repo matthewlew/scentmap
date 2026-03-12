@@ -972,7 +972,11 @@ function go(id,btn){
 /* ── Settings button ── */
 window.settingsGo=function(id){
   const menu=document.getElementById('settings-menu');
-  if(menu)menu.hidden=true;
+  if(menu){
+    menu.hidden=true;
+    const btn=document.getElementById('settings-btn');
+    if(btn)btn.setAttribute('aria-expanded', 'false');
+  }
   const backBtn=document.getElementById('nav-back-btn');
   if(backBtn)backBtn.hidden=false;
   go(id,null);
@@ -989,9 +993,13 @@ document.addEventListener('DOMContentLoaded',function(){
     settingsBtn.addEventListener('click',function(e){
       e.stopPropagation();
       settingsMenu.hidden=!settingsMenu.hidden;
+      settingsBtn.setAttribute('aria-expanded', !settingsMenu.hidden);
     });
     document.addEventListener('click',function(){
-      if(settingsMenu)settingsMenu.hidden=true;
+      if(settingsMenu){
+        settingsMenu.hidden=true;
+        settingsBtn.setAttribute('aria-expanded', 'false');
+      }
     });
     settingsMenu.addEventListener('click',function(e){e.stopPropagation();});
   }
