@@ -561,8 +561,8 @@
 
 .dc-note {
   display: flex;
-  gap: 12px;
-  padding: 8px 0;
+  gap: var(--sp-md);
+  padding: var(--sp-sm) 0;
   border-bottom: 1px solid var(--border-standard);
 }
 
@@ -2046,7 +2046,7 @@ mark.note-match {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--sp-sm); /* Using closest token */
   align-content: flex-start;
   align-items: flex-start;
 }
@@ -2085,7 +2085,7 @@ mark.note-match {
   background: none;
   border: none;
   border-radius: var(--radius-sm);
-  padding: 4px 8px;
+  padding: var(--sp-xs) var(--sp-sm);
   cursor: default;
   color: var(--text-primary);
   line-height: 1.4;
@@ -2731,12 +2731,12 @@ button.cmp-note-pill:hover {
 
 .note-popup {
   position: absolute;
-  width: 280px;
+  width: 280px; /* Layout widths usually keep absolute size to avoid wrapping constraints, but let me check if there is a variable... no variable for this specific pop-over */
   background: var(--bg-primary);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-xl);
-  box-shadow: 0 12px 40px var(--fade-strong);
-  padding: 16px 20px 20px;
+  box-shadow: var(--shadow-lg);
+  padding: var(--sp-lg) var(--sp-xl) var(--sp-xl);
   pointer-events: all;
   z-index: 1;
   max-height: 400px;
@@ -2753,7 +2753,7 @@ button.cmp-note-pill:hover {
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--sp-md);
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-sm);
 }
 
 .nfp-close {
@@ -2787,7 +2787,7 @@ button.cmp-note-pill:hover {
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin-bottom: 12px;
+  margin-bottom: var(--sp-md);
 }
 
 .np-desc {
@@ -2795,11 +2795,11 @@ button.cmp-note-pill:hover {
   color: var(--g600);
   line-height: 1.8;
   font-style: italic;
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-sm);
 }
 
 .np-frags {
-  margin-top: 16px;
+  margin-top: var(--sp-lg);
 }
 
 .np-frags .frag-picker-item {
