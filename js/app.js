@@ -1735,6 +1735,135 @@ function renderSuggestionsV2(fa,fb,ca,cb){
 }
 
 /* ── Score educational overlay ── */
+function openCharacterEdu(fa, fb, ca, cb) {
+  let overlay = document.getElementById('cmp-edu-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'cmp-edu-overlay';
+    overlay.className = 'cmp-edu-overlay';
+    document.body.appendChild(overlay);
+  }
+
+  const dims = [
+    { key: 'freshness', label: 'Fresh', desc: 'Bright, uplifting notes like citrus, green leaves, and aquatic elements.' },
+    { key: 'sweetness', label: 'Sweet', desc: 'Sugary, floral, or gourmand notes like vanilla, fruit, and sweet resins.' },
+    { key: 'warmth', label: 'Warm', desc: 'Cozy, deep notes like woods, spices, amber, and musk.' },
+    { key: 'intensity', label: 'Intensity', desc: 'How powerful the scent feels right away (projection/sillage).' },
+    { key: 'complexity', label: 'Depth', desc: 'How many different types of notes evolve over time.' }
+  ];
+
+  const pa = computeProfile(fa);
+  const pb = computeProfile(fb);
+
+  // Helper to find contributing notes for a dimension
+  const getNoteContributors = (frag, dimKey) => {
+    const allNotes = [...(frag._nTop || []), ...(frag._nMid || []), ...(frag._nBase || [])];
+    const matching = allNotes.filter(n => {
+      const info = NI_MAP[n.toLowerCase()];
+      if (!info) return false;
+      const t = info.tags || [];
+      if (dimKey === 'freshness') return t.includes('citrus') || t.includes('green') || t.includes('aquatic');
+      if (dimKey === 'sweetness') return t.includes('sweet') || t.includes('floral') || t.includes('fruity');
+      if (dimKey === 'warmth') return t.includes('warm') || t.includes('spicy') || t.includes('woody') || t.includes('amber');
+      return false; // Intensity/complexity don't map directly to single notes
+    });
+    return [...new Set(matching)].slice(0, 3);
+  };
+
+  // Find a suggestion for a dimension (someone who might want more of this)
+  const getSwapSuggestion = (dimKey) => {
+    const sorted = Object.values(CAT_MAP).map(f => ({ f, p: computeProfile(f) })).sort((a, b) => b.p[dimKey] - a.p[dimKey]);
+    const topScorers = sorted.filter(x => x.f.id !== fa.id && x.f.id !== fb.id).slice(0, 10);
+    if (topScorers.length === 0) return null;
+    return topScorers[Math.floor(Math.random() * topScorers.length)].f;
+  };
+
+  const cap = n => n.charAt(0).toUpperCase() + n.slice(1);
+
+  const html = `
+    <div class="cmp-edu-wrap">
+      <div class="cmp-edu-header">
+        <div class="cmp-edu-header-left">
+          <div class="cmp-edu-title">Character Details</div>
+        </div>
+        <button class="cmp-edu-close" aria-label="Close" onclick="document.getElementById('cmp-edu-overlay').classList.remove('open')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="cmp-edu-content">
+        <p class="cmp-edu-intro">The Character Map compares five key sensory dimensions. Here&rsquo;s what they mean and which notes drive them.</p>
+
+        <div class="cmp-edu-grid">
+          ${dims.map(dim => {
+            const isNoteDriven = ['freshness', 'sweetness', 'warmth'].includes(dim.key);
+            const notesA = isNoteDriven ? getNoteContributors(fa, dim.key) : [];
+            const notesB = isNoteDriven ? getNoteContributors(fb, dim.key) : [];
+            const suggestion = getSwapSuggestion(dim.key);
+
+            return `
+              <div class="cmp-edu-card">
+                <div class="cmp-edu-card-title">${dim.label}</div>
+                <div class="cmp-edu-card-desc">${dim.desc}</div>
+
+                ${isNoteDriven ? `
+                  <div class="cmp-edu-card-notes">
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${ca.accent}">${fa.name}</span>
+                      <span class="cmp-edu-card-notes-list">${notesA.length ? notesA.map(cap).join(', ') : '—'}</span>
+                    </div>
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${cb.accent}">${fb.name}</span>
+                      <span class="cmp-edu-card-notes-list">${notesB.length ? notesB.map(cap).join(', ') : '—'}</span>
+                    </div>
+                  </div>
+                ` : `
+                  <div class="cmp-edu-card-notes">
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${ca.accent}">${fa.name}</span>
+                      <span class="cmp-edu-card-notes-list">${Math.round(pa[dim.key]*100)}%</span>
+                    </div>
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${cb.accent}">${fb.name}</span>
+                      <span class="cmp-edu-card-notes-list">${Math.round(pb[dim.key]*100)}%</span>
+                    </div>
+                  </div>
+                `}
+
+                ${suggestion ? `
+                  <div class="cmp-edu-suggestion" onclick="openScent('${suggestion.id}')">
+                    <div class="cmp-edu-suggestion-label">Want more ${dim.label}?</div>
+                    <div class="cmp-edu-suggestion-name"><strong>${suggestion.name}</strong> by ${BRANDS_MAP[suggestion.brand] || suggestion.brand}</div>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  overlay.innerHTML = html;
+
+  // Transition in
+  requestAnimationFrame(() => overlay.classList.add('open'));
+
+  // Handle cleanup on transition out
+  const wrap = overlay.querySelector('.cmp-edu-wrap');
+  wrap.addEventListener('transitionend', (e) => {
+    if (e.propertyName === 'transform' && !overlay.classList.contains('open')) {
+      overlay.remove();
+    }
+  });
+
+  // Close on scrim click
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('open');
+    }
+  });
+}
+
 function openScoreEdu(type,matchPct,layerPct,fa,fb){
   let overlay=document.getElementById('cmp-edu-overlay');
   if(!overlay){overlay=document.createElement('div');overlay.id='cmp-edu-overlay';overlay.className='cmp-edu-overlay';document.body.appendChild(overlay);}
@@ -1822,39 +1951,43 @@ function renderCompareResults(fa,fb){
     </div>
 
     <div class="cmp-pair-card">
-      <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
-      <div class="cmp-pair-card-verdict">${verdict}</div>
-      <div class="cmp-pair-card-scores">
-        <button class="cmp-score-card" id="cmp-score-match">
-          <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
-          <div class="cmp-score-label">Similarity</div>
-          <div class="cmp-score-meter">
-            <div class="cmp-score-meter-track">
-              <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
-              <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,matchPct))}%;background:${matchColor}"></div>
-              <div class="cmp-score-meter-tick" style="left:25%"></div>
-              <div class="cmp-score-meter-tick" style="left:50%"></div>
-              <div class="cmp-score-meter-tick" style="left:75%"></div>
+      <button class="cmp-pair-card-left" id="cmp-score-character">
+        <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
+      </button>
+      <div class="cmp-pair-card-right">
+        <div class="cmp-pair-card-verdict">${verdict}</div>
+        <div class="cmp-pair-card-scores">
+          <button class="cmp-score-card" id="cmp-score-match">
+            <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
+            <div class="cmp-score-label">Similarity</div>
+            <div class="cmp-score-meter">
+              <div class="cmp-score-meter-track">
+                <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
+                <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,matchPct))}%;background:${matchColor}"></div>
+                <div class="cmp-score-meter-tick" style="left:25%"></div>
+                <div class="cmp-score-meter-tick" style="left:50%"></div>
+                <div class="cmp-score-meter-tick" style="left:75%"></div>
+              </div>
             </div>
-          </div>
-          <div class="cmp-score-range">${_simLabel(matchPct)}</div>
-          <div class="cmp-score-tap">Tap to learn more ↗</div>
-        </button>
-        <button class="cmp-score-card" id="cmp-score-layer">
-          <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
-          <div class="cmp-score-label">Pairing</div>
-          <div class="cmp-score-meter">
-            <div class="cmp-score-meter-track">
-              <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
-              <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,layerPct))}%;background:${layerColor}"></div>
-              <div class="cmp-score-meter-tick" style="left:25%"></div>
-              <div class="cmp-score-meter-tick" style="left:50%"></div>
-              <div class="cmp-score-meter-tick" style="left:75%"></div>
+            <div class="cmp-score-range">${_simLabel(matchPct)}</div>
+            <div class="cmp-score-tap">Tap to learn more ↗</div>
+          </button>
+          <button class="cmp-score-card" id="cmp-score-layer">
+            <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
+            <div class="cmp-score-label">Pairing</div>
+            <div class="cmp-score-meter">
+              <div class="cmp-score-meter-track">
+                <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
+                <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,layerPct))}%;background:${layerColor}"></div>
+                <div class="cmp-score-meter-tick" style="left:25%"></div>
+                <div class="cmp-score-meter-tick" style="left:50%"></div>
+                <div class="cmp-score-meter-tick" style="left:75%"></div>
+              </div>
             </div>
-          </div>
-          <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-          <div class="cmp-score-tap">Tap to learn more ↗</div>
-        </button>
+            <div class="cmp-score-range">${_layLabel(layerPct)}</div>
+            <div class="cmp-score-tap">Tap to learn more ↗</div>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1864,6 +1997,11 @@ function renderCompareResults(fa,fb){
   `;
 
   // Wire score taps
+  document.getElementById('cmp-score-character')?.addEventListener('click',()=>{
+    window.haptic?.('selection');
+    openCharacterEdu(fa, fb, ca, cb);
+  });
+
   document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
     window.haptic?.('selection');
     openScoreEdu('match',matchPct,layerPct,fa,fb);
