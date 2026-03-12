@@ -4,6 +4,21 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-12 (fix: mobile sheet UX — height, titles, close access)
+
+### Fixed
+- Mobile bottom sheets now have `max-height: calc(100svh - 44px)` — prevents sheets from extending above the viewport and making the Close button unreachable
+- Sheet `display: flex` added so `overflow-y: auto` on `.sheet-content` activates correctly for internal scrolling (was requiring whole-page scroll)
+- Note detail sheet no longer appears faded — underlying fragrance detail sheet no longer peeks above the note sheet
+- Fragrance detail now always shows a reachable Close button after returning from a note detail
+
+### Changed
+- Sheet topbar now displays the fragrance/note/brand name as a sticky title (Archivo Black, centered) — title is always visible regardless of scroll position
+- `.dc-name` (fragrance detail title) updated to Archivo Black display font, matching the compare picker card treatment
+- `.np-name` (note detail title) updated to Archivo Black display font
+
+---
+
 ## 2026-03-12 (fix: compare UX improvements)
 
 ### Fixed

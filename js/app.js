@@ -177,7 +177,7 @@ function unlockBodyScroll(){
 
 /* ══ MOBILE SHEET STACK ════════════════════════════════════════════ */
 const sheetStack=[];
-function pushSheet(renderFn){
+function pushSheet(renderFn,title){
   const isSubNav=sheetStack.length>0;
   if(!sheetStack.length)lockBodyScroll();
   const overlay=document.getElementById('sheet-stack');
@@ -186,6 +186,7 @@ function pushSheet(renderFn){
   el.innerHTML=`<div class="sheet-inner"><div class="sheet-handle" aria-hidden="true"></div>
     <div class="sheet-topbar">
       <button class="sheet-back hidden"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      ${title?`<div class="sheet-title">${title}</div>`:''}
       <button class="sheet-close" aria-label="Close">Close</button>
     </div>
     <div class="sheet-content"></div></div>`;
@@ -224,13 +225,13 @@ function updateSheetBacks(){sheetStack.forEach((s,i)=>s.querySelector('.sheet-ba
 document.getElementById('sheet-backdrop').addEventListener('click',closeAllSheets);
 
 /* ══ OPEN HELPERS ══════════════════════════════════════════════════ */
-function openDetail(renderFn){
+function openDetail(renderFn,title){
   if(isDesktop()||isTablet())openDesktopDetail(renderFn);
-  else pushSheet(c=>renderFn(c));
+  else pushSheet(c=>renderFn(c),title);
 }
-function pushDetail(renderFn){
+function pushDetail(renderFn,title){
   if(isDesktop()||isTablet())pushDesktopDetail(renderFn);
-  else pushSheet(c=>renderFn(c));
+  else pushSheet(c=>renderFn(c),title);
 }
 
 /* ══ SHARED RENDERERS ══════════════════════════════════════════════ */
@@ -271,7 +272,7 @@ function renderFragDetail(container,frag){
 
   // Note links
   container.querySelectorAll('.note-link').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note))});
+    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),note.name)});
   });
 
   // Collection action row
@@ -476,7 +477,7 @@ function renderNoteDetail(container,note){
   }
 }
 
-function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag))}
+function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
 
 function renderHouseDetail(container,brand){
   const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
@@ -499,7 +500,7 @@ function renderHouseDetail(container,brand){
     list.appendChild(btn);
   });
 }
-function openHouseDetail(brand){openDetail(c=>renderHouseDetail(c,brand))}
+function openHouseDetail(brand){openDetail(c=>renderHouseDetail(c,brand),brand)}
 
 function refreshAfterStateChange(id){
   const row=document.querySelector(`.scent-row[data-id="${id}"]`);
