@@ -16,6 +16,43 @@ const FAM={
 };
 const FAM_ORDER=['floral','amber','citrus','woody','chypre','gourmand','green','oud','leather','aquatic'];
 
+const EXTRACTIONS={
+  "Steam Distillation": { desc: "The most classic method. Steam passes through the material (like lavender or rose petals), carrying the volatile oils which are then condensed.", common: "Very common for woods, roots, and sturdy flowers.", example: "Rose Otto, Vetiver" },
+  "Cold Expression": { desc: "The rinds of citrus fruits are mechanically pressed to release their oils. Heat would degrade the bright, delicate top notes.", common: "Very common for citrus.", example: "Bergamot, Lemon, Grapefruit" },
+  "Solvent Extraction": { desc: "A chemical solvent dissolves aromatic compounds from delicate flowers that would be destroyed by steam. Creates a waxy 'concrete', washed with alcohol to make an 'absolute'.", common: "Common for delicate florals.", example: "Jasmine Absolute, Tuberose" },
+  "CO2 Extraction": { desc: "A modern, high-tech method using supercritical carbon dioxide at low heat. Captures a scent profile much closer to the living plant.", common: "Less common, expensive.", example: "Pink Pepper CO2, Coffee Extract" },
+  "Enfleurage": { desc: "An ancient, labor-intensive method using animal fat to absorb scent from flowers over many days. The fat is then washed with alcohol.", common: "Extremely rare today, mostly historical.", example: "Traditional Jasmine or Tuberose" },
+  "Chemical Synthesis": { desc: "Creating molecules in a laboratory. Allows perfumers to use scents that cannot be extracted from nature, or to replace animal-derived ingredients.", common: "Ubiquitous in modern perfumery.", example: "Aldehydes, Musks, Calone" }
+};
+
+
+function getExtractionTooltipHtml(methodStr) {
+  // Try to find the matching method in EXTRACTIONS
+  // Method string might be like "Steam Distillation (Otto) or Solvent Extraction (Absolute)"
+  // We'll just look for the first match or any match for simplicity in this helper.
+  let matchedKey = null;
+  for (const key of Object.keys(EXTRACTIONS)) {
+    if (methodStr.toLowerCase().includes(key.toLowerCase())) {
+      matchedKey = key;
+      break;
+    }
+  }
+
+  if (matchedKey) {
+    const ext = EXTRACTIONS[matchedKey];
+    return `<div class="ext-tooltip"><div class="ext-tt-title">${matchedKey}</div><div class="ext-tt-desc">${ext.desc}</div><div class="ext-tt-meta"><strong>Commonality:</strong> ${ext.common}</div><div class="ext-tt-meta"><strong>Example:</strong> ${ext.example}</div></div>`;
+  }
+  return '';
+}
+
+function renderExtractionHtml(methodStr) {
+  const tooltipHtml = getExtractionTooltipHtml(methodStr);
+  if (tooltipHtml) {
+    return `<span class="ext-interactive" tabindex="0">${methodStr}${tooltipHtml}</span>`;
+  }
+  return methodStr;
+}
+
 const FAM_COMPAT={
   woody:   {woody:.7,floral:.8,amber:.9,citrus:.6,leather:.8,oud:.9,green:.6,chypre:.7,gourmand:.5},
   floral:  {woody:.8,floral:.5,amber:.7,citrus:.7,leather:.5,oud:.6,green:.8,chypre:.8,gourmand:.5},
@@ -464,7 +501,7 @@ function renderNoteDetail(container,note){
   container.innerHTML=`<div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
-    ${note.extraction_method?`<div style="margin-top:10px; font-size:var(--fs-body-sm); color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
+    ${note.extraction_method?`<div style="margin-top:10px; font-size:var(--fs-body-sm); color:var(--g500); position:relative;"><strong>Extraction:</strong> ${renderExtractionHtml(note.extraction_method)}</div>`:""}
     ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:var(--fs-body-sm); color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
     ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
   if(inf.length){
@@ -523,7 +560,7 @@ function openNotePopup(note,triggerEl){
 
   const extEl = document.getElementById('np-extraction');
   if(note.extraction_method) {
-    document.getElementById('np-extraction-text').textContent = note.extraction_method;
+    document.getElementById('np-extraction-text').innerHTML = renderExtractionHtml(note.extraction_method);
     extEl.style.display = 'block';
   } else {
     extEl.style.display = 'none';
