@@ -47,10 +47,10 @@ const results=[];
 let W; // iframe window reference
 
 function assert(name,cond,detail=''){
-  results.push({name,pass:!!cond,detail,skip:false});
+  results.push({name,pass:!!cond,detail,skip:false,suite:currentSuite});
 }
 function skip(name,reason=''){
-  results.push({name,pass:false,detail:reason,skip:true});
+  results.push({name,pass:false,detail:reason,skip:true,suite:currentSuite});
 }
 
 async function waitFor(fn,timeout=3000){
@@ -247,6 +247,69 @@ async function runAll(){
     return !!style.getPropertyValue('--fam-woody').trim();
   });
 
+  // ── SUITE: Similarity scoring ─────────────────────────────────────
+  startSuite('Similarity scoring');
+  if(W.scoreSimilarity) {
+    const fA = {
+      id: 'fa',
+      family: 'floral',
+      top: ['Rose', 'Bergamot'],
+      mid: ['Jasmine'],
+      base: ['Musk'],
+      sillage: 5,
+      roles: ['casual']
+    };
+    const fB = {
+      id: 'fb',
+      family: 'woody', // FAM_COMPAT['floral']['woody'] is 0.8
+      top: ['bergamot'],
+      mid: ['Jasmine'],
+      base: ['Patchouli'],
+      sillage: 5, // diff = 0
+      roles: ['casual', 'date'] // 1 shared role
+    };
+
+    assert('scoreSimilarity identical ID returns 0', W.scoreSimilarity(fA, fA) === 0);
+
+    const fC = { ...fA, id: 'fc', sillage: 8, roles: [] }; // same notes/family, sillage diff=3, 0 shared roles
+    // fA vs fC:
+    // famScore: floral x floral (0.5 * 40 = 20)
+    // noteScore: Rose, Bergamot, Jasmine, Musk (all match). base=1(5), mid=1(3), top=2(4) -> 12.
+    // sillScore: diff 3 -> 5
+    // roleScore: 0
+    // total: 20 + 12 + 5 + 0 = 37
+    assert('scoreSimilarity with identical notes but different sillage', W.scoreSimilarity(fA, fC) === 37, `Expected 37, got ${W.scoreSimilarity(fA, fC)}`);
+
+    // fA vs fB:
+    // famScore: floral x woody = 0.8 * 40 = 32
+    // noteScore: shared top (bergamot)=1(2), mid (jasmine)=1(3), base=0 -> 5
+    // sillScore: diff 0 -> 10
+    // roleScore: shared 1 -> 7
+    // total: 32 + 5 + 10 + 7 = 54
+    assert('scoreSimilarity cross-family pairing', W.scoreSimilarity(fA, fB) === 54, `Expected 54, got ${W.scoreSimilarity(fA, fB)}`);
+
+    // test max caps
+    const fD = {
+      id: 'fd',
+      family: 'amber', // amber x amber = 0.5 -> 20
+      top: ['a','b','c','d','e','f','g','h'],
+      mid: ['a','b','c','d','e','f','g','h'],
+      base: ['a','b','c','d','e','f','g','h'],
+      sillage: 5,
+      roles: ['r1','r2','r3','r4','r5']
+    };
+    const fE = { ...fD, id: 'fe' };
+    // fam: 0.5 * 40 = 20
+    // notes: shBase=8 (40), shMid=8 (24), shTop=8 (16) -> total 80, capped at 30
+    // sill: diff 0 -> 10
+    // roles: shRoles=5 (35), capped at 20
+    // total: 20 + 30 + 10 + 20 = 80
+    assert('scoreSimilarity caps note and role scores', W.scoreSimilarity(fD, fE) === 80, `Expected 80, got ${W.scoreSimilarity(fD, fE)}`);
+
+  } else {
+    skip('scoreSimilarity function not found');
+  }
+
   render();
 }
 
@@ -255,35 +318,10 @@ let currentSuite='';
 function startSuite(name){currentSuite=name;suites.push(name);}
 
 function render(){
-  // Group results by suite
-  const grouped={};
-  let suiteIdx=0;
-  let currentS=suites[0];
+  const byS={};
+  suites.forEach(s=>byS[s]=[]);
   results.forEach(r=>{
-    if(!grouped[currentS])grouped[currentS]=[];
-    grouped[currentS].push(r);
-    // Detect suite boundary by re-counting
-  });
-
-  // Simpler: just re-group in order of startSuite calls
-  const suiteResults={};
-  suites.forEach(s=>{suiteResults[s]=[]});
-  let si=0;
-  const suiteStarts=suites.map(s=>results.findIndex((r,i)=>
-    i>=results.findIndex((_,j)=>j>=si)));
-  // Flatten approach: tag each result with suite in order
-  let sIdx=0;
-  const tagged=results.map((r,i)=>{
-    if(sIdx<suites.length-1&&suiteResults[suites[sIdx]].length&&
-       suiteResults[suites[sIdx+1]]===undefined){}
-    return r;
-  });
-  // Simple sequential approach
-  const byS={};suites.forEach(s=>byS[s]=[]);
-  let si2=0;
-  results.forEach(r=>{
-    while(si2<suites.length-1&&byS[suites[si2]].length>=getSuiteCount(suites[si2]))si2++;
-    byS[suites[si2]].push(r);
+    if(byS[r.suite]) byS[r.suite].push(r);
   });
 
   let pass=0,fail=0,sk=0;
@@ -293,11 +331,11 @@ function render(){
   document.getElementById('s-skip').textContent=sk;
   document.getElementById('summary').style.display='flex';
 
-  // Render flat list grouped visually
   let html='';
   suites.forEach(s=>{
+    if(!byS[s] || byS[s].length === 0) return;
     html+=`<div class="suite"><div class="suite-name">${s}</div>`;
-    (byS[s]||[]).forEach(r=>{
+    byS[s].forEach(r=>{
       const cls=r.skip?'skip':r.pass?'pass':'fail';
       const badge=r.skip?'SKIP':r.pass?'PASS':'FAIL';
       html+=`<div class="test ${cls}">
@@ -308,15 +346,6 @@ function render(){
     html+=`</div>`;
   });
   document.getElementById('results').innerHTML=html;
-}
-
-function getSuiteCount(s){
-  // count tests between suites by tracking declaration order
-  const idx=suites.indexOf(s);
-  const next=suites[idx+1];
-  if(!next)return Infinity;
-  // We can't know at render time, so return a large number and rely on sequential fill
-  return Infinity;
 }
 </script>
 </body>
