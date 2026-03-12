@@ -795,6 +795,7 @@ function buildCatalog(roleFilter){
   const body=document.getElementById('cat-body');body.innerHTML='';
 
   // Role filter bar
+  /*
   const filterBar=document.createElement('div');filterBar.className='cat-filter-bar';
   const allBtn=document.createElement('button');
   allBtn.className='tab'+(roleFilter===null?' active':'');
@@ -811,6 +812,7 @@ function buildCatalog(roleFilter){
     filterBar.appendChild(btn);
   });
   body.appendChild(filterBar);
+  */
 
   // Apply filters: brand + state + search
   const search=(document.getElementById('cat-search')?.value||'').toLowerCase().trim();
