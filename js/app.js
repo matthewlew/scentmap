@@ -245,8 +245,9 @@ function renderFragDetail(container,frag){
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
 
   container.innerHTML=`
+    <div class="dc-eyebrow">Fragrance</div>
     <div class="dc-name">${frag.name}</div>
-    <div class="dc-brand">${frag.brand}</div>
+    <button class="dc-brand-btn">${frag.brand}</button>
     <div class="dc-ftag" style="background:${fm.color}">
       <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
       ${fm.label}
@@ -267,8 +268,10 @@ function renderFragDetail(container,frag){
     <p class="dc-notes-caveat">Key materials only — simplified pyramid</p>`;
 
   // Note links
+  const brandBtn=container.querySelector('.dc-brand-btn');
+  if(brandBtn)brandBtn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
   container.querySelectorAll('.note-link').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),note.name)});
+    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),'Note')});
   });
 
   // Collection action row
@@ -318,16 +321,19 @@ function renderFragDetail(container,frag){
       const badge=classifyDiscovery(frag,f);
       const row=document.createElement('button');row.className='dc-sim-row';
       const namePart=reason
-        ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
-        :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand">${f.brand}</span>`;
+        ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand dc-sim-brand-btn"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
+        :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand dc-sim-brand-btn">${f.brand}</span>`;
       row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
         <span class="dc-sim-info">${namePart}</span>
         ${badge?`<span class="dc-badge ${badge.type}">${badge.label}</span>`:''}`;
-      row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
+      row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),'Fragrance');});
       shelf.appendChild(row);
     });
     container.appendChild(shelf);
   }
+  container.querySelectorAll('.dc-sim-brand-btn').forEach(btn => {
+    btn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(btn.textContent.replace(' · ','').trim());});
+  });
 }
 
 /* ── Compare CTAs in detail panel ── */
@@ -393,16 +399,19 @@ function buildLayerSuggestions(frag,container){
     const reason=layerReason(frag,f);
     const row=document.createElement('button');row.className='dc-sim-row';
     const namePart=reason
-      ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
-      :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand">${f.brand}</span>`;
+      ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand dc-sim-brand-btn"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
+      :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand dc-sim-brand-btn">${f.brand}</span>`;
     row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
       <span class="dc-sim-info">${namePart}</span>
       <span class="dc-layer-score-badge">${score}</span>
       <span class="dc-sim-state is-owned">Owned</span>`;
-    row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
+    row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),'Fragrance');});
     shelf.appendChild(row);
   });
   container.appendChild(shelf);
+  container.querySelectorAll('.dc-sim-brand-btn').forEach(btn => {
+    btn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(btn.textContent.replace(' · ','').trim());});
+  });
 }
 
 function buildRoleChips(frag,chipsEl){
@@ -446,7 +455,8 @@ function renderNoteDetail(container,note){
   const fm=FAM[note.family]||{label:note.family,color:'#888'};
   const nl=note.name.toLowerCase();
   const inf=CAT.filter(f=>f._nAll.includes(nl));
-  container.innerHTML=`<div class="np-name">${note.name}</div>
+  container.innerHTML=`<div class="dc-eyebrow">Note</div>
+    <div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
     ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
@@ -458,17 +468,18 @@ function renderNoteDetail(container,note){
       const fc=getCmpFam(f.family);
       const btn=document.createElement('button');btn.className='frag-picker-item';
       btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
-      btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
+      btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),'Fragrance');});
       span.appendChild(btn);
     });
   }
 }
 
-function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
+function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),'Fragrance')}
 
 function renderHouseDetail(container,brand){
   const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
   container.innerHTML=`<div class="house-detail-wrap">
+    <div class="dc-eyebrow">Fragrance House</div>
     <div class="house-detail-name">${brand}</div>
     <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
     <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
@@ -483,11 +494,11 @@ function renderHouseDetail(container,brand){
         <div class="frag-picker-item-name">${frag.name}</div>
         <div class="frag-picker-item-brand">${(FAM[frag.family]||{}).label||frag.family}</div>
       </div>`;
-    btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag));});
+    btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag),'Fragrance');});
     list.appendChild(btn);
   });
 }
-function openHouseDetail(brand){openDetail(c=>renderHouseDetail(c,brand),brand)}
+function openHouseDetail(brand){openDetail(c=>renderHouseDetail(c,brand),'House')}
 
 function refreshAfterStateChange(id){
   const row=document.querySelector(`.scent-row[data-id="${id}"]`);
@@ -550,7 +561,7 @@ document.getElementById('note-float-bg').addEventListener('click',closeNotePopup
 document.getElementById('nfp-close').addEventListener('click',closeNotePopup);
 
 /* ══ PICKER ═════════════════════════════════════════════════════════ */
-function openPicker(roleId){openDetail(c=>renderPicker(c,roleId))}
+function openPicker(roleId){openDetail(c=>renderPicker(c,roleId),'Role')}
 
 function renderPicker(container,roleId){
   const role=RM[roleId];
@@ -561,7 +572,8 @@ function renderPicker(container,roleId){
 
   // Header
   const hdr=document.createElement('div');hdr.className='picker-header';
-  hdr.innerHTML=`<div class="picker-title">${role.sym} ${role.name}</div><div class="picker-sub">${role.desc}</div>`;
+  hdr.innerHTML=`<div class="dc-eyebrow">Capsule Role</div>
+    <div class="picker-title">${role.sym} ${role.name}</div><div class="picker-sub">${role.desc}</div>`;
   container.appendChild(hdr);
 
   // Hero
@@ -619,7 +631,7 @@ function renderPicker(container,roleId){
       badge.className='picker-order-badge'+(i===0?' primary-badge':'');
       badge.textContent=i===0?'Primary':`#${i+1}`;
       const nameBtn=document.createElement('button');nameBtn.className='picker-name-btn'+(isWish(f.id)&&!isOwned(f.id)?' is-wish':'');nameBtn.textContent=f.name;
-      nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f))});
+      nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),'Fragrance')});
       const info=document.createElement('div');info.className='picker-info';
       info.appendChild(nameBtn);
       const br=document.createElement('div');br.className='picker-brand-row';br.textContent=f.brand;info.appendChild(br);
@@ -647,7 +659,7 @@ function renderPicker(container,roleId){
       card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
         <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
-      card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag))});
+      card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),'Fragrance')});
       row.appendChild(card);
     });
     wrap.appendChild(row);container.appendChild(wrap);
@@ -658,7 +670,7 @@ function renderPicker(container,roleId){
     const w=isWish(frag.id)&&!isOwned(frag.id);
     const row=document.createElement('div');row.className='picker-row';
     const nameBtn=document.createElement('button');nameBtn.className='picker-name-btn'+(w?' is-wish':'');nameBtn.textContent=frag.name;
-    nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag))});
+    nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),'Fragrance')});
     const info=document.createElement('div');info.className='picker-info';
     info.appendChild(nameBtn);
     const br=document.createElement('div');br.className='picker-brand-row';br.textContent=frag.brand;info.appendChild(br);
@@ -1525,7 +1537,7 @@ function renderCompareResults(fa,fb){
 
   // Wire note pill taps in notes grid
   res.querySelectorAll('.cmp-notes-v2 button[data-note]').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)openDetail(c=>renderNoteDetail(c,note),note.name);});
+    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)openDetail(c=>renderNoteDetail(c,note),'Note');});
   });
 
   // Wire suggestion taps
@@ -1782,11 +1794,12 @@ function _fillCard(slot,frag){
       <span class="cmp-frag-card-dot" aria-hidden="true"></span>${famLabel}
     </div>
     <div class="cmp-frag-card-name">${frag.name}</div>
-    <div class="cmp-frag-card-brand">${frag.brand}</div>
+    <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>
     ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
     <button class="cmp-card-detail-btn" data-slot="${slot}" aria-label="View details for ${frag.name}">Details ↗</button>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
   card.querySelector('.cmp-card-detail-btn')?.addEventListener('click',e=>{e.stopPropagation();openFragDetail(frag);});
+  card.querySelector('.cmp-brand-btn')?.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
 }
 
 function _resetCard(slot){

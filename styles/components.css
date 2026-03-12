@@ -3119,3 +3119,67 @@ button.cmp-note-pill:hover {
   color: var(--wish);
 }
 
+
+.dc-brand-btn {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--g450);
+  margin-bottom: var(--sp-xl);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  transition: color var(--dur-fast) var(--ease-spring);
+}
+
+.dc-brand-btn:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.dc-eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+
+.dc-sim-brand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  transition: color var(--dur-fast) var(--ease-spring);
+  pointer-events: auto; /* ensure we can click this */
+}
+
+.dc-sim-brand-btn:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cmp-brand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: color var(--dur-fast) var(--ease-spring);
+  display: block; /* Ensure it behaves like a block element, taking full width if necessary */
+  width: 100%;
+}
+
+.cmp-brand-btn:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
