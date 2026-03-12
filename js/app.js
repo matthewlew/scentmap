@@ -1674,9 +1674,9 @@ function renderSuggestionsV2(fa,fb,ca,cb){
       <div class="cmp-sug-card-info">
         <div class="cmp-sug-card-name">${frag.name}</div>
         <div class="cmp-sug-card-brand">${frag.brand}</div>
+        <div class="cmp-sug-card-reason">${reason}</div>
         <div class="cmp-sug-card-fam">${famLabel}</div>
         ${topNotes?`<div class="cmp-sug-card-notes">${topNotes}</div>`:''}
-        <div class="cmp-sug-card-reason">${reason}</div>
       </div>
     </button>`;
   }
