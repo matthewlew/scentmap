@@ -1,5 +1,5 @@
 /* ══ DATA (populated by fetch at startup) ════════════════════════ */
-let ROLES=[], RM={}, CAT=[], CAT_MAP={}, NI=[], NI_MAP={};
+let ROLES=[], RM={}, CAT=[], CAT_MAP={}, NI=[], NI_MAP={}, BRANDS=[], BRANDS_MAP={};
 
 
 const FAM={
@@ -470,8 +470,10 @@ function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
 
 function renderHouseDetail(container,brand){
   const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
+  const brandData=BRANDS_MAP[brand];
   container.innerHTML=`<div class="house-detail-wrap">
     <div class="house-detail-name">${brand}</div>
+    ${brandData && brandData.desc ? `<div class="house-detail-desc">${brandData.desc}</div>` : ''}
     <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
     <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
   </div>`;
@@ -1874,15 +1876,18 @@ Promise.all([
     Promise.all(idx.brands.map(b=>fetch(`data/scents/${b}.json`,_nc).then(r=>r.json())))
       .then(arrays=>arrays.flat())
   ),
-  fetch('data/notes.json',_nc).then(r=>r.json())
-]).then(([roles, scents, notes])=>{
+  fetch('data/notes.json',_nc).then(r=>r.json()),
+  fetch('data/brands.json',_nc).then(r=>r.json())
+]).then(([roles, scents, notes, brands])=>{
   ROLES=roles;
   CAT=scents;
   NI=notes;
+  BRANDS=brands;
   // Rebuild derived objects
   RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
   CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
+  BRANDS_MAP=Object.fromEntries(BRANDS.map(b=>[b.name,b]));
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
   // Pre-fill a high-layering pair so compare isn't blank on load

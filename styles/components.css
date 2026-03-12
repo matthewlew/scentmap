@@ -2360,6 +2360,14 @@ button.cmp-note-pill:hover {
   margin-bottom: 4px;
 }
 
+.house-detail-desc {
+  font-family: var(--font-serif);
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  line-height: var(--lh-relaxed);
+  margin-bottom: 8px;
+}
+
 .house-detail-count {
   font-family: var(--font-sans);
   font-size: var(--fs-label);
