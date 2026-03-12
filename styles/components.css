@@ -2353,11 +2353,20 @@ button.cmp-note-pill:hover {
 }
 
 .house-detail-name {
+  font-family: var(--font-display);
   font-size: var(--fs-display);
-  font-weight: 300;
+  font-weight: 900;
   letter-spacing: var(--ls-tight);
   line-height: var(--lh-tight);
   margin-bottom: 4px;
+}
+
+.house-detail-desc {
+  font-family: var(--font-serif);
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  line-height: var(--lh-relaxed);
+  margin-bottom: 8px;
 }
 
 .house-detail-count {
