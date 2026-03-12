@@ -186,11 +186,32 @@ function pushSheet(renderFn,title){
       <button class="sheet-close" aria-label="Close">Close</button>
     </div>
     <div class="sheet-content"></div></div>`;
-  const handle=el.querySelector('.sheet-handle');
+  const handle=el.querySelector('.sheet-topbar'); // Drag from the whole topbar
   let ds=null;
-  handle.addEventListener('touchstart',e=>{ds=e.touches[0].clientY},{passive:true});
-  handle.addEventListener('touchmove',e=>{if(ds===null)return;const dy=e.touches[0].clientY-ds;if(dy>0)el.style.transform=`translateY(${dy}px)`},{passive:true});
-  handle.addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-(ds||0);el.style.transform='';if(dy>80)popSheet();ds=null});
+  handle.addEventListener('touchstart',e=>{
+    ds=e.touches[0].clientY;
+    el.style.transition = 'none';
+  },{passive:true});
+  handle.addEventListener('touchmove',e=>{
+    if(ds===null)return;
+    const dy=e.touches[0].clientY-ds;
+    if(dy>0) {
+      el.style.transform=`translateY(${dy}px)`;
+    } else {
+      // Rubber-band resistance if pulled up
+      el.style.transform=`translateY(${dy * 0.25}px)`;
+    }
+  },{passive:true});
+  handle.addEventListener('touchend',e=>{
+    const dy=e.changedTouches[0].clientY-(ds||0);
+    el.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    el.style.transform='';
+    // Allow momentum dismissal
+    if(dy>80 || (e.changedTouches[0].clientY > ds + 20 && e.changedTouches[0].clientY - ds > (Date.now() - (e.changedTouches[0].timeStamp || Date.now())) * 0.5)) {
+      popSheet();
+    }
+    ds=null;
+  });
   el.querySelector('.sheet-close').addEventListener('click',closeAllSheets);
   el.querySelector('.sheet-back').addEventListener('click',popSheet);
   overlay.appendChild(el);sheetStack.push(el);
@@ -298,6 +319,8 @@ function renderFragDetail(container,frag){
     .filter(x=>x.score>=30)
     .sort((a,b)=>b.score-a.score)
     .slice(0,5);
+
+  _setupDetailSwipe(container, frag);
 
   if(scored.length){
     const lbl=document.createElement('div');
@@ -778,11 +801,68 @@ function buildCatalog(roleFilter){
     // Brand header → house detail
     sec.querySelector('.brand-hdr-btn')?.addEventListener('click',()=>openHouseDetail(brand));
     const list=document.createElement('div');list.className='scent-list';
+    const lastTapMap = new Map();
+    let longPressTimer = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
     list.addEventListener('click',e=>{
       const row=e.target.closest('.scent-row');if(!row)return;
+      // Prevent click if we swiped
+      const content = row.querySelector('.scent-row-content');
+      if(content && content.style.transform && content.style.transform !== 'translateX(0px)') return;
+
       const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
-      openFragDetail(frag);
+
+      // Double tap logic
+      const now = Date.now();
+      const lastTap = lastTapMap.get(id) || 0;
+
+      if(now - lastTap < 300) {
+        // Double tap on the same item!
+        window.haptic?.('success');
+        const st=gst(frag.id);
+        setState(frag.id, st==='wish'?'none':'wish');
+        refreshAfterStateChange(frag.id);
+        lastTapMap.set(id, 0); // Reset
+      } else {
+        lastTapMap.set(id, now);
+        // Single tap - immediately open detail to stay responsive
+        openFragDetail(frag);
+      }
     });
+
+    // Long press logic
+    list.addEventListener('touchstart', e=>{
+      const row=e.target.closest('.scent-row');if(!row)return;
+      const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      longPressTimer = setTimeout(()=>{
+        window.haptic?.('medium');
+        openQuickPeek(frag);
+      }, 500); // 500ms long press
+    }, {passive:true});
+
+    list.addEventListener('touchmove', e=>{
+      if(longPressTimer) {
+        const dx = e.touches[0].clientX - touchStartX;
+        const dy = e.touches[0].clientY - touchStartY;
+        // Cancel if user moved too far
+        if(Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+      }
+    }, {passive:true});
+
+    list.addEventListener('touchend', ()=>{
+      if(longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+    }, {passive:true});
+
     frags.forEach(frag=>{
       const fm=FAM[frag.family]||{color:'#888'};
       const row=document.createElement('div');row.dataset.id=frag.id;
@@ -913,12 +993,79 @@ function renderCatRow(row,frag,fm,search){
     if(topNotes)notesHtml=`<div class="frag-picker-item-notes">${topNotes}</div>`;
   }
 
-  row.innerHTML=`<div class="frag-picker-dot" style="background:${fm.color}"></div>
-    <div class="frag-picker-info">
-      <div class="frag-picker-item-name">${frag.name}</div>
-      <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
-      ${notesHtml}
+  row.draggable = true;
+  row.innerHTML=`
+    <div class="scent-row-actions">
+      <button class="scent-row-action compare" data-id="${frag.id}">Compare</button>
+      <button class="scent-row-action wishlist" data-id="${frag.id}">${st==='wish'?'Unwish':'Wish'}</button>
+    </div>
+    <div class="scent-row-content">
+      <div class="frag-picker-dot" style="background:${fm.color}"></div>
+      <div class="frag-picker-info">
+        <div class="frag-picker-item-name">${frag.name}</div>
+        <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
+        ${notesHtml}
+      </div>
     </div>`;
+
+  // Drag to Compare
+  row.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', frag.id);
+    e.dataTransfer.effectAllowed = 'copy';
+    row.classList.add('dragging');
+    window.haptic?.('selection');
+  });
+  row.addEventListener('dragend', () => {
+    row.classList.remove('dragging');
+  });
+
+  // Swipe to action logic
+  const content = row.querySelector('.scent-row-content');
+  if(!content) return;
+  let sx=0, sy=0, swiping=false, swiped=false;
+  content.addEventListener('touchstart', e=>{
+    sx = e.touches[0].clientX;
+    sy = e.touches[0].clientY;
+    swiping = true;
+    content.style.transition = 'none';
+  }, {passive:true});
+  content.addEventListener('touchmove', e=>{
+    if(!swiping) return;
+    const dx = e.touches[0].clientX - sx;
+    const dy = e.touches[0].clientY - sy;
+    if(Math.abs(dx) > Math.abs(dy) && dx < 0) { // dragging left
+      content.style.transform = `translateX(${Math.max(-160, dx)}px)`;
+      e.preventDefault(); // prevent vertical scroll if panning horizontally
+    }
+  });
+  content.addEventListener('touchend', e=>{
+    swiping = false;
+    content.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    const dx = e.changedTouches[0].clientX - sx;
+    if(dx < -60) {
+      content.style.transform = `translateX(-160px)`;
+      swiped = true;
+      window.haptic?.('light');
+    } else {
+      content.style.transform = `translateX(0)`;
+      swiped = false;
+    }
+  });
+
+  // Action listeners
+  row.querySelector('.scent-row-action.compare')?.addEventListener('click', e=>{
+    e.stopPropagation();
+    window.haptic?.('success');
+    _selectFragForSlot(CMP_A ? 'b' : 'a', frag);
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+    closeAllSheets?.();
+  });
+  row.querySelector('.scent-row-action.wishlist')?.addEventListener('click', e=>{
+    e.stopPropagation();
+    window.haptic?.('success');
+    setState(frag.id, st==='wish'?'none':'wish');
+    refreshAfterStateChange(frag.id);
+  });
 }
 function updBC(brand,key){
   const frags=CAT.filter(f=>f.brand===brand);
@@ -955,6 +1102,45 @@ function buildNotes(){
   document.getElementById('notes-count').textContent=`${NI.length} notes`;
 }
 
+/* ── QUICK PEEK ── */
+function openQuickPeek(frag){
+  let overlay=document.getElementById('quick-peek-overlay');
+  if(!overlay){
+    overlay=document.createElement('div');
+    overlay.id='quick-peek-overlay';
+    overlay.className='quick-peek-overlay';
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e=>{
+      if(e.target === overlay) closeQuickPeek();
+    });
+  }
+
+  const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
+  overlay.innerHTML=`
+    <div class="quick-peek-card">
+      <div class="dc-name">${frag.name}</div>
+      <div class="dc-brand">${frag.brand}</div>
+      <div class="dc-ftag" style="background:${fm.color}">
+        <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
+        ${fm.label}
+      </div>
+      <div class="dc-nlbl" style="margin-top:0">Notes</div>
+      <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${frag.top.join(', ')}</span></div>
+      <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${frag.mid.join(', ')}</span></div>
+      <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${frag.base.join(', ')}</span></div>
+      <div style="display:flex;gap:10px;margin-top:24px">
+        <button class="dc-collect-btn" style="flex:1;justify-content:center" onclick="closeQuickPeek();openFragDetail(CAT_MAP['${frag.id}'])">Full details</button>
+      </div>
+    </div>
+  `;
+  requestAnimationFrame(() => overlay.classList.add('open'));
+}
+
+function closeQuickPeek(){
+  const overlay=document.getElementById('quick-peek-overlay');
+  if(overlay) overlay.classList.remove('open');
+}
+
 /* ══ NAV ════════════════════════════════════════════════════════════ */
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -963,6 +1149,50 @@ function go(id,btn){
   if(btn)btn.classList.add('active');
   closeDesktopDetail();
 
+}
+
+/* ── Detail Pagination ── */
+function _setupDetailSwipe(container, currentFrag) {
+  let sx=0, sy=0;
+  container.addEventListener('touchstart', e=>{
+    // Ignore horizontal scrolls in carousels
+    if(e.target.closest('.carousel')) return;
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+  }, {passive:true});
+
+  container.addEventListener('touchend', e=>{
+    if(sx===0) return;
+    const dx=e.changedTouches[0].clientX-sx;
+    const dy=e.changedTouches[0].clientY-sy;
+    sx=0; sy=0;
+    if(Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>60) {
+      // Find current index in CAT
+      const idx = CAT.findIndex(f => f.id === currentFrag.id);
+      if(idx === -1) return;
+
+      let targetFrag = null;
+      let animClass = '';
+      if(dx < 0 && idx < CAT.length - 1) { // Swipe left -> Next
+        targetFrag = CAT[idx + 1];
+        animClass = 'slide-left';
+      } else if(dx > 0 && idx > 0) { // Swipe right -> Prev
+        targetFrag = CAT[idx - 1];
+        animClass = 'slide-right';
+      }
+
+      if(targetFrag) {
+        window.haptic?.('light');
+        if(isDesktop() || isTablet()) {
+          // Replace top of stack
+          detailStack[detailStack.length - 1] = c => renderFragDetail(c, targetFrag);
+          _renderDeskDetail(false, animClass);
+        } else {
+          // Mobile: push a new sheet
+          pushSheet(c => renderFragDetail(c, targetFrag), targetFrag.name);
+        }
+      }
+    }
+  }, {passive:true});
 }
 
 /* ── Settings button ── */
@@ -1212,6 +1442,39 @@ function getVerdict(matchPct,layerPct,fa,fb){
 }
 
 /* ── Combined radar (solid + dashed overlay) ── */
+function _setupChartHaptics(containerSelector, pointSelector) {
+  // Shared helper to trigger haptic ticks when dragging over chart points
+  const res = document.getElementById('cmp-results');
+  if(!res) return;
+  const charts = res.querySelectorAll(containerSelector);
+  charts.forEach(chart => {
+    let lastHovered = null;
+    chart.addEventListener('touchmove', e => {
+      const touch = e.touches[0];
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      if(target && target.matches(pointSelector)) {
+        if(target !== lastHovered) {
+          window.haptic?.('selection');
+          lastHovered = target;
+        }
+      } else {
+        lastHovered = null;
+      }
+    }, {passive:true});
+    // Add simple mousemove equivalent for desktop
+    chart.addEventListener('mousemove', e => {
+      if(e.target && e.target.matches(pointSelector)) {
+        if(e.target !== lastHovered) {
+          window.haptic?.('selection');
+          lastHovered = e.target;
+        }
+      } else {
+        lastHovered = null;
+      }
+    }, {passive:true});
+  });
+}
+
 function drawCombinedRadarSvg(fa,fb,caAccent,cbAccent){
   const dims=['freshness','sweetness','warmth','intensity','complexity'];
   const labels=['Fresh','Sweet','Warm','Intensity','Depth'];
@@ -1544,6 +1807,12 @@ function renderCompareResults(fa,fb){
 
   // Start sticky scroll observer
   _initStickyScroll();
+
+  // Initialize chart haptics
+  setTimeout(() => {
+    _setupChartHaptics('.cmp-radar-v2-wrap svg', 'circle');
+    _setupChartHaptics('.cmp-scatter-v2-wrap svg', 'circle');
+  }, 100);
 }
 
 /* ── Fragrance picker — dual-column drum rolodex ── */
@@ -1657,6 +1926,7 @@ function _renderPickerList(q,slot){
 /* Per-list drum scroll: auto-selects the centered item, fires haptic per tick */
 function _initPickerDrumScroll(listEl,slot){
   let _lastIdx=-1,_snapTimer=null;
+  let lastScrollTop = 0, lastScrollTime = 0;
   listEl.addEventListener('scroll',()=>{
     const items=Array.from(listEl.querySelectorAll('.frag-picker-item'));
     if(!items.length)return;
@@ -1665,9 +1935,22 @@ function _initPickerDrumScroll(listEl,slot){
     items.forEach((it,i)=>it.classList.toggle('centered',i===idx));
     // Haptic + selection only on user-initiated scrolls
     if(listEl.dataset.scrolling)return;
+
+    // Calculate velocity for dynamic haptics
+    const now = Date.now();
+    const dt = now - lastScrollTime;
+    const dy = Math.abs(listEl.scrollTop - lastScrollTop);
+    const velocity = dt > 0 ? dy / dt : 0;
+    lastScrollTop = listEl.scrollTop;
+    lastScrollTime = now;
+
     if(idx!==_lastIdx){
       _lastIdx=idx;
-      window.haptic?.('selection');
+      if (velocity > 1.5) {
+        window.haptic?.('light'); // Fast scroll -> light ticks
+      } else {
+        window.haptic?.('selection'); // Slow scroll -> heavier clicks
+      }
     }
     clearTimeout(_snapTimer);
     _snapTimer=setTimeout(()=>{
@@ -1801,6 +2084,51 @@ function _resetCard(slot){
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 }
 
+function _setupDragAndDropDropzones() {
+  const cmpBtn = document.querySelector('.mbn-btn[onclick*="compare"]');
+  if(cmpBtn) {
+    cmpBtn.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      cmpBtn.classList.add('drag-over');
+    });
+    cmpBtn.addEventListener('dragleave', () => cmpBtn.classList.remove('drag-over'));
+    cmpBtn.addEventListener('drop', e => {
+      e.preventDefault();
+      cmpBtn.classList.remove('drag-over');
+      const fid = e.dataTransfer.getData('text/plain');
+      const frag = CAT_MAP[fid];
+      if(frag) {
+        window.haptic?.('success');
+        _selectFragForSlot(CMP_A ? 'b' : 'a', frag);
+        go('compare', cmpBtn);
+      }
+    });
+  }
+
+  ['a','b'].forEach(slot => {
+    const card = document.getElementById(`cmp-card-${slot}`);
+    if(card) {
+      card.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        card.style.boxShadow = '0 0 0 2px var(--accent-primary)';
+      });
+      card.addEventListener('dragleave', () => card.style.boxShadow = '');
+      card.addEventListener('drop', e => {
+        e.preventDefault();
+        card.style.boxShadow = '';
+        const fid = e.dataTransfer.getData('text/plain');
+        const frag = CAT_MAP[fid];
+        if(frag) {
+          window.haptic?.('success');
+          _selectFragForSlot(slot, frag);
+        }
+      });
+    }
+  });
+}
+
 function initCompare(){
   ['a','b'].forEach(slot=>{
     const card=document.getElementById(`cmp-card-${slot}`);
@@ -1818,6 +2146,7 @@ function initCompare(){
   const overlay=document.getElementById('frag-picker');
   if(overlay)overlay.addEventListener('click',e=>{if(e.target===overlay)_closeFragPicker();});
   _initPickerSortSwipe();
+  _setupDragAndDropDropzones();
 }
 window.clearCmpSlot=function(slot){
   window.haptic?.('nudge')||window.haptic?.('selection');
@@ -1926,6 +2255,46 @@ Promise.all([
   })();
   // MVP: default to compare
   go('compare',null);
+
+  // Global horizontal swipe between main tabs
+  let globalSx = 0, globalSy = 0;
+  document.body.addEventListener('touchstart', e => {
+    // Don't intercept if an overlay/sheet is open
+    if(document.getElementById('sheet-stack')?.classList.contains('has-sheets') ||
+       document.getElementById('col-detail')?.classList.contains('open') ||
+       document.getElementById('frag-picker')?.classList.contains('open') ||
+       document.getElementById('note-float-overlay')?.classList.contains('open') ||
+       document.getElementById('quick-peek-overlay')?.classList.contains('open')) return;
+
+    // Don't intercept if swiping horizontally inside a carousel
+    if(e.target.closest('.carousel') || e.target.closest('.scent-row-content')) return;
+
+    globalSx = e.touches[0].clientX;
+    globalSy = e.touches[0].clientY;
+  }, {passive:true});
+
+  document.body.addEventListener('touchend', e => {
+    if(globalSx === 0) return;
+    const dx = e.changedTouches[0].clientX - globalSx;
+    const dy = e.changedTouches[0].clientY - globalSy;
+    globalSx = 0; globalSy = 0;
+
+    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 80) {
+      // Horizontal swipe detected
+      const tabs = ['catalog', 'compare'];
+      const currentTab = document.querySelector('.panel.active')?.id.replace('p-', '');
+      const idx = tabs.indexOf(currentTab);
+      if(idx === -1) return;
+
+      if(dx < 0 && idx < tabs.length - 1) { // Swipe left -> go right
+        window.haptic?.('selection');
+        goMobile(tabs[idx + 1], document.querySelector(`.mbn-btn[onclick*="${tabs[idx + 1]}"]`));
+      } else if(dx > 0 && idx > 0) { // Swipe right -> go left
+        window.haptic?.('selection');
+        goMobile(tabs[idx - 1], document.querySelector(`.mbn-btn[onclick*="${tabs[idx - 1]}"]`));
+      }
+    }
+  }, {passive:true});
 });
 
 // Load and render changelog

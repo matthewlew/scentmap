@@ -1049,7 +1049,7 @@
 /* ── 8. LISTS & ROWS ── */
 
 /* Shared row base — flex layout for all list/picker/dropdown rows */
-.scent-row, .picker-row, .cmp-dd-item {
+.picker-row, .cmp-dd-item {
   display: flex;
   align-items: center;
   gap: var(--sp-sm);
@@ -1065,16 +1065,67 @@
 .scent-row {
   padding: var(--sp-sm) var(--sp-md);
   background: var(--bg-primary);
+  position: relative;
+  background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-standard);
-  border-left: 3px solid transparent;
   transition: opacity var(--dur-fast) ease;
+  overflow: hidden;
 }
 
 .scent-row:last-child {
   border-bottom: none;
 }
 
-.scent-row:hover {
+.scent-row-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: 8px 12px;
+  background: var(--bg-primary);
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-spring), background var(--dur-fast) var(--ease-spring);
+  width: 100%;
+}
+
+.scent-row-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+.scent-row-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--bg-primary);
+  background: var(--g800);
+  border: none;
+  cursor: pointer;
+}
+
+.scent-row-action.wishlist {
+  background: var(--wish);
+}
+
+.scent-row-action.compare {
+  background: var(--accent-primary);
+}
+
+.scent-row:hover .scent-row-content {
   background: var(--bg-secondary);
 }
 
@@ -1083,39 +1134,39 @@
   pointer-events: none;
 }
 
-.scent-row[data-family="woody"] {
+.scent-row[data-family="woody"] .scent-row-content {
   border-left-color: var(--fam-woody);
 }
 
-.scent-row[data-family="floral"] {
+.scent-row[data-family="floral"] .scent-row-content {
   border-left-color: var(--fam-floral);
 }
 
-.scent-row[data-family="amber"] {
+.scent-row[data-family="amber"] .scent-row-content {
   border-left-color: var(--fam-amber);
 }
 
-.scent-row[data-family="citrus"] {
+.scent-row[data-family="citrus"] .scent-row-content {
   border-left-color: var(--fam-citrus);
 }
 
-.scent-row[data-family="leather"] {
+.scent-row[data-family="leather"] .scent-row-content {
   border-left-color: var(--fam-leather);
 }
 
-.scent-row[data-family="oud"] {
+.scent-row[data-family="oud"] .scent-row-content {
   border-left-color: var(--fam-oud);
 }
 
-.scent-row[data-family="green"] {
+.scent-row[data-family="green"] .scent-row-content {
   border-left-color: var(--fam-green);
 }
 
-.scent-row[data-family="chypre"] {
+.scent-row[data-family="chypre"] .scent-row-content {
   border-left-color: var(--fam-chypre);
 }
 
-.scent-row[data-family="gourmand"] {
+.scent-row[data-family="gourmand"] .scent-row-content {
   border-left-color: var(--fam-gourmand);
 }
 
@@ -2205,6 +2256,42 @@ button.cmp-note-pill:hover {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ── QUICK PEEK ── */
+.quick-peek-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--scrim-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) ease;
+  padding: var(--sp-lg);
+}
+
+.quick-peek-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.quick-peek-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 12px 32px var(--fade-strong);
+  padding: var(--sp-xl);
+  width: 100%;
+  max-width: 320px;
+  transform: scale(0.95);
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+
+.quick-peek-overlay.open .quick-peek-card {
+  transform: scale(1);
 }
 
 /* ── Score edu overlay ── */
