@@ -1505,6 +1505,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--sp-xs);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .brand-hdr-btn:hover {
@@ -2445,14 +2447,6 @@ button.cmp-note-pill:hover {
   padding-top: var(--sp-xs);
 }
 
-.house-detail-name {
-  font-size: var(--fs-display);
-  font-weight: 300;
-  letter-spacing: var(--ls-tight);
-  line-height: var(--lh-tight);
-  margin-bottom: var(--sp-xs);
-}
-
 .house-detail-count {
   font-family: var(--font-sans);
   font-size: var(--fs-label);
@@ -3230,6 +3224,8 @@ button.cmp-note-pill:hover {
   padding: 0;
   text-align: left;
   transition: color var(--dur-fast) var(--ease-spring);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .dc-brand-btn:hover {
@@ -3256,6 +3252,8 @@ button.cmp-note-pill:hover {
   text-align: left;
   transition: color var(--dur-fast) var(--ease-spring);
   pointer-events: auto; /* ensure we can click this */
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .dc-sim-brand-btn:hover {
@@ -3272,6 +3270,8 @@ button.cmp-note-pill:hover {
   transition: color var(--dur-fast) var(--ease-spring);
   display: block; /* Ensure it behaves like a block element, taking full width if necessary */
   width: 100%;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .cmp-brand-btn:hover {
