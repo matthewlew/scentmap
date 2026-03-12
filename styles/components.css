@@ -320,7 +320,6 @@
 .cmp-notes-empty {
   font-size: var(--fs-body-sm);
   color: var(--text-tertiary);
-  font-style: italic;
 }
 
 /* Metrics row */
@@ -592,7 +591,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs, 10px);
   color: var(--text-tertiary);
-  font-style: italic;
   letter-spacing: 0.01em;
   margin-top: var(--sp-sm);
   line-height: 1.4;
@@ -639,14 +637,12 @@
 .dc-sval {
   font-size: var(--fs-meta);
   color: var(--text-secondary);
-  font-style: italic;
 }
 
 .dc-description {
   font-size: var(--fs-body-sm);
   color: var(--g600);
   line-height: 1.65;
-  font-style: italic;
   margin-bottom: var(--sp-xl);
 }
 
@@ -942,7 +938,6 @@
 
 .rlc-desc {
   font-size: var(--fs-body-sm);
-  font-style: italic;
   color: var(--text-secondary);
   line-height: 1.45;
   margin-bottom: var(--sp-sm);
@@ -1588,7 +1583,6 @@ mark.note-match {
 
 .match-badge {
   color: var(--accent-primary);
-  font-style: italic;
   letter-spacing: 0.01em;
 }
 
@@ -1609,7 +1603,6 @@ mark.note-match {
   color: var(--g600);
   line-height: 1.65;
   margin: var(--sp-sm) 0 var(--sp-md);
-  font-style: italic;
 }
 
 .dc-roles-lbl {
@@ -2897,7 +2890,6 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-body-sm);
   color: var(--g600);
   line-height: 1.6;
-  font-style: italic;
   margin-bottom: var(--sp-xs);
 }
 
@@ -3090,7 +3082,6 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-body-sm);
   color: var(--text-tertiary);
   text-align: center;
-  font-style: italic;
 }
 
 /* ── EXPLORE CAROUSEL ── */
