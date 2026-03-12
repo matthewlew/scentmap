@@ -255,8 +255,8 @@ async function runAll(){
     const c=W.document.querySelector('.constellation-canvas');
     return c&&c.width>0&&c.height>0;
   });
-  assert('Note links rendered',W.document.querySelectorAll('.note-link').length>0,
-    `${W.document.querySelectorAll('.note-link').length} links`);
+  assert('Note pills rendered',W.document.querySelectorAll('.note-pill').length>0,
+    `${W.document.querySelectorAll('.note-pill').length} pills`);
 
   // ── SUITE: DOM — roles tab ─────────────────────────────────────────
   startSuite('DOM: Roles tab / Pairer');
@@ -284,7 +284,7 @@ async function runAll(){
   skip('Mobile media query active in iframe',
     `matchMedia max-767: ${mobileMediaMatch} (iframe may not trigger breakpoints)`);
 
-  assert('Mobile: bottom nav exists (.mbn)',!!W.document.querySelector('.mbn'));
+  assert('Mobile: bottom nav exists (.mobile-bottomnav)',!!W.document.querySelector('.mobile-bottomnav'));
   assert('Mobile: mbn buttons have min-height via class',
     W.document.querySelector('.mbn-btn')!==null);
   assert('Mobile: detail panel hidden on mobile (display:none)',()=>{

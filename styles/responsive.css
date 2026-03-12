@@ -276,16 +276,6 @@
   }
 
   /* Notes tab */
-  .notes-family-row {
-    padding: var(--sp-sm) 0;
-  }
-
-  .nf-left {
-    flex: 1;
-    padding-right: var(--sp-lg);
-    gap: var(--sp-xs) var(--sp-sm);
-  }
-
   .nf-dot {
     width: 9px;
     height: 9px;
@@ -297,13 +287,6 @@
 
   .nf-desc {
     font-size: var(--fs-body-sm);
-    padding-left: var(--sp-lg);
-  }
-
-  .note-link {
-    font-size: var(--fs-body);
-    line-height: 1.85;
-    padding: 0;
   }
 
   /* Changelog */

@@ -15,6 +15,21 @@
 
 /* ── 1. NAVIGATION & TABS ── */
 
+.nav-notes-btn {
+  font-size: var(--fs-body);
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--dur-fast);
+  margin-right: var(--sp-lg);
+}
+
+.nav-notes-btn:hover {
+  color: var(--text-primary);
+}
+
 .logo {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
@@ -1241,57 +1256,72 @@
 }
 
 
-.notes-family-row {
-  display: flex;
-  align-items: flex-start;
-  padding: var(--sp-sm) 0;
-  border-bottom: 1px solid var(--border-standard);
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--sp-xl);
+  margin-top: var(--sp-lg);
 }
 
-.notes-family-row:last-child {
-  border-bottom: none;
+.notes-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-lg);
+  display: flex;
+  flex-direction: column;
 }
 
-.nf-left {
+.notes-card-header {
   display: flex;
   align-items: flex-start;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-md);
+  padding-bottom: var(--sp-sm);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.notes-card-body {
+  display: flex;
   flex-wrap: wrap;
-  gap: var(--sp-xs) var(--sp-sm);
-  flex: 1;
-  padding-top: var(--sp-xs);
-  padding-right: var(--sp-xl);
+  gap: var(--sp-xs);
+}
+
+.note-pill {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-sm);
+  padding: 4px var(--sp-sm);
+  font-size: var(--fs-body-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--dur-fast), border-color var(--dur-fast);
+  text-decoration: underline;
+  text-decoration-color: var(--g300);
+  text-underline-offset: 2px;
+}
+
+.note-pill:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--g300);
+  text-decoration-color: var(--text-primary);
 }
 
 .nf-dot {
-  margin-top: var(--sp-xs);
+  margin-top: 5px;
 }
 
 .nf-name {
   font-size: var(--fs-body);
+  font-weight: 600;
 }
 
 .nf-desc {
-  font-size: var(--fs-body);
-  padding-left: var(--sp-lg);
-}
-
-.note-link {
-  font-size: var(--fs-body);
-  color: var(--text-primary);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-color: var(--g300);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  margin: 0 1px;
-  transition: text-decoration-color var(--dur-fast) var(--ease-spring);
-  line-height: 1.85;
-}
-
-.note-link:hover {
-  text-decoration-color: var(--text-primary);
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  margin-top: var(--sp-xs);
+  margin-bottom: var(--sp-sm);
 }
 
 /* ── 9. MISCELLANEOUS ── */
