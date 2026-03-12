@@ -374,17 +374,6 @@ function _buildCompareCTAs(frag,container){
 function buildLayerSuggestions(frag,container){
   const owned=CAT.filter(f=>isOwned(f.id)&&f.id!==frag.id);
   if(!owned.length)return;
-  function scoreLayering(a,b){
-    const famComp=FAM_COMPAT[a.family]?.[b.family]??0.5;
-    const famScore=famComp*35;
-    const sillDiff=Math.abs(a.sillage-b.sillage);
-    const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
-    const allA=[...a.top,...a.mid,...a.base].map(n=>n.toLowerCase());
-    const allB=[...b.top,...b.mid,...b.base].map(n=>n.toLowerCase());
-    const shared=allA.filter(n=>allB.includes(n)).length;
-    const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
-    return Math.round(famScore+sillScore+noteScore);
-  }
   function layerReason(a,b){
     const sillDiff=b.sillage-a.sillage;
     if(Math.abs(sillDiff)>=3)return sillDiff>0?`Wear ${b.name} over — projects further`:`Wear ${b.name} under — anchors the blend`;
@@ -394,7 +383,7 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayering(frag,f)}))
+    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
     .filter(x=>x.score>=40)
     .sort((a,b)=>b.score-a.score)
     .slice(0,2);
