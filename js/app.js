@@ -514,7 +514,7 @@ function renderHouseDetail(container,brand){
   const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:12px; margin-bottom:4px; font-size:11px; color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${f.color}; margin-right:4px;"></span>${f.label}</div>`).join('');
 
   container.innerHTML=`<div class="house-detail-wrap">
-    <div class="house-detail-name">${brand}</div>
+    <div class="dc-name">${brand}</div>
     ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:8px;">${houseData.desc}</div>` : ''}
 
     <div style="margin:20px 0;">
