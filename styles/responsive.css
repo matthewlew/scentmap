@@ -336,12 +336,12 @@
 
   /* Compare v2 mobile */
   .cmp-header-v2 {
-    gap: var(--sp-sm);
-    margin-bottom: var(--sp-xl);
+    gap: var(--sp-md);
+    margin-bottom: var(--sp-2xl);
   }
 
   .cmp-frag-card {
-    min-height: 100px;
+    min-height: 110px;
   }
 
   .cmp-frag-card-desc {
@@ -350,19 +350,19 @@
 
   .cmp-score-cards {
     flex-wrap: wrap;
-    gap: var(--sp-sm);
+    gap: var(--sp-md);
   }
 
   .cmp-score-card {
     flex: 1;
-    min-width: calc(50% - var(--sp-sm));
-    padding: var(--sp-md) var(--sp-sm);
+    min-width: calc(50% - var(--sp-md));
+    padding: var(--sp-lg);
   }
 
   .cmp-score-center {
     order: 3;
     flex-basis: 100%;
-    padding: var(--sp-sm) 0;
+    padding: var(--sp-md) 0;
   }
 
   .cmp-score-pct {
@@ -374,7 +374,7 @@
   }
 
   .cmp-grid-cell {
-    padding: var(--sp-sm) var(--sp-xs);
+    padding: var(--sp-md) var(--sp-sm);
   }
 
   .cmp-note-pill {
@@ -383,7 +383,7 @@
 
   .cmp-sug-columns {
     grid-template-columns: 1fr;
-    gap: var(--sp-md);
+    gap: var(--sp-xl);
   }
 
   .cmp-edu-grid {
