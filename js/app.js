@@ -331,16 +331,9 @@ function renderFragDetail(container,frag){
     container.appendChild(lbl);
     const shelf=document.createElement('div');shelf.className='dc-sim-shelf';
 
-    function simReason(a,b){
-      const shBase=a.base.filter((n,i)=>b._nBase.includes(a._nBase[i]));
-      if(shBase.length)return`Shared base: ${shBase.slice(0,2).join(', ')}`;
-      if((FAM_COMPAT[a.family]?.[b.family]??0)>=.8)return`${a.family[0].toUpperCase()+a.family.slice(1)} × ${b.family}`;
-      return'';
-    }
-
     scored.forEach(({f})=>{
       const fm2=FAM[f.family]||{color:'#888'};
-      const reason=simReason(frag,f);
+      const reason=getSwapReason(frag,f);
       const badge=classifyDiscovery(frag,f);
       const row=document.createElement('button');row.className='dc-sim-row';
       const namePart=reason
@@ -1454,6 +1447,50 @@ function computeProfile(frag){
   };
 }
 
+/* ── Swap Reason Helper ── */
+function getSwapReason(anchor, candidate){
+  const pa = computeProfile(anchor);
+  const pc = computeProfile(candidate);
+
+  const dInt = pc.intensity - pa.intensity;
+  const dCpx = pc.complexity - pa.complexity;
+  const dSwt = pc.sweetness - pa.sweetness;
+  const dFrs = pc.freshness - pa.freshness;
+  const dWrm = pc.warmth - pa.warmth;
+
+  const famA = (FAM[anchor.family]||{label:anchor.family}).label;
+  const famC = (FAM[candidate.family]||{label:candidate.family}).label;
+  const sameFam = anchor.family === candidate.family;
+
+  const sharedNotes = anchor._nAll.filter(n => candidate._nAll.includes(n));
+  const shNote = sharedNotes.length > 0 ? sharedNotes[0].charAt(0).toUpperCase() + sharedNotes[0].slice(1) : null;
+
+  // Thresholds
+  const TH = 0.15;
+  const TH_LG = 0.3;
+
+  // Hierarchy of reasons
+  if (dInt > TH_LG) return `A bolder, stronger ${sameFam ? 'take' : 'alternative'}${shNote ? ` sharing ${shNote}` : ''}`;
+  if (dInt < -TH_LG) return `A more subtle, intimate ${sameFam ? 'take' : 'alternative'}${shNote ? ` sharing ${shNote}` : ''}`;
+
+  if (dCpx > TH_LG) return `A more complex and layered ${sameFam ? famA : famC}`;
+  if (dCpx < -TH_LG) return `An easier-to-wear, simpler ${sameFam ? famA : famC}`;
+
+  if (dSwt > TH) return `A sweeter, more gourmand approach to ${sameFam ? famA : 'this profile'}`;
+  if (dFrs > TH) return `A fresher, brighter take${sameFam ? ' on '+famA : ''}`;
+  if (dWrm > TH) return `A warmer, cozier alternative${sameFam ? ' on '+famA : ''}`;
+
+  if (dSwt < -TH) return `A less sweet, drier alternative`;
+  if (dFrs < -TH) return `A deeper, less fresh take`;
+
+  // Fallbacks if profiles are very similar
+  if (shNote && sameFam) return `A very similar ${famA} focused on ${shNote}`;
+  if (sameFam) return `A closely related ${famA} to try`;
+  if (shNote) return `A ${famC} alternative sharing ${shNote}`;
+
+  return `An alternative from the ${famC} family`;
+}
+
 /* ── Scoring helpers ── */
 function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
 function _simLabel(pct){if(pct<26)return'Very different';if(pct<51)return'Notably different';if(pct<76)return'Fairly similar';return'Nearly identical';}
@@ -1653,15 +1690,17 @@ function renderSuggestionsV2(fa,fb,ca,cb){
       .map(f=>({f,score:scoreSimilarity(anchor,f)}))
       .sort((a,b)=>b.score-a.score).slice(0,3);
   }
-  function sugCard(frag,accent){
+  function sugCard(frag, anchor, accent){
     const fc=getCmpFam(frag.family);
     const famLabel=(FAM[frag.family]||{label:frag.family}).label;
     const topNotes=[...(frag.top||[])].slice(0,3).join(', ');
+    const reason=getSwapReason(anchor, frag);
     return`<button class="cmp-sug-card-v2" data-fid="${frag.id}">
       <div class="cmp-sug-mini-radar">${_miniRadarSvg(frag,fc.accent)}</div>
       <div class="cmp-sug-card-info">
         <div class="cmp-sug-card-name">${frag.name}</div>
         <div class="cmp-sug-card-brand">${frag.brand}</div>
+        <div class="cmp-sug-card-reason">${reason}</div>
         <div class="cmp-sug-card-fam">${famLabel}</div>
         ${topNotes?`<div class="cmp-sug-card-notes">${topNotes}</div>`:''}
       </div>
@@ -1675,11 +1714,11 @@ function renderSuggestionsV2(fa,fb,ca,cb){
     <div class="cmp-sug-columns">
       <div>
         <div class="cmp-sug-col-head" style="color:${ca.accent}">Swap ${shortA}</div>
-        <div class="cmp-sug-col-items">${sugsA.map(({f})=>sugCard(f,ca.accent)).join('')}</div>
+        <div class="cmp-sug-col-items">${sugsA.map(({f})=>sugCard(f,fa,ca.accent)).join('')}</div>
       </div>
       <div>
         <div class="cmp-sug-col-head" style="color:${cb.accent}">Swap ${shortB}</div>
-        <div class="cmp-sug-col-items">${sugsB.map(({f})=>sugCard(f,cb.accent)).join('')}</div>
+        <div class="cmp-sug-col-items">${sugsB.map(({f})=>sugCard(f,fb,cb.accent)).join('')}</div>
       </div>
     </div>
   </div>`;

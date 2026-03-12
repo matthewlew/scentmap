@@ -848,7 +848,6 @@
 .dc-sim-reason {
   font-size: var(--fs-meta);
   color: var(--text-secondary);
-  font-style: italic;
 }
 
 .dc-sim-brand {
@@ -2246,6 +2245,15 @@ button.cmp-note-pill:hover {
   font-family: var(--font-sans);
 }
 
+.cmp-sug-card-reason {
+  margin-top: var(--sp-xs);
+  margin-bottom: var(--sp-sm);
+  font-family: var(--font-serif);
+  font-size: var(--fs-body-sm);
+  color: var(--ink);
+  line-height: var(--lh-normal);
+}
+
 .cmp-sug-card-fam {
   font-size: var(--fs-caption);
   font-family: var(--font-sans);
@@ -2258,7 +2266,6 @@ button.cmp-note-pill:hover {
 .cmp-sug-card-notes {
   font-size: var(--fs-caption);
   color: var(--text-tertiary);
-  font-style: italic;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
