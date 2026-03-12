@@ -205,10 +205,12 @@ function pushSheet(renderFn,title){
   handle.addEventListener('touchend',e=>{
     const dy=e.changedTouches[0].clientY-(ds||0);
     el.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-    el.style.transform='';
     // Allow momentum dismissal
     if(dy>80 || (e.changedTouches[0].clientY > ds + 20 && e.changedTouches[0].clientY - ds > (Date.now() - (e.changedTouches[0].timeStamp || Date.now())) * 0.5)) {
+      el.style.transform='translateY(100%)';
       popSheet();
+    } else {
+      el.style.transform='';
     }
     ds=null;
   });
@@ -224,6 +226,7 @@ function popSheet(){
   if(!sheetStack.length)return;
   const top=sheetStack.pop();
   top.classList.remove('visible');
+  top.classList.remove('under');
   top.addEventListener('transitionend',()=>top.remove(),{once:true});
   updateSheetPos();updateSheetBacks();
   if(!sheetStack.length){
@@ -233,7 +236,12 @@ function popSheet(){
 }
 function closeAllSheets(){
   const all=[...sheetStack];sheetStack.length=0;
-  all.forEach(s=>{s.classList.remove('visible');s.addEventListener('transitionend',()=>s.remove(),{once:true})});
+  all.forEach(s=>{
+    s.style.transform='translateY(100%)';
+    s.classList.remove('visible');
+    s.classList.remove('under');
+    s.addEventListener('transitionend',()=>s.remove(),{once:true});
+  });
   document.getElementById('sheet-stack').classList.remove('has-sheets');
   unlockBodyScroll();
 }
@@ -787,6 +795,7 @@ function buildCatalog(roleFilter){
   const body=document.getElementById('cat-body');body.innerHTML='';
 
   // Role filter bar
+  /*
   const filterBar=document.createElement('div');filterBar.className='cat-filter-bar';
   const allBtn=document.createElement('button');
   allBtn.className='tab'+(roleFilter===null?' active':'');
@@ -803,6 +812,7 @@ function buildCatalog(roleFilter){
     filterBar.appendChild(btn);
   });
   body.appendChild(filterBar);
+  */
 
   // Apply filters: brand + state + search
   const search=(document.getElementById('cat-search')?.value||'').toLowerCase().trim();
