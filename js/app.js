@@ -518,15 +518,15 @@ function renderHouseDetail(container,brand){
     }));
 
   const barHTML = famStats.map(f => `<div style="height:100%; width:${f.pct}%; background:${f.color};" title="${f.label} (${Math.round(f.pct)}%)"></div>`).join('');
-  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:12px; margin-bottom:4px; font-size:11px; color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${f.color}; margin-right:4px;"></span>${f.label}</div>`).join('');
+  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); margin-bottom:var(--sp-xs); font-size:var(--fs-meta); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
 
   container.innerHTML=`<div class="house-detail-wrap">
     <div class="house-detail-name">${brand}</div>
-    ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:8px;">${houseData.desc}</div>` : ''}
+    ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${houseData.desc}</div>` : ''}
 
-    <div style="margin:20px 0;">
+    <div style="margin:var(--sp-xl) 0;">
       <div class="dc-slbl">Fragrance Families</div>
-      <div style="height:8px; width:100%; display:flex; border-radius:4px; overflow:hidden; margin-bottom:8px;">${barHTML}</div>
+      <div style="height:var(--sp-sm); width:100%; display:flex; border-radius:var(--radius); overflow:hidden; margin-bottom:var(--sp-sm);">${barHTML}</div>
       <div style="display:flex; flex-wrap:wrap;">${legendHTML}</div>
     </div>
 
