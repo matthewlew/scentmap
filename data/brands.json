@@ -33,20 +33,5 @@
     "id": "aesop",
     "name": "Aesop",
     "desc": "Australian brand with a botanical philosophy, blending woods, herbs, and resins with quiet, intellectual elegance."
-  },
-  {
-    "id": "chanel",
-    "name": "Chanel",
-    "desc": "Iconic French fashion house renowned for timeless elegance and revolutionary, signature aldehydes and florals."
-  },
-  {
-    "id": "dior",
-    "name": "Dior",
-    "desc": "Prestigious Parisian house blending classic luxury with modern sophistication, famous for both bold and delicate floral compositions."
-  },
-  {
-    "id": "loewe",
-    "name": "Loewe",
-    "desc": "Spanish luxury house crafting artistic, nature-inspired fragrances with botanical purity and modern minimalism."
   }
 ]

@@ -374,6 +374,17 @@ function _buildCompareCTAs(frag,container){
 function buildLayerSuggestions(frag,container){
   const owned=CAT.filter(f=>isOwned(f.id)&&f.id!==frag.id);
   if(!owned.length)return;
+  function scoreLayering(a,b){
+    const famComp=FAM_COMPAT[a.family]?.[b.family]??0.5;
+    const famScore=famComp*35;
+    const sillDiff=Math.abs(a.sillage-b.sillage);
+    const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
+    const allA=[...a.top,...a.mid,...a.base].map(n=>n.toLowerCase());
+    const allB=[...b.top,...b.mid,...b.base].map(n=>n.toLowerCase());
+    const shared=allA.filter(n=>allB.includes(n)).length;
+    const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
+    return Math.round(famScore+sillScore+noteScore);
+  }
   function layerReason(a,b){
     const sillDiff=b.sillage-a.sillage;
     if(Math.abs(sillDiff)>=3)return sillDiff>0?`Wear ${b.name} over — projects further`:`Wear ${b.name} under — anchors the blend`;
@@ -383,7 +394,7 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
+    .map(f=>({f,score:scoreLayering(frag,f)}))
     .filter(x=>x.score>=40)
     .sort((a,b)=>b.score-a.score)
     .slice(0,2);
@@ -453,8 +464,8 @@ function renderNoteDetail(container,note){
   container.innerHTML=`<div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
-    ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
-    ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
+    ${note.extraction_method?`<div style="margin-top:10px; font-size:var(--fs-body-sm); color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
+    ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:var(--fs-body-sm); color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
     ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
   if(inf.length){
     const span=container.querySelector('#_nfl');

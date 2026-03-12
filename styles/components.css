@@ -2794,7 +2794,6 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-body-sm);
   color: var(--g600);
   line-height: 1.6;
-  font-style: italic;
   margin-bottom: 4px;
 }
 
