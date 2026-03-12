@@ -1,5 +1,5 @@
 /* ══ DATA (populated by fetch at startup) ════════════════════════ */
-let ROLES=[], RM={}, CAT=[], CAT_MAP={}, NI=[], NI_MAP={};
+let ROLES=[], RM={}, CAT=[], CAT_MAP={}, NI=[], NI_MAP={}, BRANDS=[], BRANDS_MAP={};
 
 
 const FAM={
@@ -266,7 +266,7 @@ function renderFragDetail(container,frag){
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
 
   container.innerHTML=`
-    <div class="dc-eyebrow">Fragrance</div>
+
     <div class="dc-name">${frag.name}</div>
     <button class="dc-brand-btn">${frag.brand}</button>
     <div class="dc-ftag" style="background:${fm.color}">
@@ -292,7 +292,7 @@ function renderFragDetail(container,frag){
   const brandBtn=container.querySelector('.dc-brand-btn');
   if(brandBtn)brandBtn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
   container.querySelectorAll('.note-link').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),'Note')});
+    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),note.name)});
   });
 
   // Collection action row
@@ -349,7 +349,7 @@ function renderFragDetail(container,frag){
       row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
         <span class="dc-sim-info">${namePart}</span>
         ${badge?`<span class="dc-badge ${badge.type}">${badge.label}</span>`:''}`;
-      row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),'Fragrance');});
+      row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       shelf.appendChild(row);
     });
     container.appendChild(shelf);
@@ -428,7 +428,7 @@ function buildLayerSuggestions(frag,container){
       <span class="dc-sim-info">${namePart}</span>
       <span class="dc-layer-score-badge">${score}</span>
       <span class="dc-sim-state is-owned">Owned</span>`;
-    row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),'Fragrance');});
+    row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
     shelf.appendChild(row);
   });
   container.appendChild(shelf);
@@ -478,7 +478,7 @@ function renderNoteDetail(container,note){
   const fm=FAM[note.family]||{label:note.family,color:'#888'};
   const nl=note.name.toLowerCase();
   const inf=CAT.filter(f=>f._nAll.includes(nl));
-  container.innerHTML=`<div class="dc-eyebrow">Note</div>
+  container.innerHTML=`
     <div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
@@ -491,19 +491,45 @@ function renderNoteDetail(container,note){
       const fc=getCmpFam(f.family);
       const btn=document.createElement('button');btn.className='frag-picker-item';
       btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
-      btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),'Fragrance');});
+      btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       span.appendChild(btn);
     });
   }
 }
 
-function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),'Fragrance')}
+function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
 
 function renderHouseDetail(container,brand){
   const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
+  const houseData = BRANDS_MAP[brand.toLowerCase()];
+
+  // Calculate family percentages
+  const famCounts = {};
+  frags.forEach(f => {
+    famCounts[f.family] = (famCounts[f.family] || 0) + 1;
+  });
+  const famStats = Object.entries(famCounts)
+    .sort((a, b) => b[1] - a[1]) // Sort by count descending
+    .map(([fam, count]) => ({
+      family: fam,
+      label: FAM[fam]?.label || fam,
+      color: FAM[fam]?.color || '#888',
+      pct: (count / frags.length) * 100
+    }));
+
+  const barHTML = famStats.map(f => `<div style="height:100%; width:${f.pct}%; background:${f.color};" title="${f.label} (${Math.round(f.pct)}%)"></div>`).join('');
+  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:12px; margin-bottom:4px; font-size:11px; color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${f.color}; margin-right:4px;"></span>${f.label}</div>`).join('');
+
   container.innerHTML=`<div class="house-detail-wrap">
-    <div class="dc-eyebrow">Fragrance House</div>
     <div class="house-detail-name">${brand}</div>
+    ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:8px;">${houseData.desc}</div>` : ''}
+
+    <div style="margin:20px 0;">
+      <div class="dc-slbl">Fragrance Families</div>
+      <div style="height:8px; width:100%; display:flex; border-radius:4px; overflow:hidden; margin-bottom:8px;">${barHTML}</div>
+      <div style="display:flex; flex-wrap:wrap;">${legendHTML}</div>
+    </div>
+
     <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
     <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
   </div>`;
@@ -517,11 +543,11 @@ function renderHouseDetail(container,brand){
         <div class="frag-picker-item-name">${frag.name}</div>
         <div class="frag-picker-item-brand">${(FAM[frag.family]||{}).label||frag.family}</div>
       </div>`;
-    btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag),'Fragrance');});
+    btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag),frag.name);});
     list.appendChild(btn);
   });
 }
-function openHouseDetail(brand){openDetail(c=>renderHouseDetail(c,brand),'House')}
+function openHouseDetail(brand){openDetail(c=>renderHouseDetail(c,brand),brand)}
 
 function refreshAfterStateChange(id){
   const row=document.querySelector(`.scent-row[data-id="${id}"]`);
@@ -584,7 +610,7 @@ document.getElementById('note-float-bg').addEventListener('click',closeNotePopup
 document.getElementById('nfp-close').addEventListener('click',closeNotePopup);
 
 /* ══ PICKER ═════════════════════════════════════════════════════════ */
-function openPicker(roleId){openDetail(c=>renderPicker(c,roleId),'Role')}
+function openPicker(roleId){openDetail(c=>renderPicker(c,roleId),RM[roleId]?.name || 'Role')}
 
 function renderPicker(container,roleId){
   const role=RM[roleId];
@@ -595,7 +621,7 @@ function renderPicker(container,roleId){
 
   // Header
   const hdr=document.createElement('div');hdr.className='picker-header';
-  hdr.innerHTML=`<div class="dc-eyebrow">Capsule Role</div>
+  hdr.innerHTML=`
     <div class="picker-title">${role.sym} ${role.name}</div><div class="picker-sub">${role.desc}</div>`;
   container.appendChild(hdr);
 
@@ -654,7 +680,7 @@ function renderPicker(container,roleId){
       badge.className='picker-order-badge'+(i===0?' primary-badge':'');
       badge.textContent=i===0?'Primary':`#${i+1}`;
       const nameBtn=document.createElement('button');nameBtn.className='picker-name-btn'+(isWish(f.id)&&!isOwned(f.id)?' is-wish':'');nameBtn.textContent=f.name;
-      nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),'Fragrance')});
+      nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name)});
       const info=document.createElement('div');info.className='picker-info';
       info.appendChild(nameBtn);
       const br=document.createElement('div');br.className='picker-brand-row';br.textContent=f.brand;info.appendChild(br);
@@ -682,7 +708,7 @@ function renderPicker(container,roleId){
       card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
         <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
-      card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),'Fragrance')});
+      card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),frag.name)});
       row.appendChild(card);
     });
     wrap.appendChild(row);container.appendChild(wrap);
@@ -693,7 +719,7 @@ function renderPicker(container,roleId){
     const w=isWish(frag.id)&&!isOwned(frag.id);
     const row=document.createElement('div');row.className='picker-row';
     const nameBtn=document.createElement('button');nameBtn.className='picker-name-btn'+(w?' is-wish':'');nameBtn.textContent=frag.name;
-    nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),'Fragrance')});
+    nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),frag.name)});
     const info=document.createElement('div');info.className='picker-info';
     info.appendChild(nameBtn);
     const br=document.createElement('div');br.className='picker-brand-row';br.textContent=frag.brand;info.appendChild(br);
@@ -1800,7 +1826,7 @@ function renderCompareResults(fa,fb){
 
   // Wire note pill taps in notes grid
   res.querySelectorAll('.cmp-notes-v2 button[data-note]').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)openDetail(c=>renderNoteDetail(c,note),'Note');});
+    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)openDetail(c=>renderNoteDetail(c,note),note.name);});
   });
 
   // Wire suggestion taps
@@ -2237,8 +2263,9 @@ Promise.all([
     Promise.all(idx.brands.map(b=>fetch(`data/scents/${b}.json`,_nc).then(r=>r.json())))
       .then(arrays=>arrays.flat())
   ),
-  fetch('data/notes.json',_nc).then(r=>r.json())
-]).then(([roles, scents, notes])=>{
+  fetch('data/notes.json',_nc).then(r=>r.json()),
+  fetch('data/brands.json',_nc).then(r=>r.json())
+]).then(([roles, scents, notes, brands])=>{
   ROLES=roles;
   CAT=scents.map(f=>{
     f._nTop=(f.top||[]).map(n=>n.toLowerCase().trim());
@@ -2252,6 +2279,8 @@ Promise.all([
   RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
   CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
+  BRANDS=brands;
+  BRANDS_MAP=Object.fromEntries(BRANDS.map(b=>[b.name.toLowerCase(),b]));
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
   // Pre-fill a high-layering pair so compare isn't blank on load
