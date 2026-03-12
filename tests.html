@@ -109,6 +109,77 @@ async function runAll(){
     W.setState(f.id,origState); // restore
   } else skip('State tests — CAT not loaded');
 
+  // ── SUITE: Math: computeProfile ────────────────────────────────────
+  startSuite('Math: computeProfile');
+  if(W.computeProfile){
+    // Test 1: Happy Path
+    // Given citrus family: base [0.90, 0.28, 0.10]
+    // Top: 'bergamot' [0.92, 0.25, 0.10] (w=0.5)
+    // Mid: 'lavender' [0.70, 0.15, 0.35] (w=1.0)
+    // Base: 'cedar' [0.32, 0.10, 0.65] (w=1.5)
+    // Total weight = 3.0
+    // Weighted avg = [ (0.92*0.5 + 0.70*1.0 + 0.32*1.5)/3, (0.25*0.5 + 0.15*1.0 + 0.10*1.5)/3, (0.10*0.5 + 0.35*1.0 + 0.65*1.5)/3 ]
+    //              = [ (0.46 + 0.70 + 0.48)/3, (0.125 + 0.15 + 0.15)/3, (0.05 + 0.35 + 0.975)/3 ]
+    //              = [ 1.64/3, 0.425/3, 1.375/3 ]
+    //              = [ 0.54666, 0.14166, 0.45833 ]
+    // Final profile (60% note avg, 40% fam anchor):
+    // freshness = 0.54666*0.6 + 0.90*0.4 = 0.328 + 0.36 = 0.688
+    // sweetness = 0.14166*0.6 + 0.28*0.4 = 0.085 + 0.112 = 0.197
+    // warmth = 0.45833*0.6 + 0.10*0.4 = 0.275 + 0.04 = 0.315
+    const happyFrag = {
+      family: 'citrus',
+      top: ['bergamot'],
+      mid: ['lavender'],
+      base: ['cedar'],
+      sillage: 8,
+      layering: 7
+    };
+    const profile = W.computeProfile(happyFrag);
+    assert('Happy path computes correct freshness', approxEqual(profile.freshness, 0.688), `got ${profile.freshness}`);
+    assert('Happy path computes correct sweetness', approxEqual(profile.sweetness, 0.197), `got ${profile.sweetness}`);
+    assert('Happy path computes correct warmth', approxEqual(profile.warmth, 0.315), `got ${profile.warmth}`);
+    assert('Happy path computes correct intensity from sillage', approxEqual(profile.intensity, 0.8), `got ${profile.intensity}`);
+    assert('Happy path computes correct complexity from layering', approxEqual(profile.complexity, 0.7), `got ${profile.complexity}`);
+
+    // Test 2: Edge Case - No matching notes
+    // Should return family base anchor only
+    const noNotesFrag = {
+      family: 'woody', // base: [0.30, 0.30, 0.72]
+      top: ['nonexistent_note'],
+      sillage: 5,
+      layering: 5
+    };
+    const profileNoNotes = W.computeProfile(noNotesFrag);
+    assert('No matching notes returns family freshness', approxEqual(profileNoNotes.freshness, 0.30), `got ${profileNoNotes.freshness}`);
+    assert('No matching notes returns family sweetness', approxEqual(profileNoNotes.sweetness, 0.30), `got ${profileNoNotes.sweetness}`);
+    assert('No matching notes returns family warmth', approxEqual(profileNoNotes.warmth, 0.72), `got ${profileNoNotes.warmth}`);
+
+    // Test 3: Edge Case - Missing properties
+    const missingPropsFrag = {
+      family: 'unknown_family'
+      // missing top, mid, base arrays, sillage, layering
+    };
+    const profileMissing = W.computeProfile(missingPropsFrag);
+    // unknown family defaults to [0.5, 0.5, 0.5]
+    // no notes -> uses base only
+    assert('Missing properties defaults freshness to 0.5', approxEqual(profileMissing.freshness, 0.5));
+    assert('Missing properties defaults intensity to 0.5', approxEqual(profileMissing.intensity, 0.5));
+    assert('Missing properties defaults complexity to 0.5', approxEqual(profileMissing.complexity, 0.5));
+
+    // Test 4: Edge Case - Case insensitivity
+    const caseFrag = {
+      family: 'gourmand',
+      base: ['VaNiLlA'] // vanilla is [0.05,0.90,0.70]
+    };
+    const profileCase = W.computeProfile(caseFrag);
+    // Base only = [0.05, 0.90, 0.70]
+    // Gourmand base = [0.10, 0.92, 0.80]
+    // freshness = 0.05*0.6 + 0.10*0.4 = 0.03 + 0.04 = 0.07
+    assert('Case insensitivity computes correctly', approxEqual(profileCase.freshness, 0.07), `got ${profileCase.freshness}`);
+  } else {
+    skip('Math: computeProfile - computeProfile not found');
+  }
+
   // ── SUITE: Role assignment ─────────────────────────────────────────
   startSuite('Role assignment');
   if(W.ROLES?.length&&W.CAT?.length){
@@ -294,6 +365,11 @@ function render(){
     html+=`</div>`;
   });
   document.getElementById('results').innerHTML=html;
+}
+
+function approxEqual(actual, expected, tolerance = 1e-4) {
+  if (typeof actual !== 'number' || typeof expected !== 'number') return false;
+  return Math.abs(actual - expected) < tolerance;
 }
 
 function getSuiteCount(s){
