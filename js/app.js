@@ -27,9 +27,6 @@ const EXTRACTIONS={
 
 
 function getExtractionTooltipHtml(methodStr) {
-  // Try to find the matching method in EXTRACTIONS
-  // Method string might be like "Steam Distillation (Otto) or Solvent Extraction (Absolute)"
-  // We'll just look for the first match or any match for simplicity in this helper.
   let matchedKey = null;
   for (const key of Object.keys(EXTRACTIONS)) {
     if (methodStr.toLowerCase().includes(key.toLowerCase())) {
@@ -40,7 +37,12 @@ function getExtractionTooltipHtml(methodStr) {
 
   if (matchedKey) {
     const ext = EXTRACTIONS[matchedKey];
-    return `<div class="ext-tooltip"><div class="ext-tt-title">${matchedKey}</div><div class="ext-tt-desc">${ext.desc}</div><div class="ext-tt-meta"><strong>Commonality:</strong> ${ext.common}</div><div class="ext-tt-meta"><strong>Example:</strong> ${ext.example}</div></div>`;
+    return `<span class="ext-tooltip" style="display:none; position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%); width:240px; background:var(--bg-primary); border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.1); border-radius:6px; padding:10px; font-size:var(--fs-caption); color:var(--text-secondary); text-align:left; z-index:100; pointer-events:none;">
+      <strong style="display:block; margin-bottom:4px; color:var(--text-primary); font-size:var(--fs-body-sm);">${matchedKey}</strong>
+      <div style="margin-bottom:6px;">${ext.desc}</div>
+      <div><strong style="color:var(--text-primary); font-weight:500;">Commonality:</strong> ${ext.common}</div>
+      <div style="margin-top:2px;"><strong style="color:var(--text-primary); font-weight:500;">Example:</strong> ${ext.example}</div>
+    </span>`;
   }
   return '';
 }
@@ -48,7 +50,7 @@ function getExtractionTooltipHtml(methodStr) {
 function renderExtractionHtml(methodStr) {
   const tooltipHtml = getExtractionTooltipHtml(methodStr);
   if (tooltipHtml) {
-    return `<span class="ext-interactive" tabindex="0">${methodStr}${tooltipHtml}</span>`;
+    return `<span style="position:relative; text-decoration:underline; text-decoration-style:dotted; text-underline-offset:2px; cursor:help; color:var(--text-primary);" onmouseenter="this.querySelector('.ext-tooltip').style.display='block'" onmouseleave="this.querySelector('.ext-tooltip').style.display='none'" onfocus="this.querySelector('.ext-tooltip').style.display='block'" onblur="this.querySelector('.ext-tooltip').style.display='none'" tabindex="0">${methodStr}${tooltipHtml}</span>`;
   }
   return methodStr;
 }
