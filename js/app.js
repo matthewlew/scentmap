@@ -1187,6 +1187,7 @@ function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(
 function _simLabel(pct){if(pct<26)return'Very different';if(pct<51)return'Notably different';if(pct<76)return'Fairly similar';return'Nearly identical';}
 function _layLabel(pct){if(pct<25)return'Poor pairing';if(pct<50)return'Uneasy together';if(pct<75)return'Workable pair';return'Good pairing';}
 
+window.getVerdict = getVerdict;
 function getVerdict(matchPct,layerPct,fa,fb){
   const shortA=fa.name.split(' ')[0],shortB=fb.name.split(' ')[0];
   const sameFam=fa.family===fb.family;
