@@ -1195,10 +1195,10 @@ function renderNoteDetail(container, note) {
         <div style="font-size: var(--fs-body); color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--sp-lg);">${note.desc}</div>
 
         <div style="display: flex; gap: var(--sp-sm); margin-bottom: var(--sp-md);">
-          <button id="note-btn-like" style="flex: 1; padding: var(--sp-sm); border: 1px solid ${reaction === 'like' ? 'var(--text-primary)' : 'var(--border-subtle)'}; border-radius: var(--radius-lg); background: ${reaction === 'like' ? 'var(--text-primary)' : 'var(--bg-primary)'}; color: ${reaction === 'like' ? 'var(--bg-primary)' : 'var(--text-secondary)'}; font-size: var(--fs-body-sm); font-family: var(--font-sans); font-weight: 500; cursor: pointer; transition: all 0.2s;">
+          <button id="note-btn-like" style="flex: 1; padding: var(--sp-sm); border: 1px solid ${reaction === 'like' ? 'var(--fam-green)' : 'var(--border-subtle)'}; border-radius: var(--radius-lg); background: ${reaction === 'like' ? 'var(--fam-green)' : 'var(--bg-primary)'}; color: ${reaction === 'like' ? 'var(--on-dark-text)' : 'var(--text-secondary)'}; font-size: var(--fs-body-sm); font-family: var(--font-sans); font-weight: 500; cursor: pointer; transition: all 0.2s;">
             <span style="margin-right: 6px;">👍</span> Like
           </button>
-          <button id="note-btn-dislike" style="flex: 1; padding: var(--sp-sm); border: 1px solid ${reaction === 'dislike' ? 'var(--text-primary)' : 'var(--border-subtle)'}; border-radius: var(--radius-lg); background: ${reaction === 'dislike' ? 'var(--text-primary)' : 'var(--bg-primary)'}; color: ${reaction === 'dislike' ? 'var(--bg-primary)' : 'var(--text-secondary)'}; font-size: var(--fs-body-sm); font-family: var(--font-sans); font-weight: 500; cursor: pointer; transition: all 0.2s;">
+          <button id="note-btn-dislike" style="flex: 1; padding: var(--sp-sm); border: 1px solid ${reaction === 'dislike' ? 'var(--g900)' : 'var(--border-subtle)'}; border-radius: var(--radius-lg); background: ${reaction === 'dislike' ? 'var(--g900)' : 'var(--bg-primary)'}; color: ${reaction === 'dislike' ? 'var(--on-dark-text)' : 'var(--text-secondary)'}; font-size: var(--fs-body-sm); font-family: var(--font-sans); font-weight: 500; cursor: pointer; transition: all 0.2s;">
             <span style="margin-right: 6px;">👎</span> Dislike
           </button>
         </div>
@@ -1250,9 +1250,10 @@ function renderNoteDetail(container, note) {
         sugList.innerHTML = '<span style="font-size: var(--fs-meta); color: var(--g400);">No other notes in this family.</span>';
       } else {
         suggestions.forEach(s => {
+          const sfm = FAM[s.family] || { color: '#888' };
           const sbtn = document.createElement('button');
-          sbtn.style.cssText = 'padding: var(--sp-xs) var(--sp-sm); border-radius: var(--radius-lg); background: var(--bg-tertiary); border: 1px solid var(--border-standard); font-size: var(--fs-meta); color: var(--text-secondary); cursor: pointer; transition: background 0.2s; font-family: var(--font-sans);';
-          sbtn.textContent = s.name;
+          sbtn.style.cssText = 'display: inline-flex; align-items: center; gap: 6px; padding: var(--sp-xs) var(--sp-sm); border-radius: var(--radius-lg); background: var(--bg-tertiary); border: 1px solid var(--border-standard); font-size: var(--fs-meta); color: var(--text-secondary); cursor: pointer; transition: background 0.2s; font-family: var(--font-sans);';
+          sbtn.innerHTML = `<span style="width: 8px; height: 8px; border-radius: 50%; background: ${sfm.color}; display: inline-block;"></span>${s.name}`;
           sbtn.addEventListener('mouseover', () => sbtn.style.background = 'var(--bg-secondary)');
           sbtn.addEventListener('mouseout', () => sbtn.style.background = 'var(--bg-tertiary)');
           sbtn.addEventListener('click', (e) => {
@@ -1294,6 +1295,13 @@ function buildNotes(q = '', activeTier = 'all') {
 
   if (activeTier !== 'all') {
     filtered = filtered.filter(n => n._primaryTier === activeTier);
+  }
+
+  if (filtered.length === 0) {
+    body.innerHTML = `<div style="padding: var(--sp-xl); text-align: center; color: var(--text-tertiary); font-family: var(--font-sans); font-size: var(--fs-body);"><div style="margin-bottom: var(--sp-sm); font-size: 24px;">🌱</div>No notes found matching "${q}".<br>Try searching for a different note or family.</div>`;
+    const countEl = document.getElementById('notes-count');
+    if (countEl) countEl.textContent = '0 notes';
+    return;
   }
 
   const grouped = {};
