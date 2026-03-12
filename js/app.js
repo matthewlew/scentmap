@@ -1,6 +1,6 @@
 /* ══ DATA (populated by fetch at startup) ════════════════════════ */
 let ROLES=[], RM={}, CAT=[], CAT_MAP={}, NI=[], NI_MAP={};
-
+window.ROLES = ROLES; window.RM = RM; window.CAT = CAT; window.CAT_MAP = CAT_MAP; window.NI = NI; window.NI_MAP = NI_MAP;
 
 const FAM={
   citrus:  {label:'Citrus',  color:'#9A6800', desc:'Bright and fleeting. Pressed from rinds — bergamot, lemon, grapefruit. Often the first thing you smell, and the first to fade. Works in heat; rarely works alone.'},
@@ -1883,6 +1883,7 @@ Promise.all([
   RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
   CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
+  window.ROLES = ROLES; window.RM = RM; window.CAT = CAT; window.CAT_MAP = CAT_MAP; window.NI = NI; window.NI_MAP = NI_MAP;
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
   // Pre-fill a high-layering pair so compare isn't blank on load
