@@ -211,6 +211,29 @@ async function runAll(){
 
   assert('No JS errors on load',!W._smError,W._smError||'');
 
+  // ── SUITE: getCmpFam function ─────────────────────────────────────
+  startSuite('getCmpFam function');
+
+  // Test valid families
+  const woodyFam = W.getCmpFam('woody');
+  assert('getCmpFam returns correct colors for "woody"', woodyFam.accent === '#8B4513' && woodyFam.light === '#FDF5EE');
+
+  const floralFam = W.getCmpFam('floral');
+  assert('getCmpFam returns correct colors for "floral"', floralFam.accent === '#B5366E' && floralFam.light === '#FFF4F9');
+
+  // Test invalid/fallback families
+  const fallback = W.getCmpFam('nonexistent');
+  assert('getCmpFam returns fallback for unknown family', fallback.accent === '#6B6356' && fallback.light === '#F5F2EC');
+
+  const emptyFam = W.getCmpFam('');
+  assert('getCmpFam returns fallback for empty string', emptyFam.accent === '#6B6356' && emptyFam.light === '#F5F2EC');
+
+  const nullFam = W.getCmpFam(null);
+  assert('getCmpFam returns fallback for null', nullFam.accent === '#6B6356' && nullFam.light === '#F5F2EC');
+
+  const undefFam = W.getCmpFam(undefined);
+  assert('getCmpFam returns fallback for undefined', undefFam.accent === '#6B6356' && undefFam.light === '#F5F2EC');
+
   // ── SUITE: Keyboard / accessibility ───────────────────────────────
   startSuite('Accessibility');
   assert('html has lang attribute',W.document.documentElement.lang==='en');
