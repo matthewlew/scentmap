@@ -1227,8 +1227,8 @@ function drawCombinedRadarSvg(fa,fb,caAccent,cbAccent){
       ${dotsA}${dotsB}${lbls}
     </svg></div>
     <div class="cmp-radar-legend">
-      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line" style="background:${caAccent}"></div><span>${fa.name.split(' ')[0]}</span></div>
-      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line dashed" style="border-color:${cbAccent}"></div><span>${fb.name.split(' ')[0]}</span></div>
+      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line" style="background:${caAccent}"></div><span>${fa.name}</span></div>
+      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line dashed" style="border-color:${cbAccent}"></div><span>${fb.name}</span></div>
     </div>
   </div>`;
 }
@@ -1257,9 +1257,9 @@ function drawScatterSvg(fa,fb,caAccent,cbAccent){
   const close=Math.abs(xA-xB)<18&&Math.abs(yA-yB)<18;
   const ptA=`<circle cx="${xA.toFixed(1)}" cy="${yA.toFixed(1)}" r="8" fill="${caAccent}" opacity="0.88"/>`;
   const ptB=`<circle cx="${xB.toFixed(1)}" cy="${yB.toFixed(1)}" r="8" fill="${cbAccent}" opacity="0.88"/>`;
-  const lA=`<text x="${(xA+11).toFixed(1)}" y="${yA.toFixed(1)}" dominant-baseline="middle" font-size="7.5" fill="${caAccent}" font-family="DM Sans,sans-serif" font-weight="700">${fa.name.split(' ')[0]}</text>`;
+  const lA=`<text x="${(xA+11).toFixed(1)}" y="${yA.toFixed(1)}" dominant-baseline="middle" font-size="7.5" fill="${caAccent}" font-family="DM Sans,sans-serif" font-weight="700">${fa.name}</text>`;
   const lBY=close?(yB-14):yB;
-  const lB=`<text x="${(xB+11).toFixed(1)}" y="${lBY.toFixed(1)}" dominant-baseline="middle" font-size="7.5" fill="${cbAccent}" font-family="DM Sans,sans-serif" font-weight="700">${fb.name.split(' ')[0]}</text>`;
+  const lB=`<text x="${(xB+11).toFixed(1)}" y="${lBY.toFixed(1)}" dominant-baseline="middle" font-size="7.5" fill="${cbAccent}" font-family="DM Sans,sans-serif" font-weight="700">${fb.name}</text>`;
   return`<div class="cmp-scatter-v2">
     <div class="cmp-scatter-v2-label">Sillage &amp; Complexity</div>
     <div class="cmp-scatter-v2-wrap"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
@@ -1459,8 +1459,10 @@ function renderCompareResults(fa,fb){
       </div>
     </div>
 
-    <div class="cmp-scores-wrap">
-      <div class="cmp-score-cards">
+    <div class="cmp-pair-card">
+      <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
+      <div class="cmp-pair-card-verdict">${verdict}</div>
+      <div class="cmp-pair-card-scores">
         <button class="cmp-score-card" id="cmp-score-match">
           <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
           <div class="cmp-score-label">Similarity</div>
@@ -1476,7 +1478,6 @@ function renderCompareResults(fa,fb){
           <div class="cmp-score-range">${_simLabel(matchPct)}</div>
           <div class="cmp-score-tap">Tap to learn more ↗</div>
         </button>
-        <div class="cmp-score-center">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
         <button class="cmp-score-card" id="cmp-score-layer">
           <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
           <div class="cmp-score-label">Pairing</div>
@@ -1493,7 +1494,6 @@ function renderCompareResults(fa,fb){
           <div class="cmp-score-tap">Tap to learn more ↗</div>
         </button>
       </div>
-      <div class="cmp-verdict">${verdict}</div>
     </div>
 
     ${render3x3Notes(fa,fb,ca.accent,cb.accent)}
@@ -1513,7 +1513,7 @@ function renderCompareResults(fa,fb){
 
   // Wire note pill taps in notes grid
   res.querySelectorAll('.cmp-notes-v2 button[data-note]').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note));});
+    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)openDetail(c=>renderNoteDetail(c,note));});
   });
 
   // Wire suggestion taps
@@ -1770,9 +1770,9 @@ function _fillCard(slot,frag){
     <div class="cmp-frag-card-name">${frag.name}</div>
     <div class="cmp-frag-card-brand">${frag.brand}</div>
     ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
-    <button class="cmp-card-clear" data-slot="${slot}" aria-label="Remove ${frag.name}">✕</button>
+    <button class="cmp-card-detail-btn" data-slot="${slot}" aria-label="View details for ${frag.name}">Details ↗</button>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
-  card.querySelector('.cmp-card-clear')?.addEventListener('click',e=>{e.stopPropagation();clearCmpSlot(slot);});
+  card.querySelector('.cmp-card-detail-btn')?.addEventListener('click',e=>{e.stopPropagation();openFragDetail(frag);});
 }
 
 function _resetCard(slot){

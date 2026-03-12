@@ -1695,29 +1695,25 @@ mark.note-match {
   -webkit-box-orient: vertical;
 }
 
-.cmp-card-clear {
+.cmp-card-detail-btn {
   position: absolute;
   top: var(--sp-sm);
   right: var(--sp-sm);
-  background: var(--scrim-control);
+  background: none;
   border: none;
-  border-radius: var(--radius-circle);
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 2px 0;
   font-size: var(--fs-caption);
-  color: var(--scrim-control-text);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-tertiary);
   cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-spring);
+  transition: color var(--dur-fast) var(--ease-spring);
   z-index: 2;
-  line-height: 1;
+  letter-spacing: 0.01em;
 }
 
-.cmp-card-clear:hover {
-  background: var(--scrim-control-hover);
-  color: var(--on-dark-text);
+.cmp-card-detail-btn:hover {
+  color: var(--text-primary);
 }
 
 /* ── Sticky bar ── */
@@ -1795,23 +1791,39 @@ mark.note-match {
 
 /* ── Score cards ── */
 
-.cmp-scores-wrap {
+.cmp-pair-card {
+  border: 1.5px solid var(--border-standard);
+  border-radius: var(--radius-xl);
+  background: var(--bg-primary);
+  padding: var(--sp-lg);
   margin-bottom: var(--sp-3xl);
 }
 
-.cmp-score-cards {
+.cmp-pair-card-radar {
+  margin-bottom: var(--sp-md);
+}
+
+.cmp-pair-card-verdict {
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--lh-normal);
+  padding: var(--sp-sm) 0 var(--sp-md);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--sp-md);
+}
+
+.cmp-pair-card-scores {
   display: flex;
   gap: var(--sp-md);
   align-items: stretch;
-  margin-bottom: var(--sp-md);
 }
 
 .cmp-score-card {
   flex: 1;
-  padding: var(--sp-lg);
-  border-radius: var(--radius-xl);
-  border: 1.5px solid var(--border-standard);
-  background: var(--bg-primary);
+  padding: var(--sp-md);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-secondary);
   text-align: left;
   cursor: pointer;
   transition: border-color var(--dur-fast) var(--ease-spring),
@@ -1822,15 +1834,8 @@ mark.note-match {
 }
 
 .cmp-score-card:hover {
-  background: var(--bg-secondary);
-  border-color: var(--border-strong);
-}
-
-.cmp-score-center {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--bg-tertiary);
+  border-color: var(--border-standard);
 }
 
 .cmp-score-pct {
@@ -1902,17 +1907,10 @@ mark.note-match {
   font-family: var(--font-sans);
 }
 
-.cmp-verdict {
-  font-size: var(--fs-body-sm);
-  color: var(--text-secondary);
-  line-height: var(--lh-normal);
-  padding: var(--sp-md) 0;
-}
-
 /* ── Radar v2 ── */
 
 .cmp-radar-v2 {
-  margin-bottom: var(--sp-3xl);
+  margin-bottom: 0;
 }
 
 .cmp-radar-v2-label {

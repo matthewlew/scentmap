@@ -167,6 +167,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
 }
 

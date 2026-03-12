@@ -4,6 +4,19 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-12 (fix: compare UX improvements)
+
+### Fixed
+- Note pills in compare results now correctly open the detail panel (was calling `pushDetail` before panel opened; changed to `openDetail`)
+- Mobile sheet scroll now contained within sheet — added `overscroll-behavior: contain` to `.sheet-content` to prevent background compare panel from scrolling
+
+### Changed
+- Fragrance cards in compare header: replaced ✕ clear button with "Details ↗" button that opens the fragrance detail panel
+- Radar legend and scatter plot labels now show full fragrance names instead of first word only
+- Similarity and Pairing score cards combined into a single pair card (with radar and verdict) to emphasise they describe the pair, not individual fragrances
+
+---
+
 ## 2026-03-11 (fix: picker UX polish)
 
 ### Fixed
