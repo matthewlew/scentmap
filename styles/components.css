@@ -2388,6 +2388,7 @@ button.cmp-note-pill:hover {
   cursor: pointer;
   font-family: inherit;
   text-align: left;
+  opacity: 1;
   transition: background var(--dur-fast) var(--ease-spring);
 }
 
@@ -2799,6 +2800,24 @@ button.cmp-note-pill:hover {
 
 .np-frags {
   margin-top: 12px;
+}
+
+.np-frags .frag-picker-item {
+  opacity: 1;
+  height: auto;
+  padding: 10px 12px;
+  scroll-snap-align: none;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-standard);
+  transition: background var(--dur-fast) var(--ease-spring);
+}
+
+.np-frags .frag-picker-item:last-child {
+  border-bottom: none;
+}
+
+.np-frags .frag-picker-item:hover {
+  background: var(--bg-secondary);
 }
 
 /* ── PICKER PANEL ── */

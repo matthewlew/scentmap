@@ -4,6 +4,15 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-12 (fix: note detail catalog list opacity)
+
+### Fixed
+- Note detail "In Catalog" list items were rendering at `opacity: 0.32` — the `.frag-picker-item` base style targets the drum/rolodex picker where non-centered items are dimmed. Added `.np-frags .frag-picker-item { opacity: 1 }` override (plus proper padding, border-row dividers, hover state) so the static list is fully visible
+- Same fix applied to house detail list (`.house-detail-list .frag-picker-item { opacity: 1 }`)
+- Note pill taps in Compare notes grid now pass the note name as the sheet topbar title
+
+---
+
 ## 2026-03-12 (fix: mobile sheet UX — height, titles, close access)
 
 ### Fixed

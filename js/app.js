@@ -1514,7 +1514,7 @@ function renderCompareResults(fa,fb){
 
   // Wire note pill taps in notes grid
   res.querySelectorAll('.cmp-notes-v2 button[data-note]').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)openDetail(c=>renderNoteDetail(c,note));});
+    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)openDetail(c=>renderNoteDetail(c,note),note.name);});
   });
 
   // Wire suggestion taps
