@@ -453,6 +453,8 @@ function renderNoteDetail(container,note){
   container.innerHTML=`<div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
+    ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
+    ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
     ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
   if(inf.length){
     const span=container.querySelector('#_nfl');
@@ -507,6 +509,23 @@ function openNotePopup(note,triggerEl){
   document.getElementById('np-name').textContent=note.name;
   document.getElementById('np-family').textContent=fm.label;
   document.getElementById('np-desc').textContent=note.desc;
+
+  const extEl = document.getElementById('np-extraction');
+  if(note.extraction_method) {
+    document.getElementById('np-extraction-text').textContent = note.extraction_method;
+    extEl.style.display = 'block';
+  } else {
+    extEl.style.display = 'none';
+  }
+
+  const factEl = document.getElementById('np-fact');
+  if(note.insider_fact) {
+    document.getElementById('np-fact-text').textContent = note.insider_fact;
+    factEl.style.display = 'block';
+  } else {
+    factEl.style.display = 'none';
+  }
+
   const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
   if(sortedInf.length){
