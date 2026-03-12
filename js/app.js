@@ -226,6 +226,7 @@ function popSheet(){
   top.classList.remove('visible');
   top.addEventListener('transitionend',()=>top.remove(),{once:true});
   updateSheetPos();updateSheetBacks();
+  popNavTitle();
   if(!sheetStack.length){
     document.getElementById('sheet-stack').classList.remove('has-sheets');
     unlockBodyScroll();
@@ -236,17 +237,40 @@ function closeAllSheets(){
   all.forEach(s=>{s.classList.remove('visible');s.addEventListener('transitionend',()=>s.remove(),{once:true})});
   document.getElementById('sheet-stack').classList.remove('has-sheets');
   unlockBodyScroll();
+  clearNavTitle();
 }
 function updateSheetPos(){sheetStack.forEach((s,i)=>{const t=i===sheetStack.length-1;s.classList.toggle('visible',t);s.classList.toggle('under',!t)})}
 function updateSheetBacks(){sheetStack.forEach((s,i)=>s.querySelector('.sheet-back').classList.toggle('hidden',i===0))}
 document.getElementById('sheet-backdrop').addEventListener('click',closeAllSheets);
 
+/* ══ NAV TITLE HELPER ══════════════════════════════════════════════ */
+let navTitleStack = [];
+function setNavTitle(title){
+  const el = document.getElementById('nav-logo-text');
+  if(el) el.textContent = title || 'Scentmap';
+}
+function pushNavTitle(title){
+  navTitleStack.push(title);
+  setNavTitle(title);
+}
+function popNavTitle(){
+  navTitleStack.pop();
+  setNavTitle(navTitleStack[navTitleStack.length-1]);
+}
+function clearNavTitle(){
+  navTitleStack.length = 0;
+  setNavTitle();
+}
+
 /* ══ OPEN HELPERS ══════════════════════════════════════════════════ */
 function openDetail(renderFn,title){
+  clearNavTitle();
+  if(title) pushNavTitle(title);
   if(isDesktop()||isTablet())openDesktopDetail(renderFn);
   else pushSheet(c=>renderFn(c),title);
 }
 function pushDetail(renderFn,title){
+  if(title) pushNavTitle(title);
   if(isDesktop()||isTablet())pushDesktopDetail(renderFn);
   else pushSheet(c=>renderFn(c),title);
 }

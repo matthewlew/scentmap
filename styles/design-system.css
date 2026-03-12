@@ -104,7 +104,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 5b. LAYOUT DIMENSIONS ── */
 :root{
-  --col-nav-h: 50px;  /* Height of .col-main-nav sticky header (sp-md + line + sp-sm) */
+  --col-nav-h: 36px;  /* Height of .col-main-nav sticky header */
 }
 
 /* ── 6. BORDER-RADIUS SCALE ── */
