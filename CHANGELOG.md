@@ -4,6 +4,13 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-13
+
+### Fixed
+- Duplicated code in `buildLayerSuggestions`: removed redundant inner `scoreLayering` function and used global `scoreLayeringPair` instead.
+
+---
+
 ## 2026-03-12 (fix: compare picker anchors to sticky bar when scrolled)
 
 ### Fixed
