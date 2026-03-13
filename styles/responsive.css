@@ -195,7 +195,7 @@
     align-items: center;
     gap: var(--sp-xs);
     font-family: var(--font-sans);
-    font-size: var(--fs-body);
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -214,20 +214,20 @@
 
   /* Catalog section */
   .sec-label {
-    font-size: var(--fs-body);
+    font-size: var(--fs-body-sm);
     margin-bottom: var(--sp-lg);
   }
 
   .sec-label .sub {
-    font-size: var(--fs-body);
+    font-size: var(--fs-body-sm);
   }
 
   .brand-n {
-    font-size: var(--fs-body);
+    font-size: var(--fs-body-sm);
   }
 
   .brand-c {
-    font-size: var(--fs-body);
+    font-size: var(--fs-body-sm);
   }
 
   .cat-legend {
@@ -236,14 +236,14 @@
   }
 
   .cl-item {
-    font-size: var(--fs-body);
+    font-size: var(--fs-body-sm);
     gap: var(--sp-sm);
   }
 
   .cl-box {
     width: 16px;
     height: 16px;
-    font-size: var(--fs-body);
+    font-size: var(--fs-meta);
   }
 
   .scent-row {
@@ -252,7 +252,7 @@
   }
 
   .s-status {
-    font-size: var(--fs-body);
+    font-size: var(--fs-caption);
     padding: 0 var(--sp-xs);
   }
 
@@ -267,7 +267,7 @@
   }
 
   .s-meta {
-    font-size: var(--fs-body);
+    font-size: var(--fs-body-sm);
     margin-top: 2px;
   }
 
@@ -286,7 +286,7 @@
   }
 
   .nf-desc {
-    font-size: var(--fs-body);
+    font-size: var(--fs-body-sm);
   }
 
   /* Changelog */
@@ -296,7 +296,7 @@
   }
 
   .changelog-body h2 {
-    font-size: var(--fs-body);
+    font-size: var(--fs-body-sm);
     margin: var(--sp-3xl) 0 var(--sp-lg);
     padding-bottom: var(--sp-sm);
   }
@@ -399,7 +399,7 @@
   }
 
   .cmp-note-pill {
-    font-size: var(--fs-body);
+    font-size: var(--fs-caption);
   }
 
   .cmp-sug-columns {
