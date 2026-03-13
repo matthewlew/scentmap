@@ -124,8 +124,14 @@ function openDesktopDetail(renderFn){
   detailStack.length=0;
   detailStack.push(renderFn);
   _renderDeskDetail();
-  document.getElementById('col-detail').classList.add('open');
+  const detail = document.getElementById('col-detail');
+  detail.classList.add('open');
+  detail.setAttribute('role', 'dialog');
+  detail.setAttribute('aria-modal', 'true');
+  const main = document.querySelector('.col-main');
+  if(main) main.setAttribute('inert', '');
   if(isTablet())document.getElementById('detail-scrim').classList.add('open');
+  _trapFocus(detail);
 }
 function pushDesktopDetail(renderFn){
   detailStack.push(renderFn);
@@ -142,8 +148,14 @@ function _renderDeskDetail(animateIn){
 }
 function closeDesktopDetail(){
   detailStack.length=0;
-  document.getElementById('col-detail').classList.remove('open');
+  const detail = document.getElementById('col-detail');
+  detail.classList.remove('open');
+  detail.removeAttribute('role');
+  detail.removeAttribute('aria-modal');
+  const main = document.querySelector('.col-main');
+  if(main) main.removeAttribute('inert');
   document.getElementById('detail-scrim').classList.remove('open');
+  _returnFocus();
 }
 function popDesktopDetail(){
   if(detailStack.length<=1){closeDesktopDetail();return}
@@ -188,16 +200,49 @@ function pushSheet(renderFn,title){
     <div class="sheet-content"></div></div>`;
   const handle=el.querySelector('.sheet-handle');
   let ds=null;
-  handle.addEventListener('touchstart',e=>{ds=e.touches[0].clientY},{passive:true});
-  handle.addEventListener('touchmove',e=>{if(ds===null)return;const dy=e.touches[0].clientY-ds;if(dy>0)el.style.transform=`translateY(${dy}px)`},{passive:true});
-  handle.addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-(ds||0);el.style.transform='';if(dy>80)popSheet();ds=null});
+  let lastY=null;
+  let v=0;
+  handle.addEventListener('touchstart',e=>{
+    ds=e.touches[0].clientY;
+    lastY=ds;
+    v=0;
+    el.style.transition='none';
+  },{passive:true});
+  handle.addEventListener('touchmove',e=>{
+    if(ds===null)return;
+    const curY=e.touches[0].clientY;
+    const dy=curY-ds;
+    v=curY-lastY;
+    lastY=curY;
+    if(dy>0){
+      el.style.transform=`translateY(${dy}px)`;
+    } else {
+      // Add friction/resistance when dragging up past fully open
+      const resistDy = dy * 0.2;
+      el.style.transform=`translateY(${resistDy}px)`;
+    }
+  },{passive:true});
+  handle.addEventListener('touchend',e=>{
+    if(ds===null)return;
+    const dy=e.changedTouches[0].clientY-ds;
+    el.style.transition='';
+    el.style.transform='';
+    // Dismiss if dragged down far enough OR swiped down quickly
+    if(dy>80 || (dy>10 && v>5)) popSheet();
+    ds=null;
+  });
   el.querySelector('.sheet-close').addEventListener('click',closeAllSheets);
   el.querySelector('.sheet-back').addEventListener('click',popSheet);
+  el.setAttribute('role', 'dialog');
+  el.setAttribute('aria-modal', 'true');
+  const main = document.querySelector('.col-main');
+  if(main && sheetStack.length === 0) main.setAttribute('inert', '');
   overlay.appendChild(el);sheetStack.push(el);
   updateSheetPos();
   requestAnimationFrame(()=>{el.classList.add('visible');overlay.classList.add('has-sheets')});
   renderFn(el.querySelector('.sheet-content'));
   updateSheetBacks();
+  _trapFocus(el);
 }
 function popSheet(){
   if(!sheetStack.length)return;
@@ -207,14 +252,22 @@ function popSheet(){
   updateSheetPos();updateSheetBacks();
   if(!sheetStack.length){
     document.getElementById('sheet-stack').classList.remove('has-sheets');
+    const main = document.querySelector('.col-main');
+    if(main) main.removeAttribute('inert');
     unlockBodyScroll();
+    _returnFocus();
+  } else {
+    _trapFocus(sheetStack[sheetStack.length-1]);
   }
 }
 function closeAllSheets(){
   const all=[...sheetStack];sheetStack.length=0;
   all.forEach(s=>{s.classList.remove('visible');s.addEventListener('transitionend',()=>s.remove(),{once:true})});
   document.getElementById('sheet-stack').classList.remove('has-sheets');
+  const main = document.querySelector('.col-main');
+  if(main) main.removeAttribute('inert');
   unlockBodyScroll();
+  _returnFocus();
 }
 function updateSheetPos(){sheetStack.forEach((s,i)=>{const t=i===sheetStack.length-1;s.classList.toggle('visible',t);s.classList.toggle('under',!t)})}
 function updateSheetBacks(){sheetStack.forEach((s,i)=>s.querySelector('.sheet-back').classList.toggle('hidden',i===0))}

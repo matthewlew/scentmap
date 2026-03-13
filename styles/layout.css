@@ -41,11 +41,11 @@
 
 /* RIGHT: detail panel — desktop: in-flow third column */
 .col-detail {
-  width: 0;
+  width: var(--col-detail);
   flex-shrink: 0;
   overflow: hidden;
-  border-left: 0px solid var(--border-strong);
-  transition: width var(--dur-slow) var(--ease-spring), border-left-width var(--dur-slow);
+  border-left: 1px solid var(--border-strong);
+  transition: transform var(--dur-slow) var(--ease-spring), opacity var(--dur-slow);
   position: sticky;
   top: 0;
   height: 100vh;
@@ -53,12 +53,16 @@
   display: flex;
   flex-direction: column;
   background: var(--bg-primary);
+  transform: translateX(100%);
+  opacity: 0;
+  margin-right: calc(-1 * var(--col-detail));
+  pointer-events: none;
 }
 
 .col-detail.open {
-  width: var(--col-detail);
-  border-left: 1px solid var(--border-strong);
-  overflow-y: auto;
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Detail panel scrim overlay */
@@ -126,11 +130,12 @@
   border-bottom: none;
   border-radius: 16px 16px 0 0;
   transform: translateY(100%);
-  transition: transform 0.22s var(--ease-spring);
+  transition: transform 0.22s var(--ease-spring), filter 0.22s var(--ease-spring);
   z-index: 201;
   pointer-events: auto;
   display: flex;
   flex-direction: column;
+  will-change: transform;
 }
 
 .sheet.visible {
@@ -145,6 +150,7 @@
 .sheet.nav {
   transform: translateX(100%);
   border-radius: 16px 16px 0 0;
+  will-change: transform;
 }
 
 .sheet.nav.visible {
