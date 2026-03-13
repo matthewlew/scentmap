@@ -37,8 +37,11 @@ function isWish(id){return gst(id)==='wish'}
 function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
 
 /* Similarity scoring: 0–100 across family, notes, sillage, roles */
+const _simCache={};
 function scoreSimilarity(a,b){
   if(a.id===b.id)return 0;
+  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
+  if(_simCache[k]!==undefined)return _simCache[k];
   const famScore=(FAM_COMPAT[a.family]?.[b.family]??0.5)*40;
   const shBase=a._nBase.filter(n=>b._nBase.includes(n)).length;
   const shMid=a._nMid.filter(n=>b._nMid.includes(n)).length;
@@ -48,18 +51,25 @@ function scoreSimilarity(a,b){
   const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
   const shRoles=a.roles.filter(r=>b.roles.includes(r)).length;
   const roleScore=Math.min(20,shRoles*7);
-  return Math.round(famScore+noteScore+sillScore+roleScore);
+  const result=Math.round(famScore+noteScore+sillScore+roleScore);
+  _simCache[k]=result;
+  return result;
 }
 
 /* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
+const _layCache={};
 function scoreLayeringPair(a,b){
+  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
+  if(_layCache[k]!==undefined)return _layCache[k];
   const famComp=FAM_COMPAT[a.family]?.[b.family]??0.5;
   const famScore=famComp*35;
   const sillDiff=Math.abs(a.sillage-b.sillage);
   const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
   const shared=a._nAll.filter(n=>b._nAll.includes(n)).length;
   const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
-  return Math.round(famScore+sillScore+noteScore);
+  const result=Math.round(famScore+sillScore+noteScore);
+  _layCache[k]=result;
+  return result;
 }
 
 /* Classify how a candidate relates to a source frag for discover shelf */
@@ -519,7 +529,7 @@ function renderHouseDetail(container,brand){
     }));
 
   const barHTML = famStats.map(f => `<div style="height:100%; width:${f.pct}%; background:${f.color};" title="${f.label} (${Math.round(f.pct)}%)"></div>`).join('');
-  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); margin-bottom:var(--sp-xs); font-size:var(--fs-meta); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
+  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); margin-bottom:var(--sp-xs); font-size:var(--fs-body); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
 
   container.innerHTML=`<div class="house-detail-wrap">
     <div class="house-detail-name">${brand}</div>
@@ -821,8 +831,8 @@ function buildCatalog(roleFilter){
   if(CAT_STATE_FILTER==='owned')visibleCat=visibleCat.filter(f=>isOwned(f.id));
   else if(CAT_STATE_FILTER==='wish')visibleCat=visibleCat.filter(f=>isWish(f.id));
   if(search)visibleCat=visibleCat.filter(f=>
-    f.name.toLowerCase().includes(search)||
-    f.brand.toLowerCase().includes(search)||
+    f._nameL.includes(search)||
+    f._brandL.includes(search)||
     f._nAll.some(n=>n.includes(search))
   );
 
@@ -1156,199 +1166,39 @@ function updCC(){
 }
 
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
-function computeNoteTiers() {
-  NI.forEach(n => {
-    n._tierCounts = { top: 0, mid: 0, base: 0 };
-    n._primaryTier = 'mid'; // default fallback
-  });
+function buildNotes(){
+  const body=document.getElementById('notes-body');body.innerHTML='';
 
-  CAT.forEach(f => {
-    f._nTop.forEach(nl => { if (NI_MAP[nl]) NI_MAP[nl]._tierCounts.top++; });
-    f._nMid.forEach(nl => { if (NI_MAP[nl]) NI_MAP[nl]._tierCounts.mid++; });
-    f._nBase.forEach(nl => { if (NI_MAP[nl]) NI_MAP[nl]._tierCounts.base++; });
-  });
+  const grid = document.createElement('div');
+  grid.className = 'notes-grid';
 
-  NI.forEach(n => {
-    const c = n._tierCounts;
-    const t = c.top + c.mid + c.base;
-    if (t === 0) return;
+  const grouped={};
+  NI.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
+  Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
 
-    // assign primary tier based on highest occurrence
-    if (c.top >= c.mid && c.top >= c.base) n._primaryTier = 'top';
-    else if (c.mid >= c.top && c.mid >= c.base) n._primaryTier = 'mid';
-    else n._primaryTier = 'base';
-  });
-}
+  FAM_ORDER.forEach(fk=>{
+    if(!grouped[fk]?.length)return;
+    const fm=FAM[fk];if(!fm)return;
 
-function renderNoteDetail(container, note) {
-  const fm = FAM[note.family] || { label: note.family, color: '#888' };
-  const nl = note.name.toLowerCase();
-  const inf = CAT.filter(f => f._nAll.includes(nl));
+    const card=document.createElement('div');card.className='notes-card';
 
-  let reaction = null;
+    const header=document.createElement('div');header.className='notes-card-header';
+    header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
 
-  const renderContent = () => {
-    container.innerHTML = `
-      <div class="note-detail-header" style="padding: var(--sp-xl) var(--sp-xl) var(--sp-lg); border-bottom: 1px solid var(--border-subtle); margin-bottom: var(--sp-lg);">
-        <div style="font-size: var(--fs-heading); font-family: var(--font-display); font-weight: 700; margin-bottom: var(--sp-xs); color: var(--text-primary);">${note.name}</div>
-        <div style="font-size: var(--fs-label); text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: var(--sp-md);">${fm.label}</div>
-        <div style="font-size: var(--fs-body); color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--sp-lg);">${note.desc}</div>
-
-        <div style="display: flex; gap: var(--sp-sm); margin-bottom: var(--sp-md);">
-          <button id="note-btn-like" style="flex: 1; padding: var(--sp-sm); border: 1px solid ${reaction === 'like' ? 'var(--fam-green)' : 'var(--border-subtle)'}; border-radius: var(--radius-lg); background: ${reaction === 'like' ? 'var(--fam-green)' : 'var(--bg-primary)'}; color: ${reaction === 'like' ? 'var(--on-dark-text)' : 'var(--text-secondary)'}; font-size: var(--fs-body-sm); font-family: var(--font-sans); font-weight: 500; cursor: pointer; transition: all 0.2s;">
-            <span style="margin-right: 6px;">👍</span> Like
-          </button>
-          <button id="note-btn-dislike" style="flex: 1; padding: var(--sp-sm); border: 1px solid ${reaction === 'dislike' ? 'var(--g900)' : 'var(--border-subtle)'}; border-radius: var(--radius-lg); background: ${reaction === 'dislike' ? 'var(--g900)' : 'var(--bg-primary)'}; color: ${reaction === 'dislike' ? 'var(--on-dark-text)' : 'var(--text-secondary)'}; font-size: var(--fs-body-sm); font-family: var(--font-sans); font-weight: 500; cursor: pointer; transition: all 0.2s;">
-            <span style="margin-right: 6px;">👎</span> Dislike
-          </button>
-        </div>
-
-        <div id="note-reaction-suggestions" style="display: ${reaction ? 'block' : 'none'}; padding-top: var(--sp-md); border-top: 1px dashed var(--border-subtle);">
-          <div style="font-size: var(--fs-meta); font-weight: 600; color: var(--text-tertiary); margin-bottom: var(--sp-sm); text-transform: uppercase; letter-spacing: 0.05em;">
-            ${reaction === 'like' ? 'You might also like' : 'Try these instead'}
-          </div>
-          <div id="note-suggestion-list" style="display: flex; flex-wrap: wrap; gap: var(--sp-xs);"></div>
-        </div>
-      </div>
-
-      <div style="padding: 0 var(--sp-xl) var(--sp-xl);">
-        ${note.extraction_method ? `<div style="margin-bottom: var(--sp-md); padding: var(--sp-md); background: var(--bg-secondary); border-radius: var(--radius-lg);"><div style="font-size: var(--fs-label); font-weight: 600; color: var(--text-tertiary); margin-bottom: var(--sp-xs); letter-spacing: 0.05em; text-transform: uppercase;">Extraction Method</div><div style="font-size: var(--fs-body-sm); color: var(--text-secondary); line-height: 1.5;">${note.extraction_method}</div></div>` : ''}
-        ${note.insider_fact ? `<div style="margin-bottom: var(--sp-xl); padding: var(--sp-md); background: var(--bg-secondary); border-radius: var(--radius-lg);"><div style="font-size: var(--fs-label); font-weight: 600; color: var(--text-tertiary); margin-bottom: var(--sp-xs); letter-spacing: 0.05em; text-transform: uppercase;">Perfumer's Insight</div><div style="font-size: var(--fs-body-sm); color: var(--text-secondary); line-height: 1.5;">${note.insider_fact}</div></div>` : ''}
-
-        ${inf.length ? `<div style="margin-top: var(--sp-xl);"><div style="font-size: var(--fs-label); font-weight: 600; color: var(--text-tertiary); margin-bottom: var(--sp-sm); text-transform: uppercase; letter-spacing: 0.05em;">In Catalog (${inf.length})</div><div id="_nfl" style="border: 1px solid var(--border-standard); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-primary);"></div></div>` : ''}
-      </div>
-    `;
-
-    const btnLike = container.querySelector('#note-btn-like');
-    const btnDislike = container.querySelector('#note-btn-dislike');
-
-    if (btnLike && btnDislike) {
-      btnLike.addEventListener('click', (e) => {
-        e.stopPropagation();
-        reaction = reaction === 'like' ? null : 'like';
-        renderContent();
-      });
-      btnDislike.addEventListener('click', (e) => {
-        e.stopPropagation();
-        reaction = reaction === 'dislike' ? null : 'dislike';
-        renderContent();
-      });
-    }
-
-    if (reaction) {
-      const sugList = container.querySelector('#note-suggestion-list');
-      const familyNotes = NI.filter(n => n.family === note.family && n.name !== note.name);
-
-      for (let i = familyNotes.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [familyNotes[i], familyNotes[j]] = [familyNotes[j], familyNotes[i]];
-      }
-
-      const suggestions = familyNotes.slice(0, 3);
-
-      if (suggestions.length === 0) {
-        sugList.innerHTML = '<span style="font-size: var(--fs-meta); color: var(--g400);">No other notes in this family.</span>';
-      } else {
-        suggestions.forEach(s => {
-          const sfm = FAM[s.family] || { color: '#888' };
-          const sbtn = document.createElement('button');
-          sbtn.style.cssText = 'display: inline-flex; align-items: center; gap: 6px; padding: var(--sp-xs) var(--sp-sm); border-radius: var(--radius-lg); background: var(--bg-tertiary); border: 1px solid var(--border-standard); font-size: var(--fs-meta); color: var(--text-secondary); cursor: pointer; transition: background 0.2s; font-family: var(--font-sans);';
-          sbtn.innerHTML = `<span style="width: 8px; height: 8px; border-radius: 50%; background: ${sfm.color}; display: inline-block;"></span>${s.name}`;
-          sbtn.addEventListener('mouseover', () => sbtn.style.background = 'var(--bg-secondary)');
-          sbtn.addEventListener('mouseout', () => sbtn.style.background = 'var(--bg-tertiary)');
-          sbtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            pushDetail(c => renderNoteDetail(c, s), s.name);
-          });
-          sugList.appendChild(sbtn);
-        });
-      }
-    }
-
-    if (inf.length) {
-      const span = container.querySelector('#_nfl');
-      [...inf].sort((a, b) => a.name.localeCompare(b.name)).forEach((f, idx) => {
-        const fc = getCmpFam(f.family);
-        const btn = document.createElement('button');
-        btn.className = 'frag-picker-item';
-        btn.style.borderBottom = '1px solid var(--border-standard)';
-        if (idx === inf.length - 1) btn.style.borderBottom = 'none';
-        btn.innerHTML = `<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
-        btn.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, f), f.name); });
-        span.appendChild(btn);
-      });
-    }
-  };
-
-  renderContent();
-}
-
-function buildNotes(q = '', activeTier = 'all') {
-  const body = document.getElementById('notes-body');
-  body.innerHTML = '';
-  const qt = q.toLowerCase().trim();
-
-  let filtered = NI;
-  if (qt) {
-    filtered = filtered.filter(n => n.name.toLowerCase().includes(qt) || n.family.toLowerCase().includes(qt));
-  }
-
-  if (activeTier !== 'all') {
-    filtered = filtered.filter(n => n._primaryTier === activeTier);
-  }
-
-  if (filtered.length === 0) {
-    body.innerHTML = `<div style="padding: var(--sp-xl); text-align: center; color: var(--text-tertiary); font-family: var(--font-sans); font-size: var(--fs-body);"><div style="margin-bottom: var(--sp-sm); font-size: 24px;">🌱</div>No notes found matching "${q}".<br>Try searching for a different note or family.</div>`;
-    const countEl = document.getElementById('notes-count');
-    if (countEl) countEl.textContent = '0 notes';
-    return;
-  }
-
-  const grouped = {};
-  filtered.forEach(n => {
-    if (!grouped[n.family]) grouped[n.family] = [];
-    grouped[n.family].push(n);
-  });
-
-  Object.values(grouped).forEach(arr => arr.sort((a, b) => a.name.localeCompare(b.name)));
-
-  FAM_ORDER.forEach(fk => {
-    if (!grouped[fk]?.length) return;
-    const fm = FAM[fk]; if (!fm) return;
-
-    const row = document.createElement('div');
-    row.className = 'notes-family-row';
-
-    const left = document.createElement('div');
-    left.className = 'nf-left';
-    left.innerHTML = `<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>${fm.desc ? `<div class="nf-desc">${fm.desc}</div>` : ''}`;
-
-    const right = document.createElement('div');
-    right.className = 'nf-right';
-    right.style.display = 'flex';
-    right.style.flexWrap = 'wrap';
-    right.style.gap = 'var(--sp-xs)';
-    right.style.paddingLeft = '0';
-
-    grouped[fk].forEach(note => {
-      const btn = document.createElement('button');
-      btn.className = 'cmp-note-pill';
-      btn.dataset.note = note.name;
-      btn.textContent = note.name;
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        openDetail(c => renderNoteDetail(c, note), note.name);
-      });
-      right.appendChild(btn);
+    const cardBody=document.createElement('div');cardBody.className='notes-card-body';
+    grouped[fk].forEach(note=>{
+      const btn=document.createElement('button');btn.className='note-pill';btn.textContent=note.name;
+      btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
+      cardBody.appendChild(btn);
     });
 
-    row.appendChild(left);
-    row.appendChild(right);
-    body.appendChild(row);
+    card.appendChild(header);
+    card.appendChild(cardBody);
+    grid.appendChild(card);
   });
 
-  const countEl = document.getElementById('notes-count');
-  if (countEl) countEl.textContent = `${filtered.length} notes`;
+  body.appendChild(grid);
+  document.getElementById('notes-count').textContent=`${NI.length} notes`;
 }
 
 /* ── QUICK PEEK ── */
@@ -1489,16 +1339,21 @@ function openMoreSheet(btn){
   btn.classList.add('active');
   const items=[
     {id:'notes',    icon:'✿', label:'Notes'},
+    {id:'playground',icon:'⚗', label:'Playground'},
     {id:'changelog',icon:'↩', label:'Changelog'},
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:16px 0 8px">
       <div style="font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);padding:0 16px 10px">More</div>
-      ${items.map(it=>`
-        <button onclick="closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
+      ${items.map(it=>{
+        const onclick = it.id === 'playground'
+          ? "window.location.href='playground.html'"
+          : `closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))`;
+        return `<button onclick="${onclick}" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
           <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0">${it.icon}</span>
           ${it.label}
-        </button>`).join('')}
+        </button>`;
+      }).join('')}
     </div>`;
   });
 }
@@ -1643,6 +1498,7 @@ const NOTE_PROFILE={
   'yuzu':              [0.88,0.20,0.08],
 };
 function computeProfile(frag){
+  if(frag._profile)return frag._profile;
   const b=FAM_PROFILE_BASE[frag.family]||[0.5,0.5,0.5];
   // Collect notes with tier weights: top=0.5, mid=1.0, base=1.5
   const weighted=[
@@ -1651,18 +1507,20 @@ function computeProfile(frag){
     ...(frag._nBase||[]).map(n=>({n,w:1.5})),
   ].filter(({n})=>NOTE_PROFILE[n]);
   if(weighted.length===0){
-    return{freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
+    frag._profile={freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
+    return frag._profile;
   }
   const totalW=weighted.reduce((s,{w})=>s+w,0);
   const avg=weighted.reduce((acc,{n,w})=>{const p=NOTE_PROFILE[n];acc[0]+=p[0]*w;acc[1]+=p[1]*w;acc[2]+=p[2]*w;return acc;},[0,0,0]).map(v=>v/totalW);
   // 60% note-derived, 40% family anchor
-  return{
+  frag._profile={
     freshness:avg[0]*0.6+b[0]*0.4,
     sweetness:avg[1]*0.6+b[1]*0.4,
     warmth:   avg[2]*0.6+b[2]*0.4,
     intensity:(frag.sillage||5)/10,
     complexity:(frag.layering||5)/10,
   };
+  return frag._profile;
 }
 
 /* ── Swap Reason Helper ── */
@@ -1943,6 +1801,135 @@ function renderSuggestionsV2(fa,fb,ca,cb){
 }
 
 /* ── Score educational overlay ── */
+function openCharacterEdu(fa, fb, ca, cb) {
+  let overlay = document.getElementById('cmp-edu-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'cmp-edu-overlay';
+    overlay.className = 'cmp-edu-overlay';
+    document.body.appendChild(overlay);
+  }
+
+  const dims = [
+    { key: 'freshness', label: 'Fresh', desc: 'Bright, uplifting notes like citrus, green leaves, and aquatic elements.' },
+    { key: 'sweetness', label: 'Sweet', desc: 'Sugary, floral, or gourmand notes like vanilla, fruit, and sweet resins.' },
+    { key: 'warmth', label: 'Warm', desc: 'Cozy, deep notes like woods, spices, amber, and musk.' },
+    { key: 'intensity', label: 'Intensity', desc: 'How powerful the scent feels right away (projection/sillage).' },
+    { key: 'complexity', label: 'Depth', desc: 'How many different types of notes evolve over time.' }
+  ];
+
+  const pa = computeProfile(fa);
+  const pb = computeProfile(fb);
+
+  // Helper to find contributing notes for a dimension
+  const getNoteContributors = (frag, dimKey) => {
+    const allNotes = [...(frag._nTop || []), ...(frag._nMid || []), ...(frag._nBase || [])];
+    const matching = allNotes.filter(n => {
+      const info = NI_MAP[n.toLowerCase()];
+      if (!info) return false;
+      const t = info.tags || [];
+      if (dimKey === 'freshness') return t.includes('citrus') || t.includes('green') || t.includes('aquatic');
+      if (dimKey === 'sweetness') return t.includes('sweet') || t.includes('floral') || t.includes('fruity');
+      if (dimKey === 'warmth') return t.includes('warm') || t.includes('spicy') || t.includes('woody') || t.includes('amber');
+      return false; // Intensity/complexity don't map directly to single notes
+    });
+    return [...new Set(matching)].slice(0, 3);
+  };
+
+  // Find a suggestion for a dimension (someone who might want more of this)
+  const getSwapSuggestion = (dimKey) => {
+    const sorted = Object.values(CAT_MAP).map(f => ({ f, p: computeProfile(f) })).sort((a, b) => b.p[dimKey] - a.p[dimKey]);
+    const topScorers = sorted.filter(x => x.f.id !== fa.id && x.f.id !== fb.id).slice(0, 10);
+    if (topScorers.length === 0) return null;
+    return topScorers[Math.floor(Math.random() * topScorers.length)].f;
+  };
+
+  const cap = n => n.charAt(0).toUpperCase() + n.slice(1);
+
+  const html = `
+    <div class="cmp-edu-wrap">
+      <div class="cmp-edu-header">
+        <div class="cmp-edu-header-left">
+          <div class="cmp-edu-title">Character Details</div>
+        </div>
+        <button class="cmp-edu-close" aria-label="Close" onclick="document.getElementById('cmp-edu-overlay').classList.remove('open')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="cmp-edu-content">
+        <p class="cmp-edu-intro">The Character Map compares five key sensory dimensions. Here&rsquo;s what they mean and which notes drive them.</p>
+
+        <div class="cmp-edu-grid">
+          ${dims.map(dim => {
+            const isNoteDriven = ['freshness', 'sweetness', 'warmth'].includes(dim.key);
+            const notesA = isNoteDriven ? getNoteContributors(fa, dim.key) : [];
+            const notesB = isNoteDriven ? getNoteContributors(fb, dim.key) : [];
+            const suggestion = getSwapSuggestion(dim.key);
+
+            return `
+              <div class="cmp-edu-card">
+                <div class="cmp-edu-card-title">${dim.label}</div>
+                <div class="cmp-edu-card-desc">${dim.desc}</div>
+
+                ${isNoteDriven ? `
+                  <div class="cmp-edu-card-notes">
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${ca.accent}">${fa.name}</span>
+                      <span class="cmp-edu-card-notes-list">${notesA.length ? notesA.map(cap).join(', ') : '—'}</span>
+                    </div>
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${cb.accent}">${fb.name}</span>
+                      <span class="cmp-edu-card-notes-list">${notesB.length ? notesB.map(cap).join(', ') : '—'}</span>
+                    </div>
+                  </div>
+                ` : `
+                  <div class="cmp-edu-card-notes">
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${ca.accent}">${fa.name}</span>
+                      <span class="cmp-edu-card-notes-list">${Math.round(pa[dim.key]*100)}%</span>
+                    </div>
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${cb.accent}">${fb.name}</span>
+                      <span class="cmp-edu-card-notes-list">${Math.round(pb[dim.key]*100)}%</span>
+                    </div>
+                  </div>
+                `}
+
+                ${suggestion ? `
+                  <div class="cmp-edu-suggestion" onclick="openScent('${suggestion.id}')">
+                    <div class="cmp-edu-suggestion-label">Want more ${dim.label}?</div>
+                    <div class="cmp-edu-suggestion-name"><strong>${suggestion.name}</strong> by ${BRANDS_MAP[suggestion.brand] || suggestion.brand}</div>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  overlay.innerHTML = html;
+
+  // Transition in
+  requestAnimationFrame(() => overlay.classList.add('open'));
+
+  // Handle cleanup on transition out
+  const wrap = overlay.querySelector('.cmp-edu-wrap');
+  wrap.addEventListener('transitionend', (e) => {
+    if (e.propertyName === 'transform' && !overlay.classList.contains('open')) {
+      overlay.remove();
+    }
+  });
+
+  // Close on scrim click
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('open');
+    }
+  });
+}
+
 function openScoreEdu(type,matchPct,layerPct,fa,fb){
   let overlay=document.getElementById('cmp-edu-overlay');
   if(!overlay){overlay=document.createElement('div');overlay.id='cmp-edu-overlay';overlay.className='cmp-edu-overlay';document.body.appendChild(overlay);}
@@ -2030,39 +2017,43 @@ function renderCompareResults(fa,fb){
     </div>
 
     <div class="cmp-pair-card">
-      <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
-      <div class="cmp-pair-card-verdict">${verdict}</div>
-      <div class="cmp-pair-card-scores">
-        <button class="cmp-score-card" id="cmp-score-match">
-          <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
-          <div class="cmp-score-label">Similarity</div>
-          <div class="cmp-score-meter">
-            <div class="cmp-score-meter-track">
-              <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
-              <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,matchPct))}%;background:${matchColor}"></div>
-              <div class="cmp-score-meter-tick" style="left:25%"></div>
-              <div class="cmp-score-meter-tick" style="left:50%"></div>
-              <div class="cmp-score-meter-tick" style="left:75%"></div>
+      <button class="cmp-pair-card-left" id="cmp-score-character">
+        <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
+      </button>
+      <div class="cmp-pair-card-right">
+        <div class="cmp-pair-card-verdict">${verdict}</div>
+        <div class="cmp-pair-card-scores">
+          <button class="cmp-score-card" id="cmp-score-match">
+            <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
+            <div class="cmp-score-label">Similarity</div>
+            <div class="cmp-score-meter">
+              <div class="cmp-score-meter-track">
+                <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
+                <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,matchPct))}%;background:${matchColor}"></div>
+                <div class="cmp-score-meter-tick" style="left:25%"></div>
+                <div class="cmp-score-meter-tick" style="left:50%"></div>
+                <div class="cmp-score-meter-tick" style="left:75%"></div>
+              </div>
             </div>
-          </div>
-          <div class="cmp-score-range">${_simLabel(matchPct)}</div>
-          <div class="cmp-score-tap">Tap to learn more ↗</div>
-        </button>
-        <button class="cmp-score-card" id="cmp-score-layer">
-          <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
-          <div class="cmp-score-label">Pairing</div>
-          <div class="cmp-score-meter">
-            <div class="cmp-score-meter-track">
-              <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
-              <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,layerPct))}%;background:${layerColor}"></div>
-              <div class="cmp-score-meter-tick" style="left:25%"></div>
-              <div class="cmp-score-meter-tick" style="left:50%"></div>
-              <div class="cmp-score-meter-tick" style="left:75%"></div>
+            <div class="cmp-score-range">${_simLabel(matchPct)}</div>
+            <div class="cmp-score-tap">Tap to learn more ↗</div>
+          </button>
+          <button class="cmp-score-card" id="cmp-score-layer">
+            <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
+            <div class="cmp-score-label">Pairing</div>
+            <div class="cmp-score-meter">
+              <div class="cmp-score-meter-track">
+                <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
+                <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,layerPct))}%;background:${layerColor}"></div>
+                <div class="cmp-score-meter-tick" style="left:25%"></div>
+                <div class="cmp-score-meter-tick" style="left:50%"></div>
+                <div class="cmp-score-meter-tick" style="left:75%"></div>
+              </div>
             </div>
-          </div>
-          <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-          <div class="cmp-score-tap">Tap to learn more ↗</div>
-        </button>
+            <div class="cmp-score-range">${_layLabel(layerPct)}</div>
+            <div class="cmp-score-tap">Tap to learn more ↗</div>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -2072,6 +2063,11 @@ function renderCompareResults(fa,fb){
   `;
 
   // Wire score taps
+  document.getElementById('cmp-score-character')?.addEventListener('click',()=>{
+    window.haptic?.('selection');
+    openCharacterEdu(fa, fb, ca, cb);
+  });
+
   document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
     window.haptic?.('selection');
     openScoreEdu('match',matchPct,layerPct,fa,fb);
@@ -2167,8 +2163,8 @@ function _renderPickerList(q,slot){
   if(!list)return;
   const lower=q.toLowerCase();
   let frags=q.length<1?[...CAT]:CAT.filter(f=>{
-    return f.name.toLowerCase().includes(lower)||
-      f.brand.toLowerCase().includes(lower)||
+    return f._nameL.includes(lower)||
+      f._brandL.includes(lower)||
       f._nAll.some(n=>n.includes(lower));
   });
   if(_pickerSort==='name'){
@@ -2332,6 +2328,14 @@ function _initPickerKeyNav(listEl,slot){
     } else if(e.key==='ArrowUp'){
       e.preventDefault();
       listEl.scrollTo({top:Math.max(curIdx-1,0)*PICKER_ITEM_H,behavior:'smooth'});
+    } else if(e.key==='Enter'){
+      e.preventDefault();
+      const f=items[curIdx]?CAT_MAP[items[curIdx].dataset.id]:null;
+      if(f){
+        _selectFragForSlot(slot,f);
+        _updateOtherSelMarking(slot);
+      }
+      _closeFragPicker();
     } else if(e.key==='Escape'){
       e.preventDefault();
       _closeFragPicker();
@@ -2428,7 +2432,15 @@ function _setupDragAndDropDropzones() {
 function initCompare(){
   ['a','b'].forEach(slot=>{
     const card=document.getElementById(`cmp-card-${slot}`);
-    if(card)card.addEventListener('click',()=>_openFragPicker(slot));
+    if(card){
+      card.addEventListener('click',()=>_openFragPicker(slot));
+      card.addEventListener('keydown',e=>{
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault();
+          _openFragPicker(slot);
+        }
+      });
+    }
     const search=document.getElementById(`frag-picker-search-${slot}`);
     if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim(),slot));
     const list=document.getElementById(`frag-picker-list-${slot}`);
@@ -2529,6 +2541,8 @@ Promise.all([
     f._nMid=(f.mid||[]).map(n=>n.toLowerCase().trim());
     f._nBase=(f.base||[]).map(n=>n.toLowerCase().trim());
     f._nAll=[...f._nTop,...f._nMid,...f._nBase];
+    f._nameL=f.name.toLowerCase();
+    f._brandL=f.brand.toLowerCase();
     return f;
   });
   NI=notes;
