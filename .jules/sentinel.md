@@ -1,0 +1,4 @@
+## 2026-03-13 - [Sentinel] Fix XSS Vulnerability in JS Templates
+**Vulnerability:** Missing escaping when interpolating JSON values into `innerHTML` throughout `js/app.js`, notably in `CHANGELOG.md` parsing and UI rendering logic.
+**Learning:** Even internal static files and data from known sources should be properly escaped, as they may become dynamic or receive updates. `escapeHTML` was lacking in this project. Also, a faulty global string replace can easily corrupt JavaScript syntax. When fixing bugs, precision is key.
+**Prevention:** Implement `escapeHTML(str)` globally and use it in all string templates assigned to `innerHTML`. Be mindful of `0` in `escapeHTML` logic (`if (str == null) return '';` vs `if (!str) return '';`). When updating codebase globally, use AST parsing or targeted block regex, and verify with `node -c`.

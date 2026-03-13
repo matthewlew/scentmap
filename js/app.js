@@ -28,6 +28,18 @@ const FAM_COMPAT={
   gourmand:{woody:.5,floral:.5,amber:.8,citrus:.3,leather:.4,oud:.6,green:.3,chypre:.4,gourmand:.4},
 };
 
+
+/* ══ SECURITY HELPERS ══════════════════════════════════════════════ */
+function escapeHTML(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 /* State */
 const ST={};
 function gst(id){return ST[id]||'none'}
@@ -275,14 +287,14 @@ function renderFragDetail(container,frag){
 
   container.innerHTML=`
 
-    <div class="dc-name">${frag.name}</div>
-    <button class="dc-brand-btn">${frag.brand}</button>
+    <div class="dc-name">${escapeHTML(frag.name)}</div>
+    <button class="dc-brand-btn">${escapeHTML(frag.brand)}</button>
     <div class="dc-ftag" style="background:${fm.color}">
       <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
-      ${fm.label}
+      ${escapeHTML(fm.label)}
     </div>
     <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
-    ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
+    ${frag.description?`<div class="dc-description">${escapeHTML(frag.description)}</div>`:''}
     <div class="dc-cmp-cta-label">Compare with</div>
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
     <div class="dc-stats">
@@ -451,7 +463,7 @@ function buildRoleChips(frag,chipsEl){
     if(isPrimary)orderLabel='<span class="chip-order">✓</span>';
     else if(isSecondary)orderLabel=`<span class="chip-order">${status}</span>`;
     const addIcon=(!isPrimary&&!isSecondary)?'<span class="chip-add">+</span>':'';
-    chip.innerHTML=`<span class="chip-sym">${role.sym}</span> ${role.name}${orderLabel}${addIcon}`;
+    chip.innerHTML=`<span class="chip-sym">${role.sym}</span> ${escapeHTML(role.name)}${orderLabel}${addIcon}`;
     chip.title=isPrimary?`Remove ${frag.name} from ${role.name}`
       :isSecondary?`Make ${frag.name} primary for ${role.name}`
       :`Assign ${frag.name} to ${role.name}`;
@@ -480,18 +492,18 @@ function renderNoteDetail(container,note){
   const nl=note.name.toLowerCase();
   const inf=CAT.filter(f=>f._nAll.includes(nl));
   container.innerHTML=`
-    <div class="np-name">${note.name}</div>
-    <div class="np-family">${fm.label}</div>
-    <div class="np-desc">${note.desc}</div>
-    ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
-    ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
+    <div class="np-name">${escapeHTML(note.name)}</div>
+    <div class="np-family">${escapeHTML(fm.label)}</div>
+    <div class="np-desc">${escapeHTML(note.desc)}</div>
+    ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${escapeHTML(note.extraction_method)}</div>`:''}
+    ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${escapeHTML(note.insider_fact)}</div>`:''}
     ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
   if(inf.length){
     const span=container.querySelector('#_nfl');
     [...inf].sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
       const fc=getCmpFam(f.family);
       const btn=document.createElement('button');btn.className='frag-picker-item';
-      btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
+      btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${escapeHTML(f.name)}</div><div class="frag-picker-item-brand">${escapeHTML(f.brand)}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       span.appendChild(btn);
     });
@@ -522,8 +534,8 @@ function renderHouseDetail(container,brand){
   const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); margin-bottom:var(--sp-xs); font-size:var(--fs-body); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
 
   container.innerHTML=`<div class="house-detail-wrap">
-    <div class="house-detail-name">${brand}</div>
-    ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${houseData.desc}</div>` : ''}
+    <div class="house-detail-name">${escapeHTML(brand)}</div>
+    ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${escapeHTML(houseData.desc)}</div>` : ''}
 
     <div style="margin:var(--sp-xl) 0;">
       <div class="dc-slbl">Fragrance Families</div>
@@ -541,8 +553,8 @@ function renderHouseDetail(container,brand){
     btn.className='frag-picker-item';
     btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div>
       <div>
-        <div class="frag-picker-item-name">${frag.name}</div>
-        <div class="frag-picker-item-brand">${(FAM[frag.family]||{}).label||frag.family}</div>
+        <div class="frag-picker-item-name">${escapeHTML(frag.name)}</div>
+        <div class="frag-picker-item-brand">${escapeHTML((FAM[frag.family]||{}).label||frag.family)}</div>
       </div>`;
     btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag),frag.name);});
     list.appendChild(btn);
@@ -592,7 +604,7 @@ function openNotePopup(note,triggerEl){
     sortedInf.forEach(f=>{
       const fc=getCmpFam(f.family);
       const btn=document.createElement('button');btn.className='frag-picker-item';
-      btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
+      btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${escapeHTML(f.name)}</div><div class="frag-picker-item-brand">${escapeHTML(f.brand)}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();closeNotePopup();openFragDetail(f)});
       list.appendChild(btn);
     });
@@ -623,7 +635,7 @@ function renderPicker(container,roleId){
   // Header
   const hdr=document.createElement('div');hdr.className='picker-header';
   hdr.innerHTML=`
-    <div class="picker-title">${role.sym} ${role.name}</div><div class="picker-sub">${role.desc}</div>`;
+    <div class="picker-title">${role.sym} ${escapeHTML(role.name)}</div><div class="picker-sub">${escapeHTML(role.desc)}</div>`;
   container.appendChild(hdr);
 
   // Hero
@@ -651,8 +663,8 @@ function renderPicker(container,roleId){
     hero.innerHTML=`<div class="picker-hero-filled">
       <div class="picker-hero-sym" style="color:${fm.color}">${role.sym}</div>
       <div class="picker-hero-info">
-        <div class="picker-hero-name${isW?' is-wish':''}">${primaryFrag.name}</div>
-        <div class="picker-hero-brand">${primaryFrag.brand}</div>
+        <div class="picker-hero-name${isW?' is-wish':''}">${escapeHTML(primaryFrag.name)}</div>
+        <div class="picker-hero-brand">${escapeHTML(primaryFrag.brand)}</div>
         <div class="picker-hero-notes"><strong>Top</strong>${primaryFrag.top.join(', ')}</div>
       </div>
     </div>
@@ -706,9 +718,9 @@ function renderPicker(container,roleId){
     carousel.forEach(frag=>{
       const fm=FAM[frag.family]||{color:'#888'};
       const card=document.createElement('div');card.className='carousel-card';
-      card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
-        <div class="carousel-card-brand">${frag.brand}</div>
-        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
+      card.innerHTML=`<div class="carousel-card-name">${escapeHTML(frag.name)}</div>
+        <div class="carousel-card-brand">${escapeHTML(frag.brand)}</div>
+        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${escapeHTML(fm.label)}</span></div>`;
       card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),frag.name)});
       row.appendChild(card);
     });
@@ -828,7 +840,7 @@ function buildCatalog(roleFilter){
 
   if(!visibleCat.length){
     const empty=document.createElement('div');empty.className='cat-empty';
-    empty.textContent=search?`No matches for "${search}"`:'No fragrances in this view.';
+    empty.textContent=search?`No matches for "${escapeHTML(search)}"`:'No fragrances in this view.';
     body.appendChild(empty);
     updCC();return;
   }
@@ -838,7 +850,7 @@ function buildCatalog(roleFilter){
     const frags=visibleCat.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
     const key=brand.replace(/\s+/g,'-')+(roleFilter||'');
     const sec=document.createElement('div');sec.className='cat-section';
-    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n brand-hdr-btn" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
+    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n brand-hdr-btn" data-brand="${escapeHTML(brand)}">${escapeHTML(brand)}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
     // Brand header → house detail
     sec.querySelector('.brand-hdr-btn')?.addEventListener('click',()=>openHouseDetail(brand));
     const list=document.createElement('div');list.className='scent-list';
@@ -1016,21 +1028,21 @@ function renderCatRow(row,frag,fm,search){
     if(topIdx!==-1){
       // Highlight the matching top note, show others normally
       const rendered=(frag.top||[]).slice(0,3).map((n,i)=>
-        (i===topIdx||frag._nTop[i].includes(q))?`<mark class="note-match">${n}</mark>`:n
+        (i===topIdx||frag._nTop[i].includes(q))?`<mark class="note-match">${escapeHTML(n)}</mark>`:escapeHTML(n)
       ).join(', ');
       notesHtml=`<div class="frag-picker-item-notes">${rendered}</div>`;
     } else if(midIdx!==-1||baseIdx!==-1){
       // Replace notes line with a "why matched" badge
       const tier=midIdx!==-1?'Mid':'Base';
       const note=midIdx!==-1?frag.mid[midIdx]:frag.base[baseIdx];
-      notesHtml=`<div class="frag-picker-item-notes"><span class="match-badge">↳ ${tier} · ${note}</span></div>`;
+      notesHtml=`<div class="frag-picker-item-notes"><span class="match-badge">↳ ${escapeHTML(tier)} · ${escapeHTML(note)}</span></div>`;
     } else {
       // Name or brand match — show top notes as normal
-      const topNotes=(frag.top||[]).slice(0,3).join(', ');
+      const topNotes=(frag.top||[]).slice(0,3).map(escapeHTML).join(', ');
       if(topNotes)notesHtml=`<div class="frag-picker-item-notes">${topNotes}</div>`;
     }
   } else {
-    const topNotes=(frag.top||[]).slice(0,3).join(', ');
+    const topNotes=(frag.top||[]).slice(0,3).map(escapeHTML).join(', ');
     if(topNotes)notesHtml=`<div class="frag-picker-item-notes">${topNotes}</div>`;
   }
 
@@ -1043,8 +1055,8 @@ function renderCatRow(row,frag,fm,search){
     <div class="scent-row-content">
       <div class="frag-picker-dot" style="background:${fm.color}"></div>
       <div class="frag-picker-info">
-        <div class="frag-picker-item-name">${frag.name}</div>
-        <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
+        <div class="frag-picker-item-name">${escapeHTML(frag.name)}</div>
+        <div class="frag-picker-item-brand">${escapeHTML(frag.brand)} · ${escapeHTML(famLabel)}</div>
         ${notesHtml}
       </div>
     </div>`;
@@ -1138,7 +1150,7 @@ function buildNotes(){
     const card=document.createElement('div');card.className='notes-card';
 
     const header=document.createElement('div');header.className='notes-card-header';
-    header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
+    header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${escapeHTML(fm.label)}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
 
     const cardBody=document.createElement('div');cardBody.className='notes-card-body';
     grouped[fk].forEach(note=>{
@@ -1172,16 +1184,16 @@ function openQuickPeek(frag){
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
   overlay.innerHTML=`
     <div class="quick-peek-card">
-      <div class="dc-name">${frag.name}</div>
-      <div class="dc-brand">${frag.brand}</div>
+      <div class="dc-name">${escapeHTML(frag.name)}</div>
+      <div class="dc-brand">${escapeHTML(frag.brand)}</div>
       <div class="dc-ftag" style="background:${fm.color}">
         <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
-        ${fm.label}
+        ${escapeHTML(fm.label)}
       </div>
       <div class="dc-nlbl" style="margin-top:0">Notes</div>
-      <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${frag.top.join(', ')}</span></div>
-      <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${frag.mid.join(', ')}</span></div>
-      <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${frag.base.join(', ')}</span></div>
+      <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${frag.top.map(escapeHTML).join(', ')}</span></div>
+      <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${frag.mid.map(escapeHTML).join(', ')}</span></div>
+      <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${frag.base.map(escapeHTML).join(', ')}</span></div>
       <div style="display:flex;gap:10px;margin-top:24px">
         <button class="dc-collect-btn" style="flex:1;justify-content:center" onclick="closeQuickPeek();openFragDetail(CAT_MAP['${frag.id}'])">Full details</button>
       </div>
@@ -1902,8 +1914,8 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
   overlay.innerHTML=`<div class="cmp-edu-wrap">
     <div class="cmp-edu-header">
       <div class="cmp-edu-header-left">
-        <div class="cmp-edu-label">${label}</div>
-        <div class="cmp-edu-num">${pct}%</div>
+        <div class="cmp-edu-label">${escapeHTML(label)}</div>
+        <div class="cmp-edu-num">${escapeHTML(pct)}%</div>
       </div>
       <button class="cmp-edu-close" id="cmp-edu-close">✕ Close</button>
     </div>
@@ -1959,11 +1971,11 @@ function renderCompareResults(fa,fb){
     <div id="cmp-sticky-bar">
       <div class="cmp-sticky-slot" data-slot-sticky="a">
         <span class="cmp-sticky-dot" style="background:${ca.accent}"></span>
-        <span class="cmp-sticky-name">${fa.name}</span>
+        <span class="cmp-sticky-name">${escapeHTML(fa.name)}</span>
       </div>
       <span class="cmp-sticky-vs">VS</span>
       <div class="cmp-sticky-slot" data-slot-sticky="b" style="justify-content:flex-end">
-        <span class="cmp-sticky-name">${fb.name}</span>
+        <span class="cmp-sticky-name">${escapeHTML(fb.name)}</span>
         <span class="cmp-sticky-dot" style="background:${cb.accent}"></span>
       </div>
     </div>
@@ -1973,7 +1985,7 @@ function renderCompareResults(fa,fb){
         <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
       </button>
       <div class="cmp-pair-card-right">
-        <div class="cmp-pair-card-verdict">${verdict}</div>
+        <div class="cmp-pair-card-verdict">${escapeHTML(verdict)}</div>
         <div class="cmp-pair-card-scores">
           <button class="cmp-score-card" id="cmp-score-match">
             <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
@@ -1987,7 +1999,7 @@ function renderCompareResults(fa,fb){
                 <div class="cmp-score-meter-tick" style="left:75%"></div>
               </div>
             </div>
-            <div class="cmp-score-range">${_simLabel(matchPct)}</div>
+            <div class="cmp-score-range">${escapeHTML(_simLabel(matchPct))}</div>
             <div class="cmp-score-tap">Tap to learn more ↗</div>
           </button>
           <button class="cmp-score-card" id="cmp-score-layer">
@@ -2002,7 +2014,7 @@ function renderCompareResults(fa,fb){
                 <div class="cmp-score-meter-tick" style="left:75%"></div>
               </div>
             </div>
-            <div class="cmp-score-range">${_layLabel(layerPct)}</div>
+            <div class="cmp-score-range">${escapeHTML(_layLabel(layerPct))}</div>
             <div class="cmp-score-tap">Tap to learn more ↗</div>
           </button>
         </div>
@@ -2305,11 +2317,11 @@ function _fillCard(slot,frag){
   card.setAttribute('aria-label',`${frag.name} by ${frag.brand} — tap to change`);
   card.innerHTML=`
     <div class="cmp-frag-card-fam" style="background:${fc.accent}">
-      <span class="cmp-frag-card-dot" aria-hidden="true"></span>${famLabel}
+      <span class="cmp-frag-card-dot" aria-hidden="true"></span>${escapeHTML(famLabel)}
     </div>
-    <div class="cmp-frag-card-name">${frag.name}</div>
-    <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>
-    ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
+    <div class="cmp-frag-card-name">${escapeHTML(frag.name)}</div>
+    <button class="cmp-frag-card-brand cmp-brand-btn">${escapeHTML(frag.brand)}</button>
+    ${frag.description?`<div class="cmp-frag-card-desc">${escapeHTML(frag.description)}</div>`:''}
     <button class="cmp-card-detail-btn" data-slot="${slot}" aria-label="View details for ${frag.name}">Details ↗</button>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
   card.querySelector('.cmp-card-detail-btn')?.addEventListener('click',e=>{e.stopPropagation();openFragDetail(frag);});
@@ -2324,7 +2336,7 @@ function _resetCard(slot){
   const label=slot==='a'?'Fragrance One':'Fragrance Two';
   card.setAttribute('aria-label',`Select ${label}`);
   card.innerHTML=`
-    <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">${label}</div><div class="cmp-card-empty-hint">Tap to select</div></div>
+    <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">${escapeHTML(label)}</div><div class="cmp-card-empty-hint">Tap to select</div></div>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 }
 
@@ -2549,9 +2561,9 @@ fetch('CHANGELOG.md').then(r=>r.text()).then(md=>{
   const el=document.getElementById('changelog-body');
   // Minimal Markdown → HTML renderer (supports ## h2, ### h3, - lists, nested  - lists, **bold**, `code`, ---)
   function inlineFmt(s){
-    return s
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    return escapeHTML(s)
       .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/&#39;/g, "'") // allow single quotes for text
       .replace(/`([^`]+)`/g,'<code style="font-family:monospace;font-size:.82em;background:var(--g100);padding:1px 4px;border-radius:3px">$1</code>');
   }
   const lines=md.split('\n');
