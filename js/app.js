@@ -1123,23 +1123,36 @@ function updCC(){
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
 function buildNotes(){
   const body=document.getElementById('notes-body');body.innerHTML='';
+
+  const grid = document.createElement('div');
+  grid.className = 'notes-grid';
+
   const grouped={};
   NI.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
   Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
+
   FAM_ORDER.forEach(fk=>{
     if(!grouped[fk]?.length)return;
     const fm=FAM[fk];if(!fm)return;
-    const row=document.createElement('div');row.className='notes-family-row';
-    const left=document.createElement('div');left.className='nf-left';
-    left.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}` ;
-    const right=document.createElement('div');right.className='nf-right';
+
+    const card=document.createElement('div');card.className='notes-card';
+
+    const header=document.createElement('div');header.className='notes-card-header';
+    header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
+
+    const cardBody=document.createElement('div');cardBody.className='notes-card-body';
     grouped[fk].forEach(note=>{
-      const btn=document.createElement('button');btn.className='note-link';btn.textContent=note.name;
-      btn.addEventListener('click',e=>{e.stopPropagation();openNotePopup(note,btn)});
-      right.appendChild(btn);
+      const btn=document.createElement('button');btn.className='note-pill';btn.textContent=note.name;
+      btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
+      cardBody.appendChild(btn);
     });
-    row.appendChild(left);row.appendChild(right);body.appendChild(row);
+
+    card.appendChild(header);
+    card.appendChild(cardBody);
+    grid.appendChild(card);
   });
+
+  body.appendChild(grid);
   document.getElementById('notes-count').textContent=`${NI.length} notes`;
 }
 
