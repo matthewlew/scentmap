@@ -2072,14 +2072,12 @@ mark.note-match {
 
 .cmp-char-dim-bar {
   height: 6px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-micro);
   transition: width var(--dur-standard) var(--ease-spring);
 }
 
 .cmp-char-dim-bar.b {
-  border: 1px dashed;
-  background: transparent !important;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 /* ── Radar v2 ── */

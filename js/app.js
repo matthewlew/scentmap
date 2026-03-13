@@ -1676,7 +1676,7 @@ function renderCharacterSection(fa, fb, caAccent, cbAccent) {
         <div class="cmp-char-dim-desc">${d.desc}</div>
         <div class="cmp-char-dim-track">
           <div class="cmp-char-dim-bar a" style="width:${(valA/1)*100}%; background:${caAccent}"></div>
-          <div class="cmp-char-dim-bar b" style="width:${(valB/1)*100}%; background:${cbAccent}; border-color:${cbAccent}"></div>
+          <div class="cmp-char-dim-bar b" style="width:${(valB/1)*100}%; background:${cbAccent}"></div>
         </div>
       </button>
     `;
