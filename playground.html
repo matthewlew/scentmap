@@ -47,7 +47,7 @@
   }
   .pg-subsection-title {
     font-family: var(--font-sans);
-    font-size: var(--fs-ui);
+    font-size: var(--fs-body);
     font-weight: 600;
     margin: var(--sp-2xl) 0 var(--sp-lg);
     color: var(--text-secondary);
@@ -64,7 +64,7 @@
   }
   .pg-label {
     font-family: var(--font-mono);
-    font-size: var(--fs-caption);
+    font-size: var(--fs-body);
     color: var(--text-tertiary);
     text-transform: uppercase;
     letter-spacing: var(--ls-wide);
@@ -99,7 +99,7 @@
       <p class="pg-desc" style="margin-bottom: var(--sp-lg);">The following hardcoded pixels were found in the CSS and should be consolidated or converted to variables where possible. Note: There are currently <strong>0</strong> hardcoded hex colors!</p>
 
       <div style="background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-lg); padding: var(--sp-lg);">
-        <ul style="font-size: var(--fs-body-sm); color: var(--text-secondary); column-count: 2; column-gap: var(--sp-2xl);">
+        <ul style="font-size: var(--fs-body); color: var(--text-secondary); column-count: 2; column-gap: var(--sp-2xl);">
           <li style="margin-bottom: var(--sp-xs);"><strong>components.css:</strong> ~80 hardcoded pixels.
             <br><em>Mostly small adjustments (1px, 2px, 3px) for optical alignment or fixed geometry items like dots (8px) and structural dividers (1px, 2px, 4px).</em></li>
           <li style="margin-bottom: var(--sp-xs);"><strong>layout.css:</strong> ~15 hardcoded pixels.
@@ -115,15 +115,15 @@
       <div class="pg-grid">
         <div class="pg-item" style="background: var(--bg-primary); padding: var(--sp-lg); border: 1px solid var(--border-standard); border-radius: var(--radius-lg);">
           <strong style="display:block; margin-bottom: var(--sp-sm);">1. Create standard variables for fine-tuning</strong>
-          <p class="text-body-sm text-secondary">Values like 1px, 2px, and 3px are used heavily for optical alignments. We should add `--sp-micro: 2px` or `--sp-1px: 1px` to the spacing scale to formalize this.</p>
+          <p class="text-body text-secondary">Values like 1px, 2px, and 3px are used heavily for optical alignments. We should add `--sp-micro: 2px` or `--sp-1px: 1px` to the spacing scale to formalize this.</p>
         </div>
         <div class="pg-item" style="background: var(--bg-primary); padding: var(--sp-lg); border: 1px solid var(--border-standard); border-radius: var(--radius-lg);">
           <strong style="display:block; margin-bottom: var(--sp-sm);">2. Unify "Dot" components</strong>
-          <p class="text-body-sm text-secondary">There are multiple declarations for 8px/10px/9px dots (e.g., `.cmp-dd-dot`, `.fam-dot`, `.picker-fdot`). Consolidate these into a single `.ui-dot` component with standard sizes.</p>
+          <p class="text-body text-secondary">There are multiple declarations for 8px/10px/9px dots (e.g., `.cmp-dd-dot`, `.fam-dot`, `.picker-fdot`). Consolidate these into a single `.ui-dot` component with standard sizes.</p>
         </div>
         <div class="pg-item" style="background: var(--bg-primary); padding: var(--sp-lg); border: 1px solid var(--border-standard); border-radius: var(--radius-lg);">
           <strong style="display:block; margin-bottom: var(--sp-sm);">3. Standardize fixed sizes</strong>
-          <p class="text-body-sm text-secondary">A few specific numbers keep appearing (44px for touch targets, 16px for radii). We should use standard tokens like `--touch-target-min: 44px` and `--radius-xl: 16px`.</p>
+          <p class="text-body text-secondary">A few specific numbers keep appearing (44px for touch targets, 16px for radii). We should use standard tokens like `--touch-target-min: 44px` and `--radius-xl: 16px`.</p>
         </div>
       </div>
     </section>
@@ -147,28 +147,28 @@
           <div class="text-title">Eau de Parfum</div>
         </div>
         <div class="pg-item">
-          <span class="pg-label">.text-ui / var(--fs-ui)</span>
-          <div class="text-ui">Search fragrances...</div>
+          <span class="pg-label">.text-body / var(--fs-body)</span>
+          <div class="text-body">Search fragrances...</div>
         </div>
         <div class="pg-item">
           <span class="pg-label">.text-body / var(--fs-body)</span>
           <div class="text-body">A warm, spicy and woody scent inspired by the Sahara.</div>
         </div>
         <div class="pg-item">
-          <span class="pg-label">.text-body-sm / var(--fs-body-sm)</span>
-          <div class="text-body-sm">Created by Andy Tauer in 2005.</div>
+          <span class="pg-label">.text-body / var(--fs-body)</span>
+          <div class="text-body">Created by Andy Tauer in 2005.</div>
         </div>
         <div class="pg-item">
-          <span class="pg-label">.text-meta / var(--fs-meta)</span>
-          <div class="text-meta">10 items • Woody Spicy</div>
+          <span class="pg-label">.text-body / var(--fs-body)</span>
+          <div class="text-body">10 items • Woody Spicy</div>
         </div>
         <div class="pg-item">
-          <span class="pg-label">.text-label / var(--fs-label)</span>
-          <div class="text-label">Top Notes</div>
+          <span class="pg-label">.text-body / var(--fs-body)</span>
+          <div class="text-body">Top Notes</div>
         </div>
         <div class="pg-item">
-          <span class="pg-label">.text-caption / var(--fs-caption)</span>
-          <div class="text-caption">Coriander, Cumin, Petitgrain</div>
+          <span class="pg-label">.text-body / var(--fs-body)</span>
+          <div class="text-body">Coriander, Cumin, Petitgrain</div>
         </div>
       </div>
 
