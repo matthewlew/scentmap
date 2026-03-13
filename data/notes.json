@@ -927,266 +927,266 @@
   {
     "name": "Herbs",
     "family": "herbal",
-    "desc": "A herbal note."
+    "desc": "A broad category of aromatic green plants that lend a fresh, savory, and sometimes medicinal edge to a fragrance."
   },
   {
     "name": "Citrus",
     "family": "citrus",
-    "desc": "A citrus note."
+    "desc": "The sparkling, acidic zest that defines colognes and fresh top notes. Ranges from tart lemon to sweet mandarin."
   },
   {
     "name": "White Flowers",
     "family": "floral",
-    "desc": "A floral note."
+    "desc": "A narcotic, heady bouquet often dominated by jasmine, tuberose, and orange blossom. Rich, carnal, and intensely floral."
   },
   {
     "name": "Lime",
     "family": "citrus",
-    "desc": "A citrus note."
+    "desc": "Sharper, greener, and more abrasive than lemon, lime adds a piercing, tropical acidity to top notes."
   },
   {
     "name": "Green Notes",
     "family": "green",
-    "desc": "A green note."
+    "desc": "Captures the scent of crushed leaves, snapped stems, and freshly cut grass. Adds a crisp, natural, and sometimes bitter vibrancy."
   },
   {
     "name": "Mahogany",
     "family": "woods",
-    "desc": "A woods note."
+    "desc": "A deep, rich, and slightly spicy wood note that grounds a fragrance with a sense of antique warmth and structural rigidity."
   },
   {
     "name": "Maple",
     "family": "woods",
-    "desc": "A woods note."
+    "desc": "A sweet, resinous, and subtly woody note that mimics the sugary sap of the maple tree, adding a dark gourmand edge."
   },
   {
     "name": "Galbanum",
     "family": "green",
-    "desc": "A green note."
+    "desc": "An intensely green, bitter resin that smells like snapped stems and cold earth. A classic ingredient in vintage green chypres."
   },
   {
     "name": "Bayou Grass",
     "family": "green",
-    "desc": "A green note."
+    "desc": "An atmospheric, swampy green note that evokes damp earth, standing water, and wild, humid vegetation."
   },
   {
     "name": "Marine",
     "family": "aquatic",
-    "desc": "A aquatic note."
+    "desc": "The scent of the sea breeze, sea salt, and ozone. Often achieved through the synthetic molecule Calone, bringing a watery freshness."
   },
   {
     "name": "Wild Grass",
     "family": "green",
-    "desc": "A green note."
+    "desc": "A dry, hay-like, and slightly sweet green note that evokes sun-baked fields and untamed meadows."
   },
   {
     "name": "Spices",
     "family": "spicy",
-    "desc": "A spicy note."
+    "desc": "A warming blend of piquant aromatics like clove, cinnamon, and nutmeg that add heat, texture, and exoticism to a composition."
   },
   {
     "name": "Black Truffle",
     "family": "earthy",
-    "desc": "A earthy note."
+    "desc": "An intensely earthy, loamy, and almost fungal note that brings an umami-rich, dark decadence to luxury fragrances."
   },
   {
     "name": "Berry",
     "family": "fruity",
-    "desc": "A fruity note."
+    "desc": "A jammy, sweet, and tart fruity note that can range from the bright acidity of raspberry to the dark syrup of blackberry."
   },
   {
     "name": "White Suede",
     "family": "leather",
-    "desc": "A leather note."
+    "desc": "A softer, more velvety expression of leather. It replaces the harsh, animalic tar of classic leather with a clean, plush, skin-like musk."
   },
   {
     "name": "Litchi",
     "family": "fruity",
-    "desc": "A fruity note."
+    "desc": "A watery, rosy, and sweet tropical fruit note that bridges the gap between fresh florals and juicy gourmands."
   },
   {
     "name": "Sea Notes",
     "family": "aquatic",
-    "desc": "A aquatic note."
+    "desc": "An ozonic, salty accord that replicates the brisk, iodine-rich scent of ocean spray and coastal air."
   },
   {
     "name": "Blood Mandarin",
     "family": "citrus",
-    "desc": "A citrus note."
+    "desc": "A juicier, sweeter, and slightly more tart variation of classic mandarin orange, adding a vibrant, sunny succulence."
   },
   {
     "name": "Tonka Bean",
     "family": "gourmand",
-    "desc": "A gourmand note."
+    "desc": "A complex, almond-like seed that smells of sweet hay, vanilla, and cherry tobacco. A cornerstone of the fougère and gourmand families."
   },
   {
     "name": "Quince",
     "family": "fruity",
-    "desc": "A fruity note."
+    "desc": "A tart, astringent fruit note that falls somewhere between a green apple and a pear, with a slight rosy floral nuance."
   },
   {
     "name": "Virginia Cedar",
     "family": "woods",
-    "desc": "A woods note."
+    "desc": "A dry, pencil-shavings wood note that is cleaner and sharper than its Atlas counterpart, providing excellent structural support."
   },
   {
     "name": "Bitter Orange",
     "family": "citrus",
-    "desc": "A citrus note."
+    "desc": "The tart, zesty, and slightly green citrus fruit from which neroli and orange blossom are derived. Less sweet than standard orange."
   },
   {
     "name": "White Chocolate",
     "family": "gourmand",
-    "desc": "A gourmand note."
+    "desc": "A creamy, buttery, and vanilla-heavy gourmand note that adds a smooth, lactonic sweetness without the dark cocoa bitterness."
   },
   {
     "name": "Blackcurrant",
     "family": "fruity",
-    "desc": "A fruity note."
+    "desc": "A tart, fruity, and slightly sulfurous note. Can smell incredibly jammy or sharply green (like a tomato leaf) depending on the extraction."
   },
   {
     "name": "Sichuan Pepper",
     "family": "spicy",
-    "desc": "A spicy note."
+    "desc": "A sparkling, citrusy, and metallic spice note that adds a cold, tingling effect rather than the deep heat of black pepper."
   },
   {
     "name": "Ambroxan",
     "family": "musk",
-    "desc": "A musk note."
+    "desc": "A synthetic marvel that imparts a dry, radiant, and skin-like ambergris facet. It gives modern fragrances a diffusive, velvety warmth."
   },
   {
     "name": "Melon",
     "family": "fruity",
-    "desc": "A fruity note."
+    "desc": "A watery, sweet, and ozonic fruit note, heavily utilized in 90s aquatic fragrances to provide a fresh, transparent sweetness."
   },
   {
     "name": "Lily-of-the-Valley",
     "family": "floral",
-    "desc": "A floral note."
+    "desc": "A delicate, soapy, and green floral note (muguet). It is entirely synthetic in perfumery, as the flower yields no essential oil."
   },
   {
     "name": "Apricot",
     "family": "fruity",
-    "desc": "A fruity note."
+    "desc": "A soft, fuzzy, and sweet fruit note with prominent floral and osmanthus-like nuances. Often adds a velvety texture to compositions."
   },
   {
     "name": "Chamomile",
     "family": "herbal",
-    "desc": "A herbal note."
+    "desc": "A soothing, herbaceous, and slightly apple-like floral note that adds a rustic, tea-like serenity."
   },
   {
     "name": "Hawthorn",
     "family": "floral",
-    "desc": "A floral note."
+    "desc": "A powdery, almond-like, and slightly animalic floral note that bridges the gap between delicate blossoms and musky warmth."
   },
   {
     "name": "Carnation",
     "family": "spicy",
-    "desc": "A spicy note."
+    "desc": "A spicy, clove-like floral note that brings a vintage, slightly powdery heat to classic floral and oriental compositions."
   },
   {
     "name": "Woody Notes",
     "family": "woods",
-    "desc": "A woods note."
+    "desc": "A general structural accord that provides a dry, sturdy backbone to a fragrance, often blending cedar, vetiver, and synthetic timbers."
   },
   {
     "name": "Resins",
     "family": "amber",
-    "desc": "A amber note."
+    "desc": "Sticky, balsamic tree saps like frankincense and myrrh that provide a rich, sweet, and incense-like base."
   },
   {
     "name": "Turkish Rose",
     "family": "floral",
-    "desc": "A floral note."
+    "desc": "A deeply jammy, rich, and spicy rose note, often considered heavier and more luxurious than its lighter, greener counterparts."
   },
   {
     "name": "Brazilian Rosewood",
     "family": "woods",
-    "desc": "A woods note."
+    "desc": "A rich, floral, and slightly spicy wood note (palisander) that adds a polished, antique-furniture elegance."
   },
   {
     "name": "Caraway",
     "family": "spicy",
-    "desc": "A spicy note."
+    "desc": "A warm, earthy, and slightly anise-like spice that can add a savory, rye-bread nuance or a sweaty, human warmth."
   },
   {
     "name": "Orris Root",
     "family": "earthy",
-    "desc": "A earthy note."
+    "desc": "The dried root of the iris flower. One of the most expensive materials in perfumery, yielding a cold, powdery, and earthy violet-like scent."
   },
   {
     "name": "Carrot Seeds",
     "family": "earthy",
-    "desc": "A earthy note."
+    "desc": "An earthy, powdery, and slightly sweet note that beautifully bridges the gap between root vegetables and powdery iris."
   },
   {
     "name": "Italian Tangerine",
     "family": "citrus",
-    "desc": "A citrus note."
+    "desc": "A sweet, bright, and honeyed citrus note that lacks the sharp acidity of lemon, providing a sunny, joyous opening."
   },
   {
     "name": "Egyptian Jasmine",
     "family": "floral",
-    "desc": "A floral note."
+    "desc": "An intensely sweet, narcotic, and slightly fruity white floral note that is warmer and more sensual than Grasse jasmine."
   },
   {
     "name": "Linen",
     "family": "aldehyde",
-    "desc": "A aldehyde note."
+    "desc": "A clean, aldehydic, and musky accord designed to replicate the scent of freshly washed and sun-dried textiles."
   },
   {
     "name": "Frangipani",
     "family": "floral",
-    "desc": "A floral note."
+    "desc": "A lush, tropical, and creamy white floral note that smells of peaches, vanilla, and exotic beaches."
   },
   {
     "name": "Bourbon Vanilla",
     "family": "gourmand",
-    "desc": "A gourmand note."
+    "desc": "A dark, woody, and boozy vanilla extract from Madagascar, far richer and more complex than synthetic vanillin."
   },
   {
     "name": "Tarragon",
     "family": "herbal",
-    "desc": "A herbal note."
+    "desc": "A green, herbaceous, and intensely anise-like leaf that adds a sharp, bittersweet aromatic edge."
   },
   {
     "name": "Pine Needles",
     "family": "woods",
-    "desc": "A woods note."
+    "desc": "A sharp, resinous, and highly aromatic green note that immediately evokes cold, high-altitude coniferous forests."
   },
   {
     "name": "Fir",
     "family": "woods",
-    "desc": "A woods note."
+    "desc": "A sweet, jammy, and balsamic coniferous wood note, often richer and less harsh than straight pine."
   },
   {
     "name": "Guava",
     "family": "fruity",
-    "desc": "A fruity note."
+    "desc": "A pungent, musky, and intensely sweet tropical fruit note that adds a humid, exotic succulence."
   },
   {
     "name": "Costus",
     "family": "animalic",
-    "desc": "A animalic note."
+    "desc": "An intensely animalic root that smells of unwashed hair and wet dog. Used in trace amounts to add a dirty, human warmth to leathers."
   },
   {
     "name": "Anise",
     "family": "spicy",
-    "desc": "A spicy note."
+    "desc": "A sweet, licorice-like spice note that adds a cold, medicinal, and highly aromatic facet."
   },
   {
     "name": "Spicy Notes",
     "family": "spicy",
-    "desc": "A spicy note."
+    "desc": "A blended accord of hot and cold spices (like pepper, cardamom, and clove) used to invigorate and add texture to a composition."
   },
   {
     "name": "White Pepper",
     "family": "spicy",
-    "desc": "A spicy note."
+    "desc": "A more refined, earthy, and slightly musty spice note compared to black pepper, offering heat without the harsh bite."
   },
   {
     "name": "Truffle",
     "family": "earthy",
-    "desc": "A earthy note."
+    "desc": "An earthy, fungal, and deeply umami note that adds a dark, mysterious, and gastronomic richness to a fragrance base."
   }
 ]
