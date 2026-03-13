@@ -65,8 +65,10 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --font-mono:    "SF Mono", Menlo, monospace;
   --font-display: "Archivo Black", sans-serif;
 
-  /* Font sizes (Strict 3-style scale. Min: 16px / 1rem) */
+  /* Font sizes (Strict 5-style scale. Min: 14px / 0.875rem) */
+  --fs-meta:      0.875rem;  /* 14px */
   --fs-body:      1rem;      /* 16px */
+  --fs-ui:        1.125rem;  /* 18px */
   --fs-title:     1.5rem;    /* 24px */
   --fs-heading:   2rem;      /* 32px */
 
@@ -199,9 +201,19 @@ html, body {
 
 /* Typography utilities */
 
+.text-meta {
+  font-size: var(--fs-meta);
+  line-height: var(--lh-normal);
+}
+
 .text-body {
   font-size: var(--fs-body);
   line-height: var(--lh-normal);
+}
+
+.text-ui {
+  font-size: var(--fs-ui);
+  line-height: var(--lh-tight);
 }
 
 .text-title {
