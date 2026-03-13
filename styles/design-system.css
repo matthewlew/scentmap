@@ -27,13 +27,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --stone:   #EAE6DE;
   --resin:   #8C5E30;
 
-  /* Grayscale 8-step (Adjusted for AA Contrast on #F5F2EC) */
+  /* Grayscale 8-step */
   --g700:    #2E2A22;
-  --g600:    #464034;
-  --g500:    #564E40;
-  --g450:    #655B4B; /* ~5.2:1 contrast */
-  --g400:    #716654; /* ~4.5:1 contrast */
-  --g300:    #A8A087; /* Decorative only, ~2.5:1 */
+  --g600:    #50493C;
+  --g500:    #6B6356;
+  --g450:    #7C7468;
+  --g400:    #9A9180;
+  --g300:    #C4BC9E;
   --g200:    #DDD8CE;
   --g100:    #EAE6DE;
 
@@ -65,12 +65,18 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --font-mono:    "SF Mono", Menlo, monospace;
   --font-display: "Archivo Black", sans-serif;
 
-  /* Font sizes (Strict 5-style scale. Min: 14px / 0.875rem) */
-  --fs-meta:      0.875rem;  /* 14px */
-  --fs-body:      1rem;      /* 16px */
-  --fs-ui:        1.125rem;  /* 18px */
-  --fs-title:     1.5rem;    /* 24px */
-  --fs-heading:   2rem;      /* 32px */
+  /* Font sizes (base: 16px desktop / 17px tablet / 18px mobile) */
+  --fs-caption:   0.6rem;    /* 9.6–10.8px */
+  --fs-label:     0.65rem;   /* 10.4–11.7px */
+  --fs-meta:      0.72rem;   /* 11.5–13px */
+  --fs-body-sm:   0.78rem;   /* 12.5–14px */
+  --fs-body:      0.875rem;  /* 14–15.8px */
+  --fs-ui:        1rem;      /* 16–18px */
+  --fs-title:     1.4rem;    /* 22.4–25.2px */
+  --fs-display:   1.6rem;    /* 25.6–28.8px */
+  --fs-heading:   2rem;      /* 32–36px */
+  --fs-score:     2.8rem;    /* 44.8–50.4px */
+  --fs-hero:      3rem;      /* 48–54px */
 
   /* Line heights */
   --lh-tight:     1;
@@ -200,33 +206,47 @@ html, body {
 /* ── 11. SEMANTIC UTILITY CLASSES ── */
 
 /* Typography utilities */
+.text-caption {
+  font-size: var(--fs-caption);
+}
+
+.text-label {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
 
 .text-meta {
   font-size: var(--fs-meta);
-  line-height: var(--lh-normal);
+}
+
+.text-body-sm {
+  font-size: var(--fs-body-sm);
 }
 
 .text-body {
   font-size: var(--fs-body);
-  line-height: var(--lh-normal);
 }
 
 .text-ui {
   font-size: var(--fs-ui);
-  line-height: var(--lh-tight);
 }
 
 .text-title {
   font-size: var(--fs-title);
   font-weight: 600;
-  line-height: var(--lh-tight);
+}
+
+.text-display {
+  font-size: var(--fs-display);
+  font-weight: 600;
 }
 
 .text-heading {
   font-size: var(--fs-heading);
   font-weight: 900;
   font-family: var(--font-display);
-  line-height: var(--lh-tight);
 }
 
 /* ── Keyboard focus ring ──

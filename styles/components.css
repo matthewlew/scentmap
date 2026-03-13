@@ -33,7 +33,7 @@
 }
 
 .tab {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 500;
   color: var(--text-secondary);
   background: none;
@@ -67,7 +67,7 @@
 
 .cmp-hero-title {
   font-family: var(--font-display);
-  font-size: var(--fs-heading);
+  font-size: var(--fs-hero);
   line-height: var(--lh-tight);
   color: var(--text-primary);
   letter-spacing: var(--ls-tight);
@@ -93,7 +93,7 @@
 
 .cmp-picker-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -191,7 +191,7 @@
   border: none;
   cursor: pointer;
   color: var(--text-tertiary);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   padding: var(--sp-xs);
   transition: color var(--dur-fast) var(--ease-spring);
 }
@@ -221,7 +221,7 @@
 
 .cmp-frag-fam-chip {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -238,7 +238,7 @@
 }
 
 .cmp-frag-brand {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-secondary);
 }
 
@@ -257,12 +257,20 @@
 /* Section label */
 .cmp-section-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-md);
+}
+
+.cmp-section-desc {
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  line-height: var(--lh-relaxed);
+  margin-bottom: var(--sp-xl);
+  max-width: 600px;
 }
 
 /* Notes grid */
@@ -289,7 +297,7 @@
 
 .cmp-notes-col-head {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -304,7 +312,7 @@
 }
 
 .cmp-note-layer {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   padding: 1px var(--sp-xs);
   border-radius: var(--radius-micro);
@@ -314,11 +322,11 @@
 }
 
 .cmp-note-name {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
 }
 
 .cmp-notes-empty {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-tertiary);
 }
 
@@ -344,7 +352,7 @@
 }
 
 .cmp-radar-label {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -362,7 +370,7 @@
 }
 
 .cmp-metric-name {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -456,7 +464,7 @@
 
 .cmp-sug-score {
   margin-left: auto;
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -476,7 +484,7 @@
   display: flex;
   align-items: center;
   gap: var(--sp-xs);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-secondary);
   background: none;
   border: none;
@@ -496,7 +504,7 @@
 }
 
 .detail-close-btn {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-secondary);
   background: none;
   border: none;
@@ -532,7 +540,7 @@
 
 .dc-name {
   font-family: var(--font-display);
-  font-size: var(--fs-heading);
+  font-size: var(--fs-display);
   line-height: 1.15;
   letter-spacing: var(--ls-tight);
   margin-bottom: var(--sp-xs);
@@ -540,7 +548,7 @@
 
 .dc-brand {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -550,7 +558,7 @@
 
 .dc-nlbl {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -571,7 +579,7 @@
 
 .dc-nt {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -582,7 +590,7 @@
 }
 
 .dc-nv {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--g600);
   line-height: 1.5;
 }
@@ -601,7 +609,7 @@
   align-items: center;
   gap: var(--sp-xs);
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -613,7 +621,7 @@
 
 .dc-slbl {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -640,7 +648,7 @@
 }
 
 .dc-description {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--g600);
   line-height: 1.65;
   margin-bottom: var(--sp-xl);
@@ -658,7 +666,7 @@
   align-items: center;
   gap: var(--sp-xs);
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.03em;
   padding: var(--sp-xs) var(--sp-md);
@@ -685,14 +693,14 @@
 }
 
 .dc-collect-icon {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   line-height: 1;
 }
 
 /* Compare CTAs in detail panel */
 .dc-cmp-cta-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -736,7 +744,7 @@
 }
 
 .dc-cmp-btn-name {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 500;
   color: var(--text-primary);
   white-space: nowrap;
@@ -753,7 +761,7 @@
 
 .dc-cmp-btn-vs {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 600;
   color: var(--text-tertiary);
   letter-spacing: 0.04em;
@@ -761,7 +769,7 @@
 }
 
 .dc-cmp-btn-arrow {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-tertiary);
   flex-shrink: 0;
   transition: color var(--dur-fast) var(--ease-spring);
@@ -774,7 +782,7 @@
 /* Similar shelf */
 .dc-sim-lbl {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -830,7 +838,7 @@
 }
 
 .dc-sim-name {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 500;
   color: var(--text-primary);
   line-height: 1.3;
@@ -853,7 +861,7 @@
 
 .dc-sim-state {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 600;
   letter-spacing: 0.01em;
   padding: 2px var(--sp-sm);
@@ -869,7 +877,7 @@
 /* Discovery badges */
 .dc-badge {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 600;
   letter-spacing: 0.01em;
   padding: 2px var(--sp-sm);
@@ -922,7 +930,7 @@
 }
 
 .rlc-sym {
-  font-size: var(--fs-heading);
+  font-size: var(--fs-display);
   margin-bottom: var(--sp-sm);
 }
 
@@ -937,7 +945,7 @@
 }
 
 .rlc-desc {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-secondary);
   line-height: 1.45;
   margin-bottom: var(--sp-sm);
@@ -945,7 +953,7 @@
 
 .rlc-count {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -960,7 +968,7 @@
   border: 1px solid var(--border-standard);
   border-radius: var(--radius);
   background: var(--bg-primary);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-primary);
   font-family: inherit;
   transition: border-color var(--dur-fast) var(--ease-spring);
@@ -985,7 +993,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-secondary);
   padding: 0 var(--sp-xs);
   display: none;
@@ -1101,7 +1109,7 @@
   justify-content: center;
   padding: 0 16px;
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -1200,7 +1208,7 @@
 }
 
 .s-sym {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-tertiary);
   line-height: var(--lh-tight);
   position: relative;
@@ -1271,12 +1279,12 @@
 }
 
 .nf-desc {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   padding-left: var(--sp-lg);
 }
 
 .note-link {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-primary);
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -1325,7 +1333,7 @@
 }
 
 .changelog-body h3 {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--g600);
@@ -1381,7 +1389,7 @@
 
 .frag-sb-head {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -1397,7 +1405,7 @@
 
 .frag-sb-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--text-secondary);
@@ -1431,7 +1439,7 @@
   text-align: left;
   justify-content: flex-start;
   padding: var(--sp-xs) var(--sp-sm);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
 }
 
 .frag-main {
@@ -1508,7 +1516,7 @@
 
 .brand-count-chip {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 500;
   color: var(--text-tertiary);
   letter-spacing: var(--ls-normal);
@@ -1522,7 +1530,7 @@
 }
 
 .brand-c {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   color: var(--text-tertiary);
   letter-spacing: 0.01em;
 }
@@ -1531,7 +1539,7 @@
   padding: var(--sp-3xl) var(--sp-lg);
   text-align: center;
   color: var(--text-tertiary);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
 }
 
 /* Catalog row inner content */
@@ -1543,7 +1551,7 @@
 }
 
 .frag-picker-item-name {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 500;
   color: var(--text-primary);
   line-height: 1.2;
@@ -1567,7 +1575,7 @@
 }
 
 .frag-picker-item-notes {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   color: var(--text-tertiary);
   margin-top: 2px;
   white-space: nowrap;
@@ -1599,14 +1607,14 @@ mark.note-match {
 }
 
 .dc-desc {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--g600);
   line-height: 1.65;
   margin: var(--sp-sm) 0 var(--sp-md);
 }
 
 .dc-roles-lbl {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--text-secondary);
@@ -1628,7 +1636,7 @@ mark.note-match {
 .cmp-picker-label-txt {
   flex: 1;
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -1641,8 +1649,13 @@ mark.note-match {
   margin-bottom: var(--sp-3xl);
 }
 
-.cmp-frag-card {
+.cmp-card-col {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cmp-frag-card {
   position: relative;
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--border-standard);
@@ -1654,6 +1667,24 @@ mark.note-match {
   display: flex;
   flex-direction: column;
   background: var(--bg-primary);
+  flex: 1;
+}
+
+.cmp-out-detail-btn {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: var(--sp-sm) 0 0;
+  transition: color var(--dur-fast) var(--ease-spring);
+}
+
+.cmp-out-detail-btn:hover {
+  color: var(--text-primary);
 }
 
 .cmp-frag-card:hover {
@@ -1671,7 +1702,7 @@ mark.note-match {
 }
 
 .cmp-card-empty-lbl {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 600;
   color: var(--text-tertiary);
 }
@@ -1701,7 +1732,7 @@ mark.note-match {
   gap: var(--sp-xs);
   padding: var(--sp-xs) var(--sp-md);
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -1742,27 +1773,6 @@ mark.note-match {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-}
-
-.cmp-card-detail-btn {
-  position: absolute;
-  top: var(--sp-sm);
-  right: var(--sp-sm);
-  background: none;
-  border: none;
-  padding: 2px 0;
-  font-size: var(--fs-meta);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  color: var(--text-tertiary);
-  cursor: pointer;
-  transition: color var(--dur-fast) var(--ease-spring);
-  z-index: 2;
-  letter-spacing: 0.01em;
-}
-
-.cmp-card-detail-btn:hover {
-  color: var(--text-primary);
 }
 
 /* ── Sticky bar ── */
@@ -1821,7 +1831,7 @@ mark.note-match {
 }
 
 .cmp-sticky-name {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -1830,7 +1840,7 @@ mark.note-match {
 
 .cmp-sticky-vs {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--text-tertiary);
@@ -1892,7 +1902,7 @@ mark.note-match {
 }
 
 .cmp-pair-card-verdict {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-secondary);
   line-height: var(--lh-normal);
   padding: var(--sp-sm) 0 var(--sp-md);
@@ -1928,14 +1938,14 @@ mark.note-match {
 
 .cmp-score-pct {
   font-family: var(--font-display);
-  font-size: var(--fs-heading);
+  font-size: var(--fs-score);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
 }
 
 .cmp-score-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -1995,21 +2005,89 @@ mark.note-match {
   font-family: var(--font-sans);
 }
 
+/* ── Character Breakdown ── */
+
+.cmp-character-section-wrapper {
+  margin-bottom: var(--sp-3xl);
+}
+
+.cmp-character-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xl);
+  margin-bottom: var(--sp-xl);
+}
+
+.cmp-character-left,
+.cmp-character-right {
+  flex: 1;
+}
+
+.cmp-character-right {
+  margin-top: var(--sp-md);
+}
+
+.cmp-character-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-lg);
+}
+
+.cmp-char-dim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.cmp-char-dim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.cmp-char-dim-name {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cmp-char-dim-compare {
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+}
+
+.cmp-char-dim-desc {
+  font-size: var(--fs-meta);
+  color: var(--text-tertiary);
+  line-height: var(--lh-relaxed);
+}
+
+.cmp-char-dim-track {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.cmp-char-dim-bar {
+  height: 6px;
+  border-radius: var(--radius-sm);
+  transition: width var(--dur-standard) var(--ease-spring);
+}
+
+.cmp-char-dim-bar.b {
+  border: 1px dashed;
+  background: transparent !important;
+  margin-top: 1px;
+}
+
 /* ── Radar v2 ── */
 
 .cmp-radar-v2 {
   margin-bottom: 0;
 }
 
-.cmp-radar-v2-label {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  font-weight: 700;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  margin-bottom: var(--sp-sm);
-}
 
 .cmp-radar-v2-wrap svg {
   width: 100%;
@@ -2052,7 +2130,7 @@ mark.note-match {
 
 .cmp-scatter-v2-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2075,7 +2153,7 @@ mark.note-match {
 
 .cmp-notes-v2-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2095,7 +2173,7 @@ mark.note-match {
 
 .cmp-grid-col-head {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2155,7 +2233,7 @@ mark.note-match {
 
 .cmp-grid-layer-lbl {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2207,7 +2285,7 @@ button.cmp-note-pill:hover {
 
 .cmp-sug-v2-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2223,7 +2301,7 @@ button.cmp-note-pill:hover {
 
 .cmp-sug-col-head {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2266,7 +2344,7 @@ button.cmp-note-pill:hover {
 }
 
 .cmp-sug-card-name {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 600;
   letter-spacing: -0.01em;
 }
@@ -2281,13 +2359,13 @@ button.cmp-note-pill:hover {
   margin-top: var(--sp-xs);
   margin-bottom: var(--sp-sm);
   font-family: var(--font-serif);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--ink);
   line-height: var(--lh-normal);
 }
 
 .cmp-sug-card-fam {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-family: var(--font-sans);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
@@ -2296,7 +2374,7 @@ button.cmp-note-pill:hover {
 }
 
 .cmp-sug-card-notes {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   color: var(--text-tertiary);
   white-space: nowrap;
   overflow: hidden;
@@ -2396,7 +2474,7 @@ button.cmp-note-pill:hover {
 
 .cmp-edu-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2415,7 +2493,7 @@ button.cmp-note-pill:hover {
   border: 1px solid var(--border-standard);
   border-radius: var(--radius);
   padding: var(--sp-xs) var(--sp-sm);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-family: var(--font-sans);
   cursor: pointer;
   color: var(--text-secondary);
@@ -2438,7 +2516,7 @@ button.cmp-note-pill:hover {
 }
 
 .cmp-edu-intro {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-secondary);
   margin-bottom: var(--sp-lg);
   line-height: var(--lh-normal);
@@ -2461,14 +2539,6 @@ button.cmp-note-pill:hover {
 
 .cmp-edu-card-title {
   font-size: var(--fs-body);
-.cmp-edu-quad.highlight {
-  border-color: var(--border-strong);
-  background: var(--bg-secondary);
-}
-
-.cmp-edu-quad-tag {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
   font-weight: 700;
   margin-bottom: var(--sp-xs);
   color: var(--text-primary);
@@ -2479,10 +2549,6 @@ button.cmp-note-pill:hover {
   color: var(--text-secondary);
   line-height: var(--lh-normal);
   margin-bottom: var(--sp-md);
-.cmp-edu-quad-title {
-  font-size: var(--fs-body);
-  font-weight: 700;
-  margin-bottom: var(--sp-xs);
 }
 
 .cmp-edu-card-notes {
@@ -2543,7 +2609,7 @@ button.cmp-note-pill:hover {
 
 .house-detail-name {
   font-family: var(--font-display);
-  font-size: var(--fs-heading);
+  font-size: var(--fs-display);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
   margin-bottom: var(--sp-xs);
@@ -2551,7 +2617,7 @@ button.cmp-note-pill:hover {
 
 .house-detail-count {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2631,7 +2697,7 @@ button.cmp-note-pill:hover {
 
 .frag-picker-sort-label {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   color: var(--text-tertiary);
   white-space: nowrap;
@@ -2653,7 +2719,7 @@ button.cmp-note-pill:hover {
   position: relative;
   z-index: 1;
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--text-secondary);
@@ -2700,7 +2766,7 @@ button.cmp-note-pill:hover {
 
 .frag-picker-col-lbl {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2719,7 +2785,7 @@ button.cmp-note-pill:hover {
   border: 1px solid var(--border-standard);
   border-radius: var(--radius);
   background: var(--bg-primary);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-primary);
   font-family: inherit;
   transition: border-color var(--dur-fast) var(--ease-spring);
@@ -2819,14 +2885,14 @@ button.cmp-note-pill:hover {
 
 .frag-picker-swipe-hint {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   color: var(--text-disabled);
   letter-spacing: 0.01em;
 }
 
 .frag-picker-close {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--text-secondary);
@@ -2952,7 +3018,7 @@ button.cmp-note-pill:hover {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-tertiary);
   padding: 0 0 0 var(--sp-xs);
   line-height: 1;
@@ -2974,7 +3040,7 @@ button.cmp-note-pill:hover {
 
 .np-family {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -2983,7 +3049,7 @@ button.cmp-note-pill:hover {
 }
 
 .np-desc {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--g600);
   line-height: 1.6;
   margin-bottom: var(--sp-xs);
@@ -3027,7 +3093,7 @@ button.cmp-note-pill:hover {
 }
 
 .picker-sub {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-secondary);
   line-height: 1.5;
 }
@@ -3040,7 +3106,7 @@ button.cmp-note-pill:hover {
 }
 
 .picker-hero-sym-empty {
-  font-size: var(--fs-heading);
+  font-size: var(--fs-display);
   opacity: 0.12;
   line-height: 1;
   margin-bottom: var(--sp-sm);
@@ -3050,7 +3116,7 @@ button.cmp-note-pill:hover {
   position: absolute;
   bottom: 16px;
   right: 20px;
-  font-size: var(--fs-heading);
+  font-size: var(--fs-display);
   opacity: 0.06;
   line-height: 1;
   pointer-events: none;
@@ -3065,7 +3131,7 @@ button.cmp-note-pill:hover {
 }
 
 .picker-hero-sec-idx {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   color: var(--text-tertiary);
   font-family: var(--font-sans);
@@ -3075,7 +3141,7 @@ button.cmp-note-pill:hover {
 }
 
 .picker-hero-sec-name {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-secondary);
 }
 
@@ -3085,7 +3151,7 @@ button.cmp-note-pill:hover {
 
 .picker-sec-lbl {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -3126,7 +3192,7 @@ button.cmp-note-pill:hover {
 }
 
 .picker-name-btn {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 600;
   background: none;
   border: none;
@@ -3147,7 +3213,7 @@ button.cmp-note-pill:hover {
 }
 
 .picker-brand-row {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   color: var(--text-tertiary);
   font-family: var(--font-sans);
   letter-spacing: 0.02em;
@@ -3156,7 +3222,7 @@ button.cmp-note-pill:hover {
 
 .picker-order-badge {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--text-tertiary);
@@ -3175,7 +3241,7 @@ button.cmp-note-pill:hover {
 
 .picker-empty {
   padding: var(--sp-3xl) var(--sp-xl);
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   color: var(--text-tertiary);
   text-align: center;
 }
@@ -3221,7 +3287,7 @@ button.cmp-note-pill:hover {
 }
 
 .carousel-card-name {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.3;
@@ -3231,7 +3297,7 @@ button.cmp-note-pill:hover {
 
 .carousel-card-brand {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   color: var(--text-tertiary);
   letter-spacing: 0.02em;
   margin-bottom: var(--sp-sm);
@@ -3257,7 +3323,7 @@ button.cmp-note-pill:hover {
   align-items: center;
   gap: var(--sp-xs);
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.02em;
   padding: var(--sp-xs) var(--sp-sm);
@@ -3291,16 +3357,16 @@ button.cmp-note-pill:hover {
 }
 
 .chip-sym {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
 }
 
 .chip-order {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   opacity: 0.7;
 }
 
 .chip-add {
-  font-size: var(--fs-body);
+  font-size: var(--fs-body-sm);
   opacity: 0.5;
 }
 
@@ -3312,7 +3378,7 @@ button.cmp-note-pill:hover {
 
 .dc-brand-btn {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -3334,7 +3400,7 @@ button.cmp-note-pill:hover {
 
 .dc-eyebrow {
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;

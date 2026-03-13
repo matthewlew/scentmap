@@ -1580,7 +1580,6 @@ function drawCombinedRadarSvg(fa,fb,caAccent,cbAccent){
     return`<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle" font-size="8.5" fill="#6B635699" font-family="DM Sans,system-ui,sans-serif" font-weight="700" letter-spacing="0.04em">${labels[i]}</text>`;
   }).join('');
   return`<div class="cmp-radar-v2">
-    <div class="cmp-radar-v2-label">Character</div>
     <div class="cmp-radar-v2-wrap"><svg viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg">
       ${rings}${axes}
       <polygon points="${polyA}" fill="${caAccent}20" stroke="${caAccent}" stroke-width="1.8" stroke-linejoin="round"/>
@@ -1627,6 +1626,79 @@ function drawScatterSvg(fa,fb,caAccent,cbAccent){
       ${zRects}${zLabels}${grid}${axes}${xLbl}${yLbl}${ptA}${ptB}${lA}${lB}
     </svg></div>
   </div>`;
+}
+
+/* ── Character breakdown section ── */
+function renderCharacterSection(fa, fb, caAccent, cbAccent) {
+  const dims = [
+    { key: 'freshness', label: 'Fresh', desc: 'Bright, uplifting notes like citrus, green leaves, and aquatic elements.' },
+    { key: 'sweetness', label: 'Sweet', desc: 'Sugary, floral, or gourmand notes like vanilla, fruit, and sweet resins.' },
+    { key: 'warmth', label: 'Warm', desc: 'Cozy, deep notes like woods, spices, amber, and musk.' },
+    { key: 'intensity', label: 'Intensity', desc: 'How powerful the scent feels right away (projection/sillage).' },
+    { key: 'complexity', label: 'Depth', desc: 'How many different types of notes evolve over time.' }
+  ];
+
+  const pa = computeProfile(fa);
+  const pb = computeProfile(fb);
+
+  const shortA = fa.name.split(' ').slice(0, 2).join(' ');
+  const shortB = fb.name.split(' ').slice(0, 2).join(' ');
+
+  const breakdownHtml = dims.map(d => {
+    const valA = pa[d.key];
+    const valB = pb[d.key];
+    const diff = Math.abs(valA - valB);
+
+    // Determine which is higher
+    let diffText = '';
+    const adjMap = {
+      'freshness': 'fresher',
+      'sweetness': 'sweeter',
+      'warmth': 'warmer',
+      'intensity': 'more intense',
+      'complexity': 'more complex'
+    };
+
+    if (diff < 0.15) {
+      diffText = 'Equally matched';
+    } else if (valA > valB) {
+      diffText = `${shortA} is ${adjMap[d.key] || d.label.toLowerCase()}`;
+    } else {
+      diffText = `${shortB} is ${adjMap[d.key] || d.label.toLowerCase()}`;
+    }
+
+    return `
+      <button class="cmp-char-dim" data-dim="${d.key}" onclick="openCharacterEdu(COMPARE_A, COMPARE_B, getComputedStyle(document.body).getPropertyValue('--c-brand-a').trim(), getComputedStyle(document.body).getPropertyValue('--c-brand-b').trim()); setTimeout(() => { const el = document.getElementById('dim-${d.key}'); if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, 50);">
+        <div class="cmp-char-dim-header">
+          <div class="cmp-char-dim-name">${d.label}</div>
+          <div class="cmp-char-dim-compare">${diffText}</div>
+        </div>
+        <div class="cmp-char-dim-desc">${d.desc}</div>
+        <div class="cmp-char-dim-track">
+          <div class="cmp-char-dim-bar a" style="width:${(valA/1)*100}%; background:${caAccent}"></div>
+          <div class="cmp-char-dim-bar b" style="width:${(valB/1)*100}%; background:${cbAccent}; border-color:${cbAccent}"></div>
+        </div>
+      </button>
+    `;
+  }).join('');
+
+  return `
+    <div class="cmp-character-section-wrapper">
+      <div class="cmp-section-label">Character</div>
+      <p class="cmp-section-desc">Comparing the five key sensory dimensions. Here&rsquo;s what they mean and how these fragrances measure up.</p>
+
+      <div class="cmp-character-section">
+        <div class="cmp-character-left">
+          ${drawCombinedRadarSvg(fa, fb, caAccent, cbAccent)}
+        </div>
+        <div class="cmp-character-right">
+          <div class="cmp-character-breakdown">
+            ${breakdownHtml}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 /* ── 3×3 notes grid (rows=Top/Mid/Base, cols=A only|Shared|B only) ── */
@@ -1951,9 +2023,6 @@ function renderCompareResults(fa,fb){
     </div>
 
     <div class="cmp-pair-card">
-      <button class="cmp-pair-card-left" id="cmp-score-character">
-        <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
-      </button>
       <div class="cmp-pair-card-right">
         <div class="cmp-pair-card-verdict">${verdict}</div>
         <div class="cmp-pair-card-scores">
@@ -1991,16 +2060,13 @@ function renderCompareResults(fa,fb){
       </div>
     </div>
 
+    ${renderCharacterSection(fa, fb, ca.accent, cb.accent)}
     ${render3x3Notes(fa,fb,ca.accent,cb.accent)}
     ${drawScatterSvg(fa,fb,ca.accent,cb.accent)}
     ${renderSuggestionsV2(fa,fb,ca,cb)}
   `;
 
   // Wire score taps
-  document.getElementById('cmp-score-character')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openCharacterEdu(fa, fb, ca, cb);
-  });
 
   document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
     window.haptic?.('selection');
@@ -2279,6 +2345,7 @@ function _selectFragForSlot(slot,frag){
 
 function _fillCard(slot,frag){
   const card=document.getElementById(`cmp-card-${slot}`);
+  const outBtn=document.getElementById(`cmp-out-detail-${slot}`);
   if(!card)return;
   const fc=getCmpFam(frag.family);
   const famLabel=(FAM[frag.family]||{label:frag.family}).label;
@@ -2292,14 +2359,17 @@ function _fillCard(slot,frag){
     <div class="cmp-frag-card-name">${frag.name}</div>
     <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>
     ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
-    <button class="cmp-card-detail-btn" data-slot="${slot}" aria-label="View details for ${frag.name}">Details ↗</button>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
-  card.querySelector('.cmp-card-detail-btn')?.addEventListener('click',e=>{e.stopPropagation();openFragDetail(frag);});
   card.querySelector('.cmp-brand-btn')?.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
+  if(outBtn){
+    outBtn.style.display='block';
+    outBtn.onclick = () => openFragDetail(frag);
+  }
 }
 
 function _resetCard(slot){
   const card=document.getElementById(`cmp-card-${slot}`);
+  const outBtn=document.getElementById(`cmp-out-detail-${slot}`);
   if(!card)return;
   card.classList.remove('filled');
   card.style.borderColor='';
@@ -2308,6 +2378,7 @@ function _resetCard(slot){
   card.innerHTML=`
     <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">${label}</div><div class="cmp-card-empty-hint">Tap to select</div></div>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+  if(outBtn) outBtn.style.display='none';
 }
 
 function _setupDragAndDropDropzones() {
