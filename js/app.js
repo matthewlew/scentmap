@@ -1641,43 +1641,10 @@ function renderCharacterSection(fa, fb, caAccent, cbAccent) {
   const pa = computeProfile(fa);
   const pb = computeProfile(fb);
 
-  const shortA = fa.name.split(' ').slice(0, 2).join(' ');
-  const shortB = fb.name.split(' ').slice(0, 2).join(' ');
-
-  const breakdownHtml = dims.map(d => {
-    const valA = pa[d.key];
-    const valB = pb[d.key];
-    const diff = Math.abs(valA - valB);
-
-    // Determine which is higher
-    let diffText = '';
-    const adjMap = {
-      'freshness': 'fresher',
-      'sweetness': 'sweeter',
-      'warmth': 'warmer',
-      'intensity': 'more intense',
-      'complexity': 'more complex'
-    };
-
-    if (diff < 0.15) {
-      diffText = 'Equally matched';
-    } else if (valA > valB) {
-      diffText = `${shortA} is ${adjMap[d.key] || d.label.toLowerCase()}`;
-    } else {
-      diffText = `${shortB} is ${adjMap[d.key] || d.label.toLowerCase()}`;
-    }
-
+  const breakdownLinks = dims.map(d => {
     return `
-      <button class="cmp-char-dim" data-dim="${d.key}" onclick="openCharacterEdu(COMPARE_A, COMPARE_B, getComputedStyle(document.body).getPropertyValue('--c-brand-a').trim(), getComputedStyle(document.body).getPropertyValue('--c-brand-b').trim()); setTimeout(() => { const el = document.getElementById('dim-${d.key}'); if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, 50);">
-        <div class="cmp-char-dim-header">
-          <div class="cmp-char-dim-name">${d.label}</div>
-          <div class="cmp-char-dim-compare">${diffText}</div>
-        </div>
-        <div class="cmp-char-dim-desc">${d.desc}</div>
-        <div class="cmp-char-dim-track">
-          <div class="cmp-char-dim-bar a" style="width:${(valA/1)*100}%; background:${caAccent}"></div>
-          <div class="cmp-char-dim-bar b" style="width:${(valB/1)*100}%; background:${cbAccent}"></div>
-        </div>
+      <button class="cmp-char-link-pill" onclick="openCharacterEdu(COMPARE_A, COMPARE_B, {accent: getComputedStyle(document.body).getPropertyValue('--c-brand-a').trim()}, {accent: getComputedStyle(document.body).getPropertyValue('--c-brand-b').trim()}); setTimeout(() => { const el = document.getElementById('dim-${d.key}'); if(el) el.scrollIntoView({behavior: 'smooth', block: 'start'}) }, 50);">
+        ${d.label}
       </button>
     `;
   }).join('');
@@ -1690,11 +1657,12 @@ function renderCharacterSection(fa, fb, caAccent, cbAccent) {
       <div class="cmp-character-section">
         <div class="cmp-character-left">
           ${drawCombinedRadarSvg(fa, fb, caAccent, cbAccent)}
+          <div class="cmp-char-links-row">
+            ${breakdownLinks}
+          </div>
         </div>
         <div class="cmp-character-right">
-          <div class="cmp-character-breakdown">
-            ${breakdownHtml}
-          </div>
+          ${drawScatterSvg(fa, fb, caAccent, cbAccent)}
         </div>
       </div>
     </div>
@@ -1873,7 +1841,7 @@ function openCharacterEdu(fa, fb, ca, cb) {
             const suggestion = getSwapSuggestion(dim.key);
 
             return `
-              <div class="cmp-edu-card">
+              <div class="cmp-edu-card" id="dim-${dim.key}">
                 <div class="cmp-edu-card-title">${dim.label}</div>
                 <div class="cmp-edu-card-desc">${dim.desc}</div>
 
@@ -2062,7 +2030,6 @@ function renderCompareResults(fa,fb){
 
     ${renderCharacterSection(fa, fb, ca.accent, cb.accent)}
     ${render3x3Notes(fa,fb,ca.accent,cb.accent)}
-    ${drawScatterSvg(fa,fb,ca.accent,cb.accent)}
     ${renderSuggestionsV2(fa,fb,ca,cb)}
   `;
 
