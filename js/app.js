@@ -1121,39 +1121,80 @@ function updCC(){
 }
 
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
+let notesSearchQuery = '';
+let notesSortMode = 'family'; // 'family' or 'az'
+
+window.setNotesTab = function(mode) {
+  notesSortMode = mode;
+  document.getElementById('notes-tab-family').classList.toggle('active', mode === 'family');
+  document.getElementById('notes-tab-az').classList.toggle('active', mode === 'az');
+  buildNotes();
+};
+
 function buildNotes(){
   const body=document.getElementById('notes-body');body.innerHTML='';
 
-  const grid = document.createElement('div');
-  grid.className = 'notes-grid';
+  // Filter notes by search query
+  const sq = notesSearchQuery.toLowerCase().trim();
+  const filteredNotes = NI.filter(n => n.name.toLowerCase().includes(sq));
 
-  const grouped={};
-  NI.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
-  Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
+  const countEl = document.getElementById('notes-count');
+  if(countEl) countEl.textContent = `${filteredNotes.length} notes`;
 
-  FAM_ORDER.forEach(fk=>{
-    if(!grouped[fk]?.length)return;
-    const fm=FAM[fk];if(!fm)return;
+  if(filteredNotes.length === 0) {
+    body.innerHTML = `<div style="text-align:center; padding:var(--sp-2xl); color:var(--text-tertiary);">No notes found matching "${notesSearchQuery}"</div>`;
+    return;
+  }
 
-    const card=document.createElement('div');card.className='notes-card';
+  if (notesSortMode === 'az') {
+    const cardBody = document.createElement('div');
+    cardBody.className = 'notes-card-body';
+    cardBody.style.marginTop = 'var(--sp-lg)';
 
-    const header=document.createElement('div');header.className='notes-card-header';
-    header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
+    const sorted = [...filteredNotes].sort((a,b)=>a.name.localeCompare(b.name));
 
-    const cardBody=document.createElement('div');cardBody.className='notes-card-body';
-    grouped[fk].forEach(note=>{
-      const btn=document.createElement('button');btn.className='note-pill';btn.textContent=note.name;
-      btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
+    sorted.forEach(note => {
+      const fm = FAM[note.family] || {color: '#888'};
+      const btn = document.createElement('button');
+      btn.className = 'note-pill';
+      btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}`;
+      btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c,note), note.name); });
       cardBody.appendChild(btn);
     });
+    body.appendChild(cardBody);
 
-    card.appendChild(header);
-    card.appendChild(cardBody);
-    grid.appendChild(card);
-  });
+  } else {
+    // Group by family
+    const grid = document.createElement('div');
+    grid.className = 'notes-grid';
 
-  body.appendChild(grid);
-  document.getElementById('notes-count').textContent=`${NI.length} notes`;
+    const grouped={};
+    filteredNotes.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
+    Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
+
+    FAM_ORDER.forEach(fk=>{
+      if(!grouped[fk]?.length)return;
+      const fm=FAM[fk];if(!fm)return;
+
+      const card=document.createElement('div');card.className='notes-card';
+
+      const header=document.createElement('div');header.className='notes-card-header';
+      header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
+
+      const cardBody=document.createElement('div');cardBody.className='notes-card-body';
+      grouped[fk].forEach(note=>{
+        const btn=document.createElement('button');btn.className='note-pill';btn.textContent=note.name;
+        btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
+        cardBody.appendChild(btn);
+      });
+
+      card.appendChild(header);
+      card.appendChild(cardBody);
+      grid.appendChild(card);
+    });
+
+    body.appendChild(grid);
+  }
 }
 
 /* ── QUICK PEEK ── */
@@ -1293,22 +1334,16 @@ function openMoreSheet(btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const items=[
-    {id:'notes',    icon:'✿', label:'Notes'},
-    {id:'playground',icon:'⚗', label:'Playground'},
     {id:'changelog',icon:'↩', label:'Changelog'},
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:16px 0 8px">
       <div style="font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);padding:0 16px 10px">More</div>
-      ${items.map(it=>{
-        const onclick = it.id === 'playground'
-          ? "window.location.href='playground.html'"
-          : `closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))`;
-        return `<button onclick="${onclick}" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
+      ${items.map(it=>`
+        <button onclick="closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
           <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0">${it.icon}</span>
           ${it.label}
-        </button>`;
-      }).join('')}
+        </button>`).join('')}
     </div>`;
   });
 }
@@ -2488,6 +2523,25 @@ Promise.all([
   BRANDS_MAP=Object.fromEntries(BRANDS.map(b=>[b.name.toLowerCase(),b]));
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
+
+  // Init notes search
+  const notesSearchEl = document.getElementById('notes-search');
+  const notesSearchClearEl = document.getElementById('notes-search-clear');
+  if (notesSearchEl) {
+    notesSearchEl.addEventListener('input', e => {
+      notesSearchQuery = e.target.value;
+      if (notesSearchClearEl) notesSearchClearEl.style.display = notesSearchQuery ? 'block' : 'none';
+      buildNotes();
+    });
+  }
+  if (notesSearchClearEl) {
+    notesSearchClearEl.addEventListener('click', () => {
+      notesSearchQuery = '';
+      if (notesSearchEl) notesSearchEl.value = '';
+      notesSearchClearEl.style.display = 'none';
+      buildNotes();
+    });
+  }
   // Pre-fill a high-layering pair so compare isn't blank on load
   (function(){
     const sample=CAT.slice(0,40);
