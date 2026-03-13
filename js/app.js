@@ -1,5 +1,5 @@
 /* ══ DATA (populated by fetch at startup) ════════════════════════ */
-let ROLES=[], RM={}, CAT=[], CAT_MAP={}, NI=[], NI_MAP={};
+let ROLES=[], RM={}, CAT=[], CAT_MAP={}, NI=[], NI_MAP={}, BRANDS=[], BRANDS_MAP={};
 
 
 const FAM={
@@ -37,8 +37,11 @@ function isWish(id){return gst(id)==='wish'}
 function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
 
 /* Similarity scoring: 0–100 across family, notes, sillage, roles */
+const _simCache={};
 function scoreSimilarity(a,b){
   if(a.id===b.id)return 0;
+  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
+  if(_simCache[k]!==undefined)return _simCache[k];
   const famScore=(FAM_COMPAT[a.family]?.[b.family]??0.5)*40;
   const shBase=a._nBase.filter(n=>b._nBase.includes(n)).length;
   const shMid=a._nMid.filter(n=>b._nMid.includes(n)).length;
@@ -48,18 +51,25 @@ function scoreSimilarity(a,b){
   const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
   const shRoles=a.roles.filter(r=>b.roles.includes(r)).length;
   const roleScore=Math.min(20,shRoles*7);
-  return Math.round(famScore+noteScore+sillScore+roleScore);
+  const result=Math.round(famScore+noteScore+sillScore+roleScore);
+  _simCache[k]=result;
+  return result;
 }
 
 /* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
+const _layCache={};
 function scoreLayeringPair(a,b){
+  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
+  if(_layCache[k]!==undefined)return _layCache[k];
   const famComp=FAM_COMPAT[a.family]?.[b.family]??0.5;
   const famScore=famComp*35;
   const sillDiff=Math.abs(a.sillage-b.sillage);
   const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
   const shared=a._nAll.filter(n=>b._nAll.includes(n)).length;
   const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
-  return Math.round(famScore+sillScore+noteScore);
+  const result=Math.round(famScore+sillScore+noteScore);
+  _layCache[k]=result;
+  return result;
 }
 
 /* Classify how a candidate relates to a source frag for discover shelf */
@@ -198,7 +208,7 @@ function pushSheet(renderFn,title){
       <button class="sheet-close" aria-label="Close">Close</button>
     </div>
     <div class="sheet-content"></div></div>`;
-  const handle=el.querySelector('.sheet-handle');
+  const handle=el.querySelector('.sheet-topbar'); // Drag from the whole topbar
   let ds=null;
   let lastY=null;
   let v=0;
@@ -218,17 +228,21 @@ function pushSheet(renderFn,title){
       el.style.transform=`translateY(${dy}px)`;
     } else {
       // Add friction/resistance when dragging up past fully open
-      const resistDy = dy * 0.2;
+      const resistDy = dy * 0.25;
       el.style.transform=`translateY(${resistDy}px)`;
     }
   },{passive:true});
   handle.addEventListener('touchend',e=>{
     if(ds===null)return;
     const dy=e.changedTouches[0].clientY-ds;
-    el.style.transition='';
-    el.style.transform='';
-    // Dismiss if dragged down far enough OR swiped down quickly
-    if(dy>80 || (dy>10 && v>5)) popSheet();
+    el.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    // Allow momentum dismissal and fast swipe down dismissal
+    if(dy>80 || (dy>10 && v>5) || (e.changedTouches[0].clientY > ds + 20 && e.changedTouches[0].clientY - ds > (Date.now() - (e.changedTouches[0].timeStamp || Date.now())) * 0.5)) {
+      el.style.transform='translateY(100%)';
+      popSheet();
+    } else {
+      el.style.transform='';
+    }
     ds=null;
   });
   el.querySelector('.sheet-close').addEventListener('click',closeAllSheets);
@@ -248,6 +262,7 @@ function popSheet(){
   if(!sheetStack.length)return;
   const top=sheetStack.pop();
   top.classList.remove('visible');
+  top.classList.remove('under');
   top.addEventListener('transitionend',()=>top.remove(),{once:true});
   updateSheetPos();updateSheetBacks();
   if(!sheetStack.length){
@@ -262,7 +277,12 @@ function popSheet(){
 }
 function closeAllSheets(){
   const all=[...sheetStack];sheetStack.length=0;
-  all.forEach(s=>{s.classList.remove('visible');s.addEventListener('transitionend',()=>s.remove(),{once:true})});
+  all.forEach(s=>{
+    s.style.transform='translateY(100%)';
+    s.classList.remove('visible');
+    s.classList.remove('under');
+    s.addEventListener('transitionend',()=>s.remove(),{once:true});
+  });
   document.getElementById('sheet-stack').classList.remove('has-sheets');
   const main = document.querySelector('.col-main');
   if(main) main.removeAttribute('inert');
@@ -298,8 +318,9 @@ function renderFragDetail(container,frag){
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
 
   container.innerHTML=`
+
     <div class="dc-name">${frag.name}</div>
-    <div class="dc-brand">${frag.brand}</div>
+    <button class="dc-brand-btn">${frag.brand}</button>
     <div class="dc-ftag" style="background:${fm.color}">
       <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
       ${fm.label}
@@ -320,6 +341,8 @@ function renderFragDetail(container,frag){
     <p class="dc-notes-caveat">Key materials only — simplified pyramid</p>`;
 
   // Note links
+  const brandBtn=container.querySelector('.dc-brand-btn');
+  if(brandBtn)brandBtn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
   container.querySelectorAll('.note-link').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),note.name)});
   });
@@ -352,35 +375,33 @@ function renderFragDetail(container,frag){
     .sort((a,b)=>b.score-a.score)
     .slice(0,5);
 
+  _setupDetailSwipe(container, frag);
+
   if(scored.length){
     const lbl=document.createElement('div');
     lbl.className='dc-sim-lbl';lbl.textContent='More like this';
     container.appendChild(lbl);
     const shelf=document.createElement('div');shelf.className='dc-sim-shelf';
 
-    function simReason(a,b){
-      const shBase=a.base.filter((n,i)=>b._nBase.includes(a._nBase[i]));
-      if(shBase.length)return`Shared base: ${shBase.slice(0,2).join(', ')}`;
-      if((FAM_COMPAT[a.family]?.[b.family]??0)>=.8)return`${a.family[0].toUpperCase()+a.family.slice(1)} × ${b.family}`;
-      return'';
-    }
-
     scored.forEach(({f})=>{
       const fm2=FAM[f.family]||{color:'#888'};
-      const reason=simReason(frag,f);
+      const reason=getSwapReason(frag,f);
       const badge=classifyDiscovery(frag,f);
       const row=document.createElement('button');row.className='dc-sim-row';
       const namePart=reason
-        ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
-        :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand">${f.brand}</span>`;
+        ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand dc-sim-brand-btn"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
+        :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand dc-sim-brand-btn">${f.brand}</span>`;
       row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
         <span class="dc-sim-info">${namePart}</span>
         ${badge?`<span class="dc-badge ${badge.type}">${badge.label}</span>`:''}`;
-      row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
+      row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       shelf.appendChild(row);
     });
     container.appendChild(shelf);
   }
+  container.querySelectorAll('.dc-sim-brand-btn').forEach(btn => {
+    btn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(btn.textContent.replace(' · ','').trim());});
+  });
 }
 
 /* ── Compare CTAs in detail panel ── */
@@ -446,16 +467,19 @@ function buildLayerSuggestions(frag,container){
     const reason=layerReason(frag,f);
     const row=document.createElement('button');row.className='dc-sim-row';
     const namePart=reason
-      ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
-      :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand">${f.brand}</span>`;
+      ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand dc-sim-brand-btn"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
+      :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand dc-sim-brand-btn">${f.brand}</span>`;
     row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
       <span class="dc-sim-info">${namePart}</span>
       <span class="dc-layer-score-badge">${score}</span>
       <span class="dc-sim-state is-owned">Owned</span>`;
-    row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
+    row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
     shelf.appendChild(row);
   });
   container.appendChild(shelf);
+  container.querySelectorAll('.dc-sim-brand-btn').forEach(btn => {
+    btn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(btn.textContent.replace(' · ','').trim());});
+  });
 }
 
 function buildRoleChips(frag,chipsEl){
@@ -499,7 +523,8 @@ function renderNoteDetail(container,note){
   const fm=FAM[note.family]||{label:note.family,color:'#888'};
   const nl=note.name.toLowerCase();
   const inf=CAT.filter(f=>f._nAll.includes(nl));
-  container.innerHTML=`<div class="np-name">${note.name}</div>
+  container.innerHTML=`
+    <div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
     ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
@@ -511,7 +536,7 @@ function renderNoteDetail(container,note){
       const fc=getCmpFam(f.family);
       const btn=document.createElement('button');btn.className='frag-picker-item';
       btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
-      btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f));});
+      btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       span.appendChild(btn);
     });
   }
@@ -521,8 +546,35 @@ function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
 
 function renderHouseDetail(container,brand){
   const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
+  const houseData = BRANDS_MAP[brand.toLowerCase()];
+
+  // Calculate family percentages
+  const famCounts = {};
+  frags.forEach(f => {
+    famCounts[f.family] = (famCounts[f.family] || 0) + 1;
+  });
+  const famStats = Object.entries(famCounts)
+    .sort((a, b) => b[1] - a[1]) // Sort by count descending
+    .map(([fam, count]) => ({
+      family: fam,
+      label: FAM[fam]?.label || fam,
+      color: FAM[fam]?.color || '#888',
+      pct: (count / frags.length) * 100
+    }));
+
+  const barHTML = famStats.map(f => `<div style="height:100%; width:${f.pct}%; background:${f.color};" title="${f.label} (${Math.round(f.pct)}%)"></div>`).join('');
+  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); margin-bottom:var(--sp-xs); font-size:var(--fs-meta); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
+
   container.innerHTML=`<div class="house-detail-wrap">
     <div class="house-detail-name">${brand}</div>
+    ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${houseData.desc}</div>` : ''}
+
+    <div style="margin:var(--sp-xl) 0;">
+      <div class="dc-slbl">Fragrance Families</div>
+      <div style="height:var(--sp-sm); width:100%; display:flex; border-radius:var(--radius); overflow:hidden; margin-bottom:var(--sp-sm);">${barHTML}</div>
+      <div style="display:flex; flex-wrap:wrap;">${legendHTML}</div>
+    </div>
+
     <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
     <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
   </div>`;
@@ -536,7 +588,7 @@ function renderHouseDetail(container,brand){
         <div class="frag-picker-item-name">${frag.name}</div>
         <div class="frag-picker-item-brand">${(FAM[frag.family]||{}).label||frag.family}</div>
       </div>`;
-    btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag));});
+    btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag),frag.name);});
     list.appendChild(btn);
   });
 }
@@ -603,7 +655,7 @@ document.getElementById('note-float-bg').addEventListener('click',closeNotePopup
 document.getElementById('nfp-close').addEventListener('click',closeNotePopup);
 
 /* ══ PICKER ═════════════════════════════════════════════════════════ */
-function openPicker(roleId){openDetail(c=>renderPicker(c,roleId))}
+function openPicker(roleId){openDetail(c=>renderPicker(c,roleId),RM[roleId]?.name || 'Role')}
 
 function renderPicker(container,roleId){
   const role=RM[roleId];
@@ -614,7 +666,8 @@ function renderPicker(container,roleId){
 
   // Header
   const hdr=document.createElement('div');hdr.className='picker-header';
-  hdr.innerHTML=`<div class="picker-title">${role.sym} ${role.name}</div><div class="picker-sub">${role.desc}</div>`;
+  hdr.innerHTML=`
+    <div class="picker-title">${role.sym} ${role.name}</div><div class="picker-sub">${role.desc}</div>`;
   container.appendChild(hdr);
 
   // Hero
@@ -672,7 +725,7 @@ function renderPicker(container,roleId){
       badge.className='picker-order-badge'+(i===0?' primary-badge':'');
       badge.textContent=i===0?'Primary':`#${i+1}`;
       const nameBtn=document.createElement('button');nameBtn.className='picker-name-btn'+(isWish(f.id)&&!isOwned(f.id)?' is-wish':'');nameBtn.textContent=f.name;
-      nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f))});
+      nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name)});
       const info=document.createElement('div');info.className='picker-info';
       info.appendChild(nameBtn);
       const br=document.createElement('div');br.className='picker-brand-row';br.textContent=f.brand;info.appendChild(br);
@@ -700,7 +753,7 @@ function renderPicker(container,roleId){
       card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
         <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
-      card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag))});
+      card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),frag.name)});
       row.appendChild(card);
     });
     wrap.appendChild(row);container.appendChild(wrap);
@@ -711,7 +764,7 @@ function renderPicker(container,roleId){
     const w=isWish(frag.id)&&!isOwned(frag.id);
     const row=document.createElement('div');row.className='picker-row';
     const nameBtn=document.createElement('button');nameBtn.className='picker-name-btn'+(w?' is-wish':'');nameBtn.textContent=frag.name;
-    nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag))});
+    nameBtn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),frag.name)});
     const info=document.createElement('div');info.className='picker-info';
     info.appendChild(nameBtn);
     const br=document.createElement('div');br.className='picker-brand-row';br.textContent=frag.brand;info.appendChild(br);
@@ -786,6 +839,7 @@ function buildCatalog(roleFilter){
   const body=document.getElementById('cat-body');body.innerHTML='';
 
   // Role filter bar
+  /*
   const filterBar=document.createElement('div');filterBar.className='cat-filter-bar';
   const allBtn=document.createElement('button');
   allBtn.className='tab'+(roleFilter===null?' active':'');
@@ -802,6 +856,7 @@ function buildCatalog(roleFilter){
     filterBar.appendChild(btn);
   });
   body.appendChild(filterBar);
+  */
 
   // Apply filters: brand + state + search
   const search=(document.getElementById('cat-search')?.value||'').toLowerCase().trim();
@@ -810,8 +865,8 @@ function buildCatalog(roleFilter){
   if(CAT_STATE_FILTER==='owned')visibleCat=visibleCat.filter(f=>isOwned(f.id));
   else if(CAT_STATE_FILTER==='wish')visibleCat=visibleCat.filter(f=>isWish(f.id));
   if(search)visibleCat=visibleCat.filter(f=>
-    f.name.toLowerCase().includes(search)||
-    f.brand.toLowerCase().includes(search)||
+    f._nameL.includes(search)||
+    f._brandL.includes(search)||
     f._nAll.some(n=>n.includes(search))
   );
 
@@ -831,11 +886,68 @@ function buildCatalog(roleFilter){
     // Brand header → house detail
     sec.querySelector('.brand-hdr-btn')?.addEventListener('click',()=>openHouseDetail(brand));
     const list=document.createElement('div');list.className='scent-list';
+    const lastTapMap = new Map();
+    let longPressTimer = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
     list.addEventListener('click',e=>{
       const row=e.target.closest('.scent-row');if(!row)return;
+      // Prevent click if we swiped
+      const content = row.querySelector('.scent-row-content');
+      if(content && content.style.transform && content.style.transform !== 'translateX(0px)') return;
+
       const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
-      openFragDetail(frag);
+
+      // Double tap logic
+      const now = Date.now();
+      const lastTap = lastTapMap.get(id) || 0;
+
+      if(now - lastTap < 300) {
+        // Double tap on the same item!
+        window.haptic?.('success');
+        const st=gst(frag.id);
+        setState(frag.id, st==='wish'?'none':'wish');
+        refreshAfterStateChange(frag.id);
+        lastTapMap.set(id, 0); // Reset
+      } else {
+        lastTapMap.set(id, now);
+        // Single tap - immediately open detail to stay responsive
+        openFragDetail(frag);
+      }
     });
+
+    // Long press logic
+    list.addEventListener('touchstart', e=>{
+      const row=e.target.closest('.scent-row');if(!row)return;
+      const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      longPressTimer = setTimeout(()=>{
+        window.haptic?.('medium');
+        openQuickPeek(frag);
+      }, 500); // 500ms long press
+    }, {passive:true});
+
+    list.addEventListener('touchmove', e=>{
+      if(longPressTimer) {
+        const dx = e.touches[0].clientX - touchStartX;
+        const dy = e.touches[0].clientY - touchStartY;
+        // Cancel if user moved too far
+        if(Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+      }
+    }, {passive:true});
+
+    list.addEventListener('touchend', ()=>{
+      if(longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+    }, {passive:true});
+
     frags.forEach(frag=>{
       const fm=FAM[frag.family]||{color:'#888'};
       const row=document.createElement('div');row.dataset.id=frag.id;
@@ -880,6 +992,41 @@ function initCatalogControls(){
     makeStateBtn(label,val,stateBar);
     if(stateBarM)makeStateBtn(label,val,stateBarM);
   });
+
+  const notesSearch = document.getElementById('notes-search');
+  const notesSearchClear = document.getElementById('notes-search-clear');
+  const notesTierBar = document.getElementById('notes-tier-bar');
+  let currentNoteQuery = '';
+  let currentNoteTier = 'all';
+
+  if (notesSearch) {
+    notesSearch.addEventListener('input', (e) => {
+      currentNoteQuery = e.target.value;
+      notesSearchClear.style.display = currentNoteQuery ? 'block' : 'none';
+      buildNotes(currentNoteQuery, currentNoteTier);
+    });
+  }
+
+  if (notesSearchClear) {
+    notesSearchClear.addEventListener('click', () => {
+      currentNoteQuery = '';
+      notesSearch.value = '';
+      notesSearchClear.style.display = 'none';
+      buildNotes(currentNoteQuery, currentNoteTier);
+    });
+  }
+
+  if (notesTierBar) {
+    const tabs = notesTierBar.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentNoteTier = tab.dataset.tier;
+        buildNotes(currentNoteQuery, currentNoteTier);
+      });
+    });
+  }
 
   // Helper: build brand tabs into a container; allBrandBtns for sync
   const allBrandBtns=[];
@@ -966,12 +1113,79 @@ function renderCatRow(row,frag,fm,search){
     if(topNotes)notesHtml=`<div class="frag-picker-item-notes">${topNotes}</div>`;
   }
 
-  row.innerHTML=`<div class="frag-picker-dot" style="background:${fm.color}"></div>
-    <div class="frag-picker-info">
-      <div class="frag-picker-item-name">${frag.name}</div>
-      <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
-      ${notesHtml}
+  row.draggable = true;
+  row.innerHTML=`
+    <div class="scent-row-actions">
+      <button class="scent-row-action compare" data-id="${frag.id}">Compare</button>
+      <button class="scent-row-action wishlist" data-id="${frag.id}">${st==='wish'?'Unwish':'Wish'}</button>
+    </div>
+    <div class="scent-row-content">
+      <div class="frag-picker-dot" style="background:${fm.color}"></div>
+      <div class="frag-picker-info">
+        <div class="frag-picker-item-name">${frag.name}</div>
+        <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
+        ${notesHtml}
+      </div>
     </div>`;
+
+  // Drag to Compare
+  row.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', frag.id);
+    e.dataTransfer.effectAllowed = 'copy';
+    row.classList.add('dragging');
+    window.haptic?.('selection');
+  });
+  row.addEventListener('dragend', () => {
+    row.classList.remove('dragging');
+  });
+
+  // Swipe to action logic
+  const content = row.querySelector('.scent-row-content');
+  if(!content) return;
+  let sx=0, sy=0, swiping=false, swiped=false;
+  content.addEventListener('touchstart', e=>{
+    sx = e.touches[0].clientX;
+    sy = e.touches[0].clientY;
+    swiping = true;
+    content.style.transition = 'none';
+  }, {passive:true});
+  content.addEventListener('touchmove', e=>{
+    if(!swiping) return;
+    const dx = e.touches[0].clientX - sx;
+    const dy = e.touches[0].clientY - sy;
+    if(Math.abs(dx) > Math.abs(dy) && dx < 0) { // dragging left
+      content.style.transform = `translateX(${Math.max(-160, dx)}px)`;
+      e.preventDefault(); // prevent vertical scroll if panning horizontally
+    }
+  });
+  content.addEventListener('touchend', e=>{
+    swiping = false;
+    content.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    const dx = e.changedTouches[0].clientX - sx;
+    if(dx < -60) {
+      content.style.transform = `translateX(-160px)`;
+      swiped = true;
+      window.haptic?.('light');
+    } else {
+      content.style.transform = `translateX(0)`;
+      swiped = false;
+    }
+  });
+
+  // Action listeners
+  row.querySelector('.scent-row-action.compare')?.addEventListener('click', e=>{
+    e.stopPropagation();
+    window.haptic?.('success');
+    _selectFragForSlot(CMP_A ? 'b' : 'a', frag);
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+    closeAllSheets?.();
+  });
+  row.querySelector('.scent-row-action.wishlist')?.addEventListener('click', e=>{
+    e.stopPropagation();
+    window.haptic?.('success');
+    setState(frag.id, st==='wish'?'none':'wish');
+    refreshAfterStateChange(frag.id);
+  });
 }
 function updBC(brand,key){
   const frags=CAT.filter(f=>f.brand===brand);
@@ -988,24 +1202,76 @@ function updCC(){
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
 function buildNotes(){
   const body=document.getElementById('notes-body');body.innerHTML='';
+
+  const grid = document.createElement('div');
+  grid.className = 'notes-grid';
+
   const grouped={};
   NI.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
   Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
+
   FAM_ORDER.forEach(fk=>{
     if(!grouped[fk]?.length)return;
     const fm=FAM[fk];if(!fm)return;
-    const row=document.createElement('div');row.className='notes-family-row';
-    const left=document.createElement('div');left.className='nf-left';
-    left.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}` ;
-    const right=document.createElement('div');right.className='nf-right';
+
+    const card=document.createElement('div');card.className='notes-card';
+
+    const header=document.createElement('div');header.className='notes-card-header';
+    header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
+
+    const cardBody=document.createElement('div');cardBody.className='notes-card-body';
     grouped[fk].forEach(note=>{
-      const btn=document.createElement('button');btn.className='note-link';btn.textContent=note.name;
-      btn.addEventListener('click',e=>{e.stopPropagation();openNotePopup(note,btn)});
-      right.appendChild(btn);
+      const btn=document.createElement('button');btn.className='note-pill';btn.textContent=note.name;
+      btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
+      cardBody.appendChild(btn);
     });
-    row.appendChild(left);row.appendChild(right);body.appendChild(row);
+
+    card.appendChild(header);
+    card.appendChild(cardBody);
+    grid.appendChild(card);
   });
+
+  body.appendChild(grid);
   document.getElementById('notes-count').textContent=`${NI.length} notes`;
+}
+
+/* ── QUICK PEEK ── */
+function openQuickPeek(frag){
+  let overlay=document.getElementById('quick-peek-overlay');
+  if(!overlay){
+    overlay=document.createElement('div');
+    overlay.id='quick-peek-overlay';
+    overlay.className='quick-peek-overlay';
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e=>{
+      if(e.target === overlay) closeQuickPeek();
+    });
+  }
+
+  const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
+  overlay.innerHTML=`
+    <div class="quick-peek-card">
+      <div class="dc-name">${frag.name}</div>
+      <div class="dc-brand">${frag.brand}</div>
+      <div class="dc-ftag" style="background:${fm.color}">
+        <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
+        ${fm.label}
+      </div>
+      <div class="dc-nlbl" style="margin-top:0">Notes</div>
+      <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${frag.top.join(', ')}</span></div>
+      <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${frag.mid.join(', ')}</span></div>
+      <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${frag.base.join(', ')}</span></div>
+      <div style="display:flex;gap:10px;margin-top:24px">
+        <button class="dc-collect-btn" style="flex:1;justify-content:center" onclick="closeQuickPeek();openFragDetail(CAT_MAP['${frag.id}'])">Full details</button>
+      </div>
+    </div>
+  `;
+  requestAnimationFrame(() => overlay.classList.add('open'));
+}
+
+function closeQuickPeek(){
+  const overlay=document.getElementById('quick-peek-overlay');
+  if(overlay) overlay.classList.remove('open');
 }
 
 /* ══ NAV ════════════════════════════════════════════════════════════ */
@@ -1016,6 +1282,50 @@ function go(id,btn){
   if(btn)btn.classList.add('active');
   closeDesktopDetail();
 
+}
+
+/* ── Detail Pagination ── */
+function _setupDetailSwipe(container, currentFrag) {
+  let sx=0, sy=0;
+  container.addEventListener('touchstart', e=>{
+    // Ignore horizontal scrolls in carousels
+    if(e.target.closest('.carousel')) return;
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+  }, {passive:true});
+
+  container.addEventListener('touchend', e=>{
+    if(sx===0) return;
+    const dx=e.changedTouches[0].clientX-sx;
+    const dy=e.changedTouches[0].clientY-sy;
+    sx=0; sy=0;
+    if(Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>60) {
+      // Find current index in CAT
+      const idx = CAT.findIndex(f => f.id === currentFrag.id);
+      if(idx === -1) return;
+
+      let targetFrag = null;
+      let animClass = '';
+      if(dx < 0 && idx < CAT.length - 1) { // Swipe left -> Next
+        targetFrag = CAT[idx + 1];
+        animClass = 'slide-left';
+      } else if(dx > 0 && idx > 0) { // Swipe right -> Prev
+        targetFrag = CAT[idx - 1];
+        animClass = 'slide-right';
+      }
+
+      if(targetFrag) {
+        window.haptic?.('light');
+        if(isDesktop() || isTablet()) {
+          // Replace top of stack
+          detailStack[detailStack.length - 1] = c => renderFragDetail(c, targetFrag);
+          _renderDeskDetail(false, animClass);
+        } else {
+          // Mobile: push a new sheet
+          pushSheet(c => renderFragDetail(c, targetFrag), targetFrag.name);
+        }
+      }
+    }
+  }, {passive:true});
 }
 
 /* ── Settings button ── */
@@ -1063,16 +1373,21 @@ function openMoreSheet(btn){
   btn.classList.add('active');
   const items=[
     {id:'notes',    icon:'✿', label:'Notes'},
+    {id:'playground',icon:'⚗', label:'Playground'},
     {id:'changelog',icon:'↩', label:'Changelog'},
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:16px 0 8px">
       <div style="font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);padding:0 16px 10px">More</div>
-      ${items.map(it=>`
-        <button onclick="closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
+      ${items.map(it=>{
+        const onclick = it.id === 'playground'
+          ? "window.location.href='playground.html'"
+          : `closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))`;
+        return `<button onclick="${onclick}" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
           <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0">${it.icon}</span>
           ${it.label}
-        </button>`).join('')}
+        </button>`;
+      }).join('')}
     </div>`;
   });
 }
@@ -1217,6 +1532,7 @@ const NOTE_PROFILE={
   'yuzu':              [0.88,0.20,0.08],
 };
 function computeProfile(frag){
+  if(frag._profile)return frag._profile;
   const b=FAM_PROFILE_BASE[frag.family]||[0.5,0.5,0.5];
   // Collect notes with tier weights: top=0.5, mid=1.0, base=1.5
   const weighted=[
@@ -1225,18 +1541,64 @@ function computeProfile(frag){
     ...(frag._nBase||[]).map(n=>({n,w:1.5})),
   ].filter(({n})=>NOTE_PROFILE[n]);
   if(weighted.length===0){
-    return{freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
+    frag._profile={freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
+    return frag._profile;
   }
   const totalW=weighted.reduce((s,{w})=>s+w,0);
   const avg=weighted.reduce((acc,{n,w})=>{const p=NOTE_PROFILE[n];acc[0]+=p[0]*w;acc[1]+=p[1]*w;acc[2]+=p[2]*w;return acc;},[0,0,0]).map(v=>v/totalW);
   // 60% note-derived, 40% family anchor
-  return{
+  frag._profile={
     freshness:avg[0]*0.6+b[0]*0.4,
     sweetness:avg[1]*0.6+b[1]*0.4,
     warmth:   avg[2]*0.6+b[2]*0.4,
     intensity:(frag.sillage||5)/10,
     complexity:(frag.layering||5)/10,
   };
+  return frag._profile;
+}
+
+/* ── Swap Reason Helper ── */
+function getSwapReason(anchor, candidate){
+  const pa = computeProfile(anchor);
+  const pc = computeProfile(candidate);
+
+  const dInt = pc.intensity - pa.intensity;
+  const dCpx = pc.complexity - pa.complexity;
+  const dSwt = pc.sweetness - pa.sweetness;
+  const dFrs = pc.freshness - pa.freshness;
+  const dWrm = pc.warmth - pa.warmth;
+
+  const famA = (FAM[anchor.family]||{label:anchor.family}).label;
+  const famC = (FAM[candidate.family]||{label:candidate.family}).label;
+  const sameFam = anchor.family === candidate.family;
+
+  const sharedNotes = anchor._nAll.filter(n => candidate._nAll.includes(n));
+  const shNote = sharedNotes.length > 0 ? sharedNotes[0].charAt(0).toUpperCase() + sharedNotes[0].slice(1) : null;
+
+  // Thresholds
+  const TH = 0.15;
+  const TH_LG = 0.3;
+
+  // Hierarchy of reasons
+  if (dInt > TH_LG) return `A bolder, stronger ${sameFam ? 'take' : 'alternative'}${shNote ? ` sharing ${shNote}` : ''}`;
+  if (dInt < -TH_LG) return `A more subtle, intimate ${sameFam ? 'take' : 'alternative'}${shNote ? ` sharing ${shNote}` : ''}`;
+
+  if (dCpx > TH_LG) return `A more complex and layered ${sameFam ? famA : famC}`;
+  if (dCpx < -TH_LG) return `An easier-to-wear, simpler ${sameFam ? famA : famC}`;
+
+  if (dSwt > TH) return `A sweeter, more gourmand approach to ${sameFam ? famA : 'this profile'}`;
+  if (dFrs > TH) return `A fresher, brighter take${sameFam ? ' on '+famA : ''}`;
+  if (dWrm > TH) return `A warmer, cozier alternative${sameFam ? ' on '+famA : ''}`;
+
+  if (dSwt < -TH) return `A less sweet, drier alternative`;
+  if (dFrs < -TH) return `A deeper, less fresh take`;
+
+  // Fallbacks if profiles are very similar
+  if (shNote && sameFam) return `A very similar ${famA} focused on ${shNote}`;
+  if (sameFam) return `A closely related ${famA} to try`;
+  if (shNote) return `A ${famC} alternative sharing ${shNote}`;
+
+  return `An alternative from the ${famC} family`;
 }
 
 /* ── Scoring helpers ── */
@@ -1265,6 +1627,39 @@ function getVerdict(matchPct,layerPct,fa,fb){
 }
 
 /* ── Combined radar (solid + dashed overlay) ── */
+function _setupChartHaptics(containerSelector, pointSelector) {
+  // Shared helper to trigger haptic ticks when dragging over chart points
+  const res = document.getElementById('cmp-results');
+  if(!res) return;
+  const charts = res.querySelectorAll(containerSelector);
+  charts.forEach(chart => {
+    let lastHovered = null;
+    chart.addEventListener('touchmove', e => {
+      const touch = e.touches[0];
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      if(target && target.matches(pointSelector)) {
+        if(target !== lastHovered) {
+          window.haptic?.('selection');
+          lastHovered = target;
+        }
+      } else {
+        lastHovered = null;
+      }
+    }, {passive:true});
+    // Add simple mousemove equivalent for desktop
+    chart.addEventListener('mousemove', e => {
+      if(e.target && e.target.matches(pointSelector)) {
+        if(e.target !== lastHovered) {
+          window.haptic?.('selection');
+          lastHovered = e.target;
+        }
+      } else {
+        lastHovered = null;
+      }
+    }, {passive:true});
+  });
+}
+
 function drawCombinedRadarSvg(fa,fb,caAccent,cbAccent){
   const dims=['freshness','sweetness','warmth','intensity','complexity'];
   const labels=['Fresh','Sweet','Warm','Intensity','Depth'];
@@ -1405,15 +1800,17 @@ function renderSuggestionsV2(fa,fb,ca,cb){
       .map(f=>({f,score:scoreSimilarity(anchor,f)}))
       .sort((a,b)=>b.score-a.score).slice(0,3);
   }
-  function sugCard(frag,accent){
+  function sugCard(frag, anchor, accent){
     const fc=getCmpFam(frag.family);
     const famLabel=(FAM[frag.family]||{label:frag.family}).label;
     const topNotes=[...(frag.top||[])].slice(0,3).join(', ');
+    const reason=getSwapReason(anchor, frag);
     return`<button class="cmp-sug-card-v2" data-fid="${frag.id}">
       <div class="cmp-sug-mini-radar">${_miniRadarSvg(frag,fc.accent)}</div>
       <div class="cmp-sug-card-info">
         <div class="cmp-sug-card-name">${frag.name}</div>
         <div class="cmp-sug-card-brand">${frag.brand}</div>
+        <div class="cmp-sug-card-reason">${reason}</div>
         <div class="cmp-sug-card-fam">${famLabel}</div>
         ${topNotes?`<div class="cmp-sug-card-notes">${topNotes}</div>`:''}
       </div>
@@ -1427,17 +1824,146 @@ function renderSuggestionsV2(fa,fb,ca,cb){
     <div class="cmp-sug-columns">
       <div>
         <div class="cmp-sug-col-head" style="color:${ca.accent}">Swap ${shortA}</div>
-        <div class="cmp-sug-col-items">${sugsA.map(({f})=>sugCard(f,ca.accent)).join('')}</div>
+        <div class="cmp-sug-col-items">${sugsA.map(({f})=>sugCard(f,fa,ca.accent)).join('')}</div>
       </div>
       <div>
         <div class="cmp-sug-col-head" style="color:${cb.accent}">Swap ${shortB}</div>
-        <div class="cmp-sug-col-items">${sugsB.map(({f})=>sugCard(f,cb.accent)).join('')}</div>
+        <div class="cmp-sug-col-items">${sugsB.map(({f})=>sugCard(f,fb,cb.accent)).join('')}</div>
       </div>
     </div>
   </div>`;
 }
 
 /* ── Score educational overlay ── */
+function openCharacterEdu(fa, fb, ca, cb) {
+  let overlay = document.getElementById('cmp-edu-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'cmp-edu-overlay';
+    overlay.className = 'cmp-edu-overlay';
+    document.body.appendChild(overlay);
+  }
+
+  const dims = [
+    { key: 'freshness', label: 'Fresh', desc: 'Bright, uplifting notes like citrus, green leaves, and aquatic elements.' },
+    { key: 'sweetness', label: 'Sweet', desc: 'Sugary, floral, or gourmand notes like vanilla, fruit, and sweet resins.' },
+    { key: 'warmth', label: 'Warm', desc: 'Cozy, deep notes like woods, spices, amber, and musk.' },
+    { key: 'intensity', label: 'Intensity', desc: 'How powerful the scent feels right away (projection/sillage).' },
+    { key: 'complexity', label: 'Depth', desc: 'How many different types of notes evolve over time.' }
+  ];
+
+  const pa = computeProfile(fa);
+  const pb = computeProfile(fb);
+
+  // Helper to find contributing notes for a dimension
+  const getNoteContributors = (frag, dimKey) => {
+    const allNotes = [...(frag._nTop || []), ...(frag._nMid || []), ...(frag._nBase || [])];
+    const matching = allNotes.filter(n => {
+      const info = NI_MAP[n.toLowerCase()];
+      if (!info) return false;
+      const t = info.tags || [];
+      if (dimKey === 'freshness') return t.includes('citrus') || t.includes('green') || t.includes('aquatic');
+      if (dimKey === 'sweetness') return t.includes('sweet') || t.includes('floral') || t.includes('fruity');
+      if (dimKey === 'warmth') return t.includes('warm') || t.includes('spicy') || t.includes('woody') || t.includes('amber');
+      return false; // Intensity/complexity don't map directly to single notes
+    });
+    return [...new Set(matching)].slice(0, 3);
+  };
+
+  // Find a suggestion for a dimension (someone who might want more of this)
+  const getSwapSuggestion = (dimKey) => {
+    const sorted = Object.values(CAT_MAP).map(f => ({ f, p: computeProfile(f) })).sort((a, b) => b.p[dimKey] - a.p[dimKey]);
+    const topScorers = sorted.filter(x => x.f.id !== fa.id && x.f.id !== fb.id).slice(0, 10);
+    if (topScorers.length === 0) return null;
+    return topScorers[Math.floor(Math.random() * topScorers.length)].f;
+  };
+
+  const cap = n => n.charAt(0).toUpperCase() + n.slice(1);
+
+  const html = `
+    <div class="cmp-edu-wrap">
+      <div class="cmp-edu-header">
+        <div class="cmp-edu-header-left">
+          <div class="cmp-edu-title">Character Details</div>
+        </div>
+        <button class="cmp-edu-close" aria-label="Close" onclick="document.getElementById('cmp-edu-overlay').classList.remove('open')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="cmp-edu-content">
+        <p class="cmp-edu-intro">The Character Map compares five key sensory dimensions. Here&rsquo;s what they mean and which notes drive them.</p>
+
+        <div class="cmp-edu-grid">
+          ${dims.map(dim => {
+            const isNoteDriven = ['freshness', 'sweetness', 'warmth'].includes(dim.key);
+            const notesA = isNoteDriven ? getNoteContributors(fa, dim.key) : [];
+            const notesB = isNoteDriven ? getNoteContributors(fb, dim.key) : [];
+            const suggestion = getSwapSuggestion(dim.key);
+
+            return `
+              <div class="cmp-edu-card">
+                <div class="cmp-edu-card-title">${dim.label}</div>
+                <div class="cmp-edu-card-desc">${dim.desc}</div>
+
+                ${isNoteDriven ? `
+                  <div class="cmp-edu-card-notes">
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${ca.accent}">${fa.name}</span>
+                      <span class="cmp-edu-card-notes-list">${notesA.length ? notesA.map(cap).join(', ') : '—'}</span>
+                    </div>
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${cb.accent}">${fb.name}</span>
+                      <span class="cmp-edu-card-notes-list">${notesB.length ? notesB.map(cap).join(', ') : '—'}</span>
+                    </div>
+                  </div>
+                ` : `
+                  <div class="cmp-edu-card-notes">
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${ca.accent}">${fa.name}</span>
+                      <span class="cmp-edu-card-notes-list">${Math.round(pa[dim.key]*100)}%</span>
+                    </div>
+                    <div class="cmp-edu-card-notes-row">
+                      <span class="cmp-edu-card-notes-frag" style="color:${cb.accent}">${fb.name}</span>
+                      <span class="cmp-edu-card-notes-list">${Math.round(pb[dim.key]*100)}%</span>
+                    </div>
+                  </div>
+                `}
+
+                ${suggestion ? `
+                  <div class="cmp-edu-suggestion" onclick="openScent('${suggestion.id}')">
+                    <div class="cmp-edu-suggestion-label">Want more ${dim.label}?</div>
+                    <div class="cmp-edu-suggestion-name"><strong>${suggestion.name}</strong> by ${BRANDS_MAP[suggestion.brand] || suggestion.brand}</div>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  overlay.innerHTML = html;
+
+  // Transition in
+  requestAnimationFrame(() => overlay.classList.add('open'));
+
+  // Handle cleanup on transition out
+  const wrap = overlay.querySelector('.cmp-edu-wrap');
+  wrap.addEventListener('transitionend', (e) => {
+    if (e.propertyName === 'transform' && !overlay.classList.contains('open')) {
+      overlay.remove();
+    }
+  });
+
+  // Close on scrim click
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('open');
+    }
+  });
+}
+
 function openScoreEdu(type,matchPct,layerPct,fa,fb){
   let overlay=document.getElementById('cmp-edu-overlay');
   if(!overlay){overlay=document.createElement('div');overlay.id='cmp-edu-overlay';overlay.className='cmp-edu-overlay';document.body.appendChild(overlay);}
@@ -1525,39 +2051,43 @@ function renderCompareResults(fa,fb){
     </div>
 
     <div class="cmp-pair-card">
-      <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
-      <div class="cmp-pair-card-verdict">${verdict}</div>
-      <div class="cmp-pair-card-scores">
-        <button class="cmp-score-card" id="cmp-score-match">
-          <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
-          <div class="cmp-score-label">Similarity</div>
-          <div class="cmp-score-meter">
-            <div class="cmp-score-meter-track">
-              <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
-              <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,matchPct))}%;background:${matchColor}"></div>
-              <div class="cmp-score-meter-tick" style="left:25%"></div>
-              <div class="cmp-score-meter-tick" style="left:50%"></div>
-              <div class="cmp-score-meter-tick" style="left:75%"></div>
+      <button class="cmp-pair-card-left" id="cmp-score-character">
+        <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
+      </button>
+      <div class="cmp-pair-card-right">
+        <div class="cmp-pair-card-verdict">${verdict}</div>
+        <div class="cmp-pair-card-scores">
+          <button class="cmp-score-card" id="cmp-score-match">
+            <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
+            <div class="cmp-score-label">Similarity</div>
+            <div class="cmp-score-meter">
+              <div class="cmp-score-meter-track">
+                <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
+                <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,matchPct))}%;background:${matchColor}"></div>
+                <div class="cmp-score-meter-tick" style="left:25%"></div>
+                <div class="cmp-score-meter-tick" style="left:50%"></div>
+                <div class="cmp-score-meter-tick" style="left:75%"></div>
+              </div>
             </div>
-          </div>
-          <div class="cmp-score-range">${_simLabel(matchPct)}</div>
-          <div class="cmp-score-tap">Tap to learn more ↗</div>
-        </button>
-        <button class="cmp-score-card" id="cmp-score-layer">
-          <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
-          <div class="cmp-score-label">Pairing</div>
-          <div class="cmp-score-meter">
-            <div class="cmp-score-meter-track">
-              <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
-              <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,layerPct))}%;background:${layerColor}"></div>
-              <div class="cmp-score-meter-tick" style="left:25%"></div>
-              <div class="cmp-score-meter-tick" style="left:50%"></div>
-              <div class="cmp-score-meter-tick" style="left:75%"></div>
+            <div class="cmp-score-range">${_simLabel(matchPct)}</div>
+            <div class="cmp-score-tap">Tap to learn more ↗</div>
+          </button>
+          <button class="cmp-score-card" id="cmp-score-layer">
+            <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
+            <div class="cmp-score-label">Pairing</div>
+            <div class="cmp-score-meter">
+              <div class="cmp-score-meter-track">
+                <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
+                <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,layerPct))}%;background:${layerColor}"></div>
+                <div class="cmp-score-meter-tick" style="left:25%"></div>
+                <div class="cmp-score-meter-tick" style="left:50%"></div>
+                <div class="cmp-score-meter-tick" style="left:75%"></div>
+              </div>
             </div>
-          </div>
-          <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-          <div class="cmp-score-tap">Tap to learn more ↗</div>
-        </button>
+            <div class="cmp-score-range">${_layLabel(layerPct)}</div>
+            <div class="cmp-score-tap">Tap to learn more ↗</div>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1567,6 +2097,11 @@ function renderCompareResults(fa,fb){
   `;
 
   // Wire score taps
+  document.getElementById('cmp-score-character')?.addEventListener('click',()=>{
+    window.haptic?.('selection');
+    openCharacterEdu(fa, fb, ca, cb);
+  });
+
   document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
     window.haptic?.('selection');
     openScoreEdu('match',matchPct,layerPct,fa,fb);
@@ -1597,6 +2132,12 @@ function renderCompareResults(fa,fb){
 
   // Start sticky scroll observer
   _initStickyScroll();
+
+  // Initialize chart haptics
+  setTimeout(() => {
+    _setupChartHaptics('.cmp-radar-v2-wrap svg', 'circle');
+    _setupChartHaptics('.cmp-scatter-v2-wrap svg', 'circle');
+  }, 100);
 }
 
 /* ── Fragrance picker — dual-column drum rolodex ── */
@@ -1656,8 +2197,8 @@ function _renderPickerList(q,slot){
   if(!list)return;
   const lower=q.toLowerCase();
   let frags=q.length<1?[...CAT]:CAT.filter(f=>{
-    return f.name.toLowerCase().includes(lower)||
-      f.brand.toLowerCase().includes(lower)||
+    return f._nameL.includes(lower)||
+      f._brandL.includes(lower)||
       f._nAll.some(n=>n.includes(lower));
   });
   if(_pickerSort==='name'){
@@ -1710,6 +2251,7 @@ function _renderPickerList(q,slot){
 /* Per-list drum scroll: auto-selects the centered item, fires haptic per tick */
 function _initPickerDrumScroll(listEl,slot){
   let _lastIdx=-1,_snapTimer=null;
+  let lastScrollTop = 0, lastScrollTime = 0;
   listEl.addEventListener('scroll',()=>{
     const items=Array.from(listEl.querySelectorAll('.frag-picker-item'));
     if(!items.length)return;
@@ -1718,9 +2260,22 @@ function _initPickerDrumScroll(listEl,slot){
     items.forEach((it,i)=>it.classList.toggle('centered',i===idx));
     // Haptic + selection only on user-initiated scrolls
     if(listEl.dataset.scrolling)return;
+
+    // Calculate velocity for dynamic haptics
+    const now = Date.now();
+    const dt = now - lastScrollTime;
+    const dy = Math.abs(listEl.scrollTop - lastScrollTop);
+    const velocity = dt > 0 ? dy / dt : 0;
+    lastScrollTop = listEl.scrollTop;
+    lastScrollTime = now;
+
     if(idx!==_lastIdx){
       _lastIdx=idx;
-      window.haptic?.('selection');
+      if (velocity > 1.5) {
+        window.haptic?.('light'); // Fast scroll -> light ticks
+      } else {
+        window.haptic?.('selection'); // Slow scroll -> heavier clicks
+      }
     }
     clearTimeout(_snapTimer);
     _snapTimer=setTimeout(()=>{
@@ -1807,6 +2362,14 @@ function _initPickerKeyNav(listEl,slot){
     } else if(e.key==='ArrowUp'){
       e.preventDefault();
       listEl.scrollTo({top:Math.max(curIdx-1,0)*PICKER_ITEM_H,behavior:'smooth'});
+    } else if(e.key==='Enter'){
+      e.preventDefault();
+      const f=items[curIdx]?CAT_MAP[items[curIdx].dataset.id]:null;
+      if(f){
+        _selectFragForSlot(slot,f);
+        _updateOtherSelMarking(slot);
+      }
+      _closeFragPicker();
     } else if(e.key==='Escape'){
       e.preventDefault();
       _closeFragPicker();
@@ -1835,11 +2398,12 @@ function _fillCard(slot,frag){
       <span class="cmp-frag-card-dot" aria-hidden="true"></span>${famLabel}
     </div>
     <div class="cmp-frag-card-name">${frag.name}</div>
-    <div class="cmp-frag-card-brand">${frag.brand}</div>
+    <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>
     ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
     <button class="cmp-card-detail-btn" data-slot="${slot}" aria-label="View details for ${frag.name}">Details ↗</button>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
   card.querySelector('.cmp-card-detail-btn')?.addEventListener('click',e=>{e.stopPropagation();openFragDetail(frag);});
+  card.querySelector('.cmp-brand-btn')?.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
 }
 
 function _resetCard(slot){
@@ -1854,10 +2418,63 @@ function _resetCard(slot){
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 }
 
+function _setupDragAndDropDropzones() {
+  const cmpBtn = document.querySelector('.mbn-btn[onclick*="compare"]');
+  if(cmpBtn) {
+    cmpBtn.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      cmpBtn.classList.add('drag-over');
+    });
+    cmpBtn.addEventListener('dragleave', () => cmpBtn.classList.remove('drag-over'));
+    cmpBtn.addEventListener('drop', e => {
+      e.preventDefault();
+      cmpBtn.classList.remove('drag-over');
+      const fid = e.dataTransfer.getData('text/plain');
+      const frag = CAT_MAP[fid];
+      if(frag) {
+        window.haptic?.('success');
+        _selectFragForSlot(CMP_A ? 'b' : 'a', frag);
+        go('compare', cmpBtn);
+      }
+    });
+  }
+
+  ['a','b'].forEach(slot => {
+    const card = document.getElementById(`cmp-card-${slot}`);
+    if(card) {
+      card.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        card.style.boxShadow = '0 0 0 2px var(--accent-primary)';
+      });
+      card.addEventListener('dragleave', () => card.style.boxShadow = '');
+      card.addEventListener('drop', e => {
+        e.preventDefault();
+        card.style.boxShadow = '';
+        const fid = e.dataTransfer.getData('text/plain');
+        const frag = CAT_MAP[fid];
+        if(frag) {
+          window.haptic?.('success');
+          _selectFragForSlot(slot, frag);
+        }
+      });
+    }
+  });
+}
+
 function initCompare(){
   ['a','b'].forEach(slot=>{
     const card=document.getElementById(`cmp-card-${slot}`);
-    if(card)card.addEventListener('click',()=>_openFragPicker(slot));
+    if(card){
+      card.addEventListener('click',()=>_openFragPicker(slot));
+      card.addEventListener('keydown',e=>{
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault();
+          _openFragPicker(slot);
+        }
+      });
+    }
     const search=document.getElementById(`frag-picker-search-${slot}`);
     if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim(),slot));
     const list=document.getElementById(`frag-picker-list-${slot}`);
@@ -1871,6 +2488,7 @@ function initCompare(){
   const overlay=document.getElementById('frag-picker');
   if(overlay)overlay.addEventListener('click',e=>{if(e.target===overlay)_closeFragPicker();});
   _initPickerSortSwipe();
+  _setupDragAndDropDropzones();
 }
 window.clearCmpSlot=function(slot){
   window.haptic?.('nudge')||window.haptic?.('selection');
@@ -1948,14 +2566,17 @@ Promise.all([
     Promise.all(idx.brands.map(b=>fetch(`data/scents/${b}.json`,_nc).then(r=>r.json())))
       .then(arrays=>arrays.flat())
   ),
-  fetch('data/notes.json',_nc).then(r=>r.json())
-]).then(([roles, scents, notes])=>{
+  fetch('data/notes.json',_nc).then(r=>r.json()),
+  fetch('data/brands.json',_nc).then(r=>r.json())
+]).then(([roles, scents, notes, brands])=>{
   ROLES=roles;
   CAT=scents.map(f=>{
     f._nTop=(f.top||[]).map(n=>n.toLowerCase().trim());
     f._nMid=(f.mid||[]).map(n=>n.toLowerCase().trim());
     f._nBase=(f.base||[]).map(n=>n.toLowerCase().trim());
     f._nAll=[...f._nTop,...f._nMid,...f._nBase];
+    f._nameL=f.name.toLowerCase();
+    f._brandL=f.brand.toLowerCase();
     return f;
   });
   NI=notes;
@@ -1963,6 +2584,9 @@ Promise.all([
   RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
   CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
+  BRANDS=brands;
+  BRANDS_MAP=Object.fromEntries(BRANDS.map(b=>[b.name.toLowerCase(),b]));
+  computeNoteTiers();
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
   // Pre-fill a high-layering pair so compare isn't blank on load
@@ -1979,6 +2603,46 @@ Promise.all([
   })();
   // MVP: default to compare
   go('compare',null);
+
+  // Global horizontal swipe between main tabs
+  let globalSx = 0, globalSy = 0;
+  document.body.addEventListener('touchstart', e => {
+    // Don't intercept if an overlay/sheet is open
+    if(document.getElementById('sheet-stack')?.classList.contains('has-sheets') ||
+       document.getElementById('col-detail')?.classList.contains('open') ||
+       document.getElementById('frag-picker')?.classList.contains('open') ||
+       document.getElementById('note-float-overlay')?.classList.contains('open') ||
+       document.getElementById('quick-peek-overlay')?.classList.contains('open')) return;
+
+    // Don't intercept if swiping horizontally inside a carousel
+    if(e.target.closest('.carousel') || e.target.closest('.scent-row-content')) return;
+
+    globalSx = e.touches[0].clientX;
+    globalSy = e.touches[0].clientY;
+  }, {passive:true});
+
+  document.body.addEventListener('touchend', e => {
+    if(globalSx === 0) return;
+    const dx = e.changedTouches[0].clientX - globalSx;
+    const dy = e.changedTouches[0].clientY - globalSy;
+    globalSx = 0; globalSy = 0;
+
+    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 80) {
+      // Horizontal swipe detected
+      const tabs = ['catalog', 'compare'];
+      const currentTab = document.querySelector('.panel.active')?.id.replace('p-', '');
+      const idx = tabs.indexOf(currentTab);
+      if(idx === -1) return;
+
+      if(dx < 0 && idx < tabs.length - 1) { // Swipe left -> go right
+        window.haptic?.('selection');
+        goMobile(tabs[idx + 1], document.querySelector(`.mbn-btn[onclick*="${tabs[idx + 1]}"]`));
+      } else if(dx > 0 && idx > 0) { // Swipe right -> go left
+        window.haptic?.('selection');
+        goMobile(tabs[idx - 1], document.querySelector(`.mbn-btn[onclick*="${tabs[idx - 1]}"]`));
+      }
+    }
+  }, {passive:true});
 });
 
 // Load and render changelog

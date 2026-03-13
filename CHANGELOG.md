@@ -6,52 +6,58 @@ All notable changes to Scentmap are documented here.
 
 ## 2026-03-13
 
+**Under-the-hood optimization! 🛠️**
+We cleaned up some redundant code behind the scenes. This doesn't change anything you see or do, but keeps the app running smoothly and makes it easier for us to maintain.
+*(User Impact: None)*
+
+<details>
+<summary>Detailed Changelog</summary>
+
 ### Fixed
 - Duplicated code in `buildLayerSuggestions`: removed redundant inner `scoreLayering` function and used global `scoreLayeringPair` instead.
 
+</details>
+
 ---
 
-## 2026-03-12 (fix: compare picker anchors to sticky bar when scrolled)
+## 2026-03-12
 
-### Fixed
+**A massive wave of UX polish for mobile and compare! ✨**
+We've smoothed out how things feel when you use the app on your phone. Bottom sheets now scroll perfectly without hiding the close button, note details are clear and readable, and comparing fragrances is much more intuitive with combined score cards and clearer labels. Plus, the compare picker dropdown now correctly follows you as you scroll!
+*(User Impact: Major)*
+
+<details>
+<summary>Detailed Changelog</summary>
+
+### Fixed (compare picker anchors to sticky bar when scrolled)
 - When the compare page is scrolled and the condensed sticky bar is visible, opening the fragrance picker dropdown now positions the rolodex below the sticky bar instead of the (off-screen) main header. Previously `_openFragPicker` always anchored to `#cmp-header`; now it checks `cmp-header.getBoundingClientRect().bottom` and falls back to `#cmp-sticky-bar` when the header has scrolled out of view.
 
----
-
-## 2026-03-12 (fix: note detail catalog list opacity)
-
-### Fixed
+### Fixed (note detail catalog list opacity)
 - Note detail "In Catalog" list items were rendering at `opacity: 0.32` — the `.frag-picker-item` base style targets the drum/rolodex picker where non-centered items are dimmed. Added `.np-frags .frag-picker-item { opacity: 1 }` override (plus proper padding, border-row dividers, hover state) so the static list is fully visible
 - Same fix applied to house detail list (`.house-detail-list .frag-picker-item { opacity: 1 }`)
 - Note pill taps in Compare notes grid now pass the note name as the sheet topbar title
 
----
-
-## 2026-03-12 (fix: mobile sheet UX — height, titles, close access)
-
-### Fixed
+### Fixed (mobile sheet UX — height, titles, close access)
 - Mobile bottom sheets now have `max-height: calc(100svh - 44px)` — prevents sheets from extending above the viewport and making the Close button unreachable
 - Sheet `display: flex` added so `overflow-y: auto` on `.sheet-content` activates correctly for internal scrolling (was requiring whole-page scroll)
 - Note detail sheet no longer appears faded — underlying fragrance detail sheet no longer peeks above the note sheet
 - Fragrance detail now always shows a reachable Close button after returning from a note detail
 
-### Changed
+### Changed (mobile sheet UX)
 - Sheet topbar now displays the fragrance/note/brand name as a sticky title (Archivo Black, centered) — title is always visible regardless of scroll position
 - `.dc-name` (fragrance detail title) updated to Archivo Black display font, matching the compare picker card treatment
 - `.np-name` (note detail title) updated to Archivo Black display font
 
----
-
-## 2026-03-12 (fix: compare UX improvements)
-
-### Fixed
+### Fixed (compare UX improvements)
 - Note pills in compare results now correctly open the detail panel (was calling `pushDetail` before panel opened; changed to `openDetail`)
 - Mobile sheet scroll now contained within sheet — added `overscroll-behavior: contain` to `.sheet-content` to prevent background compare panel from scrolling
 
-### Changed
+### Changed (compare UX improvements)
 - Fragrance cards in compare header: replaced ✕ clear button with "Details ↗" button that opens the fragrance detail panel
 - Radar legend and scatter plot labels now show full fragrance names instead of first word only
 - Similarity and Pairing score cards combined into a single pair card (with radar and verdict) to emphasise they describe the pair, not individual fragrances
+
+</details>
 
 ---
 

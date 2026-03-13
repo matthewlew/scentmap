@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Scentmap Design System Playground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/design-system.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/responsive.css">
+<style>
+  /* Sandbox Consolidated Variant Styles */
+
+  /* 1. dc-sim-row variants */
+  .dc-sim-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .dc-sim-row-content { display: flex; align-items: center; gap: var(--sp-md); flex: 1; }
+  .dc-sim-row-info { display: flex; flex-direction: column; }
+  .dc-sim-row-name { font-weight: 600; color: var(--text-primary); font-size: var(--fs-body); }
+  .dc-sim-row-brand { font-size: var(--fs-body); color: var(--text-secondary); }
+  .dc-sim-row-notes { font-size: var(--fs-body); color: var(--text-tertiary); margin-top: var(--sp-micro); }
+  .dc-sim-row-actions { margin-left: auto; }
+  .dc-sim-row-action { background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius); padding: 4px 12px; font-size: var(--fs-body); cursor: pointer; color: var(--text-secondary); }
+
+  .dc-sim-row--flat {
+    padding: var(--sp-md);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .dc-sim-row--flat:hover { background: var(--fade-subtle); }
+
+  .dc-sim-row--card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-lg);
+    margin-bottom: var(--sp-md);
+    box-shadow: 0 1px 3px var(--fade-subtle);
+  }
+  .dc-sim-row--card:hover { border-color: var(--border-strong); }
+
+  /* 2. cmp-frag-fam-chip variants */
+  .cmp-frag-fam-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    border-radius: var(--radius-pill);
+    padding: 4px 10px;
+    white-space: nowrap;
+  }
+
+  .cmp-frag-fam-chip--solid {
+    background: var(--chip-color, var(--g600));
+    color: #fff;
+    border: 1px solid transparent;
+  }
+
+  .cmp-frag-fam-chip--outline {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-standard);
+  }
+  .cmp-frag-fam-chip--outline::before {
+    content: '';
+    display: block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--chip-color, var(--g600));
+  }
+
+  /* 3. tabs variants */
+  .tabs {
+    display: flex;
+    gap: var(--sp-micro);
+    overflow-x: auto;
+  }
+  .tabs .tab {
+    background: none; border: none;
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .tabs--pill {
+    background: var(--bg-primary);
+    padding: 4px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-standard);
+  }
+  .tabs--pill .tab { padding: 6px 16px; border-radius: var(--radius-md); }
+  .tabs--pill .tab.active { background: var(--bg-secondary); color: var(--text-primary); }
+
+  .tabs--line {
+    border-bottom: 1px solid var(--border-subtle);
+    gap: var(--sp-lg);
+  }
+  .tabs--line .tab { padding: var(--sp-md) 0; border-bottom: var(--sp-micro) solid transparent; margin-bottom: -1px; }
+  .tabs--line .tab.active { border-bottom-color: var(--text-primary); color: var(--text-primary); }
+
+  /* 4. dc-collect-btn variants */
+  .dc-collect-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-sm);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: var(--fs-body);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .dc-collect-btn--standard {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    color: var(--text-secondary);
+    padding: var(--sp-sm) var(--sp-lg);
+  }
+  .dc-collect-btn--standard:hover { background: var(--bg-secondary); border-color: var(--border-strong); color: var(--text-primary); }
+
+  .dc-collect-btn--wide {
+    width: 100%;
+    background: var(--g700);
+    border: 1px solid transparent;
+    color: #fff;
+    padding: var(--sp-md) var(--sp-lg);
+    border-radius: var(--radius-lg);
+    justify-content: space-between;
+  }
+  .dc-collect-btn--wide:hover { background: var(--ink); }
+
+  /* Playground specific styles - keep separate from system */
+  .pg-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--sp-4xl) var(--sp-xl);
+  }
+  .pg-header {
+    margin-bottom: var(--sp-4xl);
+    padding-bottom: var(--sp-2xl);
+    border-bottom: 2px solid var(--border-strong);
+  }
+  .pg-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-hero);
+    line-height: var(--lh-tight);
+    margin-bottom: var(--sp-sm);
+  }
+  .pg-desc {
+    font-size: var(--fs-body);
+    color: var(--text-secondary);
+    max-width: 600px;
+  }
+  .pg-section {
+    margin-bottom: var(--sp-4xl);
+  }
+  .pg-section-title {
+    font-family: var(--font-sans);
+    font-size: var(--fs-title);
+    font-weight: 700;
+    margin-bottom: var(--sp-2xl);
+    padding-bottom: var(--sp-sm);
+    border-bottom: 1px solid var(--border-standard);
+  }
+  .pg-subsection-title {
+    font-family: var(--font-sans);
+    font-size: var(--fs-ui);
+    font-weight: 600;
+    margin: var(--sp-2xl) 0 var(--sp-lg);
+    color: var(--text-secondary);
+  }
+  .pg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--sp-2xl);
+  }
+  .pg-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-md);
+  }
+  .pg-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+  }
+  .pg-box {
+    border: 1px dashed var(--border-standard);
+    padding: var(--sp-lg);
+    border-radius: var(--radius-lg);
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+  }
+  .pg-box.dark {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+</style>
+</head>
+<body>
+  <div class="pg-container">
+    <header class="pg-header">
+      <h1 class="pg-title">Scentmap System</h1>
+      <p class="pg-desc">Source of truth for all components, styles, and patterns used across the application. Any design changes should be updated here and verified.</p>
+    </header>
+
+    <section class="pg-section" id="audit">
+      <h2 class="pg-section-title" style="color: var(--fam-floral);">System Audit & Proposals</h2>
+
+      <h3 class="pg-subsection-title">1-off Hardcoded Pixel Values</h3>
+      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">The following hardcoded pixels were found in the CSS and should be consolidated or converted to variables where possible. Note: There are currently <strong>0</strong> hardcoded hex colors!</p>
+
+      <div style="background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-lg); padding: var(--sp-lg);">
+        <ul style="font-size: var(--fs-body-sm); color: var(--text-secondary); column-count: 2; column-gap: var(--sp-2xl);">
+          <li style="margin-bottom: var(--sp-xs);"><strong>components.css:</strong> ~80 hardcoded pixels.
+            <br><em>Mostly small adjustments (1px, 2px, 3px) for optical alignment or fixed geometry items like dots (8px) and structural dividers (1px, 2px, 4px).</em></li>
+          <li style="margin-bottom: var(--sp-xs);"><strong>layout.css:</strong> ~15 hardcoded pixels.
+            <br><em>Mainly structural constraints like max-width (500px), header clearance (80px), or specific tap-targets (44px) and structural radii (16px, 2px).</em></li>
+          <li style="margin-bottom: var(--sp-xs);"><strong>responsive.css:</strong> ~16 hardcoded pixels.
+            <br><em>Mostly media queries, base font sizes (17px, 18px), and geometry updates for mobile like tap target heights (44px, 62px) and dot sizes (8px, 9px).</em></li>
+          <li style="margin-bottom: var(--sp-xs);"><strong>design-system.css:</strong> ~2 hardcoded pixels.
+            <br><em>Focus ring width (2px) and base HTML font-size (16px).</em></li>
+        </ul>
+      </div>
+
+      <h3 class="pg-subsection-title">Proposals for Consolidation</h3>
+      <div class="pg-grid">
+        <div class="pg-item" style="background: var(--bg-primary); padding: var(--sp-lg); border: 1px solid var(--border-standard); border-radius: var(--radius-lg);">
+          <strong style="display:block; margin-bottom: var(--sp-sm);">1. Create standard variables for fine-tuning</strong>
+          <p class="text-body-sm text-secondary">Values like 1px, 2px, and 3px are used heavily for optical alignments. We should add `--sp-micro: 2px` or `--sp-1px: 1px` to the spacing scale to formalize this.</p>
+        </div>
+        <div class="pg-item" style="background: var(--bg-primary); padding: var(--sp-lg); border: 1px solid var(--border-standard); border-radius: var(--radius-lg);">
+          <strong style="display:block; margin-bottom: var(--sp-sm);">2. Unify "Dot" components</strong>
+          <p class="text-body-sm text-secondary">There are multiple declarations for 8px/10px/9px dots (e.g., `.cmp-dd-dot`, `.fam-dot`, `.picker-fdot`). Consolidate these into a single `.ui-dot` component with standard sizes.</p>
+        </div>
+        <div class="pg-item" style="background: var(--bg-primary); padding: var(--sp-lg); border: 1px solid var(--border-standard); border-radius: var(--radius-lg);">
+          <strong style="display:block; margin-bottom: var(--sp-sm);">3. Standardize fixed sizes</strong>
+          <p class="text-body-sm text-secondary">A few specific numbers keep appearing (44px for touch targets, 16px for radii). We should use standard tokens like `--touch-target-min: 44px` and `--radius-xl: 16px`.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pg-section" id="typography">
+      <h2 class="pg-section-title">1. Typography</h2>
+      <p class="pg-desc">Scentmap uses three typefaces: Source Serif 4 for body/editorial content, DM Sans for UI/caps, and Archivo Black for large impact headings.</p>
+
+      <h3 class="pg-subsection-title">Semantic Classes</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.text-heading / var(--fs-heading)</span>
+          <div class="text-heading">L'Air du Désert</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.text-display / var(--fs-display)</span>
+          <div class="text-display">Santal 33</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.text-title / var(--fs-title)</span>
+          <div class="text-title">Eau de Parfum</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.text-ui / var(--fs-ui)</span>
+          <div class="text-ui">Search fragrances...</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.text-body / var(--fs-body)</span>
+          <div class="text-body">A warm, spicy and woody scent inspired by the Sahara.</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.text-body-sm / var(--fs-body-sm)</span>
+          <div class="text-body-sm">Created by Andy Tauer in 2005.</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.text-meta / var(--fs-meta)</span>
+          <div class="text-meta">10 items • Woody Spicy</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.text-label / var(--fs-label)</span>
+          <div class="text-label">Top Notes</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.text-caption / var(--fs-caption)</span>
+          <div class="text-caption">Coriander, Cumin, Petitgrain</div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Special Typographic Components</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.logo</span>
+          <div class="logo">Scentmap</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.cmp-hero-title</span>
+          <div class="cmp-hero-title">Compare</div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.cmp-score-pct</span>
+          <div class="cmp-score-pct">92%</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pg-section" id="colors">
+      <h2 class="pg-section-title">2. Colors</h2>
+
+      <h3 class="pg-subsection-title">Primitive Palette</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">var(--paper) / var(--bg-primary)</span>
+          <div class="pg-box" style="background: var(--paper); border: 1px solid var(--border-standard);"></div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">var(--stone) / var(--bg-secondary)</span>
+          <div class="pg-box" style="background: var(--stone); border: 1px solid var(--border-standard);"></div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">var(--resin) / var(--accent-primary)</span>
+          <div class="pg-box" style="background: var(--resin); border: none;"></div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">var(--ink) / var(--text-primary)</span>
+          <div class="pg-box" style="background: var(--ink); border: none;"></div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Grayscale Steps</h3>
+      <div class="pg-grid">
+        <div class="pg-item"><span class="pg-label">var(--g700)</span><div class="pg-box" style="background: var(--g700); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">var(--g600)</span><div class="pg-box" style="background: var(--g600); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">var(--g500)</span><div class="pg-box" style="background: var(--g500); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">var(--g450)</span><div class="pg-box" style="background: var(--g450); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">var(--g400)</span><div class="pg-box" style="background: var(--g400); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">var(--g300)</span><div class="pg-box" style="background: var(--g300); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">var(--g200)</span><div class="pg-box" style="background: var(--g200); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">var(--g100) / var(--bg-tertiary)</span><div class="pg-box" style="background: var(--g100); border: 1px solid var(--border-standard);"></div></div>
+      </div>
+
+      <h3 class="pg-subsection-title">Family Semantic Colors</h3>
+      <div class="pg-grid">
+        <div class="pg-item"><span class="pg-label">--fam-woody</span><div class="pg-box" style="background: var(--fam-woody); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">--fam-floral</span><div class="pg-box" style="background: var(--fam-floral); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">--fam-amber</span><div class="pg-box" style="background: var(--fam-amber); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">--fam-citrus</span><div class="pg-box" style="background: var(--fam-citrus); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">--fam-leather</span><div class="pg-box" style="background: var(--fam-leather); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">--fam-oud</span><div class="pg-box" style="background: var(--fam-oud); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">--fam-green</span><div class="pg-box" style="background: var(--fam-green); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">--fam-chypre</span><div class="pg-box" style="background: var(--fam-chypre); border: none;"></div></div>
+        <div class="pg-item"><span class="pg-label">--fam-gourmand</span><div class="pg-box" style="background: var(--fam-gourmand); border: none;"></div></div>
+      </div>
+
+      <h3 class="pg-subsection-title">Shadows & Scrims</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.shadow-sm</span>
+          <div class="pg-box shadow-sm" style="border: 1px solid var(--border-subtle);"></div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.shadow-md</span>
+          <div class="pg-box shadow-md" style="border: 1px solid var(--border-subtle);"></div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.shadow-lg</span>
+          <div class="pg-box shadow-lg" style="border: 1px solid var(--border-subtle);"></div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">var(--scrim-dark)</span>
+          <div class="pg-box" style="background: var(--scrim-dark);"></div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">var(--fade-subtle)</span>
+          <div class="pg-box" style="background: var(--fade-subtle);"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pg-section" id="buttons">
+      <h2 class="pg-section-title">3. Buttons & Interactive Elements</h2>
+      <p class="pg-desc">Scentmap does not have a single monolithic `.btn` class. Instead, buttons are contextually styled based on their component. Below are the common interactive elements.</p>
+
+      <h3 class="pg-subsection-title">Detail Panel Actions</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.dc-collect-btn (Default)</span>
+          <div class="pg-box">
+            <button class="dc-collect-btn">
+              <span class="dc-collect-icon">✓</span> Own
+            </button>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.dc-collect-btn.active</span>
+          <div class="pg-box">
+            <button class="dc-collect-btn active">
+              <span class="dc-collect-icon">✓</span> Own
+            </button>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.dc-cmp-btn</span>
+          <div class="pg-box" style="width: 100%;">
+            <button class="dc-cmp-btn">
+              <div class="cmp-dd-dot" style="background: var(--fam-woody)"></div>
+              <span class="dc-cmp-btn-name">Santal 33</span>
+              <span class="dc-cmp-btn-vs">VS</span>
+              <span class="dc-cmp-btn-arrow">→</span>
+            </button>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.dc-role-chip</span>
+          <div class="pg-box">
+            <button class="dc-role-chip"><span class="chip-sym">☀</span> Day</button>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Compare Panel Actions</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.cmp-chip-clear</span>
+          <div class="pg-box">
+            <button class="cmp-chip-clear">✕ Clear</button>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.cmp-card-detail-btn</span>
+          <div class="pg-box">
+            <button class="cmp-card-detail-btn">Detail</button>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.cmp-note-pill</span>
+          <div class="pg-box">
+            <button class="cmp-note-pill">Bergamot</button>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Picker & Navigation Actions</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.frag-picker-sort-btn</span>
+          <div class="pg-box" style="background: var(--bg-secondary);">
+            <div class="frag-picker-sort-bar">
+              <button class="frag-picker-sort-btn active">Brand</button>
+              <button class="frag-picker-sort-btn">Title</button>
+              <div class="frag-picker-sort-pill" style="width: 50%; left: 3px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.frag-picker-close</span>
+          <div class="pg-box">
+            <button class="frag-picker-close">Done</button>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.detail-back</span>
+          <div class="pg-box">
+            <button class="detail-back visible"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.detail-close-btn</span>
+          <div class="pg-box">
+            <button class="detail-close-btn">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Inline Text Buttons</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.s-name-btn</span>
+          <div class="pg-box">
+            <button class="s-name-btn">Santal 33</button>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.note-link</span>
+          <div class="pg-box">
+            <button class="note-link">Bergamot</button>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.brand-hdr-btn</span>
+          <div class="pg-box">
+            <button class="brand-hdr-btn">Le Labo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pg-section" id="components">
+      <h2 class="pg-section-title">4. Components & Forms</h2>
+
+      <h3 class="pg-subsection-title">Inputs & Search</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.cat-search-input</span>
+          <div class="pg-box">
+            <div class="cat-search-wrap" style="width: 100%;">
+              <input type="search" class="cat-search-input" placeholder="Search fragrances, brands, notes…">
+            </div>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.frag-picker-search</span>
+          <div class="pg-box">
+            <input class="frag-picker-search" type="text" placeholder="Search…">
+          </div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Cards & Surfaces</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.cmp-frag-card (Empty)</span>
+          <div class="pg-box" style="padding: 0; background: var(--bg-secondary);">
+            <div class="cmp-frag-card" style="width: 100%;">
+              <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance One</div><div class="cmp-card-empty-hint">Tap to select</div></div>
+              <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.cmp-frag-card (Filled)</span>
+          <div class="pg-box" style="padding: 0; background: var(--bg-secondary);">
+            <div class="cmp-frag-card" style="width: 100%;">
+              <button class="cmp-card-detail-btn">Detail</button>
+              <div class="cmp-frag-card-fam" style="background: var(--fam-woody);"><div class="cmp-frag-card-dot"></div>Woody</div>
+              <div class="cmp-frag-card-name">Santal 33</div>
+              <div class="cmp-frag-card-brand">Le Labo</div>
+              <div class="cmp-frag-card-desc">A warm, woody scent.</div>
+            </div>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.cmp-sug-card-v2</span>
+          <div class="pg-box">
+            <div class="cmp-sug-card-v2">
+              <div class="cmp-sug-card-info">
+                <div class="cmp-sug-card-name">Tam Dao</div>
+                <div class="cmp-sug-card-brand">Diptyque</div>
+                <div class="cmp-sug-card-fam" style="color: var(--fam-woody);">Woody</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.role-landing-card</span>
+          <div class="pg-box">
+            <div class="role-landing-card">
+              <div class="rlc-sym">☀</div>
+              <div class="rlc-name">Day</div>
+              <div class="rlc-desc">Light and versatile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Lists & Rows</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.scent-row</span>
+          <div class="pg-box" style="padding: 0;">
+            <div class="scent-list" style="width: 100%;">
+              <div class="scent-row" data-family="woody">
+                <div class="scent-row-content">
+                  <div class="s-info">
+                    <button class="s-name-btn">Santal 33</button>
+                    <div class="s-meta">Le Labo • 2011</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.dc-sim-row</span>
+          <div class="pg-box" style="padding: 0;">
+            <div class="dc-sim-shelf" style="width: 100%;">
+              <button class="dc-sim-row">
+                <div class="dc-sim-dot" style="background: var(--fam-woody)"></div>
+                <div class="dc-sim-info">
+                  <span class="dc-sim-name">Tam Dao <span class="dc-sim-name-brand">Diptyque</span></span>
+                  <span class="dc-sim-reason">Shares Sandalwood</span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Navigation Tabs</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.tabs > .tab</span>
+          <div class="pg-box">
+            <div class="tabs">
+              <button class="tab active">Collection</button>
+              <button class="tab">Wishlist</button>
+            </div>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.cat-filter-bar / .cat-state-bar</span>
+          <div class="pg-box">
+             <div class="cat-state-bar" style="margin: 0;">
+                <button class="tab active">All</button>
+                <button class="tab">Owned</button>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Badges & Tags</h3>
+      <div class="pg-grid">
+        <div class="pg-item">
+          <span class="pg-label">.cmp-frag-fam-chip</span>
+          <div class="pg-box">
+            <div class="cmp-frag-fam-chip" style="background: var(--fam-woody); color: var(--paper);">Woody</div>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.dc-ftag</span>
+          <div class="pg-box">
+            <div class="dc-ftag" style="background: var(--fam-floral);">Floral</div>
+          </div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">.picker-order-badge</span>
+          <div class="pg-box">
+            <span class="picker-order-badge">2</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW: Interactive Consolidation Lab -->
+    <section class="pg-section" id="consolidation-lab">
+      <h2 class="pg-section-title">Component Consolidation Lab</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-xl);">
+        A playground to determine the base styles for our newly consolidated component patterns. Use the toggles below to switch between variants before we apply them globally.
+      </p>
+
+      <!-- 1. .dc-sim-row (.scent-row & .cmp-sug-card-v2) -->
+      <h3 class="pg-subsection-title">1. List Items / Cards (.dc-sim-row)</h3>
+      <p class="text-meta text-tertiary" style="margin-bottom: var(--sp-md);">
+        Consolidating <code>.scent-row</code> (flat list item) and <code>.cmp-sug-card-v2</code> (padded suggestion card).
+      </p>
+      <div style="margin-bottom: var(--sp-md);">
+        <button class="pg-btn active" onclick="setVariant('sim-row', 'flat')">Flat (List)</button>
+        <button class="pg-btn" onclick="setVariant('sim-row', 'card')">Card (Padded)</button>
+      </div>
+      <div class="pg-grid" style="grid-template-columns: 1fr;">
+        <div class="pg-item" style="padding: 0; background: var(--bg-primary);">
+          <div id="demo-sim-row" class="dc-sim-row dc-sim-row--flat">
+            <div class="dc-sim-row-content">
+              <div class="fam-dot" style="background: var(--fam-amber);"></div>
+              <div class="dc-sim-row-info">
+                <div class="dc-sim-row-name">Chergui</div>
+                <div class="dc-sim-row-brand">Serge Lutens · Amber Spicy</div>
+                <div class="dc-sim-row-notes">Tobacco, Honey, Iris</div>
+              </div>
+            </div>
+            <div class="dc-sim-row-actions">
+              <button class="dc-sim-row-action">Compare</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. .cmp-frag-fam-chip (.dc-role-chip & .dc-ftag) -->
+      <h3 class="pg-subsection-title">2. Role / Family Chips (.cmp-frag-fam-chip)</h3>
+      <p class="text-meta text-tertiary" style="margin-bottom: var(--sp-md);">
+        Consolidating <code>.dc-role-chip</code> (outlined role indicator) and <code>.dc-ftag</code> (solid family tag).
+      </p>
+      <div style="margin-bottom: var(--sp-md);">
+        <button class="pg-btn" onclick="setVariant('chip', 'solid')">Solid (Family Tag)</button>
+        <button class="pg-btn active" onclick="setVariant('chip', 'outline')">Outline (Role Chip)</button>
+      </div>
+      <div class="pg-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+        <div class="pg-item">
+          <div id="demo-chip-1" class="cmp-frag-fam-chip cmp-frag-fam-chip--outline" style="--chip-color: var(--fam-floral);">Floral</div>
+        </div>
+        <div class="pg-item">
+          <div id="demo-chip-2" class="cmp-frag-fam-chip cmp-frag-fam-chip--outline" style="--chip-color: var(--fam-woody);">Primary</div>
+        </div>
+      </div>
+
+      <!-- 3. .tabs (.cat-filter-bar & .cat-state-bar) -->
+      <h3 class="pg-subsection-title">3. Segmented Controls (.tabs)</h3>
+      <p class="text-meta text-tertiary" style="margin-bottom: var(--sp-md);">
+        Consolidating the mobile <code>.cat-state-bar</code> (pill tabs) and the desktop <code>.cat-filter-bar</code> (underlined text tabs).
+      </p>
+      <div style="margin-bottom: var(--sp-md);">
+        <button class="pg-btn active" onclick="setVariant('tabs', 'pill')">Pill (Mobile Style)</button>
+        <button class="pg-btn" onclick="setVariant('tabs', 'line')">Underline (Desktop Style)</button>
+      </div>
+      <div class="pg-grid" style="grid-template-columns: 1fr;">
+        <div class="pg-item" style="background: var(--bg-secondary);">
+          <div id="demo-tabs" class="tabs tabs--pill">
+            <button class="tab active">All</button>
+            <button class="tab">Owned</button>
+            <button class="tab">Wishlist</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. .dc-collect-btn (.dc-cmp-btn) -->
+      <h3 class="pg-subsection-title">4. Compare CTAs (.dc-collect-btn)</h3>
+      <p class="text-meta text-tertiary" style="margin-bottom: var(--sp-md);">
+        Consolidating the massive <code>.dc-cmp-btn</code> into the standard <code>.dc-collect-btn</code> structure.
+      </p>
+      <div style="margin-bottom: var(--sp-md);">
+        <button class="pg-btn active" onclick="setVariant('collect', 'standard')">Standard Button</button>
+        <button class="pg-btn" onclick="setVariant('collect', 'wide')">Wide Compare Style</button>
+      </div>
+      <div class="pg-grid" style="grid-template-columns: 1fr;">
+        <div class="pg-item">
+          <button id="demo-collect" class="dc-collect-btn dc-collect-btn--standard">
+            Compare with Chergui
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2L10 7l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <script>
+    function setVariant(component, variant) {
+      // Update toggle buttons visual state
+      const btns = event.target.parentElement.querySelectorAll('.pg-btn');
+      btns.forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Update classes based on component
+      if (component === 'sim-row') {
+        const el = document.getElementById('demo-sim-row');
+        el.className = `dc-sim-row dc-sim-row--${variant}`;
+      } else if (component === 'chip') {
+        document.getElementById('demo-chip-1').className = `cmp-frag-fam-chip cmp-frag-fam-chip--${variant}`;
+        document.getElementById('demo-chip-2').className = `cmp-frag-fam-chip cmp-frag-fam-chip--${variant}`;
+      } else if (component === 'tabs') {
+        document.getElementById('demo-tabs').className = `tabs tabs--${variant}`;
+      } else if (component === 'collect') {
+        document.getElementById('demo-collect').className = `dc-collect-btn dc-collect-btn--${variant}`;
+      }
+    }
+  </script>
+</body>
+</html>

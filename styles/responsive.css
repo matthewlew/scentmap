@@ -14,6 +14,25 @@
     font-size: 17px;
   }
 
+  .cmp-pair-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--sp-2xl);
+  }
+
+  .cmp-pair-card-left {
+    flex: 0 0 280px;
+    margin-bottom: 0;
+  }
+
+  .cmp-pair-card-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   /* Three-column layout: in-flow detail panel */
   .col-detail {
     width: var(--col-detail);
@@ -51,6 +70,25 @@
 @media (min-width: 768px) and (max-width: 1099px) {
   html {
     font-size: 17px;
+  }
+
+  .cmp-pair-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--sp-xl);
+  }
+
+  .cmp-pair-card-left {
+    flex: 0 0 240px;
+    margin-bottom: 0;
+  }
+
+  .cmp-pair-card-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   /* Fixed sidesheet detail panel */
@@ -246,16 +284,6 @@
   }
 
   /* Notes tab */
-  .notes-family-row {
-    padding: var(--sp-sm) 0;
-  }
-
-  .nf-left {
-    flex: 1;
-    padding-right: var(--sp-lg);
-    gap: var(--sp-xs) var(--sp-sm);
-  }
-
   .nf-dot {
     width: 9px;
     height: 9px;
@@ -267,13 +295,6 @@
 
   .nf-desc {
     font-size: var(--fs-body-sm);
-    padding-left: var(--sp-lg);
-  }
-
-  .note-link {
-    font-size: var(--fs-body);
-    line-height: 1.85;
-    padding: 0;
   }
 
   /* Changelog */
