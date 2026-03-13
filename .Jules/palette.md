@@ -6,3 +6,6 @@
 ## 2026-03-12 - Native App Feel on Mobile Web
 **Learning:** To create a native app feel and prevent zooming on mobile browsers, the viewport meta tag should include `maximum-scale=1.0` and `user-scalable=no`, and the CSS should apply `touch-action: manipulation` to the `html` and `body` elements to disable double-tap-to-zoom.
 **Action:** Apply this pattern when tasked with optimizing mobile web applications to function and feel more like native applications, specifically when preventing unwanted pinch and double-tap zoom interactions.
+## 2026-03-12 - Explicit Keyboard Handlers for Role Buttons
+**Learning:** Custom interactive elements that use `role="button"` and `tabindex="0"` do not automatically respond to keyboard `Enter` or `Space` events like native `<button>` elements do. Screen reader and keyboard-only users will focus these elements but be unable to activate them.
+**Action:** Whenever implementing a non-native button using `role="button"`, explicitly add a `keydown` event listener that checks for `e.key === 'Enter'` or `e.key === ' '` (Space) to trigger the same action as a `click` event.
