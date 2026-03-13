@@ -251,15 +251,6 @@
   margin-bottom: var(--sp-lg);
 }
 
-.cat-filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-xs);
-  margin-bottom: var(--sp-lg);
-  background: var(--bg-tertiary);
-  border-radius: var(--radius-lg);
-  padding: 3px; /* 3px is intentional optical fine-tuning for segment pill */
-}
 
 .cat-legend {
   display: flex;

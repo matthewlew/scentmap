@@ -296,7 +296,7 @@ function renderFragDetail(container,frag){
 
     <div class="dc-name">${frag.name}</div>
     <button class="dc-brand-btn">${frag.brand}</button>
-    <div class="dc-ftag" style="background:${fm.color}">
+    <div class="chip" style="background:${fm.color}; margin-bottom: var(--sp-xl);">
       <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
       ${fm.label}
     </div>
@@ -362,13 +362,17 @@ function renderFragDetail(container,frag){
       const fm2=FAM[f.family]||{color:'#888'};
       const reason=getSwapReason(frag,f);
       const badge=classifyDiscovery(frag,f);
-      const row=document.createElement('button');row.className='dc-sim-row';
-      const namePart=reason
-        ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand dc-sim-brand-btn"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
-        :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand dc-sim-brand-btn">${f.brand}</span>`;
-      row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
-        <span class="dc-sim-info">${namePart}</span>
-        ${badge?`<span class="dc-badge ${badge.type}">${badge.label}</span>`:''}`;
+      const row=document.createElement('button');
+      row.className='scent-row scent-row--flat';
+      row.innerHTML=`
+        <div class="scent-row-content" style="border-left-color: ${fm2.color}">
+          <div class="frag-picker-dot" style="background:${fm2.color}"></div>
+          <div class="frag-picker-info" style="flex:1">
+            <div class="frag-picker-item-name">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
+            ${reason ? `<div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>` : ''}
+          </div>
+          ${badge?`<div style="flex-shrink:0"><span class="dc-badge ${badge.type}">${badge.label}</span></div>`:''}
+        </div>`;
       row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       shelf.appendChild(row);
     });
@@ -386,7 +390,7 @@ function _buildCompareCTAs(frag,container){
     const fcSelf=getCmpFam(frag.family);
     const fcOther=existingFrag?getCmpFam(existingFrag.family):null;
     const btn=document.createElement('button');
-    btn.className='dc-cmp-btn';
+    btn.className='dc-collect-btn dc-cmp-btn';
     const inner=existingFrag
       ?`<span class="dc-cmp-btn-dot" style="background:${fcSelf.accent}"></span>
         <span class="dc-cmp-btn-name">${frag.name}</span>
@@ -397,7 +401,7 @@ function _buildCompareCTAs(frag,container){
         <span class="dc-cmp-btn-name dc-cmp-btn-empty">Compare with ${frag.name}</span>`;
     btn.innerHTML=`
       <span class="dc-cmp-btn-text" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden">${inner}</span>
-      <span class="dc-cmp-btn-arrow">→</span>`;
+      <span class="dc-cmp-btn-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2L10 7l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
     btn.addEventListener('click',()=>{
       window.haptic?.('medium');
       if(existingFrag){
@@ -440,14 +444,20 @@ function buildLayerSuggestions(frag,container){
   candidates.forEach(({f,score})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
-    const row=document.createElement('button');row.className='dc-sim-row';
-    const namePart=reason
-      ?`<span class="dc-sim-name">${f.name}<span class="dc-sim-name-brand dc-sim-brand-btn"> · ${f.brand}</span></span><span class="dc-sim-reason">${reason}</span>`
-      :`<span class="dc-sim-name">${f.name}</span><span class="dc-sim-brand dc-sim-brand-btn">${f.brand}</span>`;
-    row.innerHTML=`<span class="dc-sim-dot" style="background:${fm2.color}"></span>
-      <span class="dc-sim-info">${namePart}</span>
-      <span class="dc-layer-score-badge">${score}</span>
-      <span class="dc-sim-state is-owned">Owned</span>`;
+    const row=document.createElement('button');
+    row.className='scent-row scent-row--flat';
+    row.innerHTML=`
+      <div class="scent-row-content" style="border-left-color: ${fm2.color}">
+        <div class="frag-picker-dot" style="background:${fm2.color}"></div>
+        <div class="frag-picker-info" style="flex:1">
+          <div class="frag-picker-item-name">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
+          ${reason ? `<div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>` : ''}
+        </div>
+        <div style="flex-shrink:0; display:flex; align-items:center; gap: 4px;">
+          <span class="dc-layer-score-badge">${score}</span>
+          <span class="dc-sim-state is-owned">Owned</span>
+        </div>
+      </div>`;
     row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
     shelf.appendChild(row);
   });
@@ -465,7 +475,7 @@ function buildRoleChips(frag,chipsEl){
     const isPrimary=status==='primary';
     const isSecondary=typeof status==='number';
     const chip=document.createElement('button');
-    chip.className='dc-role-chip'+(isPrimary?' assigned-primary':isSecondary?' assigned-secondary':'');
+    chip.className='chip chip--outline'+(isPrimary?' assigned-primary':isSecondary?' assigned-secondary':'');
     let orderLabel='';
     if(isPrimary)orderLabel='<span class="chip-order">✓</span>';
     else if(isSecondary)orderLabel=`<span class="chip-order">${status}</span>`;
@@ -815,7 +825,7 @@ function buildCatalog(roleFilter){
 
   // Role filter bar
   /*
-  const filterBar=document.createElement('div');filterBar.className='cat-filter-bar';
+  const filterBar=document.createElement('div');filterBar.className='cat-state-bar';
   const allBtn=document.createElement('button');
   allBtn.className='tab'+(roleFilter===null?' active':'');
   allBtn.textContent='All';
@@ -1269,7 +1279,7 @@ function openQuickPeek(frag){
     <div class="quick-peek-card">
       <div class="dc-name">${frag.name}</div>
       <div class="dc-brand">${frag.brand}</div>
-      <div class="dc-ftag" style="background:${fm.color}">
+      <div class="chip" style="background:${fm.color}; margin-bottom: var(--sp-xl);">
         <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
         ${fm.label}
       </div>
@@ -1815,14 +1825,15 @@ function renderSuggestionsV2(fa,fb,ca,cb){
     const famLabel=(FAM[frag.family]||{label:frag.family}).label;
     const topNotes=[...(frag.top||[])].slice(0,3).join(', ');
     const reason=getSwapReason(anchor, frag);
-    return`<button class="cmp-sug-card-v2" data-fid="${frag.id}">
-      <div class="cmp-sug-mini-radar">${_miniRadarSvg(frag,fc.accent)}</div>
-      <div class="cmp-sug-card-info">
-        <div class="cmp-sug-card-name">${frag.name}</div>
-        <div class="cmp-sug-card-brand">${frag.brand}</div>
-        <div class="cmp-sug-card-reason">${reason}</div>
-        <div class="cmp-sug-card-fam">${famLabel}</div>
-        ${topNotes?`<div class="cmp-sug-card-notes">${topNotes}</div>`:''}
+    return`<button class="scent-row scent-row--flat cmp-sug-card" data-fid="${frag.id}">
+      <div class="scent-row-content" style="border-left-color: ${fc.accent}">
+        <div class="frag-picker-dot" style="background:${fc.accent}"></div>
+        <div class="frag-picker-info" style="flex:1;text-align:left;">
+          <div class="frag-picker-item-name">${frag.name}</div>
+          <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
+          <div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>
+          ${topNotes?`<div class="frag-picker-item-notes">${topNotes}</div>`:''}
+        </div>
       </div>
     </button>`;
   }
@@ -2127,7 +2138,7 @@ function renderCompareResults(fa,fb){
   });
 
   // Wire suggestion taps
-  res.querySelectorAll('.cmp-sug-card-v2').forEach(card=>{
+  res.querySelectorAll('.cmp-sug-card').forEach(card=>{
     card.addEventListener('click',()=>{
       window.haptic?.('light');
       const f=CAT_MAP[card.dataset.fid];
