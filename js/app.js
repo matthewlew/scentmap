@@ -37,8 +37,11 @@ function isWish(id){return gst(id)==='wish'}
 function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
 
 /* Similarity scoring: 0–100 across family, notes, sillage, roles */
+const _simCache={};
 function scoreSimilarity(a,b){
   if(a.id===b.id)return 0;
+  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
+  if(_simCache[k]!==undefined)return _simCache[k];
   const famScore=(FAM_COMPAT[a.family]?.[b.family]??0.5)*40;
   const shBase=a._nBase.filter(n=>b._nBase.includes(n)).length;
   const shMid=a._nMid.filter(n=>b._nMid.includes(n)).length;
@@ -48,18 +51,25 @@ function scoreSimilarity(a,b){
   const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
   const shRoles=a.roles.filter(r=>b.roles.includes(r)).length;
   const roleScore=Math.min(20,shRoles*7);
-  return Math.round(famScore+noteScore+sillScore+roleScore);
+  const result=Math.round(famScore+noteScore+sillScore+roleScore);
+  _simCache[k]=result;
+  return result;
 }
 
 /* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
+const _layCache={};
 function scoreLayeringPair(a,b){
+  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
+  if(_layCache[k]!==undefined)return _layCache[k];
   const famComp=FAM_COMPAT[a.family]?.[b.family]??0.5;
   const famScore=famComp*35;
   const sillDiff=Math.abs(a.sillage-b.sillage);
   const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
   const shared=a._nAll.filter(n=>b._nAll.includes(n)).length;
   const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
-  return Math.round(famScore+sillScore+noteScore);
+  const result=Math.round(famScore+sillScore+noteScore);
+  _layCache[k]=result;
+  return result;
 }
 
 /* Classify how a candidate relates to a source frag for discover shelf */
@@ -821,8 +831,8 @@ function buildCatalog(roleFilter){
   if(CAT_STATE_FILTER==='owned')visibleCat=visibleCat.filter(f=>isOwned(f.id));
   else if(CAT_STATE_FILTER==='wish')visibleCat=visibleCat.filter(f=>isWish(f.id));
   if(search)visibleCat=visibleCat.filter(f=>
-    f.name.toLowerCase().includes(search)||
-    f.brand.toLowerCase().includes(search)||
+    f._nameL.includes(search)||
+    f._brandL.includes(search)||
     f._nAll.some(n=>n.includes(search))
   );
 
@@ -948,6 +958,41 @@ function initCatalogControls(){
     makeStateBtn(label,val,stateBar);
     if(stateBarM)makeStateBtn(label,val,stateBarM);
   });
+
+  const notesSearch = document.getElementById('notes-search');
+  const notesSearchClear = document.getElementById('notes-search-clear');
+  const notesTierBar = document.getElementById('notes-tier-bar');
+  let currentNoteQuery = '';
+  let currentNoteTier = 'all';
+
+  if (notesSearch) {
+    notesSearch.addEventListener('input', (e) => {
+      currentNoteQuery = e.target.value;
+      notesSearchClear.style.display = currentNoteQuery ? 'block' : 'none';
+      buildNotes(currentNoteQuery, currentNoteTier);
+    });
+  }
+
+  if (notesSearchClear) {
+    notesSearchClear.addEventListener('click', () => {
+      currentNoteQuery = '';
+      notesSearch.value = '';
+      notesSearchClear.style.display = 'none';
+      buildNotes(currentNoteQuery, currentNoteTier);
+    });
+  }
+
+  if (notesTierBar) {
+    const tabs = notesTierBar.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentNoteTier = tab.dataset.tier;
+        buildNotes(currentNoteQuery, currentNoteTier);
+      });
+    });
+  }
 
   // Helper: build brand tabs into a container; allBrandBtns for sync
   const allBrandBtns=[];
@@ -1488,6 +1533,7 @@ const NOTE_PROFILE={
   'yuzu':              [0.88,0.20,0.08],
 };
 function computeProfile(frag){
+  if(frag._profile)return frag._profile;
   const b=FAM_PROFILE_BASE[frag.family]||[0.5,0.5,0.5];
   // Collect notes with tier weights: top=0.5, mid=1.0, base=1.5
   const weighted=[
@@ -1496,18 +1542,20 @@ function computeProfile(frag){
     ...(frag._nBase||[]).map(n=>({n,w:1.5})),
   ].filter(({n})=>NOTE_PROFILE[n]);
   if(weighted.length===0){
-    return{freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
+    frag._profile={freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
+    return frag._profile;
   }
   const totalW=weighted.reduce((s,{w})=>s+w,0);
   const avg=weighted.reduce((acc,{n,w})=>{const p=NOTE_PROFILE[n];acc[0]+=p[0]*w;acc[1]+=p[1]*w;acc[2]+=p[2]*w;return acc;},[0,0,0]).map(v=>v/totalW);
   // 60% note-derived, 40% family anchor
-  return{
+  frag._profile={
     freshness:avg[0]*0.6+b[0]*0.4,
     sweetness:avg[1]*0.6+b[1]*0.4,
     warmth:   avg[2]*0.6+b[2]*0.4,
     intensity:(frag.sillage||5)/10,
     complexity:(frag.layering||5)/10,
   };
+  return frag._profile;
 }
 
 /* ── Swap Reason Helper ── */
@@ -2150,8 +2198,8 @@ function _renderPickerList(q,slot){
   if(!list)return;
   const lower=q.toLowerCase();
   let frags=q.length<1?[...CAT]:CAT.filter(f=>{
-    return f.name.toLowerCase().includes(lower)||
-      f.brand.toLowerCase().includes(lower)||
+    return f._nameL.includes(lower)||
+      f._brandL.includes(lower)||
       f._nAll.some(n=>n.includes(lower));
   });
   if(_pickerSort==='name'){
@@ -2315,6 +2363,14 @@ function _initPickerKeyNav(listEl,slot){
     } else if(e.key==='ArrowUp'){
       e.preventDefault();
       listEl.scrollTo({top:Math.max(curIdx-1,0)*PICKER_ITEM_H,behavior:'smooth'});
+    } else if(e.key==='Enter'){
+      e.preventDefault();
+      const f=items[curIdx]?CAT_MAP[items[curIdx].dataset.id]:null;
+      if(f){
+        _selectFragForSlot(slot,f);
+        _updateOtherSelMarking(slot);
+      }
+      _closeFragPicker();
     } else if(e.key==='Escape'){
       e.preventDefault();
       _closeFragPicker();
@@ -2411,7 +2467,15 @@ function _setupDragAndDropDropzones() {
 function initCompare(){
   ['a','b'].forEach(slot=>{
     const card=document.getElementById(`cmp-card-${slot}`);
-    if(card)card.addEventListener('click',()=>_openFragPicker(slot));
+    if(card){
+      card.addEventListener('click',()=>_openFragPicker(slot));
+      card.addEventListener('keydown',e=>{
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault();
+          _openFragPicker(slot);
+        }
+      });
+    }
     const search=document.getElementById(`frag-picker-search-${slot}`);
     if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim(),slot));
     const list=document.getElementById(`frag-picker-list-${slot}`);
@@ -2512,6 +2576,8 @@ Promise.all([
     f._nMid=(f.mid||[]).map(n=>n.toLowerCase().trim());
     f._nBase=(f.base||[]).map(n=>n.toLowerCase().trim());
     f._nAll=[...f._nTop,...f._nMid,...f._nBase];
+    f._nameL=f.name.toLowerCase();
+    f._brandL=f.brand.toLowerCase();
     return f;
   });
   NI=notes;
@@ -2521,6 +2587,7 @@ Promise.all([
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   BRANDS=brands;
   BRANDS_MAP=Object.fromEntries(BRANDS.map(b=>[b.name.toLowerCase(),b]));
+  computeNoteTiers();
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
 

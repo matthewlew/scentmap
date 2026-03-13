@@ -70,18 +70,20 @@
       </div>
 
       <div class="panel" id="p-notes">
-        <div class="frag-main-top">
+        <div class="frag-main-top" style="position: sticky; top: 0; z-index: 10; background: var(--bg-primary); margin-bottom: var(--sp-lg); border-bottom: none;">
           <div class="frag-title-row">
-            <span class="frag-title">Notes</span>
+            <span class="frag-title" style="font-size: var(--fs-title);">Notes Directory</span>
             <span class="sub" id="notes-count"></span>
           </div>
-          <div class="cat-search-wrap">
-            <input type="search" id="notes-search" class="cat-search-input" placeholder="Search notes..." autocomplete="off">
+          <div class="cat-search-wrap" style="margin-top: var(--sp-md);">
+            <input type="search" id="notes-search" class="cat-search-input" placeholder="Search notes by name or family…" autocomplete="off">
             <button class="cat-search-clear" id="notes-search-clear" aria-label="Clear search">✕</button>
           </div>
-          <div class="tabs" style="margin-top: var(--sp-md);">
-            <button class="tab active" id="notes-tab-family" onclick="setNotesTab('family')">By Family</button>
-            <button class="tab" id="notes-tab-az" onclick="setNotesTab('az')">A-Z</button>
+          <div class="notes-tier-bar" id="notes-tier-bar" style="display: flex; gap: var(--sp-xs); margin-top: var(--sp-md); padding-bottom: var(--sp-sm); overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
+            <button class="tab active" data-tier="all">All Tiers</button>
+            <button class="tab" data-tier="top">Top Notes</button>
+            <button class="tab" data-tier="mid">Heart Notes</button>
+            <button class="tab" data-tier="base">Base Notes</button>
           </div>
         </div>
         <div id="notes-body"></div>

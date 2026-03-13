@@ -296,6 +296,48 @@ async function runAll(){
 
   assert('No JS errors on load',!W._smError,W._smError||'');
 
+  // ── SUITE: scoreLayeringPair function ─────────────────────────────
+  startSuite('scoreLayeringPair');
+  if (W.scoreLayeringPair) {
+    // Test Case 1: Complementary pair
+    const compA = { family: 'woody', sillage: 2, _nAll: ['cedar', 'sandalwood'] };
+    const compB = { family: 'amber', sillage: 8, _nAll: ['vanilla', 'benzoin'] };
+    // famComp: 0.9 -> famScore: 31.5
+    // sillDiff: 6 -> sillScore: 20
+    // shared: 0 -> noteScore: 20
+    // Total: 71.5 -> Round: 72
+    assert('Complementary pair (diff sillage, no shared notes) scores high', W.scoreLayeringPair(compA, compB) === 72, `got ${W.scoreLayeringPair(compA, compB)}`);
+
+    // Test Case 2: Identical pair
+    const idA = { family: 'citrus', sillage: 4, _nAll: ['lemon', 'bergamot', 'orange'] };
+    const idB = { family: 'citrus', sillage: 4, _nAll: ['lemon', 'bergamot', 'orange'] };
+    // famComp: 0.4 -> famScore: 14
+    // sillDiff: 0 -> sillScore: 0
+    // shared: 3 -> noteScore: 5
+    // Total: 19 -> Round: 19
+    assert('Identical pair scores low', W.scoreLayeringPair(idA, idB) === 19, `got ${W.scoreLayeringPair(idA, idB)}`);
+
+    // Test Case 3: Partial compatibility
+    const partA = { family: 'floral', sillage: 5, _nAll: ['rose', 'jasmine', 'musk'] };
+    const partB = { family: 'woody', sillage: 6, _nAll: ['musk', 'sandalwood', 'cedar'] };
+    // famComp: 0.8 -> famScore: 28
+    // sillDiff: 1 -> sillScore: 10
+    // shared: 1 -> noteScore: 12
+    // Total: 50 -> Round: 50
+    assert('Partial compatibility scores medium', W.scoreLayeringPair(partA, partB) === 50, `got ${W.scoreLayeringPair(partA, partB)}`);
+
+    // Test Case 4: Fallback case
+    const fallA = { family: 'unknown', sillage: 5, _nAll: [] };
+    const fallB = { family: 'woody', sillage: 5, _nAll: [] };
+    // famComp: 0.5 -> famScore: 17.5
+    // sillDiff: 0 -> sillScore: 0
+    // shared: 0 -> noteScore: 20
+    // Total: 37.5 -> Round: 38
+    assert('Fallback case for unknown family handles gracefully', W.scoreLayeringPair(fallA, fallB) === 38, `got ${W.scoreLayeringPair(fallA, fallB)}`);
+  } else {
+    skip('scoreLayeringPair - function not found');
+  }
+
   // ── SUITE: getCmpFam function ─────────────────────────────────────
   startSuite('getCmpFam function');
 
