@@ -1143,7 +1143,7 @@ function buildNotes(){
     const cardBody=document.createElement('div');cardBody.className='notes-card-body';
     grouped[fk].forEach(note=>{
       const btn=document.createElement('button');btn.className='note-pill';btn.textContent=note.name;
-      btn.addEventListener('click',e=>{e.stopPropagation();openNotePopup(note,btn)});
+      btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
       cardBody.appendChild(btn);
     });
 
