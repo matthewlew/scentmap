@@ -959,6 +959,41 @@ function initCatalogControls(){
     if(stateBarM)makeStateBtn(label,val,stateBarM);
   });
 
+  const notesSearch = document.getElementById('notes-search');
+  const notesSearchClear = document.getElementById('notes-search-clear');
+  const notesTierBar = document.getElementById('notes-tier-bar');
+  let currentNoteQuery = '';
+  let currentNoteTier = 'all';
+
+  if (notesSearch) {
+    notesSearch.addEventListener('input', (e) => {
+      currentNoteQuery = e.target.value;
+      notesSearchClear.style.display = currentNoteQuery ? 'block' : 'none';
+      buildNotes(currentNoteQuery, currentNoteTier);
+    });
+  }
+
+  if (notesSearchClear) {
+    notesSearchClear.addEventListener('click', () => {
+      currentNoteQuery = '';
+      notesSearch.value = '';
+      notesSearchClear.style.display = 'none';
+      buildNotes(currentNoteQuery, currentNoteTier);
+    });
+  }
+
+  if (notesTierBar) {
+    const tabs = notesTierBar.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentNoteTier = tab.dataset.tier;
+        buildNotes(currentNoteQuery, currentNoteTier);
+      });
+    });
+  }
+
   // Helper: build brand tabs into a container; allBrandBtns for sync
   const allBrandBtns=[];
   function makeBrandBtn(label,val,html,container){
@@ -2517,6 +2552,7 @@ Promise.all([
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   BRANDS=brands;
   BRANDS_MAP=Object.fromEntries(BRANDS.map(b=>[b.name.toLowerCase(),b]));
+  computeNoteTiers();
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
   // Pre-fill a high-layering pair so compare isn't blank on load
