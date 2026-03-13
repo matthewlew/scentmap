@@ -2280,6 +2280,14 @@ function _initPickerKeyNav(listEl,slot){
     } else if(e.key==='ArrowUp'){
       e.preventDefault();
       listEl.scrollTo({top:Math.max(curIdx-1,0)*PICKER_ITEM_H,behavior:'smooth'});
+    } else if(e.key==='Enter'){
+      e.preventDefault();
+      const f=items[curIdx]?CAT_MAP[items[curIdx].dataset.id]:null;
+      if(f){
+        _selectFragForSlot(slot,f);
+        _updateOtherSelMarking(slot);
+      }
+      _closeFragPicker();
     } else if(e.key==='Escape'){
       e.preventDefault();
       _closeFragPicker();
@@ -2376,7 +2384,15 @@ function _setupDragAndDropDropzones() {
 function initCompare(){
   ['a','b'].forEach(slot=>{
     const card=document.getElementById(`cmp-card-${slot}`);
-    if(card)card.addEventListener('click',()=>_openFragPicker(slot));
+    if(card){
+      card.addEventListener('click',()=>_openFragPicker(slot));
+      card.addEventListener('keydown',e=>{
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault();
+          _openFragPicker(slot);
+        }
+      });
+    }
     const search=document.getElementById(`frag-picker-search-${slot}`);
     if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim(),slot));
     const list=document.getElementById(`frag-picker-list-${slot}`);
