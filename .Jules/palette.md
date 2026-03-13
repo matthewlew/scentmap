@@ -9,3 +9,7 @@
 ## 2026-03-12 - Explicit Keyboard Handlers for Role Buttons
 **Learning:** Custom interactive elements that use `role="button"` and `tabindex="0"` do not automatically respond to keyboard `Enter` or `Space` events like native `<button>` elements do. Screen reader and keyboard-only users will focus these elements but be unable to activate them.
 **Action:** Whenever implementing a non-native button using `role="button"`, explicitly add a `keydown` event listener that checks for `e.key === 'Enter'` or `e.key === ' '` (Space) to trigger the same action as a `click` event.
+
+## 2026-03-13 - Focus trap array and stack handling
+**Learning:** When managing focus for nested overlays or sheets via an array like `_focusStack`, always push `document.activeElement` to the stack immediately in the `_trapFocus` function. Do not return early if no focusable elements are found *before* pushing, otherwise the stack lengths will misalign when the overlay is eventually closed and `_returnFocus` is called.
+**Action:** When creating focus stacks, ensure push and pop operations are perfectly symmetrical across all overlay open/close lifecycles, and handle multiple simultaneous closings with a loop of `_returnFocus` calls.

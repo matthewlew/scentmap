@@ -136,10 +136,12 @@ function openDesktopDetail(renderFn){
   _renderDeskDetail();
   document.getElementById('col-detail').classList.add('open');
   if(isTablet())document.getElementById('detail-scrim').classList.add('open');
+  _trapFocus(document.getElementById('col-detail'));
 }
 function pushDesktopDetail(renderFn){
   detailStack.push(renderFn);
   _renderDeskDetail(true);
+  _trapFocus(document.getElementById('col-detail'));
 }
 function _renderDeskDetail(animateIn){
   const top=detailStack[detailStack.length-1];if(!top)return;
@@ -151,13 +153,16 @@ function _renderDeskDetail(animateIn){
   if(animateIn){inner.offsetWidth;inner.classList.add('slide')}
 }
 function closeDesktopDetail(){
+  const len=detailStack.length;
   detailStack.length=0;
   document.getElementById('col-detail').classList.remove('open');
   document.getElementById('detail-scrim').classList.remove('open');
+  for(let i=0;i<len;i++)_returnFocus();
 }
 function popDesktopDetail(){
   if(detailStack.length<=1){closeDesktopDetail();return}
   detailStack.pop();_renderDeskDetail();
+  _returnFocus();
 }
 document.getElementById('detail-back').addEventListener('click',popDesktopDetail);
 document.getElementById('detail-close-btn').addEventListener('click',closeDesktopDetail);
@@ -231,6 +236,7 @@ function pushSheet(renderFn,title){
   requestAnimationFrame(()=>{el.classList.add('visible');overlay.classList.add('has-sheets')});
   renderFn(el.querySelector('.sheet-content'));
   updateSheetBacks();
+  _trapFocus(el);
 }
 function popSheet(){
   if(!sheetStack.length)return;
@@ -243,6 +249,7 @@ function popSheet(){
     document.getElementById('sheet-stack').classList.remove('has-sheets');
     unlockBodyScroll();
   }
+  _returnFocus();
 }
 function closeAllSheets(){
   const all=[...sheetStack];sheetStack.length=0;
@@ -254,6 +261,8 @@ function closeAllSheets(){
   });
   document.getElementById('sheet-stack').classList.remove('has-sheets');
   unlockBodyScroll();
+  // Return focus for each sheet closed, since we trap per-sheet
+  all.forEach(() => _returnFocus());
 }
 function updateSheetPos(){sheetStack.forEach((s,i)=>{const t=i===sheetStack.length-1;s.classList.toggle('visible',t);s.classList.toggle('under',!t)})}
 function updateSheetBacks(){sheetStack.forEach((s,i)=>s.querySelector('.sheet-back').classList.toggle('hidden',i===0))}
@@ -2502,18 +2511,18 @@ window.clearCmpSlot=function(slot){
 
 /* ══ KEYBOARD & FOCUS MANAGEMENT ═══════════════════════════════════ */
 // Track last focused element before opening overlays, for focus return
-let _lastFocusedEl=null;
+const _focusStack=[];
 
 function _trapFocus(el){
+  _focusStack.push(document.activeElement);
   const focusable=el.querySelectorAll('button,input,select,textarea,[tabindex]:not([tabindex="-1"])');
   if(!focusable.length)return;
-  _lastFocusedEl=document.activeElement;
   focusable[0].focus();
 }
 function _returnFocus(){
-  if(_lastFocusedEl&&typeof _lastFocusedEl.focus==='function'){
-    _lastFocusedEl.focus();
-    _lastFocusedEl=null;
+  const lastFocusedEl=_focusStack.pop();
+  if(lastFocusedEl&&typeof lastFocusedEl.focus==='function'){
+    lastFocusedEl.focus();
   }
 }
 
