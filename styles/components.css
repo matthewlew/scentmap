@@ -35,7 +35,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: 0.18em;
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-primary);
 }
 
@@ -67,7 +67,7 @@
 .tab.active {
   color: var(--text-primary);
   background: var(--bg-primary);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 /* ── 2. COMPARE PANEL ── */
@@ -111,7 +111,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-sm);
 }
@@ -137,7 +137,7 @@
   z-index: 200;
   max-height: 320px;
   overflow-y: auto;
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
   display: none;
 }
 
@@ -184,7 +184,7 @@
   gap: var(--sp-sm);
   padding: var(--sp-sm) var(--sp-md);
   border-radius: var(--radius-lg);
-  border: 1.5px solid transparent;
+  border: 1px solid transparent;
   margin-top: var(--sp-sm);
 }
 
@@ -242,7 +242,7 @@
   font-size: var(--fs-body);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   border-radius: var(--radius-pill);
   padding: 4px 10px;
   white-space: nowrap;
@@ -302,7 +302,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-md);
 }
@@ -334,7 +334,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   margin-bottom: var(--sp-sm);
 }
 
@@ -389,7 +389,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   margin-bottom: var(--sp-sm);
   font-family: var(--font-sans);
 }
@@ -407,7 +407,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-xs);
   font-family: var(--font-sans);
@@ -471,7 +471,7 @@
   gap: var(--sp-sm);
   padding: var(--sp-md) var(--sp-lg);
   border-radius: var(--radius-lg);
-  border: 1.5px solid;
+  border: 1px solid;
   background: var(--bg-primary);
   cursor: pointer;
   text-align: left;
@@ -585,7 +585,7 @@
   font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--g450);
   margin-bottom: var(--sp-xl);
 }
@@ -595,7 +595,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin: var(--sp-xl) 0 var(--sp-sm);
 }
@@ -616,7 +616,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   width: 32px;
   flex-shrink: 0;
@@ -644,7 +644,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-sm);
 }
@@ -723,7 +723,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin: var(--sp-xl) 0 var(--sp-sm);
 }
@@ -811,7 +811,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin: var(--sp-xl) 0 var(--sp-sm);
 }
@@ -942,7 +942,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-primary);
   margin-bottom: var(--sp-xs);
 }
@@ -959,7 +959,7 @@
   font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--accent-primary);
 }
 
@@ -1122,7 +1122,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--bg-primary);
   background: var(--g800);
   border: none;
@@ -1432,7 +1432,7 @@
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-xs);
 }
@@ -1679,7 +1679,7 @@ mark.note-match {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
 }
 
@@ -1753,7 +1753,7 @@ mark.note-match {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--on-dark-text);
   flex-shrink: 0;
 }
@@ -1890,7 +1890,7 @@ mark.note-match {
 /* ── Score cards ── */
 
 .cmp-pair-card {
-  border: 1.5px solid var(--border-standard);
+  border: 1px solid var(--border-standard);
   border-radius: var(--radius-xl);
   background: var(--bg-primary);
   padding: var(--sp-lg);
@@ -1959,7 +1959,7 @@ mark.note-match {
   flex: 1;
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-subtle);
+  border: 1px solid var(--border-subtle);
   background: var(--bg-secondary);
   text-align: left;
   cursor: pointer;
@@ -1987,7 +1987,7 @@ mark.note-match {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
 }
 
@@ -2019,7 +2019,7 @@ mark.note-match {
   width: 8px;
   height: 8px;
   border-radius: var(--radius-circle);
-  border: 1.5px solid var(--bg-primary);
+  border: 1px solid var(--bg-primary);
   transition: left 0.6s var(--ease-spring);
 }
 
@@ -2055,7 +2055,7 @@ mark.note-match {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-sm);
 }
@@ -2104,7 +2104,7 @@ mark.note-match {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-sm);
 }
@@ -2127,7 +2127,7 @@ mark.note-match {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-sm);
 }
@@ -2147,7 +2147,7 @@ mark.note-match {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   padding: 0 var(--sp-sm);
 }
 
@@ -2207,7 +2207,7 @@ mark.note-match {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: 2px;
   width: 100%;
@@ -2259,7 +2259,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-sm);
 }
@@ -2275,7 +2275,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   margin-bottom: var(--sp-sm);
 }
 
@@ -2310,7 +2310,7 @@ button.cmp-note-pill:hover {
   background: var(--bg-primary);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-xl);
-  box-shadow: 0 12px 32px var(--fade-strong);
+  box-shadow: none;
   padding: var(--sp-xl);
   width: 100%;
   max-width: 320px;
@@ -2382,7 +2382,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
 }
 
@@ -2436,7 +2436,7 @@ button.cmp-note-pill:hover {
 .cmp-edu-card {
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-standard);
+  border: 1px solid var(--border-standard);
   background: var(--bg-primary);
   display: flex;
   flex-direction: column;
@@ -2541,7 +2541,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--g450);
   margin-bottom: var(--sp-xl);
 }
@@ -2595,7 +2595,7 @@ button.cmp-note-pill:hover {
   background: var(--bg-primary);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-xl);
-  box-shadow: 0 8px 24px var(--fade-strong);
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2669,7 +2669,7 @@ button.cmp-note-pill:hover {
   bottom: 3px;
   background: var(--bg-primary);
   border-radius: calc(var(--radius) - 2px);
-  box-shadow: 0 1px 3px var(--fade-subtle);
+  box-shadow: none;
   pointer-events: none;
   transition: left var(--dur-standard) var(--ease-spring),
               width var(--dur-standard) var(--ease-spring);
@@ -2690,7 +2690,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   transition: color var(--dur-fast) var(--ease-spring);
 }
@@ -2914,7 +2914,7 @@ button.cmp-note-pill:hover {
   background: var(--bg-primary);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px var(--fade-strong);
+  box-shadow: none;
   padding: var(--sp-md) var(--sp-md) var(--sp-md);
   pointer-events: all;
   z-index: 1;
@@ -2964,7 +2964,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-sm);
 }
@@ -3075,7 +3075,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   padding: 0 var(--sp-xl) var(--sp-sm);
 }
@@ -3265,7 +3265,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--g450);
   margin-bottom: var(--sp-xl);
   background: none;
@@ -3287,7 +3287,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-meta);
   font-weight: 700;
   letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  text-transform: uppercase; letter-spacing: 0.1em;
   color: var(--text-tertiary);
   margin-bottom: 4px;
 }
