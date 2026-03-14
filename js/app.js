@@ -1306,6 +1306,7 @@ function updCC(){
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
 let notesSearchQuery = '';
 let notesSortMode = 'family'; // 'family' or 'az'
+let notesTierMode = 'all';
 
 window.setNotesTab = function(mode) {
   notesSortMode = mode;
@@ -1314,12 +1315,19 @@ window.setNotesTab = function(mode) {
   buildNotes();
 };
 
-function buildNotes(){
+function buildNotes(searchQuery, currentTier){
+  if (searchQuery !== undefined) notesSearchQuery = searchQuery;
+  if (currentTier !== undefined) notesTierMode = currentTier;
+
   const body=document.getElementById('notes-body');body.innerHTML='';
 
-  // Filter notes by search query
+  // Filter notes by search query and tier
   const sq = notesSearchQuery.toLowerCase().trim();
-  const filteredNotes = NI.filter(n => n.name.toLowerCase().includes(sq));
+  const filteredNotes = NI.filter(n => {
+    const matchesQuery = n.name.toLowerCase().includes(sq);
+    const matchesTier = notesTierMode === 'all' || n._tier === notesTierMode;
+    return matchesQuery && matchesTier;
+  });
 
   const countEl = document.getElementById('notes-count');
   if(countEl) countEl.textContent = `${filteredNotes.length} notes`;
@@ -2731,6 +2739,26 @@ Promise.all([
   window.ROLES = ROLES; window.RM = RM; window.BRANDS = BRANDS; window.BRANDS_MAP = BRANDS_MAP;
   window.computeProfile = computeProfile; window.scoreSimilarity = scoreSimilarity; window.scoreLayeringPair = scoreLayeringPair;
 
+  window.computeNoteTiers = function() {
+    const counts = {};
+    CAT.forEach(f => {
+      (f._nTop || []).forEach(n => { if (!counts[n]) counts[n] = {top:0, mid:0, base:0}; counts[n].top++; });
+      (f._nMid || []).forEach(n => { if (!counts[n]) counts[n] = {top:0, mid:0, base:0}; counts[n].mid++; });
+      (f._nBase || []).forEach(n => { if (!counts[n]) counts[n] = {top:0, mid:0, base:0}; counts[n].base++; });
+    });
+    NI.forEach(note => {
+      const key = note.name.toLowerCase();
+      const c = counts[key];
+      if (c) {
+        if (c.top >= c.mid && c.top >= c.base) note._tier = 'top';
+        else if (c.mid >= c.top && c.mid >= c.base) note._tier = 'mid';
+        else note._tier = 'base';
+      } else {
+        note._tier = 'base';
+      }
+    });
+  };
+
   computeNoteTiers();
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
@@ -2740,17 +2768,28 @@ Promise.all([
   const notesSearchClearEl = document.getElementById('notes-search-clear');
   if (notesSearchEl) {
     notesSearchEl.addEventListener('input', e => {
-      notesSearchQuery = e.target.value;
+      buildNotes(e.target.value, notesTierMode);
       if (notesSearchClearEl) notesSearchClearEl.style.display = notesSearchQuery ? 'block' : 'none';
-      buildNotes();
     });
   }
   if (notesSearchClearEl) {
     notesSearchClearEl.addEventListener('click', () => {
-      notesSearchQuery = '';
+      buildNotes('', notesTierMode);
       if (notesSearchEl) notesSearchEl.value = '';
       notesSearchClearEl.style.display = 'none';
-      buildNotes();
+    });
+  }
+
+  // Init notes tier bar
+  const notesTierBar = document.getElementById('notes-tier-bar');
+  if (notesTierBar) {
+    const tabs = notesTierBar.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        buildNotes(notesSearchQuery, tab.dataset.tier);
+      });
     });
   }
   // Pre-fill a high-layering pair so compare isn't blank on load
