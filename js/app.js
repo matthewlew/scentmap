@@ -698,6 +698,186 @@ function renderByredoQuiz(container) {
   renderStep();
 }
 
+function renderGlobalQuiz(container) {
+  const qs = [
+    {
+      q: "What are we looking for today?",
+      a: [
+        { label: "A fresh start / A new signature", tags: ["all"] },
+        { label: "Something light and easy for every day", tags: ["citrus", "green", "freshness"] },
+        { label: "A powerful scent for special nights", tags: ["amber", "oud", "oriental", "intensity"] }
+      ]
+    },
+    {
+      q: "What vibe speaks to you the most?",
+      a: [
+        { label: "Clean, crisp, and put-together", tags: ["citrus", "aquatic"] },
+        { label: "Dark, mysterious, and complex", tags: ["woody", "leather"] },
+        { label: "Cozy, warm, and inviting", tags: ["amber", "gourmand"] },
+        { label: "Bright, floral, and romantic", tags: ["floral"] }
+      ]
+    },
+    {
+      q: "Are there any notes you absolutely avoid?",
+      a: [
+        { label: "Heavy florals (Rose, Jasmine)", tags: ["blacklist_floral"] },
+        { label: "Sweet or food-like scents (Vanilla, Caramel)", tags: ["blacklist_gourmand"] },
+        { label: "Strong, smoky, or earthy woods (Oud, Patchouli)", tags: ["blacklist_woody", "blacklist_leather"] },
+        { label: "I'm open to anything!", tags: ["neutral"] }
+      ]
+    },
+    {
+      q: "How do you want it to project?",
+      a: [
+        { label: "I want people to smell me when I enter a room", tags: ["intensity"] },
+        { label: "I want it to be a secret just for someone who leans in", tags: ["intimate"] },
+        { label: "Something right in the middle", tags: ["neutral"] }
+      ]
+    },
+    {
+      q: "What climate will you wear this in most?",
+      a: [
+        { label: "Warm or humid weather", tags: ["freshness"] },
+        { label: "Cold or crisp weather", tags: ["warmth"] },
+        { label: "All year round", tags: ["neutral"] }
+      ]
+    }
+  ];
+
+  let step = 0;
+  let collectedTags = [];
+
+  function renderStep() {
+    if (step >= qs.length) {
+      renderResult();
+      return;
+    }
+    const q = qs[step];
+    container.innerHTML = `
+      <div style="padding:var(--sp-lg) 0;">
+        <div style="font-size:var(--fs-meta); color:var(--g500); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
+        <div class="dc-name" style="margin-bottom:var(--sp-xl);">${q.q}</div>
+        <div style="display:flex; flex-direction:column; gap:var(--sp-md);">
+          ${q.a.map((ans, i) => `
+            <button class="dc-collect-btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal; text-align:left;">${ans.label}</button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    container.querySelectorAll('.quiz-ans-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        window.haptic?.('light');
+        const ansIdx = parseInt(e.target.dataset.idx, 10);
+        collectedTags.push(...q.a[ansIdx].tags);
+        step++;
+        renderStep();
+      });
+    });
+  }
+
+  function renderResult() {
+    // Parse tags into structured preferences
+    const prefs = {
+      boostFamilies: [],
+      boostFreshness: false,
+      boostWarmth: false,
+      boostIntensity: false,
+      penalizeIntensity: false,
+      blacklistFamilies: [],
+      blacklistRoles: []
+    };
+
+    collectedTags.forEach(tag => {
+      if (tag === 'all') { /* base points applied later */ }
+      else if (tag === 'freshness') prefs.boostFreshness = true;
+      else if (tag === 'warmth') prefs.boostWarmth = true;
+      else if (tag === 'intensity') prefs.boostIntensity = true;
+      else if (tag === 'intimate') prefs.penalizeIntensity = true;
+      else if (tag.startsWith('blacklist_')) {
+        const bl = tag.replace('blacklist_', '');
+        if (bl === 'gourmand') {
+          prefs.blacklistRoles.push('gourmand', 'sweet');
+          prefs.blacklistFamilies.push('amber'); // Often overlap
+        } else {
+          prefs.blacklistFamilies.push(bl);
+        }
+      }
+      else if (tag !== 'neutral') {
+        prefs.boostFamilies.push(tag);
+      }
+    });
+
+    let bestFrags = CAT.map(frag => {
+      let score = 0;
+
+      // Blacklist strict check
+      if (prefs.blacklistFamilies.includes(frag.family)) {
+        return { frag, score: -100 };
+      }
+      if (prefs.blacklistRoles.some(r => frag.roles.includes(r))) {
+         return { frag, score: -100 };
+      }
+
+      // Base points if "all" was selected
+      if (collectedTags.includes('all')) score += 1;
+
+      // Family/Vibe Match
+      if (prefs.boostFamilies.includes(frag.family)) score += 5;
+      prefs.boostFamilies.forEach(bf => {
+        if (frag.roles.includes(bf)) score += 2;
+      });
+
+      // Profile Match (Freshness, Warmth, Intensity)
+      const prof = computeProfile(frag);
+
+      if (prefs.boostFreshness && prof.freshness > 0.6) score += 3;
+      if (prefs.boostWarmth && prof.warmth > 0.6) score += 3;
+
+      if (prefs.boostIntensity && prof.intensity > 0.6) score += 3;
+      if (prefs.penalizeIntensity) {
+        if (prof.intensity < 0.4) score += 3;
+        else if (prof.intensity > 0.6) score -= 3;
+      }
+
+      return { frag, score };
+    }).filter(x => x.score > -50).sort((a, b) => b.score - a.score);
+
+    // Get top 3
+    let top3 = bestFrags.filter(x => x.score > 0).map(x => x.frag).slice(0, 3);
+
+    // Fallback if scoring failed
+    if (top3.length === 0 && CAT.length > 2) {
+      top3 = [CAT[0], CAT[1], CAT[2]];
+    }
+
+    container.innerHTML = `
+      <div style="padding:var(--sp-lg) 0;">
+        <div class="dc-name" style="margin-bottom:var(--sp-xl);">Your Perfect Matches</div>
+        <div class="dc-description" style="margin-bottom:var(--sp-xl);">Based on your unique scent profile, we highly recommend exploring these three fragrances:</div>
+        <div class="house-detail-list"></div>
+        <button class="dc-collect-btn" onclick="pushDetail(c => renderGlobalQuiz(c), 'Fragrance Match')" style="margin-top:var(--sp-2xl); width:100%; justify-content:center; background:var(--bg-secondary); color:var(--text-secondary); border:1px solid var(--border-strong);">Retake Quiz</button>
+      </div>
+    `;
+
+    const list = container.querySelector('.house-detail-list');
+    top3.forEach(frag => {
+      const fc = getCmpFam(frag.family);
+      const btn = document.createElement('button');
+      btn.className = 'frag-picker-item';
+      btn.innerHTML = `<div class="frag-picker-dot" style="background:${fc.accent}"></div>
+        <div>
+          <div class="frag-picker-item-name">${frag.name}</div>
+          <div class="frag-picker-item-brand">${frag.brand} · ${(FAM[frag.family] || {}).label || frag.family}</div>
+        </div>`;
+      btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
+      list.appendChild(btn);
+    });
+  }
+
+  renderStep();
+}
+
 function refreshAfterStateChange(id){
   const row=document.querySelector(`.scent-row[data-id="${id}"]`);
   if(row){const f=CAT_MAP[id];renderCatRow(row,f,FAM[f.family]||{color:'#888'})}
@@ -1389,6 +1569,18 @@ function buildNotes(searchQuery, currentTier){
 
     body.appendChild(grid);
   }
+
+  // Inject Global Quiz button at the bottom of the notes directory
+  const quizBtnWrap = document.createElement('div');
+  quizBtnWrap.style.marginTop = 'var(--sp-2xl)';
+  quizBtnWrap.style.textAlign = 'center';
+  quizBtnWrap.innerHTML = `<button class="dc-collect-btn global-quiz-btn" style="display:inline-flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Perfect Fragrance (Quiz)</button>`;
+  body.appendChild(quizBtnWrap);
+
+  quizBtnWrap.querySelector('.global-quiz-btn').addEventListener('click', (e) => {
+    window.haptic?.('medium');
+    pushDetail(c => renderGlobalQuiz(c), 'Fragrance Match');
+  });
 }
 
 /* ── QUICK PEEK ── */
