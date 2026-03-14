@@ -2726,6 +2726,11 @@ Promise.all([
   NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
   BRANDS=brands;
   BRANDS_MAP=Object.fromEntries(BRANDS.map(b=>[b.name.toLowerCase(),b]));
+  // Re-expose populated arrays to window for tests
+  window.CAT = CAT; window.CAT_MAP = CAT_MAP; window.NI = NI; window.NI_MAP = NI_MAP;
+  window.ROLES = ROLES; window.RM = RM; window.BRANDS = BRANDS; window.BRANDS_MAP = BRANDS_MAP;
+  window.computeProfile = computeProfile; window.scoreSimilarity = scoreSimilarity; window.scoreLayeringPair = scoreLayeringPair;
+
   computeNoteTiers();
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();
