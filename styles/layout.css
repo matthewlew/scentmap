@@ -36,7 +36,7 @@
 }
 
 .col-main-content {
-  padding: var(--sp-xl) var(--sp-xl) 80px; /* 80px = mobile nav bar clearance, intentional */
+  padding: var(--sp-4xl) var(--sp-4xl) 120px; /* 80px = mobile nav bar clearance, intentional */
 }
 
 /* RIGHT: detail panel — desktop: in-flow third column */

@@ -22,20 +22,20 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 /* ── 2. PRIMITIVE COLOR TOKENS ── */
 :root{
   /* Warm paper palette */
-  --paper:   #F5F2EC;
-  --ink:     #0E0C09;
-  --stone:   #EAE6DE;
-  --resin:   #8C5E30;
+  --paper:   #0a0a0f;
+  --ink:     #ffffff;
+  --stone:   #151520;
+  --resin:   #ff0088;
 
   /* Grayscale 8-step (Adjusted for AA Contrast on #F5F2EC) */
-  --g700:    #2E2A22;
-  --g600:    #464034;
-  --g500:    #564E40;
-  --g450:    #655B4B; /* ~5.2:1 contrast */
-  --g400:    #716654; /* ~4.5:1 contrast */
-  --g300:    #A8A087; /* Decorative only, ~2.5:1 */
-  --g200:    #DDD8CE;
-  --g100:    #EAE6DE;
+  --g700:    #e0e0e0;
+  --g600:    #c0c0c0;
+  --g500:    #a0a0a0;
+  --g450:    #808080; /* ~5.2:1 contrast */
+  --g400:    #606060; /* ~4.5:1 contrast */
+  --g300:    #404040; /* Decorative only, ~2.5:1 */
+  --g200:    #2a2a35;
+  --g100:    #1a1a25;
 
   /* Layout sizing */
   --col-detail: 340px;
@@ -128,10 +128,10 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --scrim-dark:    rgba(0, 0, 0, 0.18);
   --scrim-tooltip: rgba(8, 8, 18, 0.93);
 
-  --fade-subtle:   rgba(14, 12, 9, 0.06);     /* Code background */
-  --fade-light:    rgba(14, 12, 9, 0.07);     /* Border */
-  --fade-medium:   rgba(14, 12, 9, 0.1);      /* Shadow */
-  --fade-strong:   rgba(14, 12, 9, 0.14);     /* Strong shadow */
+  --fade-subtle:   rgba(255, 0, 136, 0.1);     /* Code background */
+  --fade-light:    rgba(255, 0, 136, 0.2);     /* Border */
+  --fade-medium:   rgba(255, 0, 136, 0.4);      /* Shadow */
+  --fade-strong:   rgba(255, 0, 136, 0.6);     /* Strong shadow */
 
   /* On-dark overlay tokens (text/controls on family-color headers) */
   --on-dark-text:          rgba(255, 255, 255, 0.92);   /* Primary text on dark bg */
