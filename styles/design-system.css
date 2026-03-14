@@ -21,21 +21,21 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 2. PRIMITIVE COLOR TOKENS ── */
 :root{
-  /* Warm paper palette */
-  --paper:   #F5F2EC;
-  --ink:     #0E0C09;
-  --stone:   #EAE6DE;
-  --resin:   #8C5E30;
+  /* Modern monochrome palette */
+  --paper:   #FFFFFF;
+  --ink:     #000000;
+  --stone:   #FAFAFA;
+  --resin:   #333333;
 
-  /* Grayscale 8-step (Adjusted for AA Contrast on #F5F2EC) */
-  --g700:    #2E2A22;
-  --g600:    #464034;
-  --g500:    #564E40;
-  --g450:    #655B4B; /* ~5.2:1 contrast */
-  --g400:    #716654; /* ~4.5:1 contrast */
-  --g300:    #A8A087; /* Decorative only, ~2.5:1 */
-  --g200:    #DDD8CE;
-  --g100:    #EAE6DE;
+  /* Grayscale 8-step (High contrast) */
+  --g700:    #111111;
+  --g600:    #333333;
+  --g500:    #555555;
+  --g450:    #666666;
+  --g400:    #777777;
+  --g300:    #AAAAAA;
+  --g200:    #DDDDDD;
+  --g100:    #F5F5F5;
 
   /* Layout sizing */
   --col-detail: 340px;
@@ -44,26 +44,26 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 3. FAMILY COLOR TOKENS ── */
 :root{
-  /* Fragrance family semantic colors */
-  --fam-woody:    #6B4E2A;
-  --fam-floral:   #B5536E;
-  --fam-amber:    #A06800;
-  --fam-citrus:   #8A7000;
-  --fam-leather:  #3E1A08;
-  --fam-oud:      #1E0A12;
-  --fam-green:    #2E5C20;
-  --fam-chypre:   #3C5C2A;
-  --fam-gourmand: #7C3E18;
-  --fam-default:  #888;          /* Fallback for undefined families */
+  /* Desaturated minimal fragrance family semantic colors */
+  --fam-woody:    #4A4A4A;
+  --fam-floral:   #6E6E6E;
+  --fam-amber:    #5C5C5C;
+  --fam-citrus:   #7A7A7A;
+  --fam-leather:  #383838;
+  --fam-oud:      #262626;
+  --fam-green:    #525252;
+  --fam-chypre:   #4F4F4F;
+  --fam-gourmand: #454545;
+  --fam-default:  #888888;       /* Fallback for undefined families */
 }
 
 /* ── 4. TYPOGRAPHY TOKENS ── */
 :root{
   /* Font families */
-  --font-serif:   "Source Serif 4", Georgia, serif;
+  --font-serif:   "DM Sans", system-ui, sans-serif; /* Override serif to sans for modern look */
   --font-sans:    "DM Sans", system-ui, sans-serif;
   --font-mono:    "SF Mono", Menlo, monospace;
-  --font-display: "Archivo Black", sans-serif;
+  --font-display: "DM Sans", sans-serif; /* Clean sans */
 
   /* Font sizes (Strict 5-style scale. Min: 14px / 0.875rem) */
   --fs-meta:      0.875rem;  /* 14px */
@@ -103,14 +103,15 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 6. BORDER-RADIUS SCALE ── */
 :root{
-  --radius-micro:  2px;    /* Fine details, borders */
-  --radius-small:  3px;    /* Badges, chips, code blocks */
-  --radius-sm:     5px;    /* Tab pills */
-  --radius:        6px;    /* Standard buttons, inputs */
-  --radius-lg:     8px;    /* Cards, panels */
-  --radius-xl:     10px;   /* Large cards, sections */
-  --radius-pill:   20px;   /* Pill buttons, role chips */
-  --radius-circle: 50%;    /* Circular dots, indicators */
+  /* Brutalist/Sleek sharp corners */
+  --radius-micro:  0px;
+  --radius-small:  0px;
+  --radius-sm:     0px;
+  --radius:        0px;
+  --radius-lg:     0px;
+  --radius-xl:     0px;
+  --radius-pill:   0px;
+  --radius-circle: 50%;    /* Keep circular dots, indicators */
 }
 
 /* ── 7. TRANSITION/ANIMATION TOKENS ── */
@@ -125,13 +126,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 8. OVERLAY & TRANSPARENCY TOKENS ── */
 :root{
-  --scrim-dark:    rgba(0, 0, 0, 0.18);
-  --scrim-tooltip: rgba(8, 8, 18, 0.93);
+  --scrim-dark:    rgba(0, 0, 0, 0.4);
+  --scrim-tooltip: rgba(0, 0, 0, 0.95);
 
-  --fade-subtle:   rgba(14, 12, 9, 0.06);     /* Code background */
-  --fade-light:    rgba(14, 12, 9, 0.07);     /* Border */
-  --fade-medium:   rgba(14, 12, 9, 0.1);      /* Shadow */
-  --fade-strong:   rgba(14, 12, 9, 0.14);     /* Strong shadow */
+  --fade-subtle:   rgba(0, 0, 0, 0.03);     /* Code background */
+  --fade-light:    rgba(0, 0, 0, 0.05);     /* Border */
+  --fade-medium:   rgba(0, 0, 0, 0.02);      /* Shadow - almost flat */
+  --fade-strong:   rgba(0, 0, 0, 0.05);     /* Strong shadow - very subtle */
 
   /* On-dark overlay tokens (text/controls on family-color headers) */
   --on-dark-text:          rgba(255, 255, 255, 0.92);   /* Primary text on dark bg */
@@ -150,8 +151,8 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 :root{
   /* Text colors */
   --text-primary:     var(--ink);
-  --text-secondary:   var(--g500);
-  --text-tertiary:    var(--g400);
+  --text-secondary:   var(--g600); /* Darkened for better contrast in modern look */
+  --text-tertiary:    var(--g500);
   --text-disabled:    var(--g300);
 
   /* Background colors */
@@ -169,11 +170,11 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --border-subtle:    var(--g100);
 
   /* Accent colors */
-  --accent-primary:   var(--resin);
+  --accent-primary:   var(--ink); /* Changed from resin to pure black for modern feel */
   --accent-default:   var(--fam-default);
 
   /* State colors */
-  --wish:             var(--fam-floral);  /* Wishlist indicator — warm rose */
+  --wish:             var(--fam-floral);
 }
 
 /* ── 10. BASE STYLES ── */
