@@ -1693,7 +1693,7 @@ mark.note-match {
   flex: 1;
   position: relative;
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-standard);
+  border: 1px solid var(--border-subtle);
   overflow: hidden;
   cursor: pointer;
   transition: border-color var(--dur-fast) var(--ease-spring),
@@ -1701,7 +1701,7 @@ mark.note-match {
   min-height: 120px;
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
+  background: transparent;
 }
 
 .cmp-frag-card:hover {
@@ -1719,8 +1719,9 @@ mark.note-match {
 }
 
 .cmp-card-empty-lbl {
-  font-size: var(--fs-body);
-  font-weight: 600;
+  font-family: var(--font-serif);
+  font-size: var(--fs-title);
+  font-weight: 700;
   color: var(--text-tertiary);
 }
 
@@ -3321,4 +3322,22 @@ button.cmp-note-pill:hover {
   color: var(--text-primary);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+/* ══ MOBILE BOTTOM NAV ════════════════════════════════════════ */
+.mobile-bottomnav{display:none}
+@media(max-width:767px){
+  .mobile-bottomnav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;
+    background:var(--bg-primary);border-top:1px solid var(--border-strong);
+    z-index:150;padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .mbn-btn{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:none;border:none;cursor:pointer;font-family:inherit;
+    font-size:var(--fs-caption);color:var(--text-tertiary);gap:2px;padding:8px 2px 6px;
+    transition:color var(--dur-fast);letter-spacing:var(--ls-normal);min-height:52px;
+  }
+  .mbn-btn.active{color:var(--text-primary);font-weight:600}
+  .mbn-icon{font-size:var(--fs-title);line-height:1}
+  .col-main-nav{display:none!important}
 }
