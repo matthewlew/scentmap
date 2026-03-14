@@ -1693,19 +1693,21 @@ mark.note-match {
   flex: 1;
   position: relative;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border-subtle);
+  border: 2px solid var(--accent-primary);
+  box-shadow: 0 0 15px var(--fade-medium);
   overflow: hidden;
   cursor: pointer;
   transition: border-color var(--dur-fast) var(--ease-spring),
               box-shadow var(--dur-fast) var(--ease-spring);
-  min-height: 120px;
+  min-height: 160px;
   display: flex;
   flex-direction: column;
   background: transparent;
 }
 
 .cmp-frag-card:hover {
-  border-color: var(--border-strong);
+  border-color: var(--ink);
+  box-shadow: 0 0 30px var(--fade-strong);
 }
 
 .cmp-card-empty {
