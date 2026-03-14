@@ -302,6 +302,8 @@ function renderFragDetail(container,frag){
     </div>
     <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
     ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
+    ${frag.story?`<div class="dc-story" style="margin-top:var(--sp-md); padding:var(--sp-md); background:var(--g50); border-radius:6px; font-size:var(--fs-body-sm); color:var(--g600); border:1px solid var(--g200);">${frag.story}</div>`:''}
+    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--black); color:var(--paper); border:none;">Buy from ${frag.brand}</a>`:''}
     <div class="dc-cmp-cta-label">Compare with</div>
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
     <div class="dc-stats">
@@ -553,6 +555,8 @@ function renderHouseDetail(container,brand){
   container.innerHTML=`<div class="house-detail-wrap">
     <div class="house-detail-name">${brand}</div>
     ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${houseData.desc}</div>` : ''}
+    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--black); color:var(--paper); border:none;">Visit ${brand} Website</a>` : ''}
+    ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
 
     <div style="margin:var(--sp-xl) 0;">
       <div class="dc-slbl">Fragrance Families</div>
@@ -576,8 +580,123 @@ function renderHouseDetail(container,brand){
     btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag),frag.name);});
     list.appendChild(btn);
   });
+
+  const quizBtn = container.querySelector('.byredo-quiz-btn');
+  if (quizBtn) {
+    quizBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.haptic?.('medium');
+      pushDetail(c => renderByredoQuiz(c), 'Find Your Byredo');
+    });
+  }
 }
 function openHouseDetail(brand){openDetail(c=>renderHouseDetail(c,brand),brand)}
+
+function renderByredoQuiz(container) {
+  const qs = [
+    {
+      q: "What is your ideal weekend?",
+      a: [
+        { label: "Exploring the city / Gallery hopping", tags: ["floral", "chypre", "creative"] },
+        { label: "Relaxing in nature / Hiking", tags: ["green", "woody", "casual"] },
+        { label: "Reading a book by the fire", tags: ["amber", "oud", "cold"] }
+      ]
+    },
+    {
+      q: "What fabric do you wear most?",
+      a: [
+        { label: "Crisp Cotton / Linen", tags: ["citrus", "aquatic", "heat"] },
+        { label: "Leather / Denim", tags: ["leather", "woody", "signature"] },
+        { label: "Silk / Cashmere", tags: ["amber", "floral", "intimate"] }
+      ]
+    },
+    {
+      q: "Do you prefer to blend in or stand out?",
+      a: [
+        { label: "Quiet luxury (Blend in)", tags: ["casual", "intimate", "work"] },
+        { label: "Make a statement (Stand out)", tags: ["signature", "formal", "creative"] }
+      ]
+    }
+  ];
+
+  let step = 0;
+  let collectedTags = [];
+
+  function renderStep() {
+    if (step >= qs.length) {
+      renderResult();
+      return;
+    }
+    const q = qs[step];
+    container.innerHTML = `
+      <div style="padding:var(--sp-lg) 0;">
+        <div style="font-size:var(--fs-meta); color:var(--g500); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
+        <div class="dc-name" style="margin-bottom:var(--sp-xl);">${q.q}</div>
+        <div style="display:flex; flex-direction:column; gap:var(--sp-md);">
+          ${q.a.map((ans, i) => `
+            <button class="dc-collect-btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal;">${ans.label}</button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    container.querySelectorAll('.quiz-ans-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        window.haptic?.('light');
+        const ansIdx = parseInt(e.target.dataset.idx, 10);
+        collectedTags.push(...q.a[ansIdx].tags);
+        step++;
+        renderStep();
+      });
+    });
+  }
+
+  function renderResult() {
+    const byredoFrags = CAT.filter(f => f.brand.toLowerCase() === 'byredo');
+
+    // Score each fragrance based on collected tags
+    let bestFrags = byredoFrags.map(f => {
+      let score = 0;
+      collectedTags.forEach(tag => {
+        if (f.family === tag) score += 3; // strong match
+        if (f.roles.includes(tag)) score += 2; // medium match
+      });
+      return { f, score };
+    }).sort((a, b) => b.score - a.score);
+
+    // Get top 3
+    let top3 = bestFrags.filter(x => x.score > 0).map(x => x.f).slice(0, 3);
+
+    // Fallback if scoring failed
+    if (top3.length === 0) {
+      top3 = [CAT_MAP['gypsy-water'], CAT_MAP['bal-dafrique'], CAT_MAP['mojave-ghost']].filter(Boolean);
+    }
+
+    container.innerHTML = `
+      <div style="padding:var(--sp-lg) 0;">
+        <div class="dc-name" style="margin-bottom:var(--sp-xl);">Your Byredo Signatures</div>
+        <div class="dc-description" style="margin-bottom:var(--sp-xl);">Based on your preferences, we recommend exploring these fragrances next time you are at a Byredo counter:</div>
+        <div class="house-detail-list"></div>
+      </div>
+    `;
+
+    const list = container.querySelector('.house-detail-list');
+    top3.forEach(frag => {
+      const fc = getCmpFam(frag.family);
+      const btn = document.createElement('button');
+      btn.className = 'frag-picker-item';
+      btn.innerHTML = `<div class="frag-picker-dot" style="background:${fc.accent}"></div>
+        <div>
+          <div class="frag-picker-item-name">${frag.name}</div>
+          <div class="frag-picker-item-brand">${(FAM[frag.family] || {}).label || frag.family}</div>
+        </div>`;
+      btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
+      list.appendChild(btn);
+    });
+  }
+
+  renderStep();
+}
 
 function refreshAfterStateChange(id){
   const row=document.querySelector(`.scent-row[data-id="${id}"]`);
