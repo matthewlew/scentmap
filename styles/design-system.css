@@ -21,21 +21,21 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 2. PRIMITIVE COLOR TOKENS ── */
 :root{
-  /* Warm paper palette */
-  --paper:   #F5F2EC;
-  --ink:     #0E0C09;
-  --stone:   #EAE6DE;
-  --resin:   #8C5E30;
+  /* Analog equipment / jungle station palette */
+  --paper:   #E2E4DC;
+  --ink:     #171E19;
+  --stone:   #C8CCC4;
+  --resin:   #D45D00;
 
-  /* Grayscale 8-step (Adjusted for AA Contrast on #F5F2EC) */
-  --g700:    #2E2A22;
-  --g600:    #464034;
-  --g500:    #564E40;
-  --g450:    #655B4B; /* ~5.2:1 contrast */
-  --g400:    #716654; /* ~4.5:1 contrast */
-  --g300:    #A8A087; /* Decorative only, ~2.5:1 */
-  --g200:    #DDD8CE;
-  --g100:    #EAE6DE;
+  /* Grayscale 8-step (Adjusted for AA Contrast on #E2E4DC) */
+  --g700:    #252D27;
+  --g600:    #3D4A41;
+  --g500:    #4B594F;
+  --g450:    #5A695E;
+  --g400:    #68786D;
+  --g300:    #9AB0A2;
+  --g200:    #C8CCC4;
+  --g100:    #D6D9D2;
 
   /* Layout sizing */
   --col-detail: 340px;
@@ -45,25 +45,25 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 /* ── 3. FAMILY COLOR TOKENS ── */
 :root{
   /* Fragrance family semantic colors */
-  --fam-woody:    #6B4E2A;
-  --fam-floral:   #B5536E;
-  --fam-amber:    #A06800;
-  --fam-citrus:   #8A7000;
-  --fam-leather:  #3E1A08;
-  --fam-oud:      #1E0A12;
-  --fam-green:    #2E5C20;
-  --fam-chypre:   #3C5C2A;
-  --fam-gourmand: #7C3E18;
-  --fam-default:  #888;          /* Fallback for undefined families */
+  --fam-woody:    #5C4B33;
+  --fam-floral:   #8A4A5A;
+  --fam-amber:    #7A5510;
+  --fam-citrus:   #6A5B10;
+  --fam-leather:  #301E15;
+  --fam-oud:      #20151A;
+  --fam-green:    #2B4A23;
+  --fam-chypre:   #354A2B;
+  --fam-gourmand: #5C3B23;
+  --fam-default:  #68786D;       /* Fallback for undefined families */
 }
 
 /* ── 4. TYPOGRAPHY TOKENS ── */
 :root{
   /* Font families */
-  --font-serif:   "Source Serif 4", Georgia, serif;
-  --font-sans:    "DM Sans", system-ui, sans-serif;
-  --font-mono:    "SF Mono", Menlo, monospace;
-  --font-display: "Archivo Black", sans-serif;
+  --font-serif:   "Courier Prime", Courier, monospace;
+  --font-sans:    "Space Grotesk", system-ui, sans-serif;
+  --font-mono:    "Space Mono", Menlo, monospace;
+  --font-display: "Space Mono", monospace;
 
   /* Font sizes (Strict 5-style scale. Min: 14px / 0.875rem) */
   --fs-meta:      0.875rem;  /* 14px */
@@ -103,13 +103,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 6. BORDER-RADIUS SCALE ── */
 :root{
-  --radius-micro:  2px;    /* Fine details, borders */
-  --radius-small:  3px;    /* Badges, chips, code blocks */
-  --radius-sm:     5px;    /* Tab pills */
-  --radius:        6px;    /* Standard buttons, inputs */
-  --radius-lg:     8px;    /* Cards, panels */
-  --radius-xl:     10px;   /* Large cards, sections */
-  --radius-pill:   20px;   /* Pill buttons, role chips */
+  --radius-micro:  0px;    /* Fine details, borders */
+  --radius-small:  0px;    /* Badges, chips, code blocks */
+  --radius-sm:     0px;    /* Tab pills */
+  --radius:        0px;    /* Standard buttons, inputs */
+  --radius-lg:     0px;    /* Cards, panels */
+  --radius-xl:     2px;    /* Large cards, sections */
+  --radius-pill:   2px;    /* Pill buttons, role chips */
   --radius-circle: 50%;    /* Circular dots, indicators */
 }
 
@@ -253,13 +253,13 @@ html, body {
 
 /* Shadow utilities */
 .shadow-sm {
-  box-shadow: 0 1px 3px var(--fade-medium);
+  box-shadow: 2px 2px 0 var(--border-strong);
 }
 
 .shadow-md {
-  box-shadow: 0 8px 24px var(--fade-medium);
+  box-shadow: 4px 4px 0 var(--border-strong);
 }
 
 .shadow-lg {
-  box-shadow: 0 8px 32px var(--fade-strong);
+  box-shadow: 6px 6px 0 var(--border-strong);
 }

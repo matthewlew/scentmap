@@ -48,25 +48,27 @@
 }
 
 .tab {
-  font-size: var(--fs-body);
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  text-transform: uppercase;
+  font-weight: 700;
   color: var(--text-secondary);
   background: none;
   border: none;
   cursor: pointer;
   padding: var(--sp-xs) var(--sp-sm);
-  border-radius: var(--radius);
+  border-radius: 0;
   white-space: nowrap;
-  transition: color var(--dur-fast) var(--ease-spring), background var(--dur-fast) var(--ease-spring);
 }
 
 .tab:hover {
-  color: var(--text-primary);
+  color: var(--paper);
+  background: var(--ink);
 }
 
 .tab.active {
-  color: var(--text-primary);
-  background: var(--bg-primary);
+  color: var(--paper);
+  background: var(--ink);
   box-shadow: var(--shadow-sm);
 }
 
@@ -238,12 +240,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-sans);
-  font-size: var(--fs-body);
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
-  border-radius: var(--radius-pill);
+  border-radius: 0;
   padding: 4px 10px;
   white-space: nowrap;
   color: #fff;
@@ -685,31 +687,28 @@
   display: inline-flex;
   align-items: center;
   gap: var(--sp-xs);
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--fs-meta);
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
   letter-spacing: 0.03em;
   padding: var(--sp-xs) var(--sp-md);
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
   background: var(--bg-primary);
-  color: var(--text-secondary);
+  color: var(--ink);
   cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-spring),
-              border-color var(--dur-fast) var(--ease-spring),
-              color var(--dur-fast) var(--ease-spring);
 }
 
 .dc-collect-btn:hover {
-  background: var(--bg-secondary);
-  border-color: var(--border-strong);
-  color: var(--text-primary);
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .dc-collect-btn.active {
-  background: var(--text-primary);
-  border-color: var(--text-primary);
-  color: var(--bg-primary);
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: var(--shadow-sm);
 }
 
 .dc-collect-icon {
