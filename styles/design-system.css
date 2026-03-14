@@ -21,21 +21,21 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 2. PRIMITIVE COLOR TOKENS ── */
 :root{
-  /* Warm paper palette */
-  --paper:   #F5F2EC;
-  --ink:     #0E0C09;
-  --stone:   #EAE6DE;
-  --resin:   #8C5E30;
+  /* Dark mathematical palette */
+  --paper:   #0B0F19;
+  --ink:     #E0E6ED;
+  --stone:   #151A22;
+  --resin:   #00FFCC;
 
-  /* Grayscale 8-step (Adjusted for AA Contrast on #F5F2EC) */
-  --g700:    #2E2A22;
-  --g600:    #464034;
-  --g500:    #564E40;
-  --g450:    #655B4B; /* ~5.2:1 contrast */
-  --g400:    #716654; /* ~4.5:1 contrast */
-  --g300:    #A8A087; /* Decorative only, ~2.5:1 */
-  --g200:    #DDD8CE;
-  --g100:    #EAE6DE;
+  /* Grayscale 8-step (Adjusted for dark mode contrast) */
+  --g700:    #E0E6ED;
+  --g600:    #C2C9D6;
+  --g500:    #8A95A5;
+  --g450:    #717C8E;
+  --g400:    #5C677D;
+  --g300:    #3D475C;
+  --g200:    #2A3441;
+  --g100:    #1C2331;
 
   /* Layout sizing */
   --col-detail: 340px;
@@ -60,10 +60,10 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 /* ── 4. TYPOGRAPHY TOKENS ── */
 :root{
   /* Font families */
-  --font-serif:   "Source Serif 4", Georgia, serif;
-  --font-sans:    "DM Sans", system-ui, sans-serif;
-  --font-mono:    "SF Mono", Menlo, monospace;
-  --font-display: "Archivo Black", sans-serif;
+  --font-serif:   "Space Mono", monospace;
+  --font-sans:    "Inter", system-ui, sans-serif;
+  --font-mono:    "Space Mono", monospace;
+  --font-display: "Space Mono", monospace;
 
   /* Font sizes (Strict 5-style scale. Min: 14px / 0.875rem) */
   --fs-meta:      0.875rem;  /* 14px */
@@ -103,13 +103,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 6. BORDER-RADIUS SCALE ── */
 :root{
-  --radius-micro:  2px;    /* Fine details, borders */
-  --radius-small:  3px;    /* Badges, chips, code blocks */
-  --radius-sm:     5px;    /* Tab pills */
-  --radius:        6px;    /* Standard buttons, inputs */
-  --radius-lg:     8px;    /* Cards, panels */
-  --radius-xl:     10px;   /* Large cards, sections */
-  --radius-pill:   20px;   /* Pill buttons, role chips */
+  --radius-micro:  0px;    /* Fine details, borders */
+  --radius-small:  0px;    /* Badges, chips, code blocks */
+  --radius-sm:     2px;    /* Tab pills */
+  --radius:        2px;    /* Standard buttons, inputs */
+  --radius-lg:     2px;    /* Cards, panels */
+  --radius-xl:     4px;    /* Large cards, sections */
+  --radius-pill:   4px;    /* Pill buttons, role chips */
   --radius-circle: 50%;    /* Circular dots, indicators */
 }
 
@@ -189,6 +189,8 @@ body {
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   font-feature-settings: "onum" 1, "kern" 1;
+  background-image: linear-gradient(rgba(0, 255, 204, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 204, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 html, body {
