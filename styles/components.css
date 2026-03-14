@@ -184,7 +184,7 @@
   gap: var(--sp-sm);
   padding: var(--sp-sm) var(--sp-md);
   border-radius: var(--radius-lg);
-  border: 1.5px solid transparent;
+  border: 1px solid var(--border-strong);
   margin-top: var(--sp-sm);
 }
 
@@ -227,7 +227,7 @@
   flex: 1;
   padding: var(--sp-lg);
   border-radius: var(--radius-xl);
-  border: 1px solid transparent;
+  border: 1px solid var(--border-standard);
   display: flex;
   flex-direction: column;
   gap: var(--sp-sm);
@@ -471,17 +471,18 @@
   gap: var(--sp-sm);
   padding: var(--sp-md) var(--sp-lg);
   border-radius: var(--radius-lg);
-  border: 1.5px solid;
+  border: 1px solid var(--border-standard);
   background: var(--bg-primary);
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  transition: background var(--dur-fast) var(--ease-spring);
+  transition: background var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
   width: 100%;
 }
 
 .cmp-sug-card:hover {
   background: var(--bg-secondary);
+  border-color: var(--border-strong);
 }
 
 
@@ -912,6 +913,7 @@
 
 .picker-hero {
   background: var(--bg-secondary);
+  border: 1px solid var(--border-standard);
   border-radius: var(--radius-lg);
   padding: var(--sp-lg);
   margin-bottom: var(--sp-xl);
@@ -1890,7 +1892,7 @@ mark.note-match {
 /* ── Score cards ── */
 
 .cmp-pair-card {
-  border: 1.5px solid var(--border-standard);
+  border: 1px solid var(--border-standard);
   border-radius: var(--radius-xl);
   background: var(--bg-primary);
   padding: var(--sp-lg);
@@ -1959,7 +1961,7 @@ mark.note-match {
   flex: 1;
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-subtle);
+  border: 1px solid var(--border-subtle);
   background: var(--bg-secondary);
   text-align: left;
   cursor: pointer;
@@ -2019,7 +2021,7 @@ mark.note-match {
   width: 8px;
   height: 8px;
   border-radius: var(--radius-circle);
-  border: 1.5px solid var(--bg-primary);
+  border: 1px solid var(--bg-primary);
   transition: left 0.6s var(--ease-spring);
 }
 
@@ -2436,7 +2438,7 @@ button.cmp-note-pill:hover {
 .cmp-edu-card {
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-standard);
+  border: 1px solid var(--border-standard);
   background: var(--bg-primary);
   display: flex;
   flex-direction: column;
