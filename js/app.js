@@ -1177,7 +1177,10 @@ function initCatalogControls(){
   const toggleBtn=document.getElementById('frag-filter-toggle');
   const mobilePanel=document.getElementById('frag-mobile-panel');
   if(toggleBtn&&mobilePanel){
-    toggleBtn.addEventListener('click',()=>mobilePanel.classList.toggle('open'));
+    toggleBtn.addEventListener('click',()=>{
+      const isOpen=mobilePanel.classList.toggle('open');
+      toggleBtn.setAttribute('aria-expanded',isOpen);
+    });
   }
 }
 
