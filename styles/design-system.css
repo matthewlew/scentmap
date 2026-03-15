@@ -23,7 +23,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 :root{
   /* Warm paper palette */
   --paper:   #F5F2EC;
-  --ink:     #0E0C09;
+  --ink:     #000000;
   --stone:   #EAE6DE;
   --resin:   #8C5E30;
 
@@ -60,10 +60,10 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 /* ── 4. TYPOGRAPHY TOKENS ── */
 :root{
   /* Font families */
-  --font-serif:   "Source Serif 4", Georgia, serif;
-  --font-sans:    "DM Sans", system-ui, sans-serif;
-  --font-mono:    "SF Mono", Menlo, monospace;
-  --font-display: "Archivo Black", sans-serif;
+  --font-serif:   "Space Grotesk", system-ui, sans-serif;
+  --font-sans:    "Space Grotesk", system-ui, sans-serif;
+  --font-mono:    "Space Mono", Menlo, monospace;
+  --font-display: "Inter", sans-serif;
 
   /* Font sizes (Strict 5-style scale. Min: 14px / 0.875rem) */
   --fs-meta:      0.875rem;  /* 14px */
@@ -103,12 +103,12 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 6. BORDER-RADIUS SCALE ── */
 :root{
-  --radius-micro:  2px;    /* Fine details, borders */
-  --radius-small:  3px;    /* Badges, chips, code blocks */
-  --radius-sm:     5px;    /* Tab pills */
-  --radius:        6px;    /* Standard buttons, inputs */
-  --radius-lg:     8px;    /* Cards, panels */
-  --radius-xl:     10px;   /* Large cards, sections */
+  --radius-micro:  0px;    /* Fine details, borders */
+  --radius-small:  0px;    /* Badges, chips, code blocks */
+  --radius-sm:     0px;    /* Tab pills */
+  --radius:        0px;    /* Standard buttons, inputs */
+  --radius-lg:     2px;    /* Cards, panels */
+  --radius-xl:     2px;    /* Large cards, sections */
   --radius-pill:   20px;   /* Pill buttons, role chips */
   --radius-circle: 50%;    /* Circular dots, indicators */
 }
@@ -165,8 +165,8 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   /* Surface & border colors */
   --surface-bg:       var(--paper);
   --border-strong:    var(--ink);
-  --border-standard:  var(--g200);
-  --border-subtle:    var(--g100);
+  --border-standard:  var(--g400);
+  --border-subtle:    var(--g200);
 
   /* Accent colors */
   --accent-primary:   var(--resin);
@@ -238,8 +238,8 @@ html, body {
 */
 :focus-visible {
   outline: none;
-  box-shadow: 0 0 0 var(--focus-ring-offset) var(--bg-primary),
-              0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+  box-shadow: 4px 4px 0 var(--focus-ring-color);
+  outline: 1px solid var(--border-strong);
 }
 
 /* Transition utilities */
@@ -253,13 +253,13 @@ html, body {
 
 /* Shadow utilities */
 .shadow-sm {
-  box-shadow: 0 1px 3px var(--fade-medium);
+  box-shadow: 2px 2px 0 var(--border-strong);
 }
 
 .shadow-md {
-  box-shadow: 0 8px 24px var(--fade-medium);
+  box-shadow: 4px 4px 0 var(--border-strong);
 }
 
 .shadow-lg {
-  box-shadow: 0 8px 32px var(--fade-strong);
+  box-shadow: 6px 6px 0 var(--border-strong);
 }
