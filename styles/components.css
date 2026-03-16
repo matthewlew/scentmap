@@ -17,14 +17,20 @@
 
 .nav-back-btn,
 .nav-notes-btn,
-.settings-btn {
+.settings-btn,
+.detail-back,
+.detail-close-btn,
+.cmp-chip-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
   font-size: var(--fs-body);
   font-weight: 500;
   color: var(--text-secondary);
   background: none;
   border: none;
   cursor: pointer;
-  transition: color var(--dur-fast);
+  transition: color var(--dur-fast) var(--ease-spring);
   padding: 0;
 }
 
@@ -34,7 +40,10 @@
 
 .nav-back-btn:hover,
 .nav-notes-btn:hover,
-.settings-btn:hover {
+.settings-btn:hover,
+.detail-back:hover,
+.detail-close-btn:hover,
+.cmp-chip-clear:hover {
   color: var(--text-primary);
 }
 
@@ -260,17 +269,6 @@
 
 .cmp-chip-clear {
   margin-left: auto;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-tertiary);
-  font-size: var(--fs-body);
-  padding: var(--sp-xs);
-  transition: color var(--dur-fast) var(--ease-spring);
-}
-
-.cmp-chip-clear:hover {
-  color: var(--text-primary);
 }
 
 /* Results */
@@ -573,40 +571,12 @@
 }
 
 .detail-back {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-xs);
-  font-size: var(--fs-body);
-  color: var(--text-secondary);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: color var(--dur-fast) var(--ease-spring);
   visibility: hidden;
   min-width: 52px;
 }
 
 .detail-back.visible {
   visibility: visible;
-}
-
-.detail-back:hover {
-  color: var(--text-primary);
-}
-
-.detail-close-btn {
-  font-size: var(--fs-body);
-  color: var(--text-secondary);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: var(--sp-xs) 0;
-  transition: color var(--dur-fast) var(--ease-spring);
-}
-
-.detail-close-btn:hover {
-  color: var(--text-primary);
 }
 
 .detail-inner {
@@ -1594,24 +1564,6 @@
 }
 
 /* Brand header */
-.brand-hdr-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  padding: 0;
-  text-align: left;
-  color: inherit;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-xs);
-}
-
-.brand-hdr-btn:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 .brand-count-chip {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
@@ -1624,13 +1576,11 @@
 .brand-n {
   font-size: var(--fs-body);
   font-weight: 700;
-  letter-spacing: -0.01em;
 }
 
 .brand-c {
   font-size: var(--fs-meta);
   color: var(--text-tertiary);
-  letter-spacing: 0.01em;
 }
 
 .cat-empty {
