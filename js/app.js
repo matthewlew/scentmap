@@ -534,9 +534,9 @@ function renderNoteDetail(container,note){
   const nl=note.name.toLowerCase();
   const inf=CAT.filter(f=>f._nAll.includes(nl));
   container.innerHTML=`
-    <div class="np-name">${note.name}</div>
-    <div class="np-family">${fm.label}</div>
-    <div class="np-desc">${note.desc}</div>
+    <div class="dc-name">${note.name}</div>
+    <div class="dc-brand">${fm.label}</div>
+    <div class="dc-description">${note.desc}</div>
     ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
     ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
     ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
@@ -576,7 +576,7 @@ function renderHouseDetail(container,brand){
   const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); margin-bottom:var(--sp-xs); font-size:var(--fs-meta); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
 
   container.innerHTML=`<div class="house-detail-wrap">
-    <div class="house-detail-name">${brand}</div>
+    <div class="dc-name">${brand}</div>
     ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${houseData.desc}</div>` : ''}
     ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--black); color:var(--paper); border:none;">Visit ${brand} Website</a>` : ''}
     ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
@@ -587,7 +587,7 @@ function renderHouseDetail(container,brand){
       <div style="display:flex; flex-wrap:wrap;">${legendHTML}</div>
     </div>
 
-    <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
+    <div class="dc-brand">${frags.length} fragrance${frags.length!==1?'s':''}</div>
     <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
   </div>`;
   const list=container.querySelector('.house-detail-list');
@@ -975,7 +975,7 @@ function renderPicker(container,roleId){
   // Header
   const hdr=document.createElement('div');hdr.className='picker-header';
   hdr.innerHTML=`
-    <div class="picker-title">${role.sym} ${role.name}</div><div class="picker-sub">${role.desc}</div>`;
+    <div class="dc-name">${role.sym} ${role.name}</div><div class="dc-description">${role.desc}</div>`;
   container.appendChild(hdr);
 
   // Hero
