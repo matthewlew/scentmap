@@ -39,7 +39,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   --g100:    #EAE6DE;
 
   /* Layout sizing */
-  --col-detail: 340px;
+  --col-detail: 480px;
   --chart-max:  520px;
 }
 
