@@ -2507,24 +2507,6 @@ button.cmp-note-pill:hover {
   padding-top: var(--sp-xs);
 }
 
-.house-detail-name {
-  font-family: var(--font-display);
-  font-size: var(--fs-heading);
-  line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
-  margin-bottom: var(--sp-xs);
-}
-
-.house-detail-count {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  font-weight: 600;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--g450);
-  margin-bottom: var(--sp-xl);
-}
-
 .house-detail-list {
   border: 1px solid var(--border-standard);
   border-radius: var(--radius-lg);
@@ -2930,31 +2912,6 @@ button.cmp-note-pill:hover {
   color: var(--text-primary);
 }
 
-.np-name {
-  font-family: var(--font-display);
-  font-size: var(--fs-ui);
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-  line-height: 1.2;
-}
-
-.np-family {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  font-weight: 600;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  margin-bottom: var(--sp-sm);
-}
-
-.np-desc {
-  font-size: var(--fs-body);
-  color: var(--g600);
-  line-height: 1.6;
-  margin-bottom: var(--sp-xs);
-}
-
 .np-frags {
   margin-top: var(--sp-md);
 }
@@ -2983,19 +2940,6 @@ button.cmp-note-pill:hover {
   padding: var(--sp-xl) var(--sp-xl) var(--sp-md);
   border-bottom: 1px solid var(--border-standard);
   margin-bottom: var(--sp-lg);
-}
-
-.picker-title {
-  font-size: var(--fs-ui);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin-bottom: var(--sp-xs);
-}
-
-.picker-sub {
-  font-size: var(--fs-body);
-  color: var(--text-secondary);
-  line-height: 1.5;
 }
 
 .picker-hero {
