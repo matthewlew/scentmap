@@ -1524,12 +1524,14 @@ mark.note-match {
   min-height: var(--touch-target);
   display: flex;
   align-items: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--g300);
 }
 
 .cmp-card-detail-btn:hover {
   color: var(--text-primary);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration-color: var(--text-primary);
 }
 
 /* Filled card content */
@@ -1967,10 +1969,14 @@ button.cmp-note-pill {
   background: var(--bg-tertiary);
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-spring);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--g300);
 }
 
 button.cmp-note-pill:hover {
   background: var(--border-standard);
+  text-decoration-color: var(--text-primary);
 }
 
 .cmp-note-pill.shared {
@@ -2650,7 +2656,7 @@ button.cmp-note-pill:hover {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   box-shadow: 0 8px 32px var(--fade-strong);
-  padding: var(--sp-md) var(--sp-md) var(--sp-md);
+  padding: var(--sp-md);
   pointer-events: all;
   z-index: 1;
   max-height: 360px;
@@ -3049,12 +3055,14 @@ button.cmp-note-pill:hover {
   transition: color var(--dur-fast) var(--ease-spring);
   display: block; /* Ensure it behaves like a block element, taking full width if necessary */
   width: 100%;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--g300);
 }
 
 .cmp-brand-btn:hover {
   color: var(--text-primary);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration-color: var(--text-primary);
 }
 /* ══ MOBILE BOTTOM NAV ════════════════════════════════════════ */
 .mobile-bottomnav{display:none}
