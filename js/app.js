@@ -47,6 +47,8 @@ function setState(id,s){
 function isOwned(id){return gst(id)==='owned'}
 function isWish(id){return gst(id)==='wish'}
 function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
+function isNoteSaved(name){return gst('n_' + name.toLowerCase())==='saved'}
+function toggleNoteSaved(name){setState('n_' + name.toLowerCase(), isNoteSaved(name)?'none':'saved')}
 
 window.renderSaved = function() {
   const container = document.getElementById('saved-list');
@@ -322,7 +324,8 @@ const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered'
 function linkNotes(arr){
   return arr.map(n=>{
     const key=n.toLowerCase();const note=NI_MAP[key];
-    return note?`<button class="cmp-note-pill" data-note="${n}">${n}</button>`: `<span class="cmp-note-pill">${n}</span>`;
+    const savedMark = note && isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+    return note?`<button class="cmp-note-pill" data-note="${n}">${n}${savedMark}</button>`: `<span class="cmp-note-pill">${n}</span>`;
   }).join('');
 }
 
@@ -542,17 +545,40 @@ function buildRoleChips(frag,chipsEl){
   });
 }
 
+function renderNoteSaveBtn(container, note) {
+  if (!container) return;
+  const isSaved = isNoteSaved(note.name);
+  container.innerHTML = '';
+  const btn = document.createElement('button');
+  btn.className = 'dc-collect-btn' + (isSaved ? ' active' : '');
+  btn.style.marginTop = '0';
+  btn.innerHTML = `<span class="dc-collect-icon">${isSaved ? '★' : '☆'}</span> ${isSaved ? 'Saved Note' : 'Save Note'}`;
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleNoteSaved(note.name);
+    window.haptic?.('success');
+    renderNoteSaveBtn(container, note);
+    if (window.buildNotes) buildNotes();
+  });
+  container.appendChild(btn);
+}
+
 function renderNoteDetail(container,note){
   const fm=FAM[note.family]||{label:note.family,color:'#888'};
   const nl=note.name.toLowerCase();
   const inf=CAT.filter(f=>f._nAll.includes(nl));
+  const saveId = `nd-save-${note.name.replace(/\s+/g,'-')}`;
   container.innerHTML=`
     <div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
+    <div id="${saveId}" style="margin-top:var(--sp-md);"></div>
     ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
     ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
     ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
+
+  renderNoteSaveBtn(container.querySelector(`#${saveId}`), note);
+
   if(inf.length){
     const span=container.querySelector('#_nfl');
     [...inf].sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
@@ -963,6 +989,9 @@ function openNotePopup(note,triggerEl){
   document.getElementById('np-name').textContent=note.name;
   document.getElementById('np-family').textContent=fm.label;
   document.getElementById('np-desc').textContent=note.desc;
+
+  const saveEl = document.getElementById('np-save');
+  if (saveEl) renderNoteSaveBtn(saveEl, note);
 
   const extEl = document.getElementById('np-extraction');
   if(note.extraction_method) {
@@ -1592,7 +1621,10 @@ function buildNotes(searchQuery, currentTier){
   const sq = notesSearchQuery.toLowerCase().trim();
   const filteredNotes = NI.filter(n => {
     const matchesQuery = n.name.toLowerCase().includes(sq);
-    const matchesTier = notesTierMode === 'all' || n._tier === notesTierMode;
+    let matchesTier = false;
+    if (notesTierMode === 'all') matchesTier = true;
+    else if (notesTierMode === 'saved') matchesTier = isNoteSaved(n.name);
+    else matchesTier = n._tier === notesTierMode;
     return matchesQuery && matchesTier;
   });
 
@@ -1615,7 +1647,8 @@ function buildNotes(searchQuery, currentTier){
       const fm = FAM[note.family] || {color: '#888'};
       const btn = document.createElement('button');
       btn.className = 'note-pill';
-      btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}`;
+      const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+      btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}${savedMark}`;
       btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c,note), note.name); });
       cardBody.appendChild(btn);
     });
@@ -1641,7 +1674,9 @@ function buildNotes(searchQuery, currentTier){
 
       const cardBody=document.createElement('div');cardBody.className='notes-card-body';
       grouped[fk].forEach(note=>{
-        const btn=document.createElement('button');btn.className='note-pill';btn.textContent=note.name;
+        const btn=document.createElement('button');btn.className='note-pill';
+        const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+        btn.innerHTML = `${note.name}${savedMark}`;
         btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
         cardBody.appendChild(btn);
       });
@@ -2176,7 +2211,8 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
   const pill=(n,isSh=false)=>{
     const ni=NI_MAP[n];
     const cls=`cmp-note-pill${isSh?' shared':''}`;
-    return ni?`<button class="${cls}" data-note="${cap(n)}">${cap(n)}</button>`
+    const savedMark = isNoteSaved(n) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+    return ni?`<button class="${cls}" data-note="${cap(n)}">${cap(n)}${savedMark}</button>`
              :`<span class="${cls}">${cap(n)}</span>`;
   };
   const links=(notes,isSh=false)=>notes.length
@@ -2413,6 +2449,56 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
     {tag:'Uneasy 25–44',title:'Possible, with care',desc:'Similar sillage or competing notes. Layer sparingly to avoid muddiness.',hi:layerPct>=25&&layerPct<45},
     {tag:'Poor pairing < 25',title:'Better as alternates',desc:'Very similar projection or note profiles. Better worn separately.',hi:layerPct<25},
   ];
+  let bodyContent = '';
+  if (isMatch) {
+    bodyContent = `
+      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
+      <div class="cmp-edu-grid">
+        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
+      </div>`;
+  } else {
+    const famComp=FAM_COMPAT[fa.family]?.[fb.family]??0.5;
+    const famScore=famComp*35;
+    const sillDiff=Math.abs(fa.sillage-fb.sillage);
+    const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
+    const shared=fa._nAll.filter(n=>fb._nAll.includes(n)).length;
+    const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
+    const rawScore = famScore + sillScore + noteScore;
+
+    bodyContent = `
+      <div class="dc-name" style="margin-top:var(--sp-md);">Mathematical Breakdown</div>
+      <div class="dc-description">How is this score calculated? A strong pairing relies on compatible families (up to 35 pts), contrasting sillage so they don't compete (up to 20 pts), and distinct note profiles to create depth (up to 20 pts). The final raw score is scaled to 100%.</div>
+
+      <div class="dc-note">
+        <div class="dc-nt" style="width: 48px; text-align: right;">${Math.round(famScore)}/35</div>
+        <div class="dc-nv" style="flex-direction: column; gap: 0;">
+          <div class="dc-slbl" style="color: var(--ink);">Family Compatibility</div>
+        </div>
+      </div>
+
+      <div class="dc-note">
+        <div class="dc-nt" style="width: 48px; text-align: right;">${Math.round(sillScore)}/20</div>
+        <div class="dc-nv" style="flex-direction: column; gap: 0;">
+          <div class="dc-slbl" style="color: var(--ink);">Sillage Contrast</div>
+        </div>
+      </div>
+
+      <div class="dc-note">
+        <div class="dc-nt" style="width: 48px; text-align: right;">${Math.round(noteScore)}/20</div>
+        <div class="dc-nv" style="flex-direction: column; gap: 0;">
+          <div class="dc-slbl" style="color: var(--ink);">Note Independence</div>
+        </div>
+      </div>
+
+      <div class="dc-note" style="border-top: 1px solid var(--border-strong); border-bottom: none; margin-top: var(--sp-sm); padding-top: var(--sp-sm);">
+        <div class="dc-nt" style="width: 48px; text-align: right; color: var(--ink); font-size: var(--fs-body);">${Math.round(rawScore)}/75</div>
+        <div class="dc-nv" style="flex-direction: column; gap: 0;">
+          <div class="dc-slbl" style="color: var(--ink); font-weight: 700; font-size: var(--fs-body);">Raw Score</div>
+        </div>
+      </div>
+    `;
+  }
+
   overlay.innerHTML=`<div class="cmp-edu-wrap">
     <div class="cmp-edu-header">
       <div class="cmp-edu-header-left">
@@ -2422,10 +2508,7 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
       <button class="cmp-edu-close" id="cmp-edu-close">✕ Close</button>
     </div>
     <div class="cmp-edu-body">
-      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
-      <div class="cmp-edu-grid">
-        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
-      </div>
+      ${bodyContent}
     </div>
   </div>`;
   overlay.classList.add('open');

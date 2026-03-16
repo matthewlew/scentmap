@@ -1,0 +1,7 @@
+1. **Understand User Concern**: The user pointed out that the new `.cmp-edu-math` classes might introduce custom UI patterns instead of relying on the existing design system. The memory specifically says: "All detail panels (e.g., fragrance, family, note, house, and picker) must enforce visual consistency by exclusively using the standardized set of typography utility classes (`.dc-name` for titles, `.dc-brand` for sub-labels/brands, and `.dc-description` for body text) rather than maintaining disconnected, panel-specific legacy classes."
+2. **Refactor HTML Structure**:
+   - In `js/app.js`, I will update the HTML template in `openScoreEdu` for the layering breakdown to use `.dc-name`, `.dc-brand` (for labels), and `.dc-description`.
+   - Instead of creating `.cmp-edu-math-*` classes, I will use existing structural classes like `.dc-note`, `.dc-nt` (for values), and `.dc-nv` (for layout) which already handle flexing, or just simple inline styles / utility classes to achieve the layout.
+   - Let's look at how `.dc-note`, `.dc-nt`, `.dc-nv` or `.dc-collect-row` and `.dc-sim-shelf` are built to find a reusable layout for key-value pairs.
+   - Looking closely at `styles/components.css`, we can see `dc-note` is usually a flex container, and `dc-nlbl` is a label. Let's see how `dc-note` looks.
+3. **Inspect Existing CSS**: Let's first inspect `styles/components.css` to find the exact structure of `dc-note` and others so we don't invent new classes.

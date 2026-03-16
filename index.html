@@ -74,13 +74,12 @@
             <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: var(--sp-md);">Input what you own. Scentmap calculates perfect layering recipes by analyzing sillage differentials and complementary note structures.</p>
             <a href="app.html#saved" class="dc-collect-btn" style="text-decoration: none; width: 100%; box-sizing: border-box; text-align: center;">Find Layering Recipes</a>
           </div>
-          <div class="landing-card">
-            <div class="landing-card-head">
-              <span class="picker-fdot" style="background: var(--fam-amber);"></span>
-              <h3 class="landing-card-title">Smart Comparisons</h3>
-            </div>
-            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: var(--sp-md);">Before you buy, compare scents side-by-side. See the exact overlap in top, mid, and base notes to avoid redundant purchases.</p>
-            <a href="app.html#compare" class="dc-collect-btn" style="text-decoration: none; width: 100%; box-sizing: border-box; text-align: center;">Compare Now</a>
+          <div class="notes-tier-bar" id="notes-tier-bar" style="display: flex; gap: var(--sp-xs); margin-top: var(--sp-md); padding-bottom: var(--sp-sm); overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
+            <button class="tab active" data-tier="all">All</button>
+            <button class="tab" data-tier="saved">Saved</button>
+            <button class="tab" data-tier="top">Top</button>
+            <button class="tab" data-tier="mid">Heart</button>
+            <button class="tab" data-tier="base">Base</button>
           </div>
         </div>
       </div>
@@ -97,5 +96,95 @@
 
     </div>
   </div>
+
+  <!-- RIGHT: DETAIL PANEL/SIDESHEET -->
+  <div class="col-detail" id="col-detail">
+    <div class="detail-topbar">
+      <button class="detail-back" id="detail-back"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <button class="detail-close-btn" id="detail-close-btn">✕ Close</button>
+    </div>
+    <div class="detail-inner" id="detail-inner"></div>
+  </div>
+</div>
+
+<div class="detail-scrim" id="detail-scrim"></div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-bottomnav" id="mobile-bottomnav" role="navigation" aria-label="Main navigation">
+  <button class="mbn-btn active" onclick="goMobile('catalog',this)" aria-label="Fragrances"><span class="mbn-icon" aria-hidden="true">≡</span>Fragrances</button>
+  <button class="mbn-btn" onclick="goMobile('compare',this)" aria-label="Compare"><span class="mbn-icon" aria-hidden="true">⊕</span>Compare</button>
+  <button class="mbn-btn" onclick="goMobile('notes',this)" aria-label="Notes"><span class="mbn-icon" aria-hidden="true">✿</span>Notes</button>
+  <button class="mbn-btn mbn-more" onclick="openMoreSheet(this)" aria-label="More"><span class="mbn-icon" aria-hidden="true">⋯</span>More</button>
+</div>
+
+<!-- MOBILE SHEET STACK -->
+<div class="sheet-stack-overlay" id="sheet-stack">
+  <div class="sheet-backdrop" id="sheet-backdrop"></div>
+</div>
+
+<!-- NOTE FLOAT -->
+<div class="note-float-overlay" id="note-float-overlay" role="dialog" aria-modal="true" aria-labelledby="np-name">
+  <div class="note-float-bg" id="note-float-bg"></div>
+  <div class="note-popup" id="note-popup">
+    <div class="nfp-header">
+      <div class="np-name" id="np-name"></div>
+      <button class="nfp-close" id="nfp-close" aria-label="Close note">✕</button>
+    </div>
+    <div class="np-family" id="np-family"></div>
+    <div class="np-desc"   id="np-desc"></div>
+    <div id="np-save" style="margin-top:var(--sp-md);"></div>
+    <div class="np-extraction" id="np-extraction" style="display:none; margin-top: var(--sp-sm); font-size:12px; color:var(--g500);">
+      <strong>Extraction:</strong> <span id="np-extraction-text"></span>
+    </div>
+    <div class="np-fact" id="np-fact" style="display:none; margin-top: var(--sp-sm); padding: var(--sp-sm); background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);">
+      <strong style="display:block; margin-bottom: var(--sp-xs); color:var(--g900);">Perfumer's Insight</strong>
+      <span id="np-fact-text"></span>
+    </div>
+    <div class="np-frags"  id="np-frags"></div>
+  </div>
+</div>
+
+<!-- FRAGRANCE PICKER — dual-column drum rolodex -->
+<div class="frag-picker-overlay" id="frag-picker" role="dialog" aria-modal="true" aria-label="Select fragrances">
+  <div class="frag-picker-wrap">
+    <div class="frag-picker-top">
+      <div class="frag-picker-sort-row">
+        <span class="frag-picker-sort-label">Sort by</span>
+        <div class="frag-picker-sort-bar" id="frag-picker-sort-bar" role="group" aria-label="Sort order">
+          <button class="frag-picker-sort-btn active" data-sort="brand" aria-pressed="true">Brand</button>
+          <button class="frag-picker-sort-btn" data-sort="name" aria-pressed="false">Fragrance Title</button>
+          <button class="frag-picker-sort-btn" data-sort="family" aria-pressed="false">Note Family</button>
+          <div class="frag-picker-sort-pill" id="frag-picker-sort-pill" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+    <div class="frag-picker-cols" id="frag-picker-cols">
+      <div class="frag-picker-col" id="frag-picker-col-a" data-slot="a">
+        <div class="frag-picker-col-hdr">
+          <span class="frag-picker-col-lbl">Fragrance 1</span>
+          <input class="frag-picker-search" id="frag-picker-search-a" type="text" placeholder="Search…" autocomplete="off" aria-label="Search fragrance one">
+        </div>
+        <div class="frag-picker-list-outer">
+          <div class="frag-picker-list" id="frag-picker-list-a" role="listbox" tabindex="0" aria-label="Fragrance 1 options"></div>
+        </div>
+      </div>
+      <div class="frag-picker-col-divider"></div>
+      <div class="frag-picker-col" id="frag-picker-col-b" data-slot="b">
+        <div class="frag-picker-col-hdr">
+          <span class="frag-picker-col-lbl">Fragrance 2</span>
+          <input class="frag-picker-search" id="frag-picker-search-b" type="text" placeholder="Search…" autocomplete="off" aria-label="Search fragrance two">
+        </div>
+        <div class="frag-picker-list-outer">
+          <div class="frag-picker-list" id="frag-picker-list-b" role="listbox" tabindex="0" aria-label="Fragrance 2 options"></div>
+        </div>
+      </div>
+    </div>
+    <div class="frag-picker-footer">
+      <button class="frag-picker-close" id="frag-picker-close" aria-label="Close fragrance picker">Done</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js?v=20260312a"></script>
 </body>
 </html>
