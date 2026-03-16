@@ -2762,8 +2762,8 @@ function _fillCard(slot,frag){
   card.style.borderColor=`${fc.accent}40`;
   card.setAttribute('aria-label',`${frag.name} by ${frag.brand} — tap to change`);
   card.innerHTML=`
-    <div class="cmp-frag-card-fam" style="background:${fc.accent}">
-      <span class="cmp-frag-card-dot" aria-hidden="true"></span>${famLabel}
+    <div class="cmp-frag-fam-chip" style="background:${fc.accent}; color:var(--paper); align-self: flex-start; margin: var(--sp-md) var(--sp-md) 0;">
+      ${famLabel}
     </div>
     <div class="cmp-frag-card-name">${frag.name}</div>
     <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>
