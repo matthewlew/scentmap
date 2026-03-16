@@ -2430,26 +2430,34 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
     const rawScore = famScore + sillScore + noteScore;
 
     bodyContent = `
-      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
-      <div class="cmp-edu-math">
-        <div class="cmp-edu-math-row">
-          <div class="cmp-edu-math-label">Family Compatibility</div>
-          <div class="cmp-edu-math-val">${Math.round(famScore)} / 35</div>
+      <div class="dc-name" style="margin-top:var(--sp-md);">Mathematical Breakdown</div>
+      <div class="dc-description">How is this score calculated? A strong pairing relies on compatible families (up to 35 pts), contrasting sillage so they don't compete (up to 20 pts), and distinct note profiles to create depth (up to 20 pts). The final raw score is scaled to 100%.</div>
+
+      <div class="dc-note">
+        <div class="dc-nt" style="width: 48px; text-align: right;">${Math.round(famScore)}/35</div>
+        <div class="dc-nv" style="flex-direction: column; gap: 0;">
+          <div class="dc-slbl" style="color: var(--ink);">Family Compatibility</div>
         </div>
-        <div class="cmp-edu-math-row">
-          <div class="cmp-edu-math-label">Sillage Contrast</div>
-          <div class="cmp-edu-math-val">${Math.round(sillScore)} / 20</div>
+      </div>
+
+      <div class="dc-note">
+        <div class="dc-nt" style="width: 48px; text-align: right;">${Math.round(sillScore)}/20</div>
+        <div class="dc-nv" style="flex-direction: column; gap: 0;">
+          <div class="dc-slbl" style="color: var(--ink);">Sillage Contrast</div>
         </div>
-        <div class="cmp-edu-math-row">
-          <div class="cmp-edu-math-label">Note Independence</div>
-          <div class="cmp-edu-math-val">${Math.round(noteScore)} / 20</div>
+      </div>
+
+      <div class="dc-note">
+        <div class="dc-nt" style="width: 48px; text-align: right;">${Math.round(noteScore)}/20</div>
+        <div class="dc-nv" style="flex-direction: column; gap: 0;">
+          <div class="dc-slbl" style="color: var(--ink);">Note Independence</div>
         </div>
-        <div class="cmp-edu-math-total">
-          <div class="cmp-edu-math-label">Raw Score</div>
-          <div class="cmp-edu-math-val">${Math.round(rawScore)} / 75</div>
-        </div>
-        <div class="cmp-edu-math-desc">
-          A strong pairing relies on compatible families (up to 35 pts), contrasting sillage so they don't compete (up to 20 pts), and distinct note profiles to create depth (up to 20 pts). The final raw score is scaled to 100%.
+      </div>
+
+      <div class="dc-note" style="border-top: 1px solid var(--border-strong); border-bottom: none; margin-top: var(--sp-sm); padding-top: var(--sp-sm);">
+        <div class="dc-nt" style="width: 48px; text-align: right; color: var(--ink); font-size: var(--fs-body);">${Math.round(rawScore)}/75</div>
+        <div class="dc-nv" style="flex-direction: column; gap: 0;">
+          <div class="dc-slbl" style="color: var(--ink); font-weight: 700; font-size: var(--fs-body);">Raw Score</div>
         </div>
       </div>
     `;
