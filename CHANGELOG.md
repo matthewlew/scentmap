@@ -4,6 +4,25 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-16 (6)
+
+### Changed
+- **Auth: replaced mock with Supabase** — `supabaseSignIn()` calls `supabase.auth.signInWithOAuth()` with `redirectTo` for Google and Apple; `initSupabaseAuth()` restores session on load and wires `onAuthStateChange`; empty `SUPABASE_URL`/`SUPABASE_ANON_KEY` constants fall back to mock for local dev; signed-in avatar click now calls `supabase.auth.signOut()`
+
+## 2026-03-16 (5)
+
+### Added
+- **My Collection panel** — overhauled "Saved Scents" (renamed "My Collection") to show four distinct sections: Owned Scents, Wishlist, Saved Notes, and Saved Brands; each section only renders if it has items; global empty state shown when nothing is saved
+- **Brand save** — "Save Brand" button in house detail panel (mirrors existing "Save Note" pattern); `isBrandSaved()` / `toggleBrandSave()` state helpers added; brand state keys use `b_` prefix in localStorage
+- **Copy Collection to Clipboard** — button at top of My Collection panel generates a clean markdown text list of all saved items; `aria-live="polite"` toast confirms copy success
+- **Auth modal** — centered brutalist overlay with "Save your olfactive wardrobe." headline, Google and Apple SSO buttons (SVG icons), "Continue as Guest" link; focus trapping (Tab wraps, Escape closes); `aria-modal="true"`, `aria-labelledby`
+- **Sign In nav button** — new pill button in desktop top nav; after mock sign-in transitions to circular avatar showing user initial; accessible `aria-label` updates on state change
+- **Mock SSO flow** — clicking Google/Apple shows 1.2s loading state then resolves `currentUser`, updates nav avatar, closes modal; no real backend required (frontend-only sprint)
+- **My Collection in mobile More sheet** — "★ My Collection" added as first item in the More overflow sheet so mobile users can reach the panel
+
+### Changed
+- Desktop nav "Saved" label renamed to "Collection"
+
 ## 2026-03-16 (4)
 
 ### Fixed
