@@ -575,6 +575,14 @@ function renderHouseDetail(container,brand){
   const barHTML = famStats.map(f => `<div style="height:100%; width:${f.pct}%; background:${f.color};" title="${f.label} (${Math.round(f.pct)}%)"></div>`).join('');
   const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); margin-bottom:var(--sp-xs); font-size:var(--fs-meta); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
 
+  let topCount = 0;
+  if (frags.length >= 10) topCount = 5;
+  else if (frags.length >= 5) topCount = 3;
+  else if (frags.length >= 1) topCount = 2;
+
+  // We'll just take the first N fragrances in the sorted array
+  const topFrags = frags.slice(0, topCount);
+
   container.innerHTML=`<div class="house-detail-wrap">
     <div class="house-detail-name">${brand}</div>
     ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${houseData.desc}</div>` : ''}
@@ -587,9 +595,33 @@ function renderHouseDetail(container,brand){
       <div style="display:flex; flex-wrap:wrap;">${legendHTML}</div>
     </div>
 
+    ${topFrags.length > 0 ? `
+    <div class="house-known-for" style="margin-bottom:var(--sp-xl);">
+      <div class="dc-slbl" style="margin-bottom:var(--sp-md);">Known For</div>
+      <div class="carousel-wrap">
+        <div class="carousel" id="house-known-for-carousel"></div>
+      </div>
+    </div>
+    ` : ''}
+
     <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
     <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
   </div>`;
+
+  if (topFrags.length > 0) {
+    const carousel = container.querySelector('#house-known-for-carousel');
+    topFrags.forEach(frag => {
+      const fm = FAM[frag.family] || {color: '#888'};
+      const card = document.createElement('div');
+      card.className = 'carousel-card';
+      card.innerHTML = `<div class="carousel-card-name">${frag.name}</div>
+        <div class="carousel-card-brand">${frag.brand}</div>
+        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
+      card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
+      carousel.appendChild(card);
+    });
+  }
+
   const list=container.querySelector('.house-detail-list');
   frags.forEach(frag=>{
     const fc=getCmpFam(frag.family);
