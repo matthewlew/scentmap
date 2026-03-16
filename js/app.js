@@ -324,7 +324,7 @@ const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered'
 function linkNotes(arr){
   return arr.map(n=>{
     const key=n.toLowerCase();const note=NI_MAP[key];
-    const savedMark = note && isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;">★</span>' : '';
+    const savedMark = note && isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
     return note?`<button class="cmp-note-pill" data-note="${n}">${n}${savedMark}</button>`: `<span class="cmp-note-pill">${n}</span>`;
   }).join('');
 }
@@ -1647,7 +1647,7 @@ function buildNotes(searchQuery, currentTier){
       const fm = FAM[note.family] || {color: '#888'};
       const btn = document.createElement('button');
       btn.className = 'note-pill';
-      const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;">★</span>' : '';
+      const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
       btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}${savedMark}`;
       btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c,note), note.name); });
       cardBody.appendChild(btn);
@@ -1675,7 +1675,7 @@ function buildNotes(searchQuery, currentTier){
       const cardBody=document.createElement('div');cardBody.className='notes-card-body';
       grouped[fk].forEach(note=>{
         const btn=document.createElement('button');btn.className='note-pill';
-        const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;">★</span>' : '';
+        const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
         btn.innerHTML = `${note.name}${savedMark}`;
         btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
         cardBody.appendChild(btn);
@@ -2211,7 +2211,8 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
   const pill=(n,isSh=false)=>{
     const ni=NI_MAP[n];
     const cls=`cmp-note-pill${isSh?' shared':''}`;
-    return ni?`<button class="${cls}" data-note="${cap(n)}">${cap(n)}</button>`
+    const savedMark = isNoteSaved(n) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+    return ni?`<button class="${cls}" data-note="${cap(n)}">${cap(n)}${savedMark}</button>`
              :`<span class="${cls}">${cap(n)}</span>`;
   };
   const links=(notes,isSh=false)=>notes.length
