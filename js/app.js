@@ -308,7 +308,7 @@ const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered'
 function linkNotes(arr){
   return arr.map(n=>{
     const key=n.toLowerCase();const note=NI_MAP[key];
-    return note?`<button class="note-link" data-note="${n}">${n}</button>`:n;
+    return note?`<button class="s-name-btn" data-note="${n}">${n}</button>`:n;
   }).join(', ');
 }
 
@@ -343,7 +343,7 @@ function renderFragDetail(container,frag){
   // Note links
   const brandBtn=container.querySelector('.dc-brand-btn');
   if(brandBtn)brandBtn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
-  container.querySelectorAll('.note-link').forEach(btn=>{
+  container.querySelectorAll('.s-name-btn[data-note]').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),note.name)});
   });
 
@@ -1190,9 +1190,9 @@ function buildCatalog(roleFilter){
     const frags=visibleCat.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
     const key=brand.replace(/\s+/g,'-')+(roleFilter||'');
     const sec=document.createElement('div');sec.className='cat-section';
-    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n brand-hdr-btn" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
+    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n s-name-btn" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
     // Brand header → house detail
-    sec.querySelector('.brand-hdr-btn')?.addEventListener('click',()=>openHouseDetail(brand));
+    sec.querySelector('.s-name-btn')?.addEventListener('click',()=>openHouseDetail(brand));
     const list=document.createElement('div');list.className='scent-list';
     const lastTapMap = new Map();
     let longPressTimer = null;
