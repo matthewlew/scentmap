@@ -1744,14 +1744,14 @@ function openMoreSheet(btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const items=[
-    {id:'saved',icon:'♥', label:'Saved Scents'},
-    {id:'changelog',icon:'↩', label:'Changelog'},
+    {id:'changelog',icon:'↩', label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
+    {id:'playground',icon:'❖', label:'Design System', action:"window.open('playground.html', '_blank')"}
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:16px 0 8px">
       <div style="font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);padding:0 16px 10px">More</div>
       ${items.map(it=>`
-        <button onclick="closeAllSheets();goMobile('${it.id}',document.querySelector('.mbn-more'))" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
+        <button onclick="${it.action}" style="display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;padding:14px 16px;cursor:pointer;font-family:inherit;font-size:.88rem;color:var(--black);border-bottom:1px solid var(--g200);text-align:left">
           <span style="font-size:1.2rem;width:24px;text-align:center;flex-shrink:0">${it.icon}</span>
           ${it.label}
         </button>`).join('')}
@@ -2769,7 +2769,7 @@ function _fillCard(slot,frag){
     <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>
     ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
     <button class="cmp-card-detail-btn" data-slot="${slot}" aria-label="View details for ${frag.name}">Details ↗</button>
-    <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    <span class="cmp-card-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>`;
   card.querySelector('.cmp-card-detail-btn')?.addEventListener('click',e=>{e.stopPropagation();openFragDetail(frag);});
   card.querySelector('.cmp-brand-btn')?.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
 }
