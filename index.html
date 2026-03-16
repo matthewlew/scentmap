@@ -17,8 +17,21 @@
   .landing-hero .dc-description { max-width: 600px; margin: 0 auto var(--sp-xl); font-size: var(--fs-ui); }
   .landing-section { padding: var(--sp-3xl) var(--sp-xl); max-width: 800px; margin: 0 auto; }
   .landing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sp-xl); margin-top: var(--sp-xl); }
-  .landing-card { background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-xl); padding: var(--sp-lg); }
-  .landing-card-title { font-family: var(--font-display); font-size: var(--fs-title); margin-bottom: var(--sp-sm); }
+  .landing-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-xl);
+    padding: var(--sp-xl);
+    transition: transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
+    cursor: default;
+  }
+  .landing-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--border-strong);
+  }
+  .landing-card-head { display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm); }
+  .landing-card-title { font-family: var(--font-display); font-size: var(--fs-title); line-height: var(--lh-tight); letter-spacing: var(--ls-tight); }
   .cta-group { display: flex; gap: var(--sp-md); justify-content: center; flex-wrap: wrap; }
 </style>
 </head>
@@ -41,16 +54,25 @@
         <h2 class="text-title" style="text-align: center; margin-bottom: var(--sp-2xl);">How It Works</h2>
         <div class="landing-grid">
           <div class="landing-card">
-            <h3 class="landing-card-title">Data Over Marketing</h3>
-            <p class="dc-description" style="font-size: var(--fs-body);">We translate complex jargon into plain-English sensory dimensions (Warmth, Sweetness, Freshness) using objective data instead of marketing fluff.</p>
+            <div class="landing-card-head">
+              <span class="picker-fdot" style="background: var(--fam-woody);"></span>
+              <h3 class="landing-card-title">Data Over Marketing</h3>
+            </div>
+            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: 0;">We translate complex jargon into plain-English sensory dimensions (Warmth, Sweetness, Freshness) using objective data instead of marketing fluff.</p>
           </div>
           <div class="landing-card">
-            <h3 class="landing-card-title">Layering Math</h3>
-            <p class="dc-description" style="font-size: var(--fs-body);">Input what you own. Scentmap calculates perfect layering recipes by analyzing sillage differentials and complementary note structures.</p>
+            <div class="landing-card-head">
+              <span class="picker-fdot" style="background: var(--fam-floral);"></span>
+              <h3 class="landing-card-title">Layering Math</h3>
+            </div>
+            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: 0;">Input what you own. Scentmap calculates perfect layering recipes by analyzing sillage differentials and complementary note structures.</p>
           </div>
           <div class="landing-card">
-            <h3 class="landing-card-title">Smart Comparisons</h3>
-            <p class="dc-description" style="font-size: var(--fs-body);">Before you buy, compare scents side-by-side. See the exact overlap in top, mid, and base notes to avoid redundant purchases.</p>
+            <div class="landing-card-head">
+              <span class="picker-fdot" style="background: var(--fam-amber);"></span>
+              <h3 class="landing-card-title">Smart Comparisons</h3>
+            </div>
+            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: 0;">Before you buy, compare scents side-by-side. See the exact overlap in top, mid, and base notes to avoid redundant purchases.</p>
           </div>
         </div>
       </div>
@@ -59,9 +81,9 @@
         <h2 class="text-title" style="margin-bottom: var(--sp-md);">Start Exploring</h2>
         <p class="dc-description" style="margin-bottom: var(--sp-xl);">Search notes, browse houses, and build your digital olfactive wardrobe.</p>
         <div class="cta-group">
-          <a href="app.html#compare" class="dc-collect-btn" style="text-decoration: none;">Compare Scents</a>
-          <a href="app.html#notes" class="dc-collect-btn" style="text-decoration: none;">Browse Notes</a>
-          <a href="app.html#catalog" class="dc-collect-btn" style="text-decoration: none;">Explore Brands</a>
+          <a href="app.html#compare" class="dc-collect-btn active" style="text-decoration: none;">Compare Scents</a>
+          <a href="app.html#notes" class="dc-collect-btn" style="text-decoration: none; font-weight: 500;">Browse Notes</a>
+          <a href="app.html#catalog" class="dc-collect-btn" style="text-decoration: none; font-weight: 500;">Explore Brands</a>
         </div>
       </div>
 
