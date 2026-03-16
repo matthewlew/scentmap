@@ -111,10 +111,11 @@
             <button class="cat-search-clear" id="notes-search-clear" aria-label="Clear search">✕</button>
           </div>
           <div class="notes-tier-bar" id="notes-tier-bar" style="display: flex; gap: var(--sp-xs); margin-top: var(--sp-md); padding-bottom: var(--sp-sm); overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
-            <button class="tab active" data-tier="all">All Tiers</button>
-            <button class="tab" data-tier="top">Top Notes</button>
-            <button class="tab" data-tier="mid">Heart Notes</button>
-            <button class="tab" data-tier="base">Base Notes</button>
+            <button class="tab active" data-tier="all">All</button>
+            <button class="tab" data-tier="saved">Saved</button>
+            <button class="tab" data-tier="top">Top</button>
+            <button class="tab" data-tier="mid">Heart</button>
+            <button class="tab" data-tier="base">Base</button>
           </div>
         </div>
         <div id="notes-body"></div>
@@ -185,6 +186,7 @@
     </div>
     <div class="np-family" id="np-family"></div>
     <div class="np-desc"   id="np-desc"></div>
+    <div id="np-save" style="margin-top:var(--sp-md);"></div>
     <div class="np-extraction" id="np-extraction" style="display:none; margin-top: var(--sp-sm); font-size:12px; color:var(--g500);">
       <strong>Extraction:</strong> <span id="np-extraction-text"></span>
     </div>
