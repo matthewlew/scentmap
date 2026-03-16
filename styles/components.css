@@ -633,6 +633,7 @@
   gap: var(--sp-sm);
   padding: var(--sp-xs) 0;
   border-bottom: 1px solid var(--border-standard);
+  align-items: center;
 }
 
 .dc-note:last-of-type {
@@ -652,9 +653,10 @@
 }
 
 .dc-nv {
-  font-size: var(--fs-body);
-  color: var(--g600);
-  line-height: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-xs);
+  flex: 1;
 }
 
 .dc-notes-caveat {
