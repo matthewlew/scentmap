@@ -193,12 +193,8 @@
 
 /* ── 3. SUGGESTIONS (V2, used by renderSuggestionsV2) ── */
 .cmp-sug-card {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  padding: var(--sp-md) var(--sp-lg);
   border-radius: var(--radius-lg);
-  border: 1.5px solid;
+  border: 1.5px solid var(--border-standard);
   background: var(--bg-primary);
   cursor: pointer;
   text-align: left;
@@ -820,7 +816,7 @@
   display: flex;
   align-items: center;
   gap: var(--sp-sm);
-  padding: 8px 12px;
+  padding: var(--sp-sm) var(--sp-md);
   background: var(--bg-primary);
   border-left: 3px solid transparent;
   cursor: pointer;
@@ -843,7 +839,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  padding: 0 var(--sp-lg);
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 700;
@@ -1423,7 +1419,25 @@ mark.note-match {
 .cmp-header-v2 {
   display: flex;
   gap: var(--sp-lg);
+  margin-bottom: var(--sp-sm);
+}
+
+.cmp-card-meta-row {
+  display: flex;
+  gap: var(--sp-lg);
   margin-bottom: var(--sp-3xl);
+}
+
+.cmp-card-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.cmp-card-meta-desc {
+  font-size: var(--fs-meta);
+  color: var(--text-tertiary);
+  line-height: var(--lh-body);
+  margin: 0 0 var(--sp-xs);
 }
 
 .cmp-frag-card {
@@ -1468,15 +1482,54 @@ mark.note-match {
   font-family: var(--font-sans);
 }
 
+.cmp-frag-card-name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  padding: var(--sp-sm) var(--sp-sm) 2px var(--sp-md);
+}
+
+.cmp-frag-card-name-row .cmp-frag-card-name {
+  padding: 0;
+  flex: 1;
+  min-width: 0;
+}
+
 .cmp-card-chevron {
-  position: absolute;
-  bottom: var(--sp-sm);
-  right: var(--sp-sm);
   color: var(--text-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   pointer-events: none;
+}
+
+/* Empty card: chevron floats bottom-right */
+.cmp-frag-card > .cmp-card-chevron {
+  position: absolute;
+  bottom: var(--sp-sm);
+  right: var(--sp-sm);
+}
+
+.cmp-card-detail-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--text-tertiary);
+  padding: var(--sp-xs) 0;
+  text-align: left;
+  transition: color var(--dur-fast) var(--ease-spring);
+  min-height: var(--touch-target);
+  display: flex;
+  align-items: center;
+}
+
+.cmp-card-detail-btn:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* Filled card content */
@@ -1496,16 +1549,6 @@ mark.note-match {
   padding: 0 var(--sp-md) var(--sp-xs);
 }
 
-.cmp-frag-card-desc {
-  font-size: var(--fs-meta);
-  color: var(--text-tertiary);
-  padding: 0 var(--sp-md) var(--sp-lg);
-  flex: 1;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
 
 /* ── Sticky bar ── */
 

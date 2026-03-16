@@ -4,6 +4,27 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-16 (4)
+
+### Fixed
+- **Consistent recommendation components** — "More Like This" (frag detail) and "Swap Suggestions" (compare) now use identical 3-line structure: Name / Brand · Family / Reason; "More Like This" previously used inline truncated `Name · Brand` which broke at short widths
+- **Double padding on swap suggestion cards** — `.cmp-sug-card` had `padding: 12px 20px` stacked on top of `.scent-row-content`'s inner `padding: 8px 12px`; removed outer padding from `.cmp-sug-card` so single-level spacing applies
+- **Hard-coded pixel values** — replaced `padding: 8px 12px` in `.scent-row-content` and `padding: 0 16px` in `.scent-row-action` with CSS token equivalents (`var(--sp-sm) var(--sp-md)` and `0 var(--sp-lg)`)
+- **Implicit border color on `.cmp-sug-card`** — `border: 1.5px solid` with no color defaulted to `currentColor` (full ink); changed to `var(--border-standard)` for consistent light border
+
+## 2026-03-16 (3)
+
+### Changed
+- **Compare card description + detail button moved outside cards** — description (`cmp-card-meta-desc`) and "Details ↗" button now live in a `.cmp-card-meta-row` below the picker cards, each column aligned to its fragrance; cards are now purely swap targets with no distracting inner content
+- **Clear touch target separation** — card tap = swap fragrance; description/details area is spatially distinct with no overlap; applies correctly on both desktop and mobile (2-column layout maintained throughout)
+
+## 2026-03-16 (2)
+
+### Fixed
+- **Compare card family chip** — `cmp-frag-fam-chip` replaced with the canonical `.chip` component class; chip now renders correctly using the shared pill style instead of invisible unstyled markup
+- **Compare card detail button** — `cmp-card-detail-btn` now has full button styles (text-link style, tertiary color, underline on hover, 44px touch target); was previously unstyled
+- **Compare card swap affordance** — swap chevron moved inline with the fragrance name (forming a picker-style name row) so it's clear the card title is a select control; "Details ↗" is now visually distinct as a secondary action
+
 ## 2026-03-16
 
 **Under-the-hood reliability and UX polish pass 🛠️**

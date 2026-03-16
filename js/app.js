@@ -399,16 +399,18 @@ function renderFragDetail(container,frag){
 
     scored.forEach(({f})=>{
       const fm2=FAM[f.family]||{color:'#888'};
+      const famLabel2=(FAM[f.family]||{label:f.family}).label;
       const reason=getSwapReason(frag,f);
       const badge=classifyDiscovery(frag,f);
       const row=document.createElement('button');
-      row.className='scent-row scent-row--flat';
+      row.className='scent-row scent-row--flat cmp-sug-card';
       row.innerHTML=`
         <div class="scent-row-content" style="border-left-color: ${fm2.color}">
           <div class="frag-picker-dot" style="background:${fm2.color}"></div>
-          <div class="frag-picker-info" style="flex:1">
-            <div class="frag-picker-item-name">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
-            ${reason ? `<div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>` : ''}
+          <div class="frag-picker-info" style="flex:1;text-align:left;">
+            <div class="frag-picker-item-name">${f.name}</div>
+            <div class="frag-picker-item-brand">${f.brand} · ${famLabel2}</div>
+            ${reason ? `<div class="dc-sim-reason">${reason}</div>` : ''}
           </div>
           ${badge?`<div style="flex-shrink:0"><span class="dc-badge ${badge.type}">${badge.label}</span></div>`:''}
         </div>`;
@@ -417,9 +419,6 @@ function renderFragDetail(container,frag){
     });
     container.appendChild(shelf);
   }
-  container.querySelectorAll('.dc-sim-brand-btn').forEach(btn => {
-    btn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(btn.textContent.replace(' · ','').trim());});
-  });
 }
 
 /* ── Compare CTAs in detail panel ── */
@@ -2243,7 +2242,7 @@ function renderSuggestionsV2(fa,fb,ca,cb){
         <div class="frag-picker-info" style="flex:1;text-align:left;">
           <div class="frag-picker-item-name">${frag.name}</div>
           <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
-          <div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>
+          <div class="dc-sim-reason">${reason}</div>
           ${topNotes?`<div class="frag-picker-item-notes">${topNotes}</div>`:''}
         </div>
       </div>
@@ -2826,16 +2825,20 @@ function _fillCard(slot,frag){
   card.style.borderColor=`${fc.accent}40`;
   card.setAttribute('aria-label',`${frag.name} by ${frag.brand} — tap to change`);
   card.innerHTML=`
-    <div class="cmp-frag-fam-chip" style="background:${fc.accent}; color:var(--paper); align-self: flex-start; margin: var(--sp-md) var(--sp-md) 0;">
-      ${famLabel}
+    <div class="chip" style="background:${fc.accent}; align-self: flex-start; margin: var(--sp-md) var(--sp-md) 0;">${famLabel}</div>
+    <div class="cmp-frag-card-name-row">
+      <div class="cmp-frag-card-name">${frag.name}</div>
+      <span class="cmp-card-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>
     </div>
-    <div class="cmp-frag-card-name">${frag.name}</div>
-    <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>
-    ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
-    <button class="cmp-card-detail-btn" data-slot="${slot}" aria-label="View details for ${frag.name}">Details ↗</button>
-    <span class="cmp-card-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>`;
-  card.querySelector('.cmp-card-detail-btn')?.addEventListener('click',e=>{e.stopPropagation();openFragDetail(frag);});
+    <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>`;
   card.querySelector('.cmp-brand-btn')?.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
+  const meta=document.getElementById(`cmp-meta-${slot}`);
+  if(meta){
+    meta.innerHTML=`
+      ${frag.description?`<p class="cmp-card-meta-desc">${frag.description}</p>`:''}
+      <button class="cmp-card-detail-btn" aria-label="View details for ${frag.name}">Details ↗</button>`;
+    meta.querySelector('.cmp-card-detail-btn')?.addEventListener('click',()=>openFragDetail(frag));
+  }
 }
 
 function _resetCard(slot){
@@ -2848,6 +2851,8 @@ function _resetCard(slot){
   card.innerHTML=`
     <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">${label}</div><div class="cmp-card-empty-hint">Tap to select</div></div>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+  const meta=document.getElementById(`cmp-meta-${slot}`);
+  if(meta)meta.innerHTML='';
 }
 
 function _setupDragAndDropDropzones() {
