@@ -46,8 +46,12 @@
       <div class="landing-hero">
         <h1 class="text-heading">The Mathematical Fragrance Engine</h1>
         <p class="dc-description">Demystify fragrance through data. Scentmap calculates sillage, structure, and note overlap to help you understand what you smell, maximize what you own, and buy what you love.</p>
-        <div class="cta-group">
-          <a href="app.html" class="dc-collect-btn active" style="padding: var(--sp-md) var(--sp-xl); font-size: var(--fs-ui); text-decoration: none;">Open the Engine</a>
+        <div class="cta-group" style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--sp-sm);">
+          <form onsubmit="event.preventDefault(); window.location.href='app.html#search=' + encodeURIComponent(this.q.value);" style="display: flex; gap: var(--sp-xs); width: 100%;">
+            <input type="text" name="q" placeholder="Search for a fragrance, note, or brand..." style="flex: 1; padding: var(--sp-md); border: 1px solid var(--border-strong); border-radius: var(--radius-md); font-family: var(--font-sans); font-size: var(--fs-ui); background: var(--bg-secondary);">
+            <button type="submit" class="dc-collect-btn active" style="padding: var(--sp-md) var(--sp-xl); font-size: var(--fs-ui); border: none; cursor: pointer;">Search</button>
+          </form>
+          <a href="app.html" style="font-size: var(--fs-sm); color: var(--g600); text-decoration: underline; margin-top: var(--sp-xs);">Or open the full engine</a>
         </div>
       </div>
 
@@ -59,21 +63,24 @@
               <span class="picker-fdot" style="background: var(--fam-woody);"></span>
               <h3 class="landing-card-title">Data Over Marketing</h3>
             </div>
-            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: 0;">We translate complex jargon into plain-English sensory dimensions (Warmth, Sweetness, Freshness) using objective data instead of marketing fluff.</p>
+            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: var(--sp-md);">We translate complex jargon into plain-English sensory dimensions (Warmth, Sweetness, Freshness) using objective data instead of marketing fluff.</p>
+            <a href="app.html#notes" class="dc-collect-btn" style="text-decoration: none; width: 100%; box-sizing: border-box; text-align: center;">Explore Notes</a>
           </div>
           <div class="landing-card">
             <div class="landing-card-head">
               <span class="picker-fdot" style="background: var(--fam-floral);"></span>
               <h3 class="landing-card-title">Layering Math</h3>
             </div>
-            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: 0;">Input what you own. Scentmap calculates perfect layering recipes by analyzing sillage differentials and complementary note structures.</p>
+            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: var(--sp-md);">Input what you own. Scentmap calculates perfect layering recipes by analyzing sillage differentials and complementary note structures.</p>
+            <a href="app.html#saved" class="dc-collect-btn" style="text-decoration: none; width: 100%; box-sizing: border-box; text-align: center;">Find Layering Recipes</a>
           </div>
           <div class="landing-card">
             <div class="landing-card-head">
               <span class="picker-fdot" style="background: var(--fam-amber);"></span>
               <h3 class="landing-card-title">Smart Comparisons</h3>
             </div>
-            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: 0;">Before you buy, compare scents side-by-side. See the exact overlap in top, mid, and base notes to avoid redundant purchases.</p>
+            <p class="dc-description" style="font-family: var(--font-serif); font-size: var(--fs-body); color: var(--g700); margin-bottom: var(--sp-md);">Before you buy, compare scents side-by-side. See the exact overlap in top, mid, and base notes to avoid redundant purchases.</p>
+            <a href="app.html#compare" class="dc-collect-btn" style="text-decoration: none; width: 100%; box-sizing: border-box; text-align: center;">Compare Now</a>
           </div>
         </div>
       </div>

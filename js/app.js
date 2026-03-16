@@ -3111,6 +3111,14 @@ Promise.all([
     go('catalog', null); // Mobile button will be updated if below
   } else if (hash === 'saved') {
     go('saved', document.querySelector('.nav-notes-btn[onclick*="saved"]'));
+  } else if (hash.startsWith('search=')) {
+    const query = decodeURIComponent(hash.split('=')[1]);
+    go('catalog', null);
+    const searchInput = document.getElementById('cat-search');
+    if (searchInput) {
+      searchInput.value = query;
+      searchInput.dispatchEvent(new Event('input'));
+    }
   } else {
     // MVP: default to compare
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
