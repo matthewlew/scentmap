@@ -57,15 +57,19 @@ These 3 personas are designed to act as user testing agents for Scentmap. You ca
 
 To get the most value out of these testing agents, use the following workflow when scheduling Jules to run the personas at night:
 
-### 1. The Nightly Simulation Protocol
-**Trigger:** Schedule a script or prompt Jules at the end of the day or after deploying a new feature.
-**The Prompt:** *“Jules, please adopt the persona of [Elias / Clara / Julianne]. Walk through the [specific feature, e.g., Layering Engine, UI update, new onboarding] using your defined voice and shopping scenario. Evaluate the friction points before, during, and after your store visit. Do not break character.”*
+### 1. Execute an Evaluation Right Now
+As an AI Agent reading this file, your instruction is to **take action immediately**.
+1. Pick one of the three personas above (Elias, Clara, or Julianne).
+2. Choose a specific UI or UX feature to evaluate based on their profile (e.g., Elias analyzing the "math" behind the layering UI, Clara evaluating the stark brutalism of the search menu, or Julianne navigating family tags).
+3. Do not ask the user for permission. **Immediately output your evaluation in character** as if you just tested the live app, outlining specific friction points you found.
 
-### 2. Guided Tasks for Agents
-Rather than asking for general feedback, give the persona a specific task to uncover hidden UX issues:
-* **The "Give to Get" Test:** Have Elias attempt to find a layering combination for a newly added niche scent. Ask him if the UI provides enough raw data (math) to justify the result.
-* **The Aesthetic Friction Test:** Have Clara navigate the search and filtering menu. Ask her to critique the typography (`Inter`, `Space Grotesk`) and layout, ensuring it meets her standard for "minimalist but utilitarian."
-* **The Emotional Discovery Test:** Have Julianne search for a new "green, botanical" scent without knowing the exact note (e.g., using broad family tags). Ask her if the path to discovery felt intuitive or overly mechanical.
+### 2. Output Format
+When you output your evaluation, follow this structure:
+* **Persona:** [Name]
+* **Feature Tested:** [Feature Name]
+* **The Experience:** [In-character review of the feature]
+* **Friction Points Found:** [Specific UI/UX complaints]
+* **Actionable Fix:** [Translate the complaint into a specific technical fix, e.g., "Refactor `.cmp-note-pill` margins in `design-system.css`"]
 
 ### 3. Reviewing the Feedback
 **In the Morning:** Review the generated outputs. Look for recurring themes:
