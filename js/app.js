@@ -3185,8 +3185,27 @@ Promise.all([
   } else {
     setTimeout(_doPreFill, 0);
   }
-  // MVP: default to compare
-  go('compare',null);
+
+  // Read hash for deep-linking from landing page
+  const hash = window.location.hash.replace('#', '');
+  if (hash === 'notes') {
+    go('notes', document.querySelector('.nav-notes-btn[onclick*="notes"]'));
+  } else if (hash === 'catalog') {
+    go('catalog', null); // Mobile button will be updated if below
+  } else if (hash === 'saved') {
+    go('saved', document.querySelector('.nav-notes-btn[onclick*="saved"]'));
+  } else if (hash.startsWith('search=')) {
+    const query = decodeURIComponent(hash.split('=')[1]);
+    go('catalog', null);
+    const searchInput = document.getElementById('cat-search');
+    if (searchInput) {
+      searchInput.value = query;
+      searchInput.dispatchEvent(new Event('input'));
+    }
+  } else {
+    // MVP: default to compare
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+  }
 
   // Global horizontal swipe between main tabs
   let globalSx = 0, globalSy = 0;
