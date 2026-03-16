@@ -47,6 +47,8 @@ function setState(id,s){
 function isOwned(id){return gst(id)==='owned'}
 function isWish(id){return gst(id)==='wish'}
 function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
+function isNoteSaved(name){return gst('n_' + name.toLowerCase())==='saved'}
+function toggleNoteSaved(name){setState('n_' + name.toLowerCase(), isNoteSaved(name)?'none':'saved')}
 
 window.renderSaved = function() {
   const container = document.getElementById('saved-list');
@@ -322,7 +324,8 @@ const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered'
 function linkNotes(arr){
   return arr.map(n=>{
     const key=n.toLowerCase();const note=NI_MAP[key];
-    return note?`<button class="cmp-note-pill" data-note="${n}">${n}</button>`: `<span class="cmp-note-pill">${n}</span>`;
+    const savedMark = note && isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;">★</span>' : '';
+    return note?`<button class="cmp-note-pill" data-note="${n}">${n}${savedMark}</button>`: `<span class="cmp-note-pill">${n}</span>`;
   }).join('');
 }
 
@@ -542,17 +545,40 @@ function buildRoleChips(frag,chipsEl){
   });
 }
 
+function renderNoteSaveBtn(container, note) {
+  if (!container) return;
+  const isSaved = isNoteSaved(note.name);
+  container.innerHTML = '';
+  const btn = document.createElement('button');
+  btn.className = 'dc-collect-btn' + (isSaved ? ' active' : '');
+  btn.style.marginTop = '0';
+  btn.innerHTML = `<span class="dc-collect-icon">${isSaved ? '★' : '☆'}</span> ${isSaved ? 'Saved Note' : 'Save Note'}`;
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleNoteSaved(note.name);
+    window.haptic?.('success');
+    renderNoteSaveBtn(container, note);
+    if (window.buildNotes) buildNotes();
+  });
+  container.appendChild(btn);
+}
+
 function renderNoteDetail(container,note){
   const fm=FAM[note.family]||{label:note.family,color:'#888'};
   const nl=note.name.toLowerCase();
   const inf=CAT.filter(f=>f._nAll.includes(nl));
+  const saveId = `nd-save-${note.name.replace(/\s+/g,'-')}`;
   container.innerHTML=`
     <div class="np-name">${note.name}</div>
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
+    <div id="${saveId}" style="margin-top:var(--sp-md);"></div>
     ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
     ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
     ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
+
+  renderNoteSaveBtn(container.querySelector(`#${saveId}`), note);
+
   if(inf.length){
     const span=container.querySelector('#_nfl');
     [...inf].sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
@@ -963,6 +989,9 @@ function openNotePopup(note,triggerEl){
   document.getElementById('np-name').textContent=note.name;
   document.getElementById('np-family').textContent=fm.label;
   document.getElementById('np-desc').textContent=note.desc;
+
+  const saveEl = document.getElementById('np-save');
+  if (saveEl) renderNoteSaveBtn(saveEl, note);
 
   const extEl = document.getElementById('np-extraction');
   if(note.extraction_method) {
@@ -1592,7 +1621,10 @@ function buildNotes(searchQuery, currentTier){
   const sq = notesSearchQuery.toLowerCase().trim();
   const filteredNotes = NI.filter(n => {
     const matchesQuery = n.name.toLowerCase().includes(sq);
-    const matchesTier = notesTierMode === 'all' || n._tier === notesTierMode;
+    let matchesTier = false;
+    if (notesTierMode === 'all') matchesTier = true;
+    else if (notesTierMode === 'saved') matchesTier = isNoteSaved(n.name);
+    else matchesTier = n._tier === notesTierMode;
     return matchesQuery && matchesTier;
   });
 
@@ -1615,7 +1647,8 @@ function buildNotes(searchQuery, currentTier){
       const fm = FAM[note.family] || {color: '#888'};
       const btn = document.createElement('button');
       btn.className = 'note-pill';
-      btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}`;
+      const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;">★</span>' : '';
+      btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}${savedMark}`;
       btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c,note), note.name); });
       cardBody.appendChild(btn);
     });
@@ -1641,7 +1674,9 @@ function buildNotes(searchQuery, currentTier){
 
       const cardBody=document.createElement('div');cardBody.className='notes-card-body';
       grouped[fk].forEach(note=>{
-        const btn=document.createElement('button');btn.className='note-pill';btn.textContent=note.name;
+        const btn=document.createElement('button');btn.className='note-pill';
+        const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;">★</span>' : '';
+        btn.innerHTML = `${note.name}${savedMark}`;
         btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
         cardBody.appendChild(btn);
       });
