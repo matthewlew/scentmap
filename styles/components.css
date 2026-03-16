@@ -15,7 +15,9 @@
 
 /* ── 1. NAVIGATION & TABS ── */
 
-.nav-notes-btn {
+.nav-back-btn,
+.nav-notes-btn,
+.settings-btn {
   font-size: var(--fs-body);
   font-weight: 500;
   color: var(--text-secondary);
@@ -23,11 +25,67 @@
   border: none;
   cursor: pointer;
   transition: color var(--dur-fast);
+  padding: 0;
+}
+
+.nav-notes-btn {
   margin-right: var(--sp-lg);
 }
 
-.nav-notes-btn:hover {
+.nav-back-btn:hover,
+.nav-notes-btn:hover,
+.settings-btn:hover {
   color: var(--text-primary);
+}
+
+.nav-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Settings Menu */
+.settings-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--sp-sm);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--sp-xs);
+  min-width: 180px;
+  z-index: 100;
+}
+
+.settings-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--sp-sm) var(--sp-md);
+  font-family: inherit;
+  font-size: var(--fs-body-sm);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: background var(--dur-fast);
+}
+
+.settings-menu-item:hover {
+  background: var(--bg-secondary);
+}
+
+.settings-menu-icon {
+  font-size: var(--fs-ui);
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  color: var(--text-secondary);
 }
 
 .logo {

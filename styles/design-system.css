@@ -74,7 +74,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
   /* Line heights */
   --lh-tight:     1;
-  --lh-normal:    1.55;
+  --lh-normal:    1.45;
   --lh-relaxed:   1.7;
   --lh-spacious:  1.75;
 
@@ -224,7 +224,7 @@ html, body {
 
 .text-heading {
   font-size: var(--fs-heading);
-  font-weight: 900;
+  font-weight: 500;
   font-family: var(--font-display);
   line-height: var(--lh-tight);
 }
