@@ -2743,9 +2743,7 @@ function _fillCard(slot,frag){
     <div class="cmp-frag-card-name">${frag.name}</div>
     <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>
     ${frag.description?`<div class="cmp-frag-card-desc">${frag.description}</div>`:''}
-    <button class="cmp-card-detail-btn" data-slot="${slot}" aria-label="View details for ${frag.name}">Details ↗</button>
     <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
-  card.querySelector('.cmp-card-detail-btn')?.addEventListener('click',e=>{e.stopPropagation();openFragDetail(frag);});
   card.querySelector('.cmp-brand-btn')?.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
 }
 
