@@ -1793,27 +1793,6 @@ mark.note-match {
   -webkit-box-orient: vertical;
 }
 
-.cmp-card-detail-btn {
-  position: absolute;
-  top: var(--sp-sm);
-  right: var(--sp-sm);
-  background: none;
-  border: none;
-  padding: 2px 0;
-  font-size: var(--fs-meta);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  color: var(--text-tertiary);
-  cursor: pointer;
-  transition: color var(--dur-fast) var(--ease-spring);
-  z-index: 2;
-  letter-spacing: 0.01em;
-}
-
-.cmp-card-detail-btn:hover {
-  color: var(--text-primary);
-}
-
 /* ── Sticky bar ── */
 
 #cmp-sticky-bar {
