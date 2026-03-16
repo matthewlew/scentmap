@@ -29,12 +29,35 @@ const FAM_COMPAT={
 };
 
 /* State */
-const ST={};
+let ST = JSON.parse(localStorage.getItem('scentmap_st') || '{}');
 function gst(id){return ST[id]||'none'}
-function setState(id,s){ST[id]=s}
+function setState(id,s){
+  if(s==='none') delete ST[id];
+  else ST[id]=s;
+  localStorage.setItem('scentmap_st', JSON.stringify(ST));
+}
 function isOwned(id){return gst(id)==='owned'}
 function isWish(id){return gst(id)==='wish'}
 function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
+
+window.renderSaved = function() {
+  const container = document.getElementById('saved-list');
+  if (!container) return;
+  const wished = CAT.filter(f => isWish(f.id));
+  if (wished.length === 0) {
+    container.innerHTML = '<div style="padding:var(--sp-lg);color:var(--g500);">You haven\'t saved any fragrances yet.</div>';
+    return;
+  }
+  container.innerHTML = '';
+  wished.forEach(frag => {
+    const row = document.createElement('div');
+    renderCatRow(row, frag, FAM[frag.family] || {color:'#888'});
+    row.className = row.className.replace('frag-picker-item', '').trim();
+    row.style.height = 'auto'; // override frag-picker-item 48px fixed height
+    row.addEventListener('click', () => openDetail(c => renderFragDetail(c, frag), frag.name));
+    container.appendChild(row);
+  });
+};
 
 /* Similarity scoring: 0–100 across family, notes, sillage, roles */
 const _simCache={};
@@ -884,6 +907,7 @@ function refreshAfterStateChange(id){
   const brands=[...new Set(CAT.map(f=>f.brand))];
   brands.forEach(b=>updBC(b,b.replace(/\s+/g,'-')));
   updCC();
+  if(window.renderSaved)window.renderSaved();
 }
 
 /* ══ NOTE FLOAT POPUP (Notes tab) ══════════════════════════════════ */
@@ -2957,7 +2981,7 @@ Promise.all([
 
   computeNoteTiers();
   // Now initialize
-  buildCatalog();buildNotes();initCatalogControls();initCompare();
+  buildCatalog();buildNotes();initCatalogControls();initCompare();if(window.renderSaved)window.renderSaved();
 
   // Init notes search
   const notesSearchEl = document.getElementById('notes-search');
