@@ -28,8 +28,16 @@ const FAM_COMPAT={
   gourmand:{woody:.5,floral:.5,amber:.8,citrus:.3,leather:.4,oud:.6,green:.3,chypre:.4,gourmand:.4},
 };
 
+/* ── Utility: debounce ── */
+function debounce(fn, delay) {
+  let timer;
+  return function(...args) { clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), delay); };
+}
+
 /* State */
-let ST = JSON.parse(localStorage.getItem('scentmap_st') || '{}');
+let ST;
+try { ST = JSON.parse(localStorage.getItem('scentmap_st') || '{}') || {}; }
+catch(e) { ST = {}; try { localStorage.removeItem('scentmap_st'); } catch(_){} }
 function gst(id){return ST[id]||'none'}
 function setState(id,s){
   if(s==='none') delete ST[id];
@@ -210,6 +218,7 @@ function unlockBodyScroll(){
 }
 
 /* ══ MOBILE SHEET STACK ════════════════════════════════════════════ */
+let _globalLongPressTimer = null; // module-level so closeAllSheets can clear it
 const sheetStack=[];
 function pushSheet(renderFn,title){
   const isSubNav=sheetStack.length>0;
@@ -226,8 +235,10 @@ function pushSheet(renderFn,title){
     <div class="sheet-content"></div></div>`;
   const handle=el.querySelector('.sheet-topbar'); // Drag from the whole topbar
   let ds=null;
+  let _swipeStartTime = 0;
   handle.addEventListener('touchstart',e=>{
     ds=e.touches[0].clientY;
+    _swipeStartTime = Date.now();
     el.style.transition = 'none';
   },{passive:true});
   handle.addEventListener('touchmove',e=>{
@@ -242,9 +253,10 @@ function pushSheet(renderFn,title){
   },{passive:true});
   handle.addEventListener('touchend',e=>{
     const dy=e.changedTouches[0].clientY-(ds||0);
+    const elapsed = Date.now() - _swipeStartTime;
+    const velocity = elapsed > 0 ? dy / elapsed : 0; // px/ms
     el.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-    // Allow momentum dismissal
-    if(dy>80 || (e.changedTouches[0].clientY > ds + 20 && e.changedTouches[0].clientY - ds > (Date.now() - (e.changedTouches[0].timeStamp || Date.now())) * 0.5)) {
+    if(dy > 80 || velocity > 0.3) {
       el.style.transform='translateY(100%)';
       popSheet();
     } else {
@@ -275,6 +287,8 @@ function popSheet(){
   _returnFocus();
 }
 function closeAllSheets(){
+  // Clear any pending long-press timer to prevent ghost opens
+  if(_globalLongPressTimer){clearTimeout(_globalLongPressTimer);_globalLongPressTimer=null;}
   const all=[...sheetStack];sheetStack.length=0;
   all.forEach(s=>{
     s.style.transform='translateY(100%)';
@@ -1212,10 +1226,18 @@ function buildCatalog(roleFilter){
 
   if(!visibleCat.length){
     const empty=document.createElement('div');empty.className='cat-empty';
-    empty.textContent=search?`No matches for "${search}"`:'No fragrances in this view.';
+    if(search){
+      empty.innerHTML=`<div class="cat-empty-msg">No matches for <strong>"${search}"</strong></div><button class="cat-empty-clear" onclick="document.getElementById('cat-search').value='';document.getElementById('cat-search-clear').classList.remove('visible');buildCatalog()">Clear search</button>`;
+    } else {
+      empty.innerHTML=`<div class="cat-empty-msg">No fragrances in this view.</div>`;
+    }
     body.appendChild(empty);
+    const liveEl=document.getElementById('cat-live');if(liveEl)liveEl.textContent='No fragrances found.';
     updCC();return;
   }
+  // Announce result count to screen readers
+  const liveEl=document.getElementById('cat-live');if(liveEl)liveEl.textContent=`${visibleCat.length} fragrance${visibleCat.length!==1?'s':''}`;
+
 
   const brands=[...new Set(visibleCat.map(f=>f.brand))].sort((a,b)=>a.localeCompare(b));
   brands.forEach(brand=>{
@@ -1227,7 +1249,6 @@ function buildCatalog(roleFilter){
     sec.querySelector('.s-name-btn')?.addEventListener('click',()=>openHouseDetail(brand));
     const list=document.createElement('div');list.className='scent-list';
     const lastTapMap = new Map();
-    let longPressTimer = null;
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -1247,9 +1268,15 @@ function buildCatalog(roleFilter){
         // Double tap on the same item!
         window.haptic?.('success');
         const st=gst(frag.id);
-        setState(frag.id, st==='wish'?'none':'wish');
+        const nextSt = st==='wish'?'none':'wish';
+        setState(frag.id, nextSt);
         refreshAfterStateChange(frag.id);
         lastTapMap.set(id, 0); // Reset
+        // Show brief state toast
+        const toastMsg = nextSt==='wish'?'Added to wishlist':nextSt==='owned'?'Marked as owned':'Removed';
+        const toast=document.createElement('div');toast.className='state-toast';toast.setAttribute('aria-live','polite');
+        toast.textContent=toastMsg;row.appendChild(toast);
+        setTimeout(()=>toast.remove(),1250);
       } else {
         lastTapMap.set(id, now);
         // Single tap - immediately open detail to stay responsive
@@ -1263,28 +1290,29 @@ function buildCatalog(roleFilter){
       const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
-      longPressTimer = setTimeout(()=>{
+      if(_globalLongPressTimer){clearTimeout(_globalLongPressTimer);_globalLongPressTimer=null;}
+      _globalLongPressTimer = setTimeout(()=>{
+        _globalLongPressTimer = null;
         window.haptic?.('medium');
         openQuickPeek(frag);
-      }, 500); // 500ms long press
+      }, 500);
     }, {passive:true});
 
     list.addEventListener('touchmove', e=>{
-      if(longPressTimer) {
+      if(_globalLongPressTimer) {
         const dx = e.touches[0].clientX - touchStartX;
         const dy = e.touches[0].clientY - touchStartY;
-        // Cancel if user moved too far
         if(Math.abs(dx) > 10 || Math.abs(dy) > 10) {
-          clearTimeout(longPressTimer);
-          longPressTimer = null;
+          clearTimeout(_globalLongPressTimer);
+          _globalLongPressTimer = null;
         }
       }
     }, {passive:true});
 
     list.addEventListener('touchend', ()=>{
-      if(longPressTimer) {
-        clearTimeout(longPressTimer);
-        longPressTimer = null;
+      if(_globalLongPressTimer) {
+        clearTimeout(_globalLongPressTimer);
+        _globalLongPressTimer = null;
       }
     }, {passive:true});
 
@@ -1398,12 +1426,13 @@ function initCatalogControls(){
     if(brandBarM)makeBrandBtn(brand,brand,html,brandBarM);
   });
 
-  // Search
+  // Search (debounced to avoid rebuilding DOM on every keystroke)
   const searchEl=document.getElementById('cat-search');
   const clearBtn=document.getElementById('cat-search-clear');
+  const _debouncedBuildCatalog = debounce(buildCatalog, 160);
   searchEl.addEventListener('input',()=>{
     clearBtn.classList.toggle('visible',searchEl.value.length>0);
-    buildCatalog();
+    _debouncedBuildCatalog();
   });
   clearBtn.addEventListener('click',()=>{
     searchEl.value='';clearBtn.classList.remove('visible');buildCatalog();
@@ -2080,7 +2109,9 @@ function drawCombinedRadarSvg(fa,fb,caAccent,cbAccent){
   }).join('');
   return`<div class="cmp-radar-v2">
     <div class="cmp-radar-v2-label">Character</div>
-    <div class="cmp-radar-v2-wrap"><svg viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg">
+    <div class="cmp-radar-v2-wrap"><svg viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="radar-title-${fa.id}-${fb.id}">
+      <title id="radar-title-${fa.id}-${fb.id}">Fragrance profile comparison</title>
+      <desc>Radar chart comparing ${fa.name} and ${fb.name} across five dimensions: freshness, sweetness, warmth, intensity, and depth.</desc>
       ${rings}${axes}
       <polygon points="${polyA}" fill="${caAccent}20" stroke="${caAccent}" stroke-width="1.8" stroke-linejoin="round"/>
       <polygon points="${polyB}" fill="${cbAccent}18" stroke="${cbAccent}" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="5,3"/>
@@ -2122,7 +2153,9 @@ function drawScatterSvg(fa,fb,caAccent,cbAccent){
   const lB=`<text x="${(xB+11).toFixed(1)}" y="${lBY.toFixed(1)}" dominant-baseline="middle" font-size="7.5" fill="${cbAccent}" font-family="DM Sans,sans-serif" font-weight="700">${fb.name}</text>`;
   return`<div class="cmp-scatter-v2">
     <div class="cmp-scatter-v2-label">Sillage &amp; Complexity</div>
-    <div class="cmp-scatter-v2-wrap"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <div class="cmp-scatter-v2-wrap"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="scatter-title-${fa.id}-${fb.id}">
+      <title id="scatter-title-${fa.id}-${fb.id}">Sillage and complexity plot</title>
+      <desc>${fa.name} has sillage ${fa.sillage||5}/10 and complexity ${fa.layering||5}/10. ${fb.name} has sillage ${fb.sillage||5}/10 and complexity ${fb.layering||5}/10.</desc>
       ${zRects}${zLabels}${grid}${axes}${xLbl}${yLbl}${ptA}${ptB}${lA}${lB}
     </svg></div>
   </div>`;
@@ -2780,8 +2813,7 @@ function _initPickerKeyNav(listEl,slot){
 function _selectFragForSlot(slot,frag){
   if(slot==='a')CMP_A=frag;else CMP_B=frag;
   _fillCard(slot,frag);
-  const card=document.getElementById(`cmp-card-${slot}`);
-  if(card)card.addEventListener('click',()=>_openFragPicker(slot));
+  // Note: click/keydown listeners on cards are wired once in initCompare(); do not add here to avoid accumulation
   if(CMP_A&&CMP_B)renderCompareResults(CMP_A,CMP_B);
 }
 
@@ -2969,6 +3001,9 @@ Promise.all([
   fetch('data/notes.json',_nc).then(r=>r.json()),
   fetch('data/brands.json',_nc).then(r=>r.json())
 ]).then(([roles, scents, notes, brands])=>{
+  // Hide loading overlay
+  const loadingEl=document.getElementById('app-loading');
+  if(loadingEl){loadingEl.style.opacity='0';setTimeout(()=>loadingEl.hidden=true,250);}
   ROLES=roles;
   CAT=scents.map(f=>{
     f._nTop=(f.top||[]).map(n=>n.toLowerCase().trim());
@@ -3045,7 +3080,8 @@ Promise.all([
     });
   }
   // Pre-fill a high-layering pair so compare isn't blank on load
-  (function(){
+  // Deferred to idle to avoid blocking the main thread on first paint
+  const _doPreFill = () => {
     const sample=CAT.slice(0,40);
     let bestScore=-1,bestA=null,bestB=null;
     for(let i=0;i<sample.length;i++){
@@ -3055,7 +3091,12 @@ Promise.all([
       }
     }
     if(bestA&&bestB){_selectFragForSlot('a',bestA);_selectFragForSlot('b',bestB);}
-  })();
+  };
+  if(typeof requestIdleCallback==='function'){
+    requestIdleCallback(_doPreFill, {timeout:2000});
+  } else {
+    setTimeout(_doPreFill, 0);
+  }
   // MVP: default to compare
   go('compare',null);
 
@@ -3098,6 +3139,12 @@ Promise.all([
       }
     }
   }, {passive:true});
+}).catch(err=>{
+  console.error('Scentmap data load failed:', err);
+  const loadingEl=document.getElementById('app-loading');
+  if(loadingEl)loadingEl.hidden=true;
+  const errorEl=document.getElementById('app-error');
+  if(errorEl)errorEl.hidden=false;
 });
 
 // Load and render changelog

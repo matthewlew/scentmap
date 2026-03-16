@@ -4,6 +4,48 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-16
+
+**Under-the-hood reliability and UX polish pass 🛠️**
+A comprehensive set of bug fixes and UX improvements targeting shippability: silent data-load failures now show a recovery screen, swipe-to-dismiss sheets work correctly again, double-tapping a fragrance now shows a brief confirmation toast, and dozens of CSS inconsistencies were resolved.
+*(User Impact: Medium)*
+
+<details>
+<summary>Detailed Changelog</summary>
+
+### Fixed
+- **Data load failure recovery**: App now shows a loading overlay on startup and replaces it with an error screen (with Retry button) if any data fetch fails. Previously the app silently rendered blank on network errors.
+- **localStorage crash guard**: `JSON.parse` on corrupted `scentmap_st` data now resets to an empty object instead of throwing an unhandled exception.
+- **Sheet swipe-to-dismiss velocity calculation**: Swipe velocity was always near-zero due to `DOMHighResTimeStamp` being used as a wall-clock time. Fixed by tracking `Date.now()` on touchstart and computing `dy / elapsed` correctly. Sheets now dismiss correctly on a fast swipe.
+- **Long-press timer cleared on sheet close**: Long-press timer is now stored at module level and cleared in `closeAllSheets()` to prevent stale timer firing after sheet dismissal.
+- **Compare slot listener accumulation**: `_selectFragForSlot` was adding a new click listener to the card element on every fragrance selection. Removed the duplicate — listeners are now wired once in `initCompare()`.
+- **Missing CSS custom property tokens**: `var(--shadow-sm)`, `var(--shadow-md)`, `var(--shadow-lg)` were used in `components.css` but were only defined as utility classes, not as `:root` variables — causing silent rendering failures. Fixed by adding them to the semantic tokens block.
+- **Missing font-size tokens**: `var(--fs-label)`, `var(--fs-caption)`, `var(--fs-body-sm)` were used throughout but never defined. Added to typography tokens.
+- **Missing `--dur-xslow` token**: Used in compare metric bar animations but undefined. Added as `0.6s`.
+- **Missing `.sr-only` utility class**: Referenced in CLAUDE.md and used for `#cat-live` aria-live region but never defined in CSS. Added to `design-system.css`.
+- **Z-index collision**: `.cmp-dd` (compare dropdown) had `z-index: 200`, colliding with `.sheet-stack-overlay`. Fixed to `210`.
+- **Detail back button layout gap**: Changed `.detail-back` from `visibility: hidden` to `opacity: 0; pointer-events: none` so it preserves layout without showing an empty gap.
+- **Sheet topbar scrolls away**: `.sheet-topbar` is now `position: sticky; top: 0` so the Close button stays reachable on tall sheet content.
+- **Desktop tab touch targets**: Moved `min-height: var(--touch-target)` to base `.tab` rule (was mobile-only). All filter/nav tabs now meet WCAG 2.5.5 minimum.
+
+### Changed
+- **Catalog search debounced**: Input handler now uses `debounce(buildCatalog, 160)` to prevent full DOM rebuilds on every keystroke.
+- **Pre-fill compare deferred**: Similarity pre-calculation (40×40 matrix) is now deferred via `requestIdleCallback` (with `setTimeout` fallback for Safari) to avoid blocking the main thread on init.
+- **State toast on double-tap**: Double-tapping a catalog row to cycle owned/wishlist state now shows a brief overlay toast ("Added to wishlist", "Marked as owned", "Removed") with `aria-live="polite"`.
+- **Empty state improved**: Zero-result search state now includes a "Clear search" button inline.
+- **Swipe actions keyboard-accessible**: Catalog row swipe actions (wish/compare) are now revealed via `:focus-within` CSS, making them keyboard-accessible without requiring a swipe gesture.
+- **`#cat-live` announcements**: `buildCatalog` now writes the result count to the `#cat-live` aria-live region on every render for screen reader users.
+- **SVG charts accessible**: Radar and scatter SVGs now include `role="img"`, `<title>`, and `<desc>` elements for screen reader support.
+- **Hardcoded durations tokenized**: All `0.6s` durations in compare metric bars replaced with `var(--dur-xslow)`.
+- **`.quick-peek-card` shadow tokenized**: Was hardcoded; now uses `var(--shadow-xl)`.
+
+### Removed
+- ~200 lines of dead Compare V1 CSS: `.cmp-hero*`, `.cmp-picker*` (old picker, not the current one), `.cmp-vs-badge`, various dead `.cmp-chip*`, `.cmp-header-row`, `.cmp-venn-wrap`, `.cmp-section-label`, `.cmp-notes-grid*`, `.cmp-metrics-row`, `.cmp-radar-wrap`, `.cmp-metric-bars*`, `.cmp-bar-wrap`, `.cmp-bar`, `.cmp-metric-nums`, `.cmp-roles-row`, `.cmp-sug-grid`. Compare V2 classes are unaffected.
+
+</details>
+
+---
+
 ## 2026-03-13
 
 **Under-the-hood optimization! 🛠️**

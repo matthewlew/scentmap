@@ -187,6 +187,10 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--sp-md) 0 var(--sp-lg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-primary);
 }
 
 .sheet-back {

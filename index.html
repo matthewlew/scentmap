@@ -22,6 +22,25 @@
 <link rel="stylesheet" href="styles/responsive.css?v=20260312a">
 </head>
 <body>
+
+<!-- APP LOADING OVERLAY — shown by default, hidden after data loads -->
+<div id="app-loading" class="app-loading-overlay" aria-live="polite" aria-label="Loading Scentmap">
+  <div class="app-loading-inner">
+    <div class="app-loading-spinner" aria-hidden="true"></div>
+    <div class="app-loading-text">Loading your library…</div>
+  </div>
+</div>
+
+<!-- APP ERROR SCREEN — shown on data load failure -->
+<div id="app-error" class="app-error-overlay" hidden aria-live="assertive">
+  <div class="app-error-inner">
+    <div class="app-error-icon" aria-hidden="true">⚠</div>
+    <div class="app-error-title">Couldn't load fragrances</div>
+    <div class="app-error-msg">Check your connection and try again.</div>
+    <button class="app-error-retry" onclick="window.location.reload()">Retry</button>
+  </div>
+</div>
+
 <div class="shell">
 
   <!-- MIDDLE: MAIN -->
@@ -75,6 +94,7 @@
               <div class="cat-state-bar-m" id="cat-state-bar-m"></div>
               <div class="cat-brand-bar-m" id="cat-brand-bar-m"></div>
             </div>
+            <div id="cat-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
             <div id="cat-body"></div>
           </div>
         </div>
