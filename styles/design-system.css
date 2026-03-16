@@ -18,6 +18,7 @@
 /* ── 1. RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 button,input,select,textarea{font-family:inherit;font-size:inherit}
+[hidden]{display:none!important}
 
 /* ── 2. PRIMITIVE COLOR TOKENS ── */
 :root{
