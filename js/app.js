@@ -2413,6 +2413,48 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
     {tag:'Uneasy 25–44',title:'Possible, with care',desc:'Similar sillage or competing notes. Layer sparingly to avoid muddiness.',hi:layerPct>=25&&layerPct<45},
     {tag:'Poor pairing < 25',title:'Better as alternates',desc:'Very similar projection or note profiles. Better worn separately.',hi:layerPct<25},
   ];
+  let bodyContent = '';
+  if (isMatch) {
+    bodyContent = `
+      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
+      <div class="cmp-edu-grid">
+        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
+      </div>`;
+  } else {
+    const famComp=FAM_COMPAT[fa.family]?.[fb.family]??0.5;
+    const famScore=famComp*35;
+    const sillDiff=Math.abs(fa.sillage-fb.sillage);
+    const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
+    const shared=fa._nAll.filter(n=>fb._nAll.includes(n)).length;
+    const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
+    const rawScore = famScore + sillScore + noteScore;
+
+    bodyContent = `
+      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
+      <div class="cmp-edu-math">
+        <div class="cmp-edu-math-row">
+          <div class="cmp-edu-math-label">Family Compatibility</div>
+          <div class="cmp-edu-math-val">${Math.round(famScore)} / 35</div>
+        </div>
+        <div class="cmp-edu-math-row">
+          <div class="cmp-edu-math-label">Sillage Contrast</div>
+          <div class="cmp-edu-math-val">${Math.round(sillScore)} / 20</div>
+        </div>
+        <div class="cmp-edu-math-row">
+          <div class="cmp-edu-math-label">Note Independence</div>
+          <div class="cmp-edu-math-val">${Math.round(noteScore)} / 20</div>
+        </div>
+        <div class="cmp-edu-math-total">
+          <div class="cmp-edu-math-label">Raw Score</div>
+          <div class="cmp-edu-math-val">${Math.round(rawScore)} / 75</div>
+        </div>
+        <div class="cmp-edu-math-desc">
+          A strong pairing relies on compatible families (up to 35 pts), contrasting sillage so they don't compete (up to 20 pts), and distinct note profiles to create depth (up to 20 pts). The final raw score is scaled to 100%.
+        </div>
+      </div>
+    `;
+  }
+
   overlay.innerHTML=`<div class="cmp-edu-wrap">
     <div class="cmp-edu-header">
       <div class="cmp-edu-header-left">
@@ -2422,10 +2464,7 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
       <button class="cmp-edu-close" id="cmp-edu-close">✕ Close</button>
     </div>
     <div class="cmp-edu-body">
-      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
-      <div class="cmp-edu-grid">
-        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
-      </div>
+      ${bodyContent}
     </div>
   </div>`;
   overlay.classList.add('open');
