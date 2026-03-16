@@ -308,8 +308,8 @@ const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered'
 function linkNotes(arr){
   return arr.map(n=>{
     const key=n.toLowerCase();const note=NI_MAP[key];
-    return note?`<button class="s-name-btn" data-note="${n}">${n}</button>`:n;
-  }).join(', ');
+    return note?`<button class="cmp-note-pill" data-note="${n}">${n}</button>`: `<span class="cmp-note-pill">${n}</span>`;
+  }).join('');
 }
 
 function renderFragDetail(container,frag){
@@ -343,7 +343,7 @@ function renderFragDetail(container,frag){
   // Note links
   const brandBtn=container.querySelector('.dc-brand-btn');
   if(brandBtn)brandBtn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
-  container.querySelectorAll('.s-name-btn[data-note]').forEach(btn=>{
+  container.querySelectorAll('.cmp-note-pill[data-note]').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),note.name)});
   });
 
@@ -1630,9 +1630,9 @@ function openQuickPeek(frag){
         ${fm.label}
       </div>
       <div class="dc-nlbl" style="margin-top:0">Notes</div>
-      <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${frag.top.join(', ')}</span></div>
-      <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${frag.mid.join(', ')}</span></div>
-      <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${frag.base.join(', ')}</span></div>
+      <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
+      <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
+      <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
       <div style="display:flex;gap:10px;margin-top:24px">
         <button class="dc-collect-btn" style="flex:1;justify-content:center" onclick="closeQuickPeek();openFragDetail(CAT_MAP['${frag.id}'])">Full details</button>
       </div>
