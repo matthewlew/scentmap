@@ -90,6 +90,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 5. SPACING SCALE (4px grid) ── */
 :root{
+  --sp-micro: 2px;
   --sp-xs:   4px;
   --sp-sm:   8px;
   --sp-md:   12px;

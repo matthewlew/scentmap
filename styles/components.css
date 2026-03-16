@@ -1958,7 +1958,7 @@ mark.note-match {
   background: none;
   border: none;
   border-radius: var(--radius-sm);
-  padding: 2px var(--sp-xs);
+  padding: var(--sp-micro) var(--sp-xs);
   cursor: default;
   color: var(--text-primary);
 }
