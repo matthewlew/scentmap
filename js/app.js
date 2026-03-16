@@ -351,11 +351,42 @@ function renderFragDetail(container,frag){
       <div class="dc-stat"><div class="dc-slbl">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${LW[frag.layering]}</div></div>
     </div>
     <div class="dc-div"></div>
-    <div class="dc-nlbl">Notes</div>
-    <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
-    <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
-    <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
-    <p class="dc-notes-caveat">Key materials only — simplified pyramid</p>`;
+    <div class="dc-nlbl" style="margin-bottom:var(--sp-xs);">Sensory Profile</div>
+    <div style="display:flex; flex-direction:column; gap:var(--sp-sm); margin-bottom:var(--sp-2xl);">
+      ${(() => {
+        const p = computeProfile(frag);
+        const bar = (label, val, color) => `
+          <div style="display:flex; align-items:center; gap:var(--sp-sm);">
+            <div style="width:60px; font-size:var(--fs-caption); font-family:var(--font-sans); font-weight:600; text-transform:uppercase; color:var(--text-tertiary);">${label}</div>
+            <div style="flex:1; height:4px; background:var(--border-subtle); border-radius:var(--radius-micro); position:relative;">
+              <div style="position:absolute; top:0; left:0; height:100%; width:${Math.round(val*100)}%; background:${color}; border-radius:var(--radius-micro);"></div>
+            </div>
+          </div>`;
+        return bar('Fresh', p.freshness, 'var(--fam-citrus)') +
+               bar('Sweet', p.sweetness, 'var(--fam-floral)') +
+               bar('Warm', p.warmth, 'var(--fam-amber)');
+      })()}
+    </div>
+
+    <div class="dc-nlbl" style="margin-bottom:var(--sp-md);">Scent Journey</div>
+    <div style="border-left: 2px solid var(--border-standard); margin-left: 6px; padding-left: var(--sp-lg); display:flex; flex-direction:column; gap:var(--sp-lg);">
+      <div style="position:relative;">
+        <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--bg-primary); border:2px solid var(--border-strong);"></div>
+        <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Opening <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Top Notes)</span></div>
+        <div class="dc-nv" style="margin-bottom:0;">${linkNotes(frag.top)}</div>
+      </div>
+      <div style="position:relative;">
+        <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--bg-primary); border:2px solid var(--border-strong);"></div>
+        <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Heart <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Mid Notes)</span></div>
+        <div class="dc-nv" style="margin-bottom:0;">${linkNotes(frag.mid)}</div>
+      </div>
+      <div style="position:relative;">
+        <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--border-strong);"></div>
+        <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Dry Down <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Base Notes)</span></div>
+        <div class="dc-nv" style="margin-bottom:0;">${linkNotes(frag.base)}</div>
+      </div>
+    </div>
+    <p class="dc-notes-caveat" style="margin-top:var(--sp-xl);">Key materials only — simplified pyramid</p>`;
 
   // Note links
   const brandBtn=container.querySelector('.dc-brand-btn');
@@ -573,9 +604,9 @@ function renderNoteDetail(container,note){
     <div class="np-family">${fm.label}</div>
     <div class="np-desc">${note.desc}</div>
     <div id="${saveId}" style="margin-top:var(--sp-md);"></div>
-    ${note.extraction_method?`<div style="margin-top:10px; font-size:12px; color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
-    ${note.insider_fact?`<div style="margin-top:8px; padding:10px; background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:4px; color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
-    ${inf.length?`<div class="np-frags" style="margin-top:14px"><div class="dc-nlbl" style="margin:0 0 6px">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:8px;overflow:hidden"></div></div>`:''}`;
+    ${note.extraction_method?`<div style="margin-top:var(--sp-sm); font-size:var(--fs-caption); color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
+    ${note.insider_fact?`<div style="margin-top:var(--sp-sm); padding:var(--sp-sm); background:var(--g50); border-radius:var(--radius); font-size:var(--fs-caption); color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:var(--sp-xs); color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
+    ${inf.length?`<div class="np-frags" style="margin-top:var(--sp-md)"><div class="dc-nlbl" style="margin:0 0 var(--sp-xs)">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden"></div></div>`:''}`;
 
   renderNoteSaveBtn(container.querySelector(`#${saveId}`), note);
 
@@ -1177,7 +1208,7 @@ function renderPicker(container,roleId){
       const lbl=document.createElement('div');lbl.className='picker-sec-lbl';
       lbl.innerHTML=`All fragrances for this role <span style="color:var(--g400);font-weight:400">(${roleAll.length})</span>`;
       container.appendChild(lbl);
-      const hint=document.createElement('div');hint.style.cssText='font-size:.68rem;color:var(--g400);margin-bottom:10px;line-height:1.5';
+      const hint=document.createElement('div');hint.style.cssText='font-size:var(--fs-label);color:var(--text-tertiary);margin-bottom:var(--sp-md);line-height:var(--lh-normal)';
       hint.textContent='Tap a fragrance to learn more, or add directly to your capsule.';
       container.appendChild(hint);
       const list=document.createElement('div');list.className='picker-list';
@@ -1728,7 +1759,7 @@ function openQuickPeek(frag){
       <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
       <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
       <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
-      <div style="display:flex;gap:10px;margin-top:24px">
+      <div style="display:flex;gap:var(--sp-md);margin-top:var(--sp-2xl)">
         <button class="dc-collect-btn" style="flex:1;justify-content:center" onclick="closeQuickPeek();openFragDetail(CAT_MAP['${frag.id}'])">Full details</button>
       </div>
     </div>
@@ -1843,8 +1874,8 @@ function openMoreSheet(btn){
     {id:'playground',icon:'❖', label:'Design System', action:"window.open('playground.html', '_blank')"}
   ];
   pushSheet(el=>{
-    el.innerHTML=`<div style="padding:16px 0 8px">
-      <div style="font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);padding:0 16px 10px">More</div>
+    el.innerHTML=`<div style="padding:var(--sp-lg) 0 var(--sp-sm)">
+      <div style="font-size:var(--fs-label);font-weight:700;letter-spacing:var(--ls-wide);text-transform:uppercase;color:var(--text-secondary);padding:0 var(--sp-lg) var(--sp-md)">More</div>
       ${items.map(it=>`
         <button class="settings-menu-item" onclick="${it.action}">
           <span class="settings-menu-icon">${it.icon}</span>
@@ -2549,6 +2580,14 @@ function renderCompareResults(fa,fb){
   const matchColor=matchPct>=60?ca.accent:matchPct>=30?'var(--g700)':'var(--g500)';
   const layerColor=layerPct>=60?cb.accent:layerPct>=30?'var(--g700)':'var(--g500)';
 
+  const famComp=FAM_COMPAT[fa.family]?.[fb.family]??0.5;
+  const famScore=famComp*35;
+  const sillDiff=Math.abs(fa.sillage-fb.sillage);
+  const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
+  const shared=fa._nAll.filter(n=>fb._nAll.includes(n)).length;
+  const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
+  const rawScore = famScore + sillScore + noteScore;
+
   // Update permanent header cards
   _fillCard('a',fa);_fillCard('b',fb);
 
@@ -2600,7 +2639,13 @@ function renderCompareResults(fa,fb){
               </div>
             </div>
             <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
+            <div class="cmp-edu-math" style="margin-top:var(--sp-sm); padding-top:var(--sp-sm); border-top:1px dashed var(--border-standard); width:100%; display:flex; flex-direction:column; gap:4px; font-family:var(--font-mono); font-size:var(--fs-caption); color:var(--g600);">
+              <div style="display:flex; justify-content:space-between;"><span>Fam Compat</span><span>${Math.round(famScore)}/35</span></div>
+              <div style="display:flex; justify-content:space-between;"><span>Sillage Contrast</span><span>${Math.round(sillScore)}/20</span></div>
+              <div style="display:flex; justify-content:space-between;"><span>Note Independence</span><span>${Math.round(noteScore)}/20</span></div>
+              <div style="display:flex; justify-content:space-between; margin-top:2px; font-weight:700; color:var(--text-primary);"><span>Raw Score</span><span>${Math.round(rawScore)}/75</span></div>
+            </div>
+            <div class="cmp-score-tap" style="margin-top:var(--sp-sm);">Tap to learn more ↗</div>
           </button>
         </div>
       </div>
