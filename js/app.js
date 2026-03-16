@@ -49,24 +49,225 @@ function isWish(id){return gst(id)==='wish'}
 function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
 function isNoteSaved(name){return gst('n_' + name.toLowerCase())==='saved'}
 function toggleNoteSaved(name){setState('n_' + name.toLowerCase(), isNoteSaved(name)?'none':'saved')}
+function isBrandSaved(id){return gst('b_'+id.toLowerCase())==='saved'}
+function toggleBrandSave(id){setState('b_'+id.toLowerCase(),isBrandSaved(id)?'none':'saved')}
+
+/* ── Auth (Supabase) ─────────────────────────────────────────────── */
+// Fill these in after creating your Supabase project:
+//   Authentication → URL Configuration → set Site URL to your app URL
+//   Authentication → Providers → enable Google and/or Apple
+const SUPABASE_URL      = '';   // e.g. 'https://abcdefgh.supabase.co'
+const SUPABASE_ANON_KEY = '';   // Your project's anon/public key
+
+let currentUser = null;
+let _sb = null;
+if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+  _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+async function initSupabaseAuth() {
+  if (!_sb) return;
+  // Restore session (also handles the OAuth redirect fragment automatically)
+  const { data: { session } } = await _sb.auth.getSession();
+  if (session?.user) _applyUser(session.user);
+  _sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session?.user) _applyUser(session.user);
+    else if (event === 'SIGNED_OUT') { currentUser = null; updateNavForUser(); }
+  });
+}
+
+function _applyUser(user) {
+  currentUser = {
+    name:  user.user_metadata?.full_name || user.user_metadata?.name || user.email,
+    email: user.email
+  };
+  updateNavForUser();
+}
+
+function _authTrapFocus(modal) {
+  const focusable = Array.from(modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(el => !el.disabled);
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  function handler(e) {
+    if (e.key === 'Escape') { closeAuthModal(); return; }
+    if (e.key !== 'Tab') return;
+    if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+    else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+  }
+  modal._trapHandler = handler;
+  modal.addEventListener('keydown', handler);
+}
+
+function openAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+  modal.hidden = false;
+  requestAnimationFrame(() => modal.classList.add('open'));
+  setTimeout(() => { document.getElementById('auth-modal-close')?.focus(); }, 50);
+  _authTrapFocus(modal);
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  if (modal._trapHandler) modal.removeEventListener('keydown', modal._trapHandler);
+  modal.addEventListener('transitionend', () => { modal.hidden = true; }, {once: true});
+  document.getElementById('nav-signin-btn')?.focus();
+}
+
+function updateNavForUser() {
+  const btn = document.getElementById('nav-signin-btn');
+  if (!btn) return;
+  if (currentUser) {
+    btn.textContent = currentUser.name.charAt(0).toUpperCase();
+    btn.classList.add('signed-in');
+    btn.setAttribute('aria-label', `Signed in as ${currentUser.name}. Click to sign out.`);
+    btn.title = currentUser.name;
+    btn.onclick = async () => {
+      if (_sb) await _sb.auth.signOut();
+      else { currentUser = null; updateNavForUser(); }
+    };
+  } else {
+    btn.textContent = 'Sign In';
+    btn.classList.remove('signed-in');
+    btn.setAttribute('aria-label', 'Sign in to your account');
+    btn.removeAttribute('title');
+    btn.onclick = openAuthModal;
+  }
+}
+
+async function supabaseSignIn(provider) {
+  const provBtn = document.getElementById('auth-btn-' + provider);
+  if (!provBtn) return;
+  const originalHTML = provBtn.innerHTML;
+
+  if (!_sb) {
+    // Supabase not configured — fall back to mock
+    provBtn.disabled = true;
+    provBtn.textContent = '…';
+    setTimeout(() => {
+      currentUser = {name: 'Alex', email: 'alex@example.com'};
+      updateNavForUser();
+      closeAuthModal();
+      provBtn.innerHTML = originalHTML;
+      provBtn.disabled = false;
+    }, 1200);
+    return;
+  }
+
+  provBtn.disabled = true;
+  provBtn.textContent = '…';
+  const { error } = await _sb.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: window.location.origin + window.location.pathname }
+  });
+  if (error) {
+    console.error('Supabase auth error:', error.message);
+    provBtn.innerHTML = originalHTML;
+    provBtn.disabled = false;
+  }
+  // On success the page redirects — no need to restore button state
+}
+
+function copyCollectionToClipboard(toastEl) {
+  const owned  = CAT.filter(f => isOwned(f.id));
+  const wished = CAT.filter(f => isWish(f.id));
+  const notes  = NI.filter(n => isNoteSaved(n.name));
+  const brands = BRANDS.filter(b => isBrandSaved(b.id));
+  const lines = ['My Scentmap Collection', '======================'];
+  if (owned.length)  { lines.push('', `Owned (${owned.length})`);   owned.forEach(f  => lines.push(`- ${f.name} — ${f.brand}`)); }
+  if (wished.length) { lines.push('', `Wishlist (${wished.length})`);wished.forEach(f  => lines.push(`- ${f.name} — ${f.brand}`)); }
+  if (notes.length)  { lines.push('', `Saved Notes (${notes.length})`); lines.push('- ' + notes.map(n => n.name).join(', ')); }
+  if (brands.length) { lines.push('', `Saved Brands (${brands.length})`); lines.push('- ' + brands.map(b => b.name).join(', ')); }
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    if (toastEl) { toastEl.textContent = 'Copied to clipboard!'; setTimeout(() => { toastEl.textContent = ''; }, 3000); }
+  });
+}
+
+function renderCollectionSection(container, label, items, type) {
+  if (!items.length) return;
+  const section = document.createElement('div');
+  section.className = 'collection-section';
+  const hdr = document.createElement('div');
+  hdr.className = 'collection-section-hdr';
+  hdr.innerHTML = `<span>${label}</span><span class="collection-section-count">${items.length}</span>`;
+  section.appendChild(hdr);
+
+  if (type === 'frags') {
+    const list = document.createElement('div');
+    list.className = 'scent-list';
+    items.forEach(frag => {
+      const row = document.createElement('div');
+      renderCatRow(row, frag, FAM[frag.family] || {color:'#888'});
+      row.className = row.className.replace('frag-picker-item', '').trim();
+      row.addEventListener('click', () => openFragDetail(frag));
+      list.appendChild(row);
+    });
+    section.appendChild(list);
+  } else if (type === 'notes') {
+    const wrap = document.createElement('div');
+    wrap.className = 'collection-notes-wrap';
+    items.forEach(note => {
+      const btn = document.createElement('button');
+      btn.className = 'cmp-note-pill';
+      btn.textContent = note.name;
+      btn.addEventListener('click', e => { e.stopPropagation(); openNotePopup(note, btn); });
+      wrap.appendChild(btn);
+    });
+    section.appendChild(wrap);
+  } else if (type === 'brands') {
+    const wrap = document.createElement('div');
+    wrap.className = 'collection-brands-wrap';
+    items.forEach(brand => {
+      const btn = document.createElement('button');
+      btn.className = 'saved-brand-chip';
+      btn.textContent = brand.name;
+      btn.addEventListener('click', () => openHouseDetail(brand.name));
+      wrap.appendChild(btn);
+    });
+    section.appendChild(wrap);
+  }
+  container.appendChild(section);
+}
 
 window.renderSaved = function() {
   const container = document.getElementById('saved-list');
   if (!container) return;
+  container.innerHTML = '';
+
+  // Copy button + aria-live toast
+  const copyRow = document.createElement('div');
+  copyRow.style.display = 'flex';
+  copyRow.style.alignItems = 'center';
+  copyRow.style.marginBottom = 'var(--sp-xl)';
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-collection-btn';
+  copyBtn.textContent = 'Copy Collection';
+  const toastEl = document.createElement('span');
+  toastEl.className = 'copy-toast';
+  toastEl.setAttribute('aria-live', 'polite');
+  copyBtn.addEventListener('click', () => copyCollectionToClipboard(toastEl));
+  copyRow.appendChild(copyBtn);
+  copyRow.appendChild(toastEl);
+  container.appendChild(copyRow);
+
+  const owned  = CAT.filter(f => isOwned(f.id));
   const wished = CAT.filter(f => isWish(f.id));
-  if (wished.length === 0) {
-    container.innerHTML = '<div style="padding:var(--sp-lg);color:var(--g500);">You haven\'t saved any fragrances yet.</div>';
+  const notes  = NI.filter(n => isNoteSaved(n.name));
+  const brands = BRANDS.filter(b => isBrandSaved(b.id));
+
+  if (!owned.length && !wished.length && !notes.length && !brands.length) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'padding:var(--sp-lg);color:var(--g500);font-family:var(--font-serif);';
+    empty.textContent = 'Nothing saved yet. Swipe a fragrance to wishlist it, or open a note or brand to save it.';
+    container.appendChild(empty);
     return;
   }
-  container.innerHTML = '';
-  wished.forEach(frag => {
-    const row = document.createElement('div');
-    renderCatRow(row, frag, FAM[frag.family] || {color:'#888'});
-    row.className = row.className.replace('frag-picker-item', '').trim();
-    row.style.height = 'auto'; // override frag-picker-item 48px fixed height
-    row.addEventListener('click', () => openDetail(c => renderFragDetail(c, frag), frag.name));
-    container.appendChild(row);
-  });
+
+  renderCollectionSection(container, 'Owned', owned, 'frags');
+  renderCollectionSection(container, 'Wishlist', wished, 'frags');
+  renderCollectionSection(container, 'Saved Notes', notes, 'notes');
+  renderCollectionSection(container, 'Saved Brands', brands, 'brands');
 };
 
 /* Similarity scoring: 0–100 across family, notes, sillage, roles */
@@ -591,6 +792,23 @@ function renderNoteDetail(container,note){
   }
 }
 
+function renderBrandSaveBtn(container, brandData) {
+  if (!container) return;
+  container.innerHTML = '';
+  const saved = isBrandSaved(brandData.id);
+  const btn = document.createElement('button');
+  btn.className = 'dc-collect-btn' + (saved ? ' active' : '');
+  btn.innerHTML = `<span class="dc-collect-icon">${saved ? '★' : '☆'}</span> ${saved ? 'Saved Brand' : 'Save Brand'}`;
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleBrandSave(brandData.id);
+    window.haptic?.('success');
+    renderBrandSaveBtn(container, brandData);
+    if (window.renderSaved) window.renderSaved();
+  });
+  container.appendChild(btn);
+}
+
 function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
 
 function renderHouseDetail(container,brand){
@@ -625,6 +843,7 @@ function renderHouseDetail(container,brand){
   container.innerHTML=`<div class="house-detail-wrap">
     <div class="house-detail-name">${brand}</div>
     ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${houseData.desc}</div>` : ''}
+    <div id="house-brand-save-wrap" style="margin-top:var(--sp-md);"></div>
     ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--black); color:var(--paper); border:none;">Visit ${brand} Website</a>` : ''}
     ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
 
@@ -646,6 +865,12 @@ function renderHouseDetail(container,brand){
     <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
     <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
   </div>`;
+
+  const brandSaveWrap = container.querySelector('#house-brand-save-wrap');
+  if (brandSaveWrap) {
+    const bd = houseData || {id: brand.toLowerCase().replace(/\s+/g,'-'), name: brand};
+    renderBrandSaveBtn(brandSaveWrap, bd);
+  }
 
   if (topFrags.length > 0) {
     const carousel = container.querySelector('#house-known-for-carousel');
@@ -1829,6 +2054,16 @@ document.addEventListener('DOMContentLoaded',function(){
     });
     settingsMenu.addEventListener('click',function(e){e.stopPropagation();});
   }
+
+  // Auth modal wiring
+  document.getElementById('auth-modal-scrim')?.addEventListener('click', closeAuthModal);
+  document.getElementById('auth-modal-close')?.addEventListener('click', closeAuthModal);
+  document.getElementById('auth-btn-guest')?.addEventListener('click', closeAuthModal);
+  document.getElementById('auth-btn-google')?.addEventListener('click', () => supabaseSignIn('google'));
+  document.getElementById('auth-btn-apple')?.addEventListener('click', () => supabaseSignIn('apple'));
+  // nav-signin-btn click is managed by updateNavForUser() (toggles between openAuthModal / signOut)
+  updateNavForUser();
+  initSupabaseAuth();
 });
 function goMobile(id,btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
@@ -1839,6 +2074,7 @@ function openMoreSheet(btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const items=[
+    {id:'saved',icon:'★', label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
     {id:'changelog',icon:'↩', label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
     {id:'playground',icon:'❖', label:'Design System', action:"window.open('playground.html', '_blank')"}
   ];
