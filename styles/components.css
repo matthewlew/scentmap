@@ -332,7 +332,7 @@
 .cmp-frag-name {
   font-size: var(--fs-ui);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: var(--lh-tight);
 }
 
 .cmp-frag-brand {
@@ -603,7 +603,7 @@
 .dc-name {
   font-family: var(--font-display);
   font-size: var(--fs-heading);
-  line-height: 1.15;
+  line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
   margin-bottom: var(--sp-xs);
 }
@@ -665,7 +665,6 @@
   color: var(--text-tertiary);
   letter-spacing: 0.01em;
   margin-top: var(--sp-sm);
-  line-height: 1.4;
 }
 
 
@@ -700,7 +699,6 @@
 .dc-description {
   font-size: var(--fs-body);
   color: var(--g600);
-  line-height: 1.65;
   margin-bottom: var(--sp-xl);
 }
 
@@ -744,7 +742,7 @@
 
 .dc-collect-icon {
   font-size: var(--fs-body);
-  line-height: 1;
+  line-height: var(--lh-tight);
 }
 
 /* Compare CTAs in detail panel */
@@ -874,7 +872,7 @@
   font-size: var(--fs-body);
   font-weight: 500;
   color: var(--text-primary);
-  line-height: 1.3;
+  line-height: var(--lh-tight);
 }
 
 .dc-sim-name-brand {
@@ -980,7 +978,6 @@
 .rlc-desc {
   font-size: var(--fs-body);
   color: var(--text-secondary);
-  line-height: 1.45;
   margin-bottom: var(--sp-sm);
 }
 
@@ -1385,7 +1382,6 @@
 .changelog-body {
   max-width: 640px;
   font-size: var(--fs-body);
-  line-height: 1.65;
 }
 
 .changelog-body h2 {
@@ -1604,7 +1600,7 @@
   font-size: var(--fs-body);
   font-weight: 500;
   color: var(--text-primary);
-  line-height: 1.2;
+  line-height: var(--lh-tight);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1659,7 +1655,6 @@ mark.note-match {
 .dc-desc {
   font-size: var(--fs-body);
   color: var(--g600);
-  line-height: 1.65;
   margin: var(--sp-sm) 0 var(--sp-md);
 }
 
@@ -1773,7 +1768,6 @@ mark.note-match {
   font-size: var(--fs-meta);
   color: var(--text-tertiary);
   padding: 0 var(--sp-md) var(--sp-lg);
-  line-height: 1.5;
   flex: 1;
   overflow: hidden;
   display: -webkit-box;
@@ -2192,7 +2186,6 @@ mark.note-match {
   padding: 2px var(--sp-xs);
   cursor: default;
   color: var(--text-primary);
-  line-height: 1.4;
 }
 
 button.cmp-note-pill {
@@ -2909,7 +2902,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-body);
   color: var(--text-tertiary);
   padding: 0 0 0 var(--sp-xs);
-  line-height: 1;
+  line-height: var(--lh-tight);
   flex-shrink: 0;
   transition: color var(--dur-fast) var(--ease-spring);
 }
@@ -2923,7 +2916,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-ui);
   letter-spacing: -0.01em;
   color: var(--text-primary);
-  line-height: 1.2;
+  line-height: var(--lh-tight);
 }
 
 .np-family {
@@ -2939,7 +2932,6 @@ button.cmp-note-pill:hover {
 .np-desc {
   font-size: var(--fs-body);
   color: var(--g600);
-  line-height: 1.6;
   margin-bottom: var(--sp-xs);
 }
 
@@ -2983,7 +2975,6 @@ button.cmp-note-pill:hover {
 .picker-sub {
   font-size: var(--fs-body);
   color: var(--text-secondary);
-  line-height: 1.5;
 }
 
 .picker-hero {
@@ -2996,7 +2987,7 @@ button.cmp-note-pill:hover {
 .picker-hero-sym-empty {
   font-size: var(--fs-heading);
   opacity: 0.12;
-  line-height: 1;
+  line-height: var(--lh-tight);
   margin-bottom: var(--sp-sm);
 }
 
@@ -3006,7 +2997,7 @@ button.cmp-note-pill:hover {
   right: 20px;
   font-size: var(--fs-heading);
   opacity: 0.06;
-  line-height: 1;
+  line-height: var(--lh-tight);
   pointer-events: none;
   user-select: none;
 }
@@ -3178,7 +3169,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-body);
   font-weight: 600;
   letter-spacing: -0.01em;
-  line-height: 1.3;
+  line-height: var(--lh-tight);
   margin-bottom: 3px;
   color: var(--text-primary);
 }
@@ -3305,6 +3296,6 @@ button.cmp-note-pill:hover {
     transition:color var(--dur-fast);letter-spacing:var(--ls-normal);min-height:52px;
   }
   .mbn-btn.active{color:var(--text-primary);font-weight:600}
-  .mbn-icon{font-size:var(--fs-title);line-height:1}
+  .mbn-icon{font-size:var(--fs-title);line-height:var(--lh-tight)}
   .col-main-nav{display:none!important}
 }

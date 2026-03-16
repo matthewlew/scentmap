@@ -263,7 +263,6 @@
 
   .s-name-btn {
     font-size: var(--fs-body);
-    line-height: 1.4;
   }
 
   .s-meta {
@@ -292,7 +291,6 @@
   /* Changelog */
   .changelog-body {
     font-size: var(--fs-body);
-    line-height: 1.72;
   }
 
   .changelog-body h2 {
