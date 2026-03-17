@@ -6,19 +6,18 @@ All notable changes to Scentmap are documented here.
 
 ## 2026-03-16 (10)
 
-### Changed
-- **`.chip` (family chip): smaller size** — `font-size` → `--fs-meta`, `padding` → `0 --sp-xs`, removed `text-transform: uppercase`; chip is now compact and sentence-case
-- **`.dc-nt` width: 32px → 40px** — wider label column in the quick-peek notes row (Top / Heart / Base)
-- **`.cmp-card-meta-desc` line-height** — changed from `--lh-body` to `--lh-normal` for tighter description text in compare cards
-- **Mobile compare cards** — added responsive overrides for `cmp-frag-card-name` (`--fs-ui`), `cmp-frag-card-brand` (`--fs-meta`), and `cmp-frag-card-name-row` padding; reduces cramping on narrow screens
-
 ### Fixed
-- **`.scent-row--flat .scent-row-content` hover left-shift** — added `transform: none` and scoped transition to `background` only, preventing inherited `translateX(-120px)` action-reveal animation on flat suggestion cards
-- **`.scent-row--flat .scent-row-content` double-radius** — removed `border-radius` and `border-left` from the flat variant; outer container provides the border treatment
-- **`.cmp-sug-card` border-radius removed** — redundant since outer section clips content
-- **Character map "Tap to explore" hint removed** — `.cmp-pair-card-left::after` pseudo-element was clashing with radar chart hover states; removed both the `::after` block and its `:hover` rule
-- **`.dc-badge.similar` removed** — "Similar" badge no longer shown on discovery suggestions (redundant with section heading); "Contrasts" and "Complements" badges retained
-- **`.note-pill` merged into `.cmp-note-pill`** — removed duplicate `.note-pill` CSS block; Notes panel buttons now use `cmp-note-pill` class directly
+- **Catalog rows: removed `.frag-picker-item` class from catalog rows** — this rolodex picker class was forcing `height: 48px` and `opacity: 0.32` onto every catalog row, causing content overflow/overlap and washed-out text; catalog rows now use only `.scent-row` and state classes
+- **Catalog rows: removed double padding** — `.scent-row` outer padding was redundant (`.scent-row-content` has its own padding); removing the outer padding eliminates the visible bg-secondary frame around each row and cleans up the list appearance
+
+### Changed
+- **Catalog rows: dot alignment** — changed `.scent-row-content` from `align-items: center` to `align-items: flex-start` so the family color dot anchors to the fragrance name (top line) rather than the brand line (middle of 3 lines); added `margin-top: 4px` to optically center the dot with the name cap-height
+- **Catalog rows: name weight** — `.frag-picker-item-name` bumped from `font-weight: 500` to `600` and set to `font-family: var(--font-sans)` for clearer name/brand contrast
+- **Mobile filter panel: section labels** — added "COLLECTION" and "BRAND" uppercase labels above each filter group so users know what each row filters
+- **Mobile filter panel: brand bar** — brand filter chips now use pill style with horizontal scroll (`.tab` chips with border-radius-pill, overflow-x: auto) instead of a raw tab group; easier to scan on narrow screens
+- **Mobile bottom nav: Lucide SVG icons** — replaced unicode symbols (`≡`, `⊕`, `✿`, `⋯`) with proper Lucide SVGs: search for Fragrances, layers-2 for Compare, flower for Notes, menu for More
+- **More sheet: Lucide SVG icons** — replaced emoji (★, ↩, ❖) with Lucide SVGs: star for My Collection, megaphone for Changelog, library for Design System
+- **Filter toggle button: icon** — replaced `⊞` symbol with a Lucide list-filter SVG icon
 
 ## 2026-03-16 (9)
 

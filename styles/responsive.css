@@ -247,8 +247,7 @@
   }
 
   .scent-row {
-    padding: var(--sp-md);
-    min-height: 62px;
+    padding: 0;
   }
 
   .s-status {
