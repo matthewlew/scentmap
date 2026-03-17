@@ -424,7 +424,7 @@ function injectStyles() {
 
     /* Hide app chrome on quiz pages */
     .col-main-nav, .mobile-bottomnav, .sheet-stack-overlay, .note-float-overlay, .frag-picker-overlay,
-    .col-detail, .detail-scrim, #loading-overlay { display: none !important; }
+    .col-detail, .detail-scrim, #loading-overlay, #app-loading, .app-loading-overlay, #app-error, .app-error-overlay, .auth-modal, .frag-picker-overlay { display: none !important; }
     .col-main { overflow: visible; }
     .shell { display: block; }
     /* Hide all panels */
