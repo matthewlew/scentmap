@@ -2877,9 +2877,111 @@ function _initStickyScroll(){
   window._cmpStickyObs.observe(header);
 }
 
+/* ── Popular Comparisons (shown when compare results area is empty) ── */
+let _popularPairs = [];
+function renderPopularComparisons() {
+  const res = document.getElementById('cmp-results');
+  if (!res || !_popularPairs.length) return;
+  // Don't overwrite actual results
+  if (CMP_A && CMP_B) return;
+
+  const cards = _popularPairs.map(p => {
+    const fa = CAT_MAP[p.a], fb = CAT_MAP[p.b];
+    if (!fa || !fb) return '';
+    const matchPct = Math.round(scoreSimilarity(fa, fb));
+    const colorA = FAM[fa.family]?.color || 'var(--resin)';
+    const colorB = FAM[fb.family]?.color || 'var(--resin)';
+    return `<button class="pop-cmp-card" role="button" tabindex="0"
+      data-a="${fa.id}" data-b="${fb.id}"
+      aria-label="Compare ${fa.name} by ${fa.brand} with ${fb.name} by ${fb.brand}">
+      <span class="pop-cmp-label">${p.label}</span>
+      <span class="pop-cmp-pair">
+        <span class="pop-cmp-frag">
+          <span class="picker-fdot" style="background:${colorA}"></span>
+          <span class="pop-cmp-name">${fa.name}</span>
+          <span class="pop-cmp-brand">${fa.brand}</span>
+        </span>
+        <span class="pop-cmp-vs">${matchPct}%</span>
+        <span class="pop-cmp-frag">
+          <span class="picker-fdot" style="background:${colorB}"></span>
+          <span class="pop-cmp-name">${fb.name}</span>
+          <span class="pop-cmp-brand">${fb.brand}</span>
+        </span>
+      </span>
+    </button>`;
+  }).filter(Boolean);
+
+  res.innerHTML = `
+    <div class="pop-cmp-section">
+      <h3 class="pop-cmp-heading">Popular Comparisons</h3>
+      <p class="pop-cmp-subhead">Tap a pair to see the full data-driven breakdown</p>
+      <div class="pop-cmp-grid">${cards.join('')}</div>
+    </div>`;
+
+  // Wire click handlers
+  res.querySelectorAll('.pop-cmp-card').forEach(card => {
+    const handler = () => {
+      const fa = CAT_MAP[card.dataset.a], fb = CAT_MAP[card.dataset.b];
+      if (fa && fb) {
+        _selectFragForSlot('a', fa);
+        _selectFragForSlot('b', fb);
+      }
+    };
+    card.addEventListener('click', handler);
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); } });
+  });
+}
+
+/* ── Social proof helpers (computed from data, no analytics needed) ── */
+function computeNoteOverlapPercentile(fa, fb) {
+  const sharedCount = fa._nAll.filter(n => fb._nAll.includes(n)).length;
+  // Compare against a sample of cross-brand pairs
+  let betterThan = 0, total = 0;
+  const sample = CAT.slice(0, 60);
+  for (let i = 0; i < sample.length; i++) {
+    for (let j = i + 1; j < sample.length; j++) {
+      if (sample[i].brand === sample[j].brand) continue;
+      const s = sample[i]._nAll.filter(n => sample[j]._nAll.includes(n)).length;
+      if (sharedCount > s) betterThan++;
+      total++;
+    }
+  }
+  return total > 0 ? Math.round((betterThan / total) * 100) : 50;
+}
+
+function computeSillagePercentile(frag) {
+  const lower = CAT.filter(f => f.sillage < frag.sillage).length;
+  return Math.round((lower / CAT.length) * 100);
+}
+
+function _renderSocialProof(fa, fb) {
+  const shared = fa._nAll.filter(n => fb._nAll.includes(n));
+  const pct = computeNoteOverlapPercentile(fa, fb);
+  const items = [];
+  if (shared.length > 0 && pct > 50) {
+    items.push(`This pair shares ${shared.length} note${shared.length > 1 ? 's' : ''} — more overlap than ${pct}% of cross-brand pairs`);
+  } else if (shared.length === 0) {
+    items.push('Zero shared notes — a completely different scent experience');
+  }
+  const sillA = computeSillagePercentile(fa);
+  const sillB = computeSillagePercentile(fb);
+  if (Math.abs(fa.sillage - fb.sillage) >= 4) {
+    const loud = fa.sillage > fb.sillage ? fa : fb;
+    const quiet = fa.sillage > fb.sillage ? fb : fa;
+    items.push(`${loud.name} projects louder than ${computeSillagePercentile(loud)}% of our library; ${quiet.name} stays closer to the skin`);
+  }
+  if (!items.length) return '';
+  return `<div class="cmp-social-proof">
+    ${items.map(t => `<p class="cmp-social-proof-item">↳ ${t}</p>`).join('')}
+  </div>`;
+}
+
 function renderCompareResults(fa,fb){
   const res=document.getElementById('cmp-results');
   if(!res)return;
+  // Update URL to shareable compare link (canonical: alphabetical ID order)
+  const [idFirst,idSecond] = [fa.id,fb.id].sort();
+  history.replaceState(null, '', '/compare/' + idFirst + '/' + idSecond);
   window.haptic?.('success');
   const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
   const famLabelA=(FAM[fa.family]||{label:fa.family}).label;
@@ -2967,6 +3069,7 @@ function renderCompareResults(fa,fb){
       </div>
     </div>
 
+    ${_renderSocialProof(fa, fb)}
     ${render3x3Notes(fa,fb,ca.accent,cb.accent)}
     ${renderSuggestionsV2(fa,fb,ca,cb)}
   `;
@@ -3376,6 +3479,10 @@ window.clearCmpSlot=function(slot){
   const res=document.getElementById('cmp-results');
   if(res)res.innerHTML='';
   if(window._cmpStickyObs)window._cmpStickyObs.disconnect();
+  // Reset URL when a compare slot is cleared
+  if(window.location.pathname.startsWith('/compare/'))history.replaceState(null,'','/');
+  // Show popular comparisons when both slots are empty
+  if(!CMP_A && !CMP_B) renderPopularComparisons();
 };
 
 /* ══ KEYBOARD & FOCUS MANAGEMENT ═══════════════════════════════════ */
@@ -3440,13 +3547,13 @@ document.addEventListener('keydown',function(e){
 // Load data from JSON files
 const _nc={cache:'no-store'};
 Promise.all([
-  fetch('data/roles.json',_nc).then(r=>r.json()),
-  fetch('data/scents-index.json',_nc).then(r=>r.json()).then(idx=>
-    Promise.all(idx.brands.map(b=>fetch(`data/scents/${b}.json`,_nc).then(r=>r.json())))
+  fetch('/data/roles.json',_nc).then(r=>r.json()),
+  fetch('/data/scents-index.json',_nc).then(r=>r.json()).then(idx=>
+    Promise.all(idx.brands.map(b=>fetch(`/data/scents/${b}.json`,_nc).then(r=>r.json())))
       .then(arrays=>arrays.flat())
   ),
-  fetch('data/notes.json',_nc).then(r=>r.json()),
-  fetch('data/brands.json',_nc).then(r=>r.json())
+  fetch('/data/notes.json',_nc).then(r=>r.json()),
+  fetch('/data/brands.json',_nc).then(r=>r.json())
 ]).then(([roles, scents, notes, brands])=>{
   // Hide loading overlay
   const loadingEl=document.getElementById('app-loading');
@@ -3497,6 +3604,12 @@ Promise.all([
   // Now initialize
   buildCatalog();buildNotes();initCatalogControls();initCompare();if(window.renderSaved)window.renderSaved();
 
+  // Load popular comparisons for empty-state UI
+  fetch('/data/popular-comparisons.json')
+    .then(r=>r.json())
+    .then(pairs=>{_popularPairs=pairs;renderPopularComparisons();})
+    .catch(()=>{});
+
   // Init notes search
   const notesSearchEl = document.getElementById('notes-search');
   const notesSearchClearEl = document.getElementById('notes-search-clear');
@@ -3526,28 +3639,45 @@ Promise.all([
       });
     });
   }
-  // Pre-fill a high-layering pair so compare isn't blank on load
-  // Deferred to idle to avoid blocking the main thread on first paint
-  const _doPreFill = () => {
-    const sample=CAT.slice(0,40);
-    let bestScore=-1,bestA=null,bestB=null;
-    for(let i=0;i<sample.length;i++){
-      for(let j=i+1;j<sample.length;j++){
-        const s=scoreLayeringPair(sample[i],sample[j]);
-        if(s>bestScore){bestScore=s;bestA=sample[i];bestB=sample[j];}
-      }
+  // Check for /compare/<idA>/<idB> pathname deep-link
+  const _cmpMatch = window.location.pathname.match(/^\/compare\/([a-z0-9-]+)\/([a-z0-9-]+)$/);
+  let _deepLinkedCompare = false;
+  if (_cmpMatch) {
+    const fragA = CAT_MAP[_cmpMatch[1]], fragB = CAT_MAP[_cmpMatch[2]];
+    if (fragA && fragB) {
+      _deepLinkedCompare = true;
+      _selectFragForSlot('a', fragA);
+      _selectFragForSlot('b', fragB);
     }
-    if(bestA&&bestB){_selectFragForSlot('a',bestA);_selectFragForSlot('b',bestB);}
-  };
-  if(typeof requestIdleCallback==='function'){
-    requestIdleCallback(_doPreFill, {timeout:2000});
-  } else {
-    setTimeout(_doPreFill, 0);
+  }
+
+  // Pre-fill a high-layering pair so compare isn't blank on load
+  // Skip if a compare deep-link already loaded a pair
+  if (!_deepLinkedCompare) {
+    const _doPreFill = () => {
+      if (CMP_A && CMP_B) return; // already filled by URL or user
+      const sample=CAT.slice(0,40);
+      let bestScore=-1,bestA=null,bestB=null;
+      for(let i=0;i<sample.length;i++){
+        for(let j=i+1;j<sample.length;j++){
+          const s=scoreLayeringPair(sample[i],sample[j]);
+          if(s>bestScore){bestScore=s;bestA=sample[i];bestB=sample[j];}
+        }
+      }
+      if(bestA&&bestB){_selectFragForSlot('a',bestA);_selectFragForSlot('b',bestB);}
+    };
+    if(typeof requestIdleCallback==='function'){
+      requestIdleCallback(_doPreFill, {timeout:2000});
+    } else {
+      setTimeout(_doPreFill, 0);
+    }
   }
 
   // Read hash for deep-linking from landing page
   const hash = window.location.hash.replace('#', '');
-  if (hash === 'notes') {
+  if (_deepLinkedCompare) {
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+  } else if (hash === 'notes') {
     go('notes', document.querySelector('.nav-notes-btn[onclick*="notes"]'));
   } else if (hash === 'catalog') {
     go('catalog', null); // Mobile button will be updated if below

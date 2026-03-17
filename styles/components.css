@@ -3517,3 +3517,106 @@ button.cmp-note-pill:hover {
   margin-left: var(--sp-sm);
   transition: opacity var(--dur-fast);
 }
+
+/* ── Popular Comparisons (compare empty state) ── */
+.pop-cmp-section {
+  padding: var(--sp-xl) var(--sp-md);
+  text-align: center;
+}
+.pop-cmp-heading {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  color: var(--text-primary);
+  letter-spacing: var(--ls-tight);
+  margin-bottom: var(--sp-xs);
+}
+.pop-cmp-subhead {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--sp-xl);
+}
+.pop-cmp-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+  max-width: 480px;
+  margin: 0 auto;
+}
+.pop-cmp-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+  padding: var(--sp-md);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+  min-height: var(--touch-target);
+  text-align: left;
+  font-family: var(--font-sans);
+}
+.pop-cmp-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+.pop-cmp-label {
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.pop-cmp-pair {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+.pop-cmp-frag {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  flex: 1;
+  min-width: 0;
+}
+.pop-cmp-name {
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pop-cmp-brand {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  display: none;
+}
+.pop-cmp-vs {
+  font-family: var(--font-display);
+  font-size: var(--fs-ui);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  min-width: 36px;
+  text-align: center;
+}
+
+/* Show brand on wider screens */
+@media (min-width: 480px) {
+  .pop-cmp-brand { display: inline; }
+}
+
+/* ── Social Proof (in compare results) ── */
+.cmp-social-proof {
+  padding: var(--sp-sm) var(--sp-md);
+  margin: var(--sp-sm) 0;
+}
+.cmp-social-proof-item {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  line-height: var(--lh-relaxed);
+  margin: 0 0 var(--sp-xs);
+}
