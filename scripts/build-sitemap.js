@@ -19,6 +19,19 @@ const urls = new Set();
 
 // Static pages
 urls.add(SITE + '/');
+urls.add(SITE + '/app');
+
+// Quiz pages
+const quizSlugs = [
+  'find-your-scent',
+  'best-perfume-to-gift-2026',
+  'best-perfume-for-men-2026',
+  'best-perfume-for-women-2026',
+  'find-your-byredo',
+];
+for (const slug of quizSlugs) {
+  urls.add(`${SITE}/quiz/${slug}`);
+}
 
 // Popular curated pairs
 for (const p of popular) {
@@ -48,8 +61,11 @@ let xml = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 for (const url of urls) {
-  const priority = url === SITE + '/' ? '1.0' : '0.6';
-  const changefreq = url === SITE + '/' ? 'weekly' : 'monthly';
+  const isHome = url === SITE + '/';
+  const isQuiz = url.includes('/quiz/');
+  const isApp = url === SITE + '/app';
+  const priority = isHome ? '1.0' : isQuiz ? '0.8' : isApp ? '0.9' : '0.6';
+  const changefreq = isHome || isApp ? 'weekly' : isQuiz ? 'monthly' : 'monthly';
   xml += `  <url>
     <loc>${url}</loc>
     <lastmod>${today}</lastmod>
@@ -61,6 +77,6 @@ for (const url of urls) {
 
 xml += '</urlset>\n';
 
-const outPath = path.join(__dirname, '..', 'public', 'sitemap.xml');
+const outPath = path.join(__dirname, '..', 'sitemap.xml');
 fs.writeFileSync(outPath, xml);
 console.log(`Wrote ${urls.size} URLs to ${outPath}`);
