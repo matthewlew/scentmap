@@ -3199,40 +3199,85 @@ button.cmp-note-pill:hover {
   margin: 0 0 var(--sp-xl);
 }
 
-.auth-modal-actions {
+/* Email magic-link form */
+.auth-email-form {
   display: flex;
   flex-direction: column;
   gap: var(--sp-sm);
   margin-bottom: var(--sp-md);
 }
 
-.auth-btn-sso {
+.auth-email-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.auth-email-input {
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: 0 var(--sp-md);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
+  transition: border-color var(--dur-fast) var(--ease-spring);
+}
+.auth-email-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border-color: var(--accent-primary);
+}
+.auth-email-input:disabled {
+  opacity: 0.5;
+}
+
+.auth-email-error {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: #c0392b;
+  margin: 0;
+}
+
+.auth-btn-primary {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--sp-sm);
   width: 100%;
   min-height: var(--touch-target);
   font-family: var(--font-sans);
   font-size: var(--fs-body);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.01em;
-  border: 1px solid var(--border-strong);
+  border: none;
   border-radius: var(--radius-lg);
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  background: var(--ink);
+  color: var(--paper);
   cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-spring),
+  transition: opacity var(--dur-fast) var(--ease-spring),
               box-shadow var(--dur-fast) var(--ease-spring);
 }
-.auth-btn-sso:hover {
-  background: var(--bg-secondary);
+.auth-btn-primary:hover {
+  opacity: 0.88;
   box-shadow: var(--shadow-sm);
 }
-.auth-btn-sso:disabled {
-  opacity: 0.5;
+.auth-btn-primary:disabled {
+  opacity: 0.45;
   cursor: default;
   pointer-events: none;
+}
+
+/* Sent confirmation state */
+.auth-sent-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--sp-sm);
+  display: block;
 }
 
 .auth-guest-link {

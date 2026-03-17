@@ -4,6 +4,11 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-16 (7)
+
+### Changed
+- **Auth: replaced Google/Apple SSO with email magic link** — modal now shows an email input + "Send magic link" button; calls `supabase.auth.signInWithOtp()`; inline validation error on bad/empty email; transitions to "Check your inbox" confirmation state on success with "← Use a different email" back link; Supabase not configured falls back to mock sent state; CSS replaced `.auth-btn-sso`/`.auth-modal-actions` with `.auth-email-form`, `.auth-email-input`, `.auth-btn-primary`, `.auth-sent-icon`
+
 ## 2026-03-16 (6)
 
 ### Changed
