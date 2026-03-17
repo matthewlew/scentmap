@@ -13,18 +13,8 @@ All notable changes to Scentmap are documented here.
 
 ## 2026-03-17d
 
-### Added
-- **Reduced motion support** — `@media (prefers-reduced-motion: reduce)` disables all animations/transitions for vestibular-sensitive users
-- **Family abbreviation dots** — catalog rows now show a letter inside the family-color dot (F, W, C, A, etc.) so families are distinguishable without color alone (WCAG 1.4.1)
-- **Swipe hint on touch devices** — subtle chevron indicator on catalog rows (touch-only via `hover: none`) hints at swipe-to-reveal actions
-- **Compare chart text alternatives** — radar SVG `<desc>` now includes numeric profile values; sr-only summary region added above the pair card with similarity, layering, sillage, and depth data
-- **Mobile quick filters** — All/Owned/Wishlist tabs now always visible in the catalog header on mobile (no longer hidden behind filter toggle); toggle renamed to "Brands"
-- **Enhanced notes preview** — catalog rows show heart (H) and base (B) layer notes alongside top notes for richer at-a-glance information
-- **Layer hint badges** — small "H" and "B" labels in notes preview distinguish note layers
-
-### Changed
-- **`--fs-label` bumped to 12px** (was 11px) — improves readability of uppercase UI labels at no design cost
-- **Standardized animation durations** — replaced all hardcoded timing values (0.22s, 0.3s, 0.18s) in CSS and JS with design token references (`--dur-standard`, `--dur-fast`, `--ease-spring`)
+### Fixed
+- **Quiz infinite recursion crash** — `window.renderQuiz = function() { renderQuiz(...) }` was overriding the top-level `renderQuiz` function declaration in global scope, causing every call to `renderQuiz()` (including from `init()`) to recurse infinitely and throw `Maximum call stack size exceeded`. Fixed by renaming the global to `window._retakeQuiz` and updating the Retake button onclick to match.
 
 ---
 
