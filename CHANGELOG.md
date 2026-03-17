@@ -4,6 +4,22 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-16 (10)
+
+### Changed
+- **`.chip` (family chip): smaller size** — `font-size` → `--fs-meta`, `padding` → `0 --sp-xs`, removed `text-transform: uppercase`; chip is now compact and sentence-case
+- **`.dc-nt` width: 32px → 40px** — wider label column in the quick-peek notes row (Top / Heart / Base)
+- **`.cmp-card-meta-desc` line-height** — changed from `--lh-body` to `--lh-normal` for tighter description text in compare cards
+- **Mobile compare cards** — added responsive overrides for `cmp-frag-card-name` (`--fs-ui`), `cmp-frag-card-brand` (`--fs-meta`), and `cmp-frag-card-name-row` padding; reduces cramping on narrow screens
+
+### Fixed
+- **`.scent-row--flat .scent-row-content` hover left-shift** — added `transform: none` and scoped transition to `background` only, preventing inherited `translateX(-120px)` action-reveal animation on flat suggestion cards
+- **`.scent-row--flat .scent-row-content` double-radius** — removed `border-radius` and `border-left` from the flat variant; outer container provides the border treatment
+- **`.cmp-sug-card` border-radius removed** — redundant since outer section clips content
+- **Character map "Tap to explore" hint removed** — `.cmp-pair-card-left::after` pseudo-element was clashing with radar chart hover states; removed both the `::after` block and its `:hover` rule
+- **`.dc-badge.similar` removed** — "Similar" badge no longer shown on discovery suggestions (redundant with section heading); "Contrasts" and "Complements" badges retained
+- **`.note-pill` merged into `.cmp-note-pill`** — removed duplicate `.note-pill` CSS block; Notes panel buttons now use `cmp-note-pill` class directly
+
 ## 2026-03-16 (9)
 
 ### Changed

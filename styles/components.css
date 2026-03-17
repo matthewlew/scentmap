@@ -158,12 +158,11 @@
   align-items: center;
   gap: 6px;
   font-family: var(--font-sans);
-  font-size: var(--fs-body);
+  font-size: var(--fs-meta);
   font-weight: 600;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  letter-spacing: var(--ls-normal);
   border-radius: var(--radius-pill);
-  padding: 4px 10px;
+  padding: 0 var(--sp-xs);
   white-space: nowrap;
   color: #fff;
   border: 1px solid transparent;
@@ -194,7 +193,6 @@
 
 /* ── 3. SUGGESTIONS (V2, used by renderSuggestionsV2) ── */
 .cmp-sug-card {
-  border-radius: var(--radius-lg);
   border: 1.5px solid var(--border-standard);
   background: var(--bg-primary);
   cursor: pointer;
@@ -318,7 +316,7 @@
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
-  width: 32px;
+  width: 40px;
   flex-shrink: 0;
   padding-top: 0;
 }
@@ -588,10 +586,6 @@
   white-space: nowrap;
 }
 
-.dc-badge.similar {
-  background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
-  color: var(--text-secondary);
-}
 
 .dc-badge.contrasts {
   background: color-mix(in srgb, var(--g500) 12%, transparent);
@@ -878,8 +872,11 @@
 }
 .scent-row--flat .scent-row-content {
   background: transparent;
-  border-radius: var(--radius-lg);
+  border-radius: 0;
+  border-left: none;
   padding: var(--sp-sm) var(--sp-md);
+  transform: none;
+  transition: background var(--dur-fast) var(--ease-spring);
 }
 .scent-row--flat:hover .scent-row-content {
   background: var(--fade-subtle) !important;
@@ -1035,27 +1032,6 @@
   gap: var(--sp-xs);
 }
 
-.note-pill {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius-sm);
-  padding: 4px var(--sp-sm);
-  font-size: var(--fs-body-sm);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: background var(--dur-fast), border-color var(--dur-fast);
-  text-decoration: underline;
-  text-decoration-color: var(--g300);
-  text-underline-offset: 2px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.note-pill:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--g300);
-  text-decoration-color: var(--text-primary);
-}
 
 .nf-dot {
   margin-top: 5px;
@@ -1437,7 +1413,7 @@ mark.note-match {
 .cmp-card-meta-desc {
   font-size: var(--fs-meta);
   color: var(--text-tertiary);
-  line-height: var(--lh-body);
+  line-height: var(--lh-normal);
   margin: 0 0 var(--sp-xs);
 }
 
@@ -1653,22 +1629,6 @@ mark.note-match {
   background: var(--bg-secondary);
 }
 
-.cmp-pair-card-left::after {
-  content: 'Tap to explore \2197';
-  position: absolute;
-  bottom: var(--sp-sm);
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  color: var(--text-tertiary);
-  opacity: 0;
-  transition: opacity var(--dur-fast) var(--ease-spring);
-}
-
-.cmp-pair-card-left:hover::after {
-  opacity: 1;
-}
 
 .cmp-pair-card-radar {
   margin-bottom: var(--sp-md);

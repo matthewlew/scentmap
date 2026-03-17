@@ -363,6 +363,18 @@
     min-height: 100px;
   }
 
+  .cmp-frag-card-name {
+    font-size: var(--fs-ui);
+  }
+
+  .cmp-frag-card-brand {
+    font-size: var(--fs-meta);
+  }
+
+  .cmp-frag-card-name-row {
+    padding: var(--sp-xs) var(--sp-sm) 2px;
+  }
+
   .cmp-frag-card-desc {
     display: none; /* too cramped on mobile */
   }
