@@ -175,7 +175,7 @@ ${popularList}
   // Remove Supabase SDK (not needed for quiz)
   html = html.replace(/<script src="https:\/\/cdn\.jsdelivr\.net[^"]*supabase[^"]*"><\/script>/, '');
   // Swap app.js for quiz.js
-  html = html.replace(/js\/app\.js\?v=[^"']+/, 'js/quiz.js?v=20260317b');
+  html = html.replace(/js\/app\.js\?v=[^"']+/, 'js/quiz.js?v=20260317c');
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
