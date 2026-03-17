@@ -91,11 +91,17 @@
                 <input type="search" id="cat-search" class="cat-search-input" placeholder="Search fragrances, brands, notes…" autocomplete="off">
                 <button class="cat-search-clear" id="cat-search-clear" aria-label="Clear search">✕</button>
               </div>
-              <button class="frag-filter-toggle" id="frag-filter-toggle" aria-expanded="false" aria-controls="frag-mobile-panel">⊞ Filters</button>
+              <button class="frag-filter-toggle" id="frag-filter-toggle" aria-expanded="false" aria-controls="frag-mobile-panel"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg> Filters</button>
             </div>
             <div class="frag-mobile-panel" id="frag-mobile-panel">
-              <div class="cat-state-bar-m" id="cat-state-bar-m"></div>
-              <div class="cat-brand-bar-m" id="cat-brand-bar-m"></div>
+              <div class="frag-mb-section">
+                <div class="frag-mb-section-label">Collection</div>
+                <div id="cat-state-bar-m"></div>
+              </div>
+              <div class="frag-mb-section">
+                <div class="frag-mb-section-label">Brand</div>
+                <div id="cat-brand-bar-m"></div>
+              </div>
             </div>
             <div id="cat-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
             <div id="cat-body"></div>
@@ -167,10 +173,22 @@
 
 <!-- MOBILE BOTTOM NAV -->
 <div class="mobile-bottomnav" id="mobile-bottomnav" role="navigation" aria-label="Main navigation">
-  <button class="mbn-btn active" onclick="goMobile('catalog',this)" aria-label="Fragrances"><span class="mbn-icon" aria-hidden="true">≡</span>Fragrances</button>
-  <button class="mbn-btn" onclick="goMobile('compare',this)" aria-label="Compare"><span class="mbn-icon" aria-hidden="true">⊕</span>Compare</button>
-  <button class="mbn-btn" onclick="goMobile('notes',this)" aria-label="Notes"><span class="mbn-icon" aria-hidden="true">✿</span>Notes</button>
-  <button class="mbn-btn mbn-more" onclick="openMoreSheet(this)" aria-label="More"><span class="mbn-icon" aria-hidden="true">⋯</span>More</button>
+  <button class="mbn-btn active" onclick="goMobile('catalog',this)" aria-label="Fragrances">
+    <span class="mbn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+    Fragrances
+  </button>
+  <button class="mbn-btn" onclick="goMobile('compare',this)" aria-label="Compare">
+    <span class="mbn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"/><path d="m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"/></svg></span>
+    Compare
+  </button>
+  <button class="mbn-btn" onclick="goMobile('notes',this)" aria-label="Notes">
+    <span class="mbn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5"/><path d="M12 7.5V9"/><path d="M7.5 12H9"/><path d="M16.5 12H15"/><path d="M12 16.5V15"/></svg></span>
+    Notes
+  </button>
+  <button class="mbn-btn mbn-more" onclick="openMoreSheet(this)" aria-label="More">
+    <span class="mbn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg></span>
+    More
+  </button>
 </div>
 
 <!-- MOBILE SHEET STACK -->
