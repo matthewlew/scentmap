@@ -311,7 +311,7 @@ function renderResults(top3) {
           ${resultsHtml}
         </div>
         <div class="quiz-actions">
-          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');renderQuiz(_container,_quizConfig,_catalog);">Retake Quiz</button>
+          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
           <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
@@ -502,7 +502,9 @@ async function init() {
 }
 
 // Make functions available globally for onclick handlers
-window.renderQuiz = function() { renderQuiz(_container, _quizConfig, _catalog); };
+// NOTE: do NOT expose renderQuiz itself on window — that would override the top-level
+// function declaration and cause infinite recursion when init() calls renderQuiz().
+window._retakeQuiz = function() { renderQuiz(_container, _quizConfig, _catalog); };
 window.copyQuizLink = copyQuizLink;
 
 // Run init as soon as DOM is ready — don't wait for module scripts

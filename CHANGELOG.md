@@ -4,6 +4,13 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-17d
+
+### Fixed
+- **Quiz infinite recursion crash** — `window.renderQuiz = function() { renderQuiz(...) }` was overriding the top-level `renderQuiz` function declaration in global scope, causing every call to `renderQuiz()` (including from `init()`) to recurse infinitely and throw `Maximum call stack size exceeded`. Fixed by renaming the global to `window._retakeQuiz` and updating the Retake button onclick to match.
+
+---
+
 ## 2026-03-17c
 
 ### Fixed
