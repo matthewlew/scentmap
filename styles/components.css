@@ -2298,13 +2298,18 @@ button.cmp-note-pill:hover {
   line-height: var(--lh-tight);
 }
 
-.cmp-edu-breakdown {
+.cmp-edu-math {
   margin-top: var(--sp-xl);
-  border-top: 1px solid var(--border-standard);
-  padding-top: var(--sp-lg);
+  border-top: 1px solid var(--border-strong);
+  border-left: 1px solid var(--border-strong);
+  border-right: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border-strong);
+  padding: var(--sp-md);
+  background: var(--paper);
+  border-radius: 0;
 }
 
-.cmp-edu-breakdown-title {
+.cmp-edu-math-title {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 700;
@@ -2312,34 +2317,37 @@ button.cmp-note-pill:hover {
   text-transform: uppercase;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-md);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: var(--sp-xs);
 }
 
-.cmp-edu-breakdown-row {
+.cmp-edu-math-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--sp-xs) 0;
-  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
   font-size: var(--fs-body-sm);
+  border-bottom: 1px dashed var(--border-standard);
 }
 
-.cmp-edu-breakdown-row:last-child {
+.cmp-edu-math-row:last-child {
   border-bottom: none;
 }
 
-.cmp-edu-breakdown-row.total {
+.cmp-edu-math-row.total {
   margin-top: var(--sp-xs);
   padding-top: var(--sp-sm);
-  border-top: 1px solid var(--border-standard);
+  border-top: 1px solid var(--border-strong);
   font-weight: 700;
 }
 
-.cmp-edu-breakdown-label {
-  color: var(--text-secondary);
+.cmp-edu-math-label {
+  color: var(--text-primary);
 }
 
-.cmp-edu-breakdown-score {
-  font-family: var(--font-sans);
+.cmp-edu-math-score {
+  font-family: var(--font-mono);
   font-weight: 700;
   color: var(--text-primary);
 }

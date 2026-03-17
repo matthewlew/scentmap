@@ -2799,11 +2799,46 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
   ];
   let bodyContent = '';
   if (isMatch) {
+    const famScore=(FAM_COMPAT[fa.family]?.[fb.family]??0.5)*40;
+    const shBase=fa._nBase.filter(n=>fb._nBase.includes(n)).length;
+    const shMid=fa._nMid.filter(n=>fb._nMid.includes(n)).length;
+    const shTop=fa._nTop.filter(n=>fb._nTop.includes(n)).length;
+    const noteScore=Math.min(30,shBase*5+shMid*3+shTop*2);
+    const sillDiff=Math.abs(fa.sillage-fb.sillage);
+    const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
+    const shRoles=fa.roles.filter(r=>fb.roles.includes(r)).length;
+    const roleScore=Math.min(20,shRoles*7);
+    const rawScore = famScore + noteScore + sillScore + roleScore;
+
     bodyContent = `
       <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
       <div class="cmp-edu-grid">
         ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
-      </div>`;
+      </div>
+      <div class="cmp-edu-math">
+        <div class="cmp-edu-math-title">Similarity Math</div>
+        <div class="cmp-edu-math-row">
+          <span class="cmp-edu-math-label">Family Match</span>
+          <span class="cmp-edu-math-score">${Math.round(famScore)}/40</span>
+        </div>
+        <div class="cmp-edu-math-row">
+          <span class="cmp-edu-math-label">Shared Notes</span>
+          <span class="cmp-edu-math-score">${Math.round(noteScore)}/30</span>
+        </div>
+        <div class="cmp-edu-math-row">
+          <span class="cmp-edu-math-label">Sillage Match</span>
+          <span class="cmp-edu-math-score">${Math.round(sillScore)}/10</span>
+        </div>
+        <div class="cmp-edu-math-row">
+          <span class="cmp-edu-math-label">Role Overlap</span>
+          <span class="cmp-edu-math-score">${Math.round(roleScore)}/20</span>
+        </div>
+        <div class="cmp-edu-math-row total">
+          <span class="cmp-edu-math-label">Raw Similarity Score</span>
+          <span class="cmp-edu-math-score">${Math.round(rawScore)}/100</span>
+        </div>
+      </div>
+    `;
   } else {
     const famComp=FAM_COMPAT[fa.family]?.[fb.family]??0.5;
     const famScore=famComp*35;
@@ -2818,23 +2853,23 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
       <div class="cmp-edu-grid">
         ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
       </div>
-      <div class="cmp-edu-breakdown">
-        <div class="cmp-edu-breakdown-title">Score breakdown</div>
-        <div class="cmp-edu-breakdown-row">
-          <span class="cmp-edu-breakdown-label">Family Compatibility</span>
-          <span class="cmp-edu-breakdown-score">${Math.round(famScore)}/35</span>
+      <div class="cmp-edu-math">
+        <div class="cmp-edu-math-title">Layering Math</div>
+        <div class="cmp-edu-math-row">
+          <span class="cmp-edu-math-label">Family Compatibility</span>
+          <span class="cmp-edu-math-score">${Math.round(famScore)}/35</span>
         </div>
-        <div class="cmp-edu-breakdown-row">
-          <span class="cmp-edu-breakdown-label">Sillage Contrast</span>
-          <span class="cmp-edu-breakdown-score">${Math.round(sillScore)}/20</span>
+        <div class="cmp-edu-math-row">
+          <span class="cmp-edu-math-label">Sillage Contrast</span>
+          <span class="cmp-edu-math-score">${Math.round(sillScore)}/20</span>
         </div>
-        <div class="cmp-edu-breakdown-row">
-          <span class="cmp-edu-breakdown-label">Note Independence</span>
-          <span class="cmp-edu-breakdown-score">${Math.round(noteScore)}/20</span>
+        <div class="cmp-edu-math-row">
+          <span class="cmp-edu-math-label">Note Independence</span>
+          <span class="cmp-edu-math-score">${Math.round(noteScore)}/20</span>
         </div>
-        <div class="cmp-edu-breakdown-row total">
-          <span class="cmp-edu-breakdown-label">Raw Score</span>
-          <span class="cmp-edu-breakdown-score">${Math.round(rawScore)}/75</span>
+        <div class="cmp-edu-math-row total">
+          <span class="cmp-edu-math-label">Raw Layering Score</span>
+          <span class="cmp-edu-math-score">${Math.round(rawScore)}/75</span>
         </div>
       </div>
     `;
