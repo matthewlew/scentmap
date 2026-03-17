@@ -130,18 +130,72 @@ function updateNavForUser() {
   if (currentUser) {
     btn.textContent = currentUser.name.charAt(0).toUpperCase();
     btn.classList.add('signed-in');
-    btn.setAttribute('aria-label', `Signed in as ${currentUser.name}. Click to sign out.`);
+    btn.setAttribute('aria-label', `Signed in as ${currentUser.name}. Open profile.`);
     btn.title = currentUser.name;
-    btn.onclick = async () => {
-      if (_sb) await _sb.auth.signOut();
-      else { currentUser = null; updateNavForUser(); }
-    };
+    btn.onclick = openProfilePanel;
   } else {
     btn.textContent = 'Sign In';
     btn.classList.remove('signed-in');
     btn.setAttribute('aria-label', 'Sign in to your account');
     btn.removeAttribute('title');
     btn.onclick = openAuthModal;
+  }
+}
+
+function openProfilePanel() {
+  function renderProfile(container) {
+    const owned  = CAT.filter(f => isOwned(f.id));
+    const wished = CAT.filter(f => isWish(f.id));
+    const initial = currentUser.name.charAt(0).toUpperCase();
+
+    // detail-inner already provides padding: var(--sp-lg) var(--sp-2xl)
+    // sheet-inner already provides padding: 0 var(--sp-lg)
+    // so no outer wrapper needed — use margins on sections only
+    container.innerHTML = `
+      <div style="display:flex;align-items:center;gap:var(--sp-md);padding-bottom:var(--sp-xl);margin-bottom:var(--sp-xl);border-bottom:1px solid var(--border-standard);">
+        <div style="width:44px;height:44px;flex-shrink:0;background:var(--text-primary);color:var(--bg-primary);border-radius:var(--radius-circle);display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:var(--fs-ui);font-weight:700;" aria-hidden="true">${initial}</div>
+        <div style="min-width:0;overflow:hidden;">
+          <div style="font-family:var(--font-sans);font-size:var(--fs-body);font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${currentUser.name}</div>
+          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${currentUser.email}</div>
+        </div>
+      </div>
+
+      <div class="sec-label" style="margin-bottom:var(--sp-md);">Collection</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm);margin-bottom:var(--sp-xl);">
+        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-md);">
+          <div style="font-family:var(--font-display);font-size:var(--fs-title);color:var(--text-primary);line-height:1;">${owned.length}</div>
+          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);margin-top:var(--sp-xs);">Owned</div>
+        </div>
+        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-md);">
+          <div style="font-family:var(--font-display);font-size:var(--fs-title);color:var(--text-primary);line-height:1;">${wished.length}</div>
+          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);margin-top:var(--sp-xs);">Wishlist</div>
+        </div>
+      </div>
+
+      <button class="copy-collection-btn" id="profile-copy-btn" style="width:100%;justify-content:center;">Export collection</button>
+      <span id="profile-copy-toast" aria-live="polite" style="display:block;margin-top:var(--sp-xs);font-family:var(--font-sans);font-size:var(--fs-meta);color:var(--text-secondary);min-height:1.2em;"></span>
+
+      <div style="margin-top:var(--sp-2xl);border-top:1px solid var(--border-standard);padding-top:var(--sp-xl);">
+        <button class="auth-guest-link" id="profile-signout-btn">Sign out</button>
+      </div>
+    `;
+
+    container.querySelector('#profile-copy-btn').addEventListener('click', () => {
+      copyCollectionToClipboard(container.querySelector('#profile-copy-toast'));
+    });
+
+    container.querySelector('#profile-signout-btn').addEventListener('click', async () => {
+      if (isDesktop() || isTablet()) closeDesktopDetail();
+      else closeAllSheets();
+      if (_sb) await _sb.auth.signOut();
+      else { currentUser = null; updateNavForUser(); }
+    });
+  }
+
+  if (isDesktop() || isTablet()) {
+    openDesktopDetail(renderProfile);
+  } else {
+    pushSheet(renderProfile, 'Profile');
   }
 }
 

@@ -35,7 +35,7 @@
 }
 
 .nav-notes-btn {
-  margin-right: var(--sp-lg);
+  margin-right: 0;
 }
 
 .nav-back-btn:hover,
@@ -51,6 +51,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  gap: var(--sp-md);
 }
 
 /* Settings Menu */
