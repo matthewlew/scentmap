@@ -435,6 +435,10 @@ function injectStyles() {
 
 /* ── Init ── */
 async function init() {
+  // Immediately hide app chrome via JS (belt-and-suspenders with CSS)
+  const loadingEl = document.getElementById('app-loading');
+  if (loadingEl) loadingEl.style.display = 'none';
+
   injectStyles();
 
   const slug = getSlug();
@@ -458,6 +462,9 @@ async function init() {
       fetch('/data/quiz-config.json'),
     ]);
 
+    if (!scentsRes.ok) throw new Error(`Scents fetch failed: ${scentsRes.status}`);
+    if (!configRes.ok) throw new Error(`Config fetch failed: ${configRes.status}`);
+
     const scentsMap = await scentsRes.json();
     const allConfigs = await configRes.json();
 
@@ -467,7 +474,30 @@ async function init() {
 
     renderQuiz(container, config, catalog);
   } catch (err) {
-    container.innerHTML = `<div class="quiz-page"><div class="quiz-body"><p>Failed to load quiz data. <a href="/">Back to Scentmap</a></p></div></div>`;
+    console.error('[quiz] init error:', err);
+    // Fallback: try loading from per-brand files
+    try {
+      const idxRes = await fetch('/data/scents-index.json');
+      if (!idxRes.ok) throw new Error('index fetch failed');
+      const idx = await idxRes.json();
+      const brandArrays = await Promise.all(
+        idx.brands.map(b => fetch(`/data/scents/${b}.json`).then(r => r.json()))
+      );
+      const catalog = brandArrays.flat().map(f => ({
+        ...f,
+        top: typeof f.top === 'string' ? f.top.split(',').map(s => s.trim()) : f.top,
+        mid: typeof f.mid === 'string' ? f.mid.split(',').map(s => s.trim()) : f.mid,
+        base: typeof f.base === 'string' ? f.base.split(',').map(s => s.trim()) : f.base,
+        roles: f.roles || [],
+      }));
+      const cfgRes = await fetch('/data/quiz-config.json');
+      const allConfigs = cfgRes.ok ? await cfgRes.json() : {};
+      const config = allConfigs[slug] || null;
+      renderQuiz(container, config, catalog);
+    } catch (fallbackErr) {
+      console.error('[quiz] fallback error:', fallbackErr);
+      container.innerHTML = `<div class="quiz-page"><div class="quiz-body"><p>Failed to load quiz data. <a href="/">Back to Scentmap</a></p></div></div>`;
+    }
   }
 }
 
@@ -475,4 +505,13 @@ async function init() {
 window.renderQuiz = function() { renderQuiz(_container, _quizConfig, _catalog); };
 window.copyQuizLink = copyQuizLink;
 
-document.addEventListener('DOMContentLoaded', init);
+// Run init as soon as DOM is ready — don't wait for module scripts
+if (document.readyState === 'loading') {
+  // DOM not ready yet — wait for it, but use a timeout safety net
+  document.addEventListener('DOMContentLoaded', init);
+  // Safety: if DOMContentLoaded doesn't fire within 5s (blocked module?), force init
+  setTimeout(() => { if (!_container) init(); }, 5000);
+} else {
+  // DOM already ready (interactive or complete) — run immediately
+  init();
+}
