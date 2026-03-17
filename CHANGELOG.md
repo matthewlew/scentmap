@@ -4,22 +4,27 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-16 (9)
+
+### Changed
+- **Nav: added Fragrances and Compare tabs to desktop nav** — desktop nav now mirrors mobile bottom nav order: Fragrances → Compare → Notes → Collection; avatar and settings remain on the far right
+- **Nav: logo wordmark** — applied existing `.logo` class to `app.html` nav text (`SCENTMAP` uppercase, DM Sans, letter-spacing); was previously unstyled
+- **Nav: fixed avatar spacing** — added `gap: var(--sp-md)` to `.nav-right` and removed per-button `margin-right` from `.nav-notes-btn`; avatar no longer butts against adjacent nav items
+- **Profile panel: removed delete account** — simplified to identity header, collection stats, export, and sign out
+- **Profile panel: fixed padding** — removed redundant outer wrapper; panel now inherits `detail-inner` padding on desktop and `sheet-inner` padding on mobile, consistent with all other detail content
+
+## 2026-03-16 (8)
+
+### Added
+- **Profile panel** — tapping the signed-in avatar now opens a profile panel (desktop detail panel / mobile sheet) instead of signing out directly; panel shows avatar initial, display name, email, owned + wishlist counts, "Export collection" button, "Sign out" action, and "Delete account" danger action (rose-colored, separated by a divider); all UI reuses existing classes (`copy-collection-btn`, `auth-guest-link`, `sec-label`, `bg-secondary` stat tiles)
+
+### Changed
+- **Nav avatar click** — when signed in, avatar opens `openProfilePanel()` instead of immediately calling `signOut`; `aria-label` updated to "Open profile." accordingly
+
 ## 2026-03-16 (7)
 
 ### Changed
-- **Compare CTA buttons** — simplified from `[dot] Name vs [dot] Other` to `vs [dot] Other` so fragrance names no longer overflow the button width
-- **Note pyramid language** — standardised all "Mid" labels to "Heart" across the quick-peek strip and the compare 3-column notes grid
-- **Perfume house link** — `.dc-brand-btn` no longer uses uppercase/letter-spacing treatment; now renders as a normal body-weight link
-- **More Like This rows** — removed left-edge `border-left-color` accent from More Like This shelf, Swap Suggestions, and layer suggestions; dot indicator is sufficient
-- **Compare sticky bar (mobile)** — added `#cmp-sticky-bar { top: 0 }` override in the mobile media query so the bar sits flush at the viewport edge when the top nav is hidden
-- **Pairing overlay** — completely rebuilt to match the Similarity overlay layout: quad-grid with `.cmp-edu-quad` cards, shared `.cmp-edu-intro` / `.cmp-edu-grid` / `.cmp-edu-breakdown` structure, consistent `LABEL + Num` header
-- **Sillage & Depth** — removed standalone scatter plot section; mirrored bar comparison (`cmp-char-metrics`) now lives directly inside the Character radar card below the legend
-- **Edu overlay title typography** — both overlays use the same `cmp-edu-label` + `cmp-edu-num` header pattern; card titles unified to `font-weight: 600` (`cmp-edu-card-title` and `cmp-edu-quad-title`)
-
-### Fixed
-- **Character edu note contributors** — `getNoteContributors` was looking up `.tags` on `NI_MAP` entries (which don't exist); rewrote to use `NOTE_PROFILE[note]` array with a 0.55 threshold so Fresh/Sweet/Warm card rows now correctly list contributing notes
-- **Missing CSS** — added base `.cmp-edu-quad` rule (was only `.cmp-edu-quad.highlight`), `.cmp-edu-breakdown` + child classes, and `.cmp-char-metrics` + child classes for newly introduced HTML structures
-- **Scatter haptics** — removed orphaned `_setupChartHaptics('.cmp-scatter-v2-wrap svg', 'circle')` call after scatter plot was removed
+- **Auth: replaced Google/Apple SSO with email magic link** — modal now shows an email input + "Send magic link" button; calls `supabase.auth.signInWithOtp()`; inline validation error on bad/empty email; transitions to "Check your inbox" confirmation state on success with "← Use a different email" back link; Supabase not configured falls back to mock sent state; CSS replaced `.auth-btn-sso`/`.auth-modal-actions` with `.auth-email-form`, `.auth-email-input`, `.auth-btn-primary`, `.auth-sent-icon`
 
 ## 2026-03-16 (6)
 

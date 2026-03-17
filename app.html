@@ -46,12 +46,14 @@
   <!-- MIDDLE: MAIN -->
   <div class="col-main">
     <div class="col-main-nav">
-      <span class="nav-logo-text">Scentmap</span>
+      <span class="logo">Scentmap</span>
       <div class="nav-right" id="nav-right">
         <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
-        <button class="nav-signin-btn" id="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
-        <button class="nav-notes-btn" onclick="go('saved', this)">Collection</button>
+        <button class="nav-notes-btn" onclick="go('catalog', this)">Fragrances</button>
+        <button class="nav-notes-btn" onclick="go('compare', this)">Compare</button>
         <button class="nav-notes-btn" onclick="go('notes', this)">Notes</button>
+        <button class="nav-notes-btn" onclick="go('saved', this)">Collection</button>
+        <button class="nav-signin-btn" id="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
         <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings" aria-haspopup="true" aria-expanded="false">⚙</button>
         <div class="settings-menu" id="settings-menu" hidden>
           <button class="settings-menu-item" onclick="settingsGo('changelog')"><span class="settings-menu-icon">↩</span>Changelog</button>
@@ -243,34 +245,28 @@
   <div class="auth-modal-scrim" id="auth-modal-scrim"></div>
   <div class="auth-modal-wrap">
     <button class="auth-modal-close" id="auth-modal-close" aria-label="Close sign-in dialog">✕</button>
-    <div class="auth-modal-body">
+    <div class="auth-modal-body" id="auth-modal-body-enter">
       <p class="auth-modal-eyebrow">Create an account</p>
       <h2 class="auth-modal-title" id="auth-modal-title">Save your olfactive wardrobe.</h2>
       <p class="auth-modal-desc">Sync your collection across devices and unlock personalized layering recipes.</p>
-      <div class="auth-modal-actions">
-        <button class="auth-btn-sso" id="auth-btn-google" data-provider="google">
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
-            <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
-            <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
-            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-          </svg>
-          Continue with Google
-        </button>
-        <button class="auth-btn-sso" id="auth-btn-apple" data-provider="apple">
-          <svg width="18" height="18" viewBox="0 0 814 1000" aria-hidden="true" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.5-156.8-106.6c-43.6-61.3-83.3-161.1-83.3-255.9C0 426.1 51 330.6 128.1 269.3c45.2-36.6 108-72.1 185.6-72.1 73.7 0 126.4 45.2 183.1 45.2 54.6 0 116.7-48.2 198.9-48.2 36.5 0 102.3 3.2 154.1 56.8z"/>
-            <path d="M549.8 100.5C577.5 67.5 597.5 21.4 597.5 0c0-2.6-.3-5.3-.6-7.9-47.6 1.9-105.2 32.3-140.2 70.5-24.2 26.6-48.8 72.8-48.8 119.7 0 3.2.6 6.4 1 7.6 2.9.6 7.7 1.3 12.6 1.3 43 0 97.3-29.1 128.3-90.7z"/>
-          </svg>
-          Continue with Apple
-        </button>
-      </div>
+      <form class="auth-email-form" id="auth-email-form" novalidate>
+        <label class="auth-email-label" for="auth-email-input">Email address</label>
+        <input class="auth-email-input" id="auth-email-input" type="email" placeholder="you@example.com" autocomplete="email" required />
+        <p class="auth-email-error" id="auth-email-error" role="alert" hidden></p>
+        <button class="auth-btn-primary" id="auth-btn-send" type="submit">Send magic link</button>
+      </form>
       <button class="auth-guest-link" id="auth-btn-guest">Continue as Guest</button>
+    </div>
+    <div class="auth-modal-body" id="auth-modal-body-sent" hidden>
+      <div class="auth-sent-icon" aria-hidden="true">✉</div>
+      <h2 class="auth-modal-title">Check your inbox.</h2>
+      <p class="auth-modal-desc">We sent a sign-in link to <strong id="auth-sent-email"></strong>. Click it to finish signing in — no password needed.</p>
+      <button class="auth-guest-link" id="auth-btn-back">← Use a different email</button>
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="js/app.js?v=20260312a"></script>
+<script src="js/app.js?v=20260316a"></script>
 </body>
 </html>
