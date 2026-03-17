@@ -14,6 +14,7 @@ const FAM={
   gourmand:{label:'Gourmand',color:'#7C4C00', desc:'Edible-smelling notes — vanilla, caramel, tonka, praline. Emerged in the 1990s. Warm, sweet, and comforting. Fragrance as food memory.'},
   oud:     {label:'Oud',     color:'#4A1850', desc:'Dark, animalic resin from infected agarwood. Deep, smoky, and complex. The most prized raw material in Arabian perfumery — priced by weight, not volume. Polarising.'},
 };
+const FAM_ABBR={citrus:'C',green:'G',floral:'F',woody:'W',amber:'A',chypre:'Ch',aquatic:'Aq',leather:'L',gourmand:'Go',oud:'O'};
 const FAM_ORDER=['floral','amber','citrus','woody','chypre','gourmand','green','oud','leather','aquatic'];
 
 const FAM_COMPAT={
@@ -533,7 +534,7 @@ function pushSheet(renderFn,title){
     const dy=e.changedTouches[0].clientY-(ds||0);
     const elapsed = Date.now() - _swipeStartTime;
     const velocity = elapsed > 0 ? dy / elapsed : 0; // px/ms
-    el.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    el.style.transition = 'transform 0.28s var(--ease-spring)';
     if(dy > 80 || velocity > 0.3) {
       el.style.transform='translateY(100%)';
       popSheet();
@@ -1841,7 +1842,13 @@ function renderCatRow(row,frag,fm,search){
     }
   } else {
     const topNotes=(frag.top||[]).slice(0,3).join(', ');
-    if(topNotes)notesHtml=`<div class="frag-picker-item-notes">${topNotes}</div>`;
+    const midNote=(frag.mid||[])[0];
+    const baseNote=(frag.base||[])[0];
+    const parts=[];
+    if(topNotes)parts.push(topNotes);
+    if(midNote)parts.push(`<span class="note-layer-hint">H</span> ${midNote}`);
+    if(baseNote)parts.push(`<span class="note-layer-hint">B</span> ${baseNote}`);
+    if(parts.length)notesHtml=`<div class="frag-picker-item-notes">${parts.join(' · ')}</div>`;
   }
 
   row.draggable = true;
@@ -1851,7 +1858,7 @@ function renderCatRow(row,frag,fm,search){
       <button class="scent-row-action wishlist" data-id="${frag.id}">${st==='wish'?'Unwish':'Wish'}</button>
     </div>
     <div class="scent-row-content">
-      <div class="frag-picker-dot" style="background:${fm.color}"></div>
+      <div class="frag-picker-dot" style="background:${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
       <div class="frag-picker-info">
         <div class="frag-picker-item-name">${frag.name}</div>
         <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
@@ -1891,7 +1898,7 @@ function renderCatRow(row,frag,fm,search){
   });
   content.addEventListener('touchend', e=>{
     swiping = false;
-    content.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    content.style.transition = 'transform 0.28s var(--ease-spring)';
     const dx = e.changedTouches[0].clientX - sx;
     if(dx < -60) {
       content.style.transform = `translateX(-160px)`;
@@ -2495,7 +2502,7 @@ function drawCombinedRadarSvg(fa,fb,caAccent,cbAccent){
     <div class="cmp-radar-v2-label">Character</div>
     <div class="cmp-radar-v2-wrap"><svg viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="radar-title-${fa.id}-${fb.id}">
       <title id="radar-title-${fa.id}-${fb.id}">Fragrance profile comparison</title>
-      <desc>Radar chart comparing ${fa.name} and ${fb.name} across five dimensions: freshness, sweetness, warmth, intensity, and depth.</desc>
+      <desc>Radar chart comparing ${fa.name} (${dims.map((d,i)=>`${labels[i]}: ${Math.round(pa[d]*100)}%`).join(', ')}) versus ${fb.name} (${dims.map((d,i)=>`${labels[i]}: ${Math.round(pb[d]*100)}%`).join(', ')}).</desc>
       ${rings}${axes}
       <polygon points="${polyA}" fill="${caAccent}20" stroke="${caAccent}" stroke-width="1.8" stroke-linejoin="round"/>
       <polygon points="${polyB}" fill="${cbAccent}18" stroke="${cbAccent}" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="5,3"/>
@@ -3051,6 +3058,11 @@ function renderCompareResults(fa,fb){
       </div>
     </div>
 
+    <div class="sr-only" role="region" aria-label="Comparison summary">
+      ${fa.name} versus ${fb.name}: ${matchPct}% similarity, ${layerPct}% layering compatibility.
+      ${fa.name} sillage ${fa.sillage}/10, depth ${fa.layering}/10.
+      ${fb.name} sillage ${fb.sillage}/10, depth ${fb.layering}/10.
+    </div>
     <div class="cmp-pair-card">
       <button class="cmp-pair-card-left" id="cmp-score-character">
         <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>

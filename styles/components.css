@@ -153,6 +153,27 @@
   flex-shrink: 0;
 }
 
+/* Family abbreviation inside catalog dots — secondary indicator for colorblind users */
+.frag-picker-dot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+}
+
+.fam-abbr {
+  font-family: var(--font-sans);
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--on-dark-text);
+  letter-spacing: -0.02em;
+}
+
 .chip {
   display: inline-flex;
   align-items: center;
@@ -255,7 +276,7 @@
 }
 
 .detail-inner.slide {
-  animation: detail-slidein 0.18s ease-out forwards;
+  animation: detail-slidein var(--dur-fast) ease-out forwards;
 }
 
 @keyframes detail-slidein {
@@ -815,7 +836,7 @@
   background: var(--bg-primary);
   border-left: 3px solid transparent;
   cursor: pointer;
-  transition: transform 0.3s var(--ease-spring), background var(--dur-fast) var(--ease-spring);
+  transition: transform var(--dur-standard) var(--ease-spring), background var(--dur-fast) var(--ease-spring);
   width: 100%;
 }
 
@@ -852,6 +873,26 @@
 
 .scent-row-action.compare {
   background: var(--accent-primary);
+}
+
+/* Swipe hint chevron — visible on touch devices to indicate swipeable row */
+.scent-row-content::after {
+  content: '‹';
+  position: absolute;
+  right: var(--sp-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--fs-caption);
+  color: var(--g300);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-spring);
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .scent-row-content::after {
+    opacity: 1;
+  }
 }
 
 .scent-row:hover .scent-row-content {
@@ -1253,11 +1294,26 @@
   color: var(--text-tertiary);
 }
 
+/* Mobile quick-filter bar — always visible in frag-main-top on mobile */
+.frag-mobile-quick-filters {
+  display: none; /* hidden on desktop — sidebar handles it */
+}
+
+@media (max-width: 767px) {
+  .frag-mobile-quick-filters {
+    display: flex;
+    gap: 2px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-xs);
+  }
+}
+
 /* Mobile filter: state bar as pill container */
 #cat-state-bar-m {
   display: flex;
   gap: 2px;
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   border-radius: var(--radius-lg);
   padding: var(--sp-xs);
 }
@@ -1376,7 +1432,7 @@
 
 /* Align dot with first text line (name) when parent uses align-items: flex-start */
 .scent-row .frag-picker-dot {
-  margin-top: 4px;
+  margin-top: 1px;
   flex-shrink: 0;
 }
 
@@ -1402,6 +1458,16 @@ mark.note-match {
   background: none;
   color: var(--accent-primary);
   font-weight: 600;
+}
+
+/* Layer hint badges in catalog row notes preview */
+.note-layer-hint {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-disabled);
+  vertical-align: 1px;
 }
 
 .match-badge {

@@ -69,7 +69,7 @@
   background: var(--scrim-dark);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.22s;
+  transition: opacity var(--dur-standard);
 }
 
 .detail-scrim.open {
@@ -103,7 +103,7 @@
   position: absolute;
   inset: 0;
   background: transparent;
-  transition: background 0.22s;
+  transition: background var(--dur-standard);
   pointer-events: none;
 }
 
@@ -126,7 +126,7 @@
   border-bottom: none;
   border-radius: 16px 16px 0 0;
   transform: translateY(100%);
-  transition: transform 0.22s var(--ease-spring);
+  transition: transform var(--dur-standard) var(--ease-spring);
   z-index: 201;
   pointer-events: auto;
   display: flex;
