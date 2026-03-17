@@ -1,6 +1,9 @@
 {
   "rewrites": [
     { "source": "/compare/:a/:b", "destination": "/api/compare" },
+    { "source": "/fragrance/:id", "destination": "/api/fragrance" },
+    { "source": "/note/:slug", "destination": "/api/note" },
+    { "source": "/house/:id", "destination": "/api/house" },
     { "source": "/quiz/:slug", "destination": "/api/quiz" },
     { "source": "/app", "destination": "/app.html" },
     { "source": "/", "destination": "/index.html" }

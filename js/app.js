@@ -3704,6 +3704,33 @@ Promise.all([
     }
   }
 
+  // Check for /fragrance/<id> deep-link
+  const _fragMatch = window.location.pathname.match(/^\/fragrance\/([a-z0-9-]+)$/);
+  let _deepLinkedFrag = false;
+  if (_fragMatch) {
+    const frag = CAT_MAP[_fragMatch[1]];
+    if (frag) { _deepLinkedFrag = true; }
+  }
+
+  // Check for /note/<slug> deep-link
+  const _noteMatch = window.location.pathname.match(/^\/note\/([a-z0-9-]+)$/);
+  let _deepLinkedNote = false;
+  if (_noteMatch) {
+    // Find note by slugified name
+    const slug = _noteMatch[1];
+    const note = NI.find(n => n.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === slug);
+    if (note) { _deepLinkedNote = note; }
+  }
+
+  // Check for /house/<id> deep-link
+  const _houseMatch = window.location.pathname.match(/^\/house\/([a-z0-9-]+)$/);
+  let _deepLinkedHouse = false;
+  if (_houseMatch) {
+    const brandId = _houseMatch[1];
+    const brand = BRANDS.find(b => b.id === brandId);
+    if (brand) { _deepLinkedHouse = brand; }
+  }
+
   // Pre-fill a high-layering pair so compare isn't blank on load
   // Skip if a compare deep-link already loaded a pair
   if (!_deepLinkedCompare) {
@@ -3726,10 +3753,20 @@ Promise.all([
     }
   }
 
-  // Read hash for deep-linking from landing page
+  // Read hash or pathname for deep-linking
   const hash = window.location.hash.replace('#', '');
   if (_deepLinkedCompare) {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+  } else if (_deepLinkedFrag) {
+    const frag = CAT_MAP[_fragMatch[1]];
+    go('catalog', document.querySelector('.mbn-btn[onclick*="catalog"]'));
+    setTimeout(() => openFragDetail(frag), 100);
+  } else if (_deepLinkedNote) {
+    go('notes', document.querySelector('.nav-notes-btn[onclick*="notes"]'));
+    setTimeout(() => openDetail(c => renderNoteDetail(c, _deepLinkedNote), _deepLinkedNote.name), 100);
+  } else if (_deepLinkedHouse) {
+    go('catalog', document.querySelector('.mbn-btn[onclick*="catalog"]'));
+    setTimeout(() => openHouseDetail(_deepLinkedHouse.name), 100);
   } else if (hash === 'notes') {
     go('notes', document.querySelector('.nav-notes-btn[onclick*="notes"]'));
   } else if (hash === 'catalog') {

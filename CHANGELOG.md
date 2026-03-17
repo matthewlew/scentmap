@@ -4,6 +4,21 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-17h
+
+### Added
+- **Dedicated fragrance pages** (`/fragrance/:id`) — SEO-friendly URLs for every fragrance with full meta tags, JSON-LD Product schema, and noscript fallback; deep-links into the app's detail panel on load
+- **Dedicated note pages** (`/note/:slug`) — SEO-friendly URLs for every fragrance note with meta tags, JSON-LD DefinedTerm schema, and noscript content listing fragrances that use the note
+- **Dedicated house pages** (`/house/:id`) — SEO-friendly URLs for every fragrance house/brand with meta tags, JSON-LD Brand schema, and noscript fragrance list
+- **Three new serverless API functions** (`api/fragrance.js`, `api/note.js`, `api/house.js`) — dynamically inject SEO meta, canonical URLs, JSON-LD, and noscript content into the app shell HTML
+- **Deep-link routing in app.js** — detects `/fragrance/`, `/note/`, `/house/` pathnames on init, navigates to the appropriate panel, and opens the entity detail view
+
+### Changed
+- **Landing page sitemap** — brand links now use `/house/:id` URLs instead of `#app` hash links; added "Popular Fragrances" column with direct fragrance links
+- **Vercel rewrites** — added `/fragrance/:id`, `/note/:slug`, `/house/:id` routes
+
+---
+
 ## 2026-03-17g
 
 ### Added
