@@ -2086,7 +2086,13 @@ function go(id,btn){
   document.getElementById('p-'+id).classList.add('active');
   if(btn)btn.classList.add('active');
   closeDesktopDetail();
-
+  // Sync URL with compare tab state
+  if(id==='compare'){
+    if(CMP_A&&CMP_B){const[a,b]=[CMP_A.id,CMP_B.id].sort();history.replaceState(null,'','/compare/'+a+'/'+b);}
+    else{history.replaceState(null,'',window.location.pathname.startsWith('/compare/')?'/app':window.location.href.replace(window.location.origin,''));}
+  } else if(window.location.pathname.startsWith('/compare/')){
+    history.replaceState(null,'','/app');
+  }
 }
 
 /* ── Detail Pagination ── */
