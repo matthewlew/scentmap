@@ -2846,7 +2846,7 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
         <div class="cmp-edu-label">${label}</div>
         <div class="cmp-edu-num">${pct}%</div>
       </div>
-      <button class="cmp-edu-close" id="cmp-edu-close">✕ Close</button>
+      <button class="cmp-edu-close" id="cmp-edu-close" aria-label="Close">✕ Close</button>
     </div>
     <div class="cmp-edu-body">
       ${bodyContent}
