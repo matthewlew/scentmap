@@ -56,8 +56,8 @@ function toggleBrandSave(id){setState('b_'+id.toLowerCase(),isBrandSaved(id)?'no
 // Fill these in after creating your Supabase project:
 //   Authentication → URL Configuration → set Site URL to your app URL
 //   Authentication → Providers → enable Google and/or Apple
-const SUPABASE_URL      = '';   // e.g. 'https://abcdefgh.supabase.co'
-const SUPABASE_ANON_KEY = '';   // Your project's anon/public key
+const SUPABASE_URL      = 'https://ttbywijzemzqtelxkffn.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_ApGoKsgSewzitLprbBWzHw_dSWColPV';
 
 let currentUser = null;
 let _sb = null;
@@ -100,9 +100,18 @@ function _authTrapFocus(modal) {
 function openAuthModal() {
   const modal = document.getElementById('auth-modal');
   if (!modal) return;
+  // Reset to entry state
+  document.getElementById('auth-modal-body-enter').hidden = false;
+  document.getElementById('auth-modal-body-sent').hidden  = true;
+  const inp = document.getElementById('auth-email-input');
+  const err = document.getElementById('auth-email-error');
+  const btn = document.getElementById('auth-btn-send');
+  if (inp) { inp.value = ''; inp.disabled = false; }
+  if (err) { err.hidden = true; err.textContent = ''; }
+  if (btn) { btn.disabled = false; btn.textContent = 'Send magic link'; }
   modal.hidden = false;
   requestAnimationFrame(() => modal.classList.add('open'));
-  setTimeout(() => { document.getElementById('auth-modal-close')?.focus(); }, 50);
+  setTimeout(() => { inp ? inp.focus() : document.getElementById('auth-modal-close')?.focus(); }, 50);
   _authTrapFocus(modal);
 }
 
@@ -121,12 +130,9 @@ function updateNavForUser() {
   if (currentUser) {
     btn.textContent = currentUser.name.charAt(0).toUpperCase();
     btn.classList.add('signed-in');
-    btn.setAttribute('aria-label', `Signed in as ${currentUser.name}. Click to sign out.`);
+    btn.setAttribute('aria-label', `Signed in as ${currentUser.name}. Open profile.`);
     btn.title = currentUser.name;
-    btn.onclick = async () => {
-      if (_sb) await _sb.auth.signOut();
-      else { currentUser = null; updateNavForUser(); }
-    };
+    btn.onclick = openProfilePanel;
   } else {
     btn.textContent = 'Sign In';
     btn.classList.remove('signed-in');
@@ -136,37 +142,106 @@ function updateNavForUser() {
   }
 }
 
-async function supabaseSignIn(provider) {
-  const provBtn = document.getElementById('auth-btn-' + provider);
-  if (!provBtn) return;
-  const originalHTML = provBtn.innerHTML;
+function openProfilePanel() {
+  function renderProfile(container) {
+    const owned  = CAT.filter(f => isOwned(f.id));
+    const wished = CAT.filter(f => isWish(f.id));
+    const initial = currentUser.name.charAt(0).toUpperCase();
+
+    // detail-inner already provides padding: var(--sp-lg) var(--sp-2xl)
+    // sheet-inner already provides padding: 0 var(--sp-lg)
+    // so no outer wrapper needed — use margins on sections only
+    container.innerHTML = `
+      <div style="display:flex;align-items:center;gap:var(--sp-md);padding-bottom:var(--sp-xl);margin-bottom:var(--sp-xl);border-bottom:1px solid var(--border-standard);">
+        <div style="width:44px;height:44px;flex-shrink:0;background:var(--text-primary);color:var(--bg-primary);border-radius:var(--radius-circle);display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:var(--fs-ui);font-weight:700;" aria-hidden="true">${initial}</div>
+        <div style="min-width:0;overflow:hidden;">
+          <div style="font-family:var(--font-sans);font-size:var(--fs-body);font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${currentUser.name}</div>
+          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${currentUser.email}</div>
+        </div>
+      </div>
+
+      <div class="sec-label" style="margin-bottom:var(--sp-md);">Collection</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm);margin-bottom:var(--sp-xl);">
+        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-md);">
+          <div style="font-family:var(--font-display);font-size:var(--fs-title);color:var(--text-primary);line-height:1;">${owned.length}</div>
+          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);margin-top:var(--sp-xs);">Owned</div>
+        </div>
+        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-md);">
+          <div style="font-family:var(--font-display);font-size:var(--fs-title);color:var(--text-primary);line-height:1;">${wished.length}</div>
+          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);margin-top:var(--sp-xs);">Wishlist</div>
+        </div>
+      </div>
+
+      <button class="copy-collection-btn" id="profile-copy-btn" style="width:100%;justify-content:center;">Export collection</button>
+      <span id="profile-copy-toast" aria-live="polite" style="display:block;margin-top:var(--sp-xs);font-family:var(--font-sans);font-size:var(--fs-meta);color:var(--text-secondary);min-height:1.2em;"></span>
+
+      <div style="margin-top:var(--sp-2xl);border-top:1px solid var(--border-standard);padding-top:var(--sp-xl);">
+        <button class="auth-guest-link" id="profile-signout-btn">Sign out</button>
+      </div>
+    `;
+
+    container.querySelector('#profile-copy-btn').addEventListener('click', () => {
+      copyCollectionToClipboard(container.querySelector('#profile-copy-toast'));
+    });
+
+    container.querySelector('#profile-signout-btn').addEventListener('click', async () => {
+      if (isDesktop() || isTablet()) closeDesktopDetail();
+      else closeAllSheets();
+      if (_sb) await _sb.auth.signOut();
+      else { currentUser = null; updateNavForUser(); }
+    });
+  }
+
+  if (isDesktop() || isTablet()) {
+    openDesktopDetail(renderProfile);
+  } else {
+    pushSheet(renderProfile, 'Profile');
+  }
+}
+
+async function sendMagicLink(email) {
+  const sendBtn = document.getElementById('auth-btn-send');
+  const errEl   = document.getElementById('auth-email-error');
+  const inp     = document.getElementById('auth-email-input');
+
+  // Basic validation
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (errEl) { errEl.textContent = 'Please enter a valid email address.'; errEl.hidden = false; }
+    inp?.focus();
+    return;
+  }
+  if (errEl) errEl.hidden = true;
+
+  if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = 'Sending…'; }
+  if (inp)     inp.disabled = true;
 
   if (!_sb) {
-    // Supabase not configured — fall back to mock
-    provBtn.disabled = true;
-    provBtn.textContent = '…';
-    setTimeout(() => {
-      currentUser = {name: 'Alex', email: 'alex@example.com'};
-      updateNavForUser();
-      closeAuthModal();
-      provBtn.innerHTML = originalHTML;
-      provBtn.disabled = false;
-    }, 1200);
+    // Supabase not configured — mock the sent state
+    setTimeout(() => _showMagicLinkSent(email), 800);
     return;
   }
 
-  provBtn.disabled = true;
-  provBtn.textContent = '…';
-  const { error } = await _sb.auth.signInWithOAuth({
-    provider,
-    options: { redirectTo: window.location.origin + window.location.pathname }
+  const { error } = await _sb.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: window.location.origin + window.location.pathname }
   });
+
   if (error) {
-    console.error('Supabase auth error:', error.message);
-    provBtn.innerHTML = originalHTML;
-    provBtn.disabled = false;
+    if (errEl) { errEl.textContent = error.message; errEl.hidden = false; }
+    if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send magic link'; }
+    if (inp)     inp.disabled = false;
+    inp?.focus();
+  } else {
+    _showMagicLinkSent(email);
   }
-  // On success the page redirects — no need to restore button state
+}
+
+function _showMagicLinkSent(email) {
+  document.getElementById('auth-modal-body-enter').hidden = true;
+  document.getElementById('auth-modal-body-sent').hidden  = false;
+  const sentEmail = document.getElementById('auth-sent-email');
+  if (sentEmail) sentEmail.textContent = email;
+  document.getElementById('auth-btn-back')?.focus();
 }
 
 function copyCollectionToClipboard(toastEl) {
@@ -2090,8 +2165,11 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('auth-modal-scrim')?.addEventListener('click', closeAuthModal);
   document.getElementById('auth-modal-close')?.addEventListener('click', closeAuthModal);
   document.getElementById('auth-btn-guest')?.addEventListener('click', closeAuthModal);
-  document.getElementById('auth-btn-google')?.addEventListener('click', () => supabaseSignIn('google'));
-  document.getElementById('auth-btn-apple')?.addEventListener('click', () => supabaseSignIn('apple'));
+  document.getElementById('auth-email-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    sendMagicLink(document.getElementById('auth-email-input')?.value.trim());
+  });
+  document.getElementById('auth-btn-back')?.addEventListener('click', openAuthModal);
   // nav-signin-btn click is managed by updateNavForUser() (toggles between openAuthModal / signOut)
   updateNavForUser();
   initSupabaseAuth();

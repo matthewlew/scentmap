@@ -4,6 +4,28 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-16 (9)
+
+### Changed
+- **Nav: added Fragrances and Compare tabs to desktop nav** — desktop nav now mirrors mobile bottom nav order: Fragrances → Compare → Notes → Collection; avatar and settings remain on the far right
+- **Nav: logo wordmark** — applied existing `.logo` class to `app.html` nav text (`SCENTMAP` uppercase, DM Sans, letter-spacing); was previously unstyled
+- **Nav: fixed avatar spacing** — added `gap: var(--sp-md)` to `.nav-right` and removed per-button `margin-right` from `.nav-notes-btn`; avatar no longer butts against adjacent nav items
+- **Profile panel: removed delete account** — simplified to identity header, collection stats, export, and sign out
+- **Profile panel: fixed padding** — removed redundant outer wrapper; panel now inherits `detail-inner` padding on desktop and `sheet-inner` padding on mobile, consistent with all other detail content
+
+## 2026-03-16 (8)
+
+### Added
+- **Profile panel** — tapping the signed-in avatar now opens a profile panel (desktop detail panel / mobile sheet) instead of signing out directly; panel shows avatar initial, display name, email, owned + wishlist counts, "Export collection" button, "Sign out" action, and "Delete account" danger action (rose-colored, separated by a divider); all UI reuses existing classes (`copy-collection-btn`, `auth-guest-link`, `sec-label`, `bg-secondary` stat tiles)
+
+### Changed
+- **Nav avatar click** — when signed in, avatar opens `openProfilePanel()` instead of immediately calling `signOut`; `aria-label` updated to "Open profile." accordingly
+
+## 2026-03-16 (7)
+
+### Changed
+- **Auth: replaced Google/Apple SSO with email magic link** — modal now shows an email input + "Send magic link" button; calls `supabase.auth.signInWithOtp()`; inline validation error on bad/empty email; transitions to "Check your inbox" confirmation state on success with "← Use a different email" back link; Supabase not configured falls back to mock sent state; CSS replaced `.auth-btn-sso`/`.auth-modal-actions` with `.auth-email-form`, `.auth-email-input`, `.auth-btn-primary`, `.auth-sent-icon`
+
 ## 2026-03-16 (6)
 
 ### Changed
