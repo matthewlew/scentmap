@@ -4,6 +4,13 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-17e
+
+### Fixed
+- **Compare shareable URL** — `go()` now syncs the URL to `/compare/<id-a>/<id-b>` immediately when switching to the compare tab (if both slots are filled), and resets to `/app` when switching away; previously the URL only updated when `renderCompareResults` rendered, causing stale hashes like `app#catalog` to persist
+
+---
+
 ## 2026-03-17d
 
 ### Added
