@@ -1,5 +1,9 @@
 {
   "private": true,
+  "scripts": {
+    "build": "node scripts/build-static.js",
+    "sitemap": "node scripts/build-sitemap.js"
+  },
   "dependencies": {
     "@vercel/og": "^0.6.0"
   }

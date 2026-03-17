@@ -4,6 +4,27 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-17g
+
+### Added
+- **Static Build Engine** (`/scripts/build-static.js`) — generated physical `index.html` files for `/app`, all `/quiz/:slug`, and popular `/compare/:a/:b` routes; this ensures the footer sitemap links work on simple static dev servers (like WEBrick) that don't support dynamic rewrites
+- **`npm run build` command** — added to `package.json` to automate static page generation
+
+### Changed
+- **Sitemap link color fix** — reset `sitemap-link` color from browser-default blue to `var(--text-secondary)` (normal) and `var(--text-primary)` (hover) to match the project's design system
+- **Root-relative styles in landing page** — updated `index.html` to use root-relative asset paths for consistency across subdirectories
+- **Dev sync update** — updated `CLAUDE.md` and `GEMINI.md` sync instructions to include the newly built `/app`, `/quiz`, and `/compare` directories
+
+---
+
+## 2026-03-17f
+
+### Added
+- **Structured sitemap footer** — added a comprehensive sitemap to the `index.html` landing page footer with four columns (Engine, Quizzes, Brands, Popular Comparisons); improves navigation for users and link depth for SEO crawlers
+- **Footer redesign** — moved "Ready to explore?" CTA into a dedicated section above the sitemap; added a clean bottom bar with copyright and DM Sans wordmark; refined mobile layout to stack sitemap columns in 2x2 grid
+
+---
+
 ## 2026-03-17e
 
 ### Fixed
