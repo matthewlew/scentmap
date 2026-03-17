@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/compare/:a/:b", "destination": "/api/compare" },
     { "source": "/", "destination": "/app.html" }
   ],
   "headers": [
