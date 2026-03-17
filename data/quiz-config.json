@@ -1,0 +1,209 @@
+{
+  "find-your-scent": {
+    "title": "Find Your Perfect Fragrance",
+    "subtitle": "5 questions. 180+ fragrances. Your match.",
+    "questionCount": 5,
+    "questions": [
+      {
+        "q": "What are we looking for today?",
+        "a": [
+          { "label": "A fresh start / A new signature", "tags": ["all"] },
+          { "label": "Something light and easy for every day", "tags": ["citrus", "green", "freshness"] },
+          { "label": "A powerful scent for special nights", "tags": ["amber", "oud", "oriental", "intensity"] }
+        ]
+      },
+      {
+        "q": "What vibe speaks to you the most?",
+        "a": [
+          { "label": "Clean, crisp, and put-together", "tags": ["citrus", "aquatic"] },
+          { "label": "Dark, mysterious, and complex", "tags": ["woody", "leather"] },
+          { "label": "Cozy, warm, and inviting", "tags": ["amber", "gourmand"] },
+          { "label": "Bright, floral, and romantic", "tags": ["floral"] }
+        ]
+      },
+      {
+        "q": "Are there any notes you absolutely avoid?",
+        "a": [
+          { "label": "Heavy florals (Rose, Jasmine)", "tags": ["blacklist_floral"] },
+          { "label": "Sweet or food-like scents (Vanilla, Caramel)", "tags": ["blacklist_gourmand"] },
+          { "label": "Strong, smoky, or earthy woods (Oud, Patchouli)", "tags": ["blacklist_woody", "blacklist_leather"] },
+          { "label": "I'm open to anything!", "tags": ["neutral"] }
+        ]
+      },
+      {
+        "q": "How do you want it to project?",
+        "a": [
+          { "label": "I want people to smell me when I enter a room", "tags": ["intensity"] },
+          { "label": "I want it to be a secret just for someone who leans in", "tags": ["intimate"] },
+          { "label": "Something right in the middle", "tags": ["neutral"] }
+        ]
+      },
+      {
+        "q": "What climate will you wear this in most?",
+        "a": [
+          { "label": "Warm or humid weather", "tags": ["freshness"] },
+          { "label": "Cold or crisp weather", "tags": ["warmth"] },
+          { "label": "All year round", "tags": ["neutral"] }
+        ]
+      }
+    ]
+  },
+  "best-perfume-to-gift-2026": {
+    "title": "Best Perfume to Gift in 2026",
+    "subtitle": "Not sure what to buy? We'll narrow it down.",
+    "questionCount": 4,
+    "scoring": { "giftMode": true },
+    "questions": [
+      {
+        "q": "Who are you shopping for?",
+        "a": [
+          { "label": "A partner or spouse", "tags": ["intimate", "signature"] },
+          { "label": "A friend or family member", "tags": ["casual", "crowd-pleaser"] },
+          { "label": "A coworker or acquaintance", "tags": ["work", "safe"] },
+          { "label": "Myself (treat yourself!)", "tags": ["all"] }
+        ]
+      },
+      {
+        "q": "What's their style?",
+        "a": [
+          { "label": "Minimalist and clean", "tags": ["citrus", "green"] },
+          { "label": "Bold and expressive", "tags": ["oud", "leather"] },
+          { "label": "Classic and timeless", "tags": ["woody", "amber"] },
+          { "label": "Romantic and soft", "tags": ["floral", "gourmand"] }
+        ]
+      },
+      {
+        "q": "What's the occasion?",
+        "a": [
+          { "label": "Birthday", "tags": ["signature"] },
+          { "label": "Holiday / Christmas", "tags": ["cold", "formal"] },
+          { "label": "Anniversary or Valentine's", "tags": ["intimate"] },
+          { "label": "Just because", "tags": ["casual"] }
+        ]
+      },
+      {
+        "q": "Budget range?",
+        "a": [
+          { "label": "Crowd-pleasing pick ($50\u2013100)", "tags": ["safe", "casual"] },
+          { "label": "Something special ($100\u2013200)", "tags": ["signature"] },
+          { "label": "Luxury gift ($200+)", "tags": ["formal", "creative"] }
+        ]
+      }
+    ]
+  },
+  "best-perfume-for-men-2026": {
+    "title": "Best Perfume for Men in 2026",
+    "subtitle": "From fresh daily drivers to statement scents.",
+    "questionCount": 4,
+    "scoring": { "genderBias": "masculine" },
+    "questions": [
+      {
+        "q": "What's the primary use case?",
+        "a": [
+          { "label": "Daily office / work scent", "tags": ["work", "casual"] },
+          { "label": "Date night / going out", "tags": ["formal", "intimate"] },
+          { "label": "Versatile all-rounder", "tags": ["signature"] },
+          { "label": "Weekend and outdoor", "tags": ["heat", "casual"] }
+        ]
+      },
+      {
+        "q": "What scent profile do you gravitate toward?",
+        "a": [
+          { "label": "Fresh and clean (think: after a shower)", "tags": ["citrus", "aquatic", "freshness"] },
+          { "label": "Warm and spicy (think: leather jacket)", "tags": ["leather", "amber", "warmth"] },
+          { "label": "Woody and earthy (think: cedar cabin)", "tags": ["woody", "green"] },
+          { "label": "Sweet and rich (think: espresso)", "tags": ["gourmand", "oud"] }
+        ]
+      },
+      {
+        "q": "How strong should it be?",
+        "a": [
+          { "label": "Skin scent \u2014 just for me", "tags": ["intimate"] },
+          { "label": "Moderate \u2014 noticeable up close", "tags": ["casual"] },
+          { "label": "Beast mode \u2014 fill the room", "tags": ["intensity"] }
+        ]
+      },
+      {
+        "q": "What season are you wearing it?",
+        "a": [
+          { "label": "Spring / Summer", "tags": ["freshness", "heat"] },
+          { "label": "Fall / Winter", "tags": ["warmth", "cold"] },
+          { "label": "Year round", "tags": ["neutral"] }
+        ]
+      }
+    ]
+  },
+  "best-perfume-for-women-2026": {
+    "title": "Best Perfume for Women in 2026",
+    "subtitle": "Your mood, your moment, your match.",
+    "questionCount": 4,
+    "scoring": { "genderBias": "feminine" },
+    "questions": [
+      {
+        "q": "What mood are you going for?",
+        "a": [
+          { "label": "Confident and powerful", "tags": ["leather", "oud", "intensity"] },
+          { "label": "Soft and romantic", "tags": ["floral", "amber"] },
+          { "label": "Fresh and carefree", "tags": ["citrus", "green", "freshness"] },
+          { "label": "Mysterious and alluring", "tags": ["woody", "chypre", "warmth"] }
+        ]
+      },
+      {
+        "q": "When will you wear it?",
+        "a": [
+          { "label": "Everyday \u2014 work, errands, life", "tags": ["casual", "work"] },
+          { "label": "Special occasions only", "tags": ["formal", "signature"] },
+          { "label": "Both \u2014 I want a versatile scent", "tags": ["all"] }
+        ]
+      },
+      {
+        "q": "What notes do you love?",
+        "a": [
+          { "label": "Florals (Rose, Jasmine, Peony)", "tags": ["floral"] },
+          { "label": "Fruits and sweets (Vanilla, Peach, Caramel)", "tags": ["gourmand"] },
+          { "label": "Woods and spice (Sandalwood, Patchouli, Saffron)", "tags": ["woody", "amber"] },
+          { "label": "I'm open to anything!", "tags": ["neutral"] }
+        ]
+      },
+      {
+        "q": "What season are you wearing it?",
+        "a": [
+          { "label": "Warm weather", "tags": ["freshness", "heat"] },
+          { "label": "Cool weather", "tags": ["warmth", "cold"] },
+          { "label": "Year round", "tags": ["neutral"] }
+        ]
+      }
+    ]
+  },
+  "find-your-byredo": {
+    "title": "Find Your Byredo",
+    "subtitle": "3 questions to your Byredo signature.",
+    "questionCount": 3,
+    "scoring": { "brandFilter": "byredo" },
+    "questions": [
+      {
+        "q": "What is your ideal weekend?",
+        "a": [
+          { "label": "Exploring the city / Gallery hopping", "tags": ["floral", "chypre", "creative"] },
+          { "label": "Relaxing in nature / Hiking", "tags": ["green", "woody", "casual"] },
+          { "label": "Reading a book by the fire", "tags": ["amber", "oud", "cold"] }
+        ]
+      },
+      {
+        "q": "What fabric do you wear most?",
+        "a": [
+          { "label": "Crisp Cotton / Linen", "tags": ["citrus", "aquatic", "heat"] },
+          { "label": "Leather / Denim", "tags": ["leather", "woody", "signature"] },
+          { "label": "Silk / Cashmere", "tags": ["amber", "floral", "intimate"] }
+        ]
+      },
+      {
+        "q": "Do you prefer to blend in or stand out?",
+        "a": [
+          { "label": "Quiet luxury (Blend in)", "tags": ["casual", "intimate", "work"] },
+          { "label": "Make a statement (Stand out)", "tags": ["signature", "formal", "creative"] }
+        ]
+      }
+    ]
+  }
+}

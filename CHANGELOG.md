@@ -4,6 +4,29 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-17b
+
+### Added
+- **SEO quiz pages** — 5 standalone quiz pages at `/quiz/:slug` with dedicated URLs, SSR meta tags, OG images, and structured data:
+  - `/quiz/find-your-scent` — general 5-question fragrance match
+  - `/quiz/best-perfume-for-men-2026` — masculine-leaning 4-question quiz
+  - `/quiz/best-perfume-for-women-2026` — feminine-leaning 4-question quiz
+  - `/quiz/best-perfume-to-gift-2026` — gift-oriented 4-question quiz
+  - `/quiz/find-your-byredo` — Byredo-specific 3-question concierge
+- **Quiz SSR serverless function** (`/api/quiz`) — serves `app.html` with quiz-specific `<title>`, meta description, OG tags, JSON-LD (`Quiz` schema), and `<noscript>` content with popular results for crawlers
+- **Quiz OG image generation** (`/api/og-quiz`) — promo cards showing quiz title + CTA, or results cards showing 3 recommended fragrances with family dots
+- **Client-side quiz engine** (`/js/quiz.js`) — lightweight standalone JS with ported scoring logic, progress bar, step-by-step questions, shareable result URLs via `?results=id1,id2,id3`
+- **Quiz config data** (`/data/quiz-config.json`) — all 5 quiz variants with questions, answers, tags, and scoring configuration
+- **Shareable quiz results** — completing a quiz updates the URL with result IDs; sharing the link shows result-specific OG tags and loads directly to results
+- **"More Quizzes" section** on results page with links to all other quiz variants
+
+### Changed
+- **Landing page redesign** — `/` now serves `index.html` (previously went straight to app); features hero with search + "Take the Quiz" CTA, feature cards (Compare, Notes, Quiz), quiz promo section with all 4 keyword-targeted quizzes, popular comparisons grid, and footer CTA
+- **App moved to `/app`** — main application now served at `/app` instead of `/`; all internal links updated
+- **Sitemap expanded** — 2,203 URLs (added 5 quiz pages + `/app`)
+
+---
+
 ## 2026-03-17
 
 ### Added
