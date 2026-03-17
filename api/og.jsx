@@ -2,14 +2,6 @@ import { ImageResponse } from '@vercel/og';
 
 export const config = { runtime: 'edge' };
 
-let _scentsCache = null;
-async function getScents(baseUrl) {
-  if (_scentsCache) return _scentsCache;
-  const res = await fetch(new URL('/data/scents-flat.json', baseUrl));
-  _scentsCache = await res.json();
-  return _scentsCache;
-}
-
 const FAM_COMPAT = {
   woody:   {woody:.7,floral:.8,amber:.9,citrus:.6,leather:.8,oud:.9,green:.6,chypre:.7,gourmand:.5},
   floral:  {woody:.8,floral:.5,amber:.7,citrus:.7,leather:.5,oud:.6,green:.8,chypre:.8,gourmand:.5},
@@ -47,6 +39,8 @@ function getSharedNotes(a, b) {
   return all_a.filter(n => all_b.includes(n));
 }
 
+let _scentsCache = null;
+
 export default async function handler(req) {
   const { searchParams } = new URL(req.url);
   const idA = searchParams.get('a');
@@ -56,8 +50,13 @@ export default async function handler(req) {
     return new Response('Missing a or b query params', { status: 400 });
   }
 
-  const scents = await getScents(new URL(req.url).origin);
-  const fa = scents[idA], fb = scents[idB];
+  if (!_scentsCache) {
+    const origin = new URL(req.url).origin;
+    const res = await fetch(new URL('/data/scents-flat.json', origin));
+    _scentsCache = await res.json();
+  }
+
+  const fa = _scentsCache[idA], fb = _scentsCache[idB];
 
   if (!fa || !fb) {
     return new Response('Fragrance not found', { status: 404 });
