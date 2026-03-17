@@ -791,7 +791,7 @@
 }
 
 .scent-row {
-  padding: var(--sp-sm) var(--sp-md);
+  padding: 0;
   position: relative;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-standard);
@@ -815,7 +815,7 @@
   position: relative;
   z-index: 2;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--sp-sm);
   padding: var(--sp-sm) var(--sp-md);
   background: var(--bg-primary);
@@ -1261,6 +1261,63 @@
   display: flex;
 }
 
+/* Mobile filter panel: section label row */
+.frag-mb-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.frag-mb-section-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* Mobile filter: state bar as pill container */
+#cat-state-bar-m {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-xs);
+}
+
+/* Mobile filter: brand bar as horizontal scroll strip */
+#cat-brand-bar-m {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: var(--sp-xs);
+  padding-bottom: 2px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+#cat-brand-bar-m::-webkit-scrollbar {
+  display: none;
+}
+
+#cat-brand-bar-m .tab {
+  flex-shrink: 0;
+  min-height: var(--touch-target);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-pill);
+  padding: var(--sp-xs) var(--sp-md);
+}
+
+#cat-brand-bar-m .tab.active {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--bg-primary);
+  box-shadow: none;
+}
+
 .cat-search-wrap {
   position: relative;
 }
@@ -1326,8 +1383,9 @@
 }
 
 .frag-picker-item-name {
+  font-family: var(--font-sans);
   font-size: var(--fs-body);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-primary);
   line-height: var(--lh-tight);
   white-space: nowrap;
@@ -1338,6 +1396,12 @@
 .frag-picker-info {
   min-width: 0;
   flex: 1;
+}
+
+/* Align dot with first text line (name) when parent uses align-items: flex-start */
+.scent-row .frag-picker-dot {
+  margin-top: 4px;
+  flex-shrink: 0;
 }
 
 .frag-picker-item-brand {

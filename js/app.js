@@ -1810,7 +1810,7 @@ function initCatalogControls(){
 
 function renderCatRow(row,frag,fm,search){
   const st=gst(frag.id);
-  row.className=`scent-row frag-picker-item s-${st}`;
+  row.className=`scent-row s-${st}`;
   row.dataset.family=frag.family;
   row.dataset.brand=frag.brand;
   row.dataset.roles=frag.roles.join(' ');
@@ -2182,10 +2182,15 @@ function goMobile(id,btn){
 function openMoreSheet(btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  const _ico={
+    star:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    megaphone:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14"/><path d="M8 6v8"/></svg>`,
+    library:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>`,
+  };
   const items=[
-    {id:'saved',icon:'★', label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
-    {id:'changelog',icon:'↩', label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
-    {id:'playground',icon:'❖', label:'Design System', action:"window.open('playground.html', '_blank')"}
+    {id:'saved',icon:_ico.star, label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
+    {id:'changelog',icon:_ico.megaphone, label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
+    {id:'playground',icon:_ico.library, label:'Design System', action:"window.open('playground.html', '_blank')"}
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:var(--sp-lg) 0 var(--sp-sm)">

@@ -4,6 +4,21 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-16 (10)
+
+### Fixed
+- **Catalog rows: removed `.frag-picker-item` class from catalog rows** — this rolodex picker class was forcing `height: 48px` and `opacity: 0.32` onto every catalog row, causing content overflow/overlap and washed-out text; catalog rows now use only `.scent-row` and state classes
+- **Catalog rows: removed double padding** — `.scent-row` outer padding was redundant (`.scent-row-content` has its own padding); removing the outer padding eliminates the visible bg-secondary frame around each row and cleans up the list appearance
+
+### Changed
+- **Catalog rows: dot alignment** — changed `.scent-row-content` from `align-items: center` to `align-items: flex-start` so the family color dot anchors to the fragrance name (top line) rather than the brand line (middle of 3 lines); added `margin-top: 4px` to optically center the dot with the name cap-height
+- **Catalog rows: name weight** — `.frag-picker-item-name` bumped from `font-weight: 500` to `600` and set to `font-family: var(--font-sans)` for clearer name/brand contrast
+- **Mobile filter panel: section labels** — added "COLLECTION" and "BRAND" uppercase labels above each filter group so users know what each row filters
+- **Mobile filter panel: brand bar** — brand filter chips now use pill style with horizontal scroll (`.tab` chips with border-radius-pill, overflow-x: auto) instead of a raw tab group; easier to scan on narrow screens
+- **Mobile bottom nav: Lucide SVG icons** — replaced unicode symbols (`≡`, `⊕`, `✿`, `⋯`) with proper Lucide SVGs: search for Fragrances, layers-2 for Compare, flower for Notes, menu for More
+- **More sheet: Lucide SVG icons** — replaced emoji (★, ↩, ❖) with Lucide SVGs: star for My Collection, megaphone for Changelog, library for Design System
+- **Filter toggle button: icon** — replaced `⊞` symbol with a Lucide list-filter SVG icon
+
 ## 2026-03-16 (9)
 
 ### Changed
