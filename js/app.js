@@ -722,7 +722,7 @@ function renderFragDetail(container,frag){
             <div class="frag-picker-item-brand">${f.brand} · ${famLabel2}</div>
             ${reason ? `<div class="dc-sim-reason">${reason}</div>` : ''}
           </div>
-          ${badge?`<div style="flex-shrink:0"><span class="dc-badge ${badge.type}">${badge.label}</span></div>`:''}
+          ${badge&&badge.type!=='similar'?`<div style="flex-shrink:0"><span class="dc-badge ${badge.type}">${badge.label}</span></div>`:''}
         </div>`;
       row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       shelf.appendChild(row);
@@ -1977,7 +1977,7 @@ function buildNotes(searchQuery, currentTier){
     sorted.forEach(note => {
       const fm = FAM[note.family] || {color: '#888'};
       const btn = document.createElement('button');
-      btn.className = 'note-pill';
+      btn.className = 'cmp-note-pill';
       const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
       btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}${savedMark}`;
       btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c,note), note.name); });
@@ -2005,7 +2005,7 @@ function buildNotes(searchQuery, currentTier){
 
       const cardBody=document.createElement('div');cardBody.className='notes-card-body';
       grouped[fk].forEach(note=>{
-        const btn=document.createElement('button');btn.className='note-pill';
+        const btn=document.createElement('button');btn.className='cmp-note-pill';
         const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
         btn.innerHTML = `${note.name}${savedMark}`;
         btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
