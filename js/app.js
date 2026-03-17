@@ -640,7 +640,7 @@ function renderFragDetail(container,frag){
       const row=document.createElement('button');
       row.className='scent-row scent-row--flat cmp-sug-card';
       row.innerHTML=`
-        <div class="scent-row-content" style="border-left-color: ${fm2.color}">
+        <div class="scent-row-content">
           <div class="frag-picker-dot" style="background:${fm2.color}"></div>
           <div class="frag-picker-info" style="flex:1;text-align:left;">
             <div class="frag-picker-item-name">${f.name}</div>
@@ -720,7 +720,7 @@ function buildLayerSuggestions(frag,container){
     const row=document.createElement('button');
     row.className='scent-row scent-row--flat';
     row.innerHTML=`
-      <div class="scent-row-content" style="border-left-color: ${fm2.color}">
+      <div class="scent-row-content">
         <div class="frag-picker-dot" style="background:${fm2.color}"></div>
         <div class="frag-picker-info" style="flex:1">
           <div class="frag-picker-item-name">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
@@ -1982,7 +1982,7 @@ function openQuickPeek(frag){
       </div>
       <div class="dc-nlbl" style="margin-top:0">Notes</div>
       <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
-      <div class="dc-note"><span class="dc-nt">Mid</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
+      <div class="dc-note"><span class="dc-nt">Heart</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
       <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
       <div style="display:flex;gap:var(--sp-md);margin-top:var(--sp-2xl)">
         <button class="dc-collect-btn" style="flex:1;justify-content:center" onclick="closeQuickPeek();openFragDetail(CAT_MAP['${frag.id}'])">Full details</button>
@@ -2504,7 +2504,7 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
     </div>
     <div class="cmp-grid-3x3">
       ${noteRow('Top',onlyATop,shTop,onlyBTop)}
-      ${noteRow('Mid',onlyAMid,shMid,onlyBMid)}
+      ${noteRow('Heart',onlyAMid,shMid,onlyBMid)}
       ${noteRow('Base',onlyABase,shBase,onlyBBase)}
     </div>
   </div>`;
@@ -2540,7 +2540,7 @@ function renderSuggestionsV2(fa,fb,ca,cb){
     const topNotes=[...(frag.top||[])].slice(0,3).join(', ');
     const reason=getSwapReason(anchor, frag);
     return`<button class="scent-row scent-row--flat cmp-sug-card" data-fid="${frag.id}">
-      <div class="scent-row-content" style="border-left-color: ${fc.accent}">
+      <div class="scent-row-content">
         <div class="frag-picker-dot" style="background:${fc.accent}"></div>
         <div class="frag-picker-info" style="flex:1;text-align:left;">
           <div class="frag-picker-item-name">${frag.name}</div>
@@ -2594,13 +2594,12 @@ function openCharacterEdu(fa, fb, ca, cb) {
   const getNoteContributors = (frag, dimKey) => {
     const allNotes = [...(frag._nTop || []), ...(frag._nMid || []), ...(frag._nBase || [])];
     const matching = allNotes.filter(n => {
-      const info = NI_MAP[n.toLowerCase()];
-      if (!info) return false;
-      const t = info.tags || [];
-      if (dimKey === 'freshness') return t.includes('citrus') || t.includes('green') || t.includes('aquatic');
-      if (dimKey === 'sweetness') return t.includes('sweet') || t.includes('floral') || t.includes('fruity');
-      if (dimKey === 'warmth') return t.includes('warm') || t.includes('spicy') || t.includes('woody') || t.includes('amber');
-      return false; // Intensity/complexity don't map directly to single notes
+      const profile = NOTE_PROFILE[n.toLowerCase()]; // [freshness, sweetness, warmth]
+      if (!profile) return false;
+      if (dimKey === 'freshness') return profile[0] > 0.55;
+      if (dimKey === 'sweetness') return profile[1] > 0.55;
+      if (dimKey === 'warmth') return profile[2] > 0.55;
+      return false;
     });
     return [...new Set(matching)].slice(0, 3);
   };
@@ -2619,11 +2618,10 @@ function openCharacterEdu(fa, fb, ca, cb) {
     <div class="cmp-edu-wrap">
       <div class="cmp-edu-header">
         <div class="cmp-edu-header-left">
-          <div class="cmp-edu-title">Character Details</div>
+          <div class="cmp-edu-label">Character</div>
+          <div class="cmp-edu-num">Map</div>
         </div>
-        <button class="cmp-edu-close" aria-label="Close" onclick="document.getElementById('cmp-edu-overlay').classList.remove('open')">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
-        </button>
+        <button class="cmp-edu-close" aria-label="Close" onclick="document.getElementById('cmp-edu-overlay').classList.remove('open')">✕ Close</button>
       </div>
       <div class="cmp-edu-content">
         <p class="cmp-edu-intro">The Character Map compares five key sensory dimensions. Here&rsquo;s what they mean and which notes drive them.</p>
@@ -2733,34 +2731,27 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
     const rawScore = famScore + sillScore + noteScore;
 
     bodyContent = `
-      <div class="dc-name" style="margin-top:var(--sp-md);">Mathematical Breakdown</div>
-      <div class="dc-description">How is this score calculated? A strong pairing relies on compatible families (up to 35 pts), contrasting sillage so they don't compete (up to 20 pts), and distinct note profiles to create depth (up to 20 pts). The final raw score is scaled to 100%.</div>
-
-      <div class="dc-note">
-        <div class="dc-nt" style="width: 48px; text-align: right;">${Math.round(famScore)}/35</div>
-        <div class="dc-nv" style="flex-direction: column; gap: 0;">
-          <div class="dc-slbl" style="color: var(--ink);">Family Compatibility</div>
-        </div>
+      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
+      <div class="cmp-edu-grid">
+        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
       </div>
-
-      <div class="dc-note">
-        <div class="dc-nt" style="width: 48px; text-align: right;">${Math.round(sillScore)}/20</div>
-        <div class="dc-nv" style="flex-direction: column; gap: 0;">
-          <div class="dc-slbl" style="color: var(--ink);">Sillage Contrast</div>
+      <div class="cmp-edu-breakdown">
+        <div class="cmp-edu-breakdown-title">Score breakdown</div>
+        <div class="cmp-edu-breakdown-row">
+          <span class="cmp-edu-breakdown-label">Family Compatibility</span>
+          <span class="cmp-edu-breakdown-score">${Math.round(famScore)}/35</span>
         </div>
-      </div>
-
-      <div class="dc-note">
-        <div class="dc-nt" style="width: 48px; text-align: right;">${Math.round(noteScore)}/20</div>
-        <div class="dc-nv" style="flex-direction: column; gap: 0;">
-          <div class="dc-slbl" style="color: var(--ink);">Note Independence</div>
+        <div class="cmp-edu-breakdown-row">
+          <span class="cmp-edu-breakdown-label">Sillage Contrast</span>
+          <span class="cmp-edu-breakdown-score">${Math.round(sillScore)}/20</span>
         </div>
-      </div>
-
-      <div class="dc-note" style="border-top: 1px solid var(--border-strong); border-bottom: none; margin-top: var(--sp-sm); padding-top: var(--sp-sm);">
-        <div class="dc-nt" style="width: 48px; text-align: right; color: var(--ink); font-size: var(--fs-body);">${Math.round(rawScore)}/75</div>
-        <div class="dc-nv" style="flex-direction: column; gap: 0;">
-          <div class="dc-slbl" style="color: var(--ink); font-weight: 700; font-size: var(--fs-body);">Raw Score</div>
+        <div class="cmp-edu-breakdown-row">
+          <span class="cmp-edu-breakdown-label">Note Independence</span>
+          <span class="cmp-edu-breakdown-score">${Math.round(noteScore)}/20</span>
+        </div>
+        <div class="cmp-edu-breakdown-row total">
+          <span class="cmp-edu-breakdown-label">Raw Score</span>
+          <span class="cmp-edu-breakdown-score">${Math.round(rawScore)}/75</span>
         </div>
       </div>
     `;
@@ -2843,6 +2834,18 @@ function renderCompareResults(fa,fb){
     <div class="cmp-pair-card">
       <button class="cmp-pair-card-left" id="cmp-score-character">
         <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
+        <div class="cmp-char-metrics">
+          <div class="cmp-char-metric-row">
+            <div class="cmp-char-metric-track left"><div class="cmp-char-metric-fill" style="width:${fa.sillage*10}%;background:${ca.accent}"></div></div>
+            <span class="cmp-char-metric-lbl">Sillage</span>
+            <div class="cmp-char-metric-track right"><div class="cmp-char-metric-fill" style="width:${fb.sillage*10}%;background:${cb.accent}"></div></div>
+          </div>
+          <div class="cmp-char-metric-row">
+            <div class="cmp-char-metric-track left"><div class="cmp-char-metric-fill" style="width:${fa.layering*10}%;background:${ca.accent}"></div></div>
+            <span class="cmp-char-metric-lbl">Depth</span>
+            <div class="cmp-char-metric-track right"><div class="cmp-char-metric-fill" style="width:${fb.layering*10}%;background:${cb.accent}"></div></div>
+          </div>
+        </div>
       </button>
       <div class="cmp-pair-card-right">
         <div class="cmp-pair-card-verdict">${verdict}</div>
@@ -2875,20 +2878,13 @@ function renderCompareResults(fa,fb){
               </div>
             </div>
             <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-            <div class="cmp-edu-math" style="margin-top:var(--sp-sm); padding-top:var(--sp-sm); border-top:1px dashed var(--border-standard); width:100%; display:flex; flex-direction:column; gap:4px; font-family:var(--font-mono); font-size:var(--fs-caption); color:var(--g600);">
-              <div style="display:flex; justify-content:space-between;"><span>Fam Compat</span><span>${Math.round(famScore)}/35</span></div>
-              <div style="display:flex; justify-content:space-between;"><span>Sillage Contrast</span><span>${Math.round(sillScore)}/20</span></div>
-              <div style="display:flex; justify-content:space-between;"><span>Note Independence</span><span>${Math.round(noteScore)}/20</span></div>
-              <div style="display:flex; justify-content:space-between; margin-top:2px; font-weight:700; color:var(--text-primary);"><span>Raw Score</span><span>${Math.round(rawScore)}/75</span></div>
-            </div>
-            <div class="cmp-score-tap" style="margin-top:var(--sp-sm);">Tap to learn more ↗</div>
+            <div class="cmp-score-tap">Tap to learn more ↗</div>
           </button>
         </div>
       </div>
     </div>
 
     ${render3x3Notes(fa,fb,ca.accent,cb.accent)}
-    ${drawScatterSvg(fa,fb,ca.accent,cb.accent)}
     ${renderSuggestionsV2(fa,fb,ca,cb)}
   `;
 
@@ -2932,7 +2928,6 @@ function renderCompareResults(fa,fb){
   // Initialize chart haptics
   setTimeout(() => {
     _setupChartHaptics('.cmp-radar-v2-wrap svg', 'circle');
-    _setupChartHaptics('.cmp-scatter-v2-wrap svg', 'circle');
   }, 100);
 }
 

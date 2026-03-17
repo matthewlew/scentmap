@@ -4,6 +4,23 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-16 (7)
+
+### Changed
+- **Compare CTA buttons** — simplified from `[dot] Name vs [dot] Other` to `vs [dot] Other` so fragrance names no longer overflow the button width
+- **Note pyramid language** — standardised all "Mid" labels to "Heart" across the quick-peek strip and the compare 3-column notes grid
+- **Perfume house link** — `.dc-brand-btn` no longer uses uppercase/letter-spacing treatment; now renders as a normal body-weight link
+- **More Like This rows** — removed left-edge `border-left-color` accent from More Like This shelf, Swap Suggestions, and layer suggestions; dot indicator is sufficient
+- **Compare sticky bar (mobile)** — added `#cmp-sticky-bar { top: 0 }` override in the mobile media query so the bar sits flush at the viewport edge when the top nav is hidden
+- **Pairing overlay** — completely rebuilt to match the Similarity overlay layout: quad-grid with `.cmp-edu-quad` cards, shared `.cmp-edu-intro` / `.cmp-edu-grid` / `.cmp-edu-breakdown` structure, consistent `LABEL + Num` header
+- **Sillage & Depth** — removed standalone scatter plot section; mirrored bar comparison (`cmp-char-metrics`) now lives directly inside the Character radar card below the legend
+- **Edu overlay title typography** — both overlays use the same `cmp-edu-label` + `cmp-edu-num` header pattern; card titles unified to `font-weight: 600` (`cmp-edu-card-title` and `cmp-edu-quad-title`)
+
+### Fixed
+- **Character edu note contributors** — `getNoteContributors` was looking up `.tags` on `NI_MAP` entries (which don't exist); rewrote to use `NOTE_PROFILE[note]` array with a 0.55 threshold so Fresh/Sweet/Warm card rows now correctly list contributing notes
+- **Missing CSS** — added base `.cmp-edu-quad` rule (was only `.cmp-edu-quad.highlight`), `.cmp-edu-breakdown` + child classes, and `.cmp-char-metrics` + child classes for newly introduced HTML structures
+- **Scatter haptics** — removed orphaned `_setupChartHaptics('.cmp-scatter-v2-wrap svg', 'circle')` call after scatter plot was removed
+
 ## 2026-03-16 (6)
 
 ### Changed
