@@ -4,6 +4,17 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-17c
+
+### Fixed
+- **Quiz pages stuck on loading** — removed WebHaptics module script and Supabase SDK from quiz page HTML (both blocked `DOMContentLoaded`, preventing quiz init from firing)
+- **Quiz init robustness** — replaced `DOMContentLoaded`-only listener with `document.readyState` check + 5s safety timeout so init runs even if external scripts block
+- **Quiz data loading fallback** — if `scents-flat.json` fetch fails, quiz now falls back to loading per-brand files via `scents-index.json` (same path as the main app)
+- **Loading overlay** — explicitly hide `#app-loading` via JS in quiz init (belt-and-suspenders with CSS `display:none`)
+- **Fetch error handling** — added `response.ok` checks with descriptive error messages and `console.error` logging
+
+---
+
 ## 2026-03-17b
 
 ### Added
