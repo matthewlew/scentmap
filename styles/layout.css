@@ -205,7 +205,9 @@
   padding: 0;
   transition: color var(--dur-fast) var(--ease-spring);
   min-width: 56px;
+  width: 56px;
   min-height: 44px;
+  flex-shrink: 0;
 }
 
 .sheet-back:hover {
@@ -225,6 +227,10 @@
   padding: 3px 0 3px var(--sp-sm); /* 3px is intentional fine-tuning for optical alignment */
   transition: color var(--dur-fast) var(--ease-spring);
   min-height: 44px;
+  min-width: 56px;
+  width: 56px;
+  flex-shrink: 0;
+  text-align: right;
 }
 
 .sheet-close:hover {
@@ -246,12 +252,8 @@
 
 /* ── GRID SYSTEMS ── */
 
+/* .cat-state-bar → converged to .tabs pattern in components.css */
 .cat-state-bar {
-  display: flex;
-  background: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: 3px; /* 3px is intentional optical fine-tuning for segment pill */
-  gap: 2px;     /* 2px gap between segment options, intentional */
   margin-bottom: var(--sp-lg);
 }
 

@@ -4,6 +4,17 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-19
+
+### Changed
+- **Design system consolidation — playground updated** — `playground.html` rewritten to show post-consolidation canonical patterns only; old audit/storybook tables removed; Migration Summary section added documenting all 8 completed consolidations
+- **Tab bars converged to sliding-pill pattern** — `.tabs` and `.cat-state-bar` now share CSS with `.frag-picker-sort-bar`; new `.tab-pill` element slides behind the active tab; 16 section-label class variants (`.dc-nlbl`, `.dc-slbl`, `.dc-sim-lbl`, etc.) merged to single `.sec-label`
+- **List row simplified** — `border-left: 3px solid transparent` family indicator removed from `.scent-row-content`; all 9 family border-color overrides and `.scent-row.fam-dim` removed; flat variant `border-left: none` override also removed
+- **Search clear button restyled** — `.cat-search-clear` is now a 20×20px circular pill (`border-radius: var(--radius-circle)`) using `--bg-tertiary` background; displayed as flex when `.visible` class is present
+- **Sheet nav title centered** — `.sheet-back` and `.sheet-close` get `width: 56px; flex-shrink: 0` so the sheet title is always centered regardless of asymmetric left/right button content
+- **Text link converged** — `.cmp-card-detail-btn` converged to `.s-name-btn` style (serif, underline, primary color); 1-off pattern removed
+- **Removed unused CSS** — `.role-landing-card` and all `.rlc-*` sub-classes deleted (no references in app)
+
 ## 2026-03-18
 
 ### Added
