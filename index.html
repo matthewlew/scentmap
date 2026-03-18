@@ -28,6 +28,89 @@
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Scentmap",
+  "url": "https://scentmap.co",
+  "description": "Data-driven fragrance comparison and discovery engine covering 180+ designer and niche perfumes.",
+  "sameAs": []
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does Scentmap compare fragrances?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Scentmap uses a multi-factor similarity algorithm. Each comparison scores family compatibility (40%), shared note overlap weighted by tier — base notes count most (30%), sillage proximity (10%), and shared fragrance roles (20%). The result is a 0–100% match score plus a breakdown of shared and unique notes, radar charts, and layering compatibility."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What fragrance brands does Scentmap cover?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Scentmap currently covers 180+ fragrances from 12 brands: Aesop, Byredo, Chanel, Dior, Diptyque, D.S. & Durga, Fueguia 1833, Le Labo, Loewe, Replica (Maison Margiela), Tom Ford, and Xinu. The database is regularly updated with new releases."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do the fragrance quizzes work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each quiz asks 3–5 questions about your style, vibe, season preference, and note preferences. Your answers generate weighted tags that are scored against every fragrance in the database. The algorithm considers family match, note profile compatibility, sillage preferences, and role alignment to recommend your top 3 matches."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are fragrance notes and why do they matter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fragrance notes are the individual scent ingredients in a perfume, organized into three tiers: top notes (first impression, 15–30 minutes), heart/middle notes (the core character, 1–3 hours), and base notes (the lasting foundation, 4+ hours). Understanding notes helps you predict whether you'll like a fragrance and find similar alternatives."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is sillage and how is it measured?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sillage (from the French word for 'wake') describes how far a fragrance projects from the wearer. Scentmap rates sillage on a 0–10 scale: 0–3 is intimate (skin scent), 4–6 is moderate (arm's length), and 7–10 is powerful (room-filling). Sillage is different from longevity — a fragrance can last all day but sit close to the skin."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What fragrance families does Scentmap categorize?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Scentmap organizes fragrances into 9 families: Woody (sandalwood, cedar, vetiver), Floral (rose, jasmine, iris), Amber (labdanum, benzoin, warm resins), Citrus (bergamot, lemon, yuzu), Leather (suede, birch tar, smoky), Oud (agarwood-dominant), Green (galbanum, tea, herbs), Chypre (oakmoss, bergamot, patchouli), and Gourmand (vanilla, caramel, coffee)."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Popular Fragrance Comparisons",
+  "description": "Most searched perfume comparisons on Scentmap",
+  "numberOfItems": 6,
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Bleu de Chanel vs Sauvage", "url": "https://scentmap.co/compare/bleu-de-chanel/sauvage" },
+    { "@type": "ListItem", "position": 2, "name": "Santal 33 vs Another 13", "url": "https://scentmap.co/compare/another-13/santal-33" },
+    { "@type": "ListItem", "position": 3, "name": "Bal d'Afrique vs Gypsy Water", "url": "https://scentmap.co/compare/bal-dafrique/gypsy-water" },
+    { "@type": "ListItem", "position": 4, "name": "Rose 31 vs Rose Prick", "url": "https://scentmap.co/compare/rose-31/tf-rose-prick" },
+    { "@type": "ListItem", "position": 5, "name": "Santal 33 vs Santal Blush", "url": "https://scentmap.co/compare/santal-33/tf-santal-blush" },
+    { "@type": "ListItem", "position": 6, "name": "Gypsy Water vs Santal 33", "url": "https://scentmap.co/compare/gypsy-water/santal-33" }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
@@ -200,6 +283,37 @@
     </div>
   </div>
 
+  <!-- FAQ Section -->
+  <div class="landing-section" style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-3xl);">
+    <h2 class="text-title landing-section-title">Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary class="faq-question">How does Scentmap compare fragrances?</summary>
+        <p class="faq-answer">Scentmap uses a multi-factor similarity algorithm. Each comparison scores family compatibility (40%), shared note overlap weighted by tier — base notes count most (30%), sillage proximity (10%), and shared fragrance roles (20%). The result is a 0–100% match score plus a breakdown of shared and unique notes, radar charts, and layering compatibility.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">What fragrance brands does Scentmap cover?</summary>
+        <p class="faq-answer">Scentmap currently covers 180+ fragrances from 12 brands: Aesop, Byredo, Chanel, Dior, Diptyque, D.S. &amp; Durga, Fueguia 1833, Le Labo, Loewe, Replica (Maison Margiela), Tom Ford, and Xinu. The database is regularly updated with new releases.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">How do the fragrance quizzes work?</summary>
+        <p class="faq-answer">Each quiz asks 3–5 questions about your style, vibe, season preference, and note preferences. Your answers generate weighted tags that are scored against every fragrance in the database. The algorithm considers family match, note profile compatibility, sillage preferences, and role alignment to recommend your top 3 matches.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">What are fragrance notes and why do they matter?</summary>
+        <p class="faq-answer">Fragrance notes are the individual scent ingredients in a perfume, organized into three tiers: top notes (first impression, 15–30 minutes), heart/middle notes (the core character, 1–3 hours), and base notes (the lasting foundation, 4+ hours). Understanding notes helps you predict whether you'll like a fragrance and find similar alternatives.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">What is sillage and how is it measured?</summary>
+        <p class="faq-answer">Sillage (from the French word for "wake") describes how far a fragrance projects from the wearer. Scentmap rates sillage on a 0–10 scale: 0–3 is intimate (skin scent), 4–6 is moderate (arm's length), and 7–10 is powerful (room-filling). Sillage is different from longevity — a fragrance can last all day but sit close to the skin.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question">What fragrance families does Scentmap categorize?</summary>
+        <p class="faq-answer">Scentmap organizes fragrances into 9 families: Woody (sandalwood, cedar, vetiver), Floral (rose, jasmine, iris), Amber (labdanum, benzoin, warm resins), Citrus (bergamot, lemon, yuzu), Leather (suede, birch tar, smoky), Oud (agarwood-dominant), Green (galbanum, tea, herbs), Chypre (oakmoss, bergamot, patchouli), and Gourmand (vanilla, caramel, coffee).</p>
+      </details>
+    </div>
+  </div>
+
   <!-- Popular Comparisons -->
   <div class="landing-section" style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-3xl);">
     <h2 class="text-title landing-section-title">Popular Comparisons</h2>
@@ -293,6 +407,57 @@
       <span class="footer-copy">© 2026 Scentmap — The Mathematical Fragrance Engine. Key materials only.</span>
     </div>
   </div>
+
+  <nav class="sitemap-footer" aria-label="Site map">
+    <div class="sitemap-grid">
+      <div class="sitemap-col">
+        <h3 class="sitemap-heading">Tools</h3>
+        <ul class="sitemap-list">
+          <li><a href="/app">Fragrance Engine</a></li>
+          <li><a href="/app#catalog">Browse All Fragrances</a></li>
+          <li><a href="/app#compare">Compare Fragrances</a></li>
+          <li><a href="/app#notes">Notes Directory</a></li>
+        </ul>
+      </div>
+      <div class="sitemap-col">
+        <h3 class="sitemap-heading">Quizzes</h3>
+        <ul class="sitemap-list">
+          <li><a href="/quiz/find-your-scent">Find Your Scent</a></li>
+          <li><a href="/quiz/best-perfume-for-men-2026">Best Perfume for Men 2026</a></li>
+          <li><a href="/quiz/best-perfume-for-women-2026">Best Perfume for Women 2026</a></li>
+          <li><a href="/quiz/best-perfume-to-gift-2026">Best Perfume to Gift 2026</a></li>
+          <li><a href="/quiz/find-your-byredo">Find Your Byredo</a></li>
+        </ul>
+      </div>
+      <div class="sitemap-col">
+        <h3 class="sitemap-heading">Popular Comparisons</h3>
+        <ul class="sitemap-list">
+          <li><a href="/compare/bleu-de-chanel/sauvage">Bleu de Chanel vs Sauvage</a></li>
+          <li><a href="/compare/santal-33/another-13">Santal 33 vs Another 13</a></li>
+          <li><a href="/compare/bal-dafrique/gypsy-water">Bal d'Afrique vs Gypsy Water</a></li>
+          <li><a href="/compare/rose-31/tf-rose-prick">Rose 31 vs Rose Prick</a></li>
+          <li><a href="/compare/santal-33/tf-santal-blush">Santal 33 vs Santal Blush</a></li>
+          <li><a href="/compare/gypsy-water/santal-33">Gypsy Water vs Santal 33</a></li>
+        </ul>
+      </div>
+      <div class="sitemap-col">
+        <h3 class="sitemap-heading">Brands</h3>
+        <ul class="sitemap-list">
+          <li><a href="/app#catalog/aesop">Aesop</a></li>
+          <li><a href="/app#catalog/byredo">Byredo</a></li>
+          <li><a href="/app#catalog/chanel">Chanel</a></li>
+          <li><a href="/app#catalog/dior">Dior</a></li>
+          <li><a href="/app#catalog/diptyque">Diptyque</a></li>
+          <li><a href="/app#catalog/ds-durga">D.S. & Durga</a></li>
+          <li><a href="/app#catalog/le-labo">Le Labo</a></li>
+          <li><a href="/app#catalog/loewe">Loewe</a></li>
+          <li><a href="/app#catalog/replica">Replica</a></li>
+          <li><a href="/app#catalog/tom-ford">Tom Ford</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="sitemap-copy">&copy; 2026 Scentmap</p>
+  </nav>
 </div>
 
 </body>

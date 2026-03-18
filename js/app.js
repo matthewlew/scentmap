@@ -1545,6 +1545,7 @@ function highlightRows(attrKey,matchVal){
 let CAT_ROLE_FILTER=null;
 let CAT_STATE_FILTER=null;
 let CAT_BRAND_FILTER=null;
+let CAT_FAM_FILTER=null;
 let CAT_FAM_HOVER=null;
 
 function buildCatalog(roleFilter){
@@ -1575,6 +1576,7 @@ function buildCatalog(roleFilter){
   // Apply filters: brand + state + search
   const search=(document.getElementById('cat-search')?.value||'').toLowerCase().trim();
   let visibleCat=roleFilter?CAT.filter(f=>f.roles.includes(roleFilter)):CAT;
+  if(CAT_FAM_FILTER)visibleCat=visibleCat.filter(f=>f.family===CAT_FAM_FILTER);
   if(CAT_BRAND_FILTER)visibleCat=visibleCat.filter(f=>f.brand===CAT_BRAND_FILTER);
   if(CAT_STATE_FILTER==='owned')visibleCat=visibleCat.filter(f=>isOwned(f.id));
   else if(CAT_STATE_FILTER==='wish')visibleCat=visibleCat.filter(f=>isWish(f.id));
@@ -1756,6 +1758,42 @@ function initCatalogControls(){
     });
   }
 
+  // Helper: build family filter pills
+  const familyBar=document.getElementById('cat-family-bar');
+  const familyBarM=document.getElementById('cat-family-bar-m');
+  const allFamBtns=[];
+  function makeFamBtn(label,val,color,container){
+    const btn=document.createElement('button');
+    btn.className='fam-pill'+(CAT_FAM_FILTER===val?' active':'');
+    const dot=val?`<span class="fam-pill-dot" style="background:${color}"></span>`:'';
+    btn.innerHTML=`${dot}${label}`;
+    btn.dataset.fam=val===null?'':val;
+    btn.addEventListener('click',()=>{
+      CAT_FAM_FILTER=val;
+      allFamBtns.forEach(b=>b.classList.toggle('active',b.dataset.fam===(val===null?'':val)));
+      buildCatalog();
+    });
+    allFamBtns.push(btn);
+    container.appendChild(btn);
+    return btn;
+  }
+  if(familyBar){
+    makeFamBtn('All',null,null,familyBar);
+    FAM_ORDER.forEach(fam=>{
+      const f=FAM[fam];if(!f)return;
+      const count=CAT.filter(fr=>fr.family===fam).length;
+      if(count)makeFamBtn(f.label,fam,f.color,familyBar);
+    });
+  }
+  if(familyBarM){
+    makeFamBtn('All',null,null,familyBarM);
+    FAM_ORDER.forEach(fam=>{
+      const f=FAM[fam];if(!f)return;
+      const count=CAT.filter(fr=>fr.family===fam).length;
+      if(count)makeFamBtn(f.label,fam,f.color,familyBarM);
+    });
+  }
+
   // Helper: build brand tabs into a container; allBrandBtns for sync
   const allBrandBtns=[];
   function makeBrandBtn(label,val,html,container){
@@ -1934,7 +1972,12 @@ function updBC(brand,key){
 function updCC(){
   const o=CAT.filter(f=>isOwned(f.id)).length,w=CAT.filter(f=>isWish(f.id)).length;
   const el=document.getElementById('cat-count');
-  if(el)el.textContent=[o&&`${o} owned`,w&&`${w} wished`].filter(Boolean).join(' · ');
+  if(el){
+    const parts=[];
+    if(o)parts.push(`${o} owned`);
+    if(w)parts.push(`${w} wishlist`);
+    el.textContent=parts.length?parts.join(' · '):'';
+  }
 }
 
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
