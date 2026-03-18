@@ -1,59 +1,14 @@
-/* ══ DATA (populated by fetch at startup) ════════════════════════ */
-let ROLES=[], RM={}, CAT=[], CAT_MAP={}, NI=[], NI_MAP={}, BRANDS=[], BRANDS_MAP={};
+import * as store from './store.js';
+import * as engine from './engine.js';
 
+// Proxy data from store for backward compatibility during transition
+let { ROLES, CAT, CAT_MAP, NI, NI_MAP, BRANDS } = store.getData();
+const { FAM, FAM_ORDER, FAM_COMPAT } = store;
 
-/* ── Analytics stubs ── */
+// Analytics stubs
 function trackEvent(name, props) {
   console.log(`[analytics] ${name}`, props);
-  // Future: window.plausible?.(name, { props });
 }
-
-const FAM = {
-  citrus:  {label:'Citrus',  color:'#9A6800', desc:'Bright and fleeting. Pressed from rinds — bergamot, lemon, grapefruit. Often the first thing you smell, and the first to fade. Works in heat; rarely works alone.'},
-  green:   {label:'Green',   color:'#1A6030', desc:'Crisp, alive, and vegetal — cut grass, fig leaf, violet leaf. The smell of growing things rather than flowering ones. Fresh but rooted.'},
-  floral:  {label:'Floral',  color:'#902050', desc:'Derived from flowers — rose, jasmine, tuberose, iris. The broadest family. Ranges from powdery and romantic to bright and dewy. The backbone of most commercial perfumery.'},
-  woody:   {label:'Woody',   color:'#6E3210', desc:'Dry, earthy warmth from woods and roots — cedar, sandalwood, vetiver, patchouli. A broad family spanning cool dry cedar to rich creamy sandalwood.'},
-  amber:   {label:'Amber',   color:'#984000', desc:'Warm, resinous, and slightly sweet. Labdanum, benzoin, vanilla, resins. Rich base materials that linger for hours. The classic "oriental" register.'},
-  chypre:  {label:'Chypre',  color:'#285438', desc:'A structured accord: bergamot up top, labdanum at the base, oakmoss in the heart. Earthy, sophisticated, mossy. Named after Cyprus; backbone of classic perfumery.'},
-  aquatic: {label:'Aquatic', color:'#0A4880', desc:'Marine, watery, ozonic. Invented in the 1990s. The smell of imagined sea air — ozone, salt, and calone — rather than actual ocean. Fresh and weightless.'},
-  leather: {label:'Leather', color:'#42200E', desc:'Reconstructed from birch tar, labdanum, and castoreum. Dry, dark, slightly smoky. Evokes tanned hides, saddles, and worn books. Difficult to wear casually.'},
-  gourmand:{label:'Gourmand',color:'#7C4C00', desc:'Edible-smelling notes — vanilla, caramel, tonka, praline. Emerged in the 1990s. Warm, sweet, and comforting. Fragrance as food memory.'},
-  oud:     {label:'Oud',     color:'#4A1850', desc:'Dark, animalic resin from infected agarwood. Deep, smoky, and complex. The most prized raw material in Arabian perfumery — priced by weight, not volume. Polarising.'},
-};
-
-const ARCHETYPES = {
-  'quiet-expressionist': { name: 'The Quiet Expressionist' },
-  'sensory-hedonist': { name: 'The Sensory Hedonist' },
-  'urban-intellectual': { name: 'The Urban Intellectual' },
-  'sun-chaser': { name: 'The Sun Chaser' },
-  'romantic': { name: 'The Romantic' },
-  'provocateur': { name: 'The Provocateur' },
-  'naturalist': { name: 'The Naturalist' },
-  'minimalist': { name: 'The Minimalist' },
-};
-const FAM_ABBR={citrus:'C',green:'G',floral:'F',woody:'W',amber:'A',chypre:'Ch',aquatic:'Aq',leather:'L',gourmand:'Go',oud:'O'};
-const FAM_ORDER=['floral','amber','citrus','woody','chypre','gourmand','green','oud','leather','aquatic'];
-
-const FEELINGS = {
-  'grounded': { label: 'Grounded & Intellectual', families: ['woody', 'green'], color: '#6E3210', icon: '🌲' },
-  'solar':    { label: 'Solar & Energetic',    families: ['citrus', 'aquatic'], color: '#9A6800', icon: '☀️' },
-  'romantic': { label: 'Romantic & Velvety',   families: ['floral'], color: '#902050', icon: '🌹' },
-  'mysterious':{ label: 'Dark & Mysterious',    families: ['oud', 'leather', 'amber'], color: '#4A1850', icon: '🌙' },
-  'comfort':  { label: 'Sweet & Comforting',   families: ['gourmand'], color: '#7C4C00', icon: '☁️' },
-  'refined':  { label: 'Refined & Polished',   families: ['chypre'], color: '#285438', icon: '🏛️' }
-};
-
-const FAM_COMPAT={
-  woody:   {woody:.7,floral:.8,amber:.9,citrus:.6,leather:.8,oud:.9,green:.6,chypre:.7,gourmand:.5},
-  floral:  {woody:.8,floral:.5,amber:.7,citrus:.7,leather:.5,oud:.6,green:.8,chypre:.8,gourmand:.5},
-  amber:   {woody:.9,floral:.7,amber:.5,citrus:.4,leather:.8,oud:.9,green:.4,chypre:.6,gourmand:.8},
-  citrus:  {woody:.6,floral:.7,amber:.4,citrus:.4,leather:.4,oud:.3,green:.9,chypre:.7,gourmand:.3},
-  leather: {woody:.8,floral:.5,amber:.8,citrus:.4,leather:.4,oud:.9,green:.5,chypre:.7,gourmand:.4},
-  oud:     {woody:.9,floral:.6,amber:.9,citrus:.3,leather:.9,oud:.3,green:.3,chypre:.5,gourmand:.6},
-  green:   {woody:.6,floral:.8,amber:.4,citrus:.9,leather:.5,oud:.3,green:.4,chypre:.9,gourmand:.3},
-  chypre:  {woody:.7,floral:.8,amber:.6,citrus:.7,leather:.7,oud:.5,green:.9,chypre:.4,gourmand:.4},
-  gourmand:{woody:.5,floral:.5,amber:.8,citrus:.3,leather:.4,oud:.6,green:.3,chypre:.4,gourmand:.4},
-};
 
 /* ── Utility: debounce ── */
 function debounce(fn, delay) {
@@ -62,22 +17,18 @@ function debounce(fn, delay) {
 }
 
 /* State */
-let ST;
-try { ST = JSON.parse(localStorage.getItem('scentmap_st') || '{}') || {}; }
-catch(e) { ST = {}; try { localStorage.removeItem('scentmap_st'); } catch(_){} }
-function gst(id){return ST[id]||'none'}
-function setState(id,s){
-  if(s==='none') delete ST[id];
-  else ST[id]=s;
-  localStorage.setItem('scentmap_st', JSON.stringify(ST));
+function gst(id){return store.getState(id)}
+function setState(id,s){ store.setState(id,s); }
+function isOwned(id){return store.isOwned(id)}
+function isWish(id){return store.isWish(id)}
+function cycleState(id){ store.cycleState(id); }
+function isNoteSaved(name){return store.isNoteSaved(name)}
+function toggleNoteSaved(name){ store.toggleNoteSaved(name); }
+function isBrandSaved(id){return store.getState('b_'+id.toLowerCase())==='saved'}
+function toggleBrandSave(id){
+  const key = 'b_'+id.toLowerCase();
+  store.setState(key, store.getState(key)==='saved'?'none':'saved');
 }
-function isOwned(id){return gst(id)==='owned'}
-function isWish(id){return gst(id)==='wish'}
-function cycleState(id){const c=gst(id);setState(id,c==='none'?'wish':c==='wish'?'owned':'none')}
-function isNoteSaved(name){return gst('n_' + name.toLowerCase())==='saved'}
-function toggleNoteSaved(name){setState('n_' + name.toLowerCase(), isNoteSaved(name)?'none':'saved')}
-function isBrandSaved(id){return gst('b_'+id.toLowerCase())==='saved'}
-function toggleBrandSave(id){setState('b_'+id.toLowerCase(),isBrandSaved(id)?'none':'saved')}
 
 /* ── Auth (Supabase) ─────────────────────────────────────────────── */
 // Fill these in after creating your Supabase project:
@@ -332,379 +283,56 @@ function renderCollectionSection(container, label, items, type) {
   container.appendChild(section);
 }
 
-/* Olfactive DNA calculation helpers */
-function getCollectionStats(frags) {
-  if (!frags.length) return null;
-  const famCounts = {};
-  const noteCounts = {};
-  const profiles = [];
-
-  frags.forEach(f => {
-    famCounts[f.family] = (famCounts[f.family] || 0) + 1;
-    f._nAll.forEach(n => { noteCounts[n] = (noteCounts[n] || 0) + 1; });
-    profiles.push(computeProfile(f));
-  });
-
-  const avgProfile = {
-    freshness: profiles.reduce((s, p) => s + p.freshness, 0) / frags.length,
-    sweetness: profiles.reduce((s, p) => s + p.sweetness, 0) / frags.length,
-    warmth: profiles.reduce((s, p) => s + p.warmth, 0) / frags.length,
-    intensity: profiles.reduce((s, p) => s + p.intensity, 0) / frags.length,
-    complexity: profiles.reduce((s, p) => s + p.complexity, 0) / frags.length,
-  };
-
-  const topFamilies = Object.entries(famCounts).sort((a,b) => b[1] - a[1]);
-  const topNotes = Object.entries(noteCounts).sort((a,b) => b[1] - a[1]).slice(0, 10);
-
-  return { avgProfile, topFamilies, topNotes, count: frags.length };
-}
-
 window.renderSaved = function() {
   const container = document.getElementById('saved-list');
   if (!container) return;
   container.innerHTML = '';
 
+  // Copy button + aria-live toast
+  const copyRow = document.createElement('div');
+  copyRow.style.display = 'flex';
+  copyRow.style.alignItems = 'center';
+  copyRow.style.marginBottom = 'var(--sp-xl)';
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-collection-btn';
+  copyBtn.textContent = 'Copy Collection';
+  const toastEl = document.createElement('span');
+  toastEl.className = 'copy-toast';
+  toastEl.setAttribute('aria-live', 'polite');
+  copyBtn.addEventListener('click', () => copyCollectionToClipboard(toastEl));
+  copyRow.appendChild(copyBtn);
+  copyRow.appendChild(toastEl);
+  container.appendChild(copyRow);
+
   const owned  = CAT.filter(f => isOwned(f.id));
   const wished = CAT.filter(f => isWish(f.id));
   const notes  = NI.filter(n => isNoteSaved(n.name));
   const brands = BRANDS.filter(b => isBrandSaved(b.id));
-  const historyFrags = HISTORY.map(id => CAT_MAP[id]).filter(Boolean);
 
-  if (!owned.length && !wished.length && !notes.length && !brands.length && !historyFrags.length && !QUIZ_HISTORY.length) {
-    container.innerHTML = `
-      <div style="padding:var(--sp-2xl); text-align:center; color:var(--text-secondary);">
-        <div style="font-size:32px; margin-bottom:var(--sp-md);">✨</div>
-        <div class="text-title" style="margin-bottom:var(--sp-xs);">Your collection is empty</div>
-        <p class="text-body" style="font-family:var(--font-serif); opacity:0.8;">Explore the catalog and take quizzes to build your olfactive profile.</p>
-        <button class="dc-collect-btn active" style="margin-top:var(--sp-xl); width:auto; justify-content:center;" onclick="go('catalog', null)">Browse Fragrances</button>
-      </div>`;
+  if (!owned.length && !wished.length && !notes.length && !brands.length) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'padding:var(--sp-lg);color:var(--g500);font-family:var(--font-serif);';
+    empty.textContent = 'Nothing saved yet. Swipe a fragrance to wishlist it, or open a note or brand to save it.';
+    container.appendChild(empty);
     return;
   }
 
-  // ── 1. OLFACTIVE DNA (Using canonical Detail Panel stat bars) ──
-  if (owned.length > 0) {
-    const stats = getCollectionStats(owned);
-    const dnaSec = document.createElement('div');
-    dnaSec.className = 'collection-dna-card'; // We'll keep the name but use DS styles
-    dnaSec.style.cssText = 'background:var(--bg-secondary); border-radius:var(--radius-xl); padding:var(--sp-xl); margin-bottom:var(--sp-3xl); border:1px solid var(--border-subtle);';
-    
-    const profile = stats.avgProfile;
-    const bars = [
-      { l: 'Fresh', v: profile.freshness, c: 'var(--fam-citrus)' },
-      { l: 'Sweet', v: profile.sweetness, c: 'var(--fam-floral)' },
-      { l: 'Warm',  v: profile.warmth,    c: 'var(--fam-amber)' },
-      { l: 'Bold',  v: profile.intensity, c: 'var(--fam-oud)' }
-    ];
-
-    dnaSec.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-md);">
-        <div class="sec-label" style="margin-bottom:0;">Your Olfactive DNA</div>
-        <button class="dc-collect-btn" style="padding:4px 10px; font-size:10px; height:auto;" onclick="exportAuraCard()">
-          Export for Social
-        </button>
-      </div>
-      <div style="margin-bottom:var(--sp-xl);">
-        <div style="font-family:var(--font-display); font-size:var(--fs-title); line-height:1; margin-bottom:var(--sp-xs);">${owned.length}</div>
-        <div style="font-family:var(--font-sans); font-size:var(--fs-caption); color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.05em;">Fragrances Owned</div>
-      </div>
-      
-      <div class="dc-stats" style="margin-bottom:var(--sp-xl); display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-md) var(--sp-2xl);">
-        ${bars.map(b => `
-          <div class="dc-stat">
-            <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-xs); opacity:0.8;">${b.l}</div>
-            <div class="dc-bar"><div class="dc-fill" style="width:${Math.round(b.v*100)}%; background:${b.c}; height:3px;"></div></div>
-          </div>
-        `).join('')}
-      </div>
-
-      <div style="background:var(--bg-primary); border-radius:var(--radius-lg); padding:var(--sp-md); border:1px solid var(--border-subtle);">
-        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Dominant Families</div>
-        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--sp-md);">
-          ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `
-            <div class="chip" style="background:${FAM[fam]?.color||'#888'}; font-size:11px; padding:2px 8px;">${FAM[fam]?.label||fam}</div>
-          `).join('')}
-        </div>
-        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Core Notes</div>
-        <div style="font-family:var(--font-serif); font-size:var(--fs-meta); color:var(--text-secondary); line-height:1.4;">
-          ${stats.topNotes.slice(0, 5).map(n => n[0]).join(', ')}
-        </div>
-      </div>
-    `;
-    container.appendChild(dnaSec);
-  }
-
-  // ── 2. COLLECTIONS (Owned & Wishlist) ──
-  if (owned.length > 0) renderCollectionSection(container, 'Owned', owned, 'frags');
-  if (wished.length > 0) renderCollectionSection(container, 'Wishlist', wished, 'frags');
-
-  // ── 3. QUIZ HISTORY (Using canonical scent-row patterns where possible) ──
-  if (QUIZ_HISTORY.length > 0) {
-    const qSec = document.createElement('div');
-    qSec.style.marginBottom = 'var(--sp-3xl)';
-    qSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Quiz Results</div>`;
-    const qWrap = document.createElement('div');
-    qWrap.style.cssText = 'display:flex; flex-direction:column; gap:var(--sp-sm);';
-    
-    QUIZ_HISTORY.forEach(q => {
-      const row = document.createElement('div');
-      row.style.cssText = 'background:var(--bg-primary); border:1px solid var(--border-standard); border-radius:var(--radius-lg); padding:var(--sp-md); cursor:pointer;';
-      const date = new Date(q.date).toLocaleDateString(undefined, { month:'short', day:'numeric' });
-      
-      let badge = '';
-      if (q.archetype) {
-        badge = `<span style="font-size:11px; color:var(--accent-primary); font-weight:700; text-transform:uppercase; letter-spacing:0.02em;">${q.archetype.name || q.archetype}</span>`;
-      }
-
-      row.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
-          <div style="font-family:var(--font-sans); font-size:var(--fs-meta); font-weight:600; color:var(--text-primary);">${q.title}</div>
-          <div style="font-size:11px; color:var(--text-tertiary);">${date}</div>
-        </div>
-        <div style="display:flex; align-items:center; gap:var(--sp-sm);">
-          ${badge}
-          <div style="font-family:var(--font-serif); font-size:12px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1;">
-            Result: ${q.results.map(f => f.name).join(', ')}
-          </div>
-        </div>
-      `;
-      row.addEventListener('click', () => {
-        const best = q.results[0];
-        if (best) {
-          const archId = q.archetype?.id || (typeof q.archetype === 'string' ? q.archetype.toLowerCase().replace(/\s+/g,'-') : '');
-          const hash = archId ? `#frag=${best.id}&source=quiz&archetype=${archId}` : `#frag=${best.id}`;
-          window.location.hash = hash;
-        }
-      });
-      qWrap.appendChild(row);
-    });
-    qSec.appendChild(qWrap);
-    container.appendChild(qSec);
-  }
-
-  // ── 4. RECENTLY VIEWED (Using canonical Carousel components) ──
-  if (historyFrags.length > 0) {
-    const hSec = document.createElement('div');
-    hSec.style.marginBottom = 'var(--sp-3xl)';
-    hSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Recently Viewed</div>`;
-    
-    const hWrap = document.createElement('div');
-    hWrap.className = 'carousel';
-    
-    historyFrags.forEach(f => {
-      const fm = FAM[f.family] || {color: '#888'};
-      const card = document.createElement('div');
-      card.className = 'carousel-card';
-      card.innerHTML = `<div class="carousel-card-name">${f.name}</div>
-        <div class="carousel-card-brand">${f.brand}</div>
-        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
-      card.addEventListener('click', e => { e.stopPropagation(); openFragDetail(f); });
-      hWrap.appendChild(card);
-    });
-    
-    const carouselWrap = document.createElement('div');
-    carouselWrap.className = 'carousel-wrap';
-    carouselWrap.appendChild(hWrap);
-    hSec.appendChild(carouselWrap);
-    container.appendChild(hSec);
-  }
-
-  // ── 5. SAVED NOTES & BRANDS ──
-  if (notes.length > 0) renderCollectionSection(container, 'Saved Notes', notes, 'notes');
-  if (brands.length > 0) renderCollectionSection(container, 'Saved Brands', brands, 'brands');
-
-  // Footer Actions
-  const footer = document.createElement('div');
-  footer.style.cssText = 'border-top:1px solid var(--border-subtle); padding-top:var(--sp-xl); margin-top:var(--sp-xl); display:flex; align-items:center; justify-content:space-between;';
-  
-  const copyBtn = document.createElement('button');
-  copyBtn.className = 'copy-collection-btn';
-  copyBtn.textContent = 'Copy Collection Link';
-  const toastEl = document.createElement('span');
-  toastEl.className = 'copy-toast';
-  copyBtn.addEventListener('click', () => copyCollectionToClipboard(toastEl));
-  
-  footer.appendChild(copyBtn);
-  footer.appendChild(toastEl);
-  container.appendChild(footer);
-};
-
-window.renderJournal = function() {
-  const container = document.getElementById('journal-content');
-  if (!container) return;
-  container.innerHTML = '';
-
-  // Quick Track Search
-  const searchWrap = document.createElement('div');
-  searchWrap.style.marginBottom = 'var(--sp-2xl)';
-  searchWrap.innerHTML = `
-    <div class="sec-label" style="margin-bottom:var(--sp-sm);">Quick Track</div>
-    <div class="cat-search-wrap" style="background:var(--bg-secondary); border-radius:var(--radius); margin-bottom:var(--sp-xs);">
-      <input type="text" id="journal-search" class="cat-search-input" placeholder="Search a fragrance to track..." style="background:transparent;">
-    </div>
-    <div id="journal-search-results" style="margin-top:var(--sp-xs); max-height:200px; overflow-y:auto; background:var(--bg-primary); border:1px solid var(--border-standard); border-radius:var(--radius); display:none; z-index:10; position:relative;"></div>
-  `;
-  container.appendChild(searchWrap);
-
-  const jSearch = container.querySelector('#journal-search');
-  const jResults = container.querySelector('#journal-search-results');
-
-  jSearch.addEventListener('input', e => {
-    const q = e.target.value.toLowerCase();
-    if (q.length < 2) { jResults.style.display = 'none'; return; }
-    const matches = CAT.filter(f => f.name.toLowerCase().includes(q) || f.brand.toLowerCase().includes(q)).slice(0, 5);
-    if (matches.length > 0) {
-      jResults.innerHTML = matches.map(f => `
-        <button class="settings-menu-item journal-search-item" data-id="${f.id}" style="border-radius:0; border-bottom:1px solid var(--border-subtle); width:100%; text-align:left;">
-          <div style="font-weight:600;">${f.name}</div>
-          <div style="font-size:11px; opacity:0.7;">${f.brand}</div>
-        </button>
-      `).join('');
-      jResults.style.display = 'block';
-      jResults.querySelectorAll('.journal-search-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-          jSearch.value = '';
-          jResults.style.display = 'none';
-          openTrialSheet(btn.dataset.id);
-        });
-      });
-    } else {
-      jResults.style.display = 'none';
-    }
-  });
-
-  // ── ACTIVE MAP ──
-  const activeTrials = TRIALS.filter(t => t.status === 'active');
-  if (activeTrials.length > 0) {
-    const trialSec = document.createElement('div');
-    trialSec.style.marginBottom = 'var(--sp-3xl)';
-    trialSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Active Map</div>`;
-    const trialWrap = document.createElement('div');
-    trialWrap.style.display = 'flex';
-    trialWrap.style.flexDirection = 'column';
-    trialWrap.style.gap = 'var(--sp-sm)';
-
-    activeTrials.forEach(t => {
-      const frag = CAT_MAP[t.id];
-      const now = Date.now();
-      const m15Diff = Math.max(0, t.checkpoints.m15.due - now);
-      const h1Diff = Math.max(0, t.checkpoints.h1.due - now);
-
-      const row = document.createElement('div');
-      row.style.cssText = 'background:var(--bg-secondary); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:var(--sp-md);';
-      
-      const formatTime = ms => {
-        const min = Math.floor(ms / 60000);
-        return min > 0 ? `${min}m` : 'Now';
-      };
-
-      const renderCheckpoint = (label, diff, checkpoint) => {
-        const isDue = diff <= 0;
-        const isDone = t.checkpoints[checkpoint].rating !== null;
-        if (isDone) return `<div style="font-size:11px; color:var(--g500);"><span style="color:var(--fam-green)">✓</span> ${label}</div>`;
-        return `
-          <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
-            <div style="display:flex; justify-content:space-between; align-items:baseline;">
-              <span style="font-size:11px; font-weight:700; color:${isDue ? 'var(--accent-primary)' : 'var(--text-tertiary)'}">${label}</span>
-              <span style="font-size:10px; font-family:var(--font-sans); color:var(--text-tertiary);">${isDue ? 'READY' : formatTime(diff)}</span>
-            </div>
-            ${isDue ? `<button class="dc-collect-btn active" style="padding:4px; font-size:11px; justify-content:center; margin-top:2px;" onclick="openTrialUpdateSheet('${t.id}', ${t.timestamp}, '${checkpoint}')">Rate now</button>` : ''}
-          </div>`;
-      };
-
-      row.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-sm);">
-          <div>
-            <div style="font-family:var(--font-sans); font-size:var(--fs-meta); font-weight:600;">${frag.name}</div>
-            <div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${t.location}</div>
-          </div>
-          <button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp}); renderJournal();">✕</button>
-        </div>
-        <div style="display:flex; gap:var(--sp-md); padding-top:var(--sp-sm); border-top:1px solid var(--border-subtle);">
-          ${renderCheckpoint('15m Check', m15Diff, 'm15')}
-          ${renderCheckpoint('1h Check', h1Diff, 'h1')}
-        </div>
-      `;
-      trialWrap.appendChild(row);
-    });
-    trialSec.appendChild(trialWrap);
-    container.appendChild(trialSec);
-  } else {
-    const empty = document.createElement('div');
-    empty.style.cssText = 'padding:var(--sp-xl); background:var(--bg-secondary); border-radius:var(--radius-lg); text-align:center; color:var(--text-tertiary); font-family:var(--font-serif); margin-bottom:var(--sp-2xl);';
-    empty.innerHTML = `No active trials. Search a scent above or browse the catalog to start tracking.`;
-    container.appendChild(empty);
-  }
-
-  // ── TRIAL HISTORY ──
-  const completedTrials = TRIALS.filter(t => t.status === 'completed');
-  if (completedTrials.length > 0) {
-    const journalSec = document.createElement('div');
-    journalSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Trial History</div>`;
-    const journalWrap = document.createElement('div');
-    journalWrap.style.cssText = 'display:flex; flex-direction:column; gap:var(--sp-md);';
-    
-    completedTrials.forEach(t => {
-      const frag = CAT_MAP[t.id];
-      const row = document.createElement('div');
-      row.style.cssText = 'background:var(--bg-primary); border:1px solid var(--border-standard); border-radius:var(--radius-lg); padding:var(--sp-md); cursor:pointer;';
-      const date = new Date(t.timestamp).toLocaleDateString(undefined, { month:'short', day:'numeric' });
-      const stars = v => '★'.repeat(v) + '☆'.repeat(5-v);
-
-      row.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-          <div style="font-family:var(--font-sans); font-size:var(--fs-meta); font-weight:600;">${frag.name}</div>
-          <div style="font-size:11px; color:var(--text-tertiary);">${date}</div>
-        </div>
-        <div style="display:flex; align-items:center; gap:var(--sp-sm); margin-bottom:var(--sp-xs);">
-          <div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase; letter-spacing:0.04em; background:var(--bg-secondary); padding:2px 6px; border-radius:3px;">${t.location}</div>
-          <div style="font-size:12px; color:var(--amber-600); letter-spacing:1px;">${stars(t.checkpoints.h1.rating || t.checkpoints.m15.rating || 0)}</div>
-        </div>
-        <div style="font-family:var(--font-serif); font-size:12px; color:var(--text-secondary); line-height:1.4;">
-          Evolution: ${t.checkpoints.initial.rating}/5 → ${t.checkpoints.m15.rating}/5 → ${t.checkpoints.h1.rating}/5
-        </div>
-      `;
-      row.addEventListener('click', () => openFragDetail(frag));
-      journalWrap.appendChild(row);
-    });
-    journalSec.appendChild(journalWrap);
-    container.appendChild(journalSec);
-  }
+  renderCollectionSection(container, 'Owned', owned, 'frags');
+  renderCollectionSection(container, 'Wishlist', wished, 'frags');
+  renderCollectionSection(container, 'Saved Notes', notes, 'notes');
+  renderCollectionSection(container, 'Saved Brands', brands, 'brands');
 };
 
 /* Similarity scoring: 0–100 across family, notes, sillage, roles */
 const _simCache={};
 function scoreSimilarity(a,b){
-  if(a.id===b.id)return 0;
-  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
-  if(_simCache[k]!==undefined)return _simCache[k];
-  const famScore=(FAM_COMPAT[a.family]?.[b.family]??0.5)*40;
-  const shBase=a._nBase.filter(n=>b._nBase.includes(n)).length;
-  const shMid=a._nMid.filter(n=>b._nMid.includes(n)).length;
-  const shTop=a._nTop.filter(n=>b._nTop.includes(n)).length;
-  const noteScore=Math.min(30,shBase*5+shMid*3+shTop*2);
-  const sillDiff=Math.abs(a.sillage-b.sillage);
-  const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
-  const shRoles=a.roles.filter(r=>b.roles.includes(r)).length;
-  const roleScore=Math.min(20,shRoles*7);
-  const result=Math.round(famScore+noteScore+sillScore+roleScore);
-  _simCache[k]=result;
-  return result;
+  return engine.scoreSimilarity(a, b, store.FAM_COMPAT);
 }
 
 /* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
 const _layCache={};
 function scoreLayeringPair(a,b){
-  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
-  if(_layCache[k]!==undefined)return _layCache[k];
-  const famComp=FAM_COMPAT[a.family]?.[b.family]??0.5;
-  const famScore=famComp*35;
-  const sillDiff=Math.abs(a.sillage-b.sillage);
-  const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
-  const shared=a._nAll.filter(n=>b._nAll.includes(n)).length;
-  const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
-  const result=Math.round(famScore+sillScore+noteScore);
-  _layCache[k]=result;
-  return result;
+  return engine.scoreLayeringPair(a, b, store.FAM_COMPAT);
 }
 
 /* Classify how a candidate relates to a source frag for discover shelf */
@@ -721,303 +349,6 @@ let RA={};
 try { RA=JSON.parse(localStorage.getItem('scentmap_ra')||'{}') || {}; }
 catch(e){ RA={}; try{localStorage.removeItem('scentmap_ra')}catch(_){} }
 function _saveRA(){try{localStorage.setItem('scentmap_ra',JSON.stringify(RA));}catch(_){}}
-
-/* History tracking */
-let HISTORY = [];
-try { HISTORY = JSON.parse(localStorage.getItem('scentmap_history') || '[]'); }
-catch(e) { HISTORY = []; }
-function _saveHistory() { try { localStorage.setItem('scentmap_history', JSON.stringify(HISTORY.slice(0, 20))); } catch(e) {} }
-function addToHistory(fragId) {
-  HISTORY = [fragId, ...HISTORY.filter(id => id !== fragId)].slice(0, 20);
-  _saveHistory();
-}
-
-/* Quiz History */
-let QUIZ_HISTORY = [];
-try { QUIZ_HISTORY = JSON.parse(localStorage.getItem('scentmap_quiz_history') || '[]'); }
-catch(e) { QUIZ_HISTORY = []; }
-window._saveQuizResult = function(slug, title, archetype, results) {
-  const entry = { slug, title, archetype, results, date: new Date().toISOString() };
-  // Keep only most recent result for each slug to avoid clutter, or all? Let's keep last 10 total.
-  QUIZ_HISTORY = [entry, ...QUIZ_HISTORY].slice(0, 10);
-  try { localStorage.setItem('scentmap_quiz_history', JSON.stringify(QUIZ_HISTORY)); } catch(e) {}
-};
-
-/* Trial Journal Tracking */
-let TRIALS = [];
-try { TRIALS = JSON.parse(localStorage.getItem('scentmap_trials') || '[]'); }
-catch(e) { TRIALS = []; }
-function _saveTrials() { try { localStorage.setItem('scentmap_trials', JSON.stringify(TRIALS)); } catch(e) {} }
-
-function startTrial(fragId, location) {
-  const trial = {
-    id: fragId,
-    location,
-    timestamp: Date.now(),
-    checkpoints: {
-      initial: { rating: null, notes: '' },
-      m15: { rating: null, notes: '', due: Date.now() + 15 * 60000, prompted: false },
-      h1: { rating: null, notes: '', due: Date.now() + 60 * 60000, prompted: false }
-    },
-    status: 'active'
-  };
-  TRIALS = [trial, ...TRIALS];
-  _saveTrials();
-  if (window.renderSaved) window.renderSaved();
-}
-
-function updateTrial(fragId, timestamp, checkpoint, data) {
-  const trial = TRIALS.find(t => t.id === fragId && t.timestamp === timestamp);
-  if (trial) {
-    trial.checkpoints[checkpoint] = { ...trial.checkpoints[checkpoint], ...data };
-    if (checkpoint === 'h1' && data.rating !== null) trial.status = 'completed';
-    _saveTrials();
-    if (window.renderSaved) window.renderSaved();
-  }
-}
-
-function deleteTrial(fragId, timestamp) {
-  TRIALS = TRIALS.filter(t => !(t.id === fragId && t.timestamp === timestamp));
-  _saveTrials();
-  if (window.renderSaved) window.renderSaved();
-}
-
-function openTrialSheet(fragId) {
-  const frag = CAT_MAP[fragId];
-  if (!frag) return;
-
-  pushSheet(container => {
-    container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div class="sec-label" style="margin-bottom:var(--sp-md);">New Scent Trial</div>
-        <div class="dc-name" style="font-size:var(--fs-title); margin-bottom:var(--sp-xs);">${frag.name}</div>
-        <div class="dc-brand" style="margin-bottom:var(--sp-xl);">${frag.brand}</div>
-        
-        <div class="sec-label" style="margin-bottom:var(--sp-md);">Where did you apply it?</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
-          ${['Left Wrist', 'Right Wrist', 'Left Elbow', 'Right Elbow', 'Neck', 'Chest', 'Paper Strip'].map(loc => `
-            <button class="dc-collect-btn trial-loc-btn" data-loc="${loc}" style="justify-content:center;">${loc}</button>
-          `).join('')}
-        </div>
-
-        <div class="sec-label" style="margin-bottom:var(--sp-md);">Initial Impression</div>
-        <div style="display:flex; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
-          ${[1, 2, 3, 4, 5].map(v => `
-            <button class="dc-collect-btn trial-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
-          `).join('')}
-        </div>
-
-        <button class="dc-collect-btn active" id="save-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md); font-size:var(--fs-ui);">Start Tracking</button>
-      </div>
-    `;
-
-    let selectedLoc = null;
-    let selectedRate = null;
-
-    const updateBtn = () => {
-      container.querySelector('#save-trial-btn').disabled = !(selectedLoc && selectedRate);
-    };
-
-    container.querySelectorAll('.trial-loc-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        container.querySelectorAll('.trial-loc-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedLoc = btn.dataset.loc;
-        updateBtn();
-      });
-    });
-
-    container.querySelectorAll('.trial-rate-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        container.querySelectorAll('.trial-rate-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedRate = parseInt(btn.dataset.val);
-        updateBtn();
-      });
-    });
-
-    container.querySelector('#save-trial-btn').addEventListener('click', () => {
-      startTrial(fragId, selectedLoc);
-      updateTrial(fragId, TRIALS[0].timestamp, 'initial', { rating: selectedRate });
-      popSheet();
-      window.haptic?.('success');
-    });
-  });
-}
-
-function openTrialUpdateSheet(fragId, timestamp, checkpoint) {
-  const frag = CAT_MAP[fragId];
-  if (!frag) return;
-
-  pushSheet(container => {
-    const label = checkpoint === 'm15' ? '15m Follow-up' : '1h Evolution Check';
-    container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div class="sec-label" style="margin-bottom:var(--sp-md);">${label}</div>
-        <div class="dc-name" style="font-size:var(--fs-title); margin-bottom:var(--sp-xs);">${frag.name}</div>
-        <div class="dc-brand" style="margin-bottom:var(--sp-xl);">${frag.brand}</div>
-        
-        <p class="text-body" style="font-family:var(--font-serif); margin-bottom:var(--sp-xl); color:var(--text-secondary);">How has the scent developed? Give it another sniff and rate it again.</p>
-
-        <div class="sec-label" style="margin-bottom:var(--sp-md);">New Rating</div>
-        <div style="display:flex; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
-          ${[1, 2, 3, 4, 5].map(v => `
-            <button class="dc-collect-btn update-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
-          `).join('')}
-        </div>
-
-        <button class="dc-collect-btn active" id="update-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md); font-size:var(--fs-ui);">Submit Review</button>
-      </div>
-    `;
-
-    let selectedRate = null;
-    container.querySelectorAll('.update-rate-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        container.querySelectorAll('.update-rate-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedRate = parseInt(btn.dataset.val);
-        container.querySelector('#update-trial-btn').disabled = false;
-      });
-    });
-
-    container.querySelector('#update-trial-btn').addEventListener('click', () => {
-      updateTrial(fragId, timestamp, checkpoint, { rating: selectedRate });
-      popSheet();
-      window.haptic?.('success');
-    });
-  });
-}
-
-window.exportAuraCard = function() {
-  const owned = CAT.filter(f => isOwned(f.id));
-  if (!owned.length) return;
-  const stats = getCollectionStats(owned);
-  const profile = stats.avgProfile;
-
-  // 1. Create Canvas (Story Aspect Ratio 9:16)
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = 1080;
-  canvas.height = 1920;
-
-  // 2. Background Gradient (Luxury Paper / Ink feel)
-  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  grad.addColorStop(0, '#FDFCFB');
-  grad.addColorStop(1, '#E2D1C3');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // 3. Branded Header
-  ctx.fillStyle = '#0E0C09';
-  ctx.font = '700 48px Inter, system-ui, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('SCENTMAP', canvas.width / 2, 160);
-  ctx.font = '400 32px Georgia, serif';
-  ctx.fillText('Your Olfactive Identity', canvas.width / 2, 210);
-
-  // 4. Center Circle / Radar Anchor
-  const cx = canvas.width / 2;
-  const cy = 850;
-  const r = 350;
-
-  // Draw Aura Glow
-  const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 1.5);
-  const primaryFam = stats.topFamilies[0][0];
-  const primaryColor = FAM[primaryFam]?.color || '#8B4513';
-  glow.addColorStop(0, primaryColor + '22');
-  glow.addColorStop(1, 'transparent');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r * 1.5, 0, Math.PI * 2);
-  ctx.fill();
-
-  // 5. Draw Radar Chart
-  const dims = [
-    { l: 'FRESH', v: profile.freshness },
-    { l: 'SWEET', v: profile.sweetness },
-    { l: 'WARM', v: profile.warmth },
-    { l: 'BOLD', v: profile.intensity },
-    { l: 'DEEP', v: profile.complexity }
-  ];
-  const n = dims.length;
-
-  // Rings
-  ctx.strokeStyle = '#0E0C0911';
-  ctx.lineWidth = 2;
-  [0.25, 0.5, 0.75, 1.0].forEach(rv => {
-    ctx.beginPath();
-    for (let i = 0; i <= n; i++) {
-      const a = (Math.PI * 2 * i / n) - Math.PI / 2;
-      const x = cx + r * rv * Math.cos(a);
-      const y = cy + r * rv * Math.sin(a);
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  });
-
-  // Data Shape
-  ctx.beginPath();
-  ctx.fillStyle = primaryColor + '44';
-  ctx.strokeStyle = primaryColor;
-  ctx.lineWidth = 8;
-  for (let i = 0; i <= n; i++) {
-    const d = dims[i % n];
-    const a = (Math.PI * 2 * i / n) - Math.PI / 2;
-    const val = Math.max(0.1, d.v);
-    const x = cx + r * val * Math.cos(a);
-    const y = cy + r * val * Math.sin(a);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
-  ctx.fill();
-  ctx.stroke();
-
-  // Labels
-  ctx.fillStyle = '#0E0C09';
-  ctx.font = '700 28px Inter, sans-serif';
-  dims.forEach((d, i) => {
-    const a = (Math.PI * 2 * i / n) - Math.PI / 2;
-    const x = cx + (r + 60) * Math.cos(a);
-    const y = cy + (r + 60) * Math.sin(a);
-    ctx.textAlign = x < cx - 10 ? 'right' : x > cx + 10 ? 'left' : 'center';
-    ctx.fillText(d.l, x, y);
-  });
-
-  // 6. Statistics Section
-  ctx.textAlign = 'left';
-  ctx.fillStyle = '#0E0C09';
-  ctx.font = '700 36px Inter, sans-serif';
-  ctx.fillText('TOP FAMILIES', 120, 1350);
-  
-  ctx.font = '400 32px Inter, sans-serif';
-  stats.topFamilies.slice(0, 3).forEach(([fam, count], i) => {
-    const label = FAM[fam]?.label || fam;
-    ctx.fillText(`${i + 1}. ${label}`, 120, 1410 + (i * 50));
-  });
-
-  ctx.font = '700 36px Inter, sans-serif';
-  ctx.fillText('SIGNATURE NOTES', 580, 1350);
-  ctx.font = '400 32px Inter, sans-serif';
-  stats.topNotes.slice(0, 5).forEach((n, i) => {
-    ctx.fillText(`• ${n[0]}`, 580, 1410 + (i * 50));
-  });
-
-  // 7. Footer / Collection Size
-  ctx.textAlign = 'center';
-  ctx.font = '700 120px Inter, sans-serif';
-  ctx.fillText(owned.length.toString(), canvas.width / 2, 1720);
-  ctx.font = '400 28px Inter, sans-serif';
-  ctx.fillStyle = '#6B6356';
-  ctx.fillText('FRAGRANCES IN WARDROBE', canvas.width / 2, 1770);
-
-  // 8. Download
-  const link = document.createElement('a');
-  link.download = `scentmap-aura-${Date.now()}.png`;
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-  
-  window.haptic?.('success');
-};
-
 function getAssigned(roleId){return RA[roleId]||[]}
 function getPrimary(roleId){return getAssigned(roleId)[0]||null}
 function assignFrag(roleId,fragId){
@@ -1305,102 +636,6 @@ function renderDupeLab(container, anchor) {
   `;
 }
 
-function renderMoodRefinement(container, frag) {
-  const refinementSec = document.createElement('div');
-  refinementSec.className = 'dc-mood-refinement'; // Use existing class for section wrapper
-  refinementSec.style.marginTop = 'var(--sp-xl)';
-  refinementSec.style.paddingTop = 'var(--sp-lg)';
-  refinementSec.style.borderTop = '1px solid var(--border-subtle)';
-  
-  refinementSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md)">Fine-tune the mood</div>`;
-
-  const vectors = [
-    { id: 'intensity', label: 'Intensity', options: [{id:'chill', label:'More Chill'}, {id:'neutral', label:'Neutral'}, {id:'exciting', label:'More Exciting'}] },
-    { id: 'accessibility', label: 'Character', options: [{id:'pleaser', label:'Crowd Pleaser'}, {id:'neutral', label:'Neutral'}, {id:'niche', label:'Zeroing In'}] }
-  ];
-
-  vectors.forEach(v => {
-    const row = document.createElement('div');
-    row.style.marginBottom = 'var(--sp-lg)';
-    row.innerHTML = `
-      <div class="dc-mood-labels" style="display:flex; justify-content:space-between; margin-bottom:var(--sp-xs); font-family:var(--font-sans); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-tertiary);">
-        <span>${v.label}</span>
-      </div>
-      <div class="cat-state-bar" id="bar-${v.id}" style="margin-bottom:var(--sp-sm)">
-        <div class="tab-pill" id="pill-${v.id}"></div>
-        ${v.options.map(opt => `<button class="tab ${opt.id==='neutral'?'active':''}" data-opt="${opt.id}">${opt.label}</button>`).join('')}
-      </div>
-      <div id="suggestion-${v.id}"></div>
-    `;
-    refinementSec.appendChild(row);
-
-    // Pill animation logic
-    const bar = row.querySelector('.cat-state-bar');
-    const pill = row.querySelector('.tab-pill');
-    const tabs = row.querySelectorAll('.tab');
-    
-    const updatePill = (activeTab) => {
-      pill.style.left = activeTab.offsetLeft + 'px';
-      pill.style.width = activeTab.offsetWidth + 'px';
-    };
-
-    // Initial position
-    setTimeout(() => updatePill(bar.querySelector('.tab.active')), 0);
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        window.haptic?.('medium');
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        updatePill(tab);
-        updateDiscovery(v.id, tab.dataset.opt);
-      });
-    });
-  });
-
-  container.appendChild(refinementSec);
-
-  const updateDiscovery = (vectorId, optId) => {
-    const sugWrap = document.getElementById(`suggestion-${vectorId}`);
-    if (optId === 'neutral') {
-      sugWrap.innerHTML = '';
-      return;
-    }
-
-    let match = null;
-    const sameFamily = CAT.filter(f => f.family === frag.family && f.id !== frag.id);
-    
-    if (vectorId === 'intensity') {
-      if (optId === 'exciting') match = sameFamily.sort((a,b) => b.sillage - a.sillage)[0];
-      else match = sameFamily.sort((a,b) => a.sillage - b.sillage)[0];
-    } else {
-      const isNiche = b => ['Fueguia 1833', 'D.S. & Durga', 'Xinu', 'Byredo', 'Diptyque', 'Le Labo'].includes(b);
-      if (optId === 'niche') match = sameFamily.filter(f => isNiche(f.brand)).sort((a,b) => b.sillage - a.sillage)[0];
-      else match = sameFamily.filter(f => !isNiche(f.brand)).sort((a,b) => b.sillage - a.sillage)[0];
-    }
-
-    if (match && match.id !== frag.id) {
-      const optLabel = vectors.find(v=>v.id===vectorId).options.find(o=>o.id===optId).label;
-      sugWrap.innerHTML = `
-        <div class="dc-sim-shelf" style="margin-top:var(--sp-xs)">
-          <button class="scent-row scent-row--flat" onclick="openFragDetail(CAT_MAP['${match.id}'])">
-            <div class="scent-row-content">
-              <div class="frag-picker-dot" style="background:${FAM[match.family].color}"></div>
-              <div class="frag-picker-info">
-                <div class="dc-mood-sug-label" style="font-size:10px; font-weight:700; color:var(--accent-primary); text-transform:uppercase; margin-bottom:2px;">Try for ${optLabel}</div>
-                <div class="frag-picker-item-name">${match.name}</div>
-                <div class="frag-picker-item-brand">${match.brand}</div>
-              </div>
-            </div>
-          </button>
-        </div>
-      `;
-    } else {
-      sugWrap.innerHTML = `<div style="font-size:10px; color:var(--text-tertiary); margin-top:8px; text-align:center">No further match in this family</div>`;
-    }
-  };
-}
-
 function renderFragDetail(container,frag){
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
 
@@ -1501,13 +736,7 @@ function renderFragDetail(container,frag){
     ownBtn.setAttribute('aria-pressed',st==='owned'?'true':'false');
     ownBtn.innerHTML=`<span class="dc-collect-icon">${st==='owned'?'✓':''}</span> ${st==='owned'?'Owned':'Mark owned'}`;
     ownBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='owned'?'none':'owned');refreshAfterStateChange(frag.id);renderCollectRow();});
-    
-    const trialBtn=document.createElement('button');
-    trialBtn.className='dc-collect-btn';
-    trialBtn.innerHTML=`Track Trial`;
-    trialBtn.addEventListener('click',e=>{e.stopPropagation();openTrialSheet(frag.id);});
-
-    el.appendChild(wishBtn);el.appendChild(ownBtn);el.appendChild(trialBtn);
+    el.appendChild(wishBtn);el.appendChild(ownBtn);
   }
   renderCollectRow();
 
@@ -1520,8 +749,6 @@ function renderFragDetail(container,frag){
     e.stopPropagation();
     openDupeLab(frag);
   });
-
-  renderMoodRefinement(container, frag);
 
   // Similar shelf
   const scored=CAT
@@ -1747,10 +974,7 @@ function renderBrandSaveBtn(container, brandData) {
   container.appendChild(btn);
 }
 
-function openFragDetail(frag){
-  addToHistory(frag.id);
-  openDetail(c=>renderFragDetail(c,frag),frag.name);
-}
+function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
 
 function renderHouseDetail(container,brand){
   const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
@@ -2380,7 +1604,6 @@ let CAT_ROLE_FILTER=null;
 let CAT_STATE_FILTER=null;
 let CAT_BRAND_FILTER=null;
 let CAT_FAM_FILTER=null;
-let CAT_FEEL_FILTER=null;
 let CAT_FAM_HOVER=null;
 
 function buildCatalog(roleFilter){
@@ -2413,7 +1636,6 @@ function buildCatalog(roleFilter){
   let visibleCat=roleFilter?CAT.filter(f=>f.roles.includes(roleFilter)):CAT;
   if(CAT_FAM_FILTER)visibleCat=visibleCat.filter(f=>f.family===CAT_FAM_FILTER);
   if(CAT_BRAND_FILTER)visibleCat=visibleCat.filter(f=>f.brand===CAT_BRAND_FILTER);
-  if(CAT_FEEL_FILTER)visibleCat=visibleCat.filter(f=>FEELINGS[CAT_FEEL_FILTER].families.includes(f.family));
   if(CAT_STATE_FILTER==='owned')visibleCat=visibleCat.filter(f=>isOwned(f.id));
   else if(CAT_STATE_FILTER==='wish')visibleCat=visibleCat.filter(f=>isWish(f.id));
   if(search)visibleCat=visibleCat.filter(f=>
@@ -2597,36 +1819,6 @@ function initCatalogControls(){
         currentNoteTier = tab.dataset.tier;
         buildNotes(currentNoteQuery, currentNoteTier);
       });
-    });
-  }
-
-  // Helper: build feeling filter pills
-  const feelBar=document.getElementById('cat-feel-bar');
-  const allFeelBtns=[];
-  function makeFeelBtn(label,val,color,container){
-    const btn=document.createElement('button');
-    btn.className='fam-pill'+(CAT_FEEL_FILTER===val?' active':'');
-    btn.setAttribute('aria-pressed', CAT_FEEL_FILTER===val ? 'true' : 'false');
-    const dot=val?`<span class="fam-pill-dot" style="background:${color}"></span>`:'';
-    btn.innerHTML=`${dot}${label}`;
-    btn.dataset.feel=val===null?'':val;
-    btn.addEventListener('click',()=>{
-      CAT_FEEL_FILTER=val;
-      allFeelBtns.forEach(b=>{
-        const isActive=b.dataset.feel===(val===null?'':val);
-        b.classList.toggle('active',isActive);
-        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-      });
-      buildCatalog();
-    });
-    allFeelBtns.push(btn);
-    container.appendChild(btn);
-    return btn;
-  }
-  if(feelBar){
-    makeFeelBtn('All Feelings',null,null,feelBar);
-    Object.entries(FEELINGS).forEach(([id, f]) => {
-      makeFeelBtn(f.label, id, f.color, feelBar);
     });
   }
 
@@ -2869,232 +2061,106 @@ function updCC(){
 }
 
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
-/* ── NOTES ── */
-let notesActiveTab = 'explore';
 let notesSearchQuery = '';
+let notesSortMode = 'family'; // 'family' or 'az'
 let notesTierMode = 'all';
 
-function initNotesControls() {
-  const navBar = document.getElementById('notes-nav-bar');
-  const searchWrap = document.getElementById('notes-search-wrap');
-  const tierWrap = document.getElementById('notes-tier-filter-wrap');
-  const searchInput = document.getElementById('notes-search');
-  const searchClear = document.getElementById('notes-search-clear');
+window.setNotesTab = function(mode) {
+  notesSortMode = mode;
+  document.getElementById('notes-tab-family').classList.toggle('active', mode === 'family');
+  document.getElementById('notes-tab-az').classList.toggle('active', mode === 'az');
+  buildNotes();
+};
 
-  if (navBar) {
-    navBar.querySelectorAll('.notes-nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        notesActiveTab = btn.dataset.tab;
-        navBar.querySelectorAll('.notes-nav-btn').forEach(b => b.classList.toggle('active', b === btn));
-        
-        // Show/hide search based on tab
-        const showSearch = notesActiveTab === 'search' || notesActiveTab === 'saved';
-        searchWrap.style.display = showSearch ? 'block' : 'none';
-        tierWrap.style.display = notesActiveTab === 'search' ? 'flex' : 'none';
-        
-        buildNotes();
-      });
-    });
-  }
+function buildNotes(searchQuery, currentTier){
+  if (searchQuery !== undefined) notesSearchQuery = searchQuery;
+  if (currentTier !== undefined) notesTierMode = currentTier;
 
-  if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      notesSearchQuery = e.target.value;
-      searchClear.style.display = notesSearchQuery ? 'block' : 'none';
-      buildNotes();
-    });
-  }
+  const body=document.getElementById('notes-body');body.innerHTML='';
 
-  if (searchClear) {
-    searchClear.addEventListener('click', () => {
-      notesSearchQuery = '';
-      searchInput.value = '';
-      searchClear.style.display = 'none';
-      buildNotes();
-    });
-  }
-
-  if (tierWrap) {
-    const tabs = tierWrap.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        notesTierMode = tab.dataset.tier;
-        buildNotes();
-      });
-    });
-  }
-}
-
-function buildNotes() {
-  const body = document.getElementById('notes-body');
-  const countEl = document.getElementById('notes-count');
-  body.innerHTML = '';
-
-  if (notesActiveTab === 'explore') {
-    countEl.textContent = '';
-    renderNotesExplore(body);
-  } else if (notesActiveTab === 'search') {
-    renderNotesDirectory(body, countEl);
-  } else if (notesActiveTab === 'saved') {
-    renderNotesSaved(body, countEl);
-  }
-}
-
-function renderNotesExplore(container) {
-  const wrap = document.createElement('div');
-  wrap.className = 'notes-explore-wrap';
-
-  // 1. Olfactory Pyramid Education
-  const pyramid = document.createElement('div');
-  pyramid.className = 'edu-pyramid-card';
-  pyramid.innerHTML = `
-    <div class="sec-label" style="margin:0">The Olfactory Pyramid</div>
-    <p class="family-card-desc">Fragrances are constructed in three layers that evaporate at different speeds. Understanding these tiers helps you predict how a scent will evolve on your skin over hours.</p>
-    <div class="pyramid-visual">
-      <div class="pyramid-tier top" onclick="notesActiveTab='search'; notesTierMode='top'; buildNotes();">
-        <span class="pyramid-label">Top Notes</span>
-        <span class="pyramid-dur">First 15–30 mins</span>
-      </div>
-      <div class="pyramid-tier mid" onclick="notesActiveTab='search'; notesTierMode='mid'; buildNotes();">
-        <span class="pyramid-label">Heart Notes</span>
-        <span class="pyramid-dur">1–3 hours</span>
-      </div>
-      <div class="pyramid-tier base" onclick="notesActiveTab='search'; notesTierMode='base'; buildNotes();">
-        <span class="pyramid-label">Base Notes</span>
-        <span class="pyramid-dur">4+ hours</span>
-      </div>
-    </div>
-    <div style="text-align:center; font-size:var(--fs-caption); color:var(--text-tertiary);">Tap a tier to see corresponding notes</div>
-  `;
-  wrap.appendChild(pyramid);
-
-  // 2. Meet the Families
-  const famSection = document.createElement('div');
-  famSection.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-xl)">Meet the Families</div>`;
-  const grid = document.createElement('div');
-  grid.className = 'family-cards-grid';
-
-  FAM_ORDER.forEach(fk => {
-    const fm = FAM[fk];
-    const card = document.createElement('div');
-    card.className = 'family-explore-card';
-    card.style.setProperty('--fam-color', fm.color);
-    
-    // Get sample notes for this family
-    const sampleNotes = NI.filter(n => n.family === fk).slice(0, 5).map(n => n.name);
-
-    card.innerHTML = `
-      <div class="family-card-hdr">
-        <div class="family-card-title">${fm.label}</div>
-        <div class="nf-dot" style="background:${fm.color}"></div>
-      </div>
-      <div class="family-card-desc">${fm.desc}</div>
-      <div class="family-card-notes">
-        ${sampleNotes.map(n => `<span class="family-card-note-pill">${n}</span>`).join('')}
-      </div>
-    `;
-    card.addEventListener('click', () => {
-      notesActiveTab = 'search';
-      notesSearchQuery = fm.label;
-      const searchInput = document.getElementById('notes-search');
-      if (searchInput) searchInput.value = fm.label;
-      document.querySelector('.notes-nav-btn[data-tab="search"]').click();
-    });
-    grid.appendChild(card);
-  });
-
-  famSection.appendChild(grid);
-  wrap.appendChild(famSection);
-  container.appendChild(wrap);
-}
-
-function renderNotesDirectory(container, countEl) {
+  // Filter notes by search query and tier
   const sq = notesSearchQuery.toLowerCase().trim();
-  const filtered = NI.filter(n => {
-    const matchesQuery = n.name.toLowerCase().includes(sq) || (FAM[n.family]?.label.toLowerCase().includes(sq));
-    let matchesTier = true;
-    if (notesTierMode !== 'all') matchesTier = n._tier === notesTierMode;
+  const filteredNotes = NI.filter(n => {
+    const matchesQuery = n.name.toLowerCase().includes(sq);
+    let matchesTier = false;
+    if (notesTierMode === 'all') matchesTier = true;
+    else if (notesTierMode === 'saved') matchesTier = isNoteSaved(n.name);
+    else matchesTier = n._tier === notesTierMode;
     return matchesQuery && matchesTier;
   });
 
-  countEl.textContent = `${filtered.length} notes`;
+  const countEl = document.getElementById('notes-count');
+  if(countEl) countEl.textContent = `${filteredNotes.length} notes`;
 
-  if (filtered.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding:var(--sp-4xl); color:var(--text-tertiary);">No notes found matching "${notesSearchQuery}"</div>`;
+  if(filteredNotes.length === 0) {
+    body.innerHTML = `<div style="text-align:center; padding:var(--sp-2xl); color:var(--text-tertiary);">No notes found matching "${notesSearchQuery}"</div>`;
     return;
   }
 
-  const grid = document.createElement('div');
-  grid.className = 'notes-grid';
+  if (notesSortMode === 'az') {
+    const cardBody = document.createElement('div');
+    cardBody.className = 'notes-card-body';
+    cardBody.style.marginTop = 'var(--sp-lg)';
 
-  // Group by family for directory
-  const grouped = {};
-  filtered.forEach(n => { if (!grouped[n.family]) grouped[n.family] = []; grouped[n.family].push(n); });
-  
-  FAM_ORDER.forEach(fk => {
-    if (!grouped[fk]?.length) return;
-    const fm = FAM[fk];
-    const card = document.createElement('div');
-    card.className = 'notes-card';
-    card.innerHTML = `
-      <div class="notes-card-header">
-        <div class="nf-dot" style="background:${fm.color}"></div>
-        <div><div class="nf-name">${fm.label}</div><div class="nf-desc" style="margin-bottom:0">${fm.desc.split('.')[0]}.</div></div>
-      </div>
-      <div class="notes-card-body"></div>
-    `;
-    const cardBody = card.querySelector('.notes-card-body');
-    grouped[fk].sort((a,b)=>a.name.localeCompare(b.name)).forEach(note => {
+    const sorted = [...filteredNotes].sort((a,b)=>a.name.localeCompare(b.name));
+
+    sorted.forEach(note => {
+      const fm = FAM[note.family] || {color: '#888'};
       const btn = document.createElement('button');
       btn.className = 'cmp-note-pill';
-      const saved = isNoteSaved(note.name);
-      btn.innerHTML = `${note.name}${saved ? ' <span style="color:var(--accent);margin-left:4px;">★</span>' : ''}`;
-      btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c, note), note.name); });
+      const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+      btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}${savedMark}`;
+      btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c,note), note.name); });
       cardBody.appendChild(btn);
     });
-    grid.appendChild(card);
-  });
+    body.appendChild(cardBody);
 
-  container.appendChild(grid);
-}
+  } else {
+    // Group by family
+    const grid = document.createElement('div');
+    grid.className = 'notes-grid';
 
-function renderNotesSaved(container, countEl) {
-  const sq = notesSearchQuery.toLowerCase().trim();
-  const savedNotes = NI.filter(n => isNoteSaved(n.name) && (n.name.toLowerCase().includes(sq) || FAM[n.family]?.label.toLowerCase().includes(sq)));
-  
-  countEl.textContent = `${savedNotes.length} saved`;
+    const grouped={};
+    filteredNotes.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
+    Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
 
-  if (savedNotes.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding:var(--sp-4xl); color:var(--text-tertiary);">
-      ${notesSearchQuery ? `No saved notes match "${notesSearchQuery}"` : 'You haven’t saved any notes yet. Tap ★ on a note to add it here.'}
-    </div>`;
-    return;
+    FAM_ORDER.forEach(fk=>{
+      if(!grouped[fk]?.length)return;
+      const fm=FAM[fk];if(!fm)return;
+
+      const card=document.createElement('div');card.className='notes-card';
+
+      const header=document.createElement('div');header.className='notes-card-header';
+      header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
+
+      const cardBody=document.createElement('div');cardBody.className='notes-card-body';
+      grouped[fk].forEach(note=>{
+        const btn=document.createElement('button');btn.className='cmp-note-pill';
+        const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+        btn.innerHTML = `${note.name}${savedMark}`;
+        btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
+        cardBody.appendChild(btn);
+      });
+
+      card.appendChild(header);
+      card.appendChild(cardBody);
+      grid.appendChild(card);
+    });
+
+    body.appendChild(grid);
   }
 
-  const grid = document.createElement('div');
-  grid.className = 'notes-grid';
-  
-  savedNotes.sort((a,b)=>a.name.localeCompare(b.name)).forEach(note => {
-    const fm = FAM[note.family] || {color:'#888', label:note.family};
-    const card = document.createElement('div');
-    card.className = 'notes-card';
-    card.innerHTML = `
-      <div class="notes-card-header" style="border-bottom:none; margin-bottom:0; padding-bottom:0; cursor:pointer">
-        <div class="nf-dot" style="background:${fm.color}"></div>
-        <div style="flex:1">
-          <div class="nf-name">${note.name}</div>
-          <div class="nf-desc" style="margin-bottom:0">${fm.label} family &middot; ${note.desc}</div>
-        </div>
-        <span style="color:var(--accent); font-size:1.2em">★</span>
-      </div>
-    `;
-    card.addEventListener('click', () => openDetail(c => renderNoteDetail(c, note), note.name));
-    grid.appendChild(card);
-  });
+  // Inject Global Quiz button at the bottom of the notes directory
+  const quizBtnWrap = document.createElement('div');
+  quizBtnWrap.style.marginTop = 'var(--sp-2xl)';
+  quizBtnWrap.style.textAlign = 'center';
+  quizBtnWrap.innerHTML = `<button class="dc-collect-btn global-quiz-btn" style="display:inline-flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Perfect Fragrance (Quiz)</button>`;
+  body.appendChild(quizBtnWrap);
 
-  container.appendChild(grid);
+  quizBtnWrap.querySelector('.global-quiz-btn').addEventListener('click', (e) => {
+    window.haptic?.('medium');
+    pushDetail(c => renderGlobalQuiz(c), 'Fragrance Match');
+  });
 }
 
 /* ── QUICK PEEK ── */
@@ -3139,29 +2205,9 @@ function closeQuickPeek(){
 /* ══ NAV ════════════════════════════════════════════════════════════ */
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link, .mbn-btn').forEach(t=>t.classList.remove('active'));
-  const panel = document.getElementById('p-'+id);
-  if(panel) panel.classList.add('active');
-  
-  if (id === 'saved') renderSaved();
-  if (id === 'journal') renderJournal();
-
-  // Find and activate the matching global nav link or button
-  if (btn) {
-    btn.classList.add('active');
-  } else {
-    // If no btn provided, try to find one by onclick or href
-    const navLinks = document.querySelectorAll('.global-nav-link, .mbn-btn');
-    navLinks.forEach(l => {
-      const oc = l.getAttribute('onclick') || '';
-      const href = l.getAttribute('href') || '';
-      // Map 'saved' panel to 'You' nav label or #saved hash
-      if (oc.includes(`go('${id}'`) || href.endsWith(`#${id}`) || (id==='saved' && (oc.includes("go('saved'") || href.endsWith('#saved')))) {
-        l.classList.add('active');
-      }
-    });
-  }
-
+  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link').forEach(t=>t.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
   closeDesktopDetail();
   // Sync URL with compare tab state
   if(id==='compare'){
@@ -3171,19 +2217,6 @@ function go(id,btn){
     history.replaceState(null,'','/app');
   }
 }
-
-// Global hash change handler for navigation
-window.addEventListener('hashchange', () => {
-  const hash = window.location.hash.slice(1);
-  if (!hash) return;
-  
-  // Handle basic panel navigation: #catalog, #compare, #notes, #saved, #journal
-  const panels = ['catalog', 'compare', 'notes', 'saved', 'you', 'journal', 'discovery'];
-
-  if (panels.includes(hash)) {
-    go(hash);
-  }
-});
 
 /* ── Detail Pagination ── */
 function _setupDetailSwipe(container, currentFrag) {
@@ -3247,16 +2280,6 @@ window.navBack=function(){
   go('compare',null);
 };
 document.addEventListener('DOMContentLoaded',function(){
-  // Initial hash check
-  const hash = window.location.hash.slice(1);
-  const panels = ['catalog', 'compare', 'notes', 'saved', 'you', 'journal', 'discovery'];
-
-  if (panels.includes(hash)) {
-    go(hash);
-  } else if (!hash && window.location.pathname === '/app') {
-    go('compare'); // Default for /app if no hash
-  }
-
   const settingsBtn=document.getElementById('settings-btn');
   const settingsMenu=document.getElementById('settings-menu');
   if(settingsBtn&&settingsMenu){
@@ -4703,104 +3726,80 @@ document.addEventListener('keydown',function(e){
 });
 
 /* ══ INIT ═══════════════════════════════════════════════════════════ */
-// Load data from JSON files
-const _nc={cache:'no-store'};
-Promise.all([
-  fetch('/data/roles.json',_nc).then(r=>r.json()),
-  fetch('/data/scents-index.json',_nc).then(r=>r.json()).then(idx=>
-    Promise.all(idx.brands.map(b=>fetch(`/data/scents/${b}.json`,_nc).then(r=>r.json())))
-      .then(arrays=>arrays.flat())
-  ),
-  fetch('/data/notes.json',_nc).then(r=>r.json()),
-  fetch('/data/brands.json',_nc).then(r=>r.json())
-]).then(([roles, scents, notes, brands])=>{
-  // Hide loading overlay
-  const loadingEl=document.getElementById('app-loading');
-  if(loadingEl){loadingEl.style.opacity='0';setTimeout(()=>loadingEl.hidden=true,250);}
-  ROLES=roles;
-  CAT=scents.map(f=>{
-    f._nTop=(f.top||[]).map(n=>n.toLowerCase().trim());
-    f._nMid=(f.mid||[]).map(n=>n.toLowerCase().trim());
-    f._nBase=(f.base||[]).map(n=>n.toLowerCase().trim());
-    f._nAll=[...f._nTop,...f._nMid,...f._nBase];
-    f._nameL=f.name.toLowerCase();
-    f._brandL=f.brand.toLowerCase();
-    return f;
-  });
-  NI=notes;
-  // Rebuild derived objects
-  RM=Object.fromEntries(ROLES.map(r=>[r.id,r]));
-  CAT_MAP=Object.fromEntries(CAT.map(f=>[f.id,f]));
-  NI_MAP=Object.fromEntries(NI.map(n=>[n.name.toLowerCase(),n]));
-  BRANDS=brands;
-  BRANDS_MAP=Object.fromEntries(BRANDS.map(b=>[b.name.toLowerCase(),b]));
-  // Re-expose populated arrays to window for tests
-  window.CAT = CAT; window.CAT_MAP = CAT_MAP; window.NI = NI; window.NI_MAP = NI_MAP;
-  window.ROLES = ROLES; window.RM = RM; window.BRANDS = BRANDS; window.BRANDS_MAP = BRANDS_MAP;
-  window.computeProfile = computeProfile; window.scoreSimilarity = scoreSimilarity; window.scoreLayeringPair = scoreLayeringPair;
+async function init() {
+  const success = await store.initialize();
+  if (!success) {
+    const loadingEl = document.getElementById('app-loading');
+    if (loadingEl) loadingEl.hidden = true;
+    const errorEl = document.getElementById('app-error');
+    if (errorEl) errorEl.hidden = false;
+    return;
+  }
 
-  window.computeNoteTiers = function() {
-    const counts = {};
-    CAT.forEach(f => {
-      (f._nTop || []).forEach(n => { if (!counts[n]) counts[n] = {top:0, mid:0, base:0}; counts[n].top++; });
-      (f._nMid || []).forEach(n => { if (!counts[n]) counts[n] = {top:0, mid:0, base:0}; counts[n].mid++; });
-      (f._nBase || []).forEach(n => { if (!counts[n]) counts[n] = {top:0, mid:0, base:0}; counts[n].base++; });
-    });
-    NI.forEach(note => {
-      const key = note.name.toLowerCase();
-      const c = counts[key];
-      if (c) {
-        if (c.top >= c.mid && c.top >= c.base) note._tier = 'top';
-        else if (c.mid >= c.top && c.mid >= c.base) note._tier = 'mid';
-        else note._tier = 'base';
-      } else {
-        note._tier = 'base';
-      }
-    });
-  };
+  // Update proxy data references
+  const data = store.getData();
+  ROLES = data.roles;
+  CAT = data.catalog;
+  CAT_MAP = data.catalogMap;
+  NI = data.notes;
+  NI_MAP = data.notesMap;
+  BRANDS = data.brands;
+  RM = Object.fromEntries(ROLES.map(r => [r.id, r]));
+
+  // Hide loading overlay
+  const loadingEl = document.getElementById('app-loading');
+  if (loadingEl) {
+    loadingEl.style.opacity = '0';
+    setTimeout(() => loadingEl.hidden = true, 250);
+  }
+
+  // Re-expose for backward compatibility/debugging
+  window.CAT = CAT; window.CAT_MAP = CAT_MAP; window.NI = NI; window.NI_MAP = NI_MAP;
+  window.ROLES = ROLES; window.BRANDS = BRANDS;
 
   computeNoteTiers();
-  // Now initialize
-  buildCatalog();buildNotes();initCatalogControls();initNotesControls();initCompare();if(window.renderSaved)window.renderSaved();
+  
+  // Now initialize UI
+  buildCatalog();
+  buildNotes();
+  initCatalogControls();
+  initCompare();
+  if (window.renderSaved) window.renderSaved();
 
   // Load popular comparisons for empty-state UI
   fetch('/data/popular-comparisons.json')
-    .then(r=>r.json())
-    .then(pairs=>{_popularPairs=pairs;renderPopularComparisons();})
-    .catch(()=>{});
+    .then(r => r.json())
+    .then(pairs => { _popularPairs = pairs; renderPopularComparisons(); })
+    .catch(() => {});
 
-  // Init notes search
-  const notesSearchEl = document.getElementById('notes-search');
-  const notesSearchClearEl = document.getElementById('notes-search-clear');
-  if (notesSearchEl) {
-    notesSearchEl.addEventListener('input', e => {
-      buildNotes(e.target.value, notesTierMode);
-      if (notesSearchClearEl) notesSearchClearEl.style.display = notesSearchQuery ? 'block' : 'none';
-    });
-  }
-  if (notesSearchClearEl) {
-    notesSearchClearEl.addEventListener('click', () => {
-      buildNotes('', notesTierMode);
-      if (notesSearchEl) notesSearchEl.value = '';
-      notesSearchClearEl.style.display = 'none';
-    });
-  }
+  handleInitialNavigation();
+}
 
-  // Init notes tier bar
-  const notesTierBar = document.getElementById('notes-tier-bar');
-  if (notesTierBar) {
-    const tabs = notesTierBar.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        buildNotes(notesSearchQuery, tab.dataset.tier);
-      });
-    });
-  }
-  // Check for /compare/<idA>/<idB> pathname deep-link
+function computeNoteTiers() {
+  const counts = {};
+  CAT.forEach(f => {
+    (f._nTop || []).forEach(n => { if (!counts[n]) counts[n] = {top:0, mid:0, base:0}; counts[n].top++; });
+    (f._nMid || []).forEach(n => { if (!counts[n]) counts[n] = {top:0, mid:0, base:0}; counts[n].mid++; });
+    (f._nBase || []).forEach(n => { if (!counts[n]) counts[n] = {top:0, mid:0, base:0}; counts[n].base++; });
+  });
+  NI.forEach(note => {
+    const key = note.name.toLowerCase();
+    const c = counts[key];
+    if (c) {
+      if (c.top >= c.mid && c.top >= c.base) note._tier = 'top';
+      else if (c.mid >= c.top && c.mid >= c.base) note._tier = 'mid';
+      else note._tier = 'base';
+    } else {
+      note._tier = 'base';
+    }
+  });
+}
+
+function handleInitialNavigation() {
+  const hash = window.location.hash.replace('#', '');
   const _cmpMatch = window.location.pathname.match(/^\/compare\/([a-z0-9-]+)\/([a-z0-9-]+)$/);
   let _deepLinkedCompare = false;
+
   if (_cmpMatch) {
     const fragA = CAT_MAP[_cmpMatch[1]], fragB = CAT_MAP[_cmpMatch[2]];
     if (fragA && fragB) {
@@ -4810,48 +3809,14 @@ Promise.all([
     }
   }
 
-  // Pre-fill a high-layering pair so compare isn't blank on load
-  // Skip if a compare deep-link already loaded a pair
-  if (!_deepLinkedCompare) {
-    const _doPreFill = () => {
-      if (CMP_A && CMP_B) return; // already filled by URL or user
-      const sample=CAT.slice(0,40);
-      let bestScore=-1,bestA=null,bestB=null;
-      for(let i=0;i<sample.length;i++){
-        for(let j=i+1;j<sample.length;j++){
-          const s=scoreLayeringPair(sample[i],sample[j]);
-          if(s>bestScore){bestScore=s;bestA=sample[i];bestB=sample[j];}
-        }
-      }
-      if(bestA&&bestB){_selectFragForSlot('a',bestA);_selectFragForSlot('b',bestB);}
-    };
-    if(typeof requestIdleCallback==='function'){
-      requestIdleCallback(_doPreFill, {timeout:2000});
-    } else {
-      setTimeout(_doPreFill, 0);
-    }
-  }
-
-  // Read hash for deep-linking from landing page or quiz
-  const hash = window.location.hash.replace('#', '');
   if (_deepLinkedCompare) {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
   } else if (hash === 'notes') {
     go('notes', document.querySelector('.global-nav-link[onclick*="notes"]'));
   } else if (hash === 'catalog') {
-    go('catalog', null); // Mobile button will be updated if below
+    go('catalog', null);
   } else if (hash === 'saved') {
     go('saved', document.querySelector('.global-nav-link[onclick*="saved"]'));
-  } else if (hash.startsWith('feel=')) {
-    const feelId = hash.split('=')[1];
-    if (FEELINGS[feelId]) {
-      CAT_FEEL_FILTER = feelId;
-      go('catalog', null);
-      // Sync UI buttons if they exist
-      document.querySelectorAll('.fam-pill[data-feel]').forEach(b => {
-        b.classList.toggle('active', b.dataset.feel === feelId);
-      });
-    }
   } else if (hash.startsWith('search=')) {
     const query = decodeURIComponent(hash.split('=')[1]);
     go('catalog', null);
@@ -4869,56 +3834,12 @@ Promise.all([
       openFragDetail(frag);
     }
   } else {
-    // MVP: default to compare
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
   }
+}
 
-  // Global horizontal swipe between main tabs
-  let globalSx = 0, globalSy = 0;
-  document.body.addEventListener('touchstart', e => {
-    // Don't intercept if an overlay/sheet is open
-    if(document.getElementById('sheet-stack')?.classList.contains('has-sheets') ||
-       document.getElementById('col-detail')?.classList.contains('open') ||
-       document.getElementById('frag-picker')?.classList.contains('open') ||
-       document.getElementById('note-float-overlay')?.classList.contains('open') ||
-       document.getElementById('quick-peek-overlay')?.classList.contains('open')) return;
-
-    // Don't intercept if swiping horizontally inside a carousel
-    if(e.target.closest('.carousel') || e.target.closest('.scent-row-content')) return;
-
-    globalSx = e.touches[0].clientX;
-    globalSy = e.touches[0].clientY;
-  }, {passive:true});
-
-  document.body.addEventListener('touchend', e => {
-    if(globalSx === 0) return;
-    const dx = e.changedTouches[0].clientX - globalSx;
-    const dy = e.changedTouches[0].clientY - globalSy;
-    globalSx = 0; globalSy = 0;
-
-    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 80) {
-      // Horizontal swipe detected
-      const tabs = ['catalog', 'compare'];
-      const currentTab = document.querySelector('.panel.active')?.id.replace('p-', '');
-      const idx = tabs.indexOf(currentTab);
-      if(idx === -1) return;
-
-      if(dx < 0 && idx < tabs.length - 1) { // Swipe left -> go right
-        window.haptic?.('selection');
-        goMobile(tabs[idx + 1], document.querySelector(`.mbn-btn[onclick*="${tabs[idx + 1]}"]`));
-      } else if(dx > 0 && idx > 0) { // Swipe right -> go left
-        window.haptic?.('selection');
-        goMobile(tabs[idx - 1], document.querySelector(`.mbn-btn[onclick*="${tabs[idx - 1]}"]`));
-      }
-    }
-  }, {passive:true});
-}).catch(err=>{
-  console.error('Scentmap data load failed:', err);
-  const loadingEl=document.getElementById('app-loading');
-  if(loadingEl)loadingEl.hidden=true;
-  const errorEl=document.getElementById('app-error');
-  if(errorEl)errorEl.hidden=false;
-});
+// Kick off
+init();
 
 // Load and render changelog
 fetch('CHANGELOG.md').then(r=>r.text()).then(md=>{
