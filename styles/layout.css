@@ -36,7 +36,7 @@
 }
 
 .col-main-content {
-  padding: var(--sp-xl) var(--sp-xl) 80px; /* 80px = mobile nav bar clearance, intentional */
+  padding: var(--sp-xl) var(--sp-xl) var(--sp-xl); /* mobile override adds bottom nav clearance */
 }
 
 /* RIGHT: detail panel — desktop: in-flow third column */
@@ -302,7 +302,7 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: var(--sp-sm);
-  border-bottom: 1px solid var(--text-primary);
+  border-bottom: 1px solid var(--border-strong);
   margin-bottom: var(--sp-sm);
 }
 

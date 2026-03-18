@@ -152,7 +152,7 @@
   }
 
   .col-main-content {
-    padding: var(--sp-md) var(--sp-lg) calc(80px + env(safe-area-inset-bottom, 0px));
+    padding: var(--sp-md) var(--sp-lg) calc(80px + env(safe-area-inset-bottom, 0px)); /* 80px = mobile bottom nav clearance */
   }
 
   .col-detail {
@@ -190,6 +190,42 @@
     display: none;
   }
 
+  .cat-family-scroll {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--sp-xs);
+    padding-bottom: 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cat-family-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cat-family-scroll .fam-pill {
+    flex-shrink: 0;
+    min-height: 36px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-pill);
+    padding: var(--sp-xs) var(--sp-md);
+    font-size: var(--fs-meta);
+  }
+
+  .cat-family-scroll .fam-pill.active {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--bg-primary);
+    box-shadow: none;
+  }
+
+  .cat-family-scroll .fam-pill.active .fam-pill-dot {
+    border: 1.5px solid var(--bg-primary);
+  }
+
   .frag-filter-toggle {
     display: inline-flex;
     align-items: center;
@@ -205,11 +241,17 @@
     border-radius: var(--radius);
     padding: var(--sp-xs) var(--sp-md);
     cursor: pointer;
+    min-height: var(--touch-target);
   }
 
   .frag-main-top {
     position: sticky;
     top: 0;
+    padding: var(--sp-md) var(--sp-lg) var(--sp-sm);
+  }
+
+  #cat-body {
+    padding: var(--sp-md) var(--sp-lg);
   }
 
   /* Catalog section */

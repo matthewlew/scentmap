@@ -2,3 +2,7 @@ User-agent: *
 Allow: /
 
 Sitemap: https://scentmap.co/sitemap.xml
+
+# AI-readable site summary
+# https://llmstxt.org/
+# LLMs-Txt: https://scentmap.co/llms.txt

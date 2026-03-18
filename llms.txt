@@ -1,0 +1,54 @@
+# Scentmap
+
+> The Mathematical Fragrance Engine — data-driven fragrance comparison, discovery, and recommendation.
+
+Scentmap is a free web tool for comparing and discovering perfumes using structured data analysis. It covers 180+ designer and niche fragrances from brands like Byredo, Le Labo, Diptyque, Tom Ford, Chanel, Dior, Aesop, Loewe, D.S. & Durga, and Replica (Maison Margiela).
+
+## What Scentmap Does
+
+- **Compare Fragrances**: Put any two perfumes side-by-side. See a similarity score (0–100%), shared notes, radar charts (freshness, sweetness, warmth, intensity, complexity), sillage and layering comparisons, and "you might also like" suggestions.
+- **Fragrance Quizzes**: Data-driven quizzes that match users to their ideal fragrance based on style, vibe, season, and note preferences. Available quizzes: Find Your Scent, Best Perfume for Men 2026, Best Perfume for Women 2026, Best Perfume to Gift 2026, Find Your Byredo.
+- **Notes Directory**: Browse 177 fragrance notes with sensory profiles, extraction methods, and perfumer insights. See which fragrances contain each note.
+- **Fragrance Catalog**: Search and filter 180+ fragrances by brand, family (woody, floral, amber, citrus, leather, oud, green, chypre, gourmand), and notes. View top/heart/base note pyramids.
+
+## Data Model
+
+Each fragrance includes: brand, name, family, sillage (0–10 projection scale), layering score (0–10 compatibility), top notes, heart notes, base notes, roles, and a prose description.
+
+Similarity scores are computed from: family compatibility (40%), shared note overlap weighted by tier (30%), sillage proximity (10%), and shared roles (20%).
+
+## Key URLs
+
+- Homepage: https://scentmap.co/
+- Fragrance Engine (app): https://scentmap.co/app
+- Compare (example): https://scentmap.co/compare/santal-33/another-13
+- Quiz (example): https://scentmap.co/quiz/find-your-scent
+- Sitemap: https://scentmap.co/sitemap.xml
+
+## Fragrance Families
+
+- **Woody**: Sandalwood, cedar, vetiver-forward compositions
+- **Floral**: Rose, jasmine, iris, neroli-centric blends
+- **Amber**: Warm, resinous bases with labdanum, benzoin, vanilla
+- **Citrus**: Bergamot, lemon, yuzu, neroli-bright openings
+- **Leather**: Suede, birch tar, smoky-animalic profiles
+- **Oud**: Agarwood-dominant, Middle Eastern-inspired compositions
+- **Green**: Galbanum, violet leaf, tea, herbaceous freshness
+- **Chypre**: Oakmoss, bergamot, patchouli — the classic accord
+- **Gourmand**: Edible notes — vanilla, caramel, coffee, chocolate
+
+## Brands Covered
+
+Aesop, Byredo, Chanel, Dior, Diptyque, D.S. & Durga, Fueguia 1833, Le Labo, Loewe, Replica (Maison Margiela), Tom Ford, Xinu
+
+## Popular Comparisons
+
+- Bleu de Chanel vs Sauvage
+- Santal 33 vs Another 13
+- Bal d'Afrique vs Gypsy Water
+- Rose 31 vs Rose Prick
+- Santal 33 vs Santal Blush
+
+## Contact
+
+Website: https://scentmap.co
