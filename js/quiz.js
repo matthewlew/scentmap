@@ -470,10 +470,10 @@ function renderStep(step, collectedTags) {
         <div class="global-nav-left">
           <a href="/" class="global-nav-logo">Scentmap</a>
           <div class="global-nav-links">
-            <a href="/app#catalog" class="global-nav-link">Fragrances</a>
+            <a href="/#discovery" class="global-nav-link">Discovery</a>
             <a href="/app#compare" class="global-nav-link">Compare</a>
             <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/#discovery" class="global-nav-link active">Discovery</a>
+            <a href="/app#saved" class="global-nav-link">You</a>
           </div>
         </div>
         <div class="global-nav-right">
@@ -561,10 +561,10 @@ function renderResults(top3) {
         <div class="global-nav-left">
           <a href="/" class="global-nav-logo">Scentmap</a>
           <div class="global-nav-links">
-            <a href="/app#catalog" class="global-nav-link">Fragrances</a>
+            <a href="/#discovery" class="global-nav-link">Discovery</a>
             <a href="/app#compare" class="global-nav-link">Compare</a>
             <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/#discovery" class="global-nav-link active">Discovery</a>
+            <a href="/app#saved" class="global-nav-link">You</a>
           </div>
         </div>
         <div class="global-nav-right">
@@ -619,10 +619,10 @@ function renderArchetypeResults(archetype, frags) {
         <div class="global-nav-left">
           <a href="/" class="global-nav-logo">Scentmap</a>
           <div class="global-nav-links">
-            <a href="/app#catalog" class="global-nav-link">Fragrances</a>
+            <a href="/#discovery" class="global-nav-link">Discovery</a>
             <a href="/app#compare" class="global-nav-link">Compare</a>
             <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/#discovery" class="global-nav-link active">Discovery</a>
+            <a href="/app#saved" class="global-nav-link">You</a>
           </div>
         </div>
         <div class="global-nav-right">
@@ -682,10 +682,10 @@ function renderAstroResults(sign, archetype, frags) {
         <div class="global-nav-left">
           <a href="/" class="global-nav-logo">Scentmap</a>
           <div class="global-nav-links">
-            <a href="/app#catalog" class="global-nav-link">Fragrances</a>
+            <a href="/#discovery" class="global-nav-link">Discovery</a>
             <a href="/app#compare" class="global-nav-link">Compare</a>
             <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/#discovery" class="global-nav-link active">Discovery</a>
+            <a href="/app#saved" class="global-nav-link">You</a>
           </div>
         </div>
         <div class="global-nav-right">

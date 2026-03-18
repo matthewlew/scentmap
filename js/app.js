@@ -397,7 +397,12 @@ window.renderSaved = function() {
     ];
 
     dnaSec.innerHTML = `
-      <div class="sec-label" style="margin-bottom:var(--sp-md);">Your Olfactive DNA</div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-md);">
+        <div class="sec-label" style="margin-bottom:0;">Your Olfactive DNA</div>
+        <button class="dc-collect-btn" style="padding:4px 10px; font-size:10px; height:auto;" onclick="exportAuraCard()">
+          Export for Social
+        </button>
+      </div>
       <div style="margin-bottom:var(--sp-xl);">
         <div style="font-family:var(--font-display); font-size:var(--fs-title); line-height:1; margin-bottom:var(--sp-xs);">${owned.length}</div>
         <div style="font-family:var(--font-sans); font-size:var(--fs-caption); color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.05em;">Fragrances Owned</div>
@@ -882,6 +887,136 @@ function openTrialUpdateSheet(fragId, timestamp, checkpoint) {
     });
   });
 }
+
+window.exportAuraCard = function() {
+  const owned = CAT.filter(f => isOwned(f.id));
+  if (!owned.length) return;
+  const stats = getCollectionStats(owned);
+  const profile = stats.avgProfile;
+
+  // 1. Create Canvas (Story Aspect Ratio 9:16)
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 1080;
+  canvas.height = 1920;
+
+  // 2. Background Gradient (Luxury Paper / Ink feel)
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, '#FDFCFB');
+  grad.addColorStop(1, '#E2D1C3');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // 3. Branded Header
+  ctx.fillStyle = '#0E0C09';
+  ctx.font = '700 48px Inter, system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('SCENTMAP', canvas.width / 2, 160);
+  ctx.font = '400 32px Georgia, serif';
+  ctx.fillText('Your Olfactive Identity', canvas.width / 2, 210);
+
+  // 4. Center Circle / Radar Anchor
+  const cx = canvas.width / 2;
+  const cy = 850;
+  const r = 350;
+
+  // Draw Aura Glow
+  const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 1.5);
+  const primaryFam = stats.topFamilies[0][0];
+  const primaryColor = FAM[primaryFam]?.color || '#8B4513';
+  glow.addColorStop(0, primaryColor + '22');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 1.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 5. Draw Radar Chart
+  const dims = [
+    { l: 'FRESH', v: profile.freshness },
+    { l: 'SWEET', v: profile.sweetness },
+    { l: 'WARM', v: profile.warmth },
+    { l: 'BOLD', v: profile.intensity },
+    { l: 'DEEP', v: profile.complexity }
+  ];
+  const n = dims.length;
+
+  // Rings
+  ctx.strokeStyle = '#0E0C0911';
+  ctx.lineWidth = 2;
+  [0.25, 0.5, 0.75, 1.0].forEach(rv => {
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const a = (Math.PI * 2 * i / n) - Math.PI / 2;
+      const x = cx + r * rv * Math.cos(a);
+      const y = cy + r * rv * Math.sin(a);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  });
+
+  // Data Shape
+  ctx.beginPath();
+  ctx.fillStyle = primaryColor + '44';
+  ctx.strokeStyle = primaryColor;
+  ctx.lineWidth = 8;
+  for (let i = 0; i <= n; i++) {
+    const d = dims[i % n];
+    const a = (Math.PI * 2 * i / n) - Math.PI / 2;
+    const val = Math.max(0.1, d.v);
+    const x = cx + r * val * Math.cos(a);
+    const y = cy + r * val * Math.sin(a);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.fill();
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = '#0E0C09';
+  ctx.font = '700 28px Inter, sans-serif';
+  dims.forEach((d, i) => {
+    const a = (Math.PI * 2 * i / n) - Math.PI / 2;
+    const x = cx + (r + 60) * Math.cos(a);
+    const y = cy + (r + 60) * Math.sin(a);
+    ctx.textAlign = x < cx - 10 ? 'right' : x > cx + 10 ? 'left' : 'center';
+    ctx.fillText(d.l, x, y);
+  });
+
+  // 6. Statistics Section
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#0E0C09';
+  ctx.font = '700 36px Inter, sans-serif';
+  ctx.fillText('TOP FAMILIES', 120, 1350);
+  
+  ctx.font = '400 32px Inter, sans-serif';
+  stats.topFamilies.slice(0, 3).forEach(([fam, count], i) => {
+    const label = FAM[fam]?.label || fam;
+    ctx.fillText(`${i + 1}. ${label}`, 120, 1410 + (i * 50));
+  });
+
+  ctx.font = '700 36px Inter, sans-serif';
+  ctx.fillText('SIGNATURE NOTES', 580, 1350);
+  ctx.font = '400 32px Inter, sans-serif';
+  stats.topNotes.slice(0, 5).forEach((n, i) => {
+    ctx.fillText(`• ${n[0]}`, 580, 1410 + (i * 50));
+  });
+
+  // 7. Footer / Collection Size
+  ctx.textAlign = 'center';
+  ctx.font = '700 120px Inter, sans-serif';
+  ctx.fillText(owned.length.toString(), canvas.width / 2, 1720);
+  ctx.font = '400 28px Inter, sans-serif';
+  ctx.fillStyle = '#6B6356';
+  ctx.fillText('FRAGRANCES IN WARDROBE', canvas.width / 2, 1770);
+
+  // 8. Download
+  const link = document.createElement('a');
+  link.download = `scentmap-aura-${Date.now()}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  
+  window.haptic?.('success');
+};
 
 function getAssigned(roleId){return RA[roleId]||[]}
 function getPrimary(roleId){return getAssigned(roleId)[0]||null}
@@ -3004,7 +3139,7 @@ function closeQuickPeek(){
 /* ══ NAV ════════════════════════════════════════════════════════════ */
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link, .mbn-btn').forEach(t=>t.classList.remove('active'));
   const panel = document.getElementById('p-'+id);
   if(panel) panel.classList.add('active');
   
@@ -3016,11 +3151,12 @@ function go(id,btn){
     btn.classList.add('active');
   } else {
     // If no btn provided, try to find one by onclick or href
-    const navLinks = document.querySelectorAll('.global-nav-link');
+    const navLinks = document.querySelectorAll('.global-nav-link, .mbn-btn');
     navLinks.forEach(l => {
       const oc = l.getAttribute('onclick') || '';
       const href = l.getAttribute('href') || '';
-      if (oc.includes(`go('${id}'`) || href.endsWith(`#${id}`)) {
+      // Map 'saved' panel to 'You' nav label or #saved hash
+      if (oc.includes(`go('${id}'`) || href.endsWith(`#${id}`) || (id==='saved' && (oc.includes("go('saved'") || href.endsWith('#saved')))) {
         l.classList.add('active');
       }
     });

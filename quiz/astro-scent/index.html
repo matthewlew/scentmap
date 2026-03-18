@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 <title>Astro Scent Match — Quiz | Scentmap</title>
     <meta name="description" content="Find your signature fragrance based on your zodiac sign. 1 question to discover the scent that aligns with your astrological sun sign.">
     <link rel="canonical" href="https://scentmap.co/quiz/astro-scent">
@@ -15,67 +15,29 @@
     <meta name="twitter:title" content="Find Your Astro Scent Match">
     <meta name="twitter:description" content="Find your signature fragrance based on your zodiac sign. 1 question to discover the scent that aligns with your astrological sun sign.">
     <meta name="twitter:image" content="https://scentmap.co/api/og-quiz?quiz=astro-scent">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-
-
-
-
-
-
-
-
-
-
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
-<script>
-  window._hapticImpl = type => { try { if(type==='medium')navigator.vibrate?.([25]); else if(type==='success')navigator.vibrate?.([15,50,30]); } catch(e){} };
-  window.haptic = type => window._hapticImpl(type);
-</script>
-
-<link rel="stylesheet" href="/styles/design-system.css?v=20260312a">
-<link rel="stylesheet" href="/styles/components.css?v=20260312a">
-<link rel="stylesheet" href="/styles/layout.css?v=20260312a">
-<link rel="stylesheet" href="/styles/responsive.css?v=20260312a">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  
+  <link rel="stylesheet" href="/styles/design-system.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <link rel="stylesheet" href="/styles/layout.css">
+  <link rel="stylesheet" href="/styles/responsive.css">
 </head>
 <body>
-
-<!-- APP LOADING OVERLAY — shown by default, hidden after data loads -->
-<div id="app-loading" class="app-loading-overlay" aria-live="polite" aria-label="Loading Scentmap">
-  <div class="app-loading-inner">
-    <div class="app-loading-spinner" aria-hidden="true"></div>
-    <div class="app-loading-text">Loading your library…</div>
-  </div>
-</div>
-
-<!-- APP ERROR SCREEN — shown on data load failure -->
-<div id="app-error" class="app-error-overlay" hidden aria-live="assertive">
-  <div class="app-error-inner">
-    <div class="app-error-icon" aria-hidden="true">⚠</div>
-    <div class="app-error-title">Couldn't load fragrances</div>
-    <div class="app-error-msg">Check your connection and try again.</div>
-    <button class="app-error-retry" onclick="window.location.reload()">Retry</button>
-  </div>
-</div>
-
-<div class="shell">
-
-  <!-- MIDDLE: MAIN -->
-  <div class="col-main">
+  <div class="shell">
     <nav class="global-nav">
       <div class="global-nav-left">
         <a href="/" class="global-nav-logo">Scentmap</a>
         <div class="global-nav-links">
-          <button class="global-nav-link" onclick="go('catalog', this)">Fragrances</button>
-          <button class="global-nav-link active" onclick="go('compare', this)">Compare</button>
-          <button class="global-nav-link" onclick="go('notes', this)">Notes</button>
-          <button class="global-nav-link" onclick="go('saved', this)">Collection</button>
           <a href="/#discovery" class="global-nav-link">Discovery</a>
+          <a href="/app#compare" class="global-nav-link">Compare</a>
+          <a href="/app#notes" class="global-nav-link">Notes</a>
+          <a href="/app#saved" class="global-nav-link">You</a>
         </div>
       </div>
       <div class="global-nav-right">
+        <button class="nav-search-btn" onclick="openGlobalSearch()" aria-label="Quick search (⌘K)" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; padding:var(--sp-sm); display:flex; align-items:center; justify-content:center; transition:color var(--dur-fast);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
         <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
         <button class="nav-signin-btn" id="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
         <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings" aria-haspopup="true" aria-expanded="false">⚙</button>
@@ -85,247 +47,163 @@
         </div>
       </div>
     </nav>
-    <div class="col-main-content">
 
+    <div class="col-main-content">
       <div class="panel" id="p-saved" style="padding: var(--sp-lg);">
-        <div class="frag-main-top" style="margin-bottom: var(--sp-lg); border-bottom: none;">
-          <div class="frag-title-row">
-            <span class="frag-title">My Collection</span>
-          </div>
+        <div id="you-journal-cta" style="margin-bottom: var(--sp-2xl);"></div>
+        <div id="journal-content"></div>
+        <div class="frag-main-top" style="margin-top: var(--sp-4xl); margin-bottom: var(--sp-lg); border-bottom: none;">
+          <div class="frag-title-row"><span class="frag-title">Your Profile</span></div>
         </div>
         <div id="saved-list" class="scent-list"></div>
       </div>
 
       <div class="panel" id="p-catalog">
-        <div class="frag-layout">
-          <aside class="frag-sidebar" id="frag-sidebar">
-            <div class="frag-sb-section">
-              <div class="frag-sb-label">Collection</div>
+        <div class="catalog-shell">
+          <aside class="catalog-sidebar">
+            <div class="cat-search-wrap">
+              <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
+              <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
+            </div>
+            <div class="cat-sidebar-section">
+              <div class="sec-label">Filters</div>
               <div class="cat-state-bar" id="cat-state-bar"></div>
             </div>
-            <div class="frag-sb-divider"></div>
-            <div class="frag-sb-section">
-              <div class="frag-sb-label">Family</div>
+            <div class="cat-sidebar-section">
+              <div class="sec-label">Family</div>
               <div class="cat-family-bar" id="cat-family-bar"></div>
             </div>
-            <div class="frag-sb-divider"></div>
-            <div class="frag-sb-section">
-              <div class="frag-sb-label">Brand</div>
+            <div class="cat-sidebar-section">
+              <div class="sec-label">Feeling</div>
+              <div class="cat-feel-bar" id="cat-feel-bar"></div>
+            </div>
+            <div class="cat-sidebar-section">
+              <div class="sec-label">Houses</div>
               <div class="cat-brand-bar" id="cat-brand-bar"></div>
             </div>
           </aside>
-          <div class="frag-main">
-            <div class="frag-main-top">
-              <div class="frag-title-row">
-                <span class="frag-title">Fragrances</span>
-                <span class="cat-result-count" id="cat-count"></span>
-              </div>
-              <div class="cat-search-wrap">
-                <svg class="cat-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="search" id="cat-search" class="cat-search-input" placeholder="Search fragrances, brands, notes…" autocomplete="off">
-                <button class="cat-search-clear" id="cat-search-clear" aria-label="Clear search">✕</button>
-              </div>
-              <div class="frag-mobile-quick-filters" id="cat-state-bar-m"></div>
-              <div class="cat-family-scroll" id="cat-family-bar-m" role="group" aria-label="Filter by fragrance family"></div>
-              <button class="frag-filter-toggle" id="frag-filter-toggle" aria-expanded="false" aria-controls="frag-mobile-panel"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg> Filters</button>
-            </div>
-            <div class="frag-mobile-panel" id="frag-mobile-panel">
-              <div class="frag-mb-section">
-                <div class="frag-mb-section-label">Brand</div>
-                <div id="cat-brand-bar-m"></div>
-              </div>
-            </div>
-            <div id="cat-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+          <main class="catalog-main">
+            <div id="cat-live" class="sr-only" aria-live="polite"></div>
             <div id="cat-body"></div>
-          </div>
+          </main>
         </div>
       </div>
 
-      <div class="panel" id="p-notes">
-        <div class="frag-main-top" style="margin-bottom: var(--sp-lg); border-bottom: none;">
-          <div class="frag-title-row">
-            <span class="frag-title" style="font-size: var(--fs-title);">Notes</span>
-            <span class="sub" id="notes-count"></span>
+      <div class="panel active" id="p-compare">
+        <header class="cmp-header" id="cmp-header">
+          <div class="cmp-pair-row">
+            <div class="cmp-card-wrap">
+              <button class="cmp-frag-card" id="cmp-card-a" aria-label="Select first fragrance">
+                <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance One</div><div class="cmp-card-empty-hint">Tap to select</div></div>
+                <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </button>
+              <div class="cmp-card-meta" id="cmp-meta-a"></div>
+            </div>
+            <div class="cmp-vs">vs</div>
+            <div class="cmp-card-wrap">
+              <button class="cmp-frag-card" id="cmp-card-b" aria-label="Select second fragrance">
+                <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance Two</div><div class="cmp-card-empty-hint">Tap to select</div></div>
+                <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </button>
+              <div class="cmp-card-meta" id="cmp-meta-b"></div>
+            </div>
           </div>
+        </header>
+        <div id="cmp-results"></div>
+      </div>
 
+      <div class="panel" id="p-notes">
+        <div class="notes-shell">
           <div class="notes-nav-bar" id="notes-nav-bar">
             <button class="notes-nav-btn active" data-tab="explore">Explore</button>
             <button class="notes-nav-btn" data-tab="search">Search & A-Z</button>
             <button class="notes-nav-btn" data-tab="saved">My Notes</button>
           </div>
-
-          <div id="notes-search-wrap" class="cat-search-wrap" style="display: none; margin-top: var(--sp-sm);">
-            <svg class="cat-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <input type="search" id="notes-search" class="cat-search-input" placeholder="Search notes by name or family…" autocomplete="off">
-            <button class="cat-search-clear" id="notes-search-clear" aria-label="Clear search">✕</button>
+          <div class="notes-search-wrap" id="notes-search-wrap" style="display:none">
+            <div class="cat-search-wrap">
+              <input type="text" id="notes-search" class="cat-search-input" placeholder="Search notes...">
+              <button id="notes-search-clear" class="cat-search-clear" style="display:none">✕</button>
+            </div>
+            <div class="cat-sidebar-section" id="notes-tier-filter-wrap" style="display:none; margin-top:var(--sp-md)">
+              <div class="notes-tier-bar" id="notes-tier-bar">
+                <button class="tab active" data-tier="all">All Tiers</button>
+                <button class="tab" data-tier="top">Top</button>
+                <button class="tab" data-tier="mid">Heart</button>
+                <button class="tab" data-tier="base">Base</button>
+              </div>
+            </div>
           </div>
-
-          <div id="notes-tier-filter-wrap" style="display: none; gap: var(--sp-xs); margin-top: var(--sp-md); padding-bottom: var(--sp-sm); overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
-            <button class="tab active" data-tier="all">All Tiers</button>
-            <button class="tab" data-tier="top">Top</button>
-            <button class="tab" data-tier="mid">Heart</button>
-            <button class="tab" data-tier="base">Base</button>
-          </div>
+          <div id="notes-count" class="notes-count-summary"></div>
+          <div id="notes-body"></div>
         </div>
-        <div id="notes-body" style="padding: 0 var(--sp-xl) var(--sp-4xl);"></div>
       </div>
 
-      <div class="panel" id="p-changelog">
-        <div class="sec-label">Changelog</div>
-        <div id="changelog-body" class="changelog-body"></div>
+      <div class="panel" id="p-changelog" style="padding: var(--sp-lg);">
+        <div class="changelog-container">
+          <h1 class="text-title">Changelog</h1>
+          <div id="changelog-body" class="changelog-body"></div>
+        </div>
       </div>
+    </div>
 
-      <div class="panel active" id="p-compare">
-        <div class="cmp-picker-labels">
-          <span class="cmp-picker-label-txt">Fragrance 1</span>
-          <span class="cmp-picker-label-txt">Fragrance 2</span>
-        </div>
-        <div class="cmp-header-v2" id="cmp-header">
-          <div class="cmp-frag-card cmp-card-slot" id="cmp-card-a" data-slot="a" role="button" tabindex="0" aria-label="Select fragrance one">
-            <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance One</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-            <span class="cmp-card-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>
-          </div>
-          <div class="cmp-frag-card cmp-card-slot" id="cmp-card-b" data-slot="b" role="button" tabindex="0" aria-label="Select fragrance two">
-            <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance Two</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-            <span class="cmp-card-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>
-          </div>
-        </div>
-        <div class="cmp-card-meta-row">
-          <div class="cmp-card-meta" id="cmp-meta-a"></div>
-          <div class="cmp-card-meta" id="cmp-meta-b"></div>
-        </div>
-        <div id="cmp-results"></div>
-      </div>
-
+    <div class="col-detail" id="col-detail">
+      <button class="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
+      <div id="col-detail-content"></div>
     </div>
   </div>
 
-  <!-- RIGHT: DETAIL PANEL/SIDESHEET -->
-  <div class="col-detail" id="col-detail">
-    <div class="detail-topbar">
-      <button class="detail-back" id="detail-back"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
-      <button class="detail-close-btn" id="detail-close-btn">✕ Close</button>
-    </div>
-    <div class="detail-inner" id="detail-inner"></div>
-  </div>
-</div>
-
-<div class="detail-scrim" id="detail-scrim"></div>
-
-<!-- MOBILE BOTTOM NAV -->
-<div class="mobile-bottomnav" id="mobile-bottomnav" role="navigation" aria-label="Main navigation">
-  <button class="mbn-btn active" onclick="goMobile('catalog',this)" aria-label="Fragrances">
-    <span class="mbn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
-    Fragrances
-  </button>
-  <button class="mbn-btn" onclick="goMobile('compare',this)" aria-label="Compare">
-    <span class="mbn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"/><path d="m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"/></svg></span>
-    Compare
-  </button>
-  <button class="mbn-btn" onclick="goMobile('notes',this)" aria-label="Notes">
-    <span class="mbn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5"/><path d="M12 7.5V9"/><path d="M7.5 12H9"/><path d="M16.5 12H15"/><path d="M12 16.5V15"/></svg></span>
-    Notes
-  </button>
-  <button class="mbn-btn mbn-more" onclick="openMoreSheet(this)" aria-label="More">
-    <span class="mbn-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg></span>
-    More
-  </button>
-</div>
-
-<!-- MOBILE SHEET STACK -->
-<div class="sheet-stack-overlay" id="sheet-stack">
-  <div class="sheet-backdrop" id="sheet-backdrop"></div>
-</div>
-
-<!-- NOTE FLOAT -->
-<div class="note-float-overlay" id="note-float-overlay" role="dialog" aria-modal="true" aria-labelledby="np-name">
-  <div class="note-float-bg" id="note-float-bg"></div>
-  <div class="note-popup" id="note-popup">
-    <div class="nfp-header">
+  <div id="sheet-stack"></div>
+  <div class="note-float-overlay" id="note-float-overlay">
+    <div class="note-float-bg" id="note-float-bg"></div>
+    <div class="note-popup" id="note-popup" role="dialog" aria-labelledby="np-name">
+      <button class="nfp-close" id="nfp-close" aria-label="Close note info">✕</button>
+      <div class="np-family" id="np-family"></div>
       <div class="np-name" id="np-name"></div>
-      <button class="nfp-close" id="nfp-close" aria-label="Close note">✕</button>
+      <div class="np-desc" id="np-desc"></div>
+      <div id="np-save" style="margin-bottom:var(--sp-lg)"></div>
+      <div class="np-extra" id="np-extraction" style="display:none">
+        <div class="sec-label">Extraction</div>
+        <div class="np-extra-text" id="np-extraction-text"></div>
+      </div>
+      <div class="np-extra" id="np-fact" style="display:none">
+        <div class="sec-label">Insider Fact</div>
+        <div class="np-extra-text" id="np-fact-text"></div>
+      </div>
+      <div id="np-frags"></div>
     </div>
-    <div class="np-family" id="np-family"></div>
-    <div class="np-desc"   id="np-desc"></div>
-    <div class="np-extraction" id="np-extraction" style="display:none; margin-top: var(--sp-sm); font-size:12px; color:var(--g500);">
-      <strong>Extraction:</strong> <span id="np-extraction-text"></span>
-    </div>
-    <div class="np-fact" id="np-fact" style="display:none; margin-top: var(--sp-sm); padding: var(--sp-sm); background:var(--g50); border-radius:6px; font-size:12px; color:var(--g600); border:1px solid var(--g200);">
-      <strong style="display:block; margin-bottom: var(--sp-xs); color:var(--g900);">Perfumer's Insight</strong>
-      <span id="np-fact-text"></span>
-    </div>
-    <div class="np-frags"  id="np-frags"></div>
   </div>
-</div>
 
-<!-- FRAGRANCE PICKER — dual-column drum rolodex -->
-<div class="frag-picker-overlay" id="frag-picker" role="dialog" aria-modal="true" aria-label="Select fragrances">
-  <div class="frag-picker-wrap">
-    <div class="frag-picker-top">
-      <div class="frag-picker-sort-row">
-        <span class="frag-picker-sort-label">Sort by</span>
-        <div class="frag-picker-sort-bar" id="frag-picker-sort-bar" role="group" aria-label="Sort order">
-          <button class="frag-picker-sort-btn active" data-sort="brand" aria-pressed="true">Brand</button>
-          <button class="frag-picker-sort-btn" data-sort="name" aria-pressed="false">Fragrance Title</button>
-          <button class="frag-picker-sort-btn" data-sort="family" aria-pressed="false">Note Family</button>
-          <div class="frag-picker-sort-pill" id="frag-picker-sort-pill" aria-hidden="true"></div>
+  <div id="frag-picker" class="frag-picker-overlay">
+    <div class="frag-picker-wrap" role="dialog" aria-modal="true" aria-label="Select fragrance">
+      <div class="frag-picker-header">
+        <div class="frag-picker-sort-bar" id="frag-picker-sort-bar">
+          <div class="frag-picker-sort-pill" id="frag-picker-sort-pill"></div>
+          <button class="frag-picker-sort-btn active" data-sort="brand">House</button>
+          <button class="frag-picker-sort-btn" data-sort="name">A–Z</button>
+          <button class="frag-picker-sort-btn" data-sort="family">Family</button>
+        </div>
+        <button class="frag-picker-close" id="frag-picker-close">✕</button>
+      </div>
+      <div class="frag-picker-cols" id="frag-picker-cols">
+        <div class="frag-picker-col" id="frag-picker-col-a">
+          <div class="cat-search-wrap"><input type="text" id="frag-picker-search-a" class="cat-search-input" placeholder="Search..."></div>
+          <div class="frag-picker-list" id="frag-picker-list-a" role="listbox"></div>
+        </div>
+        <div class="frag-picker-col" id="frag-picker-col-b">
+          <div class="cat-search-wrap"><input type="text" id="frag-picker-search-b" class="cat-search-input" placeholder="Search..."></div>
+          <div class="frag-picker-list" id="frag-picker-list-b" role="listbox"></div>
         </div>
       </div>
     </div>
-    <div class="frag-picker-cols" id="frag-picker-cols">
-      <div class="frag-picker-col" id="frag-picker-col-a" data-slot="a">
-        <div class="frag-picker-col-hdr">
-          <span class="frag-picker-col-lbl">Fragrance 1</span>
-          <input class="frag-picker-search" id="frag-picker-search-a" type="text" placeholder="Search…" autocomplete="off" aria-label="Search fragrance one">
-        </div>
-        <div class="frag-picker-list-outer">
-          <div class="frag-picker-list" id="frag-picker-list-a" role="listbox" tabindex="0" aria-label="Fragrance 1 options"></div>
-        </div>
-      </div>
-      <div class="frag-picker-col-divider"></div>
-      <div class="frag-picker-col" id="frag-picker-col-b" data-slot="b">
-        <div class="frag-picker-col-hdr">
-          <span class="frag-picker-col-lbl">Fragrance 2</span>
-          <input class="frag-picker-search" id="frag-picker-search-b" type="text" placeholder="Search…" autocomplete="off" aria-label="Search fragrance two">
-        </div>
-        <div class="frag-picker-list-outer">
-          <div class="frag-picker-list" id="frag-picker-list-b" role="listbox" tabindex="0" aria-label="Fragrance 2 options"></div>
-        </div>
-      </div>
-    </div>
-    <div class="frag-picker-footer">
-      <button class="frag-picker-close" id="frag-picker-close" aria-label="Close fragrance picker">Done</button>
+  </div>
+
+  <div class="app-loading" id="app-loading">
+    <div class="app-loading-inner">
+      <div class="app-loading-dot"></div>
+      <div class="app-loading-text">Building Engine...</div>
     </div>
   </div>
-</div>
 
-<!-- AUTH MODAL -->
-<div class="auth-modal" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" hidden>
-  <div class="auth-modal-scrim" id="auth-modal-scrim"></div>
-  <div class="auth-modal-wrap">
-    <button class="auth-modal-close" id="auth-modal-close" aria-label="Close sign-in dialog">✕</button>
-    <div class="auth-modal-body" id="auth-modal-body-enter">
-      <p class="auth-modal-eyebrow">Create an account</p>
-      <h2 class="auth-modal-title" id="auth-modal-title">Save your olfactive wardrobe.</h2>
-      <p class="auth-modal-desc">Sync your collection across devices and unlock personalized layering recipes.</p>
-      <form class="auth-email-form" id="auth-email-form" novalidate>
-        <label class="auth-email-label" for="auth-email-input">Email address</label>
-        <input class="auth-email-input" id="auth-email-input" type="email" placeholder="you@example.com" autocomplete="email" required />
-        <p class="auth-email-error" id="auth-email-error" role="alert" hidden></p>
-        <button class="auth-btn-primary" id="auth-btn-send" type="submit">Send magic link</button>
-      </form>
-      <button class="auth-guest-link" id="auth-btn-guest">Continue as Guest</button>
-    </div>
-    <div class="auth-modal-body" id="auth-modal-body-sent" hidden>
-      <div class="auth-sent-icon" aria-hidden="true">✉</div>
-      <h2 class="auth-modal-title">Check your inbox.</h2>
-      <p class="auth-modal-desc">We sent a sign-in link to <strong id="auth-sent-email"></strong>. Click it to finish signing in — no password needed.</p>
-      <button class="auth-guest-link" id="auth-btn-back">← Use a different email</button>
-    </div>
-  </div>
-</div>
-
-
-<script src="/js/quiz.js?v=20260317c"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>
