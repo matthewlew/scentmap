@@ -175,6 +175,59 @@
       }
     ]
   },
+  "scent-archetype": {
+    "title": "What's Your Scent Archetype?",
+    "subtitle": "5 questions to discover your fragrance identity.",
+    "questionCount": 5,
+    "scoring": { "archetypeMode": true },
+    "questions": [
+      {
+        "q": "Your ideal Saturday?",
+        "a": [
+          { "label": "Hiking, a run, or time in nature", "tags": ["green", "woody", "arch:naturalist", "arch:sun-chaser"] },
+          { "label": "Gallery, bookshop, or museum", "tags": ["chypre", "woody", "arch:urban-intellectual", "arch:quiet-expressionist"] },
+          { "label": "Dinner out, cocktails, making an entrance", "tags": ["oud", "amber", "arch:provocateur", "arch:romantic"] },
+          { "label": "Home — deep into a creative project", "tags": ["amber", "gourmand", "arch:sensory-hedonist", "arch:quiet-expressionist"] }
+        ]
+      },
+      {
+        "q": "Your wardrobe reads as…",
+        "a": [
+          { "label": "Minimal and intentional — every piece earned its place", "tags": ["citrus", "aquatic", "arch:minimalist", "arch:quiet-expressionist"] },
+          { "label": "Dramatic and expressive — you own the room", "tags": ["oud", "floral", "arch:provocateur", "arch:romantic"] },
+          { "label": "Classic and timeless — you don't follow trends", "tags": ["woody", "amber", "arch:urban-intellectual", "arch:romantic"] },
+          { "label": "Natural and tactile — linen, leather, earth tones", "tags": ["green", "amber", "arch:naturalist", "arch:sensory-hedonist"] }
+        ]
+      },
+      {
+        "q": "A scent memory that stopped you in your tracks:",
+        "a": [
+          { "label": "Rain on concrete or grass after a storm", "tags": ["green", "aquatic", "arch:naturalist", "arch:minimalist"] },
+          { "label": "Woodsmoke — a fireplace, a campfire", "tags": ["woody", "amber", "arch:quiet-expressionist", "arch:sensory-hedonist"] },
+          { "label": "Flowers — a garden, a market, someone's perfume", "tags": ["floral", "amber", "arch:romantic", "arch:sensory-hedonist"] },
+          { "label": "Something spiced or exotic — a souk, a kitchen, incense", "tags": ["oud", "amber", "arch:provocateur", "arch:urban-intellectual"] }
+        ]
+      },
+      {
+        "q": "You want your scent to make you feel…",
+        "a": [
+          { "label": "Invisible — a quiet presence only the attentive notice", "tags": ["intimate", "citrus", "arch:minimalist", "arch:quiet-expressionist"] },
+          { "label": "Magnetic — people sense something before they see you", "tags": ["intensity", "oud", "arch:provocateur", "arch:romantic"] },
+          { "label": "Grounded — anchored in yourself and the moment", "tags": ["warmth", "woody", "arch:naturalist", "arch:sensory-hedonist"] },
+          { "label": "Sharp — focused, ready, already ahead", "tags": ["freshness", "chypre", "arch:urban-intellectual", "arch:sun-chaser"] }
+        ]
+      },
+      {
+        "q": "Fragrance, to you, is…",
+        "a": [
+          { "label": "A ritual — you apply it deliberately every morning", "tags": ["signature", "arch:urban-intellectual", "arch:quiet-expressionist"] },
+          { "label": "A statement — you want people to remember it", "tags": ["intensity", "arch:provocateur", "arch:romantic"] },
+          { "label": "A comfort — familiar, warm, yours", "tags": ["warmth", "casual", "arch:sensory-hedonist", "arch:naturalist"] },
+          { "label": "Armor — it completes you before you leave the house", "tags": ["freshness", "arch:minimalist", "arch:sun-chaser"] }
+        ]
+      }
+    ]
+  },
   "find-your-byredo": {
     "title": "Find Your Byredo",
     "subtitle": "3 questions to your Byredo signature.",

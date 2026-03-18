@@ -197,6 +197,93 @@ function scoreFragrances(catalog, collectedTags, scoringConfig) {
   return top3;
 }
 
+/* ── Archetypes ── */
+const ARCHETYPES = {
+  'quiet-expressionist': {
+    id: 'quiet-expressionist',
+    name: 'The Quiet Expressionist',
+    tagline: 'You let your presence speak before your words do.',
+    desc: 'Understated but unforgettable. You gravitate toward scents that reveal complexity only to those who pay attention — woody, green, and contemplative. Your fragrance is a second language.',
+    families: ['woody', 'green', 'chypre'],
+    tags: ['woody', 'green', 'chypre'],
+  },
+  'sensory-hedonist': {
+    id: 'sensory-hedonist',
+    name: 'The Sensory Hedonist',
+    tagline: 'You collect pleasures the way others collect ideas.',
+    desc: 'Warm, enveloping, and unapologetically indulgent. Amber, vanilla, and rich balsamic notes feel like home to you. You wear fragrance to feel, not to impress.',
+    families: ['amber', 'gourmand', 'floral'],
+    tags: ['amber', 'gourmand', 'warmth'],
+  },
+  'urban-intellectual': {
+    id: 'urban-intellectual',
+    name: 'The Urban Intellectual',
+    tagline: "Complexity in a bottle. You've read the footnotes.",
+    desc: "Chypre, iris, and leather. You find comfort in the unconventional and the cerebral — scents that require a second read and reward patience. You're not interested in crowd-pleasers.",
+    families: ['chypre', 'leather', 'woody'],
+    tags: ['chypre', 'leather', 'woody'],
+  },
+  'sun-chaser': {
+    id: 'sun-chaser',
+    name: 'The Sun Chaser',
+    tagline: 'Perpetually mid-journey. The next destination is always better.',
+    desc: 'Fresh, citric, and kinetic. You wear your scent like sunscreen — a signal that the day has started and anything is possible. Bergamot, lime, and the idea of open air.',
+    families: ['citrus', 'aquatic', 'green'],
+    tags: ['citrus', 'aquatic', 'freshness'],
+  },
+  'romantic': {
+    id: 'romantic',
+    name: 'The Romantic',
+    tagline: "You feel things fully and you're not sorry about it.",
+    desc: "Floral and amber, soft and deep at once. You're drawn to scents that smell like memories you want to keep — rose, jasmine, warm skin. Fragrance is emotional for you.",
+    families: ['floral', 'amber', 'gourmand'],
+    tags: ['floral', 'amber', 'intimate'],
+  },
+  'provocateur': {
+    id: 'provocateur',
+    name: 'The Provocateur',
+    tagline: 'You make an entrance. You meant to.',
+    desc: 'Oud, incense, and smoke. You wear fragrance as a declaration — something that commands a room and defies easy categorization. Subtlety is a choice you rarely make.',
+    families: ['oud', 'leather', 'amber'],
+    tags: ['oud', 'leather', 'intensity'],
+  },
+  'naturalist': {
+    id: 'naturalist',
+    name: 'The Naturalist',
+    tagline: 'Roots, earth, something growing. This is your element.',
+    desc: "Green, woody, and grounded. You're most yourself outdoors, and your scent reflects it — vetiver, pine, fresh air, and the memory of soil after rain.",
+    families: ['green', 'woody', 'citrus'],
+    tags: ['green', 'woody', 'freshness'],
+  },
+  'minimalist': {
+    id: 'minimalist',
+    name: 'The Minimalist',
+    tagline: 'Nothing superfluous. Every molecule earned its place.',
+    desc: 'Clean, precise, and quietly confident. Aquatic, citrus, and white musk. You prefer scents that feel like a second skin — barely there but impossible to forget.',
+    families: ['aquatic', 'citrus', 'woody'],
+    tags: ['aquatic', 'citrus', 'intimate'],
+  },
+};
+
+function scoreArchetypeMode(catalog, collectedTags) {
+  // Tally arch: tags to find dominant archetype
+  const counts = {};
+  collectedTags.forEach(tag => {
+    if (tag.startsWith('arch:')) {
+      const a = tag.slice(5);
+      counts[a] = (counts[a] || 0) + 1;
+    }
+  });
+  const topId = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'quiet-expressionist';
+  const archetype = ARCHETYPES[topId] || ARCHETYPES['quiet-expressionist'];
+
+  // Score fragrances using archetype's preferred tags + user's family tags
+  const userFamilyTags = collectedTags.filter(t => !t.startsWith('arch:'));
+  const merged = [...new Set([...userFamilyTags, ...archetype.tags])];
+  const frags = scoreFragrances(catalog, merged, {});
+  return { archetype, frags };
+}
+
 /* ── UI Rendering ── */
 let _container;
 let _quizConfig;
@@ -226,7 +313,13 @@ function renderQuiz(container, config, catalog) {
     const ids = resultsParam.split(',');
     const resultFrags = ids.map(id => catalog.find(f => f.id === id)).filter(Boolean).slice(0, 3);
     if (resultFrags.length > 0) {
-      renderResults(resultFrags);
+      if (config.scoring?.archetypeMode) {
+        const archetypeId = urlParams.get('archetype') || 'quiet-expressionist';
+        const archetype = ARCHETYPES[archetypeId] || ARCHETYPES['quiet-expressionist'];
+        renderArchetypeResults(archetype, resultFrags);
+      } else {
+        renderResults(resultFrags);
+      }
       return;
     }
   }
@@ -237,13 +330,19 @@ function renderQuiz(container, config, catalog) {
 function renderStep(step, collectedTags) {
   const qs = _quizConfig.questions;
   if (step >= qs.length) {
-    const top3 = scoreFragrances(_catalog, collectedTags, _quizConfig.scoring);
-    // Update URL with results
-    if (top3.length > 0) {
-      const ids = top3.map(f => f.id).join(',');
-      history.replaceState(null, '', `/quiz/${_slug}?results=${ids}`);
+    if (_quizConfig.scoring?.archetypeMode) {
+      const { archetype, frags } = scoreArchetypeMode(_catalog, collectedTags);
+      const ids = frags.map(f => f.id).join(',');
+      history.replaceState(null, '', `/quiz/${_slug}?archetype=${archetype.id}&results=${ids}`);
+      renderArchetypeResults(archetype, frags);
+    } else {
+      const top3 = scoreFragrances(_catalog, collectedTags, _quizConfig.scoring);
+      if (top3.length > 0) {
+        const ids = top3.map(f => f.id).join(',');
+        history.replaceState(null, '', `/quiz/${_slug}?results=${ids}`);
+      }
+      renderResults(top3);
     }
-    renderResults(top3);
     return;
   }
 
@@ -277,6 +376,21 @@ function renderStep(step, collectedTags) {
       renderStep(step + 1, newTags);
     });
   });
+}
+
+function _buildMoreQuizzesHtml() {
+  const all = [
+    { slug: 'scent-archetype', label: "What's Your Scent Archetype?" },
+    { slug: 'find-your-scent', label: 'Find Your Perfect Fragrance' },
+    { slug: 'best-perfume-for-men-2026', label: 'Best Perfume for Men 2026' },
+    { slug: 'best-perfume-for-women-2026', label: 'Best Perfume for Women 2026' },
+    { slug: 'best-perfume-to-gift-2026', label: 'Best Perfume to Gift 2026' },
+    { slug: 'find-your-byredo', label: 'Find Your Byredo' },
+  ];
+  const links = all.filter(q => q.slug !== _slug)
+    .map(q => `<a href="/quiz/${q.slug}" class="quiz-more-link">${q.label}</a>`)
+    .join('');
+  return `<div class="quiz-more-quizzes"><h2 class="quiz-more-title">More Quizzes</h2><div class="quiz-more-grid">${links}</div></div>`;
 }
 
 function renderResults(top3) {
@@ -315,16 +429,64 @@ function renderResults(top3) {
           <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
-        <div class="quiz-more-quizzes">
-          <h2 class="quiz-more-title">More Quizzes</h2>
-          <div class="quiz-more-grid">
-            ${_slug !== 'find-your-scent' ? '<a href="/quiz/find-your-scent" class="quiz-more-link">Find Your Perfect Fragrance</a>' : ''}
-            ${_slug !== 'best-perfume-for-men-2026' ? '<a href="/quiz/best-perfume-for-men-2026" class="quiz-more-link">Best Perfume for Men 2026</a>' : ''}
-            ${_slug !== 'best-perfume-for-women-2026' ? '<a href="/quiz/best-perfume-for-women-2026" class="quiz-more-link">Best Perfume for Women 2026</a>' : ''}
-            ${_slug !== 'best-perfume-to-gift-2026' ? '<a href="/quiz/best-perfume-to-gift-2026" class="quiz-more-link">Best Perfume to Gift 2026</a>' : ''}
-            ${_slug !== 'find-your-byredo' ? '<a href="/quiz/find-your-byredo" class="quiz-more-link">Find Your Byredo</a>' : ''}
-          </div>
+        ${_buildMoreQuizzesHtml()}
+        <a href="/app" class="quiz-engine-link">Open the full Scentmap engine</a>
+      </div>
+    </div>
+  `;
+}
+
+function renderArchetypeResults(archetype, frags) {
+  const famColors = { woody:'#6E3210', green:'#1A6030', chypre:'#285438', citrus:'#9A6800', floral:'#902050', amber:'#984000', oud:'#4A1850', leather:'#42200E', gourmand:'#7C4C00', aquatic:'#0A4880' };
+  const familyPills = archetype.families.map(f => {
+    const color = famColors[f] || '#8C5E30';
+    return `<span class="quiz-arch-fam" style="background:${color}18;color:${color};border-color:${color}30">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
+  }).join('');
+
+  const moreQuizzes = _buildMoreQuizzesHtml();
+
+  const resultsHtml = frags.map(frag => {
+    const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
+    return `
+      <a href="/app#frag=${frag.id}" class="quiz-result-card">
+        <div class="quiz-result-dot" style="background:${fc.color}"></div>
+        <div class="quiz-result-info">
+          <div class="quiz-result-name">${frag.name}</div>
+          <div class="quiz-result-brand">${frag.brand} &middot; ${fc.label}</div>
+          ${frag.description ? `<div class="quiz-result-desc">${frag.description}</div>` : ''}
         </div>
+        <svg class="quiz-result-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    `;
+  }).join('');
+
+  _container.innerHTML = `
+    <div class="quiz-page">
+      <div class="quiz-header">
+        <a href="/" class="quiz-back-link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </a>
+        <span class="quiz-title-small">${_quizConfig.title}</span>
+      </div>
+      <div class="quiz-body">
+        <div class="quiz-archetype-card">
+          <div class="quiz-archetype-eyebrow">Your Scent Archetype</div>
+          <h1 class="quiz-archetype-name">${archetype.name}</h1>
+          <p class="quiz-archetype-tagline">${archetype.tagline}</p>
+          <div class="quiz-arch-families">${familyPills}</div>
+          <p class="quiz-archetype-desc">${archetype.desc}</p>
+        </div>
+        <h2 class="quiz-section-title">Your Matches</h2>
+        <div class="quiz-results">
+          ${resultsHtml}
+        </div>
+        <div class="quiz-actions">
+          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
+          <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
+        </div>
+        <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
+        ${moreQuizzes}
         <a href="/app" class="quiz-engine-link">Open the full Scentmap engine</a>
       </div>
     </div>
@@ -421,6 +583,16 @@ function injectStyles() {
       display: block; text-align: center; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px);
       color: var(--text-tertiary, #B0A898); text-decoration: underline; text-underline-offset: 3px; padding-bottom: var(--sp-4xl, 48px);
     }
+
+    /* Archetype result card */
+    .quiz-archetype-card { border: 1px solid var(--border-standard, #DDD8D0); border-radius: var(--radius-lg, 12px); background: var(--bg-primary, #FAF8F4); padding: var(--sp-xl, 24px); margin-bottom: var(--sp-xl, 24px); }
+    .quiz-archetype-eyebrow { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: var(--sp-sm, 8px); }
+    .quiz-archetype-name { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: clamp(22px, 5vw, 32px); line-height: 1.1; letter-spacing: -0.02em; color: var(--text-primary, #0E0C09); margin: 0 0 var(--sp-sm, 8px); }
+    .quiz-archetype-tagline { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); font-style: italic; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); line-height: 1.5; }
+    .quiz-arch-families { display: flex; flex-wrap: wrap; gap: var(--sp-xs, 4px); margin-bottom: var(--sp-md, 12px); }
+    .quiz-arch-fam { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); font-weight: 600; padding: 3px 10px; border-radius: 20px; border: 1px solid transparent; }
+    .quiz-archetype-desc { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); color: var(--text-secondary, #8C8070); margin: 0; line-height: 1.6; }
+    .quiz-section-title { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-ui, 14px); font-weight: 600; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); }
 
     /* Hide app chrome on quiz pages */
     .col-main-nav, .mobile-bottomnav, .sheet-stack-overlay, .note-float-overlay, .frag-picker-overlay,

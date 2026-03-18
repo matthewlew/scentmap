@@ -6,6 +6,12 @@ All notable changes to Scentmap are documented here.
 
 ## 2026-03-18
 
+### Added
+- **Scent Archetype Quiz** — new quiz at `/quiz/scent-archetype`; 5 questions map answers to one of 8 fragrance archetypes (The Quiet Expressionist, The Sensory Hedonist, The Urban Intellectual, The Sun Chaser, The Romantic, The Provocateur, The Naturalist, The Minimalist); result page shows archetype name, tagline, family pills, description, and 3 matched fragrances; shareable URL encodes both archetype ID and result fragrance IDs; pre-load from URL on direct link
+- **`ARCHETYPES` constant in `quiz.js`** — 8 archetype definitions with name, tagline, desc, families, and scoring tags; `scoreArchetypeMode()` tallies `arch:` prefixed tags from quiz answers, identifies dominant archetype, merges archetype tags with user's family tags for fragrance scoring
+- **`renderArchetypeResults()` in `quiz.js`** — rich result card with archetype name (Archivo Black), italic serif tagline, color-coded family pills, and prose description; distinct from standard `renderResults()` flow
+- **`_buildMoreQuizzesHtml()` helper in `quiz.js`** — DRY refactor; both `renderResults()` and `renderArchetypeResults()` now use shared helper for "More Quizzes" section; new Scent Archetype quiz included in the list
+
 ### Fixed
 - **`aria-selected` on picker drum items** — compare fragrance picker now sets `aria-selected="true"` on the currently centered/selected item in each drum column; was always `"false"` regardless of selection state; also updates live as the drum scrolls so screen readers track the active option
 - **`aria-pressed` on Wishlist / Mark Owned buttons** — detail panel collect-row buttons now carry correct `aria-pressed` state so assistive technology announces toggle state without relying on visual-only cues
