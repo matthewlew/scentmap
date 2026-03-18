@@ -270,61 +270,73 @@ const ZODIAC = {
   'aries': {
     name: 'Aries',
     traits: 'bold, energetic, and pioneering',
+    archetypeId: 'provocateur',
     desc: 'As a fire sign, you need a scent that matches your high-octane energy. You gravitate toward intense, woody, and amber profiles that command attention.'
   },
   'taurus': {
     name: 'Taurus',
     traits: 'sensual, grounded, and indulgent',
+    archetypeId: 'sensory-hedonist',
     desc: 'You appreciate the finer things and natural beauty. Green, floral, and warm balsamic notes reflect your love for earthy luxury and comfort.'
   },
   'gemini': {
     name: 'Gemini',
     traits: 'witty, versatile, and curious',
+    archetypeId: 'sun-chaser',
     desc: 'Your dual nature demands a scent that is as multifaceted as you are. Bright citrus and dewy florals keep up with your fast-paced, social lifestyle.'
   },
   'cancer': {
     name: 'Cancer',
     traits: 'intuitive, nurturing, and emotive',
+    archetypeId: 'romantic',
     desc: 'Fragrance is personal and nostalgic for you. You prefer intimate skin scents, soft florals, and aquatic notes that feel like a protective, watery embrace.'
   },
   'leo': {
     name: 'Leo',
     traits: 'radiant, confident, and dramatic',
+    archetypeId: 'provocateur',
     desc: 'You were born to stand out. Only the most regal ambers and boldest florals will do for someone who naturally takes center stage.'
   },
   'virgo': {
     name: 'Virgo',
     traits: 'precise, analytical, and elegant',
+    archetypeId: 'minimalist',
     desc: 'You value clarity and craftsmanship. Crisp green notes and polished woods appeal to your desire for a scent that is clean, intentional, and perfectly balanced.'
   },
   'libra': {
     name: 'Libra',
     traits: 'harmonious, romantic, and charming',
+    archetypeId: 'romantic',
     desc: 'Ruled by Venus, you seek beauty and balance. Sophisticated chypres and airy florals provide the aesthetic harmony you crave.'
   },
   'scorpio': {
     name: 'Scorpio',
     traits: 'intense, mysterious, and powerful',
+    archetypeId: 'urban-intellectual',
     desc: 'You are drawn to the shadows and the deep. Dark oud, smoky leather, and rich spices reflect your magnetic and transformative presence.'
   },
   'sagittarius': {
     name: 'Sagittarius',
     traits: 'adventurous, optimistic, and free-spirited',
+    archetypeId: 'sun-chaser',
     desc: 'The explorer of the zodiac needs a scent that travels well. Fresh woods and bright, open-air citruses match your quest for the next big horizon.'
   },
   'capricorn': {
     name: 'Capricorn',
     traits: 'ambitious, disciplined, and timeless',
+    archetypeId: 'quiet-expressionist',
     desc: 'You play the long game. Classic leather, sturdy woods, and warm ambers reflect your resilience and your respect for tradition and quality.'
   },
   'aquarius': {
     name: 'Aquarius',
     traits: 'original, independent, and visionary',
+    archetypeId: 'urban-intellectual',
     desc: 'You defy convention. Unconventional aquatics and electric citruses appeal to your forward-thinking and rebellious spirit.'
   },
   'pisces': {
     name: 'Pisces',
     traits: 'dreamy, compassionate, and ethereal',
+    archetypeId: 'minimalist',
     desc: 'As the mystic of the zodiac, you drift between worlds. Soft aquatics and dewy, romantic florals capture your poetic and imaginative essence.'
   }
 };
@@ -353,11 +365,16 @@ function scoreAstroMode(catalog, collectedTags) {
   const signTag = collectedTags.find(t => t.startsWith('astro:'));
   const signId = signTag ? signTag.slice(6) : 'aries';
   const sign = ZODIAC[signId] || ZODIAC['aries'];
+  const archetype = ARCHETYPES[sign.archetypeId] || ARCHETYPES['provocateur'];
 
   // Filter out the astro tag for scoring
-  const otherTags = collectedTags.filter(t => !t.startsWith('astro:'));
-  const frags = scoreFragrances(catalog, otherTags, {});
-  return { sign, frags };
+  const userTags = collectedTags.filter(t => !t.startsWith('astro:'));
+  
+  // Merge user's climate/vibe tags with archetype's core tags
+  const mergedTags = [...new Set([...userTags, ...archetype.tags])];
+  const frags = scoreFragrances(catalog, mergedTags, {});
+  
+  return { sign, archetype, frags };
 }
 
 /* ── UI Rendering ── */
@@ -396,7 +413,8 @@ function renderQuiz(container, config, catalog) {
       } else if (config.scoring?.astroMode) {
         const signId = urlParams.get('sign') || 'aries';
         const sign = ZODIAC[signId] || ZODIAC['aries'];
-        renderAstroResults(sign, resultFrags);
+        const archetype = ARCHETYPES[sign.archetypeId] || ARCHETYPES['provocateur'];
+        renderAstroResults(sign, archetype, resultFrags);
       } else {
         renderResults(resultFrags);
       }
@@ -416,12 +434,12 @@ function renderStep(step, collectedTags) {
       history.replaceState(null, '', `/quiz/${_slug}?archetype=${archetype.id}&results=${ids}`);
       renderArchetypeResults(archetype, frags);
     } else if (_quizConfig.scoring?.astroMode) {
-      const { sign, frags } = scoreAstroMode(_catalog, collectedTags);
+      const { sign, archetype, frags } = scoreAstroMode(_catalog, collectedTags);
       const ids = frags.map(f => f.id).join(',');
       const signTag = collectedTags.find(t => t.startsWith('astro:'));
       const signId = signTag ? signTag.slice(6) : 'aries';
       history.replaceState(null, '', `/quiz/${_slug}?sign=${signId}&results=${ids}`);
-      renderAstroResults(sign, frags);
+      renderAstroResults(sign, archetype, frags);
     } else {
       const top3 = scoreFragrances(_catalog, collectedTags, _quizConfig.scoring);
       if (top3.length > 0) {
@@ -602,8 +620,14 @@ function renderArchetypeResults(archetype, frags) {
   `;
 }
 
-function renderAstroResults(sign, frags) {
+function renderAstroResults(sign, archetype, frags) {
   const moreQuizzes = _buildMoreQuizzesHtml();
+  const famColors = { woody:'#6E3210', green:'#1A6030', chypre:'#285438', citrus:'#9A6800', floral:'#902050', amber:'#984000', oud:'#4A1850', leather:'#42200E', gourmand:'#7C4C00', aquatic:'#0A4880' };
+  const familyPills = archetype.families.map(f => {
+    const color = famColors[f] || '#8C5E30';
+    return `<span class="quiz-arch-fam" style="background:${color}18;color:${color};border-color:${color}30">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
+  }).join('');
+
   const resultsHtml = frags.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
@@ -637,12 +661,20 @@ function renderAstroResults(sign, frags) {
       </nav>
       <div class="quiz-body">
         <div class="quiz-archetype-card">
-          <div class="quiz-archetype-eyebrow">Astro Scent Match</div>
+          <div class="quiz-archetype-eyebrow">Cosmic Scent Match</div>
           <h1 class="quiz-archetype-name">${sign.name}</h1>
           <p class="quiz-archetype-tagline">You are ${sign.traits}.</p>
-          <p class="quiz-archetype-desc">${sign.desc}</p>
+          <p class="quiz-archetype-desc" style="margin-bottom:var(--sp-lg);">${sign.desc}</p>
+          
+          <div style="border-top:1px solid var(--border-subtle); padding-top:var(--sp-md); margin-top:var(--sp-md);">
+            <div class="quiz-archetype-eyebrow">Your Olfactive Archetype</div>
+            <h2 class="quiz-archetype-name" style="font-size:var(--fs-title);">${archetype.name}</h2>
+            <div class="quiz-arch-families" style="margin-bottom:var(--sp-sm);">${familyPills}</div>
+            <p class="quiz-archetype-desc">${archetype.desc}</p>
+          </div>
         </div>
-        <h2 class="quiz-section-title">Your Cosmic Pairings</h2>
+        
+        <h2 class="quiz-section-title">Your Zodiac Recommendations</h2>
         <div class="quiz-results">
           ${resultsHtml}
         </div>
