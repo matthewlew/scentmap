@@ -4,6 +4,21 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-19
+
+### Fixed
+- **Quiz keyboard focus management (Nadia persona)** — after each step renders, focus is programmatically moved to the question `<h1>` (`tabindex="-1"`); previously the DOM replacement dropped keyboard focus to `<body>`, forcing keyboard-first users to Tab from scratch on every question; same fix applied on results pages (standard results heading and archetype name heading)
+- **Quiz touch targets (Miguel persona)** — `.quiz-ans-btn`, `.quiz-btn-primary`, `.quiz-btn-secondary` now have `min-height: var(--touch-target, 44px)` ensuring WCAG 2.5.5-compliant 44px tap targets; action buttons were previously undersized at ~40px
+
+### Changed
+- **Quiz `:focus-visible` rings** — added explicit focus ring rules for all quiz interactive elements (`.quiz-ans-btn`, `.quiz-btn-primary`, `.quiz-btn-secondary`, `.quiz-result-card`, `.quiz-back-link`, `.quiz-more-link`, `.quiz-engine-link`); uses the same double `box-shadow` pattern as the global `design-system.css` focus ring (bg gap + `--focus-ring-color` ring); previously relied on global styles that could be overridden by injected element borders
+- **Quiz token alignment** — replaced undefined `--fs-sm` alias with correct `--fs-body-sm` (13px) and `--fs-ui` (18px UI label) with `--fs-meta` (14px) where appropriate; fallback values now match actual design-system scale; `2px` margin hardcode replaced with `var(--sp-micro)`; spacing fallback for body padding corrected to match `--sp-2xl`/`--sp-3xl`
+- **`famColors` duplicate removed** — `renderArchetypeResults()` no longer declares a local copy of the family color map; uses the module-level `FAM` object directly, eliminating the maintenance risk of the two maps drifting apart
+
+### Added
+- **Quiz progress aria-live region** — `.quiz-progress` div now carries `aria-live="polite" aria-atomic="true"` with screen-reader-only "Question N of N" text; visible numeric label uses `aria-hidden` to avoid double-announcement; screen readers announce step changes without visual disruption
+- **Quiz answer group labelling** — `.quiz-answers` div now has `role="group" aria-labelledby="quiz-question-heading"` so assistive technology groups the answer buttons under the question context
+
 ## 2026-03-18
 
 ### Added

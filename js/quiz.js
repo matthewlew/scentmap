@@ -357,10 +357,13 @@ function renderStep(step, collectedTags) {
         <span class="quiz-title-small">${_quizConfig.title}</span>
       </div>
       <div class="quiz-body">
-        <div class="quiz-progress">${step + 1} of ${qs.length}</div>
+        <div class="quiz-progress" aria-live="polite" aria-atomic="true">
+          <span aria-hidden="true">${step + 1} of ${qs.length}</span>
+          <span class="sr-only">Question ${step + 1} of ${qs.length}</span>
+        </div>
         <div class="quiz-bar-track"><div class="quiz-bar-fill" style="width:${((step + 1) / qs.length) * 100}%"></div></div>
-        <h1 class="quiz-question">${q.q}</h1>
-        <div class="quiz-answers">
+        <h1 class="quiz-question" id="quiz-question-heading" tabindex="-1">${q.q}</h1>
+        <div class="quiz-answers" role="group" aria-labelledby="quiz-question-heading">
           ${q.a.map((ans, i) => `
             <button class="quiz-ans-btn" data-idx="${i}">${ans.label}</button>
           `).join('')}
@@ -368,6 +371,12 @@ function renderStep(step, collectedTags) {
       </div>
     </div>
   `;
+
+  // Nadia persona: restore keyboard focus to the question heading after DOM replace
+  requestAnimationFrame(() => {
+    const heading = _container.querySelector('#quiz-question-heading');
+    if (heading) heading.focus();
+  });
 
   _container.querySelectorAll('.quiz-ans-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -419,7 +428,7 @@ function renderResults(top3) {
         <span class="quiz-title-small">${_quizConfig.title}</span>
       </div>
       <div class="quiz-body">
-        <h1 class="quiz-question">Your Perfect Matches</h1>
+        <h1 class="quiz-question" id="quiz-results-heading" tabindex="-1">Your Perfect Matches</h1>
         <p class="quiz-subtitle">Based on your answers, we recommend these fragrances:</p>
         <div class="quiz-results">
           ${resultsHtml}
@@ -434,12 +443,18 @@ function renderResults(top3) {
       </div>
     </div>
   `;
+
+  // Nadia persona: focus results heading after DOM replace
+  requestAnimationFrame(() => {
+    const heading = _container.querySelector('#quiz-results-heading');
+    if (heading) heading.focus();
+  });
 }
 
 function renderArchetypeResults(archetype, frags) {
-  const famColors = { woody:'#6E3210', green:'#1A6030', chypre:'#285438', citrus:'#9A6800', floral:'#902050', amber:'#984000', oud:'#4A1850', leather:'#42200E', gourmand:'#7C4C00', aquatic:'#0A4880' };
+  // Use the top-level FAM object — no duplicate color map needed
   const familyPills = archetype.families.map(f => {
-    const color = famColors[f] || '#8C5E30';
+    const color = (FAM[f] || { color: '#8C5E30' }).color;
     return `<span class="quiz-arch-fam" style="background:${color}18;color:${color};border-color:${color}30">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
   }).join('');
 
@@ -472,7 +487,7 @@ function renderArchetypeResults(archetype, frags) {
       <div class="quiz-body">
         <div class="quiz-archetype-card">
           <div class="quiz-archetype-eyebrow">Your Scent Archetype</div>
-          <h1 class="quiz-archetype-name">${archetype.name}</h1>
+          <h1 class="quiz-archetype-name" id="quiz-archetype-heading" tabindex="-1">${archetype.name}</h1>
           <p class="quiz-archetype-tagline">${archetype.tagline}</p>
           <div class="quiz-arch-families">${familyPills}</div>
           <p class="quiz-archetype-desc">${archetype.desc}</p>
@@ -491,6 +506,12 @@ function renderArchetypeResults(archetype, frags) {
       </div>
     </div>
   `;
+
+  // Nadia persona: focus archetype heading after DOM replace
+  requestAnimationFrame(() => {
+    const heading = _container.querySelector('#quiz-archetype-heading');
+    if (heading) heading.focus();
+  });
 }
 
 function copyQuizLink() {
@@ -522,11 +543,11 @@ function injectStyles() {
   style.textContent = `
     .quiz-page { min-height: 100vh; min-height: 100dvh; background: var(--bg-secondary, #F5F2EC); }
     .quiz-header { display: flex; align-items: center; justify-content: space-between; padding: var(--sp-md, 16px) var(--sp-xl, 24px); border-bottom: 1px solid var(--border-subtle, #E8E4DC); background: var(--bg-primary, #FAF8F4); }
-    .quiz-back-link { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-secondary, #8C8070); text-decoration: none; font-weight: 500; }
+    .quiz-back-link { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-body-sm, 0.8125rem); color: var(--text-secondary, #8C8070); text-decoration: none; font-weight: 500; }
     .quiz-back-link:hover { color: var(--text-primary, #0E0C09); }
-    .quiz-title-small { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); }
-    .quiz-body { max-width: 600px; margin: 0 auto; padding: var(--sp-3xl, 36px) var(--sp-xl, 24px); }
-    .quiz-progress { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); margin-bottom: var(--sp-xs, 4px); }
+    .quiz-title-small { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-body-sm, 0.8125rem); color: var(--text-tertiary, #B0A898); }
+    .quiz-body { max-width: 600px; margin: 0 auto; padding: var(--sp-3xl, 32px) var(--sp-2xl, 24px); }
+    .quiz-progress { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-body-sm, 0.8125rem); color: var(--text-tertiary, #B0A898); margin-bottom: var(--sp-xs, 4px); }
     .quiz-bar-track { height: 3px; background: var(--border-subtle, #E8E4DC); border-radius: 2px; margin-bottom: var(--sp-xl, 24px); }
     .quiz-bar-fill { height: 100%; background: var(--text-primary, #0E0C09); border-radius: 2px; transition: width 0.3s cubic-bezier(.16,1,.3,1); }
     .quiz-question { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: clamp(24px, 5vw, 36px); line-height: 1.15; letter-spacing: -0.02em; color: var(--text-primary, #0E0C09); margin: 0 0 var(--sp-xl, 24px); }
@@ -550,8 +571,8 @@ function injectStyles() {
     .quiz-result-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
     .quiz-result-info { flex: 1; min-width: 0; }
     .quiz-result-name { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: var(--fs-ui, 14px); letter-spacing: -0.01em; }
-    .quiz-result-brand { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-secondary, #8C8070); margin-top: 2px; }
-    .quiz-result-desc { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); margin-top: var(--sp-xs, 4px); line-height: 1.5; }
+    .quiz-result-brand { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-body-sm, 0.8125rem); color: var(--text-secondary, #8C8070); margin-top: var(--sp-micro, 2px); }
+    .quiz-result-desc { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body-sm, 0.8125rem); color: var(--text-tertiary, #B0A898); margin-top: var(--sp-xs, 4px); line-height: 1.5; }
     .quiz-result-arrow { color: var(--text-tertiary, #B0A898); flex-shrink: 0; }
     .quiz-actions { display: flex; gap: var(--sp-md, 12px); margin-bottom: var(--sp-xl, 24px); }
     .quiz-btn-primary {
@@ -567,32 +588,67 @@ function injectStyles() {
     }
     .quiz-btn-secondary:hover { background: var(--bg-secondary, #F5F2EC); }
     .quiz-share-toast {
-      text-align: center; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px);
+      text-align: center; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-body-sm, 0.8125rem);
       color: var(--text-secondary, #8C8070); opacity: 0; transition: opacity 0.3s; margin-bottom: var(--sp-xl, 24px);
     }
     .quiz-share-toast.visible { opacity: 1; }
     .quiz-more-quizzes { border-top: 1px solid var(--border-subtle, #E8E4DC); padding-top: var(--sp-xl, 24px); margin-bottom: var(--sp-xl, 24px); }
-    .quiz-more-title { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-ui, 14px); font-weight: 600; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); }
+    .quiz-more-title { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-meta, 0.875rem); font-weight: 600; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); }
     .quiz-more-grid { display: flex; flex-direction: column; gap: var(--sp-sm, 8px); }
     .quiz-more-link {
-      font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-ui, 14px); color: var(--text-primary, #0E0C09);
+      font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-meta, 0.875rem); color: var(--text-primary, #0E0C09);
       text-decoration: underline; text-underline-offset: 3px;
     }
     .quiz-more-link:hover { color: var(--text-secondary, #8C8070); }
     .quiz-engine-link {
-      display: block; text-align: center; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px);
+      display: block; text-align: center; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-body-sm, 0.8125rem);
       color: var(--text-tertiary, #B0A898); text-decoration: underline; text-underline-offset: 3px; padding-bottom: var(--sp-4xl, 48px);
     }
 
     /* Archetype result card */
     .quiz-archetype-card { border: 1px solid var(--border-standard, #DDD8D0); border-radius: var(--radius-lg, 12px); background: var(--bg-primary, #FAF8F4); padding: var(--sp-xl, 24px); margin-bottom: var(--sp-xl, 24px); }
-    .quiz-archetype-eyebrow { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: var(--sp-sm, 8px); }
+    .quiz-archetype-eyebrow { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-body-sm, 0.8125rem); color: var(--text-tertiary, #B0A898); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: var(--sp-sm, 8px); }
     .quiz-archetype-name { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: clamp(22px, 5vw, 32px); line-height: 1.1; letter-spacing: -0.02em; color: var(--text-primary, #0E0C09); margin: 0 0 var(--sp-sm, 8px); }
-    .quiz-archetype-tagline { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); font-style: italic; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); line-height: 1.5; }
+    .quiz-archetype-tagline { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 1rem); font-style: italic; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); line-height: 1.5; }
     .quiz-arch-families { display: flex; flex-wrap: wrap; gap: var(--sp-xs, 4px); margin-bottom: var(--sp-md, 12px); }
-    .quiz-arch-fam { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); font-weight: 600; padding: 3px 10px; border-radius: 20px; border: 1px solid transparent; }
-    .quiz-archetype-desc { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); color: var(--text-secondary, #8C8070); margin: 0; line-height: 1.6; }
-    .quiz-section-title { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-ui, 14px); font-weight: 600; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); }
+    .quiz-arch-fam { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-body-sm, 0.8125rem); font-weight: 600; padding: 3px 10px; border-radius: 20px; border: 1px solid transparent; }
+    .quiz-archetype-desc { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 1rem); color: var(--text-secondary, #8C8070); margin: 0; line-height: 1.6; }
+    .quiz-section-title { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-meta, 0.875rem); font-weight: 600; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); }
+
+    /* ── Touch targets (Miguel persona — essential tremor, 44px min) ── */
+    .quiz-btn-primary, .quiz-btn-secondary { min-height: var(--touch-target, 44px); }
+    .quiz-ans-btn { min-height: var(--touch-target, 44px); }
+
+    /* ── Focus rings (Nadia persona — keyboard-first, low vision) ── */
+    /* Uses same double box-shadow pattern as global design-system.css :focus-visible */
+    .quiz-ans-btn:focus-visible {
+      outline: none;
+      border-color: var(--focus-ring-color, #8C5E30);
+      box-shadow: 0 0 0 var(--focus-ring-offset, 3px) var(--bg-primary, #FAF8F4),
+                  0 0 0 calc(var(--focus-ring-offset, 3px) + var(--focus-ring-width, 2px)) var(--focus-ring-color, #8C5E30);
+    }
+    .quiz-btn-primary:focus-visible,
+    .quiz-btn-secondary:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 var(--focus-ring-offset, 3px) var(--bg-primary, #FAF8F4),
+                  0 0 0 calc(var(--focus-ring-offset, 3px) + var(--focus-ring-width, 2px)) var(--focus-ring-color, #8C5E30);
+    }
+    .quiz-result-card:focus-visible {
+      outline: none;
+      border-color: var(--focus-ring-color, #8C5E30);
+      box-shadow: 0 0 0 var(--focus-ring-offset, 3px) var(--bg-primary, #FAF8F4),
+                  0 0 0 calc(var(--focus-ring-offset, 3px) + var(--focus-ring-width, 2px)) var(--focus-ring-color, #8C5E30);
+    }
+    .quiz-back-link:focus-visible,
+    .quiz-more-link:focus-visible,
+    .quiz-engine-link:focus-visible {
+      outline: none;
+      border-radius: var(--radius-small, 3px);
+      box-shadow: 0 0 0 var(--focus-ring-offset, 3px) var(--bg-primary, #FAF8F4),
+                  0 0 0 calc(var(--focus-ring-offset, 3px) + var(--focus-ring-width, 2px)) var(--focus-ring-color, #8C5E30);
+    }
+    /* .quiz-question used as focus target between steps — no visible ring needed on heading */
+    .quiz-question:focus { outline: none; }
 
     /* Hide app chrome on quiz pages */
     .col-main-nav, .mobile-bottomnav, .sheet-stack-overlay, .note-float-overlay, .frag-picker-overlay,
