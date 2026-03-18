@@ -4,6 +4,13 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-17h
+
+### Added
+- **everything-claude-code integration** — added skill, instincts, and package-manager config from affaan-m/everything-claude-code to `.claude/` directory for cross-platform development guidance and conventional commit standards
+
+---
+
 ## 2026-03-17g
 
 ### Added
