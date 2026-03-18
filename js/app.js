@@ -392,26 +392,31 @@ function classifyDiscovery(source,candidate){
 }
 
 /* Role assignments: roleId → ordered array of fragId (index 0 = primary) */
-const RA={};
+let RA={};
+try { RA=JSON.parse(localStorage.getItem('scentmap_ra')||'{}') || {}; }
+catch(e){ RA={}; try{localStorage.removeItem('scentmap_ra')}catch(_){} }
+function _saveRA(){try{localStorage.setItem('scentmap_ra',JSON.stringify(RA));}catch(_){}}
 function getAssigned(roleId){return RA[roleId]||[]}
 function getPrimary(roleId){return getAssigned(roleId)[0]||null}
 function assignFrag(roleId,fragId){
   if(!RA[roleId])RA[roleId]=[];
   // Remove if already present
   const idx=RA[roleId].indexOf(fragId);
-  if(idx!==-1){RA[roleId].splice(idx,1);return}
+  if(idx!==-1){RA[roleId].splice(idx,1);_saveRA();return}
   // Otherwise add (push to end if not primary, or prepend to make primary)
-  RA[roleId].push(fragId);
+  RA[roleId].push(fragId);_saveRA();
 }
 function makePrimary(roleId,fragId){
   if(!RA[roleId])RA[roleId]=[];
   const idx=RA[roleId].indexOf(fragId);
   if(idx===-1)RA[roleId].unshift(fragId);
   else{RA[roleId].splice(idx,1);RA[roleId].unshift(fragId);}
+  _saveRA();
 }
 function removeFromRole(roleId,fragId){
   if(!RA[roleId])return;
   RA[roleId]=RA[roleId].filter(id=>id!==fragId);
+  _saveRA();
 }
 function getFragRoleStatus(fragId,roleId){
   const arr=getAssigned(roleId);
@@ -429,9 +434,12 @@ function getAllRolesForFrag(fragId){
   return result;
 }
 
-// Defaults
-['casual','gypsy-water'],['signature','endeavour'],['cold','eleventh-hour'],['creative','oronardo']
-  .forEach(([r,f])=>{if(!RA[r])RA[r]=[];RA[r].push(f)});
+// Defaults (only applied when no saved assignments exist)
+if(!Object.keys(RA).length){
+  [['casual','gypsy-water'],['signature','endeavour'],['cold','eleventh-hour'],['creative','oronardo']]
+    .forEach(([r,f])=>{if(!RA[r])RA[r]=[];RA[r].push(f)});
+  _saveRA();
+}
 
 
 
@@ -679,10 +687,12 @@ function renderFragDetail(container,frag){
     el.innerHTML='';
     const wishBtn=document.createElement('button');
     wishBtn.className='dc-collect-btn'+(st==='wish'?' active':'');
+    wishBtn.setAttribute('aria-pressed',st==='wish'?'true':'false');
     wishBtn.innerHTML=`<span class="dc-collect-icon">${st==='wish'?'♥':'♡'}</span> Wishlist`;
     wishBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='wish'?'none':'wish');refreshAfterStateChange(frag.id);renderCollectRow();});
     const ownBtn=document.createElement('button');
     ownBtn.className='dc-collect-btn'+(st==='owned'?' active':'');
+    ownBtn.setAttribute('aria-pressed',st==='owned'?'true':'false');
     ownBtn.innerHTML=`<span class="dc-collect-icon">${st==='owned'?'✓':''}</span> ${st==='owned'?'Owned':'Mark owned'}`;
     ownBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='owned'?'none':'owned');refreshAfterStateChange(frag.id);renderCollectRow();});
     el.appendChild(wishBtn);el.appendChild(ownBtn);
@@ -1850,6 +1860,12 @@ function initCatalogControls(){
   });
   clearBtn.addEventListener('click',()=>{
     searchEl.value='';clearBtn.classList.remove('visible');buildCatalog();
+  });
+  searchEl.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&searchEl.value.length>0){
+      e.stopPropagation();
+      searchEl.value='';clearBtn.classList.remove('visible');buildCatalog();searchEl.blur();
+    }
   });
 
   // Mobile filter toggle
@@ -3308,7 +3324,8 @@ function _renderPickerList(q,slot){
     if(_pickerSort==='name') sub=`${f.brand} · ${(FAM[f.family]||{}).label||f.family}`;
     else if(_pickerSort==='family') sub=f.brand;
     else sub=f.brand;
-    return`<div class="frag-picker-item${isOther?' other-sel':''}" data-id="${f.id}" role="option" aria-selected="false">
+    const isCur=!!(curFrag&&curFrag.id===f.id);
+    return`<div class="frag-picker-item${isOther?' other-sel':''}" data-id="${f.id}" role="option" aria-selected="${isCur}">
       <div class="frag-picker-dot" style="background:${fc.accent}"></div>
       <div class="frag-picker-item-text">
         <div class="frag-picker-item-name">${f.name}</div>
@@ -3345,8 +3362,11 @@ function _initPickerDrumScroll(listEl,slot){
     const items=Array.from(listEl.querySelectorAll('.frag-picker-item'));
     if(!items.length)return;
     const idx=Math.max(0,Math.min(Math.round(listEl.scrollTop/PICKER_ITEM_H),items.length-1));
-    // Always update visual centering
-    items.forEach((it,i)=>it.classList.toggle('centered',i===idx));
+    // Always update visual centering and ARIA selection
+    items.forEach((it,i)=>{
+      it.classList.toggle('centered',i===idx);
+      it.setAttribute('aria-selected',i===idx?'true':'false');
+    });
     // Haptic + selection only on user-initiated scrolls
     if(listEl.dataset.scrolling)return;
 
@@ -3383,8 +3403,10 @@ function _updateOtherSelMarking(slot){
   const newFrag=slot==='a'?CMP_A:CMP_B;
   const otherList=document.getElementById(`frag-picker-list-${slot==='a'?'b':'a'}`);
   if(!otherList)return;
+  const otherSlotFrag=slot==='a'?CMP_B:CMP_A;
   otherList.querySelectorAll('.frag-picker-item').forEach(it=>{
     it.classList.toggle('other-sel',!!(newFrag&&it.dataset.id===newFrag.id));
+    it.setAttribute('aria-selected',!!(otherSlotFrag&&it.dataset.id===otherSlotFrag.id)?'true':'false');
   });
 }
 

@@ -4,6 +4,16 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-18
+
+### Fixed
+- **`aria-selected` on picker drum items** — compare fragrance picker now sets `aria-selected="true"` on the currently centered/selected item in each drum column; was always `"false"` regardless of selection state; also updates live as the drum scrolls so screen readers track the active option
+- **`aria-pressed` on Wishlist / Mark Owned buttons** — detail panel collect-row buttons now carry correct `aria-pressed` state so assistive technology announces toggle state without relying on visual-only cues
+
+### Added
+- **Role assignments now persist across sessions** — fragrance role assignments (`RA`) are saved to `localStorage` (`scentmap_ra`) and restored on load; assignments survived neither page refresh nor revisit before this change; defaults (casual → Gypsy Water, etc.) are only applied when no saved data exists
+- **Escape clears catalog search** — pressing Escape while the search field has text clears the query, dismisses the clear button, rebuilds the catalog, and blurs the input; natural keyboard behaviour previously missing
+
 ## 2026-03-17h
 
 ### Added
