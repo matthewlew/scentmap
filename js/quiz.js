@@ -265,6 +265,70 @@ const ARCHETYPES = {
   },
 };
 
+/* ── Zodiac Traits ── */
+const ZODIAC = {
+  'aries': {
+    name: 'Aries',
+    traits: 'bold, energetic, and pioneering',
+    desc: 'As a fire sign, you need a scent that matches your high-octane energy. You gravitate toward intense, woody, and amber profiles that command attention.'
+  },
+  'taurus': {
+    name: 'Taurus',
+    traits: 'sensual, grounded, and indulgent',
+    desc: 'You appreciate the finer things and natural beauty. Green, floral, and warm balsamic notes reflect your love for earthy luxury and comfort.'
+  },
+  'gemini': {
+    name: 'Gemini',
+    traits: 'witty, versatile, and curious',
+    desc: 'Your dual nature demands a scent that is as multifaceted as you are. Bright citrus and dewy florals keep up with your fast-paced, social lifestyle.'
+  },
+  'cancer': {
+    name: 'Cancer',
+    traits: 'intuitive, nurturing, and emotive',
+    desc: 'Fragrance is personal and nostalgic for you. You prefer intimate skin scents, soft florals, and aquatic notes that feel like a protective, watery embrace.'
+  },
+  'leo': {
+    name: 'Leo',
+    traits: 'radiant, confident, and dramatic',
+    desc: 'You were born to stand out. Only the most regal ambers and boldest florals will do for someone who naturally takes center stage.'
+  },
+  'virgo': {
+    name: 'Virgo',
+    traits: 'precise, analytical, and elegant',
+    desc: 'You value clarity and craftsmanship. Crisp green notes and polished woods appeal to your desire for a scent that is clean, intentional, and perfectly balanced.'
+  },
+  'libra': {
+    name: 'Libra',
+    traits: 'harmonious, romantic, and charming',
+    desc: 'Ruled by Venus, you seek beauty and balance. Sophisticated chypres and airy florals provide the aesthetic harmony you crave.'
+  },
+  'scorpio': {
+    name: 'Scorpio',
+    traits: 'intense, mysterious, and powerful',
+    desc: 'You are drawn to the shadows and the deep. Dark oud, smoky leather, and rich spices reflect your magnetic and transformative presence.'
+  },
+  'sagittarius': {
+    name: 'Sagittarius',
+    traits: 'adventurous, optimistic, and free-spirited',
+    desc: 'The explorer of the zodiac needs a scent that travels well. Fresh woods and bright, open-air citruses match your quest for the next big horizon.'
+  },
+  'capricorn': {
+    name: 'Capricorn',
+    traits: 'ambitious, disciplined, and timeless',
+    desc: 'You play the long game. Classic leather, sturdy woods, and warm ambers reflect your resilience and your respect for tradition and quality.'
+  },
+  'aquarius': {
+    name: 'Aquarius',
+    traits: 'original, independent, and visionary',
+    desc: 'You defy convention. Unconventional aquatics and electric citruses appeal to your forward-thinking and rebellious spirit.'
+  },
+  'pisces': {
+    name: 'Pisces',
+    traits: 'dreamy, compassionate, and ethereal',
+    desc: 'As the mystic of the zodiac, you drift between worlds. Soft aquatics and dewy, romantic florals capture your poetic and imaginative essence.'
+  }
+};
+
 function scoreArchetypeMode(catalog, collectedTags) {
   // Tally arch: tags to find dominant archetype
   const counts = {};
@@ -282,6 +346,18 @@ function scoreArchetypeMode(catalog, collectedTags) {
   const merged = [...new Set([...userFamilyTags, ...archetype.tags])];
   const frags = scoreFragrances(catalog, merged, {});
   return { archetype, frags };
+}
+
+function scoreAstroMode(catalog, collectedTags) {
+  // Find the selected zodiac sign
+  const signTag = collectedTags.find(t => t.startsWith('astro:'));
+  const signId = signTag ? signTag.slice(6) : 'aries';
+  const sign = ZODIAC[signId] || ZODIAC['aries'];
+
+  // Filter out the astro tag for scoring
+  const otherTags = collectedTags.filter(t => !t.startsWith('astro:'));
+  const frags = scoreFragrances(catalog, otherTags, {});
+  return { sign, frags };
 }
 
 /* ── UI Rendering ── */
@@ -317,6 +393,10 @@ function renderQuiz(container, config, catalog) {
         const archetypeId = urlParams.get('archetype') || 'quiet-expressionist';
         const archetype = ARCHETYPES[archetypeId] || ARCHETYPES['quiet-expressionist'];
         renderArchetypeResults(archetype, resultFrags);
+      } else if (config.scoring?.astroMode) {
+        const signId = urlParams.get('sign') || 'aries';
+        const sign = ZODIAC[signId] || ZODIAC['aries'];
+        renderAstroResults(sign, resultFrags);
       } else {
         renderResults(resultFrags);
       }
@@ -335,6 +415,13 @@ function renderStep(step, collectedTags) {
       const ids = frags.map(f => f.id).join(',');
       history.replaceState(null, '', `/quiz/${_slug}?archetype=${archetype.id}&results=${ids}`);
       renderArchetypeResults(archetype, frags);
+    } else if (_quizConfig.scoring?.astroMode) {
+      const { sign, frags } = scoreAstroMode(_catalog, collectedTags);
+      const ids = frags.map(f => f.id).join(',');
+      const signTag = collectedTags.find(t => t.startsWith('astro:'));
+      const signId = signTag ? signTag.slice(6) : 'aries';
+      history.replaceState(null, '', `/quiz/${_slug}?sign=${signId}&results=${ids}`);
+      renderAstroResults(sign, frags);
     } else {
       const top3 = scoreFragrances(_catalog, collectedTags, _quizConfig.scoring);
       if (top3.length > 0) {
@@ -500,6 +587,62 @@ function renderArchetypeResults(archetype, frags) {
           <p class="quiz-archetype-desc">${archetype.desc}</p>
         </div>
         <h2 class="quiz-section-title">Your Matches</h2>
+        <div class="quiz-results">
+          ${resultsHtml}
+        </div>
+        <div class="quiz-actions">
+          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
+          <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
+        </div>
+        <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
+        ${moreQuizzes}
+        <a href="/app" class="quiz-engine-link">Open the full Scentmap engine</a>
+      </div>
+    </div>
+  `;
+}
+
+function renderAstroResults(sign, frags) {
+  const moreQuizzes = _buildMoreQuizzesHtml();
+  const resultsHtml = frags.map(frag => {
+    const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
+    return `
+      <a href="/app#frag=${frag.id}" class="quiz-result-card">
+        <div class="quiz-result-dot" style="background:${fc.color}"></div>
+        <div class="quiz-result-info">
+          <div class="quiz-result-name">${frag.name}</div>
+          <div class="quiz-result-brand">${frag.brand} &middot; ${fc.label}</div>
+          ${frag.description ? `<div class="quiz-result-desc">${frag.description}</div>` : ''}
+        </div>
+        <svg class="quiz-result-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    `;
+  }).join('');
+
+  _container.innerHTML = `
+    <div class="quiz-page">
+      <nav class="global-nav">
+        <div class="global-nav-left">
+          <a href="/" class="global-nav-logo">Scentmap</a>
+          <div class="global-nav-links">
+            <a href="/app#catalog" class="global-nav-link">Fragrances</a>
+            <a href="/app#compare" class="global-nav-link">Compare</a>
+            <a href="/app#notes" class="global-nav-link">Notes</a>
+            <a href="/#quizzes" class="global-nav-link active">Quizzes</a>
+          </div>
+        </div>
+        <div class="global-nav-right">
+          <span class="quiz-title-small">${_quizConfig.title}</span>
+        </div>
+      </nav>
+      <div class="quiz-body">
+        <div class="quiz-archetype-card">
+          <div class="quiz-archetype-eyebrow">Astro Scent Match</div>
+          <h1 class="quiz-archetype-name">${sign.name}</h1>
+          <p class="quiz-archetype-tagline">You are ${sign.traits}.</p>
+          <p class="quiz-archetype-desc">${sign.desc}</p>
+        </div>
+        <h2 class="quiz-section-title">Your Cosmic Pairings</h2>
         <div class="quiz-results">
           ${resultsHtml}
         </div>
