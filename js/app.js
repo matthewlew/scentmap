@@ -550,14 +550,16 @@ function openDetail(renderFn,title){
   if(isDesktop()||isTablet())openDesktopDetail(renderFn);
   else pushSheet(c=>renderFn(c),title);
 }
+window.openDetail = openDetail;
+
 function pushDetail(renderFn,title){
   if(isDesktop()||isTablet())pushDesktopDetail(renderFn);
   else pushSheet(c=>renderFn(c),title);
 }
+window.pushDetail = pushDetail;
 
-/* ══ SHARED RENDERERS ══════════════════════════════════════════════ */
-const SW=['','Skin','Skin','Subtle','Subtle','Moderate','Moderate','Strong','Strong','Enveloping','Enormous'];
-const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered','Layered','Complex','Deep'];
+function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
+window.openFragDetail = openFragDetail;
 
 function linkNotes(arr){
   return arr.map(n=>{
@@ -973,8 +975,6 @@ function renderBrandSaveBtn(container, brandData) {
   });
   container.appendChild(btn);
 }
-
-function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
 
 function renderHouseDetail(container,brand){
   const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
@@ -2205,9 +2205,29 @@ function closeQuickPeek(){
 /* ══ NAV ════════════════════════════════════════════════════════════ */
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link').forEach(t=>t.classList.remove('active'));
-  document.getElementById('p-'+id).classList.add('active');
-  if(btn)btn.classList.add('active');
+  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link, .mbn-btn').forEach(t=>t.classList.remove('active'));
+  const panel = document.getElementById('p-'+id);
+  if(panel) panel.classList.add('active');
+  
+  if (id === 'saved') renderSaved();
+  if (id === 'journal') renderJournal();
+
+  // Find and activate the matching global nav link or button
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    // If no btn provided, try to find one by onclick or href
+    const navLinks = document.querySelectorAll('.global-nav-link, .mbn-btn');
+    navLinks.forEach(l => {
+      const oc = l.getAttribute('onclick') || '';
+      const href = l.getAttribute('href') || '';
+      // Map 'saved' panel to 'You' nav label or #saved hash
+      if (oc.includes(`go('${id}'`) || href.endsWith(`#${id}`) || (id==='saved' && (oc.includes("go('saved'") || href.endsWith('#saved')))) {
+        l.classList.add('active');
+      }
+    });
+  }
+
   closeDesktopDetail();
   // Sync URL with compare tab state
   if(id==='compare'){
@@ -2217,6 +2237,14 @@ function go(id,btn){
     history.replaceState(null,'','/app');
   }
 }
+window.go = go;
+
+function goMobile(id,btn){
+  document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  go(id,null);
+}
+window.goMobile = goMobile;
 
 /* ── Detail Pagination ── */
 function _setupDetailSwipe(container, currentFrag) {
@@ -2310,11 +2338,6 @@ document.addEventListener('DOMContentLoaded',function(){
   updateNavForUser();
   initSupabaseAuth();
 });
-function goMobile(id,btn){
-  document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  go(id,null);
-}
 function openMoreSheet(btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
