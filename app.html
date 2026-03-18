@@ -62,6 +62,7 @@
           <button class="global-nav-link" onclick="go('catalog', this)">Fragrances</button>
           <button class="global-nav-link active" onclick="go('compare', this)">Compare</button>
           <button class="global-nav-link" onclick="go('notes', this)">Notes</button>
+          <button class="global-nav-link" onclick="go('journal', this)">Journal</button>
           <button class="global-nav-link" onclick="go('saved', this)">Collection</button>
           <a href="/#quizzes" class="global-nav-link">Quizzes</a>
         </div>
@@ -77,6 +78,16 @@
       </div>
     </nav>
     <div class="col-main-content">
+
+      <div class="panel" id="p-journal" style="padding: var(--sp-lg);">
+        <div class="frag-main-top" style="margin-bottom: var(--sp-lg); border-bottom: none;">
+          <div class="frag-title-row">
+            <span class="frag-title">Scent Journal</span>
+          </div>
+          <p class="text-body" style="font-family:var(--font-serif); margin-top:var(--sp-xs); color:var(--text-secondary); opacity:0.8;">Track what you're wearing and how it evolves over time.</p>
+        </div>
+        <div id="journal-content"></div>
+      </div>
 
       <div class="panel" id="p-saved" style="padding: var(--sp-lg);">
         <div class="frag-main-top" style="margin-bottom: var(--sp-lg); border-bottom: none;">
