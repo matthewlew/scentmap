@@ -428,14 +428,15 @@ function renderQuiz(container, config, catalog) {
 function renderStep(step, collectedTags) {
   const qs = _quizConfig.questions;
   if (step >= qs.length) {
-    if (_quizConfig.scoring?.archetypeMode) {
       const { archetype, frags } = scoreArchetypeMode(_catalog, collectedTags);
       const ids = frags.map(f => f.id).join(',');
+      window._saveQuizResult?.(_slug, _quizConfig.title, archetype, frags);
       history.replaceState(null, '', `/quiz/${_slug}?archetype=${archetype.id}&results=${ids}`);
       renderArchetypeResults(archetype, frags);
     } else if (_quizConfig.scoring?.astroMode) {
       const { sign, archetype, frags } = scoreAstroMode(_catalog, collectedTags);
       const ids = frags.map(f => f.id).join(',');
+      window._saveQuizResult?.(_slug, _quizConfig.title, { name: sign.name, traits: sign.traits, archetype: archetype.name }, frags);
       const signTag = collectedTags.find(t => t.startsWith('astro:'));
       const signId = signTag ? signTag.slice(6) : 'aries';
       history.replaceState(null, '', `/quiz/${_slug}?sign=${signId}&results=${ids}`);
@@ -443,6 +444,7 @@ function renderStep(step, collectedTags) {
     } else {
       const top3 = scoreFragrances(_catalog, collectedTags, _quizConfig.scoring);
       if (top3.length > 0) {
+        window._saveQuizResult?.(_slug, _quizConfig.title, null, top3);
         const ids = top3.map(f => f.id).join(',');
         history.replaceState(null, '', `/quiz/${_slug}?results=${ids}`);
       }

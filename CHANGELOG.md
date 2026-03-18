@@ -21,6 +21,11 @@ All notable changes to Scentmap are documented here.
 ### Added
 - **Dupe Lab feature** — new "Find Dupes in Catalog" entry point added to fragrance detail panels; calculates similarity scores across the entire 183-scent database using the multi-factor similarity algorithm; ranked results show match percentage, note overlap bar, and "Why this matches" math expansion (family/note/sillage/role breakdown); "View Details" allows deep-linking to matched fragrances
 - **Astro Scent Match Quiz — Archetype Integration** — zodiac-mapped quiz now integrates with the Scent Archetype framework; each sun sign maps to a core archetype (e.g., Aries to "The Provocateur", Virgo to "The Minimalist"); results page provides dual personality-to-fragrance rationale; added multi-step refinement questions (Climate, Mystery) for personalized cosmic pairings
+- **Enhanced "My Collection" (Saved) tab** — transformed the static list into a personalized dashboard including:
+  - **Olfactive DNA card** — visual summary of owned fragrances featuring average profile bars (Fresh, Sweet, Warm, Bold), dominant note families, and core shared notes
+  - **Quiz History** — logged history of completed quizzes with results and archetypes; supports one-tap deep-linking back to recommendations with quiz attribution
+  - **Recently Viewed** — new carousel tracking the last 20 fragrances explored in the engine
+  - **Improved Empty State** — friendly onboarding for new users with "Browse Fragrances" CTA
 - **Quiz result attribution banner** — added personalized context when deep-linking from quiz results to the fragrance engine; detail panels now display a "From your scent archetype: [Name]" banner when arrived via a quiz result link
 - **Analytics event stubs** — added `trackEvent()` helper to `js/app.js` with initial instrumentation for `dupe_lab_opened` and `dupe_clicked` events; establishing the pattern for planned DNA Card analytics
 

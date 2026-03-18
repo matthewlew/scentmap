@@ -323,44 +323,199 @@ function renderCollectionSection(container, label, items, type) {
   container.appendChild(section);
 }
 
+/* Olfactive DNA calculation helpers */
+function getCollectionStats(frags) {
+  if (!frags.length) return null;
+  const famCounts = {};
+  const noteCounts = {};
+  const profiles = [];
+
+  frags.forEach(f => {
+    famCounts[f.family] = (famCounts[f.family] || 0) + 1;
+    f._nAll.forEach(n => { noteCounts[n] = (noteCounts[n] || 0) + 1; });
+    profiles.push(computeProfile(f));
+  });
+
+  const avgProfile = {
+    freshness: profiles.reduce((s, p) => s + p.freshness, 0) / frags.length,
+    sweetness: profiles.reduce((s, p) => s + p.sweetness, 0) / frags.length,
+    warmth: profiles.reduce((s, p) => s + p.warmth, 0) / frags.length,
+    intensity: profiles.reduce((s, p) => s + p.intensity, 0) / frags.length,
+    complexity: profiles.reduce((s, p) => s + p.complexity, 0) / frags.length,
+  };
+
+  const topFamilies = Object.entries(famCounts).sort((a,b) => b[1] - a[1]);
+  const topNotes = Object.entries(noteCounts).sort((a,b) => b[1] - a[1]).slice(0, 10);
+
+  return { avgProfile, topFamilies, topNotes, count: frags.length };
+}
+
 window.renderSaved = function() {
   const container = document.getElementById('saved-list');
   if (!container) return;
   container.innerHTML = '';
 
-  // Copy button + aria-live toast
-  const copyRow = document.createElement('div');
-  copyRow.style.display = 'flex';
-  copyRow.style.alignItems = 'center';
-  copyRow.style.marginBottom = 'var(--sp-xl)';
-  const copyBtn = document.createElement('button');
-  copyBtn.className = 'copy-collection-btn';
-  copyBtn.textContent = 'Copy Collection';
-  const toastEl = document.createElement('span');
-  toastEl.className = 'copy-toast';
-  toastEl.setAttribute('aria-live', 'polite');
-  copyBtn.addEventListener('click', () => copyCollectionToClipboard(toastEl));
-  copyRow.appendChild(copyBtn);
-  copyRow.appendChild(toastEl);
-  container.appendChild(copyRow);
-
   const owned  = CAT.filter(f => isOwned(f.id));
   const wished = CAT.filter(f => isWish(f.id));
   const notes  = NI.filter(n => isNoteSaved(n.name));
   const brands = BRANDS.filter(b => isBrandSaved(b.id));
+  const historyFrags = HISTORY.map(id => CAT_MAP[id]).filter(Boolean);
 
-  if (!owned.length && !wished.length && !notes.length && !brands.length) {
-    const empty = document.createElement('div');
-    empty.style.cssText = 'padding:var(--sp-lg);color:var(--g500);font-family:var(--font-serif);';
-    empty.textContent = 'Nothing saved yet. Swipe a fragrance to wishlist it, or open a note or brand to save it.';
-    container.appendChild(empty);
+  if (!owned.length && !wished.length && !notes.length && !brands.length && !historyFrags.length && !QUIZ_HISTORY.length) {
+    container.innerHTML = `
+      <div style="padding:var(--sp-2xl); text-align:center; color:var(--text-secondary);">
+        <div style="font-size:32px; margin-bottom:var(--sp-md);">✨</div>
+        <div class="text-title" style="margin-bottom:var(--sp-xs);">Your collection is empty</div>
+        <p class="text-body" style="font-family:var(--font-serif); opacity:0.8;">Explore the catalog and take quizzes to build your olfactive profile.</p>
+        <button class="dc-collect-btn active" style="margin-top:var(--sp-xl);" onclick="go('catalog', null)">Browse Fragrances</button>
+      </div>`;
     return;
   }
 
-  renderCollectionSection(container, 'Owned', owned, 'frags');
-  renderCollectionSection(container, 'Wishlist', wished, 'frags');
-  renderCollectionSection(container, 'Saved Notes', notes, 'notes');
-  renderCollectionSection(container, 'Saved Brands', brands, 'brands');
+  // ── 1. OLFACTIVE DNA (Summary of Owned) ──
+  if (owned.length > 0) {
+    const stats = getCollectionStats(owned);
+    const dnaSec = document.createElement('div');
+    dnaSec.className = 'collection-dna-card';
+    dnaSec.style.cssText = 'background:var(--bg-secondary); border-radius:var(--radius-xl); padding:var(--sp-xl); margin-bottom:var(--sp-3xl); border:1px solid var(--border-subtle);';
+    
+    const profile = stats.avgProfile;
+    const bars = [
+      { l: 'Fresh', v: profile.freshness, c: 'var(--fam-citrus)' },
+      { l: 'Sweet', v: profile.sweetness, c: 'var(--fam-floral)' },
+      { l: 'Warm',  v: profile.warmth,    c: 'var(--fam-amber)' },
+      { l: 'Bold',  v: profile.intensity, c: 'var(--fam-oud)' }
+    ];
+
+    dnaSec.innerHTML = `
+      <div class="sec-label" style="margin-bottom:var(--sp-md);">Your Olfactive DNA</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-xl); align-items:center;">
+        <div>
+          <div style="font-family:var(--font-display); font-size:var(--fs-title); line-height:1; margin-bottom:var(--sp-xs);">${owned.length}</div>
+          <div style="font-family:var(--font-sans); font-size:var(--fs-caption); color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:var(--sp-lg);">Fragrances Owned</div>
+          
+          <div style="display:flex; flex-direction:column; gap:var(--sp-xs);">
+            ${bars.map(b => `
+              <div style="display:flex; align-items:center; gap:var(--sp-sm);">
+                <div style="width:45px; font-size:var(--fs-caption); font-weight:600; color:var(--text-tertiary);">${b.l}</div>
+                <div style="flex:1; height:4px; background:var(--border-subtle); border-radius:2px; position:relative; overflow:hidden;">
+                  <div style="position:absolute; top:0; left:0; height:100%; width:${Math.round(b.v*100)}%; background:${b.c};"></div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div style="background:var(--bg-primary); border-radius:var(--radius-lg); padding:var(--sp-md); border:1px solid var(--border-subtle);">
+          <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Dominant Families</div>
+          <div style="display:flex; flex-wrap:wrap; gap:4px;">
+            ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `
+              <div class="chip" style="background:${FAM[fam]?.color||'#888'}; font-size:11px; padding:2px 8px;">${FAM[fam]?.label||fam}</div>
+            `).join('')}
+          </div>
+          <div class="sec-label" style="font-size:10px; margin:var(--sp-md) 0 var(--sp-sm); opacity:0.6;">Core Notes</div>
+          <div style="font-family:var(--font-serif); font-size:var(--fs-meta); color:var(--text-secondary); line-height:1.4;">
+            ${stats.topNotes.slice(0, 5).map(n => n[0]).join(', ')}
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(dnaSec);
+  }
+
+  // ── 2. COLLECTIONS (Owned & Wishlist) ──
+  if (owned.length > 0) renderCollectionSection(container, 'Owned', owned, 'frags');
+  if (wished.length > 0) renderCollectionSection(container, 'Wishlist', wished, 'frags');
+
+  // ── 3. QUIZ HISTORY ──
+  if (QUIZ_HISTORY.length > 0) {
+    const qSec = document.createElement('div');
+    qSec.style.marginBottom = 'var(--sp-3xl)';
+    qSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Quiz Results</div>`;
+    const qWrap = document.createElement('div');
+    qWrap.style.cssText = 'display:flex; flex-direction:column; gap:var(--sp-sm);';
+    
+    QUIZ_HISTORY.forEach(q => {
+      const row = document.createElement('div');
+      row.style.cssText = 'background:var(--bg-primary); border:1px solid var(--border-standard); border-radius:var(--radius-lg); padding:var(--sp-md); cursor:pointer;';
+      const date = new Date(q.date).toLocaleDateString(undefined, { month:'short', day:'numeric' });
+      
+      let badge = '';
+      if (q.archetype) {
+        badge = `<span style="font-size:11px; color:var(--accent-primary); font-weight:700; text-transform:uppercase; letter-spacing:0.02em;">${q.archetype.name || q.archetype}</span>`;
+      }
+
+      row.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
+          <div style="font-family:var(--font-sans); font-size:var(--fs-meta); font-weight:600; color:var(--text-primary);">${q.title}</div>
+          <div style="font-size:11px; color:var(--text-tertiary);">${date}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:var(--sp-sm);">
+          ${badge}
+          <div style="font-family:var(--font-serif); font-size:12px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1;">
+            Result: ${q.results.map(f => f.name).join(', ')}
+          </div>
+        </div>
+      `;
+      row.addEventListener('click', () => {
+        // Find best result to deep-link
+        const best = q.results[0];
+        if (best) {
+          const archId = q.archetype?.id || (typeof q.archetype === 'string' ? q.archetype.toLowerCase().replace(/\s+/g,'-') : '');
+          const hash = archId ? `#frag=${best.id}&source=quiz&archetype=${archId}` : `#frag=${best.id}`;
+          window.location.hash = hash;
+        }
+      });
+      qWrap.appendChild(row);
+    });
+    qSec.appendChild(qWrap);
+    container.appendChild(qSec);
+  }
+
+  // ── 4. RECENTLY VIEWED ──
+  if (historyFrags.length > 0) {
+    const hSec = document.createElement('div');
+    hSec.style.marginBottom = 'var(--sp-3xl)';
+    hSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Recently Viewed</div>`;
+    const hWrap = document.createElement('div');
+    hWrap.className = 'carousel';
+    hWrap.style.paddingBottom = 'var(--sp-md)';
+    
+    historyFrags.forEach(f => {
+      const fm = FAM[f.family] || {color: '#888'};
+      const card = document.createElement('div');
+      card.className = 'carousel-card';
+      card.innerHTML = `<div class="carousel-card-name">${f.name}</div>
+        <div class="carousel-card-brand">${f.brand}</div>
+        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
+      card.addEventListener('click', e => { e.stopPropagation(); openFragDetail(f); });
+      hWrap.appendChild(card);
+    });
+    
+    const carouselWrap = document.createElement('div');
+    carouselWrap.className = 'carousel-wrap';
+    carouselWrap.appendChild(hWrap);
+    hSec.appendChild(carouselWrap);
+    container.appendChild(hSec);
+  }
+
+  // ── 5. SAVED NOTES & BRANDS ──
+  if (notes.length > 0) renderCollectionSection(container, 'Saved Notes', notes, 'notes');
+  if (brands.length > 0) renderCollectionSection(container, 'Saved Brands', brands, 'brands');
+
+  // Footer Actions
+  const footer = document.createElement('div');
+  footer.style.cssText = 'border-top:1px solid var(--border-subtle); padding-top:var(--sp-xl); margin-top:var(--sp-xl); display:flex; align-items:center; justify-content:space-between;';
+  
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-collection-btn';
+  copyBtn.textContent = 'Copy Collection Link';
+  const toastEl = document.createElement('span');
+  toastEl.className = 'copy-toast';
+  copyBtn.addEventListener('click', () => copyCollectionToClipboard(toastEl));
+  
+  footer.appendChild(copyBtn);
+  footer.appendChild(toastEl);
+  container.appendChild(footer);
 };
 
 /* Similarity scoring: 0–100 across family, notes, sillage, roles */
@@ -413,6 +568,28 @@ let RA={};
 try { RA=JSON.parse(localStorage.getItem('scentmap_ra')||'{}') || {}; }
 catch(e){ RA={}; try{localStorage.removeItem('scentmap_ra')}catch(_){} }
 function _saveRA(){try{localStorage.setItem('scentmap_ra',JSON.stringify(RA));}catch(_){}}
+
+/* History tracking */
+let HISTORY = [];
+try { HISTORY = JSON.parse(localStorage.getItem('scentmap_history') || '[]'); }
+catch(e) { HISTORY = []; }
+function _saveHistory() { try { localStorage.setItem('scentmap_history', JSON.stringify(HISTORY.slice(0, 20))); } catch(e) {} }
+function addToHistory(fragId) {
+  HISTORY = [fragId, ...HISTORY.filter(id => id !== fragId)].slice(0, 20);
+  _saveHistory();
+}
+
+/* Quiz History */
+let QUIZ_HISTORY = [];
+try { QUIZ_HISTORY = JSON.parse(localStorage.getItem('scentmap_quiz_history') || '[]'); }
+catch(e) { QUIZ_HISTORY = []; }
+window._saveQuizResult = function(slug, title, archetype, results) {
+  const entry = { slug, title, archetype, results, date: new Date().toISOString() };
+  // Keep only most recent result for each slug to avoid clutter, or all? Let's keep last 10 total.
+  QUIZ_HISTORY = [entry, ...QUIZ_HISTORY].slice(0, 10);
+  try { localStorage.setItem('scentmap_quiz_history', JSON.stringify(QUIZ_HISTORY)); } catch(e) {}
+};
+
 function getAssigned(roleId){return RA[roleId]||[]}
 function getPrimary(roleId){return getAssigned(roleId)[0]||null}
 function assignFrag(roleId,fragId){
@@ -1038,7 +1215,10 @@ function renderBrandSaveBtn(container, brandData) {
   container.appendChild(btn);
 }
 
-function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
+function openFragDetail(frag){
+  addToHistory(frag.id);
+  openDetail(c=>renderFragDetail(c,frag),frag.name);
+}
 
 function renderHouseDetail(container,brand){
   const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
