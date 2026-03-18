@@ -2203,16 +2203,20 @@ function openMoreSheet(btn){
   const items=[
     {id:'saved',icon:_ico.star, label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
     {id:'changelog',icon:_ico.megaphone, label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
-    {id:'playground',icon:_ico.library, label:'Design System', action:"window.open('/playground.html', '_blank')"}
+    {id:'playground',icon:_ico.library, label:'Design System', href:'/playground.html'}
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:var(--sp-lg) 0 var(--sp-sm)">
       <div style="font-size:var(--fs-label);font-weight:700;letter-spacing:var(--ls-wide);text-transform:uppercase;color:var(--text-secondary);padding:0 var(--sp-lg) var(--sp-md)">More</div>
-      ${items.map(it=>`
-        <button class="settings-menu-item" onclick="${it.action}">
-          <span class="settings-menu-icon">${it.icon}</span>
-          ${it.label}
-        </button>`).join('')}
+      ${items.map(it=>it.href
+        ? `<a href="${it.href}" target="_blank" rel="noopener" class="settings-menu-item" style="text-decoration:none">
+             <span class="settings-menu-icon">${it.icon}</span>
+             ${it.label}
+           </a>`
+        : `<button class="settings-menu-item" onclick="${it.action}">
+             <span class="settings-menu-icon">${it.icon}</span>
+             ${it.label}
+           </button>`).join('')}
     </div>`;
   });
 }
