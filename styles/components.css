@@ -483,13 +483,11 @@
 }
 
 .dc-cmp-btn-name {
-  font-size: var(--fs-body);
   font-weight: 500;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 80px;
 }
 
 .dc-cmp-btn-empty {
