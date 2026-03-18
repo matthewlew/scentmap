@@ -159,6 +159,20 @@
     gap: var(--sp-xs);
     transition: transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
   }
+
+  /* Feature: Vibe Discovery */
+  .vibe-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-md); margin-top: var(--sp-xl); }
+  .vibe-card { 
+    aspect-ratio: 16/9; border-radius: var(--radius-xl); border: 1px solid var(--border-standard); 
+    display: flex; flex-direction: column; justify-content: flex-end; padding: var(--sp-lg);
+    background-size: cover; background-position: center; position: relative; overflow: hidden;
+    cursor: pointer; transition: transform var(--dur-fast) var(--ease-spring), border-color var(--dur-fast);
+    text-decoration: none;
+  }
+  .vibe-card:hover { transform: translateY(-4px); border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+  .vibe-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent); }
+  .vibe-card span { position: relative; z-index: 1; color: white; font-family: var(--font-display); font-size: var(--fs-body); letter-spacing: -0.01em; font-weight: 700; }
+  }
   .landing-cmp-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--border-strong); }
   .landing-cmp-title { font-family: var(--font-display); font-size: var(--fs-ui); line-height: var(--lh-tight); letter-spacing: var(--ls-tight); }
   .landing-cmp-label { font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text-tertiary); }
@@ -234,6 +248,20 @@
 </div>
 
 <div class="landing-wrap">
+
+  <!-- Feelings Discovery -->
+  <div class="landing-section">
+    <div class="landing-section-title">
+      <div class="sec-label" style="text-align: center; margin-bottom: var(--sp-sm);">Discovery by feeling</div>
+      <h2 class="text-title">How do you want to feel?</h2>
+    </div>
+    <div class="vibe-grid">
+      <a href="/app#feel=solar" class="vibe-card" style="background-color: #F4E76E;"><span>Solar & Energetic</span></a>
+      <a href="/app#feel=grounded" class="vibe-card" style="background-color: #6E3210;"><span>Grounded & Intellectual</span></a>
+      <a href="/app#feel=romantic" class="vibe-card" style="background-color: #902050;"><span>Romantic & Velvety</span></a>
+      <a href="/app#feel=mysterious" class="vibe-card" style="background-color: #4A1850;"><span>Dark & Mysterious</span></a>
+    </div>
+  </div>
 
   <!-- Features -->
   <div class="landing-section">

@@ -4309,6 +4309,16 @@ Promise.all([
     go('catalog', null); // Mobile button will be updated if below
   } else if (hash === 'saved') {
     go('saved', document.querySelector('.global-nav-link[onclick*="saved"]'));
+  } else if (hash.startsWith('feel=')) {
+    const feelId = hash.split('=')[1];
+    if (FEELINGS[feelId]) {
+      CAT_FEEL_FILTER = feelId;
+      go('catalog', null);
+      // Sync UI buttons if they exist
+      document.querySelectorAll('.fam-pill[data-feel]').forEach(b => {
+        b.classList.toggle('active', b.dataset.feel === feelId);
+      });
+    }
   } else if (hash.startsWith('search=')) {
     const query = decodeURIComponent(hash.split('=')[1]);
     go('catalog', null);
