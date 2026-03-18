@@ -206,9 +206,19 @@
 </head>
 <body>
 
-<nav class="landing-nav">
-  <span class="logo">Scentmap</span>
-  <a href="/app" class="landing-nav-link">Open Engine</a>
+<nav class="global-nav">
+  <div class="global-nav-left">
+    <a href="/" class="global-nav-logo">Scentmap</a>
+    <div class="global-nav-links">
+      <a href="/app#catalog" class="global-nav-link">Fragrances</a>
+      <a href="/app#compare" class="global-nav-link">Compare</a>
+      <a href="/app#notes" class="global-nav-link">Notes</a>
+      <a href="#quizzes" class="global-nav-link active">Quizzes</a>
+    </div>
+  </div>
+  <div class="global-nav-right">
+    <a href="/app" class="dc-collect-btn active" style="text-decoration: none; padding: var(--sp-xs) var(--sp-md); font-size: var(--fs-meta);">Open Engine</a>
+  </div>
 </nav>
 
 <div class="landing-hero">
@@ -260,7 +270,7 @@
   </div>
 
   <!-- Quiz Promos -->
-  <div class="landing-section" style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-3xl);">
+  <div class="landing-section" id="quizzes" style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-3xl);">
     <h2 class="text-title landing-section-title">Fragrance Quizzes</h2>
     <p class="dc-description" style="text-align: center; max-width: 500px; margin: calc(-1 * var(--sp-sm)) auto var(--sp-xl);">Not sure where to start? Our data-driven quizzes match you with the perfect fragrance.</p>
     <div class="quiz-promo-grid">

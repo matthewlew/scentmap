@@ -64,14 +64,19 @@
 
   <!-- MIDDLE: MAIN -->
   <div class="col-main">
-    <div class="col-main-nav">
-      <span class="logo">Scentmap</span>
-      <div class="nav-right" id="nav-right">
+    <nav class="global-nav">
+      <div class="global-nav-left">
+        <a href="/" class="global-nav-logo">Scentmap</a>
+        <div class="global-nav-links">
+          <button class="global-nav-link" onclick="go('catalog', this)">Fragrances</button>
+          <button class="global-nav-link active" onclick="go('compare', this)">Compare</button>
+          <button class="global-nav-link" onclick="go('notes', this)">Notes</button>
+          <a href="/#quizzes" class="global-nav-link">Quizzes</a>
+          <button class="global-nav-link" onclick="go('saved', this)">Collection</button>
+        </div>
+      </div>
+      <div class="global-nav-right">
         <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
-        <button class="nav-notes-btn" onclick="go('catalog', this)">Fragrances</button>
-        <button class="nav-notes-btn" onclick="go('compare', this)">Compare</button>
-        <button class="nav-notes-btn" onclick="go('notes', this)">Notes</button>
-        <button class="nav-notes-btn" onclick="go('saved', this)">Collection</button>
         <button class="nav-signin-btn" id="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
         <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings" aria-haspopup="true" aria-expanded="false">⚙</button>
         <div class="settings-menu" id="settings-menu" hidden>
@@ -79,7 +84,7 @@
           <button class="settings-menu-item" onclick="window.open('playground.html', '_blank')"><span class="settings-menu-icon">❖</span>Design System</button>
         </div>
       </div>
-    </div>
+    </nav>
     <div class="col-main-content">
 
       <div class="panel" id="p-saved" style="padding: var(--sp-lg);">
@@ -94,24 +99,35 @@
       <div class="panel" id="p-catalog">
         <div class="frag-layout">
           <aside class="frag-sidebar" id="frag-sidebar">
-            <div class="frag-sb-head">Filters</div>
-            <div class="cat-state-bar" id="cat-state-bar"></div>
+            <div class="frag-sb-section">
+              <div class="frag-sb-label">Collection</div>
+              <div class="cat-state-bar" id="cat-state-bar"></div>
+            </div>
             <div class="frag-sb-divider"></div>
-            <div class="frag-sb-label">Brand</div>
-            <div class="cat-brand-bar" id="cat-brand-bar"></div>
+            <div class="frag-sb-section">
+              <div class="frag-sb-label">Family</div>
+              <div class="cat-family-bar" id="cat-family-bar"></div>
+            </div>
+            <div class="frag-sb-divider"></div>
+            <div class="frag-sb-section">
+              <div class="frag-sb-label">Brand</div>
+              <div class="cat-brand-bar" id="cat-brand-bar"></div>
+            </div>
           </aside>
           <div class="frag-main">
             <div class="frag-main-top">
               <div class="frag-title-row">
                 <span class="frag-title">Fragrances</span>
-                <span class="sub" id="cat-count"></span>
+                <span class="cat-result-count" id="cat-count"></span>
               </div>
               <div class="cat-search-wrap">
+                <svg class="cat-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 <input type="search" id="cat-search" class="cat-search-input" placeholder="Search fragrances, brands, notes…" autocomplete="off">
                 <button class="cat-search-clear" id="cat-search-clear" aria-label="Clear search">✕</button>
               </div>
               <div class="frag-mobile-quick-filters" id="cat-state-bar-m"></div>
-              <button class="frag-filter-toggle" id="frag-filter-toggle" aria-expanded="false" aria-controls="frag-mobile-panel"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg> Brands</button>
+              <div class="cat-family-scroll" id="cat-family-bar-m" role="group" aria-label="Filter by fragrance family"></div>
+              <button class="frag-filter-toggle" id="frag-filter-toggle" aria-expanded="false" aria-controls="frag-mobile-panel"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg> Filters</button>
             </div>
             <div class="frag-mobile-panel" id="frag-mobile-panel">
               <div class="frag-mb-section">
@@ -126,12 +142,13 @@
       </div>
 
       <div class="panel" id="p-notes">
-        <div class="frag-main-top" style="position: sticky; top: 0; z-index: 10; background: var(--bg-primary); margin-bottom: var(--sp-lg); border-bottom: none;">
+        <div class="frag-main-top" style="margin-bottom: var(--sp-lg); border-bottom: none;">
           <div class="frag-title-row">
             <span class="frag-title" style="font-size: var(--fs-title);">Notes Directory</span>
             <span class="sub" id="notes-count"></span>
           </div>
           <div class="cat-search-wrap" style="margin-top: var(--sp-md);">
+            <svg class="cat-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             <input type="search" id="notes-search" class="cat-search-input" placeholder="Search notes by name or family…" autocomplete="off">
             <button class="cat-search-clear" id="notes-search-clear" aria-label="Clear search">✕</button>
           </div>

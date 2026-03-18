@@ -24,7 +24,7 @@
   flex-direction: column;
 }
 
-.col-main-nav {
+.global-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;

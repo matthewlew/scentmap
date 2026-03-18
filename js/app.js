@@ -704,17 +704,17 @@ function renderFragDetail(container,frag){
     ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
     ${frag.story?`<div class="dc-story" style="margin-top:var(--sp-md); padding:var(--sp-md); background:var(--g50); border-radius:6px; font-size:var(--fs-body-sm); color:var(--g600); border:1px solid var(--g200);">${frag.story}</div>`:''}
     ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="margin-top:var(--sp-md);">Buy from ${frag.brand}</a>`:''}
-    <div class="dc-cmp-cta-label">Compare with</div>
+    <div class="sec-label">Compare with</div>
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
     <button class="dc-collect-btn" id="find-dupes-${frag.id}" style="width:100%; justify-content:center; margin-bottom:var(--sp-xl);">
       <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
     </button>
     <div class="dc-stats">
-      <div class="dc-stat"><div class="dc-slbl">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${SW[frag.sillage]}</div></div>
-      <div class="dc-stat"><div class="dc-slbl">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${LW[frag.layering]}</div></div>
+      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${SW[frag.sillage]}</div></div>
+      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${LW[frag.layering]}</div></div>
     </div>
     <div class="dc-div"></div>
-    <div class="dc-nlbl" style="margin-bottom:var(--sp-xs);">Sensory Profile</div>
+    <div class="sec-label" style="margin-bottom:var(--sp-xs);">Sensory Profile</div>
     <div style="display:flex; flex-direction:column; gap:var(--sp-sm); margin-bottom:var(--sp-2xl);">
       ${(() => {
         const p = computeProfile(frag);
@@ -731,7 +731,7 @@ function renderFragDetail(container,frag){
       })()}
     </div>
 
-    <div class="dc-nlbl" style="margin-bottom:var(--sp-md);">Scent Journey</div>
+    <div class="sec-label" style="margin-bottom:var(--sp-md);">Scent Journey</div>
     <div style="border-left: 2px solid var(--border-standard); margin-left: 6px; padding-left: var(--sp-lg); display:flex; flex-direction:column; gap:var(--sp-lg);">
       <div style="position:relative;">
         <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--bg-primary); border:2px solid var(--border-strong);"></div>
@@ -799,7 +799,7 @@ function renderFragDetail(container,frag){
 
   if(scored.length){
     const lbl=document.createElement('div');
-    lbl.className='dc-sim-lbl';lbl.textContent='More like this';
+    lbl.className='sec-label';lbl.textContent='More like this';
     container.appendChild(lbl);
     const shelf=document.createElement('div');shelf.className='dc-sim-shelf';
 
@@ -882,7 +882,7 @@ function buildLayerSuggestions(frag,container){
     .slice(0,2);
   if(!candidates.length)return;
   const lbl=document.createElement('div');
-  lbl.className='dc-sim-lbl';lbl.textContent='Layer with what you own';
+  lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
   const shelf=document.createElement('div');shelf.className='dc-sim-shelf';
   candidates.forEach(({f,score})=>{
@@ -978,7 +978,7 @@ function renderNoteDetail(container,note){
     <div id="${saveId}" style="margin-top:var(--sp-md);"></div>
     ${note.extraction_method?`<div style="margin-top:var(--sp-sm); font-size:var(--fs-caption); color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
     ${note.insider_fact?`<div style="margin-top:var(--sp-sm); padding:var(--sp-sm); background:var(--g50); border-radius:var(--radius); font-size:var(--fs-caption); color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:var(--sp-xs); color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
-    ${inf.length?`<div class="np-frags" style="margin-top:var(--sp-md)"><div class="dc-nlbl" style="margin:0 0 var(--sp-xs)">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden"></div></div>`:''}`;
+    ${inf.length?`<div class="np-frags" style="margin-top:var(--sp-md)"><div class="sec-label" style="margin:0 0 var(--sp-xs)">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden"></div></div>`:''}`;
 
   renderNoteSaveBtn(container.querySelector(`#${saveId}`), note);
 
@@ -1050,14 +1050,14 @@ function renderHouseDetail(container,brand){
     ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
 
     <div style="margin:var(--sp-xl) 0;">
-      <div class="dc-slbl">Fragrance Families</div>
+      <div class="sec-label">Fragrance Families</div>
       <div style="height:var(--sp-sm); width:100%; display:flex; border-radius:var(--radius); overflow:hidden; margin-bottom:var(--sp-sm);">${barHTML}</div>
       <div style="display:flex; flex-wrap:wrap;">${legendHTML}</div>
     </div>
 
     ${topFrags.length > 0 ? `
     <div class="house-known-for" style="margin-bottom:var(--sp-xl);">
-      <div class="dc-slbl" style="margin-bottom:var(--sp-md);">Known For</div>
+      <div class="sec-label" style="margin-bottom:var(--sp-md);">Known For</div>
       <div class="carousel-wrap">
         <div class="carousel" id="house-known-for-carousel"></div>
       </div>
@@ -1439,7 +1439,7 @@ function openNotePopup(note,triggerEl){
   const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
   if(sortedInf.length){
-    const lbl=document.createElement('div');lbl.className='dc-nlbl';lbl.style.marginBottom='6px';lbl.textContent=`In catalog (${sortedInf.length})`;
+    const lbl=document.createElement('div');lbl.className='sec-label';lbl.style.marginBottom='6px';lbl.textContent=`In catalog (${sortedInf.length})`;
     fe.appendChild(lbl);
     const list=document.createElement('div');list.style.cssText='border:1px solid var(--g200);border-radius:8px;overflow:hidden';
     sortedInf.forEach(f=>{
@@ -2222,7 +2222,7 @@ function openQuickPeek(frag){
         <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
         ${fm.label}
       </div>
-      <div class="dc-nlbl" style="margin-top:0">Notes</div>
+      <div class="sec-label" style="margin-top:0">Notes</div>
       <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
       <div class="dc-note"><span class="dc-nt">Heart</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
       <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
@@ -2242,7 +2242,7 @@ function closeQuickPeek(){
 /* ══ NAV ════════════════════════════════════════════════════════════ */
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab)').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link').forEach(t=>t.classList.remove('active'));
   document.getElementById('p-'+id).classList.add('active');
   if(btn)btn.classList.add('active');
   closeDesktopDetail();
@@ -3897,11 +3897,11 @@ Promise.all([
   if (_deepLinkedCompare) {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
   } else if (hash === 'notes') {
-    go('notes', document.querySelector('.nav-notes-btn[onclick*="notes"]'));
+    go('notes', document.querySelector('.global-nav-link[onclick*="notes"]'));
   } else if (hash === 'catalog') {
     go('catalog', null); // Mobile button will be updated if below
   } else if (hash === 'saved') {
-    go('saved', document.querySelector('.nav-notes-btn[onclick*="saved"]'));
+    go('saved', document.querySelector('.global-nav-link[onclick*="saved"]'));
   } else if (hash.startsWith('search=')) {
     const query = decodeURIComponent(hash.split('=')[1]);
     go('catalog', null);
