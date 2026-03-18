@@ -1,4 +1,6 @@
 {
+  "outputDirectory": ".",
+  "buildCommand": "",
   "rewrites": [
     { "source": "/compare/:a/:b", "destination": "/api/compare" },
     { "source": "/quiz/:slug", "destination": "/api/quiz" },
