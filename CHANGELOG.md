@@ -4,6 +4,18 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-18
+
+### Added
+- **Global Navigation Bar** — implemented a unified navigation component across the landing page, fragrance engine, and quiz engine; features consistent branding with the Scentmap logo and contextual active states for "Fragrances", "Compare", "Notes", "Quizzes", and "Collection"; uses design system tokens for background, typography, and spacing.
+- **Quizzes Landing Section** — added a dedicated section on the homepage for discovering data-driven quizzes, linked directly from the global navigation bar.
+
+### Changed
+- **Mobile Sticky Offsets** — adjusted mobile sticky positions for the fragrance catalog header and comparison bar to account for the new global navigation bar, ensuring no element overlap on small screens.
+- **Navigation Logic** — updated `js/app.js` and `js/quiz.js` to automatically synchronize the navigation active state based on the current page or tool.
+
+---
+
 ## 2026-03-19
 
 ### Added
