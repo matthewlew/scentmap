@@ -267,18 +267,18 @@
       {
         "q": "What is your Sun sign?",
         "a": [
-          { "label": "\u2648 Aries", "tags": ["intensity", "woody", "amber"] },
-          { "label": "\u2649 Taurus", "tags": ["warmth", "green", "floral"] },
-          { "label": "\u264a Gemini", "tags": ["freshness", "citrus", "floral"] },
-          { "label": "\u264b Cancer", "tags": ["intimate", "floral", "aquatic"] },
-          { "label": "\u264c Leo", "tags": ["intensity", "amber", "floral"] },
-          { "label": "\u264d Virgo", "tags": ["freshness", "green", "woody"] },
-          { "label": "\u264e Libra", "tags": ["sweetness", "floral", "chypre"] },
-          { "label": "\u264f Scorpio", "tags": ["intensity", "oud", "leather"] },
-          { "label": "\u2650 Sagittarius", "tags": ["freshness", "woody", "citrus"] },
-          { "label": "\u2651 Capricorn", "tags": ["warmth", "leather", "woody"] },
-          { "label": "\u2652 Aquarius", "tags": ["freshness", "aquatic", "citrus"] },
-          { "label": "\u2653 Pisces", "tags": ["intimate", "aquatic", "floral"] }
+          { "label": "\u2648 Aries (Mar 21\u2013Apr 19)", "tags": ["intensity", "woody", "amber"] },
+          { "label": "\u2649 Taurus (Apr 20\u2013May 20)", "tags": ["warmth", "green", "floral"] },
+          { "label": "\u264a Gemini (May 21\u2013Jun 20)", "tags": ["freshness", "citrus", "floral"] },
+          { "label": "\u264b Cancer (Jun 21\u2013Jul 22)", "tags": ["intimate", "floral", "aquatic"] },
+          { "label": "\u264c Leo (Jul 23\u2013Aug 22)", "tags": ["intensity", "amber", "floral"] },
+          { "label": "\u264d Virgo (Aug 23\u2013Sep 22)", "tags": ["freshness", "green", "woody"] },
+          { "label": "\u264e Libra (Sep 23\u2013Oct 22)", "tags": ["sweetness", "floral", "chypre"] },
+          { "label": "\u264f Scorpio (Oct 23\u2013Nov 21)", "tags": ["intensity", "oud", "leather"] },
+          { "label": "\u2650 Sagittarius (Nov 22\u2013Dec 21)", "tags": ["freshness", "woody", "citrus"] },
+          { "label": "\u2651 Capricorn (Dec 22\u2013Jan 19)", "tags": ["warmth", "leather", "woody"] },
+          { "label": "\u2652 Aquarius (Jan 20\u2013Feb 18)", "tags": ["freshness", "aquatic", "citrus"] },
+          { "label": "\u2653 Pisces (Feb 19\u2013Mar 20)", "tags": ["intimate", "aquatic", "floral"] }
         ]
       }
     ]
