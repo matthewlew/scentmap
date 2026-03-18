@@ -139,11 +139,11 @@
             <input type="search" id="notes-search" class="cat-search-input" placeholder="Search notes by name or family…" autocomplete="off">
             <button class="cat-search-clear" id="notes-search-clear" aria-label="Clear search">✕</button>
           </div>
-          <div class="notes-tier-bar" id="notes-tier-bar" style="display: flex; gap: var(--sp-xs); margin-top: var(--sp-md); padding-bottom: var(--sp-sm); overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
-            <button class="tab active" data-tier="all">All Tiers</button>
-            <button class="tab" data-tier="top">Top Notes</button>
-            <button class="tab" data-tier="mid">Heart Notes</button>
-            <button class="tab" data-tier="base">Base Notes</button>
+          <div class="notes-tier-bar" id="notes-tier-bar" role="group" aria-label="Note tier filter" style="display: flex; gap: var(--sp-xs); margin-top: var(--sp-md); padding-bottom: var(--sp-sm); overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
+            <button class="tab active" data-tier="all" aria-pressed="true">All Tiers</button>
+            <button class="tab" data-tier="top" aria-pressed="false">Top Notes</button>
+            <button class="tab" data-tier="mid" aria-pressed="false">Heart Notes</button>
+            <button class="tab" data-tier="base" aria-pressed="false">Base Notes</button>
           </div>
         </div>
         <div id="notes-body"></div>

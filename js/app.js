@@ -1707,10 +1707,15 @@ function initCatalogControls(){
   function makeStateBtn(label,val,container){
     const btn=document.createElement('button');
     btn.className='tab'+(CAT_STATE_FILTER===val?' active':'');
+    btn.setAttribute('aria-pressed', CAT_STATE_FILTER===val ? 'true' : 'false');
     btn.textContent=label;
     btn.addEventListener('click',()=>{
       CAT_STATE_FILTER=val;
-      allStateBtns.forEach(b=>b.classList.toggle('active',b.dataset.val===(val===null?'':val)));
+      allStateBtns.forEach(b=>{
+        const isActive=b.dataset.val===(val===null?'':val);
+        b.classList.toggle('active',isActive);
+        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
       buildCatalog();
     });
     btn.dataset.val=val===null?'':val;
@@ -1750,8 +1755,9 @@ function initCatalogControls(){
     const tabs = notesTierBar.querySelectorAll('.tab');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
+        tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-pressed', 'false'); });
         tab.classList.add('active');
+        tab.setAttribute('aria-pressed', 'true');
         currentNoteTier = tab.dataset.tier;
         buildNotes(currentNoteQuery, currentNoteTier);
       });
@@ -1765,12 +1771,17 @@ function initCatalogControls(){
   function makeFamBtn(label,val,color,container){
     const btn=document.createElement('button');
     btn.className='fam-pill'+(CAT_FAM_FILTER===val?' active':'');
+    btn.setAttribute('aria-pressed', CAT_FAM_FILTER===val ? 'true' : 'false');
     const dot=val?`<span class="fam-pill-dot" style="background:${color}"></span>`:'';
     btn.innerHTML=`${dot}${label}`;
     btn.dataset.fam=val===null?'':val;
     btn.addEventListener('click',()=>{
       CAT_FAM_FILTER=val;
-      allFamBtns.forEach(b=>b.classList.toggle('active',b.dataset.fam===(val===null?'':val)));
+      allFamBtns.forEach(b=>{
+        const isActive=b.dataset.fam===(val===null?'':val);
+        b.classList.toggle('active',isActive);
+        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
       buildCatalog();
     });
     allFamBtns.push(btn);
@@ -1799,11 +1810,16 @@ function initCatalogControls(){
   function makeBrandBtn(label,val,html,container){
     const btn=document.createElement('button');
     btn.className='tab'+(CAT_BRAND_FILTER===val?' active':'');
+    btn.setAttribute('aria-pressed', CAT_BRAND_FILTER===val ? 'true' : 'false');
     btn.innerHTML=html;
     btn.dataset.brand=val===null?'':val;
     btn.addEventListener('click',()=>{
       CAT_BRAND_FILTER=val;
-      allBrandBtns.forEach(b=>b.classList.toggle('active',b.dataset.brand===(val===null?'':val)));
+      allBrandBtns.forEach(b=>{
+        const isActive=b.dataset.brand===(val===null?'':val);
+        b.classList.toggle('active',isActive);
+        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
       buildCatalog();
     });
     if(val){
