@@ -2246,7 +2246,7 @@ function openMoreSheet(btn){
   const items=[
     {id:'saved',icon:_ico.star, label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
     {id:'changelog',icon:_ico.megaphone, label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
-    {id:'playground',icon:_ico.library, label:'Design System', action:"window.open('playground.html', '_blank')"}
+    {id:'playground',icon:_ico.library, label:'Design System', action:"window.open('/playground.html', '_blank')"}
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:var(--sp-lg) 0 var(--sp-sm)">
