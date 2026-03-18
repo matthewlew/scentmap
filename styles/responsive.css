@@ -146,7 +146,7 @@
     min-height: auto;
   }
 
-  .col-main-nav {
+  .global-nav {
     padding: var(--sp-md) var(--sp-lg) var(--sp-sm);
     position: sticky;
   }

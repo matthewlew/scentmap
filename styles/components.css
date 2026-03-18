@@ -3270,7 +3270,6 @@ button.cmp-note-pill:hover {
   }
   .mbn-btn.active{color:var(--text-primary);font-weight:600}
   .mbn-icon{font-size:var(--fs-title);line-height:var(--lh-tight)}
-  .col-main-nav{display:none!important}
   /* Compare sticky bar: flush with top on mobile since nav is hidden */
   #cmp-sticky-bar { top: 0; }
 }

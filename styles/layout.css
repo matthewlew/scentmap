@@ -24,17 +24,6 @@
   flex-direction: column;
 }
 
-.global-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--sp-md) var(--sp-xl) var(--sp-sm);
-  position: sticky;
-  top: 0;
-  background: var(--mobile-nav-bg);
-  z-index: 50;
-}
-
 .col-main-content {
   padding: var(--sp-xl) var(--sp-xl) var(--sp-xl); /* mobile override adds bottom nav clearance */
 }
