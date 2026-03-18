@@ -33,12 +33,12 @@ All notable changes to Scentmap are documented here.
 - **Analytics event stubs** — added `trackEvent()` helper to `js/app.js` with initial instrumentation for `dupe_lab_opened` and `dupe_clicked` events; establishing the pattern for planned DNA Card analytics
 
 ### Added
-- **Scent Journal & Live Trials** — new retail companion feature for tracking fragrances while testing in-store:
-  - **Scent Mapping** — log the exact application spot (Left Wrist, Neck, Paper Strip, etc.) to keep track of multiple tests
-  - **Evolution Tracking** — automated 15-minute and 1-hour follow-up prompts to rate how a scent develops on skin
-  - **Live Trials Dashboard** — sticky "active trial" indicators in the Collection tab with countdown timers for follow-up reviews
-  - **Trial Journal** — permanent history of all fragrance tests, showing how your impression evolved from initial spray to the dry-down
-- **Navigation system recovery** — fixed broken links across all pages by unifying header structures; integrated hash-based routing in `js/app.js` to ensure the correct panel (Catalog, Compare, Notes, Collection) activates when arriving via external links (e.g., `/app#catalog`); added `hashchange` listener to keep UI in sync with URL changes
+- **Dedicated Scent Journal Panel** — separated scent tracking into a distinct experience from the general collection:
+  - **Quick Track Search** — start a trial directly from the Journal by searching for any fragrance, bypassing the full catalog
+  - **Active Map** — real-time dashboard for in-store testing, mapping sprays to specific body locations (Left Wrist, Neck, etc.)
+  - **Trial History** — permanent log of all fragrance tests with date, time, location, and a 3-step evolution rating (Initial → 15m → 1h)
+  - **Landing Page Entry** — added a prominent "Scent Journal" call-to-action on the home page for quick access during retail exploration
+- **Navigation system recovery** — fixed broken links across all pages by unifying header structures; integrated hash-based routing in `js/app.js` to ensure the correct panel (Catalog, Compare, Notes, Journal, Collection) activates when arriving via external links (e.g., `/app#journal`); added `hashchange` listener to keep UI in sync with URL changes
 - **`dc-cmp-btn` typography and readability** — reduced letter-spacing to `0.00em` for better legibility; removed `max-width`, `overflow: hidden`, and `text-overflow: ellipsis` from `.dc-cmp-btn-name` to ensure fragrance names are fully readable in the compare slot buttons
 - **Double sitemap footer removed** — deleted redundant legacy `sitemap-footer` block from `index.html`; main sitemap is now exclusively handled by the `landing-footer` grid, which has been updated to include the new Scent Archetype and Astro Scent Match quizzes
 - **`dc-collect-btn` rendering** — removed conflicting inline styles (`background:var(--black); color:var(--paper); border:none;`) that were overriding the default button CSS class; "Buy from" and "Visit brand" links now render with proper `.dc-collect-btn` styling
