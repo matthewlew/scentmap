@@ -7,6 +7,11 @@ All notable changes to Scentmap are documented here.
 ## 2026-03-18
 
 ### Added
+- **"You" Dashboard Refactor** — Restructured dashboard widgets to use canonical `.dc-sim-shelf` and `.settings-menu-item` patterns instead of custom inline flexboxes.
+- **Olfactive DNA Integration** — Stats now use the native `.dc-stats`, `.dc-stat`, `.dc-bar`, and `.dc-fill` components from the design system.
+- **Golden Pairs** — Integrated seamlessly into the native `.carousel` and `.carousel-card` patterns for a unified UI feel.
+- **Journal CTA** — Uses the established `.landing-card` component for brand-consistent presentation.
+- **Redundancy Alert** — The warning slide-up for duplicate notes/scents now leverages the standard `.detail-inner` layout structure.
 - **Global Navigation Bar** — implemented a unified navigation component across the landing page, fragrance engine, and quiz engine; features consistent branding with the Scentmap logo and contextual active states for "Fragrances", "Compare", "Notes", "Quizzes", and "Collection"; uses design system tokens for background, typography, and spacing.
 - **Notes 2.0: Educational Exploratorium** — transformed the Notes directory into a curated learning experience with three tabs: **Explore** (educational content), **Search & A-Z** (refined directory), and **My Notes** (saved favorites).
 - **Interactive Olfactory Pyramid** — added a visual educational component to the Notes page explaining fragrance evaporation tiers (Top, Heart, Base), with integrated filtering.

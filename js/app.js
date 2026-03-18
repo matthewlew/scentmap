@@ -18,7 +18,61 @@ function debounce(fn, delay) {
 
 /* State */
 function gst(id){return store.getState(id)}
-function setState(id,s){ store.setState(id,s); }
+window.checkRedundancy = function(fragId) {
+  const frag = CAT_MAP[fragId];
+  const owned = CAT.filter(f => isOwned(f.id));
+  for (const o of owned) {
+    const sim = scoreSimilarity(frag, o);
+    if (sim >= 85) return { match: o, score: Math.round(sim) };
+  }
+  return null;
+};
+
+window.getGoldenPairs = function(owned) {
+  if (owned.length < 2) return [];
+  const pairs = [];
+  for (let i = 0; i < owned.length; i++) {
+    for (let j = i + 1; j < owned.length; j++) {
+      const score = scoreLayeringPair(owned[i], owned[j]);
+      if (score >= 50) { 
+        pairs.push({ a: owned[i], b: owned[j], score: Math.round(score / 75 * 100) });
+      }
+    }
+  }
+  return pairs.sort((a, b) => b.score - a.score).slice(0, 5);
+};
+
+function setState(id,s){
+  if(s==='wish'){
+    const redun = window.checkRedundancy(id);
+    if(redun){
+      pushSheet(c => {
+        const frag = CAT_MAP[id];
+        c.innerHTML = `
+          <div class="detail-inner" style="text-align:center;">
+            <div style="font-size:32px; margin-bottom:var(--sp-md);">⚖️</div>
+            <div class="sec-label" style="justify-content:center;">Redundancy Alert</div>
+            <div class="dc-name" style="margin-bottom:var(--sp-md);">Wait, you might not need this.</div>
+            <p class="text-body" style="font-family:var(--font-serif); color:var(--text-secondary); margin-bottom:var(--sp-xl); line-height:1.5;">
+              <strong>${frag.name}</strong> is a <strong>${redun.score}% mathematical match</strong> to <strong>${redun.match.name}</strong> which you already own.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:var(--sp-sm);">
+              <button class="dc-collect-btn active" style="width:100%; justify-content:center; padding:var(--sp-md);" onclick="popSheet()">Actually, skip it</button>
+              <button class="dc-collect-btn" style="width:100%; justify-content:center; padding:var(--sp-md); border:none;" id="force-wish">Save anyway</button>
+            </div>
+          </div>
+        `;
+        c.querySelector('#force-wish').onclick = () => {
+          store.setState(id, 'wish');
+          refreshAfterStateChange(id);
+          popSheet();
+        };
+      });
+      return; 
+    }
+  }
+  store.setState(id,s);
+}
 function isOwned(id){return store.isOwned(id)}
 function isWish(id){return store.isWish(id)}
 function cycleState(id){ store.cycleState(id); }
@@ -283,26 +337,258 @@ function renderCollectionSection(container, label, items, type) {
   container.appendChild(section);
 }
 
+let TRIALS = [];
+try { TRIALS = JSON.parse(localStorage.getItem('scentmap_trials') || '[]'); } catch(e) { TRIALS = []; }
+function _saveTrials() { try { localStorage.setItem('scentmap_trials', JSON.stringify(TRIALS)); } catch(e) {} }
+
+function startTrial(fragId, location) {
+  const trial = { id: fragId, location, timestamp: Date.now(), rating: null, status: 'active' };
+  TRIALS = [trial, ...TRIALS];
+  _saveTrials();
+  if (window.renderSaved) window.renderSaved();
+}
+
+function updateTrial(fragId, timestamp, data) {
+  const trial = TRIALS.find(t => t.id === fragId && t.timestamp === timestamp);
+  if (trial) {
+    Object.assign(trial, data);
+    if (data.rating !== null) trial.status = 'completed';
+    _saveTrials();
+    if (window.renderSaved) window.renderSaved();
+  }
+}
+
+function deleteTrial(fragId, timestamp) {
+  TRIALS = TRIALS.filter(t => !(t.id === fragId && t.timestamp === timestamp));
+  _saveTrials();
+  if (window.renderSaved) window.renderSaved();
+}
+
+window.openTrialSheet = function(fragId) {
+  const frag = CAT_MAP[fragId];
+  if (!frag) return;
+  pushSheet(container => {
+    container.innerHTML = `
+      <div class="detail-inner">
+        <div class="sec-label">New Test Bench Entry</div>
+        <div class="dc-name">${frag.name}</div>
+        <div class="dc-brand">${frag.brand}</div>
+        
+        <div class="sec-label" style="margin-top:var(--sp-xl);">Where did you spray it?</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
+          ${['Left Wrist', 'Right Wrist', 'Left Elbow', 'Right Elbow', 'Neck', 'Chest', 'Paper Strip'].map(loc => `
+            <button class="dc-collect-btn trial-loc-btn" data-loc="${loc}" style="justify-content:center;">${loc}</button>
+          `).join('')}
+        </div>
+
+        <div class="sec-label">Initial Impression</div>
+        <div style="display:flex; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
+          ${[1, 2, 3, 4, 5].map(v => `
+            <button class="dc-collect-btn trial-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+          `).join('')}
+        </div>
+
+        <button class="dc-collect-btn active" id="save-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md);">Add to Test Bench</button>
+      </div>
+    `;
+
+    let selectedLoc = null, selectedRate = null;
+    const updateBtn = () => { container.querySelector('#save-trial-btn').disabled = !(selectedLoc && selectedRate); };
+
+    container.querySelectorAll('.trial-loc-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('.trial-loc-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedLoc = btn.dataset.loc;
+        updateBtn();
+      });
+    });
+
+    container.querySelectorAll('.trial-rate-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('.trial-rate-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedRate = parseInt(btn.dataset.val);
+        updateBtn();
+      });
+    });
+
+    container.querySelector('#save-trial-btn').addEventListener('click', () => {
+      startTrial(fragId, selectedLoc);
+      updateTrial(fragId, TRIALS[0].timestamp, { rating: selectedRate });
+      popSheet();
+      window.haptic?.('success');
+    });
+  });
+};
+
+window.openTrialUpdateSheet = function(fragId, timestamp) {
+  const frag = CAT_MAP[fragId];
+  if (!frag) return;
+  pushSheet(container => {
+    container.innerHTML = `
+      <div class="detail-inner">
+        <div class="sec-label">Final Review</div>
+        <div class="dc-name">${frag.name}</div>
+        
+        <p class="text-body" style="font-family:var(--font-serif); margin-bottom:var(--sp-xl); color:var(--text-secondary);">How has the scent developed? Give it another sniff and rate it again.</p>
+
+        <div class="sec-label">New Rating</div>
+        <div style="display:flex; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
+          ${[1, 2, 3, 4, 5].map(v => `
+            <button class="dc-collect-btn update-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+          `).join('')}
+        </div>
+
+        <button class="dc-collect-btn active" id="update-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md);">Complete Review</button>
+      </div>
+    `;
+
+    let selectedRate = null;
+    container.querySelectorAll('.update-rate-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('.update-rate-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedRate = parseInt(btn.dataset.val);
+        container.querySelector('#update-trial-btn').disabled = false;
+      });
+    });
+
+    container.querySelector('#update-trial-btn').addEventListener('click', () => {
+      updateTrial(fragId, timestamp, { rating: selectedRate });
+      popSheet();
+      window.haptic?.('success');
+    });
+  });
+};
+
+function getCollectionStats(frags) {
+  if (!frags.length) return null;
+  const famCounts = {}; const noteCounts = {}; const profiles = [];
+  frags.forEach(f => {
+    famCounts[f.family] = (famCounts[f.family] || 0) + 1;
+    f._nAll.forEach(n => { noteCounts[n] = (noteCounts[n] || 0) + 1; });
+    profiles.push(engine.computeProfile(f));
+  });
+  const avgProfile = {
+    freshness: profiles.reduce((s, p) => s + p.freshness, 0) / frags.length,
+    sweetness: profiles.reduce((s, p) => s + p.sweetness, 0) / frags.length,
+    warmth: profiles.reduce((s, p) => s + p.warmth, 0) / frags.length,
+    intensity: profiles.reduce((s, p) => s + p.intensity, 0) / frags.length,
+    complexity: profiles.reduce((s, p) => s + p.complexity, 0) / frags.length,
+  };
+  const topFamilies = Object.entries(famCounts).sort((a,b) => b[1] - a[1]);
+  const topNotes = Object.entries(noteCounts).sort((a,b) => b[1] - a[1]).slice(0, 10);
+  return { avgProfile, topFamilies, topNotes, count: frags.length };
+}
+
+window.exportAuraCard = function() {
+  const owned = CAT.filter(f => isOwned(f.id)); if (!owned.length) return;
+  const stats = getCollectionStats(owned); const profile = stats.avgProfile;
+  const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+  canvas.width = 1080; canvas.height = 1920;
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height); grad.addColorStop(0, '#FDFCFB'); grad.addColorStop(1, '#E2D1C3');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#0E0C09'; ctx.font = '700 48px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('SCENTMAP', canvas.width / 2, 160);
+  ctx.font = '400 32px Georgia, serif'; ctx.fillText('Your Olfactive Identity', canvas.width / 2, 210);
+  const cx = canvas.width / 2; const cy = 850; const r = 350;
+  const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 1.5);
+  const primaryFam = stats.topFamilies[0][0]; const primaryColor = FAM[primaryFam]?.color || '#8B4513';
+  glow.addColorStop(0, primaryColor + '22'); glow.addColorStop(1, 'transparent'); ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, r * 1.5, 0, Math.PI * 2); ctx.fill();
+  const dims = [{ l: 'FRESH', v: profile.freshness }, { l: 'SWEET', v: profile.sweetness }, { l: 'WARM', v: profile.warmth }, { l: 'BOLD', v: profile.intensity }, { l: 'DEEP', v: profile.complexity }];
+  const n = dims.length;
+  ctx.strokeStyle = '#0E0C0911'; ctx.lineWidth = 2;
+  [0.25, 0.5, 0.75, 1.0].forEach(rv => { ctx.beginPath(); for (let i = 0; i <= n; i++) { const a = (Math.PI * 2 * i / n) - Math.PI / 2; const x = cx + r * rv * Math.cos(a); const y = cy + r * rv * Math.sin(a); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); } ctx.stroke(); });
+  ctx.beginPath(); ctx.fillStyle = primaryColor + '44'; ctx.strokeStyle = primaryColor; ctx.lineWidth = 8;
+  for (let i = 0; i <= n; i++) { const d = dims[i % n]; const a = (Math.PI * 2 * i / n) - Math.PI / 2; const val = Math.max(0.1, d.v); const x = cx + r * val * Math.cos(a); const y = cy + r * val * Math.sin(a); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); } ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#0E0C09'; ctx.font = '700 28px Inter, sans-serif';
+  dims.forEach((d, i) => { const a = (Math.PI * 2 * i / n) - Math.PI / 2; const x = cx + (r + 60) * Math.cos(a); const y = cy + (r + 60) * Math.sin(a); ctx.textAlign = x < cx - 10 ? 'right' : x > cx + 10 ? 'left' : 'center'; ctx.fillText(d.l, x, y); });
+  ctx.textAlign = 'left'; ctx.font = '700 36px Inter, sans-serif'; ctx.fillText('TOP FAMILIES', 120, 1350);
+  ctx.font = '400 32px Inter, sans-serif'; stats.topFamilies.slice(0, 3).forEach(([fam, count], i) => { ctx.fillText(`${i + 1}. ${FAM[fam]?.label || fam}`, 120, 1410 + (i * 50)); });
+  ctx.font = '700 36px Inter, sans-serif'; ctx.fillText('SIGNATURE NOTES', 580, 1350);
+  ctx.font = '400 32px Inter, sans-serif'; stats.topNotes.slice(0, 5).forEach((n, i) => { ctx.fillText(`• ${n[0]}`, 580, 1410 + (i * 50)); });
+  ctx.textAlign = 'center'; ctx.font = '700 120px Inter, sans-serif'; ctx.fillText(owned.length.toString(), canvas.width / 2, 1720);
+  ctx.font = '400 28px Inter, sans-serif'; ctx.fillStyle = '#6B6356'; ctx.fillText('FRAGRANCES IN WARDROBE', canvas.width / 2, 1770);
+  const link = document.createElement('a'); link.download = `scentmap-aura-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click();
+};
+
+window.exportLayeringRecipe = function(idA, idB, score) {
+  const fa = CAT_MAP[idA]; const fb = CAT_MAP[idB]; if (!fa || !fb) return;
+  const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+  canvas.width = 1080; canvas.height = 1080;
+  const grad = ctx.createLinearGradient(0, 0, 1080, 1080); grad.addColorStop(0, '#FFFFFF'); grad.addColorStop(1, '#F5F2EC');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#0E0C09'; ctx.font = '700 32px Inter, sans-serif'; ctx.textAlign = 'left'; ctx.fillText('SCENTMAP', 80, 100);
+  ctx.font = '400 24px Georgia, serif'; ctx.fillText('Layering Recipe', 80, 140);
+  const bx = 850, by = 100, br = 80; ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fillStyle = '#0E0C09'; ctx.fill();
+  ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center'; ctx.font = '700 42px Inter, sans-serif'; ctx.fillText(`${score}%`, bx, by + 10);
+  ctx.font = '700 14px Inter, sans-serif'; ctx.fillText('MATCH', bx, by + 35);
+  const ca = getCmpFam(fa.family); ctx.textAlign = 'left'; ctx.fillStyle = ca.accent; ctx.font = '700 56px Inter, sans-serif'; ctx.fillText(fa.name.toUpperCase(), 80, 350);
+  ctx.font = '400 32px Inter, sans-serif'; ctx.fillStyle = '#6B6356'; ctx.fillText(fa.brand, 80, 400);
+  ctx.fillStyle = '#0E0C0922'; ctx.font = '400 120px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('+', canvas.width / 2, 530);
+  const cb = getCmpFam(fb.family); ctx.textAlign = 'right'; ctx.fillStyle = cb.accent; ctx.font = '700 56px Inter, sans-serif'; ctx.fillText(fb.name.toUpperCase(), 1000, 680);
+  ctx.font = '400 32px Inter, sans-serif'; ctx.fillStyle = '#6B6356'; ctx.fillText(fb.brand, 1000, 730);
+  ctx.beginPath(); ctx.roundRect(80, 820, 920, 180, 20); ctx.fillStyle = '#0E0C0908'; ctx.fill();
+  ctx.textAlign = 'center'; ctx.fillStyle = '#0E0C09'; ctx.font = '700 24px Inter, sans-serif'; ctx.fillText('WHY IT WORKS', canvas.width / 2, 875);
+  ctx.font = 'italic 36px Georgia, serif'; ctx.fillStyle = '#4A453E'; ctx.fillText(engine.getSwapReason(fa, fb, store.FAM_COMPAT).replace('An alternative', 'This pair layers well'), canvas.width / 2, 940);
+  const link = document.createElement('a'); link.download = `scentmap-recipe-${idA}-${idB}.png`; link.href = canvas.toDataURL('image/png'); link.click();
+};
+
+function renderJournalContent(container) {
+  if (!container) return; container.innerHTML = '';
+  const activeTrials = TRIALS.filter(t => t.status === 'active');
+  if (activeTrials.length > 0) {
+    const trialSec = document.createElement('div'); trialSec.style.marginBottom = 'var(--sp-3xl)';
+    trialSec.innerHTML = `<div class="sec-label">Test Bench (Active)</div>`;
+    const trialWrap = document.createElement('div'); trialWrap.className = 'dc-sim-shelf';
+    activeTrials.forEach(t => {
+      const frag = CAT_MAP[t.id]; const row = document.createElement('div');
+      row.className = 'settings-menu-item'; row.style.cursor = 'default';
+      row.innerHTML = `<div style="flex:1;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-weight:600;">${frag.name}</div><div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div></div><div style="display:flex; gap:var(--sp-xs);"><button class="dc-collect-btn active" style="padding:4px 12px; font-size:10px;" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button><button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button></div></div></div>`;
+      trialWrap.appendChild(row);
+    });
+    trialSec.appendChild(trialWrap); container.appendChild(trialSec);
+  }
+  const completedTrials = TRIALS.filter(t => t.status === 'completed');
+  if (completedTrials.length > 0) {
+    const journalSec = document.createElement('div'); journalSec.style.marginBottom = 'var(--sp-3xl)';
+    journalSec.innerHTML = `<div class="sec-label">Test History</div>`;
+    const journalWrap = document.createElement('div'); journalWrap.className = 'dc-sim-shelf';
+    completedTrials.forEach(t => {
+      const frag = CAT_MAP[t.id]; const row = document.createElement('button');
+      row.className = 'settings-menu-item';
+      const date = new Date(t.timestamp).toLocaleDateString(undefined, { month:'short', day:'numeric' });
+      const stars = v => '★'.repeat(v) + '☆'.repeat(5-v);
+      row.innerHTML = `<div style="flex:1;"><div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;"><div style="font-weight:600;">${frag.name}</div><div style="font-size:10px; color:var(--text-tertiary);">${date}</div></div><div style="display:flex; align-items:center; gap:var(--sp-sm);"><div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div><div style="font-size:12px; color:var(--amber-600); letter-spacing:1px;">${stars(t.rating || 0)}</div></div></div>`;
+      row.addEventListener('click', () => openFragDetail(frag));
+      journalWrap.appendChild(row);
+    });
+    journalSec.appendChild(journalWrap); container.appendChild(journalSec);
+  }
+}
+
 window.renderSaved = function() {
   const container = document.getElementById('saved-list');
+  const ctaWrap = document.getElementById('you-journal-cta');
+  const journalWrap = document.getElementById('journal-content');
   if (!container) return;
-  container.innerHTML = '';
+  
+  if (ctaWrap) {
+    ctaWrap.innerHTML = `
+      <div class="landing-card" style="border-color:var(--accent-primary); background:var(--bg-secondary); margin-bottom:var(--sp-2xl);">
+        <div class="landing-card-head">
+          <span class="picker-fdot" style="background:var(--accent-primary);"></span>
+          <h3 class="landing-card-title">Trying scents on?</h3>
+        </div>
+        <p class="landing-card-desc">Start tracking to see how they evolve over time.</p>
+        <button class="landing-card-cta" style="border:none; background:none; padding:0; text-align:left; cursor:pointer;" onclick="go('catalog')">Find a scent to track</button>
+      </div>
+    `;
+  }
+  
+  if (journalWrap) { renderJournalContent(journalWrap); }
 
-  // Copy button + aria-live toast
-  const copyRow = document.createElement('div');
-  copyRow.style.display = 'flex';
-  copyRow.style.alignItems = 'center';
-  copyRow.style.marginBottom = 'var(--sp-xl)';
-  const copyBtn = document.createElement('button');
-  copyBtn.className = 'copy-collection-btn';
-  copyBtn.textContent = 'Copy Collection';
-  const toastEl = document.createElement('span');
-  toastEl.className = 'copy-toast';
-  toastEl.setAttribute('aria-live', 'polite');
-  copyBtn.addEventListener('click', () => copyCollectionToClipboard(toastEl));
-  copyRow.appendChild(copyBtn);
-  copyRow.appendChild(toastEl);
-  container.appendChild(copyRow);
+  container.innerHTML = '';
 
   const owned  = CAT.filter(f => isOwned(f.id));
   const wished = CAT.filter(f => isWish(f.id));
@@ -315,6 +601,65 @@ window.renderSaved = function() {
     empty.textContent = 'Nothing saved yet. Swipe a fragrance to wishlist it, or open a note or brand to save it.';
     container.appendChild(empty);
     return;
+  }
+
+  // ── 1. OLFACTIVE DNA ──
+  if (owned.length > 0) {
+    const stats = getCollectionStats(owned);
+    const dnaSec = document.createElement('div');
+    dnaSec.className = 'dc-sim-shelf'; 
+    dnaSec.style.padding = 'var(--sp-xl)';
+    dnaSec.style.marginBottom = 'var(--sp-3xl)';
+    const profile = stats.avgProfile;
+    const bars = [{ l: 'Fresh', v: profile.freshness, c: 'var(--fam-citrus)' }, { l: 'Sweet', v: profile.sweetness, c: 'var(--fam-floral)' }, { l: 'Warm', v: profile.warmth, c: 'var(--fam-amber)' }, { l: 'Bold', v: profile.intensity, c: 'var(--fam-oud)' }];
+    dnaSec.innerHTML = `
+      <div class="sec-label">
+        Your Olfactive DNA
+        <button class="nav-notes-btn" style="font-size:10px;" onclick="window.exportAuraCard()">Export</button>
+      </div>
+      <div style="margin-bottom:var(--sp-xl);">
+        <div class="dc-name" style="margin-bottom:0; font-size:32px;">${owned.length}</div>
+        <div class="dc-brand" style="margin-bottom:0; font-size:10px;">Fragrances Owned</div>
+      </div>
+      <div class="dc-stats" style="margin-bottom:var(--sp-lg);">
+        ${bars.map(b => `<div class="dc-stat"><div class="sec-label" style="font-size:10px; margin-bottom:4px; opacity:0.8; text-transform:none; letter-spacing:normal;">${b.l}</div><div class="dc-bar"><div class="dc-fill" style="width:${Math.round(b.v*100)}%; background:${b.c}; height:3px;"></div></div></div>`).join('')}
+      </div>
+      <div style="margin-top:var(--sp-xl); border-top:1px solid var(--border-standard); padding-top:var(--sp-md);">
+        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Dominant Families</div>
+        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--sp-md);">
+          ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `<div class="dc-badge" style="background:${FAM[fam]?.color||'#888'}; color:#fff;">${FAM[fam]?.label||fam}</div>`).join('')}
+        </div>
+        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Core Notes</div>
+        <div style="font-family:var(--font-serif); font-size:var(--fs-meta); color:var(--text-secondary); line-height:1.4;">${stats.topNotes.slice(0, 5).map(n => n[0]).join(', ')}</div>
+      </div>
+    `;
+    container.appendChild(dnaSec);
+  }
+
+  // ── 2. SHOP YOUR STASH ──
+  if (owned.length >= 2) {
+    const pairs = window.getGoldenPairs(owned);
+    if (pairs.length > 0) {
+      const pairSec = document.createElement('div'); pairSec.style.marginBottom = 'var(--sp-3xl)';
+      pairSec.innerHTML = `<div class="sec-label">Shop Your Stash (Golden Pairs)</div>`;
+      const pairWrap = document.createElement('div'); pairWrap.className = 'carousel';
+      pairs.forEach(p => {
+        const card = document.createElement('div'); card.className = 'carousel-card'; card.style.width = '240px';
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-sm);">
+            <div class="dc-badge" style="background:var(--accent-primary); color:var(--paper); font-size:9px;">${p.score}% LAYER MATCH</div>
+            <button class="settings-btn" style="padding:2px; opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
+          </div>
+          <div class="dc-sim-name">${p.a.name}</div>
+          <div class="dc-sim-brand" style="font-size:10px; margin-bottom:var(--sp-xs);">+ ${p.b.name}</div>
+          <div class="dc-sim-reason" style="font-family:var(--font-serif); line-height:1.3;">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
+        `;
+        card.onclick = () => { _selectFragForSlot('a', p.a); _selectFragForSlot('b', p.b); go('compare'); };
+        pairWrap.appendChild(card);
+      });
+      const cw = document.createElement('div'); cw.className = 'carousel-wrap'; cw.appendChild(pairWrap);
+      pairSec.appendChild(cw); container.appendChild(pairSec);
+    }
   }
 
   renderCollectionSection(container, 'Owned', owned, 'frags');
@@ -738,7 +1083,13 @@ function renderFragDetail(container,frag){
     ownBtn.setAttribute('aria-pressed',st==='owned'?'true':'false');
     ownBtn.innerHTML=`<span class="dc-collect-icon">${st==='owned'?'✓':''}</span> ${st==='owned'?'Owned':'Mark owned'}`;
     ownBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='owned'?'none':'owned');refreshAfterStateChange(frag.id);renderCollectRow();});
-    el.appendChild(wishBtn);el.appendChild(ownBtn);
+    
+    const trialBtn=document.createElement('button');
+    trialBtn.className='dc-collect-btn';
+    trialBtn.innerHTML=`<span class="dc-collect-icon">⏱</span> Track Trial`;
+    trialBtn.addEventListener('click',e=>{e.stopPropagation();window.openTrialSheet(frag.id);});
+    
+    el.appendChild(wishBtn);el.appendChild(ownBtn);el.appendChild(trialBtn);
   }
   renderCollectRow();
 
