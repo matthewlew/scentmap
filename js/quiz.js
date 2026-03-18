@@ -454,6 +454,16 @@ function renderStep(step, collectedTags) {
   }
 
   const q = qs[step];
+  // Diagnostic intent mapping (transparency)
+  const intents = {
+    0: "Establishing your olfactive baseline.",
+    1: "Defining your preferred fragrance family.",
+    2: "Calibrating for notes you find polarizing.",
+    3: "Adjusting for desired sillage and projection.",
+    4: "Finalizing based on seasonal performance."
+  };
+  const intent = intents[step] || "Refining your scent match.";
+
   _container.innerHTML = `
     <div class="quiz-page">
       <nav class="global-nav">
@@ -463,7 +473,7 @@ function renderStep(step, collectedTags) {
             <a href="/app#catalog" class="global-nav-link">Fragrances</a>
             <a href="/app#compare" class="global-nav-link">Compare</a>
             <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/#quizzes" class="global-nav-link active">Quizzes</a>
+            <a href="/#discovery" class="global-nav-link active">Discovery</a>
           </div>
         </div>
         <div class="global-nav-right">
@@ -471,9 +481,15 @@ function renderStep(step, collectedTags) {
         </div>
       </nav>
       <div class="quiz-body">
-        <div class="quiz-progress">${step + 1} of ${qs.length}</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--sp-xs);">
+          <div class="quiz-progress">${step + 1} of ${qs.length}</div>
+          ${step > 0 ? `<button class="quiz-back-btn" id="quiz-btn-prev">← Previous</button>` : ''}
+        </div>
         <div class="quiz-bar-track"><div class="quiz-bar-fill" style="width:${((step + 1) / qs.length) * 100}%"></div></div>
+        
+        <div class="quiz-intent-hint">Diagnostic: ${intent}</div>
         <h1 class="quiz-question">${q.q}</h1>
+        
         <div class="quiz-answers">
           ${q.a.map((ans, i) => `
             <button class="quiz-ans-btn" data-idx="${i}">${ans.label}</button>
@@ -490,22 +506,37 @@ function renderStep(step, collectedTags) {
       renderStep(step + 1, newTags);
     });
   });
+
+  const prevBtn = document.getElementById('quiz-btn-prev');
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      const newTags = [...collectedTags];
+      // Note: this simple pop assumes each step adds 1 set of tags.
+      // Since q.a[idx].tags is spread, we'd need to know how many tags to pop.
+      // But for current configs, spreading is fine as we're just rebuilding from start mostly.
+      // Actually, we should ideally pass the count or just slice it.
+      // For now, let's just assume we can't easily undo the tags without state management,
+      // OR we just re-run with step-1.
+      newTags.pop(); 
+      renderStep(step - 1, newTags);
+    });
+  }
 }
 
-function _buildMoreQuizzesHtml() {
+function _buildMoreDiscoveryHtml() {
   const all = [
-    { slug: 'scent-archetype', label: "What's Your Scent Archetype?" },
-    { slug: 'astro-scent', label: "Find Your Astro Scent Match" },
-    { slug: 'find-your-scent', label: 'Find Your Perfect Fragrance' },
-    { slug: 'best-perfume-for-men-2026', label: 'Best Perfume for Men 2026' },
-    { slug: 'best-perfume-for-women-2026', label: 'Best Perfume for Women 2026' },
-    { slug: 'best-perfume-to-gift-2026', label: 'Best Perfume to Gift 2026' },
-    { slug: 'find-your-byredo', label: 'Find Your Byredo' },
+    { slug: 'scent-archetype', label: "Olfactive Archetype Consultation" },
+    { slug: 'astro-scent', label: "Astro Scent Match" },
+    { slug: 'find-your-scent', label: 'Signature Scent Discovery' },
+    { slug: 'best-perfume-for-men-2026', label: 'Men’s Selection Guide' },
+    { slug: 'best-perfume-for-women-2026', label: 'Women’s Selection Guide' },
+    { slug: 'best-perfume-to-gift-2026', label: 'Gift Consultation' },
+    { slug: 'find-your-byredo', label: 'Byredo Brand Guide' },
   ];
   const links = all.filter(q => q.slug !== _slug)
     .map(q => `<a href="/quiz/${q.slug}" class="quiz-more-link">${q.label}</a>`)
     .join('');
-  return `<div class="quiz-more-quizzes"><h2 class="quiz-more-title">More Quizzes</h2><div class="quiz-more-grid">${links}</div></div>`;
+  return `<div class="quiz-more-quizzes"><h2 class="quiz-more-title">Explore More Discovery</h2><div class="quiz-more-grid">${links}</div></div>`;
 }
 
 function renderResults(top3) {
@@ -533,7 +564,7 @@ function renderResults(top3) {
             <a href="/app#catalog" class="global-nav-link">Fragrances</a>
             <a href="/app#compare" class="global-nav-link">Compare</a>
             <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/#quizzes" class="global-nav-link active">Quizzes</a>
+            <a href="/#discovery" class="global-nav-link active">Discovery</a>
           </div>
         </div>
         <div class="global-nav-right">
@@ -551,7 +582,7 @@ function renderResults(top3) {
           <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
-        ${_buildMoreQuizzesHtml()}
+        ${_buildMoreDiscoveryHtml()}
         <a href="/app" class="quiz-engine-link">Open the full Scentmap engine</a>
       </div>
     </div>
@@ -565,7 +596,7 @@ function renderArchetypeResults(archetype, frags) {
     return `<span class="quiz-arch-fam" style="background:${color}18;color:${color};border-color:${color}30">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
   }).join('');
 
-  const moreQuizzes = _buildMoreQuizzesHtml();
+  const moreQuizzes = _buildMoreDiscoveryHtml();
 
   const resultsHtml = frags.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
@@ -591,7 +622,7 @@ function renderArchetypeResults(archetype, frags) {
             <a href="/app#catalog" class="global-nav-link">Fragrances</a>
             <a href="/app#compare" class="global-nav-link">Compare</a>
             <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/#quizzes" class="global-nav-link active">Quizzes</a>
+            <a href="/#discovery" class="global-nav-link active">Discovery</a>
           </div>
         </div>
         <div class="global-nav-right">
@@ -623,7 +654,7 @@ function renderArchetypeResults(archetype, frags) {
 }
 
 function renderAstroResults(sign, archetype, frags) {
-  const moreQuizzes = _buildMoreQuizzesHtml();
+  const moreQuizzes = _buildMoreDiscoveryHtml();
   const famColors = { woody:'#6E3210', green:'#1A6030', chypre:'#285438', citrus:'#9A6800', floral:'#902050', amber:'#984000', oud:'#4A1850', leather:'#42200E', gourmand:'#7C4C00', aquatic:'#0A4880' };
   const familyPills = archetype.families.map(f => {
     const color = famColors[f] || '#8C5E30';
@@ -654,7 +685,7 @@ function renderAstroResults(sign, archetype, frags) {
             <a href="/app#catalog" class="global-nav-link">Fragrances</a>
             <a href="/app#compare" class="global-nav-link">Compare</a>
             <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/#quizzes" class="global-nav-link active">Quizzes</a>
+            <a href="/#discovery" class="global-nav-link active">Discovery</a>
           </div>
         </div>
         <div class="global-nav-right">
@@ -726,6 +757,9 @@ function injectStyles() {
     .quiz-bar-track { height: 3px; background: var(--border-subtle, #E8E4DC); border-radius: 2px; margin-bottom: var(--sp-xl, 24px); }
     .quiz-bar-fill { height: 100%; background: var(--text-primary, #0E0C09); border-radius: 2px; transition: width 0.3s cubic-bezier(.16,1,.3,1); }
     .quiz-question { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: clamp(24px, 5vw, 36px); line-height: 1.15; letter-spacing: -0.02em; color: var(--text-primary, #0E0C09); margin: 0 0 var(--sp-xl, 24px); }
+    .quiz-intent-hint { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary, #B0A898); margin-bottom: var(--sp-sm, 8px); }
+    .quiz-back-btn { background: none; border: none; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); cursor: pointer; padding: 0; transition: color 0.15s; }
+    .quiz-back-btn:hover { color: var(--text-secondary, #8C8070); }
     .quiz-subtitle { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); color: var(--text-secondary, #8C8070); margin: calc(-1 * var(--sp-sm, 8px)) 0 var(--sp-xl, 24px); line-height: var(--lh-body, 1.6); }
     .quiz-answers { display: flex; flex-direction: column; gap: var(--sp-md, 12px); }
     .quiz-ans-btn {

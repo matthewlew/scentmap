@@ -3042,7 +3042,8 @@ window.addEventListener('hashchange', () => {
   if (!hash) return;
   
   // Handle basic panel navigation: #catalog, #compare, #notes, #saved, #journal
-  const panels = ['catalog', 'compare', 'notes', 'saved', 'journal'];
+  const panels = ['catalog', 'compare', 'notes', 'saved', 'you', 'journal', 'discovery'];
+
   if (panels.includes(hash)) {
     go(hash);
   }
@@ -3112,7 +3113,8 @@ window.navBack=function(){
 document.addEventListener('DOMContentLoaded',function(){
   // Initial hash check
   const hash = window.location.hash.slice(1);
-  const panels = ['catalog', 'compare', 'notes', 'saved', 'journal'];
+  const panels = ['catalog', 'compare', 'notes', 'saved', 'you', 'journal', 'discovery'];
+
   if (panels.includes(hash)) {
     go(hash);
   } else if (!hash && window.location.pathname === '/app') {
