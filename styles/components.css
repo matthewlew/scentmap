@@ -3684,3 +3684,160 @@ button.cmp-note-pill:hover {
   line-height: var(--lh-relaxed);
   margin: 0 0 var(--sp-xs);
 }
+
+/* ── Notes 2.0: Educational & Explore ── */
+
+.notes-nav-bar {
+  display: flex;
+  gap: var(--sp-md);
+  margin-bottom: var(--sp-lg);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: var(--sp-xs);
+}
+
+.notes-nav-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: var(--sp-xs) 0;
+  position: relative;
+  transition: color var(--dur-fast);
+}
+
+.notes-nav-btn:hover {
+  color: var(--text-secondary);
+}
+
+.notes-nav-btn.active {
+  color: var(--text-primary);
+}
+
+.notes-nav-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--text-primary);
+}
+
+.notes-explore-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xl);
+  padding-top: var(--sp-md);
+}
+
+/* Olfactory Pyramid Visual */
+.edu-pyramid-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-lg);
+}
+
+.pyramid-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: var(--sp-md) 0;
+}
+
+.pyramid-tier {
+  width: 100%;
+  padding: var(--sp-md);
+  text-align: center;
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+
+.pyramid-tier:hover {
+  transform: scale(1.01);
+}
+
+.pyramid-tier.top { background: var(--g50); border: 1px solid var(--g200); max-width: 60%; }
+.pyramid-tier.mid { background: var(--g100); border: 1px solid var(--g300); max-width: 80%; }
+.pyramid-tier.base { background: var(--g200); border: 1px solid var(--g400); max-width: 100%; }
+
+.pyramid-label { font-weight: 700; font-size: var(--fs-body-sm); text-transform: uppercase; letter-spacing: var(--ls-wide); display: block; margin-bottom: 2px; }
+.pyramid-dur { font-size: var(--fs-caption); color: var(--text-secondary); }
+
+/* Family Cards */
+.family-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--sp-xl);
+}
+
+.family-explore-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.family-explore-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.family-explore-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--fam-color);
+}
+
+.family-card-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.family-card-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  letter-spacing: var(--ls-tight);
+}
+
+.family-card-desc {
+  font-family: var(--font-serif);
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  line-height: var(--lh-body);
+}
+
+.family-card-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-xs);
+  margin-top: auto;
+}
+
+.family-card-note-pill {
+  font-size: var(--fs-caption);
+  padding: 2px 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-pill);
+  color: var(--text-tertiary);
+}

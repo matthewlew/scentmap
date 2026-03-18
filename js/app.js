@@ -2301,106 +2301,232 @@ function updCC(){
 }
 
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
+/* ── NOTES ── */
+let notesActiveTab = 'explore';
 let notesSearchQuery = '';
-let notesSortMode = 'family'; // 'family' or 'az'
 let notesTierMode = 'all';
 
-window.setNotesTab = function(mode) {
-  notesSortMode = mode;
-  document.getElementById('notes-tab-family').classList.toggle('active', mode === 'family');
-  document.getElementById('notes-tab-az').classList.toggle('active', mode === 'az');
-  buildNotes();
-};
+function initNotesControls() {
+  const navBar = document.getElementById('notes-nav-bar');
+  const searchWrap = document.getElementById('notes-search-wrap');
+  const tierWrap = document.getElementById('notes-tier-filter-wrap');
+  const searchInput = document.getElementById('notes-search');
+  const searchClear = document.getElementById('notes-search-clear');
 
-function buildNotes(searchQuery, currentTier){
-  if (searchQuery !== undefined) notesSearchQuery = searchQuery;
-  if (currentTier !== undefined) notesTierMode = currentTier;
+  if (navBar) {
+    navBar.querySelectorAll('.notes-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        notesActiveTab = btn.dataset.tab;
+        navBar.querySelectorAll('.notes-nav-btn').forEach(b => b.classList.toggle('active', b === btn));
+        
+        // Show/hide search based on tab
+        const showSearch = notesActiveTab === 'search' || notesActiveTab === 'saved';
+        searchWrap.style.display = showSearch ? 'block' : 'none';
+        tierWrap.style.display = notesActiveTab === 'search' ? 'flex' : 'none';
+        
+        buildNotes();
+      });
+    });
+  }
 
-  const body=document.getElementById('notes-body');body.innerHTML='';
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      notesSearchQuery = e.target.value;
+      searchClear.style.display = notesSearchQuery ? 'block' : 'none';
+      buildNotes();
+    });
+  }
 
-  // Filter notes by search query and tier
+  if (searchClear) {
+    searchClear.addEventListener('click', () => {
+      notesSearchQuery = '';
+      searchInput.value = '';
+      searchClear.style.display = 'none';
+      buildNotes();
+    });
+  }
+
+  if (tierWrap) {
+    const tabs = tierWrap.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        notesTierMode = tab.dataset.tier;
+        buildNotes();
+      });
+    });
+  }
+}
+
+function buildNotes() {
+  const body = document.getElementById('notes-body');
+  const countEl = document.getElementById('notes-count');
+  body.innerHTML = '';
+
+  if (notesActiveTab === 'explore') {
+    countEl.textContent = '';
+    renderNotesExplore(body);
+  } else if (notesActiveTab === 'search') {
+    renderNotesDirectory(body, countEl);
+  } else if (notesActiveTab === 'saved') {
+    renderNotesSaved(body, countEl);
+  }
+}
+
+function renderNotesExplore(container) {
+  const wrap = document.createElement('div');
+  wrap.className = 'notes-explore-wrap';
+
+  // 1. Olfactory Pyramid Education
+  const pyramid = document.createElement('div');
+  pyramid.className = 'edu-pyramid-card';
+  pyramid.innerHTML = `
+    <div class="sec-label" style="margin:0">The Olfactory Pyramid</div>
+    <p class="family-card-desc">Fragrances are constructed in three layers that evaporate at different speeds. Understanding these tiers helps you predict how a scent will evolve on your skin over hours.</p>
+    <div class="pyramid-visual">
+      <div class="pyramid-tier top" onclick="notesActiveTab='search'; notesTierMode='top'; buildNotes();">
+        <span class="pyramid-label">Top Notes</span>
+        <span class="pyramid-dur">First 15–30 mins</span>
+      </div>
+      <div class="pyramid-tier mid" onclick="notesActiveTab='search'; notesTierMode='mid'; buildNotes();">
+        <span class="pyramid-label">Heart Notes</span>
+        <span class="pyramid-dur">1–3 hours</span>
+      </div>
+      <div class="pyramid-tier base" onclick="notesActiveTab='search'; notesTierMode='base'; buildNotes();">
+        <span class="pyramid-label">Base Notes</span>
+        <span class="pyramid-dur">4+ hours</span>
+      </div>
+    </div>
+    <div style="text-align:center; font-size:var(--fs-caption); color:var(--text-tertiary);">Tap a tier to see corresponding notes</div>
+  `;
+  wrap.appendChild(pyramid);
+
+  // 2. Meet the Families
+  const famSection = document.createElement('div');
+  famSection.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-xl)">Meet the Families</div>`;
+  const grid = document.createElement('div');
+  grid.className = 'family-cards-grid';
+
+  FAM_ORDER.forEach(fk => {
+    const fm = FAM[fk];
+    const card = document.createElement('div');
+    card.className = 'family-explore-card';
+    card.style.setProperty('--fam-color', fm.color);
+    
+    // Get sample notes for this family
+    const sampleNotes = NI.filter(n => n.family === fk).slice(0, 5).map(n => n.name);
+
+    card.innerHTML = `
+      <div class="family-card-hdr">
+        <div class="family-card-title">${fm.label}</div>
+        <div class="nf-dot" style="background:${fm.color}"></div>
+      </div>
+      <div class="family-card-desc">${fm.desc}</div>
+      <div class="family-card-notes">
+        ${sampleNotes.map(n => `<span class="family-card-note-pill">${n}</span>`).join('')}
+      </div>
+    `;
+    card.addEventListener('click', () => {
+      notesActiveTab = 'search';
+      notesSearchQuery = fm.label;
+      const searchInput = document.getElementById('notes-search');
+      if (searchInput) searchInput.value = fm.label;
+      document.querySelector('.notes-nav-btn[data-tab="search"]').click();
+    });
+    grid.appendChild(card);
+  });
+
+  famSection.appendChild(grid);
+  wrap.appendChild(famSection);
+  container.appendChild(wrap);
+}
+
+function renderNotesDirectory(container, countEl) {
   const sq = notesSearchQuery.toLowerCase().trim();
-  const filteredNotes = NI.filter(n => {
-    const matchesQuery = n.name.toLowerCase().includes(sq);
-    let matchesTier = false;
-    if (notesTierMode === 'all') matchesTier = true;
-    else if (notesTierMode === 'saved') matchesTier = isNoteSaved(n.name);
-    else matchesTier = n._tier === notesTierMode;
+  const filtered = NI.filter(n => {
+    const matchesQuery = n.name.toLowerCase().includes(sq) || (FAM[n.family]?.label.toLowerCase().includes(sq));
+    let matchesTier = true;
+    if (notesTierMode !== 'all') matchesTier = n._tier === notesTierMode;
     return matchesQuery && matchesTier;
   });
 
-  const countEl = document.getElementById('notes-count');
-  if(countEl) countEl.textContent = `${filteredNotes.length} notes`;
+  countEl.textContent = `${filtered.length} notes`;
 
-  if(filteredNotes.length === 0) {
-    body.innerHTML = `<div style="text-align:center; padding:var(--sp-2xl); color:var(--text-tertiary);">No notes found matching "${notesSearchQuery}"</div>`;
+  if (filtered.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding:var(--sp-4xl); color:var(--text-tertiary);">No notes found matching "${notesSearchQuery}"</div>`;
     return;
   }
 
-  if (notesSortMode === 'az') {
-    const cardBody = document.createElement('div');
-    cardBody.className = 'notes-card-body';
-    cardBody.style.marginTop = 'var(--sp-lg)';
+  const grid = document.createElement('div');
+  grid.className = 'notes-grid';
 
-    const sorted = [...filteredNotes].sort((a,b)=>a.name.localeCompare(b.name));
-
-    sorted.forEach(note => {
-      const fm = FAM[note.family] || {color: '#888'};
+  // Group by family for directory
+  const grouped = {};
+  filtered.forEach(n => { if (!grouped[n.family]) grouped[n.family] = []; grouped[n.family].push(n); });
+  
+  FAM_ORDER.forEach(fk => {
+    if (!grouped[fk]?.length) return;
+    const fm = FAM[fk];
+    const card = document.createElement('div');
+    card.className = 'notes-card';
+    card.innerHTML = `
+      <div class="notes-card-header">
+        <div class="nf-dot" style="background:${fm.color}"></div>
+        <div><div class="nf-name">${fm.label}</div><div class="nf-desc" style="margin-bottom:0">${fm.desc.split('.')[0]}.</div></div>
+      </div>
+      <div class="notes-card-body"></div>
+    `;
+    const cardBody = card.querySelector('.notes-card-body');
+    grouped[fk].sort((a,b)=>a.name.localeCompare(b.name)).forEach(note => {
       const btn = document.createElement('button');
       btn.className = 'cmp-note-pill';
-      const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
-      btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}${savedMark}`;
-      btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c,note), note.name); });
+      const saved = isNoteSaved(note.name);
+      btn.innerHTML = `${note.name}${saved ? ' <span style="color:var(--accent);margin-left:4px;">★</span>' : ''}`;
+      btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c, note), note.name); });
       cardBody.appendChild(btn);
     });
-    body.appendChild(cardBody);
+    grid.appendChild(card);
+  });
 
-  } else {
-    // Group by family
-    const grid = document.createElement('div');
-    grid.className = 'notes-grid';
+  container.appendChild(grid);
+}
 
-    const grouped={};
-    filteredNotes.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
-    Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
+function renderNotesSaved(container, countEl) {
+  const sq = notesSearchQuery.toLowerCase().trim();
+  const savedNotes = NI.filter(n => isNoteSaved(n.name) && (n.name.toLowerCase().includes(sq) || FAM[n.family]?.label.toLowerCase().includes(sq)));
+  
+  countEl.textContent = `${savedNotes.length} saved`;
 
-    FAM_ORDER.forEach(fk=>{
-      if(!grouped[fk]?.length)return;
-      const fm=FAM[fk];if(!fm)return;
-
-      const card=document.createElement('div');card.className='notes-card';
-
-      const header=document.createElement('div');header.className='notes-card-header';
-      header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
-
-      const cardBody=document.createElement('div');cardBody.className='notes-card-body';
-      grouped[fk].forEach(note=>{
-        const btn=document.createElement('button');btn.className='cmp-note-pill';
-        const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
-        btn.innerHTML = `${note.name}${savedMark}`;
-        btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
-        cardBody.appendChild(btn);
-      });
-
-      card.appendChild(header);
-      card.appendChild(cardBody);
-      grid.appendChild(card);
-    });
-
-    body.appendChild(grid);
+  if (savedNotes.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding:var(--sp-4xl); color:var(--text-tertiary);">
+      ${notesSearchQuery ? `No saved notes match "${notesSearchQuery}"` : 'You haven’t saved any notes yet. Tap ★ on a note to add it here.'}
+    </div>`;
+    return;
   }
 
-  // Inject Global Quiz button at the bottom of the notes directory
-  const quizBtnWrap = document.createElement('div');
-  quizBtnWrap.style.marginTop = 'var(--sp-2xl)';
-  quizBtnWrap.style.textAlign = 'center';
-  quizBtnWrap.innerHTML = `<button class="dc-collect-btn global-quiz-btn" style="display:inline-flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Perfect Fragrance (Quiz)</button>`;
-  body.appendChild(quizBtnWrap);
-
-  quizBtnWrap.querySelector('.global-quiz-btn').addEventListener('click', (e) => {
-    window.haptic?.('medium');
-    pushDetail(c => renderGlobalQuiz(c), 'Fragrance Match');
+  const grid = document.createElement('div');
+  grid.className = 'notes-grid';
+  
+  savedNotes.sort((a,b)=>a.name.localeCompare(b.name)).forEach(note => {
+    const fm = FAM[note.family] || {color:'#888', label:note.family};
+    const card = document.createElement('div');
+    card.className = 'notes-card';
+    card.innerHTML = `
+      <div class="notes-card-header" style="border-bottom:none; margin-bottom:0; padding-bottom:0; cursor:pointer">
+        <div class="nf-dot" style="background:${fm.color}"></div>
+        <div style="flex:1">
+          <div class="nf-name">${note.name}</div>
+          <div class="nf-desc" style="margin-bottom:0">${fm.label} family &middot; ${note.desc}</div>
+        </div>
+        <span style="color:var(--accent); font-size:1.2em">★</span>
+      </div>
+    `;
+    card.addEventListener('click', () => openDetail(c => renderNoteDetail(c, note), note.name));
+    grid.appendChild(card);
   });
+
+  container.appendChild(grid);
 }
 
 /* ── QUICK PEEK ── */
@@ -4024,7 +4150,7 @@ Promise.all([
 
   computeNoteTiers();
   // Now initialize
-  buildCatalog();buildNotes();initCatalogControls();initCompare();if(window.renderSaved)window.renderSaved();
+  buildCatalog();buildNotes();initCatalogControls();initNotesControls();initCompare();if(window.renderSaved)window.renderSaved();
 
   // Load popular comparisons for empty-state UI
   fetch('/data/popular-comparisons.json')

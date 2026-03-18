@@ -135,22 +135,30 @@
       <div class="panel" id="p-notes">
         <div class="frag-main-top" style="margin-bottom: var(--sp-lg); border-bottom: none;">
           <div class="frag-title-row">
-            <span class="frag-title" style="font-size: var(--fs-title);">Notes Directory</span>
+            <span class="frag-title" style="font-size: var(--fs-title);">Notes</span>
             <span class="sub" id="notes-count"></span>
           </div>
-          <div class="cat-search-wrap" style="margin-top: var(--sp-md);">
+
+          <div class="notes-nav-bar" id="notes-nav-bar">
+            <button class="notes-nav-btn active" data-tab="explore">Explore</button>
+            <button class="notes-nav-btn" data-tab="search">Search & A-Z</button>
+            <button class="notes-nav-btn" data-tab="saved">My Notes</button>
+          </div>
+
+          <div id="notes-search-wrap" class="cat-search-wrap" style="display: none; margin-top: var(--sp-sm);">
             <svg class="cat-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             <input type="search" id="notes-search" class="cat-search-input" placeholder="Search notes by name or family…" autocomplete="off">
             <button class="cat-search-clear" id="notes-search-clear" aria-label="Clear search">✕</button>
           </div>
-          <div class="notes-tier-bar" id="notes-tier-bar" style="display: flex; gap: var(--sp-xs); margin-top: var(--sp-md); padding-bottom: var(--sp-sm); overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
+
+          <div id="notes-tier-filter-wrap" style="display: none; gap: var(--sp-xs); margin-top: var(--sp-md); padding-bottom: var(--sp-sm); overflow-x: auto; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); scrollbar-width: none;">
             <button class="tab active" data-tier="all">All Tiers</button>
-            <button class="tab" data-tier="top">Top Notes</button>
-            <button class="tab" data-tier="mid">Heart Notes</button>
-            <button class="tab" data-tier="base">Base Notes</button>
+            <button class="tab" data-tier="top">Top</button>
+            <button class="tab" data-tier="mid">Heart</button>
+            <button class="tab" data-tier="base">Base</button>
           </div>
         </div>
-        <div id="notes-body"></div>
+        <div id="notes-body" style="padding: 0 var(--sp-xl) var(--sp-4xl);"></div>
       </div>
 
       <div class="panel" id="p-changelog">
