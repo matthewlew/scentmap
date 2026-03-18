@@ -370,7 +370,7 @@ window.renderSaved = function() {
   const brands = BRANDS.filter(b => isBrandSaved(b.id));
   const historyFrags = HISTORY.map(id => CAT_MAP[id]).filter(Boolean);
 
-  if (!owned.length && !wished.length && !notes.length && !brands.length && !historyFrags.length && !QUIZ_HISTORY.length && !TRIALS.length) {
+  if (!owned.length && !wished.length && !notes.length && !brands.length && !historyFrags.length && !QUIZ_HISTORY.length) {
     container.innerHTML = `
       <div style="padding:var(--sp-2xl); text-align:center; color:var(--text-secondary);">
         <div style="font-size:32px; margin-bottom:var(--sp-md);">✨</div>
@@ -381,65 +381,7 @@ window.renderSaved = function() {
     return;
   }
 
-  // ── 0. LIVE TRIALS (New) ──
-  const activeTrials = TRIALS.filter(t => t.status === 'active');
-  if (activeTrials.length > 0) {
-    const trialSec = document.createElement('div');
-    trialSec.style.marginBottom = 'var(--sp-3xl)';
-    trialSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Live Scent Trials</div>`;
-    const trialWrap = document.createElement('div');
-    trialWrap.style.display = 'flex';
-    trialWrap.style.flexDirection = 'column';
-    trialWrap.style.gap = 'var(--sp-sm)';
-
-    activeTrials.forEach(t => {
-      const frag = CAT_MAP[t.id];
-      const now = Date.now();
-      const m15Diff = Math.max(0, t.checkpoints.m15.due - now);
-      const h1Diff = Math.max(0, t.checkpoints.h1.due - now);
-
-      const row = document.createElement('div');
-      row.style.cssText = 'background:var(--bg-secondary); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:var(--sp-md);';
-      
-      const formatTime = ms => {
-        const min = Math.floor(ms / 60000);
-        return min > 0 ? `${min}m` : 'Now';
-      };
-
-      const renderCheckpoint = (label, diff, checkpoint) => {
-        const isDue = diff <= 0;
-        const isDone = t.checkpoints[checkpoint].rating !== null;
-        if (isDone) return `<div style="font-size:11px; color:var(--g500);"><span style="color:var(--fam-green)">✓</span> ${label}</div>`;
-        return `
-          <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
-            <div style="display:flex; justify-content:space-between; align-items:baseline;">
-              <span style="font-size:11px; font-weight:700; color:${isDue ? 'var(--accent-primary)' : 'var(--text-tertiary)'}">${label}</span>
-              <span style="font-size:10px; font-family:var(--font-sans); color:var(--text-tertiary);">${isDue ? 'READY' : formatTime(diff)}</span>
-            </div>
-            ${isDue ? `<button class="dc-collect-btn active" style="padding:4px; font-size:11px; justify-content:center; margin-top:2px;" onclick="openTrialUpdateSheet('${t.id}', ${t.timestamp}, '${checkpoint}')">Rate now</button>` : ''}
-          </div>`;
-      };
-
-      row.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-sm);">
-          <div>
-            <div style="font-family:var(--font-sans); font-size:var(--fs-meta); font-weight:600;">${frag.name}</div>
-            <div style="font-size:11px; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.04em;">${t.location}</div>
-          </div>
-          <button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp})">✕</button>
-        </div>
-        <div style="display:flex; gap:var(--sp-md); padding-top:var(--sp-sm); border-top:1px solid var(--border-subtle);">
-          ${renderCheckpoint('15m Check', m15Diff, 'm15')}
-          ${renderCheckpoint('1h Check', h1Diff, 'h1')}
-        </div>
-      `;
-      trialWrap.appendChild(row);
-    });
-    trialSec.appendChild(trialWrap);
-    container.appendChild(trialSec);
-  }
-
-  // ── 1. OLFACTIVE DNA (Summary of Owned) ──
+  // ── 1. OLFACTIVE DNA (Using canonical Detail Panel stat bars) ──
   if (owned.length > 0) {
     const stats = getCollectionStats(owned);
     const dnaSec = document.createElement('div');
@@ -565,12 +507,134 @@ window.renderSaved = function() {
   if (notes.length > 0) renderCollectionSection(container, 'Saved Notes', notes, 'notes');
   if (brands.length > 0) renderCollectionSection(container, 'Saved Brands', brands, 'brands');
 
-  // ── 6. TRIAL JOURNAL (Completed) ──
+  // Footer Actions
+  const footer = document.createElement('div');
+  footer.style.cssText = 'border-top:1px solid var(--border-subtle); padding-top:var(--sp-xl); margin-top:var(--sp-xl); display:flex; align-items:center; justify-content:space-between;';
+  
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-collection-btn';
+  copyBtn.textContent = 'Copy Collection Link';
+  const toastEl = document.createElement('span');
+  toastEl.className = 'copy-toast';
+  copyBtn.addEventListener('click', () => copyCollectionToClipboard(toastEl));
+  
+  footer.appendChild(copyBtn);
+  footer.appendChild(toastEl);
+  container.appendChild(footer);
+};
+
+window.renderJournal = function() {
+  const container = document.getElementById('journal-content');
+  if (!container) return;
+  container.innerHTML = '';
+
+  // Quick Track Search
+  const searchWrap = document.createElement('div');
+  searchWrap.style.marginBottom = 'var(--sp-2xl)';
+  searchWrap.innerHTML = `
+    <div class="sec-label" style="margin-bottom:var(--sp-sm);">Quick Track</div>
+    <div class="cat-search-wrap" style="background:var(--bg-secondary); border-radius:var(--radius); margin-bottom:var(--sp-xs);">
+      <input type="text" id="journal-search" class="cat-search-input" placeholder="Search a fragrance to track..." style="background:transparent;">
+    </div>
+    <div id="journal-search-results" style="margin-top:var(--sp-xs); max-height:200px; overflow-y:auto; background:var(--bg-primary); border:1px solid var(--border-standard); border-radius:var(--radius); display:none; z-index:10; position:relative;"></div>
+  `;
+  container.appendChild(searchWrap);
+
+  const jSearch = container.querySelector('#journal-search');
+  const jResults = container.querySelector('#journal-search-results');
+
+  jSearch.addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    if (q.length < 2) { jResults.style.display = 'none'; return; }
+    const matches = CAT.filter(f => f.name.toLowerCase().includes(q) || f.brand.toLowerCase().includes(q)).slice(0, 5);
+    if (matches.length > 0) {
+      jResults.innerHTML = matches.map(f => `
+        <button class="settings-menu-item journal-search-item" data-id="${f.id}" style="border-radius:0; border-bottom:1px solid var(--border-subtle); width:100%; text-align:left;">
+          <div style="font-weight:600;">${f.name}</div>
+          <div style="font-size:11px; opacity:0.7;">${f.brand}</div>
+        </button>
+      `).join('');
+      jResults.style.display = 'block';
+      jResults.querySelectorAll('.journal-search-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          jSearch.value = '';
+          jResults.style.display = 'none';
+          openTrialSheet(btn.dataset.id);
+        });
+      });
+    } else {
+      jResults.style.display = 'none';
+    }
+  });
+
+  // ── ACTIVE MAP ──
+  const activeTrials = TRIALS.filter(t => t.status === 'active');
+  if (activeTrials.length > 0) {
+    const trialSec = document.createElement('div');
+    trialSec.style.marginBottom = 'var(--sp-3xl)';
+    trialSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Active Map</div>`;
+    const trialWrap = document.createElement('div');
+    trialWrap.style.display = 'flex';
+    trialWrap.style.flexDirection = 'column';
+    trialWrap.style.gap = 'var(--sp-sm)';
+
+    activeTrials.forEach(t => {
+      const frag = CAT_MAP[t.id];
+      const now = Date.now();
+      const m15Diff = Math.max(0, t.checkpoints.m15.due - now);
+      const h1Diff = Math.max(0, t.checkpoints.h1.due - now);
+
+      const row = document.createElement('div');
+      row.style.cssText = 'background:var(--bg-secondary); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:var(--sp-md);';
+      
+      const formatTime = ms => {
+        const min = Math.floor(ms / 60000);
+        return min > 0 ? `${min}m` : 'Now';
+      };
+
+      const renderCheckpoint = (label, diff, checkpoint) => {
+        const isDue = diff <= 0;
+        const isDone = t.checkpoints[checkpoint].rating !== null;
+        if (isDone) return `<div style="font-size:11px; color:var(--g500);"><span style="color:var(--fam-green)">✓</span> ${label}</div>`;
+        return `
+          <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-size:11px; font-weight:700; color:${isDue ? 'var(--accent-primary)' : 'var(--text-tertiary)'}">${label}</span>
+              <span style="font-size:10px; font-family:var(--font-sans); color:var(--text-tertiary);">${isDue ? 'READY' : formatTime(diff)}</span>
+            </div>
+            ${isDue ? `<button class="dc-collect-btn active" style="padding:4px; font-size:11px; justify-content:center; margin-top:2px;" onclick="openTrialUpdateSheet('${t.id}', ${t.timestamp}, '${checkpoint}')">Rate now</button>` : ''}
+          </div>`;
+      };
+
+      row.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-sm);">
+          <div>
+            <div style="font-family:var(--font-sans); font-size:var(--fs-meta); font-weight:600;">${frag.name}</div>
+            <div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${t.location}</div>
+          </div>
+          <button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp}); renderJournal();">✕</button>
+        </div>
+        <div style="display:flex; gap:var(--sp-md); padding-top:var(--sp-sm); border-top:1px solid var(--border-subtle);">
+          ${renderCheckpoint('15m Check', m15Diff, 'm15')}
+          ${renderCheckpoint('1h Check', h1Diff, 'h1')}
+        </div>
+      `;
+      trialWrap.appendChild(row);
+    });
+    trialSec.appendChild(trialWrap);
+    container.appendChild(trialSec);
+  } else {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'padding:var(--sp-xl); background:var(--bg-secondary); border-radius:var(--radius-lg); text-align:center; color:var(--text-tertiary); font-family:var(--font-serif); margin-bottom:var(--sp-2xl);';
+    empty.innerHTML = `No active trials. Search a scent above or browse the catalog to start tracking.`;
+    container.appendChild(empty);
+  }
+
+  // ── TRIAL HISTORY ──
   const completedTrials = TRIALS.filter(t => t.status === 'completed');
   if (completedTrials.length > 0) {
     const journalSec = document.createElement('div');
-    journalSec.style.cssText = 'margin-top:var(--sp-4xl); margin-bottom:var(--sp-3xl);';
-    journalSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Trial Journal</div>`;
+    journalSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Trial History</div>`;
     const journalWrap = document.createElement('div');
     journalWrap.style.cssText = 'display:flex; flex-direction:column; gap:var(--sp-md);';
     
@@ -579,7 +643,6 @@ window.renderSaved = function() {
       const row = document.createElement('div');
       row.style.cssText = 'background:var(--bg-primary); border:1px solid var(--border-standard); border-radius:var(--radius-lg); padding:var(--sp-md); cursor:pointer;';
       const date = new Date(t.timestamp).toLocaleDateString(undefined, { month:'short', day:'numeric' });
-      
       const stars = v => '★'.repeat(v) + '☆'.repeat(5-v);
 
       row.innerHTML = `
@@ -601,21 +664,6 @@ window.renderSaved = function() {
     journalSec.appendChild(journalWrap);
     container.appendChild(journalSec);
   }
-
-  // Footer Actions
-  const footer = document.createElement('div');
-  footer.style.cssText = 'border-top:1px solid var(--border-subtle); padding-top:var(--sp-xl); margin-top:var(--sp-xl); display:flex; align-items:center; justify-content:space-between;';
-  
-  const copyBtn = document.createElement('button');
-  copyBtn.className = 'copy-collection-btn';
-  copyBtn.textContent = 'Copy Collection Link';
-  const toastEl = document.createElement('span');
-  toastEl.className = 'copy-toast';
-  copyBtn.addEventListener('click', () => copyCollectionToClipboard(toastEl));
-  
-  footer.appendChild(copyBtn);
-  footer.appendChild(toastEl);
-  container.appendChild(footer);
 };
 
 /* Similarity scoring: 0–100 across family, notes, sillage, roles */
@@ -1122,6 +1170,94 @@ function renderDupeLab(container, anchor) {
   `;
 }
 
+function renderMoodRefinement(container, frag) {
+  const refinementSec = document.createElement('div');
+  refinementSec.className = 'dc-mood-refinement';
+  refinementSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md)">Fine-tune the mood</div>`;
+
+  const vectors = [
+    { id: 'intensity', left: 'More Chill', right: 'More Exciting', center: 'Neutral' },
+    { id: 'accessibility', left: 'Crowd Pleaser', right: 'Zeroing In', center: 'Neutral' }
+  ];
+
+  vectors.forEach(v => {
+    const row = document.createElement('div');
+    row.className = 'dc-mood-slider-row';
+    row.innerHTML = `
+      <div class="dc-mood-labels">
+        <span>${v.left}</span>
+        <span>${v.right}</span>
+      </div>
+      <div class="dc-mood-slider-wrap">
+        <div class="dc-mood-track">
+          <div class="dc-mood-center-mark"></div>
+        </div>
+        <div class="dc-mood-handle" id="handle-${v.id}" style="left: 50%"></div>
+        <input type="range" class="dc-mood-input" id="input-${v.id}" min="-100" max="100" value="0">
+      </div>
+      <div id="suggestion-${v.id}" class="dc-mood-suggestion-wrap"></div>
+    `;
+    refinementSec.appendChild(row);
+  });
+
+  container.appendChild(refinementSec);
+
+  // Logic for discovery
+  const updateDiscovery = (vectorId, value) => {
+    const handle = document.getElementById(`handle-${vectorId}`);
+    const sugWrap = document.getElementById(`suggestion-${vectorId}`);
+    handle.style.left = `${50 + (value / 2)}%`;
+
+    if (Math.abs(value) < 15) {
+      sugWrap.innerHTML = '';
+      return;
+    }
+
+    // Find a match
+    let match = null;
+    const sameFamily = CAT.filter(f => f.family === frag.family && f.id !== frag.id);
+    
+    if (vectorId === 'intensity') {
+      if (value > 0) { // Exciting (High sillage / complex)
+        match = sameFamily.sort((a,b) => b.sillage - a.sillage)[0];
+      } else { // Chill (Low sillage / clean)
+        match = sameFamily.sort((a,b) => a.sillage - b.sillage)[0];
+      }
+    } else { // Accessibility
+      const isNiche = b => ['Fueguia 1833', 'D.S. & Durga', 'Xinu', 'Byredo', 'Diptyque', 'Le Labo'].includes(b);
+      if (value > 0) { // Zeroing in (Niche)
+        match = sameFamily.filter(f => isNiche(f.brand)).sort((a,b) => b.sillage - a.sillage)[0];
+      } else { // Crowd Pleaser (Designer)
+        match = sameFamily.filter(f => !isNiche(f.brand)).sort((a,b) => b.sillage - a.sillage)[0];
+      }
+    }
+
+    if (match && match.id !== frag.id) {
+      const label = value > 0 ? vectors.find(v => v.id === vectorId).right : vectors.find(v => v.id === vectorId).left;
+      sugWrap.innerHTML = `
+        <div class="dc-mood-suggestion-card" onclick="openFragDetail(CAT_MAP['${match.id}'])">
+          <div class="frag-picker-dot" style="background:${FAM[match.family].color}"></div>
+          <div style="flex:1">
+            <div class="dc-mood-sug-label">Try for ${label}</div>
+            <div class="frag-picker-item-name">${match.name}</div>
+            <div class="frag-picker-item-brand">${match.brand}</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-tertiary)"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      `;
+    } else {
+      sugWrap.innerHTML = `<div style="font-size:10px; color:var(--text-tertiary); margin-top:8px; text-align:center">No further ${value > 0 ? 'extreme' : 'mellow'} match in this family</div>`;
+    }
+  };
+
+  refinementSec.querySelectorAll('.dc-mood-input').forEach(input => {
+    input.addEventListener('input', e => {
+      window.haptic?.('medium');
+      updateDiscovery(input.id.replace('input-', ''), parseInt(e.target.value));
+    });
+  });
+}
+
 function renderFragDetail(container,frag){
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
 
@@ -1225,7 +1361,7 @@ function renderFragDetail(container,frag){
     
     const trialBtn=document.createElement('button');
     trialBtn.className='dc-collect-btn';
-    trialBtn.innerHTML=`<span class="dc-collect-icon">📝</span> Track Trial`;
+    trialBtn.innerHTML=`Track Trial`;
     trialBtn.addEventListener('click',e=>{e.stopPropagation();openTrialSheet(frag.id);});
 
     el.appendChild(wishBtn);el.appendChild(ownBtn);el.appendChild(trialBtn);
@@ -1241,6 +1377,8 @@ function renderFragDetail(container,frag){
     e.stopPropagation();
     openDupeLab(frag);
   });
+
+  renderMoodRefinement(container, frag);
 
   // Similar shelf
   const scored=CAT
@@ -2862,6 +3000,9 @@ function go(id,btn){
   const panel = document.getElementById('p-'+id);
   if(panel) panel.classList.add('active');
   
+  if (id === 'saved') renderSaved();
+  if (id === 'journal') renderJournal();
+
   // Find and activate the matching global nav link or button
   if (btn) {
     btn.classList.add('active');
@@ -2892,8 +3033,8 @@ window.addEventListener('hashchange', () => {
   const hash = window.location.hash.slice(1);
   if (!hash) return;
   
-  // Handle basic panel navigation: #catalog, #compare, #notes, #saved
-  const panels = ['catalog', 'compare', 'notes', 'saved'];
+  // Handle basic panel navigation: #catalog, #compare, #notes, #saved, #journal
+  const panels = ['catalog', 'compare', 'notes', 'saved', 'journal'];
   if (panels.includes(hash)) {
     go(hash);
   }
@@ -2963,7 +3104,7 @@ window.navBack=function(){
 document.addEventListener('DOMContentLoaded',function(){
   // Initial hash check
   const hash = window.location.hash.slice(1);
-  const panels = ['catalog', 'compare', 'notes', 'saved'];
+  const panels = ['catalog', 'compare', 'notes', 'saved', 'journal'];
   if (panels.includes(hash)) {
     go(hash);
   } else if (!hash && window.location.pathname === '/app') {

@@ -3681,7 +3681,121 @@ button.cmp-note-pill:hover {
   margin: 0 0 var(--sp-xs);
 }
 
-/* ── Notes 2.0: Educational & Explore ── */
+/* ── Mood Refinement Sliders ── */
+.dc-mood-refinement {
+  margin-top: var(--sp-xl);
+  padding-top: var(--sp-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.dc-mood-slider-row {
+  margin-bottom: var(--sp-xl);
+}
+
+.dc-mood-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--sp-xs);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+
+.dc-mood-slider-wrap {
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.dc-mood-track {
+  width: 100%;
+  height: 1px;
+  background: var(--border-strong);
+  position: relative;
+}
+
+.dc-mood-track::before, .dc-mood-track::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 1px;
+  height: 7px;
+  background: var(--border-strong);
+}
+.dc-mood-track::before { left: 0; }
+.dc-mood-track::after { right: 0; }
+
+.dc-mood-center-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  background: var(--text-primary);
+  border-radius: 50%;
+}
+
+.dc-mood-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: ew-resize;
+  z-index: 2;
+}
+
+.dc-mood-handle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: var(--bg-primary);
+  border: 1.5px solid var(--text-primary);
+  border-radius: 50%;
+  z-index: 1;
+  transition: left 0.1s ease-out;
+  pointer-events: none;
+}
+
+.dc-mood-suggestion-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-md);
+  margin-top: var(--sp-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  cursor: pointer;
+  transition: transform var(--dur-fast), background var(--dur-fast);
+  min-height: 52px;
+  border: 1px solid transparent;
+}
+
+.dc-mood-suggestion-card:hover {
+  background: var(--bg-tertiary);
+  transform: translateY(-1px);
+}
+
+.dc-mood-suggestion-card.active {
+  border-color: var(--border-strong);
+  background: var(--bg-primary);
+}
+
+.dc-mood-sug-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
 
 .notes-nav-bar {
   display: flex;
