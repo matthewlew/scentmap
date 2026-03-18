@@ -367,16 +367,16 @@ window.renderSaved = function() {
         <div style="font-size:32px; margin-bottom:var(--sp-md);">✨</div>
         <div class="text-title" style="margin-bottom:var(--sp-xs);">Your collection is empty</div>
         <p class="text-body" style="font-family:var(--font-serif); opacity:0.8;">Explore the catalog and take quizzes to build your olfactive profile.</p>
-        <button class="dc-collect-btn active" style="margin-top:var(--sp-xl);" onclick="go('catalog', null)">Browse Fragrances</button>
+        <button class="dc-collect-btn active" style="margin-top:var(--sp-xl); width:auto; justify-content:center;" onclick="go('catalog', null)">Browse Fragrances</button>
       </div>`;
     return;
   }
 
-  // ── 1. OLFACTIVE DNA (Summary of Owned) ──
+  // ── 1. OLFACTIVE DNA (Using canonical Detail Panel stat bars) ──
   if (owned.length > 0) {
     const stats = getCollectionStats(owned);
     const dnaSec = document.createElement('div');
-    dnaSec.className = 'collection-dna-card';
+    dnaSec.className = 'collection-dna-card'; // We'll keep the name but use DS styles
     dnaSec.style.cssText = 'background:var(--bg-secondary); border-radius:var(--radius-xl); padding:var(--sp-xl); margin-bottom:var(--sp-3xl); border:1px solid var(--border-subtle);';
     
     const profile = stats.avgProfile;
@@ -389,33 +389,30 @@ window.renderSaved = function() {
 
     dnaSec.innerHTML = `
       <div class="sec-label" style="margin-bottom:var(--sp-md);">Your Olfactive DNA</div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-xl); align-items:center;">
-        <div>
-          <div style="font-family:var(--font-display); font-size:var(--fs-title); line-height:1; margin-bottom:var(--sp-xs);">${owned.length}</div>
-          <div style="font-family:var(--font-sans); font-size:var(--fs-caption); color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:var(--sp-lg);">Fragrances Owned</div>
-          
-          <div style="display:flex; flex-direction:column; gap:var(--sp-xs);">
-            ${bars.map(b => `
-              <div style="display:flex; align-items:center; gap:var(--sp-sm);">
-                <div style="width:45px; font-size:var(--fs-caption); font-weight:600; color:var(--text-tertiary);">${b.l}</div>
-                <div style="flex:1; height:4px; background:var(--border-subtle); border-radius:2px; position:relative; overflow:hidden;">
-                  <div style="position:absolute; top:0; left:0; height:100%; width:${Math.round(b.v*100)}%; background:${b.c};"></div>
-                </div>
-              </div>
-            `).join('')}
+      <div style="margin-bottom:var(--sp-xl);">
+        <div style="font-family:var(--font-display); font-size:var(--fs-title); line-height:1; margin-bottom:var(--sp-xs);">${owned.length}</div>
+        <div style="font-family:var(--font-sans); font-size:var(--fs-caption); color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.05em;">Fragrances Owned</div>
+      </div>
+      
+      <div class="dc-stats" style="margin-bottom:var(--sp-xl); display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-md) var(--sp-2xl);">
+        ${bars.map(b => `
+          <div class="dc-stat">
+            <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-xs); opacity:0.8;">${b.l}</div>
+            <div class="dc-bar"><div class="dc-fill" style="width:${Math.round(b.v*100)}%; background:${b.c}; height:3px;"></div></div>
           </div>
+        `).join('')}
+      </div>
+
+      <div style="background:var(--bg-primary); border-radius:var(--radius-lg); padding:var(--sp-md); border:1px solid var(--border-subtle);">
+        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Dominant Families</div>
+        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--sp-md);">
+          ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `
+            <div class="chip" style="background:${FAM[fam]?.color||'#888'}; font-size:11px; padding:2px 8px;">${FAM[fam]?.label||fam}</div>
+          `).join('')}
         </div>
-        <div style="background:var(--bg-primary); border-radius:var(--radius-lg); padding:var(--sp-md); border:1px solid var(--border-subtle);">
-          <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Dominant Families</div>
-          <div style="display:flex; flex-wrap:wrap; gap:4px;">
-            ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `
-              <div class="chip" style="background:${FAM[fam]?.color||'#888'}; font-size:11px; padding:2px 8px;">${FAM[fam]?.label||fam}</div>
-            `).join('')}
-          </div>
-          <div class="sec-label" style="font-size:10px; margin:var(--sp-md) 0 var(--sp-sm); opacity:0.6;">Core Notes</div>
-          <div style="font-family:var(--font-serif); font-size:var(--fs-meta); color:var(--text-secondary); line-height:1.4;">
-            ${stats.topNotes.slice(0, 5).map(n => n[0]).join(', ')}
-          </div>
+        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Core Notes</div>
+        <div style="font-family:var(--font-serif); font-size:var(--fs-meta); color:var(--text-secondary); line-height:1.4;">
+          ${stats.topNotes.slice(0, 5).map(n => n[0]).join(', ')}
         </div>
       </div>
     `;
@@ -426,7 +423,7 @@ window.renderSaved = function() {
   if (owned.length > 0) renderCollectionSection(container, 'Owned', owned, 'frags');
   if (wished.length > 0) renderCollectionSection(container, 'Wishlist', wished, 'frags');
 
-  // ── 3. QUIZ HISTORY ──
+  // ── 3. QUIZ HISTORY (Using canonical scent-row patterns where possible) ──
   if (QUIZ_HISTORY.length > 0) {
     const qSec = document.createElement('div');
     qSec.style.marginBottom = 'var(--sp-3xl)';
@@ -457,7 +454,6 @@ window.renderSaved = function() {
         </div>
       `;
       row.addEventListener('click', () => {
-        // Find best result to deep-link
         const best = q.results[0];
         if (best) {
           const archId = q.archetype?.id || (typeof q.archetype === 'string' ? q.archetype.toLowerCase().replace(/\s+/g,'-') : '');
@@ -471,14 +467,14 @@ window.renderSaved = function() {
     container.appendChild(qSec);
   }
 
-  // ── 4. RECENTLY VIEWED ──
+  // ── 4. RECENTLY VIEWED (Using canonical Carousel components) ──
   if (historyFrags.length > 0) {
     const hSec = document.createElement('div');
     hSec.style.marginBottom = 'var(--sp-3xl)';
     hSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md);">Recently Viewed</div>`;
+    
     const hWrap = document.createElement('div');
     hWrap.className = 'carousel';
-    hWrap.style.paddingBottom = 'var(--sp-md)';
     
     historyFrags.forEach(f => {
       const fm = FAM[f.family] || {color: '#888'};
