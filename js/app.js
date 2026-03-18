@@ -34,6 +34,15 @@ const ARCHETYPES = {
 const FAM_ABBR={citrus:'C',green:'G',floral:'F',woody:'W',amber:'A',chypre:'Ch',aquatic:'Aq',leather:'L',gourmand:'Go',oud:'O'};
 const FAM_ORDER=['floral','amber','citrus','woody','chypre','gourmand','green','oud','leather','aquatic'];
 
+const FEELINGS = {
+  'grounded': { label: 'Grounded & Intellectual', families: ['woody', 'green'], color: '#6E3210', icon: '🌲' },
+  'solar':    { label: 'Solar & Energetic',    families: ['citrus', 'aquatic'], color: '#9A6800', icon: '☀️' },
+  'romantic': { label: 'Romantic & Velvety',   families: ['floral'], color: '#902050', icon: '🌹' },
+  'mysterious':{ label: 'Dark & Mysterious',    families: ['oud', 'leather', 'amber'], color: '#4A1850', icon: '🌙' },
+  'comfort':  { label: 'Sweet & Comforting',   families: ['gourmand'], color: '#7C4C00', icon: '☁️' },
+  'refined':  { label: 'Refined & Polished',   families: ['chypre'], color: '#285438', icon: '🏛️' }
+};
+
 const FAM_COMPAT={
   woody:   {woody:.7,floral:.8,amber:.9,citrus:.6,leather:.8,oud:.9,green:.6,chypre:.7,gourmand:.5},
   floral:  {woody:.8,floral:.5,amber:.7,citrus:.7,leather:.5,oud:.6,green:.8,chypre:.8,gourmand:.5},
@@ -1844,6 +1853,7 @@ let CAT_ROLE_FILTER=null;
 let CAT_STATE_FILTER=null;
 let CAT_BRAND_FILTER=null;
 let CAT_FAM_FILTER=null;
+let CAT_FEEL_FILTER=null;
 let CAT_FAM_HOVER=null;
 
 function buildCatalog(roleFilter){
@@ -1876,6 +1886,7 @@ function buildCatalog(roleFilter){
   let visibleCat=roleFilter?CAT.filter(f=>f.roles.includes(roleFilter)):CAT;
   if(CAT_FAM_FILTER)visibleCat=visibleCat.filter(f=>f.family===CAT_FAM_FILTER);
   if(CAT_BRAND_FILTER)visibleCat=visibleCat.filter(f=>f.brand===CAT_BRAND_FILTER);
+  if(CAT_FEEL_FILTER)visibleCat=visibleCat.filter(f=>FEELINGS[CAT_FEEL_FILTER].families.includes(f.family));
   if(CAT_STATE_FILTER==='owned')visibleCat=visibleCat.filter(f=>isOwned(f.id));
   else if(CAT_STATE_FILTER==='wish')visibleCat=visibleCat.filter(f=>isWish(f.id));
   if(search)visibleCat=visibleCat.filter(f=>
@@ -2059,6 +2070,36 @@ function initCatalogControls(){
         currentNoteTier = tab.dataset.tier;
         buildNotes(currentNoteQuery, currentNoteTier);
       });
+    });
+  }
+
+  // Helper: build feeling filter pills
+  const feelBar=document.getElementById('cat-feel-bar');
+  const allFeelBtns=[];
+  function makeFeelBtn(label,val,color,container){
+    const btn=document.createElement('button');
+    btn.className='fam-pill'+(CAT_FEEL_FILTER===val?' active':'');
+    btn.setAttribute('aria-pressed', CAT_FEEL_FILTER===val ? 'true' : 'false');
+    const dot=val?`<span class="fam-pill-dot" style="background:${color}"></span>`:'';
+    btn.innerHTML=`${dot}${label}`;
+    btn.dataset.feel=val===null?'':val;
+    btn.addEventListener('click',()=>{
+      CAT_FEEL_FILTER=val;
+      allFeelBtns.forEach(b=>{
+        const isActive=b.dataset.feel===(val===null?'':val);
+        b.classList.toggle('active',isActive);
+        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+      buildCatalog();
+    });
+    allFeelBtns.push(btn);
+    container.appendChild(btn);
+    return btn;
+  }
+  if(feelBar){
+    makeFeelBtn('All Feelings',null,null,feelBar);
+    Object.entries(FEELINGS).forEach(([id, f]) => {
+      makeFeelBtn(f.label, id, f.color, feelBar);
     });
   }
 
