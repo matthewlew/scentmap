@@ -246,7 +246,7 @@
 
   .frag-main-top {
     position: sticky;
-    top: 0;
+    top: var(--col-nav-h);
     padding: var(--sp-md) var(--sp-lg) var(--sp-sm);
   }
 

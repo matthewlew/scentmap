@@ -3270,8 +3270,8 @@ button.cmp-note-pill:hover {
   }
   .mbn-btn.active{color:var(--text-primary);font-weight:600}
   .mbn-icon{font-size:var(--fs-title);line-height:var(--lh-tight)}
-  /* Compare sticky bar: flush with top on mobile since nav is hidden */
-  #cmp-sticky-bar { top: 0; }
+  /* Compare sticky bar: offset by global-nav on mobile */
+  #cmp-sticky-bar { top: var(--col-nav-h); }
 }
 
 /* ══ AUTH MODAL ═══════════════════════════════════════════════════ */
