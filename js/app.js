@@ -20,6 +20,17 @@ const FAM = {
   gourmand:{label:'Gourmand',color:'#7C4C00', desc:'Edible-smelling notes — vanilla, caramel, tonka, praline. Emerged in the 1990s. Warm, sweet, and comforting. Fragrance as food memory.'},
   oud:     {label:'Oud',     color:'#4A1850', desc:'Dark, animalic resin from infected agarwood. Deep, smoky, and complex. The most prized raw material in Arabian perfumery — priced by weight, not volume. Polarising.'},
 };
+
+const ARCHETYPES = {
+  'quiet-expressionist': { name: 'The Quiet Expressionist' },
+  'sensory-hedonist': { name: 'The Sensory Hedonist' },
+  'urban-intellectual': { name: 'The Urban Intellectual' },
+  'sun-chaser': { name: 'The Sun Chaser' },
+  'romantic': { name: 'The Romantic' },
+  'provocateur': { name: 'The Provocateur' },
+  'naturalist': { name: 'The Naturalist' },
+  'minimalist': { name: 'The Minimalist' },
+};
 const FAM_ABBR={citrus:'C',green:'G',floral:'F',woody:'W',amber:'A',chypre:'Ch',aquatic:'Aq',leather:'L',gourmand:'Go',oud:'O'};
 const FAM_ORDER=['floral','amber','citrus','woody','chypre','gourmand','green','oud','leather','aquatic'];
 
@@ -692,8 +703,24 @@ function renderDupeLab(container, anchor) {
 function renderFragDetail(container,frag){
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
 
-  container.innerHTML=`
+  // Handle quiz attribution
+  let quizAttribution = '';
+  const hash = window.location.hash;
+  if (hash.includes('source=quiz')) {
+    const archMatch = hash.match(/archetype=([a-z0-9-]+)/);
+    if (archMatch && archMatch[1]) {
+      const arch = ARCHETYPES[archMatch[1]];
+      if (arch) {
+        quizAttribution = `
+          <div class="dc-quiz-attribution" style="margin-bottom:var(--sp-lg); padding:var(--sp-sm) var(--sp-md); background:var(--bg-secondary); border:1px solid var(--border-subtle); border-radius:var(--radius-md); font-family:var(--font-sans); font-size:var(--fs-meta); color:var(--text-secondary); display:flex; align-items:center; gap:var(--sp-xs);">
+            <span style="font-size:1.2em;">✨</span> From your scent archetype: <strong style="color:var(--text-primary);">${arch.name}</strong>
+          </div>`;
+      }
+    }
+  }
 
+  container.innerHTML=`
+    ${quizAttribution}
     <div class="dc-name">${frag.name}</div>
     <button class="dc-brand-btn">${frag.brand}</button>
     <div class="chip" style="background:${fm.color}; margin-bottom: var(--sp-xl);">
@@ -3892,7 +3919,7 @@ Promise.all([
     }
   }
 
-  // Read hash for deep-linking from landing page
+  // Read hash for deep-linking from landing page or quiz
   const hash = window.location.hash.replace('#', '');
   if (_deepLinkedCompare) {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
@@ -3909,6 +3936,14 @@ Promise.all([
     if (searchInput) {
       searchInput.value = query;
       searchInput.dispatchEvent(new Event('input'));
+    }
+  } else if (hash.startsWith('frag=')) {
+    const params = new URLSearchParams(hash.replace('frag=', 'id='));
+    const fragId = params.get('id');
+    const frag = CAT_MAP[fragId];
+    if (frag) {
+      go('catalog', null);
+      openFragDetail(frag);
     }
   } else {
     // MVP: default to compare

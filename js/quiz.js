@@ -568,7 +568,7 @@ function renderArchetypeResults(archetype, frags) {
   const resultsHtml = frags.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
-      <a href="/app#frag=${frag.id}" class="quiz-result-card">
+      <a href="/app#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
         <div class="quiz-result-dot" style="background:${fc.color}"></div>
         <div class="quiz-result-info">
           <div class="quiz-result-name">${frag.name}</div>
@@ -631,7 +631,7 @@ function renderAstroResults(sign, archetype, frags) {
   const resultsHtml = frags.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
-      <a href="/app#frag=${frag.id}" class="quiz-result-card">
+      <a href="/app#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
         <div class="quiz-result-dot" style="background:${fc.color}"></div>
         <div class="quiz-result-info">
           <div class="quiz-result-name">${frag.name}</div>
