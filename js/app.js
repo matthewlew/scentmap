@@ -2,7 +2,13 @@
 let ROLES=[], RM={}, CAT=[], CAT_MAP={}, NI=[], NI_MAP={}, BRANDS=[], BRANDS_MAP={};
 
 
-const FAM={
+/* ── Analytics stubs ── */
+function trackEvent(name, props) {
+  console.log(`[analytics] ${name}`, props);
+  // Future: window.plausible?.(name, { props });
+}
+
+const FAM = {
   citrus:  {label:'Citrus',  color:'#9A6800', desc:'Bright and fleeting. Pressed from rinds — bergamot, lemon, grapefruit. Often the first thing you smell, and the first to fade. Works in heat; rarely works alone.'},
   green:   {label:'Green',   color:'#1A6030', desc:'Crisp, alive, and vegetal — cut grass, fig leaf, violet leaf. The smell of growing things rather than flowering ones. Fresh but rooted.'},
   floral:  {label:'Floral',  color:'#902050', desc:'Derived from flowers — rose, jasmine, tuberose, iris. The broadest family. Ranges from powdery and romantic to bright and dewy. The backbone of most commercial perfumery.'},
@@ -614,6 +620,75 @@ function linkNotes(arr){
   }).join('');
 }
 
+function openDupeLab(anchor) {
+  trackEvent('dupe_lab_opened', { source: anchor.id });
+  openDetail(container => renderDupeLab(container, anchor), `Dupes for ${anchor.name}`);
+}
+
+function renderDupeLab(container, anchor) {
+  const dupes = CAT
+    .filter(f => f.id !== anchor.id)
+    .map(f => ({ f, score: scoreSimilarity(anchor, f) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10);
+
+  container.innerHTML = `
+    <div class="dc-name">Dupe Lab</div>
+    <div class="dc-brand" style="margin-bottom:var(--sp-xl);">Finding matches for ${anchor.name}</div>
+    
+    <div class="dupe-list">
+      ${dupes.map(({f, score}) => {
+        const fm = FAM[f.family] || {label: f.family, color:'#888'};
+        const reason = getSwapReason(anchor, f);
+        return `
+          <div class="dupe-item" style="margin-bottom:var(--sp-lg); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:var(--sp-md); background:var(--bg-primary);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-xs);">
+              <div class="dc-name" style="font-size:var(--fs-body); margin-bottom:0;">${f.name}</div>
+              <div style="font-family:var(--font-sans); font-weight:700; color:var(--accent-primary); font-size:var(--fs-ui);">${score}%</div>
+            </div>
+            <div class="dc-brand" style="margin-bottom:var(--sp-sm);">${f.brand} · ${fm.label}</div>
+            
+            <div style="height:4px; background:var(--border-subtle); border-radius:2px; margin-bottom:var(--sp-sm); position:relative; overflow:hidden;">
+              <div style="position:absolute; top:0; left:0; height:100%; width:${score}%; background:var(--accent-primary); border-radius:2px;"></div>
+            </div>
+            
+            <div class="dc-description" style="font-size:var(--fs-meta); margin-bottom:var(--sp-sm); line-height:1.4;">${reason}</div>
+            
+            <details style="margin-bottom:var(--sp-sm);">
+              <summary style="font-size:var(--fs-caption); font-family:var(--font-sans); font-weight:600; color:var(--text-tertiary); cursor:pointer; list-style:none; display:flex; align-items:center; gap:4px;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                Why this matches
+              </summary>
+              <div style="margin-top:var(--sp-sm); padding-top:var(--sp-sm); border-top:1px dashed var(--border-subtle); font-size:var(--fs-caption); color:var(--text-tertiary); display:flex; flex-direction:column; gap:4px;">
+                ${(() => {
+                  const famScore = (FAM_COMPAT[anchor.family]?.[f.family] ?? 0.5) * 40;
+                  const shBase = anchor._nBase.filter(n => f._nBase.includes(n)).length;
+                  const shMid = anchor._nMid.filter(n => f._nMid.includes(n)).length;
+                  const shTop = anchor._nTop.filter(n => f._nTop.includes(n)).length;
+                  const noteScore = Math.min(30, shBase * 5 + shMid * 3 + shTop * 2);
+                  const sillDiff = Math.abs(anchor.sillage - f.sillage);
+                  const sillScore = sillDiff <= 2 ? 10 : sillDiff <= 4 ? 5 : 0;
+                  const shRoles = anchor.roles.filter(r => f.roles.includes(r)).length;
+                  const roleScore = Math.min(20, shRoles * 7);
+                  
+                  return `
+                    <div style="display:flex; justify-content:space-between;"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span>Role alignment</span><span>${roleScore}/20</span></div>
+                  `;
+                })()}
+              </div>
+            </details>
+            
+            <button class="s-name-btn" style="font-size:var(--fs-meta);" onclick="event.stopPropagation(); trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">View Details →</button>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
 function renderFragDetail(container,frag){
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
 
@@ -631,6 +706,9 @@ function renderFragDetail(container,frag){
     ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="margin-top:var(--sp-md);">Buy from ${frag.brand}</a>`:''}
     <div class="dc-cmp-cta-label">Compare with</div>
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
+    <button class="dc-collect-btn" id="find-dupes-${frag.id}" style="width:100%; justify-content:center; margin-bottom:var(--sp-xl);">
+      <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
+    </button>
     <div class="dc-stats">
       <div class="dc-stat"><div class="dc-slbl">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${SW[frag.sillage]}</div></div>
       <div class="dc-stat"><div class="dc-slbl">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${LW[frag.layering]}</div></div>
@@ -701,6 +779,13 @@ function renderFragDetail(container,frag){
 
   // Compare CTAs
   _buildCompareCTAs(frag,container.querySelector(`#dc-ctas-${frag.id}`));
+
+  // Find Dupes button
+  const dupeBtn = container.querySelector(`#find-dupes-${frag.id}`);
+  if(dupeBtn) dupeBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    openDupeLab(frag);
+  });
 
   // Similar shelf
   const scored=CAT

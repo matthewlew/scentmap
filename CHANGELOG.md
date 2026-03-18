@@ -6,6 +6,10 @@ All notable changes to Scentmap are documented here.
 
 ## 2026-03-19
 
+### Added
+- **Dupe Lab feature** — new "Find Dupes in Catalog" entry point added to fragrance detail panels; calculates similarity scores across the entire 183-scent database using the multi-factor similarity algorithm; ranked results show match percentage, note overlap bar, and "Why this matches" math expansion (family/note/sillage/role breakdown); "View Details" allows deep-linking to matched fragrances
+- **Analytics event stubs** — added `trackEvent()` helper to `js/app.js` with initial instrumentation for `dupe_lab_opened` and `dupe_clicked` events; establishing the pattern for planned DNA Card analytics
+
 ### Fixed
 - **`dc-collect-btn` rendering** — removed conflicting inline styles (`background:var(--black); color:var(--paper); border:none;`) that were overriding the default button CSS class; "Buy from" and "Visit brand" links now render with proper `.dc-collect-btn` styling
 
