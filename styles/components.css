@@ -455,7 +455,7 @@
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.00em;
   padding: var(--sp-xs) var(--sp-md);
   border: 1px solid var(--border-standard);
   border-radius: var(--radius);
@@ -486,8 +486,6 @@
   font-weight: 500;
   color: var(--text-primary);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .dc-cmp-btn-empty {
