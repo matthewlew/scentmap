@@ -87,6 +87,7 @@
       <a href="#cards">Cards</a>
       <a href="#chips">Chips &amp; Badges</a>
       <a href="#tabs">Tabs &amp; Segments</a>
+      <a href="#family-pills">Family Filter Pills</a>
       <a href="#buttons">Buttons</a>
       <a href="#inputs">Inputs</a>
       <a href="#sheets">Sheets &amp; Panels</a>
@@ -620,6 +621,62 @@
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════
+         SECTION 8b: FAMILY FILTER PILLS
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="family-pills">
+      <h2 class="pg-section-title">Family Filter Pills <span class="pg-usage pg-usage--high" style="vertical-align: middle; margin-left: var(--sp-sm);">NEW</span></h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">Used in the catalog sidebar to filter fragrances by olfactory family. Each pill has a colored dot + label. Desktop renders as a vertical stack inside <code>.frag-sidebar</code>; a mobile horizontal scroll variant is planned via <code>.cat-family-scroll</code>.</p>
+
+      <h3 class="pg-subsection-title">Sidebar Layout (vertical stack)</h3>
+      <div class="pg-controls" id="fampill-controls">
+        <button class="pg-ctrl active" onclick="setFamPillActive('all', this)">All active</button>
+        <button class="pg-ctrl" onclick="setFamPillActive('woody', this)">Woody active</button>
+        <button class="pg-ctrl" onclick="setFamPillActive('floral', this)">Floral active</button>
+      </div>
+      <div class="pg-box" style="max-width: 200px; display: flex; flex-direction: column; align-items: stretch; padding: var(--sp-sm);" id="fam-pill-demo">
+        <button class="fam-pill active" data-fam="all">All</button>
+        <button class="fam-pill" data-fam="woody"><span class="fam-pill-dot" style="background: var(--fam-woody);"></span>Woody</button>
+        <button class="fam-pill" data-fam="floral"><span class="fam-pill-dot" style="background: var(--fam-floral);"></span>Floral</button>
+        <button class="fam-pill" data-fam="amber"><span class="fam-pill-dot" style="background: var(--fam-amber);"></span>Amber</button>
+        <button class="fam-pill" data-fam="citrus"><span class="fam-pill-dot" style="background: var(--fam-citrus);"></span>Citrus</button>
+        <button class="fam-pill" data-fam="green"><span class="fam-pill-dot" style="background: var(--fam-green);"></span>Green</button>
+      </div>
+
+      <h3 class="pg-subsection-title">States</h3>
+      <div class="pg-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="pg-item">
+          <span class="pg-label">Default</span>
+          <div class="pg-box"><button class="fam-pill"><span class="fam-pill-dot" style="background: var(--fam-woody);"></span>Woody</button></div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">Active</span>
+          <div class="pg-box"><button class="fam-pill active"><span class="fam-pill-dot" style="background: var(--fam-floral);"></span>Floral</button></div>
+        </div>
+        <div class="pg-item">
+          <span class="pg-label">No dot (All)</span>
+          <div class="pg-box"><button class="fam-pill active">All</button></div>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Mobile Horizontal Strip (planned)</h3>
+      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Same <code>.fam-pill</code> elements placed in a horizontally-scrolling container. CSS class <code>.cat-family-scroll</code> wraps the strip — currently <code>display: none</code> pending HTML wiring.</p>
+      <div class="pg-box" style="overflow-x: auto; padding: var(--sp-sm) var(--sp-md);">
+        <div style="display: flex; gap: var(--sp-xs); flex-wrap: nowrap;">
+          <button class="fam-pill active" style="flex-shrink: 0;">All</button>
+          <button class="fam-pill" style="flex-shrink: 0;"><span class="fam-pill-dot" style="background: var(--fam-woody);"></span>Woody</button>
+          <button class="fam-pill" style="flex-shrink: 0;"><span class="fam-pill-dot" style="background: var(--fam-floral);"></span>Floral</button>
+          <button class="fam-pill" style="flex-shrink: 0;"><span class="fam-pill-dot" style="background: var(--fam-amber);"></span>Amber</button>
+          <button class="fam-pill" style="flex-shrink: 0;"><span class="fam-pill-dot" style="background: var(--fam-citrus);"></span>Citrus</button>
+          <button class="fam-pill" style="flex-shrink: 0;"><span class="fam-pill-dot" style="background: var(--fam-green);"></span>Green</button>
+          <button class="fam-pill" style="flex-shrink: 0;"><span class="fam-pill-dot" style="background: var(--fam-leather);"></span>Leather</button>
+          <button class="fam-pill" style="flex-shrink: 0;"><span class="fam-pill-dot" style="background: var(--fam-oud);"></span>Oud</button>
+          <button class="fam-pill" style="flex-shrink: 0;"><span class="fam-pill-dot" style="background: var(--fam-chypre);"></span>Chypre</button>
+          <button class="fam-pill" style="flex-shrink: 0;"><span class="fam-pill-dot" style="background: var(--fam-gourmand);"></span>Gourmand</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
          SECTION 9: BUTTONS
          ═══════════════════════════════════════════════════════════ -->
     <section class="pg-section" id="buttons">
@@ -665,17 +722,38 @@
          ═══════════════════════════════════════════════════════════ -->
     <section class="pg-section" id="inputs">
       <h2 class="pg-section-title">Inputs</h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">Two inputs that share identical styling. Recommend merging into one class.</p>
+      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">Two inputs sharing nearly-identical styling. <code>.cat-search-input</code> recently updated: rounded to <code>radius-lg</code>, secondary background at rest (transitions to primary on focus), and icon-ready left padding.</p>
 
+      <h3 class="pg-subsection-title">Catalog Search (.cat-search-input) — updated</h3>
       <div class="pg-grid">
         <div class="pg-item">
-          <span class="pg-label">.cat-search-input (catalog)</span>
-          <div class="cat-search-wrap"><input type="search" class="cat-search-input" placeholder="Search fragrances, brands, notes..."></div>
+          <span class="pg-label">Rest state (bg-secondary)</span>
+          <div class="cat-search-wrap"><input type="search" class="cat-search-input" placeholder="Search fragrances, brands, notes…" autocomplete="off"><button class="cat-search-clear" style="display:none" aria-label="Clear search">✕</button></div>
         </div>
         <div class="pg-item">
-          <span class="pg-label">.frag-picker-search (picker)</span>
-          <input class="frag-picker-search" type="text" placeholder="Search...">
+          <span class="pg-label">With clear button (.cat-search-clear)</span>
+          <div class="cat-search-wrap"><input type="search" class="cat-search-input" value="Santal" autocomplete="off"><button class="cat-search-clear" aria-label="Clear search">✕</button></div>
         </div>
+      </div>
+      <div class="pg-callout" style="margin-top: var(--sp-lg);">
+        <div class="pg-callout-title">Focus behavior</div>
+        <div class="pg-callout-body">Tab into the input above. Border turns <code>--border-strong</code> and background switches to <code>--bg-primary</code>. Uses border-based focus (not the global box-shadow ring) per the input override in design-system.css.</div>
+      </div>
+
+      <h3 class="pg-subsection-title">Picker Search (.frag-picker-search)</h3>
+      <div class="pg-grid" style="grid-template-columns: 1fr;">
+        <div class="pg-item">
+          <span class="pg-label">.frag-picker-search (compare drum picker)</span>
+          <input class="frag-picker-search" type="text" placeholder="Search fragrances…">
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Result Count (.cat-result-count)</h3>
+      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Inline metadata shown alongside the catalog title. DM Sans 14px, tertiary color.</p>
+      <div class="pg-box" style="gap: var(--sp-sm);">
+        <span class="frag-title" style="font-family: var(--font-display); font-size: var(--fs-ui); letter-spacing: var(--ls-tight);">Fragrances</span>
+        <span class="cat-result-count">183 total</span>
+        <span class="cat-result-count" style="margin-left: var(--sp-xs);">· 12 owned</span>
       </div>
     </section>
 
@@ -987,6 +1065,15 @@
           return `<span class="chip chip--outline assigned-secondary">${f.name}</span>`;
         }
       }).join('');
+    }
+
+    /* ── Family pill demo ── */
+    function setFamPillActive(fam, ctrl) {
+      document.querySelectorAll('#fampill-controls .pg-ctrl').forEach(b => b.classList.remove('active'));
+      ctrl.classList.add('active');
+      document.querySelectorAll('#fam-pill-demo .fam-pill').forEach(b => {
+        b.classList.toggle('active', b.dataset.fam === fam);
+      });
     }
 
     /* ── Tab activation ── */

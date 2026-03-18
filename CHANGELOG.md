@@ -4,6 +4,16 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-17h
+
+### Added
+- **Family Filter Pills section in playground** — new storybook section for `.fam-pill` / `.fam-pill-dot` components added in ux-update; shows vertical sidebar layout, all three states (default / active / no-dot), and mobile horizontal strip demo
+
+### Changed
+- **Inputs section in playground** — updated `.cat-search-input` description to reflect recent changes (rounded to `radius-lg`, secondary background at rest, background transition on focus); added `.cat-search-clear` variant and `.cat-result-count` demo
+
+---
+
 ## 2026-03-17g
 
 ### Added
