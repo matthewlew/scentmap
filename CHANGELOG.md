@@ -32,7 +32,12 @@ All notable changes to Scentmap are documented here.
 - **Quiz result attribution banner** — added personalized context when deep-linking from quiz results to the fragrance engine; detail panels now display a "From your scent archetype: [Name]" banner when arrived via a quiz result link
 - **Analytics event stubs** — added `trackEvent()` helper to `js/app.js` with initial instrumentation for `dupe_lab_opened` and `dupe_clicked` events; establishing the pattern for planned DNA Card analytics
 
-### Fixed
+### Added
+- **Scent Journal & Live Trials** — new retail companion feature for tracking fragrances while testing in-store:
+  - **Scent Mapping** — log the exact application spot (Left Wrist, Neck, Paper Strip, etc.) to keep track of multiple tests
+  - **Evolution Tracking** — automated 15-minute and 1-hour follow-up prompts to rate how a scent develops on skin
+  - **Live Trials Dashboard** — sticky "active trial" indicators in the Collection tab with countdown timers for follow-up reviews
+  - **Trial Journal** — permanent history of all fragrance tests, showing how your impression evolved from initial spray to the dry-down
 - **Navigation system recovery** — fixed broken links across all pages by unifying header structures; integrated hash-based routing in `js/app.js` to ensure the correct panel (Catalog, Compare, Notes, Collection) activates when arriving via external links (e.g., `/app#catalog`); added `hashchange` listener to keep UI in sync with URL changes
 - **`dc-cmp-btn` typography and readability** — reduced letter-spacing to `0.00em` for better legibility; removed `max-width`, `overflow: hidden`, and `text-overflow: ellipsis` from `.dc-cmp-btn-name` to ensure fragrance names are fully readable in the compare slot buttons
 - **Double sitemap footer removed** — deleted redundant legacy `sitemap-footer` block from `index.html`; main sitemap is now exclusively handled by the `landing-footer` grid, which has been updated to include the new Scent Archetype and Astro Scent Match quizzes
