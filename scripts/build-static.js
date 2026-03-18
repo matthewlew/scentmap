@@ -29,6 +29,16 @@ const QUIZ_META = {
     description: 'Which Byredo fragrance is your match? 3 quick questions to find your signature scent from Byredo\'s full lineup.',
     ogTitle: 'Which Byredo Is Right for You?',
   },
+  'scent-archetype': {
+    title: 'What\'s Your Scent Archetype? — Quiz | Scentmap',
+    description: 'Discover your fragrance identity. 5 questions to uncover which of the 8 scent archetypes best describes your olfactive personality.',
+    ogTitle: 'What\'s Your Scent Archetype?',
+  },
+  'astro-scent': {
+    title: 'Astro Scent Match — Quiz | Scentmap',
+    description: 'Find your signature fragrance based on your zodiac sign. 1 question to discover the scent that aligns with your astrological sun sign.',
+    ogTitle: 'Find Your Astro Scent Match',
+  },
 };
 
 const POPULAR_COMPARISONS = [

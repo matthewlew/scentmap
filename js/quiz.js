@@ -349,13 +349,20 @@ function renderStep(step, collectedTags) {
   const q = qs[step];
   _container.innerHTML = `
     <div class="quiz-page">
-      <div class="quiz-header">
-        <a href="/" class="quiz-back-link">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Back
-        </a>
-        <span class="quiz-title-small">${_quizConfig.title}</span>
-      </div>
+      <nav class="global-nav">
+        <div class="global-nav-left">
+          <a href="/" class="global-nav-logo">Scentmap</a>
+          <div class="global-nav-links">
+            <a href="/app#catalog" class="global-nav-link">Fragrances</a>
+            <a href="/app#compare" class="global-nav-link">Compare</a>
+            <a href="/app#notes" class="global-nav-link">Notes</a>
+            <a href="/#quizzes" class="global-nav-link active">Quizzes</a>
+          </div>
+        </div>
+        <div class="global-nav-right">
+          <span class="quiz-title-small">${_quizConfig.title}</span>
+        </div>
+      </nav>
       <div class="quiz-body">
         <div class="quiz-progress">${step + 1} of ${qs.length}</div>
         <div class="quiz-bar-track"><div class="quiz-bar-fill" style="width:${((step + 1) / qs.length) * 100}%"></div></div>
@@ -381,6 +388,7 @@ function renderStep(step, collectedTags) {
 function _buildMoreQuizzesHtml() {
   const all = [
     { slug: 'scent-archetype', label: "What's Your Scent Archetype?" },
+    { slug: 'astro-scent', label: "Find Your Astro Scent Match" },
     { slug: 'find-your-scent', label: 'Find Your Perfect Fragrance' },
     { slug: 'best-perfume-for-men-2026', label: 'Best Perfume for Men 2026' },
     { slug: 'best-perfume-for-women-2026', label: 'Best Perfume for Women 2026' },
@@ -411,13 +419,20 @@ function renderResults(top3) {
 
   _container.innerHTML = `
     <div class="quiz-page">
-      <div class="quiz-header">
-        <a href="/" class="quiz-back-link">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Back
-        </a>
-        <span class="quiz-title-small">${_quizConfig.title}</span>
-      </div>
+      <nav class="global-nav">
+        <div class="global-nav-left">
+          <a href="/" class="global-nav-logo">Scentmap</a>
+          <div class="global-nav-links">
+            <a href="/app#catalog" class="global-nav-link">Fragrances</a>
+            <a href="/app#compare" class="global-nav-link">Compare</a>
+            <a href="/app#notes" class="global-nav-link">Notes</a>
+            <a href="/#quizzes" class="global-nav-link active">Quizzes</a>
+          </div>
+        </div>
+        <div class="global-nav-right">
+          <span class="quiz-title-small">${_quizConfig.title}</span>
+        </div>
+      </nav>
       <div class="quiz-body">
         <h1 class="quiz-question">Your Perfect Matches</h1>
         <p class="quiz-subtitle">Based on your answers, we recommend these fragrances:</p>
@@ -462,13 +477,20 @@ function renderArchetypeResults(archetype, frags) {
 
   _container.innerHTML = `
     <div class="quiz-page">
-      <div class="quiz-header">
-        <a href="/" class="quiz-back-link">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Back
-        </a>
-        <span class="quiz-title-small">${_quizConfig.title}</span>
-      </div>
+      <nav class="global-nav">
+        <div class="global-nav-left">
+          <a href="/" class="global-nav-logo">Scentmap</a>
+          <div class="global-nav-links">
+            <a href="/app#catalog" class="global-nav-link">Fragrances</a>
+            <a href="/app#compare" class="global-nav-link">Compare</a>
+            <a href="/app#notes" class="global-nav-link">Notes</a>
+            <a href="/#quizzes" class="global-nav-link active">Quizzes</a>
+          </div>
+        </div>
+        <div class="global-nav-right">
+          <span class="quiz-title-small">${_quizConfig.title}</span>
+        </div>
+      </nav>
       <div class="quiz-body">
         <div class="quiz-archetype-card">
           <div class="quiz-archetype-eyebrow">Your Scent Archetype</div>
@@ -521,9 +543,6 @@ function injectStyles() {
   const style = document.createElement('style');
   style.textContent = `
     .quiz-page { min-height: 100vh; min-height: 100dvh; background: var(--bg-secondary, #F5F2EC); }
-    .quiz-header { display: flex; align-items: center; justify-content: space-between; padding: var(--sp-md, 16px) var(--sp-xl, 24px); border-bottom: 1px solid var(--border-subtle, #E8E4DC); background: var(--bg-primary, #FAF8F4); }
-    .quiz-back-link { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-secondary, #8C8070); text-decoration: none; font-weight: 500; }
-    .quiz-back-link:hover { color: var(--text-primary, #0E0C09); }
     .quiz-title-small { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); }
     .quiz-body { max-width: 600px; margin: 0 auto; padding: var(--sp-3xl, 36px) var(--sp-xl, 24px); }
     .quiz-progress { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); margin-bottom: var(--sp-xs, 4px); }
@@ -595,7 +614,7 @@ function injectStyles() {
     .quiz-section-title { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-ui, 14px); font-weight: 600; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); }
 
     /* Hide app chrome on quiz pages */
-    .col-main-nav, .mobile-bottomnav, .sheet-stack-overlay, .note-float-overlay, .frag-picker-overlay,
+    .mobile-bottomnav, .sheet-stack-overlay, .note-float-overlay, .frag-picker-overlay,
     .col-detail, .detail-scrim, #loading-overlay, #app-loading, .app-loading-overlay, #app-error, .app-error-overlay, .auth-modal, .frag-picker-overlay { display: none !important; }
     .col-main { overflow: visible; }
     .shell { display: block; }
