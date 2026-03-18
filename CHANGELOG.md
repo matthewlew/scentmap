@@ -8,6 +8,9 @@ All notable changes to Scentmap are documented here.
 
 ### Added
 - **Global Navigation Bar** — implemented a unified navigation component across the landing page, fragrance engine, and quiz engine; features consistent branding with the Scentmap logo and contextual active states for "Fragrances", "Compare", "Notes", "Quizzes", and "Collection"; uses design system tokens for background, typography, and spacing.
+- **Notes 2.0: Educational Exploratorium** — transformed the Notes directory into a curated learning experience with three tabs: **Explore** (educational content), **Search & A-Z** (refined directory), and **My Notes** (saved favorites).
+- **Interactive Olfactory Pyramid** — added a visual educational component to the Notes page explaining fragrance evaporation tiers (Top, Heart, Base), with integrated filtering.
+- **Fragrance Family Deep-Dives** — implemented rich cards for each olfactory family featuring sensory descriptions and key note previews.
 - **Quizzes Landing Section** — added a dedicated section on the homepage for discovering data-driven quizzes, linked directly from the global navigation bar.
 
 ### Changed
