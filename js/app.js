@@ -628,7 +628,7 @@ function renderFragDetail(container,frag){
     <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
     ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
     ${frag.story?`<div class="dc-story" style="margin-top:var(--sp-md); padding:var(--sp-md); background:var(--g50); border-radius:6px; font-size:var(--fs-body-sm); color:var(--g600); border:1px solid var(--g200);">${frag.story}</div>`:''}
-    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--black); color:var(--paper); border:none;">Buy from ${frag.brand}</a>`:''}
+    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="margin-top:var(--sp-md);">Buy from ${frag.brand}</a>`:''}
     <div class="dc-cmp-cta-label">Compare with</div>
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
     <div class="dc-stats">
@@ -961,7 +961,7 @@ function renderHouseDetail(container,brand){
     <div class="house-detail-name">${brand}</div>
     ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${houseData.desc}</div>` : ''}
     <div id="house-brand-save-wrap" style="margin-top:var(--sp-md);"></div>
-    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--black); color:var(--paper); border:none;">Visit ${brand} Website</a>` : ''}
+    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="margin-top:var(--sp-md);">Visit ${brand} Website</a>` : ''}
     ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
 
     <div style="margin:var(--sp-xl) 0;">

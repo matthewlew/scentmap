@@ -6,6 +6,9 @@ All notable changes to Scentmap are documented here.
 
 ## 2026-03-19
 
+### Fixed
+- **`dc-collect-btn` rendering** — removed conflicting inline styles (`background:var(--black); color:var(--paper); border:none;`) that were overriding the default button CSS class; "Buy from" and "Visit brand" links now render with proper `.dc-collect-btn` styling
+
 ### Changed
 - **Design system consolidation — playground updated** — `playground.html` rewritten to show post-consolidation canonical patterns only; old audit/storybook tables removed; Migration Summary section added documenting all 8 completed consolidations
 - **Tab bars converged to sliding-pill pattern** — `.tabs` and `.cat-state-bar` now share CSS with `.frag-picker-sort-bar`; new `.tab-pill` element slides behind the active tab; 16 section-label class variants (`.dc-nlbl`, `.dc-slbl`, `.dc-sim-lbl`, etc.) merged to single `.sec-label`
