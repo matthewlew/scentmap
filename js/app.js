@@ -366,11 +366,8 @@ function scoreSimilarity(a,b){
   return result;
 }
 
-/* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
-const _layCache={};
-function scoreLayeringPair(a,b){
-  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
-  if(_layCache[k]!==undefined)return _layCache[k];
+/* Layering compatibility score details */
+function getLayeringDetails(a,b) {
   const famComp=FAM_COMPAT[a.family]?.[b.family]??0.5;
   const famScore=famComp*35;
   const sillDiff=Math.abs(a.sillage-b.sillage);
@@ -378,8 +375,17 @@ function scoreLayeringPair(a,b){
   const shared=a._nAll.filter(n=>b._nAll.includes(n)).length;
   const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
   const result=Math.round(famScore+sillScore+noteScore);
-  _layCache[k]=result;
-  return result;
+  return { famScore: Math.round(famScore), sillScore, noteScore, shared, total: result };
+}
+
+/* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
+const _layCache={};
+function scoreLayeringPair(a,b){
+  const k=a.id<b.id?a.id+'~'+b.id:b.id+'~'+a.id;
+  if(_layCache[k]!==undefined)return _layCache[k];
+  const details = getLayeringDetails(a,b);
+  _layCache[k]=details.total;
+  return details.total;
 }
 
 /* Classify how a candidate relates to a source frag for discover shelf */
@@ -793,18 +799,35 @@ function buildLayerSuggestions(frag,container){
   candidates.forEach(({f,score})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
+    const details=getLayeringDetails(frag,f);
     const row=document.createElement('button');
     row.className='scent-row scent-row--flat';
     row.innerHTML=`
-      <div class="scent-row-content">
-        <div class="frag-picker-dot" style="background:${fm2.color}"></div>
-        <div class="frag-picker-info" style="flex:1">
-          <div class="frag-picker-item-name">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
-          ${reason ? `<div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>` : ''}
+      <div class="scent-row-content" style="flex-direction: column; align-items: stretch; gap: var(--sp-sm);">
+        <div style="display: flex; align-items: center; gap: var(--sp-sm);">
+          <div class="frag-picker-dot" style="background:${fm2.color}"></div>
+          <div class="frag-picker-info" style="flex:1">
+            <div class="frag-picker-item-name">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
+            ${reason ? `<div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>` : ''}
+          </div>
+          <div style="flex-shrink:0; display:flex; align-items:center; gap: 4px;">
+            <span class="dc-layer-score-badge">${score}</span>
+            <span class="dc-sim-state is-owned">Owned</span>
+          </div>
         </div>
-        <div style="flex-shrink:0; display:flex; align-items:center; gap: 4px;">
-          <span class="dc-layer-score-badge">${score}</span>
-          <span class="dc-sim-state is-owned">Owned</span>
+        <div class="cmp-edu-math" style="margin: 0; padding: var(--sp-xs); font-size: var(--fs-meta);">
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Family Compatibility</span>
+            <span class="cmp-edu-math-score">${details.famScore}/35</span>
+          </div>
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Sillage Difference</span>
+            <span class="cmp-edu-math-score">${details.sillScore}/20</span>
+          </div>
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Note Independence</span>
+            <span class="cmp-edu-math-score">${details.noteScore}/20</span>
+          </div>
         </div>
       </div>`;
     row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
@@ -3160,7 +3183,12 @@ function renderCompareResults(fa,fb){
               </div>
             </div>
             <div class="cmp-score-range">${_simLabel(matchPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
+            <div class="cmp-edu-math" style="margin-top: var(--sp-sm); width: 100%; font-size: var(--fs-meta); text-align: left;">
+              <div class="cmp-edu-math-row" style="padding: 2px 0; border: none;"><span class="cmp-edu-math-label">Family Match</span><span class="cmp-edu-math-score">${Math.round((FAM_COMPAT[fa.family]?.[fb.family]??0.5)*40)}/40</span></div>
+              <div class="cmp-edu-math-row" style="padding: 2px 0; border: none;"><span class="cmp-edu-math-label">Shared Notes</span><span class="cmp-edu-math-score">${Math.round(Math.min(30, fa._nBase.filter(n=>fb._nBase.includes(n)).length*5 + fa._nMid.filter(n=>fb._nMid.includes(n)).length*3 + fa._nTop.filter(n=>fb._nTop.includes(n)).length*2))}/30</span></div>
+              <div class="cmp-edu-math-row" style="padding: 2px 0; border: none;"><span class="cmp-edu-math-label">Sillage Match</span><span class="cmp-edu-math-score">${Math.round(Math.abs(fa.sillage-fb.sillage)<=2?10:Math.abs(fa.sillage-fb.sillage)<=4?5:0)}/10</span></div>
+              <div class="cmp-edu-math-row" style="padding: 2px 0; border: none;"><span class="cmp-edu-math-label">Role Overlap</span><span class="cmp-edu-math-score">${Math.round(Math.min(20, fa.roles.filter(r=>fb.roles.includes(r)).length*7))}/20</span></div>
+            </div>
           </button>
           <button class="cmp-score-card" id="cmp-score-layer">
             <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
@@ -3175,7 +3203,11 @@ function renderCompareResults(fa,fb){
               </div>
             </div>
             <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
+            <div class="cmp-edu-math" style="margin-top: var(--sp-sm); width: 100%; font-size: var(--fs-meta); text-align: left;">
+              <div class="cmp-edu-math-row" style="padding: 2px 0; border: none;"><span class="cmp-edu-math-label">Family Comp.</span><span class="cmp-edu-math-score">${getLayeringDetails(fa,fb).famScore}/35</span></div>
+              <div class="cmp-edu-math-row" style="padding: 2px 0; border: none;"><span class="cmp-edu-math-label">Sillage Diff.</span><span class="cmp-edu-math-score">${getLayeringDetails(fa,fb).sillScore}/20</span></div>
+              <div class="cmp-edu-math-row" style="padding: 2px 0; border: none;"><span class="cmp-edu-math-label">Note Indep.</span><span class="cmp-edu-math-score">${getLayeringDetails(fa,fb).noteScore}/20</span></div>
+            </div>
           </button>
         </div>
       </div>
