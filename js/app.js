@@ -2572,8 +2572,24 @@ function closeQuickPeek(){
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link').forEach(t=>t.classList.remove('active'));
-  document.getElementById('p-'+id).classList.add('active');
-  if(btn)btn.classList.add('active');
+  const panel = document.getElementById('p-'+id);
+  if(panel) panel.classList.add('active');
+  
+  // Find and activate the matching global nav link or button
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    // If no btn provided, try to find one by onclick or href
+    const navLinks = document.querySelectorAll('.global-nav-link');
+    navLinks.forEach(l => {
+      const oc = l.getAttribute('onclick') || '';
+      const href = l.getAttribute('href') || '';
+      if (oc.includes(`go('${id}'`) || href.endsWith(`#${id}`)) {
+        l.classList.add('active');
+      }
+    });
+  }
+
   closeDesktopDetail();
   // Sync URL with compare tab state
   if(id==='compare'){
@@ -2583,6 +2599,18 @@ function go(id,btn){
     history.replaceState(null,'','/app');
   }
 }
+
+// Global hash change handler for navigation
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+  
+  // Handle basic panel navigation: #catalog, #compare, #notes, #saved
+  const panels = ['catalog', 'compare', 'notes', 'saved'];
+  if (panels.includes(hash)) {
+    go(hash);
+  }
+});
 
 /* ── Detail Pagination ── */
 function _setupDetailSwipe(container, currentFrag) {
@@ -2646,6 +2674,15 @@ window.navBack=function(){
   go('compare',null);
 };
 document.addEventListener('DOMContentLoaded',function(){
+  // Initial hash check
+  const hash = window.location.hash.slice(1);
+  const panels = ['catalog', 'compare', 'notes', 'saved'];
+  if (panels.includes(hash)) {
+    go(hash);
+  } else if (!hash && window.location.pathname === '/app') {
+    go('compare'); // Default for /app if no hash
+  }
+
   const settingsBtn=document.getElementById('settings-btn');
   const settingsMenu=document.getElementById('settings-menu');
   if(settingsBtn&&settingsMenu){

@@ -33,6 +33,7 @@ All notable changes to Scentmap are documented here.
 - **Analytics event stubs** — added `trackEvent()` helper to `js/app.js` with initial instrumentation for `dupe_lab_opened` and `dupe_clicked` events; establishing the pattern for planned DNA Card analytics
 
 ### Fixed
+- **Navigation system recovery** — fixed broken links across all pages by unifying header structures; integrated hash-based routing in `js/app.js` to ensure the correct panel (Catalog, Compare, Notes, Collection) activates when arriving via external links (e.g., `/app#catalog`); added `hashchange` listener to keep UI in sync with URL changes
 - **`dc-cmp-btn` typography and readability** — reduced letter-spacing to `0.00em` for better legibility; removed `max-width`, `overflow: hidden`, and `text-overflow: ellipsis` from `.dc-cmp-btn-name` to ensure fragrance names are fully readable in the compare slot buttons
 - **Double sitemap footer removed** — deleted redundant legacy `sitemap-footer` block from `index.html`; main sitemap is now exclusively handled by the `landing-footer` grid, which has been updated to include the new Scent Archetype and Astro Scent Match quizzes
 - **`dc-collect-btn` rendering** — removed conflicting inline styles (`background:var(--black); color:var(--paper); border:none;`) that were overriding the default button CSS class; "Buy from" and "Visit brand" links now render with proper `.dc-collect-btn` styling
