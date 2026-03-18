@@ -1172,90 +1172,98 @@ function renderDupeLab(container, anchor) {
 
 function renderMoodRefinement(container, frag) {
   const refinementSec = document.createElement('div');
-  refinementSec.className = 'dc-mood-refinement';
+  refinementSec.className = 'dc-mood-refinement'; // Use existing class for section wrapper
+  refinementSec.style.marginTop = 'var(--sp-xl)';
+  refinementSec.style.paddingTop = 'var(--sp-lg)';
+  refinementSec.style.borderTop = '1px solid var(--border-subtle)';
+  
   refinementSec.innerHTML = `<div class="sec-label" style="margin-bottom:var(--sp-md)">Fine-tune the mood</div>`;
 
   const vectors = [
-    { id: 'intensity', left: 'More Chill', right: 'More Exciting', center: 'Neutral' },
-    { id: 'accessibility', left: 'Crowd Pleaser', right: 'Zeroing In', center: 'Neutral' }
+    { id: 'intensity', label: 'Intensity', options: [{id:'chill', label:'More Chill'}, {id:'neutral', label:'Neutral'}, {id:'exciting', label:'More Exciting'}] },
+    { id: 'accessibility', label: 'Character', options: [{id:'pleaser', label:'Crowd Pleaser'}, {id:'neutral', label:'Neutral'}, {id:'niche', label:'Zeroing In'}] }
   ];
 
   vectors.forEach(v => {
     const row = document.createElement('div');
-    row.className = 'dc-mood-slider-row';
+    row.style.marginBottom = 'var(--sp-lg)';
     row.innerHTML = `
-      <div class="dc-mood-labels">
-        <span>${v.left}</span>
-        <span>${v.right}</span>
+      <div class="dc-mood-labels" style="display:flex; justify-content:space-between; margin-bottom:var(--sp-xs); font-family:var(--font-sans); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-tertiary);">
+        <span>${v.label}</span>
       </div>
-      <div class="dc-mood-slider-wrap">
-        <div class="dc-mood-track">
-          <div class="dc-mood-center-mark"></div>
-        </div>
-        <div class="dc-mood-handle" id="handle-${v.id}" style="left: 50%"></div>
-        <input type="range" class="dc-mood-input" id="input-${v.id}" min="-100" max="100" value="0">
+      <div class="cat-state-bar" id="bar-${v.id}" style="margin-bottom:var(--sp-sm)">
+        <div class="tab-pill" id="pill-${v.id}"></div>
+        ${v.options.map(opt => `<button class="tab ${opt.id==='neutral'?'active':''}" data-opt="${opt.id}">${opt.label}</button>`).join('')}
       </div>
-      <div id="suggestion-${v.id}" class="dc-mood-suggestion-wrap"></div>
+      <div id="suggestion-${v.id}"></div>
     `;
     refinementSec.appendChild(row);
+
+    // Pill animation logic
+    const bar = row.querySelector('.cat-state-bar');
+    const pill = row.querySelector('.tab-pill');
+    const tabs = row.querySelectorAll('.tab');
+    
+    const updatePill = (activeTab) => {
+      pill.style.left = activeTab.offsetLeft + 'px';
+      pill.style.width = activeTab.offsetWidth + 'px';
+    };
+
+    // Initial position
+    setTimeout(() => updatePill(bar.querySelector('.tab.active')), 0);
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        window.haptic?.('medium');
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        updatePill(tab);
+        updateDiscovery(v.id, tab.dataset.opt);
+      });
+    });
   });
 
   container.appendChild(refinementSec);
 
-  // Logic for discovery
-  const updateDiscovery = (vectorId, value) => {
-    const handle = document.getElementById(`handle-${vectorId}`);
+  const updateDiscovery = (vectorId, optId) => {
     const sugWrap = document.getElementById(`suggestion-${vectorId}`);
-    handle.style.left = `${50 + (value / 2)}%`;
-
-    if (Math.abs(value) < 15) {
+    if (optId === 'neutral') {
       sugWrap.innerHTML = '';
       return;
     }
 
-    // Find a match
     let match = null;
     const sameFamily = CAT.filter(f => f.family === frag.family && f.id !== frag.id);
     
     if (vectorId === 'intensity') {
-      if (value > 0) { // Exciting (High sillage / complex)
-        match = sameFamily.sort((a,b) => b.sillage - a.sillage)[0];
-      } else { // Chill (Low sillage / clean)
-        match = sameFamily.sort((a,b) => a.sillage - b.sillage)[0];
-      }
-    } else { // Accessibility
+      if (optId === 'exciting') match = sameFamily.sort((a,b) => b.sillage - a.sillage)[0];
+      else match = sameFamily.sort((a,b) => a.sillage - b.sillage)[0];
+    } else {
       const isNiche = b => ['Fueguia 1833', 'D.S. & Durga', 'Xinu', 'Byredo', 'Diptyque', 'Le Labo'].includes(b);
-      if (value > 0) { // Zeroing in (Niche)
-        match = sameFamily.filter(f => isNiche(f.brand)).sort((a,b) => b.sillage - a.sillage)[0];
-      } else { // Crowd Pleaser (Designer)
-        match = sameFamily.filter(f => !isNiche(f.brand)).sort((a,b) => b.sillage - a.sillage)[0];
-      }
+      if (optId === 'niche') match = sameFamily.filter(f => isNiche(f.brand)).sort((a,b) => b.sillage - a.sillage)[0];
+      else match = sameFamily.filter(f => !isNiche(f.brand)).sort((a,b) => b.sillage - a.sillage)[0];
     }
 
     if (match && match.id !== frag.id) {
-      const label = value > 0 ? vectors.find(v => v.id === vectorId).right : vectors.find(v => v.id === vectorId).left;
+      const optLabel = vectors.find(v=>v.id===vectorId).options.find(o=>o.id===optId).label;
       sugWrap.innerHTML = `
-        <div class="dc-mood-suggestion-card" onclick="openFragDetail(CAT_MAP['${match.id}'])">
-          <div class="frag-picker-dot" style="background:${FAM[match.family].color}"></div>
-          <div style="flex:1">
-            <div class="dc-mood-sug-label">Try for ${label}</div>
-            <div class="frag-picker-item-name">${match.name}</div>
-            <div class="frag-picker-item-brand">${match.brand}</div>
-          </div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-tertiary)"><path d="m9 18 6-6-6-6"/></svg>
+        <div class="dc-sim-shelf" style="margin-top:var(--sp-xs)">
+          <button class="scent-row scent-row--flat" onclick="openFragDetail(CAT_MAP['${match.id}'])">
+            <div class="scent-row-content">
+              <div class="frag-picker-dot" style="background:${FAM[match.family].color}"></div>
+              <div class="frag-picker-info">
+                <div class="dc-mood-sug-label" style="font-size:10px; font-weight:700; color:var(--accent-primary); text-transform:uppercase; margin-bottom:2px;">Try for ${optLabel}</div>
+                <div class="frag-picker-item-name">${match.name}</div>
+                <div class="frag-picker-item-brand">${match.brand}</div>
+              </div>
+            </div>
+          </button>
         </div>
       `;
     } else {
-      sugWrap.innerHTML = `<div style="font-size:10px; color:var(--text-tertiary); margin-top:8px; text-align:center">No further ${value > 0 ? 'extreme' : 'mellow'} match in this family</div>`;
+      sugWrap.innerHTML = `<div style="font-size:10px; color:var(--text-tertiary); margin-top:8px; text-align:center">No further match in this family</div>`;
     }
   };
-
-  refinementSec.querySelectorAll('.dc-mood-input').forEach(input => {
-    input.addEventListener('input', e => {
-      window.haptic?.('medium');
-      updateDiscovery(input.id.replace('input-', ''), parseInt(e.target.value));
-    });
-  });
 }
 
 function renderFragDetail(container,frag){
