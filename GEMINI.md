@@ -1,4 +1,4 @@
-# Scentmap — Developer Guide for Claude
+# Scentmap — Developer Guide for Gemini CLI
 
 This file describes the development workflow and conventions for the Scentmap project. **Follow these instructions on every session.**
 
@@ -24,7 +24,7 @@ data/
     diptyque.json
     ...
 CHANGELOG.md        Feature log — updated on every commit
-CLAUDE.md           This file
+GEMINI.md           This file
 .claude/
   launch.json       Dev server config (Ruby WEBrick on port 3000)
 ```
@@ -50,7 +50,7 @@ cp -r /Users/matthewlewair/Documents/scentmap/compare /tmp/scentmap-copy/
 http://localhost:3000/?v=<timestamp>
 ```
 
-Use `preview_eval` with `location.href = 'http://localhost:3000/?v=' + Date.now()` to force a fresh load.
+Use `location.href = 'http://localhost:3000/?v=' + Date.now()` to force a fresh load in the browser.
 
 ---
 
@@ -110,9 +110,9 @@ Low vision (20/80 corrected), keyboard-first navigator. Relies on Tab/Enter, nee
 
 **Guidelines:**
 - Always use CSS custom properties instead of hard-coded values
-- Define all colors, spacing, sizing, and timing in design-system.css
+- Define all colors, spacing, sizing, and timing in `design-system.css`
 - Use semantic variable names (e.g., `--text-label` instead of `--font-11px`)
 - Consolidate duplicate rules — if a style appears multiple times, extract to a reusable class or variable
 - No magic numbers — all dimensions should relate to the 4px grid or defined scale
-- Never use raw `rgba()` — use the overlay/transparency tokens from design-system.css
+- Never use raw `rgba()` — use the overlay/transparency tokens from `design-system.css`
 - Never use `outline: none` on a base style — use `:focus-visible` overrides only where border-based focus replaces the ring

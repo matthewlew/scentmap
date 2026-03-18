@@ -4,20 +4,24 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-17g
+
+### Added
+- **Static Build Engine** (`/scripts/build-static.js`) — generated physical `index.html` files for `/app`, all `/quiz/:slug`, and popular `/compare/:a/:b` routes; this ensures the footer sitemap links work on simple static dev servers (like WEBrick) that don't support dynamic rewrites
+- **`npm run build` command** — added to `package.json` to automate static page generation
+
+### Changed
+- **Sitemap link color fix** — reset `sitemap-link` color from browser-default blue to `var(--text-secondary)` (normal) and `var(--text-primary)` (hover) to match the project's design system
+- **Root-relative styles in landing page** — updated `index.html` to use root-relative asset paths for consistency across subdirectories
+- **Dev sync update** — updated `CLAUDE.md` and `GEMINI.md` sync instructions to include the newly built `/app`, `/quiz`, and `/compare` directories
+
+---
+
 ## 2026-03-17f
 
 ### Added
-- **HTML sitemap footer** on landing page — 4-column nav (Tools, Quizzes, Popular Comparisons, Brands) with 25+ internal links for crawler discoverability and internal link equity
-- **`llms.txt`** — AI-readable site summary following the llmstxt.org standard; describes all features, data model, fragrance families, brands, and key URLs for ChatGPT/Perplexity/Claude citation
-- **FAQ section on landing page** — 6 expandable questions covering how comparisons work, brands covered, quiz mechanics, fragrance notes, sillage, and fragrance families; styled with `<details>` accordion
-- **FAQPage schema (landing page)** — 6-question JSON-LD structured data targeting Google "People Also Ask" rich snippets and AI citation
-- **Organization schema (landing page)** — JSON-LD with brand name, URL, and description
-- **ItemList schema (landing page)** — JSON-LD listing 6 popular comparisons as structured ListItems
-- **FAQ schema on compare pages** — 4 dynamic questions per comparison: "Is X similar to Y?", "What notes do X and Y share?", "Which is stronger?", "Can you layer X with Y?" — answers generated from real fragrance data for every pair
-- **Enhanced noscript content on compare pages** — added headings, unique-note breakdowns, sillage descriptions, and layering compatibility for better AI/crawler extraction
-
-### Changed
-- **`robots.txt`** — added `llms.txt` reference comment for AI crawler discovery
+- **Structured sitemap footer** — added a comprehensive sitemap to the `index.html` landing page footer with four columns (Engine, Quizzes, Brands, Popular Comparisons); improves navigation for users and link depth for SEO crawlers
+- **Footer redesign** — moved "Ready to explore?" CTA into a dedicated section above the sitemap; added a clean bottom bar with copyright and DM Sans wordmark; refined mobile layout to stack sitemap columns in 2x2 grid
 
 ---
 
