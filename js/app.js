@@ -4,7 +4,11 @@ import * as engine from './engine.js';
 // Proxy data from store for backward compatibility during transition
 let { ROLES, CAT, CAT_MAP, NI, NI_MAP, BRANDS } = store.getData();
 let RM = {};
+let BRANDS_MAP = {};
 const { FAM, FAM_ORDER, FAM_COMPAT, FAM_ABBR } = store;
+
+const SW=['','Skin','Skin','Subtle','Subtle','Moderate','Moderate','Strong','Strong','Enveloping','Enormous'];
+const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered','Layered','Complex','Deep'];
 
 // Analytics stubs
 function trackEvent(name, props) {
@@ -4244,6 +4248,7 @@ async function init() {
   NI = data.notes;
   NI_MAP = data.notesMap;
   BRANDS = data.brands;
+  BRANDS_MAP = Object.fromEntries(BRANDS.map(b => [b.name.toLowerCase(), b]));
   RM = Object.fromEntries(ROLES.map(r => [r.id, r]));
 
   // Hide loading overlay

@@ -6,6 +6,10 @@ All notable changes to Scentmap are documented here.
 
 ## 2026-03-19
 
+### Fixed
+- **Detail panels broken** — restored `SW` (sillage label array) and `LW` (layering label array) that were removed during the store.js refactor but still referenced in `renderFragDetail`. Missing definitions caused a `ReferenceError` on every detail open, silently preventing fragrance, note, and house details from rendering.
+- **House detail empty** — restored `BRANDS_MAP` (keyed by lowercase brand name) built from the `BRANDS` array after data loads. `renderHouseDetail` was referencing `BRANDS_MAP[brand.toLowerCase()]` which was `undefined`, causing the container to render blank.
+
 ### Added
 - **Universal Search** — ⌘K / Ctrl+K / `/` now opens a context-aware search modal (max-width 560px, `z-index 400`) that works from any page. Idle state shows Recently Opened (sessionStorage `sm_recent`, max 5) and Popular fragrances. Typing filters across Fragrances (max 6), Notes (max 3), and Houses (max 2) grouped by type. Keyboard nav: ↑↓ arrows + Tab move the highlight; Enter selects; Esc closes and returns focus via `_trapFocus`/`_returnFocus`.
 - **Compare mode in universal search** — clicking a compare slot card (or sticky bar chip) opens the modal in compare mode with a context banner ("Selecting Fragrance B ↔ Santal 33"). When the other slot is filled, all fragrances are pre-sorted by `scoreSimilarity()` with live scores shown right-aligned in the result row. Selecting a frag fills the slot and pulses the other empty card (600ms CSS keyframe).
