@@ -1,3 +1,27 @@
+## 2026-03-19 (22)
+
+### Added
+- **Visual Composition Rules in DESIGN.md:** Added `## Visual Composition Rules` section codifying three previously undocumented design patterns:
+  - **Card taxonomy** — surface color determines border usage: cards on `--bg-primary` use `--bg-secondary` + no border; cards on `--bg-secondary` use `--bg-primary` + `--border-standard`; interactive cards use `--border-subtle` + hover `--border-strong`
+  - **Section spacing** — `gap: var(--sp-2xl)` (24px) on the parent flex container for major sections, with a full hierarchy down to `--sp-xs` for tight label+value pairs
+  - **List item typography contract** — `.list-item-name` / `.list-item-sub` / `.list-item-meta` are the only permitted classes for name+description text in list rows and cards; display heading exception documented for `.dc-name`, `.np-name`, `.cmp-frag-card-name`
+- **Pre-PR checklist extended** with card taxonomy, section spacing, and list typography checks
+
+### Changed
+- **`.cmp-frag-card` background:** Changed from `transparent` to `var(--bg-primary)` to match interactive card taxonomy rule (`components.css`)
+- **`.dc-description`, `.np-desc`:** Fixed primitive token `var(--g600)` → `var(--text-secondary)` (`components.css`)
+- **Parent-managed spacing for compare results:** `#cmp-results` is now a flex column with `gap: var(--sp-3xl)`; removed `margin-bottom` from `.cmp-pair-card`, `.cmp-scatter-v2`, `.cmp-notes-v2`, `.cmp-sug-v2`, `.cmp-social-proof`
+- **Parent-managed spacing for catalog:** `#cat-body` is now a flex column with `gap: var(--sp-3xl)`; removed `margin-bottom` from `.cat-section`
+- **`.cmp-header` margin → padding:** Changed `margin-bottom` to `padding-bottom` to avoid collapsing margin in the compare panel header
+- **Notes body top spacing:** Added `padding-top: var(--sp-lg)` to `#notes-body`; removed `margin-top` from `.notes-grid` and inline `style.marginTop` in the A-Z sort mode
+- **`.carousel-card-name` / `.carousel-card-brand`:** Converted to dual-class approach — JS templates now add `.list-item-name` / `.list-item-sub`; component CSS retains only layout overrides (letter-spacing, margin-bottom)
+- **`.nf-name` / `.nf-desc`:** Consolidated to `.list-item-name` / `.list-item-sub` in JS templates; orphaned CSS rules removed
+
+### Added (CSS classes)
+- **`.dc-story`** — callout/story block in detail panel (`components.css`); replaces inline `style` on `frag.story` template; uses `var(--bg-secondary)`, `var(--border-subtle)`, `var(--text-secondary)`
+- **`.np-insight`** — Perfumer's Insight callout block in note detail (`components.css`); replaces inline `style`; matching visual treatment to `.dc-story`
+- **`.np-frags-list`** — container for in-catalog list in note popup; replaces inline `style="border:1px solid var(--g200)..."`
+
 ## 2026-03-19 (21)
 
 ### Fixed

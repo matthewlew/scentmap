@@ -17,8 +17,8 @@ This is the single source of truth for component inventory, token rules, and the
 | List Item — Compact | `.list-item--compact` | `styles/components.css:940` | — | Notes rows, quiz results, house detail rows. |
 | List Item — Flat | `.list-item--flat` | `styles/components.css:924` | — | Compare suggestion cards. Transparent bg, no border. |
 | List Item — Search | `.list-item--search` | `styles/components.css:959` | — | Universal search result rows only. |
-| Compare Frag Card | `.cmp-frag-card` | `styles/components.css:1800` | `.cmp-frag-card-name`, `.cmp-frag-card-brand` | Compare slot picker buttons. Never inline padding on children. |
-| Carousel Card | `.carousel-card` | `styles/components.css:3208` | `.carousel-card-name`, `.carousel-card-brand`, `.carousel-card-family` | Golden pairs, horizontal scrolling lists. No inline width/font overrides. |
+| Compare Frag Card | `.cmp-frag-card` | `styles/components.css:1800` | `.cmp-frag-card-name` (layout only), `.cmp-frag-card-brand` (layout only) | Compare slot picker buttons. Typography uses `.list-item-name` / `.list-item-sub` inside layout wrappers. Never inline padding on children. |
+| Carousel Card | `.carousel-card` | `styles/components.css:3208` | `.carousel-card-name` (layout only), `.carousel-card-brand` (layout only), `.carousel-card-family` | Golden pairs, horizontal scrolling lists. Typography uses `.list-item-name` / `.list-item-sub` inside layout wrappers. No inline width/font overrides. |
 | DNA Card | `.dna-card` | `styles/components.css:3748` | `.dna-grid`, `.dna-headline`, `.dna-sub`, `.dna-stats`, `.dna-bar`, `.dna-badge`, `.dna-notes` | Personalization summary on the You panel. Sub-elements defined for card layout only. |
 
 ---
@@ -62,13 +62,77 @@ These rules are absolute. No exceptions without explicit discussion.
 
 ---
 
+## Visual Composition Rules
+
+These rules govern how components are assembled into screens. They answer the three most common consistency questions: how cards work, how sections are spaced, and how list text is typed.
+
+---
+
+### Card Taxonomy
+
+**The rule: the parent surface color determines whether a card uses a border.**
+
+Contrast alone separates a card from its background when the surfaces differ. A border only becomes necessary when they are too similar to separate visually.
+
+| Situation | Card background | Border | Padding | Border radius |
+|---|---|---|---|---|
+| Card sits on `--bg-primary` (white page bg) | `--bg-secondary` | **None** — contrast does the work | `var(--sp-lg)` (16px) | `var(--radius-lg)` (12px) |
+| Card sits on `--bg-secondary` (off-white) | `--bg-primary` | `1px solid var(--border-standard)` | `var(--sp-lg)` (16px) | `var(--radius-lg)` (12px) |
+| Interactive / clickable card | `--bg-primary` | `1px solid var(--border-subtle)` + hover: `--border-strong` | `var(--sp-lg)` (16px) | `var(--radius-lg)` (12px) |
+
+**Additional card rules:**
+- Internal section spacing within a card: `gap: var(--sp-md)` (12px) on the flex container
+- Use `var(--radius-xl)` (16px) only for large hero/feature cards — not standard content cards
+- **Never** mix `margin-bottom` on card children with `gap` on the card itself — pick one approach, always prefer `gap`
+
+---
+
+### Section Spacing
+
+**The rule: sections are spaced by the parent's `gap`, never by the child's `margin`.**
+
+A section is a top-level block within a panel, sheet, or detail container. The parent flex container sets `gap: var(--sp-2xl)` (24px) and children carry no `margin-top` or `margin-bottom`. This makes re-ordering sections safe and keeps spacing source-of-truth in one place.
+
+**Section spacing hierarchy:**
+
+| Scale | Token | Value | Use |
+|---|---|---|---|
+| Between major panel sections | `--sp-2xl` | 24px | Parent `gap` in `.detail-inner`, `.sheet-content`, `.cmp-results` |
+| Between items within a section | `--sp-md` | 12px | Parent `gap` in cards, info blocks |
+| Between tightly grouped label + value pairs | `--sp-xs` | 4px | Parent `gap` in stat rows, meta lines |
+
+**Section header (`.sec-label`) rule:** do not add `margin-bottom` to `.sec-label` itself. Group the section label and its content inside a `<div>` with `display: flex; flex-direction: column; gap: var(--sp-md)` so the parent's `gap` separates sections, and the internal gap separates the label from the content below it.
+
+**Containers that must use `gap` (never child margins):**
+`.detail-inner`, `.sheet-content`, `.note-popup`, `.cmp-results`, any panel child layout container.
+
+---
+
+### List Item Typography Contract
+
+Every component that renders a name plus secondary text **must** use this three-level class hierarchy. Do not invent per-component alternatives (e.g. `.dc-name`, `.nf-name`, `.cmp-frag-card-name`).
+
+| Level | Class | Font family | Size token | Color token | Purpose |
+|---|---|---|---|---|---|
+| Primary | `.list-item-name` | `--font-sans` | `--fs-body` (15px) | `--text-primary` | The item's main label — name, title |
+| Secondary | `.list-item-sub` | `--font-sans` | `--fs-meta` (13px) | `--text-secondary` | Brand, category, short descriptor |
+| Tertiary | `.list-item-meta` | `--font-sans` | `--fs-meta` (13px) | `--text-tertiary` | Count, role, supporting context |
+
+**Wrapping rule:** nest these inside `.list-item-body` (which provides `flex: 1; min-width: 0` for text truncation). Never apply `font-size`, `color`, or `font-weight` directly to these classes — they inherit from the component definition.
+
+**Display heading exception:** Detail panel headings (`.dc-name` at 32px Archivo Black, `.np-name` at 18px Archivo Black, `.cmp-frag-card-name` at 24px Archivo Black) are intentionally larger display headings — they do not need to use `.list-item-name`. These classes are appropriate because they are *not* name-in-a-list — they are section titles for a full-bleed detail view. The test: if the element is inside a scrolling list row or inside a card in a collection, use `.list-item-name`. If it's the main heading of a detail panel, it may use a display heading class.
+
+---
+
 ## Pre-PR Checklist
 
 Run through this before every commit that touches UI:
 
 - [ ] **No hardcoded colors** — Inspect Element on modified components; confirm all colors show as `var(--*)` in DevTools
 - [ ] **No magic numbers** — all spacing/sizing uses `--sp-*` or `--radius-*` tokens
-- [ ] **Parent-managed spacing** — Detail views use `gap` instead of child `margin` for section spacing
+- [ ] **Parent-managed spacing** — Detail views and cards use `gap` instead of child `margin` for section spacing; use `gap: var(--sp-2xl)` between major sections
+- [ ] **Card taxonomy followed** — cards on `--bg-primary` use `--bg-secondary` + no border; cards on `--bg-secondary` use `--bg-primary` + `--border-standard`; interactive cards use `--border-subtle` + hover `--border-strong`
+- [ ] **List typography contract** — name/brand/desc text uses `.list-item-name` / `.list-item-sub` / `.list-item-meta`; no per-component text class equivalents
 - [ ] **Touch targets ≥44px** — interactive elements have `min-height: var(--touch-target)`
 - [ ] **No inline style for typography/color** — JS template literals use class names, not style attributes for visual properties
 - [ ] **New components documented** — if you added a new CSS class, add it to the Component Inventory table above

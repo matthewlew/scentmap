@@ -1214,7 +1214,7 @@ function renderFragDetail(container,frag){
     </div>
     <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
     ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
-    ${frag.story?`<div class="dc-story" style="padding:var(--sp-md); background:var(--g50); border-radius:6px; font-size:var(--fs-body-sm); color:var(--g600); border:1px solid var(--g200);">${frag.story}</div>`:''}
+    ${frag.story?`<div class="dc-story">${frag.story}</div>`:''}
     ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn">Buy from ${frag.brand}</a>`:''}
     <div class="sec-label">Compare with</div>
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
@@ -1533,8 +1533,8 @@ function renderNoteDetail(container,note){
     <div class="np-desc">${note.desc}</div>
     <div id="${saveId}"></div>
     ${note.extraction_method?`<div style="font-size:var(--fs-caption); color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
-    ${note.insider_fact?`<div style="padding:var(--sp-sm); background:var(--g50); border-radius:var(--radius); font-size:var(--fs-caption); color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:var(--sp-xs); color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
-    ${inf.length?`<div class="np-frags"><div class="sec-label" style="margin:0 0 var(--sp-xs)">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden"></div></div>`:''}`;
+    ${note.insider_fact?`<div class="np-insight"><strong>Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
+    ${inf.length?`<div class="np-frags"><div class="sec-label">In catalog (${inf.length})</div><div id="_nfl" class="np-frags-list"></div></div>`:''}`;
 
   renderNoteSaveBtn(container.querySelector(`#${saveId}`), note);
 
@@ -1636,8 +1636,8 @@ function renderHouseDetail(container,brand){
       const fm = FAM[frag.family] || {color: '#888'};
       const card = document.createElement('div');
       card.className = 'carousel-card';
-      card.innerHTML = `<div class="carousel-card-name">${frag.name}</div>
-        <div class="carousel-card-brand">${frag.brand}</div>
+      card.innerHTML = `<div class="carousel-card-name list-item-name">${frag.name}</div>
+        <div class="carousel-card-brand list-item-sub">${frag.brand}</div>
         <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
       card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       carousel.appendChild(card);
@@ -2815,7 +2815,6 @@ function buildNotes(searchQuery, currentTier){
   if (notesSortMode === 'az') {
     const cardBody = document.createElement('div');
     cardBody.className = 'notes-card-body';
-    cardBody.style.marginTop = 'var(--sp-lg)';
 
     const sorted = [...filteredNotes].sort((a,b)=>a.name.localeCompare(b.name));
 
@@ -2846,7 +2845,7 @@ function buildNotes(searchQuery, currentTier){
       const card=document.createElement('div');card.className='notes-card';
 
       const header=document.createElement('div');header.className='notes-card-header';
-      header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="nf-name">${fm.label}</div>${fm.desc?`<div class="nf-desc">${fm.desc}</div>`:''}</div>`;
+      header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="list-item-name">${fm.label}</div>${fm.desc?`<div class="list-item-sub">${fm.desc}</div>`:''}</div>`;
 
       const cardBody=document.createElement('div');cardBody.className='notes-card-body';
       grouped[fk].forEach(note=>{
