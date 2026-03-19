@@ -190,7 +190,8 @@ The JS block in `app.js` (~lines 3716–4076) is removed.
 - `_selectFragForSlot(slot, frag)` — keep, called from new search
 - `_fillCard(slot, frag)` — keep
 - `_updateOtherSelMarking()` — keep
-- `openFragDetail()`, `openNoteFloat()`, `openHouseDetail()` — unchanged
+- `openFragDetail()`, `openHouseDetail()` — unchanged
+- Note selection: `openDetail(c => renderNoteDetail(c, note), note.name)` — consistent with all existing note-open call sites; `openNoteFloat` does not exist, `openNotePopup` requires a DOM anchor
 - `scoreSimilarity()` — called once on compare modal open
 - `getCmpFam()` — unchanged, used for family dots
 - `isOwned()`, `isWish()` — used for badges
@@ -262,8 +263,17 @@ On first visit (no recents): show only Popular section.
 4. Wire keyboard nav (arrow, enter, tab, esc) on the modal
 5. Wire ⌘K / Ctrl+K in the global keydown handler (replaces `openGlobalSearch()` body)
 6. Wire `/` in the global keydown handler (replaces catalog-focus behavior)
-7. Update `initCompare()`: replace `_openFragPicker(slot)` calls with `openUniversalSearch({ context: 'compare', slot })`
-8. Update `openFragDetail()` to write sessionStorage recents
+7. Update compare slot wiring (two places):
+   - `initCompare()`: replace all `_openFragPicker(slot)` calls with `openUniversalSearch({ context: 'compare', slot })`
+   - Sticky slot listener (~line 3704): `el.addEventListener('click', () => openUniversalSearch({ context: 'compare', slot: el.dataset.slotSticky }))`
+8. Update `openFragDetail()` to write sessionStorage recents with try/catch:
+   ```js
+   try {
+     const recent = JSON.parse(sessionStorage.getItem('sm_recent') || '[]');
+     const next = [frag.id, ...recent.filter(id => id !== frag.id)].slice(0, 5);
+     sessionStorage.setItem('sm_recent', JSON.stringify(next));
+   } catch(e) { /* storage unavailable — silently skip */ }
+   ```
 9. Remove drum roller HTML from `app/index.html`
 10. Remove drum roller JS from `app.js` (~350 lines)
 11. Remove drum roller CSS from `components.css`
@@ -275,4 +285,6 @@ On first visit (no recents): show only Popular section.
 
 ```js
 const US_POPULAR = ['santal-33', 'bleu-de-chanel', 'bal-dafrique', 'gypsy-water', 'rose-31'];
+// Always null-guard before render:
+const popularFrags = US_POPULAR.map(id => CAT_MAP[id]).filter(Boolean);
 ```
