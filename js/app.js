@@ -311,7 +311,7 @@ function renderCollectionSection(container, label, items, type) {
     items.forEach(frag => {
       const row = document.createElement('div');
       renderCatRow(row, frag, FAM[frag.family] || {color:'#888'});
-      row.className = row.className.replace('frag-picker-item', '').trim();
+      row.className = row.className.replace('list-item--compact', '').trim();
       row.addEventListener('click', () => openFragDetail(frag));
       list.appendChild(row);
     });
@@ -1141,13 +1141,13 @@ function renderFragDetail(container,frag){
       const reason=getSwapReason(frag,f);
       const badge=classifyDiscovery(frag,f);
       const row=document.createElement('button');
-      row.className='scent-row scent-row--flat cmp-sug-card';
+      row.className='list-item list-item--flat cmp-sug-card';
       row.innerHTML=`
-        <div class="scent-row-content">
-          <div class="frag-picker-dot" style="background:${fm2.color}"></div>
-          <div class="frag-picker-info" style="flex:1;text-align:left;">
-            <div class="frag-picker-item-name">${f.name}</div>
-            <div class="frag-picker-item-brand">${f.brand} · ${famLabel2}</div>
+        <div class="list-item-content">
+          <div class="list-item-dot" style="background:${fm2.color}"></div>
+          <div class="list-item-body" style="flex:1;text-align:left;">
+            <div class="list-item-name">${f.name}</div>
+            <div class="list-item-sub">${f.brand} · ${famLabel2}</div>
             ${reason ? `<div class="dc-sim-reason">${reason}</div>` : ''}
           </div>
           ${badge&&badge.type!=='similar'?`<div style="flex-shrink:0"><span class="dc-badge ${badge.type}">${badge.label}</span></div>`:''}
@@ -1221,12 +1221,12 @@ function buildLayerSuggestions(frag,container){
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
     const row=document.createElement('button');
-    row.className='scent-row scent-row--flat';
+    row.className='list-item list-item--flat';
     row.innerHTML=`
-      <div class="scent-row-content">
-        <div class="frag-picker-dot" style="background:${fm2.color}"></div>
-        <div class="frag-picker-info" style="flex:1">
-          <div class="frag-picker-item-name">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
+      <div class="list-item-content">
+        <div class="list-item-dot" style="background:${fm2.color}"></div>
+        <div class="list-item-body" style="flex:1">
+          <div class="list-item-name">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
           ${reason ? `<div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>` : ''}
         </div>
         <div style="flex-shrink:0; display:flex; align-items:center; gap: 4px;">
@@ -1318,8 +1318,8 @@ function renderNoteDetail(container,note){
     const span=container.querySelector('#_nfl');
     [...inf].sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
       const fc=getCmpFam(f.family);
-      const btn=document.createElement('button');btn.className='frag-picker-item';
-      btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
+      const btn=document.createElement('button');btn.className='list-item list-item--compact';
+      btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div><div class="list-item-body"><div class="list-item-name">${f.name}</div><div class="list-item-sub">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       span.appendChild(btn);
     });
@@ -1422,11 +1422,11 @@ function renderHouseDetail(container,brand){
   frags.forEach(frag=>{
     const fc=getCmpFam(frag.family);
     const btn=document.createElement('button');
-    btn.className='frag-picker-item';
-    btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div>
-      <div>
-        <div class="frag-picker-item-name">${frag.name}</div>
-        <div class="frag-picker-item-brand">${(FAM[frag.family]||{}).label||frag.family}</div>
+    btn.className='list-item list-item--compact';
+    btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div>
+      <div class="list-item-body">
+        <div class="list-item-name">${frag.name}</div>
+        <div class="list-item-sub">${(FAM[frag.family]||{}).label||frag.family}</div>
       </div>`;
     btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag),frag.name);});
     list.appendChild(btn);
@@ -1535,11 +1535,11 @@ function renderByredoQuiz(container) {
     top3.forEach(frag => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
-      btn.className = 'frag-picker-item';
-      btn.innerHTML = `<div class="frag-picker-dot" style="background:${fc.accent}"></div>
-        <div>
-          <div class="frag-picker-item-name">${frag.name}</div>
-          <div class="frag-picker-item-brand">${(FAM[frag.family] || {}).label || frag.family}</div>
+      btn.className = 'list-item list-item--compact';
+      btn.innerHTML = `<div class="list-item-dot" style="background:${fc.accent}"></div>
+        <div class="list-item-body">
+          <div class="list-item-name">${frag.name}</div>
+          <div class="list-item-sub">${(FAM[frag.family] || {}).label || frag.family}</div>
         </div>`;
       btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       list.appendChild(btn);
@@ -1715,11 +1715,11 @@ function renderGlobalQuiz(container) {
     top3.forEach(frag => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
-      btn.className = 'frag-picker-item';
-      btn.innerHTML = `<div class="frag-picker-dot" style="background:${fc.accent}"></div>
-        <div>
-          <div class="frag-picker-item-name">${frag.name}</div>
-          <div class="frag-picker-item-brand">${frag.brand} · ${(FAM[frag.family] || {}).label || frag.family}</div>
+      btn.className = 'list-item list-item--compact';
+      btn.innerHTML = `<div class="list-item-dot" style="background:${fc.accent}"></div>
+        <div class="list-item-body">
+          <div class="list-item-name">${frag.name}</div>
+          <div class="list-item-sub">${frag.brand} · ${(FAM[frag.family] || {}).label || frag.family}</div>
         </div>`;
       btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       list.appendChild(btn);
@@ -1730,7 +1730,7 @@ function renderGlobalQuiz(container) {
 }
 
 function refreshAfterStateChange(id){
-  const row=document.querySelector(`.scent-row[data-id="${id}"]`);
+  const row=document.querySelector(`.list-item[data-id="${id}"]`);
   if(row){const f=CAT_MAP[id];renderCatRow(row,f,FAM[f.family]||{color:'#888'})}
   const brands=[...new Set(CAT.map(f=>f.brand))];
   brands.forEach(b=>updBC(b,b.replace(/\s+/g,'-')));
@@ -1774,8 +1774,8 @@ function openNotePopup(note,triggerEl){
     const list=document.createElement('div');list.style.cssText='border:1px solid var(--g200);border-radius:8px;overflow:hidden';
     sortedInf.forEach(f=>{
       const fc=getCmpFam(f.family);
-      const btn=document.createElement('button');btn.className='frag-picker-item';
-      btn.innerHTML=`<div class="frag-picker-dot" style="background:${fc.accent}"></div><div><div class="frag-picker-item-name">${f.name}</div><div class="frag-picker-item-brand">${f.brand}</div></div>`;
+      const btn=document.createElement('button');btn.className='list-item list-item--compact';
+      btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div><div class="list-item-body"><div class="list-item-name">${f.name}</div><div class="list-item-sub">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();closeNotePopup();openFragDetail(f)});
       list.appendChild(btn);
     });
@@ -1952,7 +1952,7 @@ function renderPicker(container,roleId){
 
 /* ══ ROW HIGHLIGHT HELPER (family / brand / role hover) ════════════ */
 function highlightRows(attrKey,matchVal){
-  document.querySelectorAll('.scent-row').forEach(row=>{
+  document.querySelectorAll('.list-item').forEach(row=>{
     if(matchVal===null){row.classList.remove('fam-dim');return;}
     let match;
     if(attrKey==='roles'){
@@ -2040,9 +2040,9 @@ function buildCatalog(roleFilter){
     let touchStartY = 0;
 
     list.addEventListener('click',e=>{
-      const row=e.target.closest('.scent-row');if(!row)return;
+      const row=e.target.closest('.list-item');if(!row)return;
       // Prevent click if we swiped
-      const content = row.querySelector('.scent-row-content');
+      const content = row.querySelector('.list-item-content');
       if(content && content.style.transform && content.style.transform !== 'translateX(0px)') return;
 
       const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
@@ -2073,7 +2073,7 @@ function buildCatalog(roleFilter){
 
     // Long press logic
     list.addEventListener('touchstart', e=>{
-      const row=e.target.closest('.scent-row');if(!row)return;
+      const row=e.target.closest('.list-item');if(!row)return;
       const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
@@ -2296,7 +2296,7 @@ function initCatalogControls(){
 
 function renderCatRow(row,frag,fm,search){
   const st=gst(frag.id);
-  row.className=`scent-row s-${st}`;
+  row.className=`list-item${st!=='default'?' list-item--'+st:''}`;
   row.dataset.family=frag.family;
   row.dataset.brand=frag.brand;
   row.dataset.roles=frag.roles.join(' ');
@@ -2314,16 +2314,16 @@ function renderCatRow(row,frag,fm,search){
       const rendered=(frag.top||[]).slice(0,3).map((n,i)=>
         (i===topIdx||frag._nTop[i].includes(q))?`<mark class="note-match">${n}</mark>`:n
       ).join(', ');
-      notesHtml=`<div class="frag-picker-item-notes">${rendered}</div>`;
+      notesHtml=`<div class="list-item-meta">${rendered}</div>`;
     } else if(midIdx!==-1||baseIdx!==-1){
       // Replace notes line with a "why matched" badge
       const tier=midIdx!==-1?'Mid':'Base';
       const note=midIdx!==-1?frag.mid[midIdx]:frag.base[baseIdx];
-      notesHtml=`<div class="frag-picker-item-notes"><span class="match-badge">↳ ${tier} · ${note}</span></div>`;
+      notesHtml=`<div class="list-item-meta"><span class="match-badge">↳ ${tier} · ${note}</span></div>`;
     } else {
       // Name or brand match — show top notes as normal
       const topNotes=(frag.top||[]).slice(0,3).join(', ');
-      if(topNotes)notesHtml=`<div class="frag-picker-item-notes">${topNotes}</div>`;
+      if(topNotes)notesHtml=`<div class="list-item-meta">${topNotes}</div>`;
     }
   } else {
     const topNotes=(frag.top||[]).slice(0,3).join(', ');
@@ -2333,20 +2333,20 @@ function renderCatRow(row,frag,fm,search){
     if(topNotes)parts.push(topNotes);
     if(midNote)parts.push(`<span class="note-layer-hint">H</span> ${midNote}`);
     if(baseNote)parts.push(`<span class="note-layer-hint">B</span> ${baseNote}`);
-    if(parts.length)notesHtml=`<div class="frag-picker-item-notes">${parts.join(' · ')}</div>`;
+    if(parts.length)notesHtml=`<div class="list-item-meta">${parts.join(' · ')}</div>`;
   }
 
   row.draggable = true;
   row.innerHTML=`
-    <div class="scent-row-actions">
-      <button class="scent-row-action compare" data-id="${frag.id}">Compare</button>
-      <button class="scent-row-action wishlist" data-id="${frag.id}">${st==='wish'?'Unwish':'Wish'}</button>
+    <div class="list-item-actions">
+      <button class="list-item-action list-item-action--compare" data-id="${frag.id}">Compare</button>
+      <button class="list-item-action list-item-action--wishlist" data-id="${frag.id}">${st==='wish'?'Unwish':'Wish'}</button>
     </div>
-    <div class="scent-row-content">
-      <div class="frag-picker-dot" style="background:${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
-      <div class="frag-picker-info">
-        <div class="frag-picker-item-name">${frag.name}</div>
-        <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
+    <div class="list-item-content">
+      <div class="list-item-dot--lg" style="background:${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
+      <div class="list-item-body">
+        <div class="list-item-name">${frag.name}</div>
+        <div class="list-item-sub">${frag.brand} · ${famLabel}</div>
         ${notesHtml}
       </div>
     </div>`;
@@ -2363,7 +2363,7 @@ function renderCatRow(row,frag,fm,search){
   });
 
   // Swipe to action logic
-  const content = row.querySelector('.scent-row-content');
+  const content = row.querySelector('.list-item-content');
   if(!content) return;
   let sx=0, sy=0, swiping=false, swiped=false;
   content.addEventListener('touchstart', e=>{
@@ -2396,14 +2396,14 @@ function renderCatRow(row,frag,fm,search){
   });
 
   // Action listeners
-  row.querySelector('.scent-row-action.compare')?.addEventListener('click', e=>{
+  row.querySelector('.list-item-action--compare')?.addEventListener('click', e=>{
     e.stopPropagation();
     window.haptic?.('success');
     _selectFragForSlot(CMP_A ? 'b' : 'a', frag);
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
     closeAllSheets?.();
   });
-  row.querySelector('.scent-row-action.wishlist')?.addEventListener('click', e=>{
+  row.querySelector('.list-item-action--wishlist')?.addEventListener('click', e=>{
     e.stopPropagation();
     window.haptic?.('success');
     setState(frag.id, st==='wish'?'none':'wish');
@@ -2815,11 +2815,11 @@ function _renderUsResults(query) {
     html += noteMatches.map(n => {
       const tier = n._tier ? (n._tier === 'top' ? 'Top' : n._tier === 'mid' ? 'Heart' : 'Base') : '';
       const sub = [tier, n.family].filter(Boolean).join(' · ');
-      return `<button class="us-row" role="option" aria-selected="false" data-us-type="note" data-us-id="${n.name}" data-row-idx="${rowIdx++}">
-        <span class="us-row-icon">🌿</span>
-        <span class="us-row-body">
-          <span class="us-row-name">${n.name}</span>
-          ${sub ? `<span class="us-row-sub">${sub}</span>` : ''}
+      return `<button class="list-item list-item--search" role="option" aria-selected="false" data-us-type="note" data-us-id="${n.name}" data-row-idx="${rowIdx++}">
+        <span class="list-item-icon">🌿</span>
+        <span class="list-item-body">
+          <span class="list-item-name">${n.name}</span>
+          ${sub ? `<span class="list-item-sub">${sub}</span>` : ''}
         </span>
       </button>`;
     }).join('');
@@ -2834,11 +2834,11 @@ function _renderUsResults(query) {
     html += `<div class="us-section-hdr" role="presentation">Houses</div>`;
     html += brandMatches.map(b => {
       const count = CAT.filter(f => f.brand === b.name).length;
-      return `<button class="us-row" role="option" aria-selected="false" data-us-type="house" data-us-id="${b.name}" data-row-idx="${rowIdx++}">
-        <span class="us-row-icon">🏛</span>
-        <span class="us-row-body">
-          <span class="us-row-name">${b.name}</span>
-          <span class="us-row-sub">${count} fragrance${count !== 1 ? 's' : ''}</span>
+      return `<button class="list-item list-item--search" role="option" aria-selected="false" data-us-type="house" data-us-id="${b.name}" data-row-idx="${rowIdx++}">
+        <span class="list-item-icon">🏛</span>
+        <span class="list-item-body">
+          <span class="list-item-name">${b.name}</span>
+          <span class="list-item-sub">${count} fragrance${count !== 1 ? 's' : ''}</span>
         </span>
       </button>`;
     }).join('');
@@ -2854,15 +2854,15 @@ function _usFragRowHtml(f, rowIdx, scoreLabel) {
   const owned = isOwned(f.id);
   const wished = isWish(f.id);
   const badge = owned ? 'Owned' : wished ? 'Wishlist' : '';
-  return `<button class="us-row" role="option" aria-selected="false"
+  return `<button class="list-item list-item--search" role="option" aria-selected="false"
     data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
-    <span class="us-row-dot" style="background:${fc.accent}"></span>
-    <span class="us-row-body">
-      <span class="us-row-name">${f.name}</span>
-      <span class="us-row-sub">${f.brand} · ${famLabel}</span>
+    <span class="list-item-dot" style="background:${fc.accent}"></span>
+    <span class="list-item-body">
+      <span class="list-item-name">${f.name}</span>
+      <span class="list-item-sub">${f.brand} · ${famLabel}</span>
     </span>
-    ${badge ? `<span class="us-row-badge">${badge}</span>` : ''}
-    ${scoreLabel ? `<span class="us-row-score">${scoreLabel}</span>` : ''}
+    ${badge ? `<span class="list-item-badge">${badge}</span>` : ''}
+    ${scoreLabel ? `<span class="list-item-score">${scoreLabel}</span>` : ''}
   </button>`;
 }
 
@@ -2874,7 +2874,7 @@ function _usEmptyHtml(query) {
 }
 
 function _wireUsRows(container) {
-  container.querySelectorAll('.us-row').forEach(row => {
+  container.querySelectorAll('.list-item--search').forEach(row => {
     row.addEventListener('click', () => _usSelectRow(row));
   });
   // Restore highlight if any
@@ -2924,7 +2924,7 @@ document.getElementById('universal-search').addEventListener('keydown', function
     return;
   }
 
-  const rows = Array.from(document.querySelectorAll('#us-results .us-row'));
+  const rows = Array.from(document.querySelectorAll('#us-results .list-item--search'));
   if (!rows.length) return;
 
   if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
@@ -2944,7 +2944,7 @@ document.getElementById('universal-search').addEventListener('keydown', function
 });
 
 function _usSetHighlight(idx) {
-  const rows = Array.from(document.querySelectorAll('#us-results .us-row'));
+  const rows = Array.from(document.querySelectorAll('#us-results .list-item--search'));
   rows.forEach((r, i) => {
     const active = i === idx;
     r.setAttribute('aria-selected', active ? 'true' : 'false');
@@ -3497,14 +3497,14 @@ function renderSuggestionsV2(fa,fb,ca,cb){
     const famLabel=(FAM[frag.family]||{label:frag.family}).label;
     const topNotes=[...(frag.top||[])].slice(0,3).join(', ');
     const reason=getSwapReason(anchor, frag);
-    return`<button class="scent-row scent-row--flat cmp-sug-card" data-fid="${frag.id}">
-      <div class="scent-row-content">
-        <div class="frag-picker-dot" style="background:${fc.accent}"></div>
-        <div class="frag-picker-info" style="flex:1;text-align:left;">
-          <div class="frag-picker-item-name">${frag.name}</div>
-          <div class="frag-picker-item-brand">${frag.brand} · ${famLabel}</div>
+    return`<button class="list-item list-item--flat cmp-sug-card" data-fid="${frag.id}">
+      <div class="list-item-content">
+        <div class="list-item-dot" style="background:${fc.accent}"></div>
+        <div class="list-item-body" style="flex:1;text-align:left;">
+          <div class="list-item-name">${frag.name}</div>
+          <div class="list-item-sub">${frag.brand} · ${famLabel}</div>
           <div class="dc-sim-reason">${reason}</div>
-          ${topNotes?`<div class="frag-picker-item-notes">${topNotes}</div>`:''}
+          ${topNotes?`<div class="list-item-meta">${topNotes}</div>`:''}
         </div>
       </div>
     </button>`;

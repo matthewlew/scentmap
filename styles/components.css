@@ -173,7 +173,7 @@
 }
 
 /* Family abbreviation inside catalog dots — secondary indicator for colorblind users */
-.frag-picker-dot {
+.list-item-dot--lg {
   position: relative;
   display: flex;
   align-items: center;
@@ -771,7 +771,7 @@
   100% { opacity: 0; }
 }
 
-.scent-row {
+.list-item {
   padding: 0;
   position: relative;
   background: var(--bg-secondary);
@@ -788,11 +788,11 @@
   font-family: inherit;
 }
 
-.scent-row:last-child {
+.list-item:last-child {
   border-bottom: none;
 }
 
-.scent-row-content {
+.list-item-content {
   position: relative;
   z-index: 2;
   display: flex;
@@ -805,7 +805,7 @@
   width: 100%;
 }
 
-.scent-row-actions {
+.list-item-actions {
   position: absolute;
   top: 0;
   right: 0;
@@ -816,7 +816,7 @@
   justify-content: flex-end;
 }
 
-.scent-row-action {
+.list-item-action {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -832,16 +832,16 @@
   cursor: pointer;
 }
 
-.scent-row-action.wishlist {
+.list-item-action--wishlist {
   background: var(--wish);
 }
 
-.scent-row-action.compare {
+.list-item-action--compare {
   background: var(--accent-primary);
 }
 
 /* Swipe hint chevron — visible on touch devices to indicate swipeable row */
-.scent-row-content::after {
+.list-item-content::after {
   content: '‹';
   position: absolute;
   right: var(--sp-sm);
@@ -855,37 +855,76 @@
 }
 
 @media (hover: none) and (pointer: coarse) {
-  .scent-row-content::after {
+  .list-item-content::after {
     opacity: 1;
   }
 }
 
-.scent-row:hover .scent-row-content {
+.list-item:hover .list-item-content {
   background: var(--bg-secondary);
 }
 
 /* Reveal action buttons on keyboard focus (accessibility: swipe actions not keyboard-accessible otherwise) */
-.scent-row:focus-within .scent-row-actions {
+.list-item:focus-within .list-item-actions {
   transform: translateX(0);
 }
-.scent-row:focus-within .scent-row-content {
+.list-item:focus-within .list-item-content {
   transform: translateX(-120px);
 }
 
-.scent-row--flat {
+/* Flat variant — compare suggestion cards */
+.list-item--flat {
   padding: 0;
   border-bottom: none;
 }
-.scent-row--flat .scent-row-content {
+.list-item--flat .list-item-content {
   background: transparent;
   border-radius: 0;
   padding: var(--sp-sm) var(--sp-md);
   transform: none;
   transition: background var(--dur-fast) var(--ease-spring);
 }
-.scent-row--flat:hover .scent-row-content {
+.list-item--flat:hover .list-item-content {
   background: var(--fade-subtle) !important;
 }
+
+/* Compact variant — note detail, house detail, quiz results */
+.list-item--compact {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-md);
+  background: var(--bg-primary);
+  border: none;
+  border-bottom: 1px solid var(--border-standard);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background var(--dur-fast) var(--ease-spring);
+  overflow: hidden;
+  width: 100%;
+}
+.list-item--compact:last-child { border-bottom: none; }
+.list-item--compact:hover { background: var(--bg-secondary); }
+
+/* Search variant — universal search modal */
+.list-item--search {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: 0 var(--sp-lg);
+  min-height: var(--touch-target);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background var(--dur-fast);
+  width: 100%;
+}
+.list-item--search:hover,
+.list-item--search[aria-selected="true"] { background: var(--bg-secondary); }
+.list-item--search .list-item-name { font-weight: 500; }
 
 
 .s-name-btn {
@@ -906,11 +945,11 @@
   text-decoration-color: var(--text-primary);
 }
 
-.scent-row.s-wish .s-name-btn {
+.list-item--wish .list-item-name {
   font-weight: 600;
 }
 
-.scent-row.s-owned .s-name-btn {
+.list-item--owned .list-item-name {
   font-weight: 700;
 }
 
@@ -931,13 +970,6 @@
   cursor: default;
 }
 
-.scent-row.s-wish .s-sym {
-  color: var(--accent-primary);
-}
-
-.scent-row.s-owned .s-sym {
-  color: var(--text-primary);
-}
 
 .s-sym-tip {
   display: none;
@@ -954,7 +986,7 @@
   white-space: nowrap;
 }
 
-.scent-row:hover .s-sym-tip {
+.list-item:hover .s-sym-tip {
   display: block;
 }
 
@@ -1390,15 +1422,15 @@
   color: var(--text-primary);
 }
 
-/* Catalog row inner content */
-.frag-picker-dot {
+/* List item body sub-elements — shared across all .list-item variants */
+.list-item-dot {
   width: 8px;
   height: 8px;
   border-radius: var(--radius-circle);
   flex-shrink: 0;
 }
 
-.frag-picker-item-name {
+.list-item-name {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   font-weight: 600;
@@ -1409,18 +1441,18 @@
   text-overflow: ellipsis;
 }
 
-.frag-picker-info {
+.list-item-body {
   min-width: 0;
   flex: 1;
 }
 
 /* Align dot with first text line (name) when parent uses align-items: flex-start */
-.scent-row .frag-picker-dot {
+.list-item .list-item-dot {
   margin-top: 1px;
   flex-shrink: 0;
 }
 
-.frag-picker-item-brand {
+.list-item-sub {
   font-size: var(--fs-meta);
   color: var(--text-secondary);
   margin-top: 0;
@@ -1429,13 +1461,47 @@
   text-overflow: ellipsis;
 }
 
-.frag-picker-item-notes {
+.list-item-meta {
   font-size: var(--fs-meta);
   color: var(--text-tertiary);
   margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Search trailing elements */
+.list-item-icon {
+  width: 18px;
+  text-align: center;
+  font-size: var(--fs-body);
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+.list-item-trail {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  flex-shrink: 0;
+  margin-left: var(--sp-xs);
+}
+
+.list-item-badge {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.list-item-score {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  color: var(--accent-primary);
+  flex-shrink: 0;
+  min-width: 36px;
+  text-align: right;
 }
 
 mark.note-match {
@@ -2444,29 +2510,6 @@ button.cmp-note-pill:hover {
   overflow: hidden;
 }
 
-.house-detail-list .frag-picker-item {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  width: 100%;
-  padding: var(--sp-sm) var(--sp-md);
-  background: var(--bg-primary);
-  border: none;
-  border-bottom: 1px solid var(--border-standard);
-  cursor: pointer;
-  font-family: inherit;
-  text-align: left;
-  opacity: 1;
-  transition: background var(--dur-fast) var(--ease-spring);
-}
-
-.house-detail-list .frag-picker-item:last-child {
-  border-bottom: none;
-}
-
-.house-detail-list .frag-picker-item:hover {
-  background: var(--bg-secondary);
-}
 
 /* ══ UNIVERSAL SEARCH MODAL ══ */
 
@@ -2606,85 +2649,7 @@ button.cmp-note-pill:hover {
   margin-top: 0;
 }
 
-/* Result row */
-.us-row {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  padding: 0 var(--sp-lg);
-  min-height: var(--touch-target);
-  cursor: pointer;
-  transition: background var(--dur-fast);
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-}
-
-.us-row:hover,
-.us-row[aria-selected="true"] {
-  background: var(--bg-secondary);
-}
-
-.us-row-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-}
-
-.us-row-icon {
-  width: 18px;
-  text-align: center;
-  font-size: var(--fs-body);
-  flex-shrink: 0;
-  color: var(--text-tertiary);
-}
-
-.us-row-body {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.us-row-name {
-  font-family: var(--font-sans);
-  font-size: var(--fs-body);
-  font-weight: 500;
-  color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.us-row-sub {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.us-row-badge {
-  font-family: var(--font-sans);
-  font-size: var(--fs-caption);
-  color: var(--text-tertiary);
-  flex-shrink: 0;
-  margin-left: var(--sp-xs);
-}
-
-.us-row-score {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  font-weight: 700;
-  color: var(--accent-primary);
-  flex-shrink: 0;
-  min-width: 36px;
-  text-align: right;
-}
+/* Result row — uses .list-item.list-item--search with canonical .list-item-* sub-elements */
 
 /* Empty state */
 .us-empty {
@@ -2874,23 +2839,7 @@ button.cmp-note-pill:hover {
   margin-top: var(--sp-md);
 }
 
-.np-frags .frag-picker-item {
-  opacity: 1;
-  height: auto;
-  padding: var(--sp-sm) var(--sp-md);
-  scroll-snap-align: none;
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-standard);
-  transition: background var(--dur-fast) var(--ease-spring);
-}
-
-.np-frags .frag-picker-item:last-child {
-  border-bottom: none;
-}
-
-.np-frags .frag-picker-item:hover {
-  background: var(--bg-secondary);
-}
+/* .np-frags uses .list-item.list-item--compact — no additional overrides needed */
 
 /* ── PICKER PANEL ── */
 

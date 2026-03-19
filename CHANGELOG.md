@@ -4,6 +4,19 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-19 (2)
+
+### Changed
+- **List row design system consolidation** — replaced four parallel implementations (`.scent-row`, `.frag-picker-item`, `.us-row`, and `s-wish`/`s-owned` state modifiers) with a single canonical `.list-item` component and modifier variants:
+  - `.list-item` (default) — swipeable catalog rows with `.list-item-content`, `.list-item-actions`, and `.list-item-action--compare` / `.list-item-action--wishlist`
+  - `.list-item--compact` — note detail, house detail, and quiz result rows (replaces context-scoped `.frag-picker-item` selectors)
+  - `.list-item--search` — universal search modal rows (replaces `.us-row` and all `.us-row-*` sub-elements)
+  - `.list-item--flat` — compare suggestion cards (renamed from `.scent-row--flat`)
+  - `.list-item--wish` / `.list-item--owned` — state modifiers (renamed from `.s-wish`/`.s-owned`; dead child selectors removed)
+- **Unified body sub-elements** — all contexts now use `.list-item-dot` (8px plain dot), `.list-item-dot--lg` (18px with family abbreviation, catalog only), `.list-item-body`, `.list-item-name`, `.list-item-sub`, `.list-item-meta`, `.list-item-icon`, `.list-item-badge`, `.list-item-score`
+- **Fixed duplicate `.frag-picker-dot` definition** — two conflicting global rules (18px and 8px) were silently overriding each other; replaced with properly scoped `--lg` variant
+- **Removed dead CSS** — deleted `.house-detail-list .frag-picker-item`, `.np-frags .frag-picker-item`, and all `.us-row`/`.us-row-*` rule blocks (now covered by canonical classes); dropped dead state rules targeting `.s-name-btn` and `.s-sym` which had no matching elements
+
 ## 2026-03-19
 
 ### Fixed
