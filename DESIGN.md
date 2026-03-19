@@ -19,6 +19,7 @@ This is the single source of truth for component inventory, token rules, and the
 | List Item — Search | `.list-item--search` | `styles/components.css:959` | — | Universal search result rows only. |
 | Compare Frag Card | `.cmp-frag-card` | `styles/components.css:1800` | `.cmp-frag-card-name`, `.cmp-frag-card-brand` | Compare slot picker buttons. Never inline padding on children. |
 | Carousel Card | `.carousel-card` | `styles/components.css:3208` | `.carousel-card-name`, `.carousel-card-brand`, `.carousel-card-family` | Golden pairs, horizontal scrolling lists. No inline width/font overrides. |
+| DNA Card | `.dna-card` | `styles/components.css:3748` | `.dna-grid`, `.dna-headline`, `.dna-sub`, `.dna-stats`, `.dna-bar`, `.dna-badge`, `.dna-notes` | Personalization summary on the You panel. Sub-elements defined for card layout only. |
 
 ---
 
@@ -35,6 +36,7 @@ These rules are absolute. No exceptions without explicit discussion.
 - All margins, paddings, and gaps must use the 4px grid tokens: `--sp-micro` (2px) → `--sp-4xl` (48px)
 - **Never** write `margin: 16px` — write `margin: var(--sp-lg)`
 - **Never** use magic numbers like `6px`, `15px`, `22px`
+- **Parent-Managed Spacing:** Vertical spacing between sections in detail containers (`.detail-inner`, `.sheet-content`, `.note-popup`) MUST be handled by the parent's `gap` property. Do NOT add `margin-top` or `margin-bottom` to top-level children in these containers. If elements require tighter grouping, wrap them in a `div`.
 
 ### Typography
 - Font sizes via tokens only: `--fs-label` (12px), `--fs-meta` (13px), `--fs-body` (15px), `--fs-title` (20px), `--fs-heading` (32px)
@@ -66,6 +68,7 @@ Run through this before every commit that touches UI:
 
 - [ ] **No hardcoded colors** — Inspect Element on modified components; confirm all colors show as `var(--*)` in DevTools
 - [ ] **No magic numbers** — all spacing/sizing uses `--sp-*` or `--radius-*` tokens
+- [ ] **Parent-managed spacing** — Detail views use `gap` instead of child `margin` for section spacing
 - [ ] **Touch targets ≥44px** — interactive elements have `min-height: var(--touch-target)`
 - [ ] **No inline style for typography/color** — JS template literals use class names, not style attributes for visual properties
 - [ ] **New components documented** — if you added a new CSS class, add it to the Component Inventory table above

@@ -23,27 +23,18 @@ Fixed in prior session (commit `385448f`) — quiz.js syntax error repaired, con
 ### ✅ FIXED (2026-03-19): Unstyled catalog sidebar on `/compare/` and `/quiz/` pages
 Fixed in prior session — `.catalog-sidebar` hidden on standalone pages.
 
-### LOW: `#feel=solar` and other feel hashes don't activate discovery filtering
-**Repro:** Navigate to `http://localhost:3001/app#feel=solar`.
-**Impact:** "Discovery by Feeling" homepage cards are non-functional.
-**Where:** Hash routing in `app.js` — `#feel=*` pattern not handled.
+### ✅ FIXED (2026-03-19): `#feel=solar` and other feel hashes don't activate discovery filtering
+**Root cause:** Mapping between landing page "feelings" (solar, grounded, romantic, mysterious) and internal Role IDs (heat, work, intimate, cold) was missing. Button finding used text content which didn't match symbol-prefixed labels.
+**Fix:** Added `feelMap` to `handleInitialNavigation` and updated button lookup to prefer `dataset.val` (ID) matching.
 
-### LOW: `#journal` hash doesn't navigate to journal view
-**Repro:** Navigate to `http://localhost:3001/app#journal`.
-**Impact:** Scent Journal linked from homepage is not accessible via URL.
-**Where:** Hash routing in `app.js`.
+### ✅ FIXED (2026-03-19): `#journal` hash doesn't navigate to journal view
+**Fix:** Updated `handleInitialNavigation` to scroll to `#journal-content` after activating the `saved` panel. Fixed `ReferenceError` in `go('journal')` by mapping it to the `saved` panel.
 
-### LOW: State change aria-live announcements missing
-**What:** When a user marks a fragrance as owned/wishlist/removed, no screen reader announcement fires. Keyboard users get zero feedback.
-**Why:** Persona: Nadia (low vision, keyboard-first). Currently silent — she has to navigate away and back to confirm the action worked.
-**Where:** `setState()` in `app.js` should write to `#cat-live` or a dedicated `aria-live="assertive"` region.
-**Effort:** S (CC: ~10 min)
+### ✅ FIXED (2026-03-19): State change aria-live announcements missing
+**Fix:** Added assertive announcements to `setState()` in `app.js` using the `#cat-live` region. Messages now include the fragrance name and the action taken (e.g., "Santal 33 added to wishlist").
 
-### LOW: Swipe-to-action triggers on reduced-motion / imprecise input
-**What:** Catalog row swipe actions fire accidentally for users with tremor. Respect `prefers-reduced-motion` to disable swipe gestures and show action buttons inline instead.
-**Why:** Persona: Miguel (essential tremor). Lateral hand movement triggers swipe when he means to scroll.
-**Where:** Swipe handler in `app.js` catalog rows + `styles/components.css` for inline button variant.
-**Effort:** S (CC: ~10 min)
+### ✅ FIXED (2026-03-19): Swipe-to-action triggers on reduced-motion / imprecise input
+**Fix:** Added `prefers-reduced-motion` check to swipe handler in `app.js` to disable lateral movement for users with tremor (Miguel persona). Implemented a CSS fallback in `styles/components.css` that renders action buttons inline below the content when reduced motion is preferred, ensuring accessibility without relying on precise gestures.
 
 ---
 
@@ -118,9 +109,8 @@ Tasks migrated from `design-fixes.md` (see that file for original findings). Eac
 
 ---
 
-### P4-003: Extract DNA card inline styles to CSS classes
-**Model:** Pro | **Effort:** ~1 hour
-**What:** The Olfactive DNA card (`js/app.js:642–668`) uses 100% inline styles: `font-size:32px`, `font-size:10px`, `opacity:0.8`, `margin-bottom:4px`, etc.
+### ✅ FIXED (2026-03-19): Extract DNA card inline styles to CSS classes (P4-003)
+**What:** The Olfactive DNA card (`js/app.js:721–806`) uses 100% inline styles: `font-size:32px`, `font-size:10px`, `opacity:0.8`, `margin-bottom:4px`, etc.
 **How:**
 1. Create `.dna-card` in `styles/components.css` with proper padding and background.
 2. Create `.dna-stat-label` with `font-size: var(--fs-label); color: var(--text-tertiary)`.
@@ -130,65 +120,42 @@ Tasks migrated from `design-fixes.md` (see that file for original findings). Eac
 
 ---
 
-### P4-004: Extract sensory profile bars to CSS classes
-**Model:** Flash | **Effort:** ~30 min
-**What:** The "Sensory Profile" section in the detail panel (`js/app.js:1075–1088`) uses raw inline styles for every bar element.
-**How:** Create in `styles/components.css`:
-- `.sensory-bar-row { display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-xs); }`
-- `.sensory-bar-label { font-family: var(--font-sans); font-size: var(--fs-label); color: var(--text-tertiary); width: 56px; flex-shrink: 0; }`
-- `.sensory-bar-track { flex: 1; height: 4px; background: var(--border-standard); border-radius: var(--radius-micro); overflow: hidden; }`
-- `.sensory-bar-fill { height: 100%; background: var(--resin); border-radius: var(--radius-micro); transition: width var(--dur-standard) var(--ease-spring); }`
-The `width` on `.sensory-bar-fill` remains a data-driven inline style (`style="width: ${pct}%"`).
-**Done when:** Sensory bars use the CSS classes; only the `width` value is inline.
+### ✅ FIXED (2026-03-19): Extract sensory profile bars to CSS classes (P4-004)
+**What:** The "Sensory Profile" section in the detail panel (`js/app.js:1215–1235`) uses raw inline styles for every bar element.
+**Fix:** Refactored sensory bars and dupe meters to use canonical patterns: `.cmp-score-meter-track` and `.cmp-score-meter-fill`. Removed redundant `sensory-bar-*` and `dupe-meter-*` CSS. Refactored Sensory Profile to use the stacked `.dc-stat` and `.sec-label` layout.
 
 ---
 
-### P4-005: Extract scent journey timeline to CSS classes
-**Model:** Flash | **Effort:** ~30 min
-**What:** The Opening→Heart→Dry Down timeline (`js/app.js:1092–1108`) uses deeply nested inline styles for the vertical timeline layout.
-**How:** Create in `styles/components.css`:
-- `.journey-timeline { padding-left: var(--sp-lg); border-left: 2px solid var(--border-standard); }`
-- `.journey-step { position: relative; margin-bottom: var(--sp-md); }`
-- `.journey-dot { position: absolute; left: calc(-1 * var(--sp-lg) - 5px); top: 4px; width: 8px; height: 8px; border-radius: var(--radius-circle); border: 2px solid var(--border-strong); background: var(--bg-primary); }`
-- `.journey-dot--filled { background: var(--resin); border-color: var(--resin); }`
+### ✅ FIXED (2026-03-19): Extract scent journey timeline to CSS classes (P4-005)
+**What:** The Opening→Heart→Dry Down timeline (`js/app.js:1240–1256`) uses 10+ inline styles for the vertical timeline layout.
+**Fix:** Added `.journey-step-title`, `.journey-step-meta`, and `.journey-caveat` to `styles/components.css`. Refactored `js/app.js` to use these classes and reuse the standard `.cmp-sug-card` pattern for similar fragrances.
 **Done when:** Timeline renders with the same visual as before, but using CSS classes instead of inline styles.
 
 ---
 
-### P4-006: Fix compare frag-card padding inconsistency
-**Model:** Flash | **Effort:** ~20 min
+### ✅ FIXED (2026-03-19): Fix compare frag-card padding inconsistency (P4-006)
 **What:** `.cmp-frag-card-name-row` has mixed padding values with a magic `2px`. Children manage their own horizontal padding instead of the parent.
-**Where:** `styles/components.css` lines 1842, 1849, 1903
-**How:** Add `.cmp-frag-card-body { padding: var(--sp-md); }`. Remove individual horizontal padding from `.cmp-frag-card-name-row`, `.cmp-frag-card-name`, `.cmp-frag-card-brand`. Use `gap` for vertical spacing.
-**Done when:** All padding inside a compare frag card comes from a single `.cmp-frag-card-body` wrapper — no magic pixel values.
+**Fix:** Added `.cmp-frag-card-body { padding: var(--sp-md); }`. Removed individual horizontal padding from `.cmp-frag-card-name-row`, `.cmp-frag-card-name`, `.cmp-frag-card-brand`. Use `gap` for vertical spacing.
 
 ---
 
-### P4-007: Fix collection section spacing
-**Model:** Flash | **Effort:** ~15 min
+### ✅ FIXED (2026-03-19): Fix collection section spacing (P4-007)
 **What:** `.collection-section` spacing is tight — "OWNED 1" header and list item below have no breathing room. Panel padding is inline on `#p-saved`.
-**Where:** `js/app.js:327–370`; `styles/components.css:3562`; `app/index.html:58`
-**How:**
+**Fix:** 
 1. In `styles/components.css`, add `margin-top: var(--sp-sm)` to `.scent-list` within `.collection-section`.
 2. In `styles/layout.css`, add `#p-saved, #p-changelog { padding: var(--sp-lg); }` and remove inline `style="padding: var(--sp-lg);"` from those panels in `app/index.html`.
-**Done when:** The "OWNED" section header has visible breathing room above the first card; no inline padding on panel elements.
 
 ---
 
-### P4-008: Fix cmp-sug-v2-label class name
-**Model:** Flash | **Effort:** ~5 min
+### ✅ FIXED (2026-03-19): Fix cmp-sug-v2-label class name (P4-008)
 **What:** The "Swap suggestions" heading in JS still uses `.cmp-sug-v2-label` which was migrated to `.sec-label` in CSS.
-**Where:** `js/app.js:3610`
-**How:** Change the class to `sec-label` in the JS template string.
-**Done when:** The swap suggestions heading renders with the same styling as all other `.sec-label` headings.
+**Fix:** Changed the class to `sec-label` in the JS template string.
 
 ---
 
-### P4-009: Extract dupe lab items to CSS classes
-**Model:** Flash | **Effort:** ~30 min
+### ✅ FIXED (2026-03-19): Extract dupe lab items to CSS classes (P4-009)
 **What:** Each dupe item in the detail panel (`js/app.js:985–1026`) is a `<div>` with ~8 inline styles: border, radius, padding, background, margin, flex.
-**How:** Create `.dupe-item` in `styles/components.css` with `border: 1px solid var(--border-standard); border-radius: var(--radius-lg); padding: var(--sp-md); background: var(--bg-secondary); margin-bottom: var(--sp-sm)`. Reuse `.dc-*` patterns for the score and brand sub-elements.
-**Done when:** Each dupe item uses `.dupe-item` with no inline style other than data-driven score widths.
+**Fix:** Created `.dupe-item` in `styles/components.css` with proper tokens. Reused `.dc-*` patterns and added sub-element classes for name, score, and description.
 
 ---
 

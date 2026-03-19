@@ -203,7 +203,8 @@
   font-weight: 600;
   letter-spacing: var(--ls-normal);
   border-radius: var(--radius-pill);
-  padding: 0 var(--sp-xs);
+  padding: 0 var(--sp-md);
+  height: 24px;
   white-space: nowrap;
   color: #fff;
   border: 1px solid transparent;
@@ -296,6 +297,9 @@
   padding: var(--sp-lg) var(--sp-2xl);
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xl);
 }
 
 .detail-inner.slide {
@@ -318,7 +322,7 @@
   font-size: var(--fs-heading);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
-  margin-bottom: var(--sp-xs);
+  margin-bottom: 0;
 }
 
 .dc-brand {
@@ -328,7 +332,7 @@
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--g450);
-  margin-bottom: var(--sp-xl);
+  margin-bottom: 0;
 }
 
 /* .dc-nlbl → migrated to .sec-label */
@@ -369,7 +373,7 @@
   font-size: var(--text-xs, 10px);
   color: var(--text-tertiary);
   letter-spacing: 0.01em;
-  margin-top: var(--sp-sm);
+  margin-top: 0;
 }
 
 
@@ -396,14 +400,14 @@
 .dc-description {
   font-size: var(--fs-body);
   color: var(--g600);
-  margin-bottom: var(--sp-xl);
+  margin-bottom: 0;
 }
 
 /* Collection quick-action row in detail panel */
 .dc-collect-row {
   display: flex;
   gap: var(--sp-sm);
-  margin: var(--sp-md) 0 var(--sp-xs);
+  margin: 0;
 }
 
 .dc-collect-btn {
@@ -449,7 +453,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--sp-xs);
-  margin-bottom: var(--sp-xl);
+  margin-bottom: 0;
 }
 
 .dc-cmp-btn {
@@ -728,14 +732,14 @@
 /* ── 6. BADGES & TAGS ── */
 
 .dc-state-wrap {
-  margin-bottom: var(--sp-md);
+  margin-bottom: 0;
 }
 
 .dc-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--sp-sm);
-  margin-bottom: var(--sp-md);
+  margin-bottom: 0;
 }
 
 .dc-stat {
@@ -917,6 +921,35 @@
   }
 }
 
+/* Inline actions for reduced-motion preference (Miguel persona) */
+@media (prefers-reduced-motion: reduce) {
+  .list-item {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .list-item-actions {
+    position: static !important;
+    display: flex !important;
+    order: 2 !important;
+    width: 100% !important;
+    transform: none !important;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .list-item-content {
+    position: static !important;
+    order: 1 !important;
+    transform: none !important;
+    padding-right: var(--sp-lg) !important;
+  }
+  .list-item-content::after {
+    display: none !important;
+  }
+  .list-item-action {
+    flex: 1;
+    min-height: var(--touch-target);
+  }
+}
+
 /* Hide swipe tray entirely on desktop (pointer devices) */
 @media (hover: hover) and (pointer: fine) {
   .list-item-actions {
@@ -1071,13 +1104,14 @@
   padding: var(--sp-lg);
   display: flex;
   flex-direction: column;
+  gap: var(--sp-md);
 }
 
 .notes-card-header {
   display: flex;
   align-items: flex-start;
   gap: var(--sp-sm);
-  margin-bottom: var(--sp-md);
+  margin-bottom: 0;
   padding-bottom: var(--sp-sm);
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -1593,7 +1627,7 @@ mark.note-match {
 .dc-div {
   height: 1px;
   background: var(--border-standard);
-  margin: var(--sp-md) 0;
+  margin: 0;
 }
 
 .dc-desc {
@@ -1610,46 +1644,6 @@ mark.note-match {
   margin: var(--sp-md) 0 var(--sp-sm);
 }
 
-/* ── Sensory profile bars ── */
-.sensory-bars {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-sm);
-  margin-bottom: var(--sp-2xl);
-}
-
-.sensory-bar-row {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-}
-
-.sensory-bar-label {
-  width: 60px;
-  font-size: var(--fs-caption);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  flex-shrink: 0;
-}
-
-.sensory-bar-track {
-  flex: 1;
-  height: 4px;
-  background: var(--border-subtle);
-  border-radius: var(--radius-micro);
-  position: relative;
-}
-
-.sensory-bar-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  border-radius: var(--radius-micro);
-}
-
 /* ── Scent journey timeline ── */
 .journey-timeline {
   border-left: 2px solid var(--border-standard);
@@ -1658,6 +1652,7 @@ mark.note-match {
   display: flex;
   flex-direction: column;
   gap: var(--sp-lg);
+  margin-bottom: var(--sp-2xl);
 }
 
 .journey-step {
@@ -1679,46 +1674,31 @@ mark.note-match {
   background: var(--border-strong);
 }
 
-/* ── Dupe lab ── */
-.dupe-item {
-  margin-bottom: var(--sp-lg);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: var(--sp-md);
-  background: var(--bg-primary);
-}
-
-.dupe-item-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.journey-step-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+  color: var(--text-primary);
   margin-bottom: var(--sp-xs);
 }
 
-.dupe-item-score {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  color: var(--accent-primary);
-  font-size: var(--fs-ui);
+.journey-step-meta {
+  color: var(--text-tertiary);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
-.dupe-meter {
-  height: 4px;
-  background: var(--border-subtle);
-  border-radius: var(--radius-micro);
-  margin-bottom: var(--sp-sm);
-  position: relative;
-  overflow: hidden;
+.journey-caveat {
+  font-size: var(--fs-caption);
+  color: var(--text-tertiary);
+  margin-top: var(--sp-xl);
+  margin-bottom: var(--sp-2xl);
 }
 
-.dupe-meter-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: var(--accent-primary);
-  border-radius: var(--radius-micro);
-}
+/* ── Dupe lab ── */
 
 .dupe-breakdown {
   margin-top: var(--sp-sm);
@@ -1916,6 +1896,16 @@ mark.note-match {
   color: var(--text-secondary);
   font-family: var(--font-sans);
   padding: 0 var(--sp-md) var(--sp-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  width: fit-content;
+}
+
+.cmp-frag-card-brand:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
 }
 
 
@@ -2676,7 +2666,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-heading);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
-  margin-bottom: var(--sp-xs);
+  margin-bottom: 0;
 }
 
 .house-detail-count {
@@ -2686,7 +2676,7 @@ button.cmp-note-pill:hover {
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--g450);
-  margin-bottom: var(--sp-xl);
+  margin-bottom: 0;
 }
 
 .house-detail-list {
@@ -2966,6 +2956,9 @@ button.cmp-note-pill:hover {
   max-height: 360px;
   overflow-y: auto;
   scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
 }
 
 .note-popup::-webkit-scrollbar {
@@ -3011,17 +3004,17 @@ button.cmp-note-pill:hover {
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin-bottom: var(--sp-sm);
+  margin-bottom: 0;
 }
 
 .np-desc {
   font-size: var(--fs-body);
   color: var(--g600);
-  margin-bottom: var(--sp-xs);
+  margin-bottom: 0;
 }
 
 .np-frags {
-  margin-top: var(--sp-md);
+  margin-top: 0;
 }
 
 /* .np-frags uses .list-item.list-item--compact — no additional overrides needed */
@@ -3303,7 +3296,7 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-body-sm);
   font-weight: 500;
   color: var(--text-secondary);
-  margin-bottom: var(--sp-xl);
+  margin-bottom: 0;
   background: none;
   border: none;
   cursor: pointer;
@@ -3752,56 +3745,15 @@ button.cmp-note-pill:hover {
   margin-bottom: var(--sp-3xl);
 }
 
-.dna-card .sec-label {
-  margin-bottom: var(--sp-md);
-}
-
-.dna-headline {
-  font-family: var(--font-display);
-  font-size: var(--fs-heading);
-  line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
-  margin-bottom: 0;
-}
-
-.dna-sub {
-  font-family: var(--font-sans);
-  font-size: var(--fs-caption);
-  font-weight: 600;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--g450);
-}
-
 .dna-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-sm);
-  margin-bottom: var(--sp-lg);
-}
-
-.dna-stat-label {
-  font-family: var(--font-sans);
-  font-size: var(--fs-caption);
-  font-weight: 600;
-  color: var(--text-tertiary);
-  margin-bottom: var(--sp-xs);
+  margin-top: var(--sp-xl);
+  margin-bottom: var(--sp-xl);
 }
 
 .dna-divider {
   border-top: 1px solid var(--border-standard);
   padding-top: var(--sp-md);
   margin-top: var(--sp-xl);
-}
-
-.dna-section-label {
-  font-family: var(--font-sans);
-  font-size: var(--fs-caption);
-  font-weight: 600;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--text-disabled);
-  margin-bottom: var(--sp-sm);
 }
 
 .dna-families {

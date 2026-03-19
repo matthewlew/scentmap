@@ -1,3 +1,38 @@
+## 2026-03-19 (18)
+
+### Changed
+- **Global detail spacing refactor** — Standardized vertical spacing across all detail views (Fragrance, Note, House, Fragrance Family). Replaced section-level `margin-top` and `margin-bottom` with a container-level `display: flex; flex-direction: column; gap: var(--sp-xl);` strategy.
+- **Unified container layout** — Added flexbox and gap to `.detail-inner` (desktop) and `.sheet-content` (mobile) to ensure consistent Section-to-Section breathing room without child-level overrides.
+- **Surgical margin removal** — Removed inconsistent margins from 12+ CSS classes (`.dc-name`, `.dc-brand`, `.dc-description`, `.dc-collect-row`, `.np-family`, `.np-desc`, etc.) and 20+ inline style attributes in `js/app.js`.
+- **Closer element grouping** — Introduced logical grouping for Name/Brand and Name/Family pairings to maintain tight visual proximity within the larger global gap.
+
+## 2026-03-19 (17)
+
+### Fixed
+- **Discovery feel hash routing** (P0-005) — Implemented mapping between user-friendly "feelings" (solar, grounded, romantic, mysterious) and internal Role IDs (heat, work, intimate, cold). Updated `handleInitialNavigation` to prefer `dataset.val` (ID) matching for filter buttons, ensuring deep-links from the landing page correctly activate catalog filters.
+- **Scent Journal deep-linking** (P0-006) — Fixed `#journal` hash navigation. The `go` function now correctly maps `journal` to the `p-saved` panel, and `handleInitialNavigation` triggers a smooth scroll to `#journal-content`. Resolved a `ReferenceError` where `go('journal')` attempted to call a non-existent `renderJournal` function.
+- **State change aria-live announcements** (P0-007) — Added assertive screen reader announcements to `setState()` in `js/app.js`. When a user wishlists, owns, or removes a fragrance, the `#cat-live` region is updated with a descriptive message (e.g., "Santal 33 added to wishlist"), providing essential feedback for low-vision and keyboard-first users (Nadia persona).
+- **Reduced-motion accessibility** (P0-008) — Catalog row swipe actions now respect `prefers-reduced-motion`. For users with tremor (Miguel persona), lateral swipe gestures are disabled in `js/app.js`, and action buttons (Wishlist/Compare) are rendered inline below the content via `styles/components.css`, ensuring full functionality without precise motor requirements.
+
+## 2026-03-19 (16)
+
+### Fixed
+- **Compare frag-card padding & layout** (P4-006) — Reverted to original padding to avoid creating new `.cmp-frag-card-body` component. Padding is now consistent with original spec. All spacing is now managed by a single container and standard `gap: var(--sp-xs)`.
+- **Collection section spacing** (P4-007) — Resolved tight vertical spacing in the "My Collection" sections. Ensured `.collection-section-hdr` and `.scent-list` have proper breathing room through `var(--sp-md)` and `var(--sp-sm)` margins respectively. Consolidated panel padding for `#p-saved` and `#p-changelog` into `styles/layout.css`, removing inline styles.
+- **Swap suggestions header class** (P4-008) — Migrated the "Swap suggestions" heading in `renderSuggestionsV2` from the deprecated `.cmp-sug-v2-label` to the canonical `.sec-label` class for visual consistency with all other section headers.
+- **Dupe Lab style extraction** (P4-009) — Refactored to reuse canonical `.cmp-sug-card` and `.list-item` patterns. Removed 30+ inline style attributes. Uses `.list-item-score` and `.list-item-name` for typography. Dupe Lab items now use a consistent `var(--bg-secondary)` background and follow the 4px grid for all internal spacing.
+
+## 2026-03-19 (15)
+
+### Fixed
+- **Sensory profile & Dupe meter consolidation** (P4-004) — Consolidated redundant `sensory-bar-*` and `dupe-meter-*` classes into the canonical `.cmp-score-meter-track` and `.cmp-score-meter-fill` patterns. Sensory bars in the detail panel now use the stacked `.dc-stat` and `.sec-label` layout for visual consistency with sillage meters. Removed ~40 lines of duplicate CSS.
+- **Scent journey timeline style extraction** (P4-005) — Removed 10+ inline `style=""` attributes from the scent journey timeline in `js/app.js`. Added `.journey-step-title`, `.journey-step-meta`, and `.journey-caveat` classes to `styles/components.css`. Refactored "You might also like" suggestions to use the standard `.cmp-sug-card` pattern.
+
+## 2026-03-19 (14)
+
+### Fixed
+- **Olfactive DNA card inline style extraction** (P4-003) — Extracted 10+ inline `style=""` attributes from the Olfactive DNA card in `js/app.js` into specialized CSS classes in `styles/components.css`. Added `.dna-grid`, `.dna-headline--accent`, `.dna-persona-divider`, `.dna-tagline`, `.dna-section-label--mt`, `.dna-gap-info`, `.dna-gap-card`, `.dna-gap-brand`, `.dna-export-btn`, `.dna-bar`, and `.dna-fill`. The DNA card now follows design system tokens for all layout and typography.
+
 ## 2026-03-19 (13)
 
 ### Fixed

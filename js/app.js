@@ -144,10 +144,19 @@ function setState(id,s){
   
   store.setState(id,s);
   
+  const frag = CAT_MAP[id];
+  const name = frag ? frag.name : 'Fragrance';
   let msg = '';
   if (s === 'owned') msg = 'Marked as owned';
   else if (s === 'wish') msg = 'Added to wishlist';
   else msg = 'Removed from collection';
+
+  // State change aria-live announcement
+  const liveEl = document.getElementById('cat-live');
+  if (liveEl) {
+    liveEl.textContent = `${name} ${msg.toLowerCase()}`;
+    setTimeout(() => { if (liveEl.textContent === `${name} ${msg.toLowerCase()}`) liveEl.textContent = ''; }, 3000);
+  }
   
   showUndoToast(msg, () => {
     store.setState(id, oldState);
@@ -734,10 +743,10 @@ window.renderSaved = function() {
       const archId = computeCollectionArchetype(stats);
       const arch = store.ARCHETYPES[archId];
       personaHtml = `
-        <div class="dna-divider" style="background:var(--bg-secondary); margin:var(--sp-xl) calc(-1 * var(--sp-xl)); padding:var(--sp-lg) var(--sp-xl); border-top:1px solid var(--border-standard); border-bottom:1px solid var(--border-standard);">
-          <div class="dna-section-label">Your Olfactive Persona</div>
-          <div class="dna-headline" style="font-size:var(--fs-title); color:var(--accent-primary);">${arch.name}</div>
-          <div class="text-body" style="font-family:var(--font-serif); font-size:var(--fs-meta); margin-top:var(--sp-xs); opacity:0.8;">${arch.tagline}</div>
+        <div class="dna-divider">
+          <div class="sec-label">Your Olfactive Persona</div>
+          <div class="text-title" style="color:var(--accent-primary);">${arch.name}</div>
+          <div class="text-meta" style="font-family:var(--font-serif); opacity:0.8;">${arch.tagline}</div>
         </div>
       `;
     }
@@ -746,15 +755,15 @@ window.renderSaved = function() {
     let gapHtml = '';
     if (gapRec) {
       gapHtml = `
-        <div class="dna-section-label" style="margin-top:var(--sp-xl);">Collection Gap</div>
-        <div class="text-body" style="font-family:var(--font-serif); font-size:var(--fs-meta); margin-bottom:var(--sp-sm);">
+        <div class="sec-label" style="margin-top:var(--sp-xl);">Collection Gap</div>
+        <div class="text-meta" style="font-family:var(--font-serif); margin-bottom:var(--sp-sm);">
           Your collection is currently low on <strong>${gapRec.label}</strong>. Consider exploring:
         </div>
-        <button class="settings-menu-item" style="background:var(--bg-secondary); border-radius:var(--radius-md);" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
+        <button class="list-item list-item--compact cmp-sug-card" style="margin-top:var(--sp-sm);" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
           <div class="picker-fdot" style="background:${(FAM[gapRec.frag.family]||{}).color}"></div>
-          <div style="flex:1; text-align:left;">
-            <div style="font-weight:600;">${gapRec.frag.name}</div>
-            <div style="font-size:10px; opacity:0.6;">${gapRec.frag.brand} · To fill the gap</div>
+          <div class="list-item-body">
+            <div class="list-item-name">${gapRec.frag.name}</div>
+            <div class="list-item-meta">${gapRec.frag.brand} · To fill the gap</div>
           </div>
         </button>
       `;
@@ -765,37 +774,41 @@ window.renderSaved = function() {
         Your Olfactive DNA
         <button class="nav-notes-btn" style="font-size:var(--fs-caption);" onclick="window.exportAuraCard()">Export</button>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-xl); margin-bottom:var(--sp-xl);">
+      <div class="cmp-sug-columns">
         <div>
-          <div class="dna-headline">${owned.length}</div>
-          <div class="dna-sub">Fragrances Owned</div>
+          <div class="cmp-score-pct">${owned.length}</div>
+          <div class="sec-label">Fragrances Owned</div>
         </div>
         <div>
-          <div class="dna-headline" style="font-size:var(--fs-title);">${avgSillage}<span style="font-size:var(--fs-meta); font-weight:400; color:var(--text-tertiary);">/10</span></div>
-          <div class="dna-sub">Average Sillage</div>
+          <div class="cmp-score-pct">${avgSillage}<span class="text-meta" style="font-weight:400; color:var(--text-tertiary);">/10</span></div>
+          <div class="sec-label">Average Sillage</div>
         </div>
       </div>
       
       ${personaHtml}
 
-      <div class="dna-stats" style="margin-top:var(--sp-xl);">
+      <div class="dna-stats">
         ${bars.map(b => `
-          <div class="dc-stat">
-            <div class="dna-stat-label">${b.l}</div>
-            <div class="dc-bar"><div class="dc-fill" style="width:${Math.round(b.v*100)}%; background:${b.c};"></div></div>
+          <div class="dna-stat">
+            <div class="sec-label">${b.l}</div>
+            <div class="cmp-score-meter">
+              <div class="cmp-score-meter-track">
+                <div class="cmp-score-meter-fill" style="width:${Math.round(b.v*100)}%; background:${b.c};"></div>
+              </div>
+            </div>
           </div>
         `).join('')}
       </div>
       <div class="dna-divider">
-        <div class="dna-section-label">Dominant Families</div>
+        <div class="sec-label">Dominant Families</div>
         <div class="dna-families">
           ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `
-            <div class="dc-badge" style="background:${FAM[fam]?.color||'#888'}; color:#fff; padding:2px 8px; font-size:10px;">
+            <div class="chip" style="background:${FAM[fam]?.color||'#888'};">
               ${FAM[fam]?.label||fam} (${count})
             </div>
           `).join('')}
         </div>
-        <div class="dna-section-label">Signature Material</div>
+        <div class="sec-label">Signature Material</div>
         <div class="dna-notes">
           You frequently gravitate towards <strong>${topNote}</strong>. Other core notes in your collection include ${stats.topNotes.slice(1, 5).map(n => n[0]).join(', ')}.
         </div>
@@ -1114,30 +1127,32 @@ function renderDupeLab(container, anchor) {
     <div class="dc-name">Dupe Lab</div>
     <div class="dc-brand" style="margin-bottom:var(--sp-xl);">Finding matches for ${anchor.name}</div>
     
-    <div class="dupe-list">
+    <div class="dupe-list" style="display: flex; flex-direction: column; gap: var(--sp-md);">
       ${dupes.map(({f, score}) => {
         const fm = FAM[f.family] || {label: f.family, color:'#888'};
         const reason = getSwapReason(anchor, f);
         return `
-          <div class="dupe-item">
-            <div class="dupe-item-head">
-              <div class="dc-name" style="font-size:var(--fs-body); margin-bottom:0;">${f.name}</div>
-              <div class="dupe-item-score">${score}%</div>
+          <div class="list-item list-item--flat cmp-sug-card dupe-item" style="display: block; padding: var(--sp-md); cursor: default;">
+            <div class="dupe-item-head" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--sp-xs);">
+              <div class="list-item-name" style="font-size: var(--fs-body);">${f.name}</div>
+              <div class="list-item-score">${score}%</div>
             </div>
-            <div class="dc-brand" style="margin-bottom:var(--sp-sm);">${f.brand} · ${fm.label}</div>
+            <div class="list-item-sub" style="margin-bottom: var(--sp-sm);">${f.brand} · ${fm.label}</div>
 
-            <div class="dupe-meter">
-              <div class="dupe-meter-fill" style="width:${score}%;"></div>
+            <div class="cmp-score-meter" style="margin-bottom: var(--sp-sm);">
+              <div class="cmp-score-meter-track">
+                <div class="cmp-score-meter-fill" style="width:${score}%; background:var(--accent-primary);"></div>
+              </div>
             </div>
 
-            <div class="dc-description" style="font-size:var(--fs-meta); margin-bottom:var(--sp-sm); line-height:var(--lh-normal);">${reason}</div>
+            <div class="list-item-meta" style="margin-bottom: var(--sp-sm); line-height: var(--lh-normal); color: var(--text-secondary);">${reason}</div>
 
-            <details style="margin-bottom:var(--sp-sm);">
-              <summary style="font-size:var(--fs-caption); font-family:var(--font-sans); font-weight:600; color:var(--text-tertiary); cursor:pointer; list-style:none; display:flex; align-items:center; gap:var(--sp-xs);">
+            <details style="margin-bottom: var(--sp-sm);">
+              <summary style="font-size: var(--fs-caption); font-family: var(--font-sans); font-weight: 600; color: var(--text-tertiary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: var(--sp-xs);">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                 Why this matches
               </summary>
-              <div class="dupe-breakdown">
+              <div class="dupe-breakdown" style="margin-top: var(--sp-sm); padding-top: var(--sp-sm); border-top: 1px dashed var(--border-subtle); font-size: var(--fs-caption); color: var(--text-tertiary); display: flex; flex-direction: column; gap: var(--sp-xs);">
                 ${(() => {
                   const famScore = (FAM_COMPAT[anchor.family]?.[f.family] ?? 0.5) * 40;
                   const shBase = anchor._nBase.filter(n => f._nBase.includes(n)).length;
@@ -1150,16 +1165,16 @@ function renderDupeLab(container, anchor) {
                   const roleScore = Math.min(20, shRoles * 7);
 
                   return `
-                    <div class="dupe-breakdown-row"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
-                    <div class="dupe-breakdown-row"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
-                    <div class="dupe-breakdown-row"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
-                    <div class="dupe-breakdown-row"><span>Role alignment</span><span>${roleScore}/20</span></div>
+                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
+                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
+                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
+                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Role alignment</span><span>${roleScore}/20</span></div>
                   `;
                 })()}
               </div>
             </details>
 
-            <button class="s-name-btn" style="font-size:var(--fs-meta);" onclick="event.stopPropagation(); trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">View Details →</button>
+            <button class="s-name-btn" style="font-size: var(--fs-meta);" onclick="event.stopPropagation(); trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">View Details →</button>
           </div>
         `;
       }).join('')}
@@ -1179,7 +1194,7 @@ function renderFragDetail(container,frag){
       const arch = ARCHETYPES[archMatch[1]];
       if (arch) {
         quizAttribution = `
-          <div class="dc-quiz-attribution" style="margin-bottom:var(--sp-lg); padding:var(--sp-sm) var(--sp-md); background:var(--bg-secondary); border:1px solid var(--border-subtle); border-radius:var(--radius-md); font-family:var(--font-sans); font-size:var(--fs-meta); color:var(--text-secondary); display:flex; align-items:center; gap:var(--sp-xs);">
+          <div class="dc-quiz-attribution" style="padding:var(--sp-sm) var(--sp-md); background:var(--bg-secondary); border:1px solid var(--border-subtle); border-radius:var(--radius-md); font-family:var(--font-sans); font-size:var(--fs-meta); color:var(--text-secondary); display:flex; align-items:center; gap:var(--sp-xs);">
             <span style="font-size:1.2em;">✨</span> From your scent archetype: <strong style="color:var(--text-primary);">${arch.name}</strong>
           </div>`;
       }
@@ -1188,19 +1203,22 @@ function renderFragDetail(container,frag){
 
   container.innerHTML=`
     ${quizAttribution}
-    <div class="dc-name">${frag.name}</div>
-    <button class="dc-brand-btn">${frag.brand}</button>
-    <div class="chip" style="background:${fm.color}; margin-bottom: var(--sp-xl);">
-      <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
-      ${fm.label}
+    <div>
+      <div class="dc-name">${frag.name}</div>
+      <button class="dc-brand-btn" style="margin-bottom: var(--sp-sm);">${frag.brand}</button>
+      <br>
+      <div class="chip" style="background:${fm.color};">
+        <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
+        ${fm.label}
+      </div>
     </div>
     <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
     ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
-    ${frag.story?`<div class="dc-story" style="margin-top:var(--sp-md); padding:var(--sp-md); background:var(--g50); border-radius:6px; font-size:var(--fs-body-sm); color:var(--g600); border:1px solid var(--g200);">${frag.story}</div>`:''}
-    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="margin-top:var(--sp-md);">Buy from ${frag.brand}</a>`:''}
+    ${frag.story?`<div class="dc-story" style="padding:var(--sp-md); background:var(--g50); border-radius:6px; font-size:var(--fs-body-sm); color:var(--g600); border:1px solid var(--g200);">${frag.story}</div>`:''}
+    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn">Buy from ${frag.brand}</a>`:''}
     <div class="sec-label">Compare with</div>
     <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
-    <button class="dc-collect-btn" id="find-dupes-${frag.id}" style="width:100%; justify-content:center; margin-bottom:var(--sp-xl);">
+    <button class="dc-collect-btn" id="find-dupes-${frag.id}" style="width:100%; justify-content:center;">
       <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
     </button>
     <div class="dc-stats">
@@ -1208,15 +1226,17 @@ function renderFragDetail(container,frag){
       <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${frag.layering}/10 — ${LW[frag.layering]}</div></div>
     </div>
     <div class="dc-div"></div>
-    <div class="sec-label" style="margin-bottom:var(--sp-xs);">Sensory Profile</div>
-    <div class="sensory-bars">
+    <div class="sec-label">Sensory Profile</div>
+    <div class="dc-stats">
       ${(() => {
         const p = computeProfile(frag);
         const bar = (label, val, color) => `
-          <div class="sensory-bar-row">
-            <div class="sensory-bar-label">${label}</div>
-            <div class="sensory-bar-track">
-              <div class="sensory-bar-fill" style="width:${Math.round(val*100)}%; background:${color};"></div>
+          <div class="dc-stat">
+            <div class="sec-label">${label}</div>
+            <div class="cmp-score-meter">
+              <div class="cmp-score-meter-track">
+                <div class="cmp-score-meter-fill" style="width:${Math.round(val*100)}%; background:${color};"></div>
+              </div>
             </div>
           </div>`;
         return bar('Fresh', p.freshness, 'var(--fam-citrus)') +
@@ -1225,27 +1245,29 @@ function renderFragDetail(container,frag){
       })()}
     </div>
 
-    <div class="sec-label" style="margin-bottom:var(--sp-md);">Scent Journey</div>
-    <div class="journey-timeline">
-      <div class="journey-step">
-        <div class="journey-dot"></div>
-        <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Opening <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Top Notes)</span></div>
-        <div class="dc-nv">${linkNotes(frag.top)}</div>
+    <div class="sec-label">Scent Journey</div>
+    <div>
+      <div class="journey-timeline">
+        <div class="journey-step">
+          <div class="journey-dot"></div>
+          <div class="journey-step-title">Opening <span class="journey-step-meta">(Top Notes)</span></div>
+          <div class="dc-nv">${linkNotes(frag.top)}</div>
+        </div>
+        <div class="journey-step">
+          <div class="journey-dot"></div>
+          <div class="journey-step-title">Heart <span class="journey-step-meta">(Mid Notes)</span></div>
+          <div class="dc-nv">${linkNotes(frag.mid)}</div>
+        </div>
+        <div class="journey-step">
+          <div class="journey-dot journey-dot--filled"></div>
+          <div class="journey-step-title">Dry Down <span class="journey-step-meta">(Base Notes)</span></div>
+          <div class="dc-nv">${linkNotes(frag.base)}</div>
+        </div>
       </div>
-      <div class="journey-step">
-        <div class="journey-dot"></div>
-        <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Heart <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Mid Notes)</span></div>
-        <div class="dc-nv">${linkNotes(frag.mid)}</div>
-      </div>
-      <div class="journey-step">
-        <div class="journey-dot journey-dot--filled"></div>
-        <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Dry Down <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Base Notes)</span></div>
-        <div class="dc-nv">${linkNotes(frag.base)}</div>
-      </div>
+      <p class="journey-caveat">Key materials only — simplified pyramid</p>
     </div>
-    <p class="dc-notes-caveat" style="margin-top:var(--sp-xl); margin-bottom:var(--sp-2xl);">Key materials only — simplified pyramid</p>
-    
-    <div class="sec-label" style="margin-bottom:var(--sp-md);">You might also like</div>
+
+    <div class="sec-label">You might also like</div>
     <div class="dc-sim-shelf">
       ${(() => {
         const simFrags = CAT.filter(f => f.id !== frag.id)
@@ -1253,14 +1275,13 @@ function renderFragDetail(container,frag){
           .sort((a, b) => b.score - a.score)
           .slice(0, 3);
         return simFrags.map(s => `
-          <button class="settings-menu-item" onclick="pushDetail(c => renderFragDetail(c, CAT_MAP['${s.f.id}']), '${s.f.name.replace(/'/g, "\\'")}')">
+          <button class="list-item list-item--compact cmp-sug-card" onclick="pushDetail(c => renderFragDetail(c, CAT_MAP['${s.f.id}']), '${s.f.name.replace(/'/g, "\\'")}')">
             <div class="picker-fdot" style="background:${(FAM[s.f.family]||{}).color}"></div>
-            <div style="flex:1; text-align:left;">
-              <div style="font-weight:600;">${s.f.name}</div>
-              <div style="font-size:10px; opacity:0.6;">${s.f.brand} · ${s.score}% match</div>
+            <div class="list-item-body">
+              <div class="list-item-name">${s.f.name}</div>
+              <div class="list-item-meta">${s.f.brand} · ${s.score}% match</div>
             </div>
-          </button>
-        `).join('');
+          </button>`).join('');
       })()}
     </div>`;
 
@@ -1505,13 +1526,15 @@ function renderNoteDetail(container,note){
   const inf=CAT.filter(f=>f._nAll.includes(nl));
   const saveId = `nd-save-${note.name.replace(/\s+/g,'-')}`;
   container.innerHTML=`
-    <div class="np-name">${note.name}</div>
-    <div class="np-family">${fm.label}</div>
+    <div>
+      <div class="np-name">${note.name}</div>
+      <div class="np-family">${fm.label}</div>
+    </div>
     <div class="np-desc">${note.desc}</div>
-    <div id="${saveId}" style="margin-top:var(--sp-md);"></div>
-    ${note.extraction_method?`<div style="margin-top:var(--sp-sm); font-size:var(--fs-caption); color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
-    ${note.insider_fact?`<div style="margin-top:var(--sp-sm); padding:var(--sp-sm); background:var(--g50); border-radius:var(--radius); font-size:var(--fs-caption); color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:var(--sp-xs); color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
-    ${inf.length?`<div class="np-frags" style="margin-top:var(--sp-md)"><div class="sec-label" style="margin:0 0 var(--sp-xs)">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden"></div></div>`:''}`;
+    <div id="${saveId}"></div>
+    ${note.extraction_method?`<div style="font-size:var(--fs-caption); color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
+    ${note.insider_fact?`<div style="padding:var(--sp-sm); background:var(--g50); border-radius:var(--radius); font-size:var(--fs-caption); color:var(--g600); border:1px solid var(--g200);"><strong style="display:block; margin-bottom:var(--sp-xs); color:var(--g900);">Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
+    ${inf.length?`<div class="np-frags"><div class="sec-label" style="margin:0 0 var(--sp-xs)">In catalog (${inf.length})</div><div id="_nfl" style="border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden"></div></div>`:''}`;
 
   renderNoteSaveBtn(container.querySelector(`#${saveId}`), note);
 
@@ -1563,7 +1586,7 @@ function renderHouseDetail(container,brand){
     }));
 
   const barHTML = famStats.map(f => `<div style="height:100%; width:${f.pct}%; background:${f.color};" title="${f.label} (${Math.round(f.pct)}%)"></div>`).join('');
-  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); margin-bottom:var(--sp-xs); font-size:var(--fs-meta); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
+  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); font-size:var(--fs-meta); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
 
   let topCount = 0;
   if (frags.length >= 10) topCount = 5;
@@ -1573,30 +1596,32 @@ function renderHouseDetail(container,brand){
   // We'll just take the first N fragrances in the sorted array
   const topFrags = frags.slice(0, topCount);
 
-  container.innerHTML=`<div class="house-detail-wrap">
+  container.innerHTML=`<div class="house-detail-wrap" style="display:flex; flex-direction:column; gap:var(--sp-xl);">
     <div class="house-detail-name">${brand}</div>
-    ${houseData && houseData.desc ? `<div class="dc-description" style="margin-top:var(--sp-sm);">${houseData.desc}</div>` : ''}
-    <div id="house-brand-save-wrap" style="margin-top:var(--sp-md);"></div>
-    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="margin-top:var(--sp-md);">Visit ${brand} Website</a>` : ''}
-    ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; margin-top:var(--sp-md); background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
+    ${houseData && houseData.desc ? `<div class="dc-description">${houseData.desc}</div>` : ''}
+    <div id="house-brand-save-wrap"></div>
+    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn">Visit ${brand} Website</a>` : ''}
+    ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
 
-    <div style="margin:var(--sp-xl) 0;">
+    <div>
       <div class="sec-label">Fragrance Families</div>
       <div style="height:var(--sp-sm); width:100%; display:flex; border-radius:var(--radius); overflow:hidden; margin-bottom:var(--sp-sm);">${barHTML}</div>
-      <div style="display:flex; flex-wrap:wrap;">${legendHTML}</div>
+      <div style="display:flex; flex-wrap:wrap; gap:var(--sp-xs);">${legendHTML}</div>
     </div>
 
     ${topFrags.length > 0 ? `
-    <div class="house-known-for" style="margin-bottom:var(--sp-xl);">
-      <div class="sec-label" style="margin-bottom:var(--sp-md);">Known For</div>
+    <div class="house-known-for">
+      <div class="sec-label">Known For</div>
       <div class="carousel-wrap">
         <div class="carousel" id="house-known-for-carousel"></div>
       </div>
     </div>
     ` : ''}
 
-    <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
-    <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
+    <div>
+      <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
+      <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
+    </div>
   </div>`;
 
   const brandSaveWrap = container.querySelector('#house-brand-save-wrap');
@@ -2652,6 +2677,11 @@ function renderCatRow(row,frag,fm,search){
   // Swipe to action logic
   const content = row.querySelector('.list-item-content');
   if(!content) return;
+  
+  // Disable swipe logic for reduced-motion users (Miguel persona)
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) return;
+
   let sx=0, sy=0, swiping=false, swiped=false;
   content.addEventListener('touchstart', e=>{
     sx = e.touches[0].clientX;
@@ -2889,13 +2919,16 @@ function closeQuickPeek(){
 
 /* ══ NAV ════════════════════════════════════════════════════════════ */
 function go(id,btn){
+  let panelId = id;
+  if (id === 'journal') panelId = 'saved';
+
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link, .mbn-btn').forEach(t=>t.classList.remove('active'));
-  const panel = document.getElementById('p-'+id);
+  
+  const panel = document.getElementById('p-'+panelId);
   if(panel) panel.classList.add('active');
   
-  if (id === 'saved') renderSaved();
-  if (id === 'journal') renderJournal();
+  if (panelId === 'saved') renderSaved();
 
   // Find and activate the matching global nav link or button
   if (btn) {
@@ -4089,7 +4122,7 @@ function renderCompareResults(fa,fb){
             <div class="cmp-score-tap">Tap to learn more ↗</div>
           </button>
         </div>
-        <button id="cmp-share-btn" class="dc-collect-btn active" style="margin-top:var(--sp-md);width:100%;justify-content:center;">Share Comparison</button>
+        <button id="cmp-share-btn" class="dc-collect-btn active" style="width:100%;justify-content:center;">Share Comparison</button>
       </div>
     </div>
 
@@ -4929,14 +4962,24 @@ function handleInitialNavigation() {
     go('catalog', null);
   } else if (hash === 'saved' || hash === 'journal' || hash === 'you') {
     go('saved', document.querySelector('.global-nav-link[onclick*="saved"], .mbn-btn[onclick*="saved"]'));
+    if (hash === 'journal') {
+      setTimeout(() => {
+        const j = document.getElementById('journal-content');
+        if (j) j.scrollIntoView({ behavior: 'smooth' });
+      }, 350);
+    }
   } else if (hash === 'open-search') {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
     setTimeout(() => openUniversalSearch(), 350);
   } else if (hash.startsWith('feel=')) {
-    const feel = decodeURIComponent(hash.split('=')[1]);
+    let feel = decodeURIComponent(hash.split('=')[1]).toLowerCase();
+    const feelMap = { 'solar':'heat', 'grounded':'work', 'romantic':'intimate', 'mysterious':'cold' };
+    if (feelMap[feel]) feel = feelMap[feel];
     go('catalog', null);
     setTimeout(() => {
-      const btn = Array.from(document.querySelectorAll('.cat-feel-bar .tab, .cat-feel-bar-m .tab')).find(b => b.textContent.toLowerCase().includes(feel.toLowerCase()));
+      const btns = Array.from(document.querySelectorAll('.cat-feel-bar .tab, .cat-feel-bar-m .tab'));
+      let btn = btns.find(b => b.dataset.val === feel);
+      if (!btn) btn = btns.find(b => b.textContent.toLowerCase().includes(feel));
       if (btn) btn.click();
     }, 200);
   } else if (hash.startsWith('search=')) {
