@@ -290,6 +290,7 @@ function renderQuiz(container, config, catalog) {
 function renderStep(step, collectedTags) {
   const qs = _quizConfig.questions;
   if (step >= qs.length) {
+    if (_quizConfig.scoring?.archetypeMode) {
       const { archetype, frags } = scoreArchetypeMode(_catalog, collectedTags);
       const ids = frags.map(f => f.id).join(',');
       window._saveQuizResult?.(_slug, _quizConfig.title, archetype, frags);
@@ -687,7 +688,7 @@ function injectStyles() {
     .quiz-section-title { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-ui, 14px); font-weight: 600; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); }
 
     /* Hide app chrome on quiz pages */
-    .mobile-bottomnav, .sheet-stack-overlay, .note-float-overlay, .frag-picker-overlay,
+    .mobile-bottomnav, .sheet-stack-overlay, .note-float-overlay, .frag-picker-overlay, .catalog-sidebar,
     .col-detail, .detail-scrim, #loading-overlay, #app-loading, .app-loading-overlay, #app-error, .app-error-overlay, .auth-modal, .frag-picker-overlay { display: none !important; }
     .col-main { overflow: visible; }
     .shell { display: block; }
@@ -712,13 +713,33 @@ async function init() {
   }
 
   // Find or create container
-  const main = document.querySelector('.col-main');
+  const main = document.querySelector('.col-main') || document.querySelector('.col-main-content');
+  let container;
   if (!main) {
     document.body.innerHTML = '<div id="quiz-root"></div>';
+    container = document.getElementById('quiz-root');
+  } else {
+    // We are inside a shell. Target the main content area.
+    container = main;
+    // Ensure all app panels are hidden so the quiz can render cleanly
+    document.querySelectorAll('.panel').forEach(p => {
+      p.classList.remove('active');
+      p.style.display = 'none';
+    });
   }
-  const container = main || document.getElementById('quiz-root');
-  // Clear existing content
+  
+  // Clear existing content and render
   container.innerHTML = '<div class="quiz-page"><div class="quiz-body"><div class="quiz-progress">Loading quiz...</div></div></div>';
+  _container = container;
+
+  // Minimal go() redirector for nav links in standalone shell
+  window.go = function(id) {
+    if (id === 'compare') window.location.href = '/app#compare';
+    else if (id === 'notes') window.location.href = '/app#notes';
+    else if (id === 'saved' || id === 'you') window.location.href = '/app#saved';
+    else if (id === 'discovery') window.location.href = '/#discovery';
+    else window.location.href = '/app';
+  };
 
   try {
     const [scentsRes, configRes] = await Promise.all([

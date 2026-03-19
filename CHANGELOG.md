@@ -1,10 +1,20 @@
-# Changelog
+## 2026-03-19 (9)
 
-All notable changes to Scentmap are documented here.
+### Fixed
+- **Standalone Compare URLs** — fixed deep-linked fragrance pre-loading by making ID lookup more robust (case-insensitive) and improving regex to support all valid fragrance slugs.
+- **Standalone Quiz Logic** — fixed a critical syntax error in `quiz.js` that prevented the quiz from loading on standalone pages.
+- **SPA Quiz Fallback** — implemented `renderStandaloneQuiz` in `app.js` to handle quiz routes when the main app shell is loaded via a Single Page App configuration.
+- **Navigation Stability** — refined `go()` redirect logic to prevent unnecessary resets to `/app` when on a valid deep-linked comparison route.
 
----
+## 2026-03-19 (8)
 
-## 2026-03-19 (7)
+### Fixed
+- **Phase 0 Routing and Navigation** — resolved critical issues where standalone `/compare/` and `/quiz/` URLs wouldn't correctly load or display data.
+- **Missing "Feelings" (Role) Filters** — the Catalog sidebar now correctly populates the Feeling/Role filter bar (`cat-feel-bar`) using `ROLES` data, enabling `#feel=solar` style deep-links.
+- **Standalone Quiz Rendering** — `quiz.js` now correctly identifies `.col-main-content` and renders inside the shell without breaking the navigation or blowing away the `document.body`.
+- **Global Navigation on Quiz Pages** — added a `window.go` redirector to `quiz.js` so navigation buttons (Compare, Notes, You) work from standalone quiz pages.
+- **Hash-based Routing Improvements** — `app.js` now handles `#you`, `#journal`, and robustly parses `pathname` for standalone entry points.
+- **ReferenceError: renderStandaloneQuiz** — implemented the missing function in `app.js` to ensure stability when navigating to quiz paths.
 
 ### Added
 - **Scent DNA Persona Mapping** — collection stats now identify users as one of 8 fragrance archetypes (e.g. The Minimalist, The Provocateur) based on their average sensory profile.
@@ -32,6 +42,8 @@ All notable changes to Scentmap are documented here.
 ## 2026-03-19 (5)
 
 ### Fixed
+- **Navigation on standalone comparison pages** — fixed broken navigation links in `compare/**/index.html` by replacing absolute `a` tag redirects with local `onclick="go(...)"` button handlers. This prevents unnecessary page reloads and allows users to switch to the Notes or You dashboard while maintaining their current deep-linked comparison context.
+- **Hash-based routing recovery** — restored the `hashchange` event listener in `js/app.js` (which was lost during a previous code restoration) to ensure the UI stays in sync when the URL anchor changes (e.g., when clicking shareable links or navigating via the browser back/forward buttons).
 - **Catalog rows: missing ARIA attributes** — `renderCatRow` now sets `role="button"`, `tabindex="0"`, and `aria-label="<name> by <brand>[— Owned/On wishlist]"` on every catalog row. Without these, keyboard users and screen reader users could not interact with the list at all.
 - **Catalog rows: keyboard activation** — added `keydown` handler on each `.scent-list` so Enter and Space open the fragrance detail panel when a row has focus (in addition to click).
 - **Focus ring clipped by overflow:hidden** — catalog rows use `overflow: hidden` which clips the global `box-shadow` focus ring. Added `.list-item:focus-visible` override with an inset `outline` so the focus indicator is always visible for keyboard navigation.

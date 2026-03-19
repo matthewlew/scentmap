@@ -2492,6 +2492,36 @@ function initCatalogControls(){
     if(brandBarM)makeBrandBtn(brand,brand,html,brandBarM);
   });
 
+  // Populate Feelings (Roles)
+  const feelBar = document.getElementById('cat-feel-bar');
+  const feelBarM = document.getElementById('cat-feel-bar-m');
+  const allFeelBtns = [];
+  function makeFeelBtn(label, val, sym, container) {
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (CAT_ROLE_FILTER === val ? ' active' : '');
+    btn.innerHTML = `${sym} ${label}`;
+    btn.dataset.val = val === null ? '' : val;
+    btn.addEventListener('click', () => {
+      CAT_ROLE_FILTER = val;
+      allFeelBtns.forEach(b => {
+        const isActive = b.dataset.val === (val === null ? '' : val);
+        b.classList.toggle('active', isActive);
+      });
+      buildCatalog();
+    });
+    allFeelBtns.push(btn);
+    container.appendChild(btn);
+    return btn;
+  }
+  if (feelBar) {
+    makeFeelBtn('All', null, '◈', feelBar);
+    ROLES.forEach(r => makeFeelBtn(r.name, r.id, r.sym, feelBar));
+  }
+  if (feelBarM) {
+    makeFeelBtn('All', null, '◈', feelBarM);
+    ROLES.forEach(r => makeFeelBtn(r.name, r.id, r.sym, feelBarM));
+  }
+
   // Search (debounced to avoid rebuilding DOM on every keystroke)
   const searchEl=document.getElementById('cat-search');
   const clearBtn=document.getElementById('cat-search-clear');
@@ -2886,8 +2916,16 @@ function go(id,btn){
   closeDesktopDetail();
   // Sync URL with compare tab state
   if(id==='compare'){
-    if(CMP_A&&CMP_B){const[a,b]=[CMP_A.id,CMP_B.id].sort();history.replaceState(null,'','/compare/'+a+'/'+b);}
-    else{history.replaceState(null,'',window.location.pathname.startsWith('/compare/')?'/app':window.location.href.replace(window.location.origin,''));}
+    if(CMP_A&&CMP_B){
+      const[a,b]=[CMP_A.id,CMP_B.id].sort();
+      const newPath = '/compare/'+a+'/'+b;
+      if (window.location.pathname !== newPath) history.replaceState(null,'',newPath);
+    } else {
+      // Only redirect away from /compare/ paths if we are explicitly on one and have no comparison active
+      if (window.location.pathname.startsWith('/compare/') && !CMP_A && !CMP_B) {
+        history.replaceState(null,'','/app');
+      }
+    }
   } else if(window.location.pathname.startsWith('/compare/')){
     history.replaceState(null,'','/app');
   }
@@ -4579,9 +4617,22 @@ function _renderNoseRound(container){
           result='correct';
         }else if(q.type==='family'&&q._families){
           // Same broad group = close
-          result='wrong';
+          const correctFam = q._families[q.correctIdx];
+          const guessedFam = q._families[idx];
+          const groups = [
+            ['woody', 'oud', 'leather'],
+            ['citrus', 'green'],
+            ['amber', 'gourmand'],
+            ['floral', 'chypre']
+          ];
+          const isClose = groups.some(g => g.includes(correctFam) && g.includes(guessedFam));
+          if(isClose) result = 'close';
         }else if(q.type==='sillage'){
-          // Within 2 points = close
+          // Within 2 points = close (though sillage is binary in this game, so this only applies if we had more choices)
+          // Actually, in sillage round, it's a binary choice between two frags. 
+          // So 'close' doesn't really apply to the binary choice itself, 
+          // but we could mark it close if the silage difference was very small (<= 2).
+          // However, the question gen ensures difference >= 2.
           result='wrong';
         }
 
@@ -4594,12 +4645,18 @@ function _renderNoseRound(container){
             b.setAttribute('aria-label',b.textContent+' — correct answer');
           }
         });
-        if(!isCorrect)btn.classList.add('wrong');
+        if(!isCorrect){
+          btn.classList.add(result==='close'?'close':'wrong');
+        }
         btn.setAttribute('aria-checked','true');
 
-        fb.innerHTML=isCorrect
-          ?`<span class="nose-fb-icon correct">✓</span> Correct! ${q.explanation}`
-          :`<span class="nose-fb-icon wrong">✗</span> Not quite. ${q.explanation}`;
+        if(isCorrect){
+          fb.innerHTML=`<span class="nose-fb-icon correct">✓</span> Correct! ${q.explanation}`;
+        }else if(result==='close'){
+          fb.innerHTML=`<span class="nose-fb-icon close">~</span> Close! ${q.explanation}`;
+        }else{
+          fb.innerHTML=`<span class="nose-fb-icon wrong">✗</span> Not quite. ${q.explanation}`;
+        }
         fb.hidden=false;
 
         _noseState.answers.push(result);
@@ -4810,6 +4867,7 @@ async function init() {
     .catch(() => {});
 
   handleInitialNavigation();
+  window.addEventListener('hashchange', handleInitialNavigation);
 }
 
 function computeNoteTiers() {
@@ -4832,14 +4890,79 @@ function computeNoteTiers() {
   });
 }
 
+function renderStandaloneQuiz(slug) {
+  fetch('/data/quiz-config.json')
+    .then(r => r.json())
+    .then(allConfigs => {
+      const config = allConfigs[slug];
+      if (config) {
+        pushDetail(c => {
+          let step = 0;
+          let collectedTags = [];
+          const qs = config.questions;
+
+          function renderStep() {
+            if (step >= qs.length) {
+              // For simplicity in the app shell, we'll use the existing global quiz scoring
+              // or just show a message. Ideally, we'd import the engine scoring.
+              c.innerHTML = `<div style="padding:var(--sp-xl); text-align:center;">
+                <div class="dc-name">Quiz Complete</div>
+                <p class="text-body" style="margin-bottom:var(--sp-xl);">Thank you for completing the ${config.title}!</p>
+                <button class="dc-collect-btn active" onclick="popDetail()" style="width:100%; justify-content:center;">Back to app</button>
+              </div>`;
+              return;
+            }
+            const q = qs[step];
+            c.innerHTML = `
+              <div style="padding:var(--sp-lg) 0;">
+                <div style="font-size:var(--fs-meta); color:var(--g500); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
+                <div class="dc-name" style="margin-bottom:var(--sp-xl);">${q.q}</div>
+                <div style="display:flex; flex-direction:column; gap:var(--sp-md);">
+                  ${q.a.map((ans, i) => `
+                    <button class="dc-collect-btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal; text-align:left;">${ans.label}</button>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+            c.querySelectorAll('.quiz-ans-btn').forEach(btn => {
+              btn.addEventListener('click', (e) => {
+                const ansIdx = parseInt(e.target.dataset.idx, 10);
+                collectedTags.push(...q.a[ansIdx].tags);
+                step++;
+                renderStep();
+              });
+            });
+          }
+          renderStep();
+        }, config.title);
+      }
+    })
+    .catch(err => {
+      console.error('[app] Failed to load quiz config:', err);
+    });
+}
+
 function handleInitialNavigation() {
   const hash = window.location.hash.replace('#', '');
-  const _cmpMatch = window.location.pathname.match(/^\/compare\/([a-z0-9-]+)\/([a-z0-9-]+)\/?(?:index\.html)?$/);
-  const _quizMatch = window.location.pathname.match(/^\/quiz\/([a-z0-9-]+)\/?(?:index\.html)?$/);
+  const pathname = window.location.pathname;
+  // More robust regex for compare routes, allowing for alphanumeric and dashes/underscores
+  const _cmpMatch = pathname.match(/^\/compare\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)\/?(?:index\.html)?$/);
+  const _quizMatch = pathname.match(/^\/quiz\/([a-zA-Z0-9_-]+)\/?(?:index\.html)?$/);
   let _deepLinkedCompare = false;
 
+  const data = store.getData();
+  const currentCatMap = data.catalogMap;
+
+  // Standalone page? Hide unneeded elements
+  if (pathname.startsWith('/compare/') || pathname.startsWith('/quiz/')) {
+    const sidebar = document.querySelector('.catalog-sidebar');
+    if (sidebar) sidebar.style.display = 'none';
+  }
+
   if (_cmpMatch) {
-    const fragA = CAT_MAP[_cmpMatch[1]], fragB = CAT_MAP[_cmpMatch[2]];
+    const idA = _cmpMatch[1].toLowerCase();
+    const idB = _cmpMatch[2].toLowerCase();
+    const fragA = currentCatMap[idA], fragB = currentCatMap[idB];
     if (fragA && fragB) {
       _deepLinkedCompare = true;
       _selectFragForSlot('a', fragA);
@@ -4848,15 +4971,15 @@ function handleInitialNavigation() {
   }
 
   if (_deepLinkedCompare) {
-    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
   } else if (_quizMatch) {
     renderStandaloneQuiz(_quizMatch[1]);
   } else if (hash === 'notes') {
-    go('notes', document.querySelector('.global-nav-link[onclick*="notes"]'));
+    go('notes', document.querySelector('.global-nav-link[onclick*="notes"], .mbn-btn[onclick*="notes"]'));
   } else if (hash === 'catalog') {
     go('catalog', null);
-  } else if (hash === 'saved' || hash === 'journal') {
-    go('saved', document.querySelector('.global-nav-link[onclick*="saved"]'));
+  } else if (hash === 'saved' || hash === 'journal' || hash === 'you') {
+    go('saved', document.querySelector('.global-nav-link[onclick*="saved"], .mbn-btn[onclick*="saved"]'));
   } else if (hash === 'open-search') {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
     setTimeout(() => openUniversalSearch(), 350);
@@ -4864,9 +4987,9 @@ function handleInitialNavigation() {
     const feel = decodeURIComponent(hash.split('=')[1]);
     go('catalog', null);
     setTimeout(() => {
-      const btn = Array.from(document.querySelectorAll('.cat-feel-bar .tab')).find(b => b.textContent.toLowerCase().includes(feel.toLowerCase()));
+      const btn = Array.from(document.querySelectorAll('.cat-feel-bar .tab, .cat-feel-bar-m .tab')).find(b => b.textContent.toLowerCase().includes(feel.toLowerCase()));
       if (btn) btn.click();
-    }, 100);
+    }, 200);
   } else if (hash.startsWith('search=')) {
     const query = decodeURIComponent(hash.split('=')[1]);
     go('catalog', null);
@@ -4883,8 +5006,32 @@ function handleInitialNavigation() {
       go('catalog', null);
       openFragDetail(frag);
     }
-  } else {
-    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+  } else if (hash === 'compare') {
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
+  } else if (pathname === '/app' || pathname === '/app.html' || pathname === '/') {
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
+  }
+}
+
+async function renderStandaloneQuiz(slug) {
+  // Try to use full quiz logic if available (by loading quiz config)
+  try {
+    const res = await fetch('/data/quiz-config.json');
+    const allConfigs = await res.json();
+    const config = allConfigs[slug];
+    if (config) {
+      // For now, render the Global Quiz or Byredo Quiz if it matches
+      const container = document.getElementById('p-compare'); // Re-use panel for quiz if in standalone shell
+      if (slug === 'find-your-byredo') {
+        go('compare', null); // Hide results, show panel
+        openDetail(c => renderByredoQuiz(c), config.title);
+      } else {
+        go('compare', null);
+        openDetail(c => renderGlobalQuiz(c), config.title);
+      }
+    }
+  } catch (e) {
+    console.warn('[app] renderStandaloneQuiz failed:', e);
   }
 }
 
