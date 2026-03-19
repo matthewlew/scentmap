@@ -2951,8 +2951,15 @@ function go(id,btn){
   if(id==='compare'){
     if(CMP_A&&CMP_B){
       const[a,b]=[CMP_A.id,CMP_B.id].sort();
-      const newPath = '/compare/'+a+'/'+b;
-      if (window.location.pathname !== newPath) history.replaceState(null,'',newPath);
+      // On localhost (static dev server), use hashes to avoid 404s on refresh for non-rendered comparison pages.
+      // Production (Vercel) handles /compare/a/b paths via serverless functions.
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        const newHash = '#compare/'+a+'/'+b;
+        if (window.location.hash !== newHash) history.replaceState(null, '', newHash);
+      } else {
+        const newPath = '/compare/'+a+'/'+b;
+        if (window.location.pathname !== newPath) history.replaceState(null,'',newPath);
+      }
     } else {
       // Only redirect away from /compare/ paths if we are explicitly on one and have no comparison active
       if (window.location.pathname.startsWith('/compare/') && !CMP_A && !CMP_B) {
@@ -4034,6 +4041,11 @@ function renderCompareResults(fa,fb){
   // NOTE: URL and Card fills are now handled by _selectFragForSlot
   window.haptic?.('success');
   const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
+  const matchPct=Math.round(scoreSimilarity(fa,fb));
+  const layerPct=scoreLayeringPct(fa,fb);
+  const verdict=getVerdict(matchPct,layerPct,fa,fb);
+  const matchColor=matchPct>=60?ca.accent:matchPct>=30?'var(--g700)':'var(--g500)';
+  const layerColor=layerPct>=60?cb.accent:layerPct>=30?'var(--g700)':'var(--g500)';
 
   res.innerHTML=`
     <div id="cmp-sticky-bar">
@@ -4187,7 +4199,7 @@ function _selectFragForSlot(slot,frag){
     // We don't have a canonical URL for a single-fragrance compare yet, 
     // but we can clear the deep link if we are on one but only one slot is filled.
     if (window.location.pathname.startsWith('/compare/')) {
-      history.replaceState(null, '', '/app');
+      history.replaceState(null, '', '/app.html');
     }
   }
 }
@@ -5001,7 +5013,20 @@ function handleInitialNavigation() {
       go('catalog', null);
       openFragDetail(frag);
     }
-  } else if (hash === 'compare') {
+  } else if (hash === 'compare' || hash.startsWith('compare/')) {
+    if (hash.startsWith('compare/')) {
+      const parts = hash.split('/');
+      if (parts.length >= 3) {
+        const idA = parts[1].toLowerCase();
+        const idB = parts[2].toLowerCase();
+        const fragA = currentCatMap[idA], fragB = currentCatMap[idB];
+        if (fragA && fragB) {
+          _deepLinkedCompare = true;
+          _selectFragForSlot('a', fragA);
+          _selectFragForSlot('b', fragB);
+        }
+      }
+    }
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
   } else if (pathname === '/app' || pathname === '/app/' || pathname === '/app.html' || pathname === '/app/index.html' || pathname === '/' || pathname === '/index.html') {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));

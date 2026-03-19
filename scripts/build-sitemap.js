@@ -19,7 +19,7 @@ const urls = new Set();
 
 // Static pages
 urls.add(SITE + '/');
-urls.add(SITE + '/app');
+urls.add(SITE + '/app.html');
 
 // Quiz pages
 const quizSlugs = [

@@ -2,6 +2,7 @@
 
 ### Fixed
 - **Compare page refresh:** Regenerated all static pages in `/compare/` and `/quiz/` to match the new `app.html` layout structure, fixing broken CSS and "unfinished" look on refresh.
+- **Deep-link rendering:** Fixed a `ReferenceError` in `renderCompareResults` where score variables (`matchPct`, `layerPct`, etc.) were used before definition, which prevented content from rendering on deep-link refreshes.
 - **Compare selection state:** Updated `_selectFragForSlot` in `js/app.js` to ensure the URL updates immediately when fragrances are selected, even when already on a comparison page.
 - **Redundant renders:** Added guards to `handleInitialNavigation` to prevent state loops when navigating between comparison pairs.
 - **Universal Search selection:** Improved selection flow in Compare mode to ensure UI and URL stay in sync.
