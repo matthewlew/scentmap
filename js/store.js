@@ -132,9 +132,10 @@ export const initialize = async () => {
       // Pre-process for search
       f._nameL = f.name.toLowerCase();
       f._brandL = f.brand.toLowerCase();
-      f._nTop = (f.top || '').split(',').map(s => s.trim().toLowerCase());
-      f._nMid = (f.mid || '').split(',').map(s => s.trim().toLowerCase());
-      f._nBase = (f.base || '').split(',').map(s => s.trim().toLowerCase());
+      const _split = v => Array.isArray(v) ? v.map(s => s.trim().toLowerCase()) : (v || '').split(',').map(s => s.trim().toLowerCase());
+      f._nTop = _split(f.top);
+      f._nMid = _split(f.mid);
+      f._nBase = _split(f.base);
       f._nAll = [...f._nTop, ...f._nMid, ...f._nBase];
     });
 

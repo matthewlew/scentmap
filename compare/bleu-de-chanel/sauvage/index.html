@@ -147,12 +147,21 @@
     </div>
 
     <div class="col-detail" id="col-detail">
-      <button class="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
-      <div id="col-detail-content"></div>
+      <div class="detail-topbar">
+        <button class="detail-back" id="detail-back" aria-label="Back">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="detail-close-btn" id="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
+      </div>
+      <div class="detail-inner" id="detail-inner"></div>
     </div>
+    <div class="detail-scrim" id="detail-scrim"></div>
   </div>
 
-  <div id="sheet-stack"></div>
+  <div id="sheet-stack" class="sheet-stack-overlay">
+    <div class="sheet-backdrop" id="sheet-backdrop"></div>
+  </div>
   <div class="note-float-overlay" id="note-float-overlay">
     <div class="note-float-bg" id="note-float-bg"></div>
     <div class="note-popup" id="note-popup" role="dialog" aria-labelledby="np-name">

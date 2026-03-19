@@ -6,6 +6,22 @@ All notable changes to Scentmap are documented here.
 
 ## 2026-03-18
 
+### Fixed
+- **Compare Panel CSS** — added missing `.cmp-header`, `.cmp-pair-row`, `.cmp-card-wrap`, and `.cmp-vs` base styles; the HTML used these classes but only `.cmp-header-v2` existed in CSS, causing the compare cards to render with no layout.
+- **Notes Tab Switching** — wired click handlers to the Explore / Search & A-Z / My Notes tab buttons in the notes panel; extracted `initNotesNav()` as a standalone init function and replaced the broken `setNotesTab()` which referenced non-existent DOM elements.
+- **Mobile Bottom Nav Icons** — replaced emoji icons (magnifying glass, arrows, clipboard, person) with Lucide-style SVGs (compass, maximize, apple, user) for consistency with the design system; added the mobile bottom nav to `app/index.html` which was missing it entirely.
+- **Nav Button Borders** — added `background: none; border: none; cursor: pointer` reset to `.global-nav-link` to eliminate default button chrome on the Compare, Notes, and You nav buttons.
+- **Mobile Compare Stacking** — added `flex-direction: column` to `.cmp-pair-row` on mobile (`<768px`) so fragrance cards stack vertically with the "vs" label centered between them.
+- **Shell Layout** — added `flex-wrap: wrap` to `.shell` and `flex: 0 0 100%` to `.global-nav` so the sticky nav takes full width instead of becoming a narrow flex column sibling.
+- **Missing Google Fonts** — added `<link>` tags for Source Serif 4, DM Sans, and Archivo Black to `app.html` and `app/index.html`; fonts were defined in CSS tokens but never loaded.
+- **Compare Auto-Select** — the first popular comparison pair (Gypsy Water vs Bal d'Afrique) now auto-loads on Compare so users never see empty placeholder cards.
+- **Missing `FAM_ABBR` Import** — added `FAM_ABBR` to the destructured import from `store.js` in `app.js`; its absence caused `renderCatRow()` to crash silently inside `async init()`, which prevented `buildCatalog()`, `initCompare()`, and all downstream UI initialization from completing — breaking the Catalog, Compare, and Notes pages.
+- **Detail Panel Crash** — restored missing `#detail-back`, `#detail-inner`, and `#detail-scrim` DOM elements across all HTML pages (`app.html`, `app/index.html`, 5 compare pages, 7 quiz pages); their absence caused `app.js` to throw on page load when adding event listeners to null elements.
+- **Global Search Button** — defined `openGlobalSearch()` (switches to catalog panel and focuses search input); previously called by the nav search icon but never implemented, causing a `ReferenceError` on click.
+- **Desktop Detail Close** — exposed `closeDesktopDetail()` on `window` so the `onclick` handler in HTML can reach it from ES module scope.
+- **Null-safe Detail Panel** — added optional chaining (`?.`) to `getElementById` calls in the detail stack so pages without the full detail DOM don't crash.
+- **Trailing-slash Route** — added `/app/` → `app.html` rewrite in `vercel.json` to prevent serving the stale `app/index.html` static fallback.
+
 ### Added
 - **"You" Dashboard Refactor** — Restructured dashboard widgets to use canonical `.dc-sim-shelf` and `.settings-menu-item` patterns instead of custom inline flexboxes.
 - **Olfactive DNA Integration** — Stats now use the native `.dc-stats`, `.dc-stat`, `.dc-bar`, and `.dc-fill` components from the design system.

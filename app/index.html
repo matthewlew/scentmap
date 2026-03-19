@@ -16,7 +16,9 @@
     <meta name="twitter:description" content="Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.">
     <meta name="twitter:image" content="https://scentmap.co/api/og">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles/design-system.css">
   <link rel="stylesheet" href="/styles/components.css">
   <link rel="stylesheet" href="/styles/layout.css">
@@ -147,12 +149,21 @@
     </div>
 
     <div class="col-detail" id="col-detail">
-      <button class="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
-      <div id="col-detail-content"></div>
+      <div class="detail-topbar">
+        <button class="detail-back" id="detail-back" aria-label="Back">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="detail-close-btn" id="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
+      </div>
+      <div class="detail-inner" id="detail-inner"></div>
     </div>
+    <div class="detail-scrim" id="detail-scrim"></div>
   </div>
 
-  <div id="sheet-stack"></div>
+  <div id="sheet-stack" class="sheet-stack-overlay">
+    <div class="sheet-backdrop" id="sheet-backdrop"></div>
+  </div>
   <div class="note-float-overlay" id="note-float-overlay">
     <div class="note-float-bg" id="note-float-bg"></div>
     <div class="note-popup" id="note-popup" role="dialog" aria-labelledby="np-name">
@@ -196,6 +207,13 @@
       </div>
     </div>
   </div>
+
+  <nav class="mobile-bottomnav">
+    <a href="/#discovery" class="mbn-btn"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>Discovery</a>
+    <button class="mbn-btn active" onclick="goMobile('compare', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M21 3l-7 7"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M8 21H3v-5"/><path d="M21 21l-7-7"/><path d="M3 21l7-7"/></svg></span>Compare</button>
+    <button class="mbn-btn" onclick="goMobile('notes', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/><path d="M10 2c1 .5 2 2 2 5"/></svg></span>Notes</button>
+    <button class="mbn-btn" onclick="goMobile('saved', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>You</button>
+  </nav>
 
   <div class="app-loading" id="app-loading">
     <div class="app-loading-inner">

@@ -394,6 +394,16 @@
     grid-template-columns: 1fr;
   }
 
+  .cmp-pair-row {
+    flex-direction: column;
+    gap: var(--sp-xs);
+  }
+
+  .cmp-vs {
+    justify-content: center;
+    padding: var(--sp-xs) 0;
+  }
+
   /* Compare v2 mobile */
   .cmp-header-v2 {
     gap: var(--sp-sm);

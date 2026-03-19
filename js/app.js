@@ -3,7 +3,8 @@ import * as engine from './engine.js';
 
 // Proxy data from store for backward compatibility during transition
 let { ROLES, CAT, CAT_MAP, NI, NI_MAP, BRANDS } = store.getData();
-const { FAM, FAM_ORDER, FAM_COMPAT } = store;
+let RM = {};
+const { FAM, FAM_ORDER, FAM_COMPAT, FAM_ABBR } = store;
 
 // Analytics stubs
 function trackEvent(name, props) {
@@ -759,20 +760,23 @@ function pushDesktopDetail(renderFn){
   _renderDeskDetail(true);
   _trapFocus(document.getElementById('col-detail'));
 }
-function _renderDeskDetail(animateIn){
+function _renderDeskDetail(animateIn, animClass){
   const top=detailStack[detailStack.length-1];if(!top)return;
   const inner=document.getElementById('detail-inner');
+  if(!inner)return;
   inner.classList.remove('slide');
+  if(animClass){inner.classList.remove('slide-left','slide-right');}
   inner.innerHTML='';
   top(inner);
-  document.getElementById('detail-back').classList.toggle('visible',detailStack.length>1);
+  document.getElementById('detail-back')?.classList.toggle('visible',detailStack.length>1);
   if(animateIn){inner.offsetWidth;inner.classList.add('slide')}
+  if(animClass){inner.offsetWidth;inner.classList.add(animClass)}
 }
 function closeDesktopDetail(){
   const len=detailStack.length;
   detailStack.length=0;
-  document.getElementById('col-detail').classList.remove('open');
-  document.getElementById('detail-scrim').classList.remove('open');
+  document.getElementById('col-detail')?.classList.remove('open');
+  document.getElementById('detail-scrim')?.classList.remove('open');
   for(let i=0;i<len;i++)_returnFocus();
 }
 function popDesktopDetail(){
@@ -780,9 +784,9 @@ function popDesktopDetail(){
   detailStack.pop();_renderDeskDetail();
   _returnFocus();
 }
-document.getElementById('detail-back').addEventListener('click',popDesktopDetail);
-document.getElementById('detail-close-btn').addEventListener('click',closeDesktopDetail);
-document.getElementById('detail-scrim').addEventListener('click',closeDesktopDetail);
+document.getElementById('detail-back')?.addEventListener('click',popDesktopDetail);
+document.getElementById('detail-close-btn')?.addEventListener('click',closeDesktopDetail);
+document.getElementById('detail-scrim')?.addEventListener('click',closeDesktopDetail);
 
 /* ══ BODY SCROLL LOCK (iOS-compatible) ════════════════════════════ */
 let _scrollLocked=false,_lockY=0;
@@ -2411,17 +2415,48 @@ function updCC(){
   }
 }
 
+/* ══ NOTES NAV ═════════════════════════════════════════════════════ */
+function initNotesNav() {
+  const notesNavBar = document.getElementById('notes-nav-bar');
+  if (!notesNavBar) return;
+  notesNavBar.querySelectorAll('.notes-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchNotesTab(btn.dataset.tab));
+  });
+}
+
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
 let notesSearchQuery = '';
 let notesSortMode = 'family'; // 'family' or 'az'
 let notesTierMode = 'all';
 
-window.setNotesTab = function(mode) {
-  notesSortMode = mode;
-  document.getElementById('notes-tab-family').classList.toggle('active', mode === 'family');
-  document.getElementById('notes-tab-az').classList.toggle('active', mode === 'az');
+let _notesActiveTab = 'explore'; // 'explore' | 'search' | 'saved'
+
+function switchNotesTab(tab) {
+  _notesActiveTab = tab;
+  // Update button active states
+  document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+  // Show/hide search controls
+  const searchWrap = document.getElementById('notes-search-wrap');
+  const tierWrap = document.getElementById('notes-tier-filter-wrap');
+  if (tab === 'explore') {
+    notesSortMode = 'family';
+    notesTierMode = 'all';
+    if (searchWrap) searchWrap.style.display = 'none';
+  } else if (tab === 'search') {
+    notesSortMode = 'az';
+    notesTierMode = 'all';
+    if (searchWrap) searchWrap.style.display = '';
+    if (tierWrap) tierWrap.style.display = '';
+  } else if (tab === 'saved') {
+    notesSortMode = 'az';
+    notesTierMode = 'saved';
+    if (searchWrap) searchWrap.style.display = '';
+    if (tierWrap) tierWrap.style.display = 'none';
+  }
   buildNotes();
-};
+}
 
 function buildNotes(searchQuery, currentTier){
   if (searchQuery !== undefined) notesSearchQuery = searchQuery;
@@ -2589,6 +2624,17 @@ function go(id,btn){
   }
 }
 window.go = go;
+window.closeDesktopDetail = closeDesktopDetail;
+
+/* ── Global Search (⌘K) ── */
+function openGlobalSearch() {
+  go('catalog', null);
+  requestAnimationFrame(() => {
+    const input = document.getElementById('cat-search');
+    if (input) { input.focus(); input.select(); }
+  });
+}
+window.openGlobalSearch = openGlobalSearch;
 
 function goMobile(id,btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
@@ -4132,18 +4178,31 @@ async function init() {
   window.ROLES = ROLES; window.BRANDS = BRANDS;
 
   computeNoteTiers();
-  
+
   // Now initialize UI
   buildCatalog();
   buildNotes();
   initCatalogControls();
+  initNotesNav();
   initCompare();
   if (window.renderSaved) window.renderSaved();
 
-  // Load popular comparisons for empty-state UI
+  // Load popular comparisons and auto-select first pair as default
   fetch('/data/popular-comparisons.json')
     .then(r => r.json())
-    .then(pairs => { _popularPairs = pairs; renderPopularComparisons(); })
+    .then(pairs => {
+      _popularPairs = pairs;
+      // Auto-select first pair if no comparison is active
+      if (!CMP_A && !CMP_B && pairs.length) {
+        const fa = CAT_MAP[pairs[0].a], fb = CAT_MAP[pairs[0].b];
+        if (fa && fb) {
+          _selectFragForSlot('a', fa);
+          _selectFragForSlot('b', fb);
+          return; // renderCompareResults is called by _selectFragForSlot
+        }
+      }
+      renderPopularComparisons();
+    })
     .catch(() => {});
 
   handleInitialNavigation();

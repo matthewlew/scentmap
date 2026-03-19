@@ -1502,6 +1502,37 @@ mark.note-match {
   flex: 1;
 }
 
+.cmp-header {
+  margin-bottom: var(--sp-lg);
+}
+
+.cmp-pair-row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--sp-lg);
+}
+
+.cmp-card-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cmp-vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  padding: 0 var(--sp-xs);
+}
+
 .cmp-header-v2 {
   display: flex;
   gap: var(--sp-lg);
@@ -3224,12 +3255,15 @@ button.cmp-note-pill:hover {
   font-weight: 600;
   color: var(--text-tertiary);
   text-decoration: none;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
   transition: color var(--dur-fast), border-color var(--dur-fast);
   padding: 0;
   height: 100%;
   display: flex;
   align-items: center;
-  border-bottom: 2px solid transparent;
   margin-top: 2px; /* optical alignment with logo */
 }
 
@@ -3267,9 +3301,11 @@ button.cmp-note-pill:hover {
     background:none;border:none;cursor:pointer;font-family:inherit;
     font-size:var(--fs-caption);color:var(--text-tertiary);gap:2px;padding:8px 2px 6px;
     transition:color var(--dur-fast);letter-spacing:var(--ls-normal);min-height:52px;
+    text-decoration:none;
   }
   .mbn-btn.active{color:var(--text-primary);font-weight:600}
-  .mbn-icon{font-size:var(--fs-title);line-height:var(--lh-tight)}
+  .mbn-icon{display:flex;align-items:center;justify-content:center;width:20px;height:20px}
+  .mbn-icon svg{width:20px;height:20px}
   /* Compare sticky bar: offset by global-nav on mobile */
   #cmp-sticky-bar { top: var(--col-nav-h); }
 }

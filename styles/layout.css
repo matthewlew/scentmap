@@ -12,8 +12,13 @@
 
 .shell {
   display: flex;
+  flex-wrap: wrap;
   min-height: 100vh;
   margin: 0 auto;
+}
+
+.global-nav {
+  flex: 0 0 100%;
 }
 
 /* MIDDLE: main — always fills remaining width */
