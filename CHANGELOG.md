@@ -1,3 +1,10 @@
+## 2026-03-19 (10)
+
+### Fixed
+- **App Module Crash (root cause)** — removed duplicate `function` declarations for `scoreSimilarity`, `scoreLayeringPair`, and `renderStandaloneQuiz` in `app.js`. In ES module strict mode, these duplicates caused a `SyntaxError` that silently prevented the entire module from loading — blocking all navigation, search, and fragrance opens.
+- **Quiz Duplicate Nav Bar** — quiz.js was injecting a second `<nav class="global-nav">` into `.col-main-content`, creating a nested nav bar below the shell's existing nav. Removed the embedded navs from all 4 quiz render functions (`renderStep`, `renderResults`, `renderArchetypeResults`, `renderAstroResults`).
+- **CHANGELOG Fetch Path** — changed `fetch('CHANGELOG.md')` to `fetch('/CHANGELOG.md')` so the changelog loads correctly from any path (e.g. `/app/`, `/compare/`).
+
 ## 2026-03-19 (9)
 
 ### Fixed

@@ -329,20 +329,6 @@ function renderStep(step, collectedTags) {
 
   _container.innerHTML = `
     <div class="quiz-page">
-      <nav class="global-nav">
-        <div class="global-nav-left">
-          <a href="/" class="global-nav-logo">Scentmap</a>
-          <div class="global-nav-links">
-            <a href="/#discovery" class="global-nav-link">Discovery</a>
-            <a href="/app#compare" class="global-nav-link">Compare</a>
-            <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/app#saved" class="global-nav-link">You</a>
-          </div>
-        </div>
-        <div class="global-nav-right">
-          <span class="quiz-title-small">${_quizConfig.title}</span>
-        </div>
-      </nav>
       <div class="quiz-body">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--sp-xs);">
           <div class="quiz-progress">${step + 1} of ${qs.length}</div>
@@ -420,20 +406,6 @@ function renderResults(top3) {
 
   _container.innerHTML = `
     <div class="quiz-page">
-      <nav class="global-nav">
-        <div class="global-nav-left">
-          <a href="/" class="global-nav-logo">Scentmap</a>
-          <div class="global-nav-links">
-            <a href="/#discovery" class="global-nav-link">Discovery</a>
-            <a href="/app#compare" class="global-nav-link">Compare</a>
-            <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/app#saved" class="global-nav-link">You</a>
-          </div>
-        </div>
-        <div class="global-nav-right">
-          <span class="quiz-title-small">${_quizConfig.title}</span>
-        </div>
-      </nav>
       <div class="quiz-body">
         <h1 class="quiz-question">Your Perfect Matches</h1>
         <p class="quiz-subtitle">Based on your answers, we recommend these fragrances:</p>
@@ -478,20 +450,6 @@ function renderArchetypeResults(archetype, frags) {
 
   _container.innerHTML = `
     <div class="quiz-page">
-      <nav class="global-nav">
-        <div class="global-nav-left">
-          <a href="/" class="global-nav-logo">Scentmap</a>
-          <div class="global-nav-links">
-            <a href="/#discovery" class="global-nav-link">Discovery</a>
-            <a href="/app#compare" class="global-nav-link">Compare</a>
-            <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/app#saved" class="global-nav-link">You</a>
-          </div>
-        </div>
-        <div class="global-nav-right">
-          <span class="quiz-title-small">${_quizConfig.title}</span>
-        </div>
-      </nav>
       <div class="quiz-body">
         <div class="quiz-archetype-card">
           <div class="quiz-archetype-eyebrow">Your Scent Archetype</div>
@@ -541,20 +499,6 @@ function renderAstroResults(sign, archetype, frags) {
 
   _container.innerHTML = `
     <div class="quiz-page">
-      <nav class="global-nav">
-        <div class="global-nav-left">
-          <a href="/" class="global-nav-logo">Scentmap</a>
-          <div class="global-nav-links">
-            <a href="/#discovery" class="global-nav-link">Discovery</a>
-            <a href="/app#compare" class="global-nav-link">Compare</a>
-            <a href="/app#notes" class="global-nav-link">Notes</a>
-            <a href="/app#saved" class="global-nav-link">You</a>
-          </div>
-        </div>
-        <div class="global-nav-right">
-          <span class="quiz-title-small">${_quizConfig.title}</span>
-        </div>
-      </nav>
       <div class="quiz-body">
         <div class="quiz-archetype-card">
           <div class="quiz-archetype-eyebrow">Cosmic Scent Match</div>

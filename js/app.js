@@ -3395,8 +3395,6 @@ function getCmpFam(fam){return CMP_FAM[fam]||{accent:'#6B6356',light:'#F5F2EC'};
 
 /* ── Scoring helpers ── */
 function computeProfile(frag){ return engine.computeProfile(frag); }
-function scoreSimilarity(a,b){ return engine.scoreSimilarity(a, b, store.FAM_COMPAT); }
-function scoreLayeringPair(a,b){ return engine.scoreLayeringPair(a, b, store.FAM_COMPAT); }
 function getSwapReason(anchor, candidate){ return engine.getSwapReason(anchor, candidate, FAM); }
 
 function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
@@ -4890,57 +4888,6 @@ function computeNoteTiers() {
   });
 }
 
-function renderStandaloneQuiz(slug) {
-  fetch('/data/quiz-config.json')
-    .then(r => r.json())
-    .then(allConfigs => {
-      const config = allConfigs[slug];
-      if (config) {
-        pushDetail(c => {
-          let step = 0;
-          let collectedTags = [];
-          const qs = config.questions;
-
-          function renderStep() {
-            if (step >= qs.length) {
-              // For simplicity in the app shell, we'll use the existing global quiz scoring
-              // or just show a message. Ideally, we'd import the engine scoring.
-              c.innerHTML = `<div style="padding:var(--sp-xl); text-align:center;">
-                <div class="dc-name">Quiz Complete</div>
-                <p class="text-body" style="margin-bottom:var(--sp-xl);">Thank you for completing the ${config.title}!</p>
-                <button class="dc-collect-btn active" onclick="popDetail()" style="width:100%; justify-content:center;">Back to app</button>
-              </div>`;
-              return;
-            }
-            const q = qs[step];
-            c.innerHTML = `
-              <div style="padding:var(--sp-lg) 0;">
-                <div style="font-size:var(--fs-meta); color:var(--g500); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
-                <div class="dc-name" style="margin-bottom:var(--sp-xl);">${q.q}</div>
-                <div style="display:flex; flex-direction:column; gap:var(--sp-md);">
-                  ${q.a.map((ans, i) => `
-                    <button class="dc-collect-btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal; text-align:left;">${ans.label}</button>
-                  `).join('')}
-                </div>
-              </div>
-            `;
-            c.querySelectorAll('.quiz-ans-btn').forEach(btn => {
-              btn.addEventListener('click', (e) => {
-                const ansIdx = parseInt(e.target.dataset.idx, 10);
-                collectedTags.push(...q.a[ansIdx].tags);
-                step++;
-                renderStep();
-              });
-            });
-          }
-          renderStep();
-        }, config.title);
-      }
-    })
-    .catch(err => {
-      console.error('[app] Failed to load quiz config:', err);
-    });
-}
 
 function handleInitialNavigation() {
   const hash = window.location.hash.replace('#', '');
@@ -5039,7 +4986,7 @@ async function renderStandaloneQuiz(slug) {
 init();
 
 // Load and render changelog
-fetch('CHANGELOG.md').then(r=>r.text()).then(md=>{
+fetch('/CHANGELOG.md').then(r=>r.text()).then(md=>{
   const el=document.getElementById('changelog-body');
   // Minimal Markdown → HTML renderer (supports ## h2, ### h3, - lists, nested  - lists, **bold**, `code`, ---)
   function inlineFmt(s){
