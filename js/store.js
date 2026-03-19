@@ -127,6 +127,7 @@ export const initialize = async () => {
     _NI.forEach(n => _NI_MAP[n.name.toLowerCase()] = n);
     _BRANDS = brands;
     _CAT = scentArrays.flat();
+    const _norm = s => (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
     _CAT.forEach(f => {
       _CAT_MAP[f.id] = f;
       // Pre-process for search
@@ -137,7 +138,12 @@ export const initialize = async () => {
       f._nMid = _split(f.mid);
       f._nBase = _split(f.base);
       f._nAll = [...f._nTop, ...f._nMid, ...f._nBase];
+      // Diacritic-normalized fields for fuzzy search
+      f._nameN = _norm(f.name);
+      f._brandN = _norm(f.brand);
+      f._nAllN = f._nAll.map(_norm);
     });
+    _NI.forEach(n => { n._nameN = _norm(n.name); });
 
     return true;
   } catch (err) {
