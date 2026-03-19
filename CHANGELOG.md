@@ -1,3 +1,17 @@
+## 2026-03-19 (21)
+
+### Fixed
+- **Compare search selection bug:** Fixed an issue in `js/app.js` (`_usSelectRow`) where selecting a fragrance from the Universal Search in compare mode would throw a `TypeError`. This occurred because `_usContext` was being cleared by `closeUniversalSearch()` before its `slot` property was read.
+
+## 2026-03-19 (20)
+
+### Fixed
+- **Local Dev Server Routing:** Fixed an issue where refreshing the app on localhost resulted in 404 errors or a broken UI. 
+  - Restored `app.html` as the primary application shell and updated the Ruby local dev server sync command in `GEMINI.md` to include it.
+  - Updated `handleInitialNavigation` and `go()` in `js/app.js` to fallback to hash-based routing (`#compare/a/b`) specifically when running on `localhost` or `127.0.0.1`, bypassing the need for pre-rendered directories during local development.
+  - Standardized all navigation links in `index.html` and `js/quiz.js` to use `/app.html#...` instead of `/app#...` for consistent behavior across both local dev and production.
+  - Updated `app.html` to include the `universal-search` modal, replacing the deprecated `frag-picker` component.
+
 ## 2026-03-19 (19)
 
 ### Fixed

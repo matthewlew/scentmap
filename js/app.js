@@ -3226,9 +3226,10 @@ function _usSelectRow(row) {
     if (!frag) return;
     if (_usContext) {
       // Compare mode: fill slot and pulse the other empty slot
+      const currentSlot = _usContext.slot;
+      const otherSlot = currentSlot === 'a' ? 'b' : 'a';
       closeUniversalSearch();
-      _selectFragForSlot(_usContext.slot, frag);
-      const otherSlot = _usContext.slot === 'a' ? 'b' : 'a';
+      _selectFragForSlot(currentSlot, frag);
       const otherCard = document.getElementById(`cmp-card-${otherSlot}`);
       if (otherCard && !otherCard.classList.contains('filled')) {
         otherCard.classList.add('us-slot-pulse');
