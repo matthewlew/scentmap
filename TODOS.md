@@ -5,6 +5,18 @@ Each item includes enough context to be picked up cold.
 
 ---
 
+## Universal Search
+
+### Post-ship picker cleanup
+**What:** Audit all remaining `frag-picker-*` class references and `_pickerSort` / `_pickerSlot` variable usage after the universal search ships. Several other panels (DNA card picker, journal picker, layering picker) use `.frag-picker-item` CSS classes independently. Confirm each is either: (a) intentionally using its own picker UI, or (b) needs migrating to the new universal search.
+**Why:** The drum roller removal targets the compare picker specifically. Other panels that render `.frag-picker-item` rows for inline selection are not in scope for removal — but they need to be confirmed as distinct before the CSS cleanup is finalized.
+**Pros:** Prevents CSS debt from lingering drum-roller styles that no longer have a parent component. Makes the `frag-picker-*` namespace safe to repurpose or remove.
+**Cons:** None meaningful — 30-minute grep + verify session.
+**Context:** Decided in plan-design-review session 2026-03-18. Universal search ships first; this is a follow-up sweep.
+**Depends on:** Universal search feature shipping.
+
+---
+
 ## Scent DNA Card
 
 ### Analytics Events
