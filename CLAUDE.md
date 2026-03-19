@@ -11,7 +11,7 @@ This file describes the development workflow and conventions for the Scentmap pr
 ```
 index.html          HTML structure only (~180 lines, no inline JS)
 js/
-  app.js            All application logic (~1,950 lines)
+  app.js            All application logic (~5,100 lines)
 styles/
   design-system.css Design tokens (colors, spacing, typography, breakpoints)
   components.css    Component styles
@@ -35,7 +35,7 @@ CLAUDE.md           This file
 
 ## Dev server
 
-The preview server serves from `/tmp/scentmap-copy/` on port 3000.
+The preview server serves from `/tmp/scentmap-copy/` on port 3001.
 
 **Sync after every edit before testing:**
 ```bash
@@ -49,10 +49,10 @@ cp -r /Users/matthewlewair/Documents/scentmap/compare /tmp/scentmap-copy/
 
 **Cache-bust the browser after syncing:**
 ```
-http://localhost:3000/?v=<timestamp>
+http://localhost:3001/?v=<timestamp>
 ```
 
-Use `preview_eval` with `location.href = 'http://localhost:3000/?v=' + Date.now()` to force a fresh load.
+Use `preview_eval` with `location.href = 'http://localhost:3001/?v=' + Date.now()` to force a fresh load.
 
 ---
 
@@ -61,12 +61,7 @@ Use `preview_eval` with `location.href = 'http://localhost:3000/?v=' + Date.now(
 **Every commit must include a CHANGELOG.md update.** No exceptions.
 
 1. Make and test changes in `index.html`, `js/app.js`, and/or `styles/`
-2. Sync to dev server:
-   ```bash
-   cp /Users/matthewlewair/Documents/scentmap/index.html /tmp/scentmap-copy/index.html
-   cp -r /Users/matthewlewair/Documents/scentmap/styles /tmp/scentmap-copy/
-   cp -r /Users/matthewlewair/Documents/scentmap/js /tmp/scentmap-copy/
-   ```
+2. Sync to dev server using the full sync command in the **Dev server** section above
 3. Cache-bust and verify in preview (screenshot + functional checks)
 4. **Update `CHANGELOG.md`** — add entries under a dated `## YYYY-MM-DD` section:
    - `### Added` for new features
@@ -85,36 +80,17 @@ Use `preview_eval` with `location.href = 'http://localhost:3000/?v=' + Date.now(
 - **Desktop detail panel** — `pushDesktopDetail(renderFn)` / `openDesktopDetail(renderFn)` / `closeDesktopDetail()`. Use `_renderDeskDetail(true)` to animate on push.
 - **Nav** — `go(id, btn)` for desktop tab navigation; `goMobile(id, btn)` for mobile bottom nav. Both activate the corresponding `#p-{id}` panel.
 - **Catalog controls** — `initCatalogControls()` must be called once during init (after data loads) to wire up All/Owned/Wishlist tabs and the search input. State is tracked in `CAT_STATE_FILTER` and `CAT_ROLE_FILTER`.
-- **State** — Fragrance state (owned/wishlist) is tracked in the in-memory `ST{}` object via `gst(id)` / `setState(id, s)` / `cycleState(id)`. Role assignments are in `RA{}`. No localStorage persistence in current build.
+- **State** — Fragrance state (owned/wishlist) is tracked in `ST{}` via `gst(id)` / `setState(id, s)` / `cycleState(id)`. Role assignments in `RA{}`. Persisted to `localStorage` keys: `sm_owned`, `sm_wish`, `sm_roles`.
 - **go() tab selector** — the `.tab` deactivation selector excludes `.dc-state-wrap .tab`, `.picker-row .tab`, and `.cat-state-bar .tab` to avoid clearing filter UI on nav.
 
 ---
 
 ## CSS conventions
 
-**Design tokens (in `styles/design-system.css`):**
-- Palette variables: `--paper`, `--ink`, `--stone`, `--black`, `--g700`…`--g100`, `--resin`, `--wish`
-- Family colors: `--fam-woody`, `--fam-floral`, etc.
-- Spacing scale: 4px grid (`--sp-xs`, `--sp-sm`, `--sp-md`, `--sp-lg`, etc.)
-- Typography: `--font-serif`, `--font-sans`, with semantic sizes (`--text-sm`, `--text-md`, `--text-lg`)
-- Transitions: `--ease-spring: cubic-bezier(.16,1,.3,1)` at `--dur-sm` (0.28s), `--dur-md` (0.36s), `--dur-lg` (0.48s)
-- Breakpoints: mobile `<768px`, tablet `768–1099px`, desktop `≥1100px`
+Full token reference, component inventory, and pre-PR checklist are in **[`DESIGN.md`](./DESIGN.md)** — read it before modifying any UI.
 
-**Focus & accessibility tokens:**
-- `--focus-ring-color` (`var(--accent-primary)`), `--focus-ring-width` (2px), `--focus-ring-offset` (3px)
-- Global `:focus-visible` in `design-system.css` uses `box-shadow` double-ring (bg gap + accent ring) — respects `border-radius`
-- Inputs override with border-based focus: `outline: none; box-shadow: none; border-color: var(--border-strong)`
-- On-dark overlay tokens: `--on-dark-text`, `--on-dark-subtle`, `--scrim-control`, `--scrim-control-hover`, `--scrim-control-text`
-- State color: `--wish: var(--fam-floral)` (rose/pink wishlist indicator)
-
-**Accessibility persona (Nadia, 28):**
-Low vision (20/80 corrected), keyboard-first navigator. Relies on Tab/Enter, needs strong focus rings. This persona drives the focus ring system and minimum tap target sizing decisions.
-
-**Guidelines:**
-- Always use CSS custom properties instead of hard-coded values
-- Define all colors, spacing, sizing, and timing in design-system.css
-- Use semantic variable names (e.g., `--text-label` instead of `--font-11px`)
-- Consolidate duplicate rules — if a style appears multiple times, extract to a reusable class or variable
-- No magic numbers — all dimensions should relate to the 4px grid or defined scale
-- Never use raw `rgba()` — use the overlay/transparency tokens from design-system.css
-- Never use `outline: none` on a base style — use `:focus-visible` overrides only where border-based focus replaces the ring
+**Hard rules (enforced on every change):**
+- Use CSS custom properties only — no hard-coded colors, sizes, or timing values
+- No raw `rgba()` — use overlay/transparency tokens from `design-system.css`
+- Never `outline: none` on a base style — only in `:focus-visible` overrides where border-based focus replaces the ring
+- All dimensions on the 4px grid (`--sp-*` scale)
