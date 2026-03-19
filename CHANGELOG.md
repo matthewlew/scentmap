@@ -4,6 +4,14 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-19 (3)
+
+### Fixed
+- **Detail panel layout on desktop** — `app/index.html` was missing the `.col-main` flex wrapper and the two-level shell structure, causing `.col-detail` to collapse to 0px width instead of sitting beside the main content. Restructured `layout.css` to use a column-direction shell (`flex-direction: column`) with a new `.content-row` flex row that holds `.col-main` + `.col-detail` side by side. All three breakpoints now behave correctly:
+  - Desktop (≥1100px): detail panel slides in on the right, compressing main content width
+  - Tablet (768–1099px): detail panel is a fixed overlay with scrim, unchanged
+  - Mobile (<768px): detail panel hidden; bottom sheets used for all detail types
+
 ## 2026-03-19 (2)
 
 ### Changed
