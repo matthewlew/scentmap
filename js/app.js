@@ -40,6 +40,11 @@ function wordFuzzy(q,phrase,threshold){
 function matchFrag(f,q){
   if(!q) return true;
   if(f._nameN.includes(q)||f._brandN.includes(q)||f._nAllN.some(n=>n.includes(q))) return true;
+  // Word-prefix: "dip" → Diptyque, "san" → Santal 33
+  const ws=(f._nameN+' '+f._brandN).split(/\s+/);
+  if(ws.some(w=>w.startsWith(q))) return true;
+  // Fuzzy prefix: "dipti" → diptyque (lev("dipti","dipty")=1), "byrd" → byredo
+  if(q.length>=3&&ws.some(w=>{const p=w.slice(0,q.length);return p.length===q.length&&levenshtein(q,p)<=1;})) return true;
   if(q.length<4) return false;
   return wordFuzzy(q,f._nameN,2)||wordFuzzy(q,f._brandN,1);
 }
@@ -795,6 +800,9 @@ function _renderDeskDetail(animateIn, animClass){
   if(animClass){inner.classList.remove('slide-left','slide-right');}
   inner.innerHTML='';
   top(inner);
+  // Scroll to top on every new detail render
+  const col=document.getElementById('col-detail');
+  if(col) col.scrollTop=0;
   document.getElementById('detail-back')?.classList.toggle('visible',detailStack.length>1);
   if(animateIn){inner.offsetWidth;inner.classList.add('slide')}
   if(animClass){inner.offsetWidth;inner.classList.add(animClass)}

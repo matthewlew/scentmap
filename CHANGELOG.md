@@ -4,6 +4,16 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-19 (6)
+
+### Added
+- **Nav search bar** — replaced the bare icon button with a Spotify-style pill showing "Search... ⌘K", making it immediately obvious the app has a search function. On tablet/mobile it collapses back to the icon only.
+- **Search placeholder** — universal search input now has placeholder text "Search fragrances, notes, brands…" so users know what they can search for.
+
+### Fixed
+- **Fuzzy prefix matching** — search now uses word-prefix fuzzy matching: typing "dipti" surfaces all Diptyque fragrances (lev("dipti","dipty")=1), "byrd" surfaces Byredo, and any 3+ char query that is within 1 edit of the start of a word in brand or name will match. Previously the user had to type an exact substring.
+- **Detail panel scroll** — opening a fragrance or note detail panel from search (or any trigger) now scrolls the detail column back to the top. Previously it could open scrolled to the middle of the previous content.
+
 ## 2026-03-19 (5)
 
 ### Fixed

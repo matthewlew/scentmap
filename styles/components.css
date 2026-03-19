@@ -3244,6 +3244,67 @@ button.cmp-note-pill:hover {
   gap: var(--sp-md);
 }
 
+/* Nav search bar pill — visible input affordance (Spotify-style) */
+.nav-search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-pill);
+  padding: 0 var(--sp-md);
+  height: 32px;
+  min-width: 168px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  transition: border-color var(--dur-fast), background var(--dur-fast), color var(--dur-fast);
+}
+.nav-search-bar:hover {
+  border-color: var(--border-strong);
+  color: var(--text-secondary);
+}
+.nav-search-bar-icon {
+  flex-shrink: 0;
+  color: inherit;
+}
+.nav-search-bar-text {
+  flex: 1;
+  text-align: left;
+}
+.nav-search-bar-kbd {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-standard);
+  border-radius: 3px;
+  padding: 1px 5px;
+  background: var(--bg-primary);
+  line-height: 1.6;
+  letter-spacing: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1099px) {
+  .nav-search-bar {
+    min-width: unset;
+    background: none;
+    border-color: transparent;
+    padding: var(--sp-sm);
+    gap: 0;
+  }
+  .nav-search-bar:hover {
+    background: var(--bg-secondary);
+    border-color: var(--border-standard);
+  }
+  .nav-search-bar-text,
+  .nav-search-bar-kbd {
+    display: none;
+  }
+}
+
 @media (max-width: 767px) {
   .global-nav-links {
     display: none;

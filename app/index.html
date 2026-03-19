@@ -37,8 +37,10 @@
         </div>
       </div>
       <div class="global-nav-right">
-        <button class="nav-search-btn" onclick="openGlobalSearch()" aria-label="Quick search (⌘K)" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; padding:var(--sp-sm); display:flex; align-items:center; justify-content:center; transition:color var(--dur-fast);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <button class="nav-search-bar" onclick="openGlobalSearch()" aria-label="Quick search (⌘K)">
+          <svg class="nav-search-bar-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span class="nav-search-bar-text">Search...</span>
+          <kbd class="nav-search-bar-kbd">⌘K</kbd>
         </button>
         <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
         <button class="nav-signin-btn" id="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
@@ -197,6 +199,7 @@
       <div class="us-input-wrap">
         <svg class="us-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <input id="us-input" type="text" class="us-input"
+               placeholder="Search fragrances, notes, houses..."
                autocomplete="off" spellcheck="false"
                aria-controls="us-results" aria-autocomplete="list">
         <button id="us-close" class="us-close" aria-label="Close search">✕</button>
