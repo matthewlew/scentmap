@@ -2,6 +2,8 @@
 
 This file describes the development workflow and conventions for the Scentmap project. **Follow these instructions on every session.**
 
+**Component inventory, token rules, and the pre-PR checklist are in [`DESIGN.md`](./DESIGN.md). Read it before modifying any UI.**
+
 ---
 
 ## Project structure

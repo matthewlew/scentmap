@@ -74,6 +74,7 @@
   align-items: center;
   gap: var(--sp-sm);
   width: 100%;
+  min-height: var(--touch-target);
   background: none;
   border: none;
   padding: var(--sp-sm) var(--sp-md);
@@ -82,7 +83,7 @@
   color: var(--text-primary);
   text-align: left;
   cursor: pointer;
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   transition: background var(--dur-fast);
 }
 
@@ -233,13 +234,16 @@
 
 /* ── 3. SUGGESTIONS (V2, used by renderSuggestionsV2) ── */
 .cmp-sug-card {
-  border: 1.5px solid var(--border-standard);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
   background: var(--bg-primary);
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  transition: background var(--dur-fast) var(--ease-spring);
+  transition: background var(--dur-fast) var(--ease-spring),
+              border-color var(--dur-fast) var(--ease-spring);
   width: 100%;
+  overflow: hidden;
 }
 
 .cmp-sug-card:hover {
@@ -902,12 +906,21 @@
   background: var(--bg-secondary);
 }
 
-/* Reveal action buttons on keyboard focus (accessibility: swipe actions not keyboard-accessible otherwise) */
-.list-item:focus-within .list-item-actions {
-  transform: translateX(0);
+/* Reveal action buttons on keyboard focus — touch/keyboard devices only */
+@media (hover: none), (pointer: coarse) {
+  .list-item:focus-within .list-item-actions {
+    transform: translateX(0);
+  }
+  .list-item:focus-within .list-item-content {
+    transform: translateX(-120px);
+  }
 }
-.list-item:focus-within .list-item-content {
-  transform: translateX(-120px);
+
+/* Hide swipe tray entirely on desktop (pointer devices) */
+@media (hover: hover) and (pointer: fine) {
+  .list-item-actions {
+    display: none;
+  }
 }
 
 /* Focus ring: box-shadow is clipped by overflow:hidden — use inset outline instead */
@@ -924,8 +937,8 @@
 }
 .list-item--flat .list-item-content {
   background: transparent;
-  border-radius: 0;
-  padding: var(--sp-sm) var(--sp-md);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-md);
   transform: none;
   transition: background var(--dur-fast) var(--ease-spring);
 }
@@ -1596,6 +1609,132 @@ mark.note-match {
   margin: var(--sp-md) 0 var(--sp-sm);
 }
 
+/* ── Sensory profile bars ── */
+.sensory-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-2xl);
+}
+
+.sensory-bar-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+.sensory-bar-label {
+  width: 60px;
+  font-size: var(--fs-caption);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.sensory-bar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-micro);
+  position: relative;
+}
+
+.sensory-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: var(--radius-micro);
+}
+
+/* ── Scent journey timeline ── */
+.journey-timeline {
+  border-left: 2px solid var(--border-standard);
+  margin-left: 6px;
+  padding-left: var(--sp-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-lg);
+}
+
+.journey-step {
+  position: relative;
+}
+
+.journey-dot {
+  position: absolute;
+  left: calc(-1 * var(--sp-lg) - 7px);
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-circle);
+  background: var(--bg-primary);
+  border: 2px solid var(--border-strong);
+}
+
+.journey-dot--filled {
+  background: var(--border-strong);
+}
+
+/* ── Dupe lab ── */
+.dupe-item {
+  margin-bottom: var(--sp-lg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-md);
+  background: var(--bg-primary);
+}
+
+.dupe-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--sp-xs);
+}
+
+.dupe-item-score {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  color: var(--accent-primary);
+  font-size: var(--fs-ui);
+}
+
+.dupe-meter {
+  height: 4px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-micro);
+  margin-bottom: var(--sp-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.dupe-meter-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--accent-primary);
+  border-radius: var(--radius-micro);
+}
+
+.dupe-breakdown {
+  margin-top: var(--sp-sm);
+  padding-top: var(--sp-sm);
+  border-top: 1px dashed var(--border-subtle);
+  font-size: var(--fs-caption);
+  color: var(--text-tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.dupe-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+}
+
 /* ══════════════════════════════════════════════════════════════
    COMPARE PANEL V2
    ══════════════════════════════════════════════════════════════ */
@@ -1714,7 +1853,7 @@ mark.note-match {
   display: flex;
   align-items: center;
   gap: var(--sp-xs);
-  padding: var(--sp-sm) var(--sp-sm) 2px var(--sp-md);
+  padding: var(--sp-sm) var(--sp-md) 0;
 }
 
 .cmp-frag-card-name-row .cmp-frag-card-name {
@@ -1768,14 +1907,14 @@ mark.note-match {
   font-size: var(--fs-title);
   letter-spacing: var(--ls-tight);
   line-height: var(--lh-tight);
-  padding: var(--sp-sm) var(--sp-md) 2px;
+  padding: var(--sp-sm) var(--sp-md) 0;
 }
 
 .cmp-frag-card-brand {
   font-size: var(--fs-meta);
   color: var(--text-secondary);
   font-family: var(--font-sans);
-  padding: 0 var(--sp-md) var(--sp-xs);
+  padding: 0 var(--sp-md) var(--sp-sm);
 }
 
 
@@ -3117,6 +3256,17 @@ button.cmp-note-pill:hover {
   gap: var(--sp-xs);
 }
 
+.carousel-card-family-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  color: var(--text-tertiary);
+}
+
+/* Wide variant for golden-pairs layering cards */
+.carousel-card--wide {
+  width: 240px;
+}
+
 .fam-dot {
   width: 8px;
   height: 8px;
@@ -3592,10 +3742,85 @@ button.cmp-note-pill:hover {
   color: var(--text-secondary);
 }
 
+/* ══ OLFACTIVE DNA CARD ════════════════════════════════════════════ */
+
+.dna-card {
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-xl);
+  margin-bottom: var(--sp-3xl);
+}
+
+.dna-card .sec-label {
+  margin-bottom: var(--sp-md);
+}
+
+.dna-headline {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  margin-bottom: 0;
+}
+
+.dna-sub {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--g450);
+}
+
+.dna-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-lg);
+}
+
+.dna-stat-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  margin-bottom: var(--sp-xs);
+}
+
+.dna-divider {
+  border-top: 1px solid var(--border-standard);
+  padding-top: var(--sp-md);
+  margin-top: var(--sp-xl);
+}
+
+.dna-section-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--text-disabled);
+  margin-bottom: var(--sp-sm);
+}
+
+.dna-families {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-xs);
+  margin-bottom: var(--sp-md);
+}
+
+.dna-notes {
+  font-family: var(--font-serif);
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+  line-height: var(--lh-normal);
+}
+
 /* ══ MY COLLECTION SECTIONS ═══════════════════════════════════════ */
 
 .collection-section {
-  margin-bottom: var(--sp-xl);
+  margin-bottom: var(--sp-3xl);
 }
 
 .collection-section-hdr {
@@ -3611,6 +3836,10 @@ button.cmp-note-pill:hover {
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
+}
+
+.collection-section .scent-list {
+  margin-top: var(--sp-sm);
 }
 
 .collection-section-count {
@@ -4160,4 +4389,40 @@ button.cmp-note-pill:hover {
 @media (prefers-reduced-motion: reduce) {
   .nose-feedback { animation: none; }
   .nose-dot { transition: none; }
+}
+
+/* ── Global Undo Toast ── */
+.global-toast {
+  position: fixed;
+  bottom: var(--sp-2xl);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  padding: var(--sp-sm) var(--sp-md);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-md);
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  z-index: 1000;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast);
+}
+
+.global-toast.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.global-toast-undo {
+  background: transparent;
+  border: none;
+  color: var(--accent-primary);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
 }

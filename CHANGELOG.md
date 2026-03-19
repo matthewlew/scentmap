@@ -1,8 +1,55 @@
-# Changelog
+## 2026-03-19 (11)
 
-All notable changes to Scentmap are documented here.
+### Fixed
+- **Compare URL hard-refresh race condition** — `renderPopularComparisons()` was called inside the `popular-comparisons.json` fetch callback even when `handleInitialNavigation()` had already populated `CMP_A`/`CMP_B`, overwriting the pre-loaded comparison with popular suggestions. Fixed with `if (CMP_A || CMP_B) return;` guard at top of fetch `.then()`. Hard-refreshing `/compare/<id-a>/<id-b>/` now always loads both fragrances.
+- **List-item swipe tray visible on desktop click** — `focus-within` CSS rule was applying `transform: translateX(-120px)` on the catalog row when a user clicked it on desktop (click → focus triggers `focus-within`). Wrapped the reveal rule in `@media (hover: none), (pointer: coarse)`. Added `@media (hover: hover) and (pointer: fine) { .list-item-actions { display: none; } }` to completely hide swipe actions on pointer devices.
+- **Catalog sidebar missing layout CSS** — `.catalog-shell`, `.catalog-sidebar`, `.catalog-main`, `.cat-sidebar-section` had zero CSS definitions. The sidebar showed as an unstyled vertically-stacked block on all viewports. Added proper flex-row shell, 220px fixed sidebar, flex-grow main content, and `display: none` on mobile (<768px) in `styles/layout.css`.
 
----
+### Changed
+- **settings-menu-item token alignment** — Added `min-height: var(--touch-target)` (44px, WCAG 2.5.5). Changed `border-radius: var(--radius)` → `var(--radius-sm)` (explicit scoped token).
+- **carousel-card family label** — Replaced `<span style="font-size:.6rem;color:var(--g500)">` inline style with `.carousel-card-family-label` CSS class (`--fs-label` + `--text-tertiary`). Added `.carousel-card--wide` CSS variant (240px) for golden-pairs cards; removed `card.style.width = '240px'` inline override.
+
+### Added
+- **DESIGN.md** — Component inventory (9 components with file:line refs), token rules, pre-PR checklist, and accessibility persona descriptions. Referenced from `CLAUDE.md`.
+- **TODOS.md Phase 3 + Phase 4** — Phase 3 documents all QA fixes with root causes. Phase 4 has 9 self-contained design debt tasks from `design-fixes.md` audit, written as Gemini-ready prompts with model assignments.
+
+## 2026-03-19 (10)
+
+### Fixed
+- **App Module Crash (root cause)** — removed duplicate `function` declarations for `scoreSimilarity`, `scoreLayeringPair`, and `renderStandaloneQuiz` in `app.js`. In ES module strict mode, these duplicates caused a `SyntaxError` that silently prevented the entire module from loading — blocking all navigation, search, and fragrance opens.
+- **Quiz Duplicate Nav Bar** — quiz.js was injecting a second `<nav class="global-nav">` into `.col-main-content`, creating a nested nav bar below the shell's existing nav. Removed the embedded navs from all 4 quiz render functions (`renderStep`, `renderResults`, `renderArchetypeResults`, `renderAstroResults`).
+- **CHANGELOG Fetch Path** — changed `fetch('CHANGELOG.md')` to `fetch('/CHANGELOG.md')` so the changelog loads correctly from any path (e.g. `/app/`, `/compare/`).
+
+## 2026-03-19 (9)
+
+### Fixed
+- **Standalone Compare URLs** — fixed deep-linked fragrance pre-loading by making ID lookup more robust (case-insensitive) and improving regex to support all valid fragrance slugs.
+- **Standalone Quiz Logic** — fixed a critical syntax error in `quiz.js` that prevented the quiz from loading on standalone pages.
+- **SPA Quiz Fallback** — implemented `renderStandaloneQuiz` in `app.js` to handle quiz routes when the main app shell is loaded via a Single Page App configuration.
+- **Navigation Stability** — refined `go()` redirect logic to prevent unnecessary resets to `/app` when on a valid deep-linked comparison route.
+
+## 2026-03-19 (8)
+
+### Fixed
+- **Phase 0 Routing and Navigation** — resolved critical issues where standalone `/compare/` and `/quiz/` URLs wouldn't correctly load or display data.
+- **Missing "Feelings" (Role) Filters** — the Catalog sidebar now correctly populates the Feeling/Role filter bar (`cat-feel-bar`) using `ROLES` data, enabling `#feel=solar` style deep-links.
+- **Standalone Quiz Rendering** — `quiz.js` now correctly identifies `.col-main-content` and renders inside the shell without breaking the navigation or blowing away the `document.body`.
+- **Global Navigation on Quiz Pages** — added a `window.go` redirector to `quiz.js` so navigation buttons (Compare, Notes, You) work from standalone quiz pages.
+- **Hash-based Routing Improvements** — `app.js` now handles `#you`, `#journal`, and robustly parses `pathname` for standalone entry points.
+- **ReferenceError: renderStandaloneQuiz** — implemented the missing function in `app.js` to ensure stability when navigating to quiz paths.
+
+### Added
+- **Scent DNA Persona Mapping** — collection stats now identify users as one of 8 fragrance archetypes (e.g. The Minimalist, The Provocateur) based on their average sensory profile.
+- **Collection Gap Analysis** — the "You" dashboard now identifies weak points in a user's collection (e.g. low freshness) and suggests a specific fragrance to fill the gap.
+- **Global Undo Toast** — after any wishlist or owned state change, a floating toast appears with a 3-second "Undo" window. Allows users to immediately revert accidental clicks without re-cycling through states.
+- **Share Comparison** — added a "Share Comparison" button to the Compare results. Uses native device sharing on mobile and clipboard copy on desktop.
+- **Recommendations in Detail View** — fragrance detail panels now include a "You might also like" section showing the top 3 most mathematically similar fragrances.
+- **Plain-language metric labels** — sillage and structure scores now show human-readable descriptions (e.g. "Strong - fills a room") alongside the numerical value.
+
+### Fixed
+- **Phase 0 Routing** — resolved critical bugs where standalone `/compare/` and `/quiz/` URLs wouldn't load data or rendered the wrong page.
+- **Sidebar Leaking** — hidden the catalog sidebar on standalone pages to prevent visual pollution.
+- **Engine Deduplication** — removed ~300 lines of duplicated profile computation and constants across `app.js` and `quiz.js`, centralizing them in `engine.js` and `store.js`.
 
 ## 2026-03-19 (6)
 
@@ -17,6 +64,8 @@ All notable changes to Scentmap are documented here.
 ## 2026-03-19 (5)
 
 ### Fixed
+- **Navigation on standalone comparison pages** — fixed broken navigation links in `compare/**/index.html` by replacing absolute `a` tag redirects with local `onclick="go(...)"` button handlers. This prevents unnecessary page reloads and allows users to switch to the Notes or You dashboard while maintaining their current deep-linked comparison context.
+- **Hash-based routing recovery** — restored the `hashchange` event listener in `js/app.js` (which was lost during a previous code restoration) to ensure the UI stays in sync when the URL anchor changes (e.g., when clicking shareable links or navigating via the browser back/forward buttons).
 - **Catalog rows: missing ARIA attributes** — `renderCatRow` now sets `role="button"`, `tabindex="0"`, and `aria-label="<name> by <brand>[— Owned/On wishlist]"` on every catalog row. Without these, keyboard users and screen reader users could not interact with the list at all.
 - **Catalog rows: keyboard activation** — added `keydown` handler on each `.scent-list` so Enter and Space open the fragrance detail panel when a row has focus (in addition to click).
 - **Focus ring clipped by overflow:hidden** — catalog rows use `overflow: hidden` which clips the global `box-shadow` focus ring. Added `.list-item:focus-visible` override with an inset `outline` so the focus indicator is always visible for keyboard navigation.

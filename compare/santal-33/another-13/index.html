@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="/styles/components.css">
   <link rel="stylesheet" href="/styles/layout.css">
   <link rel="stylesheet" href="/styles/responsive.css">
+
+  <style>.catalog-sidebar { display: none !important; }</style>
 </head>
 <body>
   <div class="shell">
@@ -29,9 +31,9 @@
         <a href="/" class="global-nav-logo">Scentmap</a>
         <div class="global-nav-links">
           <a href="/#discovery" class="global-nav-link">Discovery</a>
-          <a href="/app#compare" class="global-nav-link">Compare</a>
-          <a href="/app#notes" class="global-nav-link">Notes</a>
-          <a href="/app#saved" class="global-nav-link">You</a>
+          <button class="global-nav-link active" onclick="go('compare', this)">Compare</button>
+          <button class="global-nav-link" onclick="go('notes', this)">Notes</button>
+          <button class="global-nav-link" onclick="go('saved', this)">You</button>
         </div>
       </div>
       <div class="global-nav-right">

@@ -9,7 +9,7 @@ This file describes the development workflow and conventions for the Scentmap pr
 ```
 index.html          HTML structure only (~180 lines, no inline JS)
 js/
-  app.js            All application logic (~1,950 lines)
+  app.js            All application logic
 styles/
   design-system.css Design tokens (colors, spacing, typography, breakpoints)
   components.css    Component styles
@@ -47,10 +47,10 @@ cp -r /Users/matthewlewair/Documents/scentmap/compare /tmp/scentmap-copy/
 
 **Cache-bust the browser after syncing:**
 ```
-http://localhost:3000/?v=<timestamp>
+http://localhost:3001/?v=<timestamp>
 ```
 
-Use `location.href = 'http://localhost:3000/?v=' + Date.now()` to force a fresh load in the browser.
+Use `location.href = 'http://localhost:3001/?v=' + Date.now()` to force a fresh load in the browser.
 
 ---
 
@@ -82,9 +82,9 @@ Use `location.href = 'http://localhost:3000/?v=' + Date.now()` to force a fresh 
 - **Sheet stack** — mobile bottom sheets use `pushSheet(renderFn)` / `popSheet()` / `closeAllSheets()`. First sheet slides up from bottom; subsequent (sub-nav) sheets get class `.nav` and slide in from the right.
 - **Desktop detail panel** — `pushDesktopDetail(renderFn)` / `openDesktopDetail(renderFn)` / `closeDesktopDetail()`. Use `_renderDeskDetail(true)` to animate on push.
 - **Nav** — `go(id, btn)` for desktop tab navigation; `goMobile(id, btn)` for mobile bottom nav. Both activate the corresponding `#p-{id}` panel.
-- **Catalog controls** — `initCatalogControls()` must be called once during init (after data loads) to wire up All/Owned/Wishlist tabs and the search input. State is tracked in `CAT_STATE_FILTER` and `CAT_ROLE_FILTER`.
-- **State** — Fragrance state (owned/wishlist) is tracked in the in-memory `ST{}` object via `gst(id)` / `setState(id, s)` / `cycleState(id)`. Role assignments are in `RA{}`. No localStorage persistence in current build.
-- **go() tab selector** — the `.tab` deactivation selector excludes `.dc-state-wrap .tab`, `.picker-row .tab`, and `.cat-state-bar .tab` to avoid clearing filter UI on nav.
+- **Catalog controls** — `initCatalogControls()` must be called once during init (after data loads) to wire up All/Owned/Wishlist tabs, the search input, and the **Feelings/Role filter bar (`cat-feel-bar`)**.
+- **Deep Linking** — `handleInitialNavigation()` parses the URL hash (e.g., `#notes`, `#saved`, `#feel=solar`) and path (e.g., `/compare/a/b`, `/quiz/slug`) to activate the correct state and pre-load data on startup.
+- **Standalone Engines** — Sub-pages like `/quiz/` use `js/quiz.js`, which renders into `.col-main-content`. It includes a `window.go` redirector to ensure navigation links in the shared shell remain functional.
 
 ---
 

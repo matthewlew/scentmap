@@ -8,20 +8,20 @@ Only items actively planned for the next 2 shipping cycles.
 
 ## Phase 0: Fix Broken Routes (do first)
 
-### CRITICAL: Standalone `/compare/` URLs don't pre-load fragrances
-**Repro:** Visit `http://localhost:3001/compare/bleu-de-chanel/sauvage` directly.
-**Impact:** All 6 "Popular Comparisons" links from the homepage footer are broken.
-**Where:** `compare/` directory HTML + JS init logic that should parse `window.location.pathname`.
+### ✅ FIXED (2026-03-19): App module crash — all navigation/search/frags broken
+Duplicate `function` declarations (`scoreSimilarity`, `scoreLayeringPair`, `renderStandaloneQuiz`) caused a `SyntaxError` in ES module strict mode, silently preventing `app.js` from executing entirely. Fixed in commit `23a2e27`.
 
-### CRITICAL: Standalone `/quiz/` URLs render Compare page instead of quiz
-**Repro:** Visit `http://localhost:3001/quiz/find-your-scent`.
-**Impact:** All quiz links from homepage navigate to a broken page.
-**Where:** Quiz page HTML files in `quiz/` + JS init logic in `app.js`.
+### ✅ FIXED (2026-03-19): Quiz duplicate nav bar
+`quiz.js` injected a second `<nav class="global-nav">` on every render step. Removed embedded navs from all 4 render functions. Fixed in commit `23a2e27`.
 
-### MEDIUM: Unstyled catalog sidebar elements on `/compare/` and `/quiz/` pages
-**Repro:** Visit any `/compare/` or `/quiz/` URL and scroll down.
-**Impact:** Visual pollution — catalog filter elements leaking into visible area.
-**Where:** `.catalog-sidebar` HTML in the shared shell — not hidden on standalone pages.
+### ✅ FIXED (2026-03-19): Standalone `/compare/` URLs don't pre-load fragrances
+Fixed in prior session (commit `385448f`) — ID lookup made case-insensitive, regex improved.
+
+### ✅ FIXED (2026-03-19): Standalone `/quiz/` URLs render Compare page instead of quiz
+Fixed in prior session (commit `385448f`) — quiz.js syntax error repaired, container targeting corrected.
+
+### ✅ FIXED (2026-03-19): Unstyled catalog sidebar on `/compare/` and `/quiz/` pages
+Fixed in prior session — `.catalog-sidebar` hidden on standalone pages.
 
 ### LOW: `#feel=solar` and other feel hashes don't activate discovery filtering
 **Repro:** Navigate to `http://localhost:3001/app#feel=solar`.
@@ -48,63 +48,159 @@ Only items actively planned for the next 2 shipping cycles.
 ---
 
 ## Phase 1: Search Improvements + Quick Wins
-
-### Diacritic normalization + fuzzy matching + keyboard navigation
-**What:** (1) Diacritic stripping so `xinu` matches `xinú`, (2) Levenshtein fuzzy fallback so `diptique` matches `diptyque`, (3) arrow-key navigation from search input through catalog results.
-**Why:** #1 silent failure mode in search. Covers catalog, ⌘K modal, and compare picker.
-**Depends on:** Nothing. Self-contained change to `store.js` + `app.js` + `styles/components.css`.
-**Status:** ✅ SHIPPED (2026-03-19, changelog entry 4).
-**Effort:** S (CC: ~15 min)
-
-### Undo toast for state changes
-**What:** After any owned/wish/remove action, show a 3-second toast with "Undo" button. If tapped, reverts the state change.
-**Why:** Persona: Miguel (essential tremor). Accidentally cycles state frequently due to imprecise clicking. No way to revert without cycling through all 3 states again.
-**Where:** `setState()` in `app.js`. Toast component in `components.css`.
-**Depends on:** Nothing. Self-contained.
-**Effort:** S (CC: ~15 min)
-
-### Share button on Compare results
-**What:** Add a share/copy button to the Compare results section. Uses `navigator.share()` on mobile, clipboard copy on desktop. Compare URLs (`#compare/<id-a>/<id-b>`) already work via `history.replaceState`.
-**Why:** Persona: Jake (in-store shopper). Wants to share comparisons with friends. The URLs exist but there's no UI to copy them.
-**Where:** `renderCompareResults()` in `app.js`.
-**Effort:** S (CC: ~10 min)
-
-### "If you like X" recommendations in detail view
-**What:** At the bottom of `renderFragDetail()`, show "You might also like" with top 3 most similar fragrances (via `scoreSimilarity()`). Each row is a clickable `.list-item--compact`.
-**Why:** Persona: Jake (curious shopper). Arrives via one comparison, sees one fragrance detail, then dead-ends. This keeps exploration going.
-**Where:** `renderFragDetail()` in `app.js`. `scoreSimilarity()` already exists.
-**Effort:** S (CC: ~15 min)
-
-### Plain-language metric labels in detail view
-**What:** Next to sillage and layering scores, show the human-readable label. e.g., "7/10 — Strong (fills a room)" instead of just "7/10". The `SW[]` and `LW[]` arrays already exist with these labels.
-**Why:** Persona: Sarah (gift giver). "Sillage 7/10" means nothing to non-enthusiasts. The labels exist in code but aren't displayed.
-**Where:** `renderFragDetail()` in `app.js`. Just concatenate `SW[score]` / `LW[score]`.
-**Effort:** S (CC: ~5 min)
+**Status:** ✅ SHIPPED (2026-03-19, changelog entry 7).
 
 ---
 
 ## Phase 1.5: Collection Intelligence (before DNA Card)
-
-### Basic collection stats on 'You' tab
-**What:** Above the flat fragrance list on the 'You' / saved panel, show: total owned count, family breakdown (horizontal pill bar), average sillage, most common note across collection.
-**Why:** Persona: Emma (collector, 15 fragrances). Currently the 'You' tab is a dumb list. Even basic stats create collection awareness and prime users for DNA Card.
-**Where:** `buildSavedPanel()` or equivalent in `app.js`. `computeProfile()` can be aggregated across owned fragrances.
-**Depends on:** Nothing. Uses existing functions.
-**Effort:** S (CC: ~20 min)
+**Status:** ✅ SHIPPED (2026-03-19, changelog entry 7).
 
 ---
 
 ## Phase 2: Scent DNA Card
+**Status:** ✅ SHIPPED (2026-03-19, changelog entry 7).
 
-**What:** Wardrobe-derived identity profile. When user has ≥3 owned fragrances, aggregates `computeProfile()` across collection → persona + sensory bars + family breakdown + gap recommendation + shareable card.
-**Why:** The emotional hook. Turns wardrobe data into identity. Creates collection investment and share moments.
-**Status:** Design-complete. Full spec in memory (`project_scent_dna_card.md`).
-**Depends on:** Nothing. Additive feature.
-**Effort:** M (CC: ~30 min)
+---
 
-When shipping DNA Card, also do:
-- Deduplicate `computeProfile()` / `NOTE_PROFILE{}` between app.js and engine.js (~130 lines of exact duplication)
-- Add analytics event stubs (`dna_tab_viewed`, `dna_persona_assigned`, etc.)
+## Phase 3: QA Fixes & Design System Polish
+
+**Branch:** `QA-fixes` | **Status:** In progress (2026-03-19)
+
+Tasks are written as self-contained agent prompts. Read `DESIGN.md` and `GEMINI.md` before starting any task.
+
+**Model guide:** Flash = isolated/CSS changes. Pro = multi-file debugging or layout reasoning.
+
+---
+
+### ✅ FIXED (2026-03-19): Stale agent docs (GEMINI.md, PRINCIPLES.md, design-fixes.md, testing-personas.md)
+Port corrected (3000→3001), Session Summary removed, Jules references removed, PRINCIPLES.md Section 6 removed.
+
+### ✅ FIXED (2026-03-19): DESIGN.md component guide created
+`DESIGN.md` now exists with component inventory table (9 components), token rules, pre-PR checklist, and persona descriptions. `CLAUDE.md` updated to reference it. See `DESIGN.md`.
+
+### ✅ FIXED (2026-03-19): Compare URL hard-refresh drops fragrances
+**Root cause:** `renderPopularComparisons()` inside the `popular-comparisons.json` fetch callback was called even when `handleInitialNavigation()` had already set `CMP_A`/`CMP_B`, overwriting the pre-loaded comparison.
+**Fix:** Added `if (CMP_A || CMP_B) return;` guard at top of the `.then()` callback (`js/app.js` ~line 4852). Fetch now bails out immediately if a comparison is already active.
+
+### ✅ FIXED (2026-03-19): List-item swipe tray visible on desktop click
+**Root cause:** `focus-within` CSS rule in `styles/components.css` (lines ~908–914) applied `transform: translateX(-120px)` on desktop click (which focuses the element).
+**Fix:** Wrapped `focus-within` rules in `@media (hover: none), (pointer: coarse)`. Added `@media (hover: hover) and (pointer: fine) { .list-item-actions { display: none; } }` to completely hide the tray on pointer devices.
+
+### ✅ FIXED (2026-03-19): settings-menu-item token alignment
+Added `min-height: var(--touch-target)` (WCAG 2.5.5). Changed `border-radius: var(--radius)` → `var(--radius-sm)`. (`styles/components.css` lines 72–87)
+
+### ✅ FIXED (2026-03-19): carousel-card inline style overrides
+Added `.carousel-card--wide` (width: 240px) and `.carousel-card-family-label` CSS classes. Removed `card.style.width = '240px'` inline override. Replaced `<span style="font-size:.6rem;color:var(--g500)">` with `<span class="carousel-card-family-label">` in all carousel-card family renders.
+
+### ✅ FIXED (2026-03-19): Catalog sidebar layout missing CSS + mobile showing raw stacked filters
+**Root cause:** `.catalog-shell`, `.catalog-sidebar`, `.catalog-main`, `.cat-sidebar-section` had zero CSS. The sidebar appeared unstyled and visible on all viewports.
+**Fix:** Added layout CSS in `styles/layout.css`: flex row shell, 220px fixed sidebar, flex-grow main. Added filter bar vertical layout rules for sidebar. Added `@media (max-width: 767px) { .catalog-sidebar { display: none; } }`.
+
+---
+
+## Phase 4: Design Debt (from design-fixes.md audit)
+
+Tasks migrated from `design-fixes.md` (see that file for original findings). Each task is self-contained and Gemini-ready.
+
+---
+
+### P4-001: Add .landing-card CSS class
+**Model:** Flash | **Effort:** ~20 min
+**What:** The "Trying scents on?" CTA card in the You panel (`js/app.js:611`, renders into `#you-journal-cta`) uses a nonexistent `.landing-card` class with no CSS. The card has no border-radius or padding — content touches the edge.
+**How:** Add `.landing-card` to `styles/components.css`:
+```css
+.landing-card {
+  border-radius: var(--radius-lg);
+  padding: var(--sp-lg);
+  border: 1px solid var(--border-standard);
+  background: var(--bg-secondary);
+}
+```
+Remove any inline `border-color` and `background` attributes from the JS render.
+**Done when:** The CTA card in the You tab has rounded corners, padding, and a consistent border — no inline style overrides.
+
+---
+
+### P4-002: Add border-radius and border to swap suggestion cards
+**Model:** Flash | **Effort:** ~20 min
+**What:** `.cmp-sug-card` (`.list-item--flat`) renders as flat rectangles with no border-radius. They look like bars, not contained surfaces.
+**Where:** `styles/components.css` line ~235 (`.cmp-sug-card`)
+**How:** Add `border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-standard);` to `.cmp-sug-card` or its parent.
+**Done when:** Swap suggestion cards have visible rounded corners on all four corners with a subtle border.
+
+---
+
+### P4-003: Extract DNA card inline styles to CSS classes
+**Model:** Pro | **Effort:** ~1 hour
+**What:** The Olfactive DNA card (`js/app.js:642–668`) uses 100% inline styles: `font-size:32px`, `font-size:10px`, `opacity:0.8`, `margin-bottom:4px`, etc.
+**How:**
+1. Create `.dna-card` in `styles/components.css` with proper padding and background.
+2. Create `.dna-stat-label` with `font-size: var(--fs-label); color: var(--text-tertiary)`.
+3. Create `.dna-section-divider` with `border-top: 1px solid var(--border-subtle); margin: var(--sp-md) 0`.
+4. Replace all inline style attributes in the JS render with these classes.
+**Done when:** Zero inline `style=""` attributes on DNA card elements except data-driven bar widths.
+
+---
+
+### P4-004: Extract sensory profile bars to CSS classes
+**Model:** Flash | **Effort:** ~30 min
+**What:** The "Sensory Profile" section in the detail panel (`js/app.js:1075–1088`) uses raw inline styles for every bar element.
+**How:** Create in `styles/components.css`:
+- `.sensory-bar-row { display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-xs); }`
+- `.sensory-bar-label { font-family: var(--font-sans); font-size: var(--fs-label); color: var(--text-tertiary); width: 56px; flex-shrink: 0; }`
+- `.sensory-bar-track { flex: 1; height: 4px; background: var(--border-standard); border-radius: var(--radius-micro); overflow: hidden; }`
+- `.sensory-bar-fill { height: 100%; background: var(--resin); border-radius: var(--radius-micro); transition: width var(--dur-standard) var(--ease-spring); }`
+The `width` on `.sensory-bar-fill` remains a data-driven inline style (`style="width: ${pct}%"`).
+**Done when:** Sensory bars use the CSS classes; only the `width` value is inline.
+
+---
+
+### P4-005: Extract scent journey timeline to CSS classes
+**Model:** Flash | **Effort:** ~30 min
+**What:** The Opening→Heart→Dry Down timeline (`js/app.js:1092–1108`) uses deeply nested inline styles for the vertical timeline layout.
+**How:** Create in `styles/components.css`:
+- `.journey-timeline { padding-left: var(--sp-lg); border-left: 2px solid var(--border-standard); }`
+- `.journey-step { position: relative; margin-bottom: var(--sp-md); }`
+- `.journey-dot { position: absolute; left: calc(-1 * var(--sp-lg) - 5px); top: 4px; width: 8px; height: 8px; border-radius: var(--radius-circle); border: 2px solid var(--border-strong); background: var(--bg-primary); }`
+- `.journey-dot--filled { background: var(--resin); border-color: var(--resin); }`
+**Done when:** Timeline renders with the same visual as before, but using CSS classes instead of inline styles.
+
+---
+
+### P4-006: Fix compare frag-card padding inconsistency
+**Model:** Flash | **Effort:** ~20 min
+**What:** `.cmp-frag-card-name-row` has mixed padding values with a magic `2px`. Children manage their own horizontal padding instead of the parent.
+**Where:** `styles/components.css` lines 1842, 1849, 1903
+**How:** Add `.cmp-frag-card-body { padding: var(--sp-md); }`. Remove individual horizontal padding from `.cmp-frag-card-name-row`, `.cmp-frag-card-name`, `.cmp-frag-card-brand`. Use `gap` for vertical spacing.
+**Done when:** All padding inside a compare frag card comes from a single `.cmp-frag-card-body` wrapper — no magic pixel values.
+
+---
+
+### P4-007: Fix collection section spacing
+**Model:** Flash | **Effort:** ~15 min
+**What:** `.collection-section` spacing is tight — "OWNED 1" header and list item below have no breathing room. Panel padding is inline on `#p-saved`.
+**Where:** `js/app.js:327–370`; `styles/components.css:3562`; `app/index.html:58`
+**How:**
+1. In `styles/components.css`, add `margin-top: var(--sp-sm)` to `.scent-list` within `.collection-section`.
+2. In `styles/layout.css`, add `#p-saved, #p-changelog { padding: var(--sp-lg); }` and remove inline `style="padding: var(--sp-lg);"` from those panels in `app/index.html`.
+**Done when:** The "OWNED" section header has visible breathing room above the first card; no inline padding on panel elements.
+
+---
+
+### P4-008: Fix cmp-sug-v2-label class name
+**Model:** Flash | **Effort:** ~5 min
+**What:** The "Swap suggestions" heading in JS still uses `.cmp-sug-v2-label` which was migrated to `.sec-label` in CSS.
+**Where:** `js/app.js:3610`
+**How:** Change the class to `sec-label` in the JS template string.
+**Done when:** The swap suggestions heading renders with the same styling as all other `.sec-label` headings.
+
+---
+
+### P4-009: Extract dupe lab items to CSS classes
+**Model:** Flash | **Effort:** ~30 min
+**What:** Each dupe item in the detail panel (`js/app.js:985–1026`) is a `<div>` with ~8 inline styles: border, radius, padding, background, margin, flex.
+**How:** Create `.dupe-item` in `styles/components.css` with `border: 1px solid var(--border-standard); border-radius: var(--radius-lg); padding: var(--sp-md); background: var(--bg-secondary); margin-bottom: var(--sp-sm)`. Reuse `.dc-*` patterns for the score and brand sub-elements.
+**Done when:** Each dupe item uses `.dupe-item` with no inline style other than data-driven score widths.
 
 ---
 

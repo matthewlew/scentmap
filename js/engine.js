@@ -3,7 +3,7 @@
  * Pure mathematical functions for fragrance similarity, layering, and discovery.
  */
 
-const FAM_PROFILE_BASE = {
+export const FAM_PROFILE_BASE = {
   citrus:  [0.90,0.28,0.10],
   green:   [0.82,0.18,0.20],
   aquatic: [0.92,0.10,0.08],
@@ -16,7 +16,7 @@ const FAM_PROFILE_BASE = {
   oud:     [0.08,0.40,1.00],
 };
 
-const NOTE_PROFILE = {
+export const NOTE_PROFILE = {
   'agarwood':          [0.10,0.22,0.90],
   'aldehydes':         [0.72,0.20,0.38],
   'almond':            [0.10,0.85,0.60],

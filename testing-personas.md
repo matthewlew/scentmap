@@ -1,20 +1,22 @@
-# Scentmap User Testing Agents & Action Protocol
+# Scentmap User Testing Personas & Action Protocol
 
-This document defines 3 user testing personas (agents) for Scentmap and provides the exact execution flows to run them as automated scheduled agents in Jules.
+This document defines 3 user testing personas for Scentmap. Each persona has a profile, a shopping scenario, and an action flow that can be given to any AI agent (Gemini CLI or Claude) to drive focused UX audits.
 
-**Core Directive for Jules:** When running this document, do not just provide feedback. You must adopt the assigned persona, evaluate the current state of the application (before, during, and after a simulated shopping experience), and then **take immediate action** to build, refactor, or clean up a feature that aligns with the persona's core values.
+**Core Directive:** When using a persona, adopt the assigned voice, evaluate the current application through their specific lens, then take action — write code, clean up debt, or build a feature that aligns with their needs. All changes must adhere to the design system (`DESIGN.md`) and the 'Give to Get' trust model (`PRINCIPLES.md`).
 
 ---
 
-## The Execution Protocol (How to run this)
+## How to run a persona
 
-When scheduling a nightly run, prompt Jules with the following instruction block:
+Pass the persona's profile + action flow to your agent of choice:
 
-> "Jules, you are now operating as **[Agent Name]**.
-> 1. Read your profile below to internalize your voice, tastes, and shopping scenario.
-> 2. Evaluate the Scentmap codebase (specifically `js/app.js`, `styles/design-system.css`, and `index.html`) through your specific lens.
-> 3. Execute your **Action Flow** defined below. You must write code, clean up technical debt, or build the requested feature to satisfy your persona's needs.
-> 4. Ensure all changes adhere strictly to the project's brutalist design system and 'Give to Get' trust model."
+```bash
+gemini "$(cat GEMINI.md)
+
+You are now operating as [Agent Name]. Read the profile below, evaluate the Scentmap codebase through their lens, then execute the Action Flow. All changes must follow the design system rules in DESIGN.md.
+
+[paste persona block here]"
+```
 
 ---
 

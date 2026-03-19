@@ -62,9 +62,3 @@ Every feature must serve at least one of these users:
 2.  **The Guided Explorer (3-7 bottles):** Needs confidence for their next purchase, sensory translations, and safe blind-buy recommendations.
 3.  **The Gifter / Risk-Averse Buyer:** Needs similarity matching to mitigate the risk of buying the wrong gift.
 
----
-
-## 6. Upcoming Feature Roadmap (Applying the Principles)
-*   **"Wardrobe Report Card":** A highly visual, shareable analysis of a user's collection (e.g., "Your collection is 80% warm and 20% fresh. You are missing a summer aquatic.").
-*   **"Scent of the Day" (SOTD) Layering Engine:** Daily suggestions for layering recipes using *only* the bottles marked as "Owned".
-*   **"Redundancy Warning":** Alerts on the Wishlist if a new scent is mathematically too similar to an owned scent.

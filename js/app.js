@@ -75,7 +75,40 @@ window.getGoldenPairs = function(owned) {
   return pairs.sort((a, b) => b.score - a.score).slice(0, 5);
 };
 
+function showUndoToast(msg, onUndo) {
+  let toast = document.getElementById('global-undo-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'global-undo-toast';
+    toast.className = 'global-toast';
+    toast.innerHTML = `
+      <span class="global-toast-msg"></span>
+      <button class="global-toast-undo">Undo</button>
+    `;
+    document.body.appendChild(toast);
+  }
+  
+  toast.querySelector('.global-toast-msg').textContent = msg;
+  const undoBtn = toast.querySelector('.global-toast-undo');
+  
+  const newUndoBtn = undoBtn.cloneNode(true);
+  undoBtn.parentNode.replaceChild(newUndoBtn, undoBtn);
+  
+  newUndoBtn.addEventListener('click', () => {
+    onUndo();
+    toast.classList.remove('visible');
+  });
+
+  toast.classList.add('visible');
+  
+  if (toast._timeout) clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.classList.remove('visible');
+  }, 3000);
+}
+
 function setState(id,s){
+  const oldState = store.getState(id);
   if(s==='wish'){
     const redun = window.checkRedundancy(id);
     if(redun){
@@ -99,12 +132,27 @@ function setState(id,s){
           store.setState(id, 'wish');
           refreshAfterStateChange(id);
           popSheet();
+          showUndoToast('Added to wishlist', () => {
+            store.setState(id, oldState);
+            refreshAfterStateChange(id);
+          });
         };
       });
       return; 
     }
   }
+  
   store.setState(id,s);
+  
+  let msg = '';
+  if (s === 'owned') msg = 'Marked as owned';
+  else if (s === 'wish') msg = 'Added to wishlist';
+  else msg = 'Removed from collection';
+  
+  showUndoToast(msg, () => {
+    store.setState(id, oldState);
+    refreshAfterStateChange(id);
+  });
 }
 function isOwned(id){return store.isOwned(id)}
 function isWish(id){return store.isWish(id)}
@@ -600,6 +648,40 @@ function renderJournalContent(container) {
   }
 }
 
+function computeCollectionArchetype(stats) {
+  const p = stats.avgProfile;
+  if (p.intensity > 0.65 && p.warmth > 0.65) return 'provocateur';
+  if (p.freshness > 0.65 && p.complexity < 0.45) return 'minimalist';
+  if (p.freshness > 0.65 && p.complexity > 0.55) return 'naturalist';
+  if (p.sweetness > 0.55 && p.warmth > 0.55) return 'sensory-hedonist';
+  if (p.complexity > 0.65 && p.intensity < 0.55) return 'quiet-expressionist';
+  if (p.freshness > 0.55) return 'sun-chaser';
+  if (p.sweetness > 0.45) return 'romantic';
+  return 'urban-intellectual';
+}
+
+function getGapRecommendation(stats) {
+  const p = stats.avgProfile;
+  const dimensions = [
+    { key: 'freshness', label: 'freshness' },
+    { key: 'sweetness', label: 'sweetness' },
+    { key: 'warmth', label: 'warmth' },
+    { key: 'intensity', label: 'boldness' }
+  ];
+  
+  const gap = dimensions.sort((a, b) => p[a.key] - p[b.key])[0];
+  if (p[gap.key] > 0.5) return null; // No major gaps
+
+  const candidates = CAT.filter(f => !isOwned(f.id) && !isWish(f.id));
+  const best = candidates.sort((a, b) => {
+    const pa = engine.computeProfile(a);
+    const pb = engine.computeProfile(b);
+    return pb[gap.key] - pa[gap.key];
+  })[0];
+  
+  return { label: gap.label, frag: best };
+}
+
 window.renderSaved = function() {
   const container = document.getElementById('saved-list');
   const ctaWrap = document.getElementById('you-journal-cta');
@@ -608,13 +690,13 @@ window.renderSaved = function() {
   
   if (ctaWrap) {
     ctaWrap.innerHTML = `
-      <div class="landing-card" style="border-color:var(--accent-primary); background:var(--bg-secondary); margin-bottom:var(--sp-2xl);">
+      <div class="landing-card" style="margin-bottom:var(--sp-2xl);">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background:var(--accent-primary);"></span>
           <h3 class="landing-card-title">Trying scents on?</h3>
         </div>
         <p class="landing-card-desc">Start tracking to see how they evolve over time.</p>
-        <button class="landing-card-cta" style="border:none; background:none; padding:0; text-align:left; cursor:pointer;" onclick="go('catalog')">Find a scent to track</button>
+        <button class="landing-card-cta" onclick="go('catalog')">Find a scent to track</button>
       </div>
     `;
   }
@@ -640,30 +722,85 @@ window.renderSaved = function() {
   if (owned.length > 0) {
     const stats = getCollectionStats(owned);
     const dnaSec = document.createElement('div');
-    dnaSec.className = 'dc-sim-shelf'; 
-    dnaSec.style.padding = 'var(--sp-xl)';
-    dnaSec.style.marginBottom = 'var(--sp-3xl)';
+    dnaSec.className = 'dna-card';
     const profile = stats.avgProfile;
     const bars = [{ l: 'Fresh', v: profile.freshness, c: 'var(--fam-citrus)' }, { l: 'Sweet', v: profile.sweetness, c: 'var(--fam-floral)' }, { l: 'Warm', v: profile.warmth, c: 'var(--fam-amber)' }, { l: 'Bold', v: profile.intensity, c: 'var(--fam-oud)' }];
-    dnaSec.innerHTML = `
-      <div class="sec-label">
-        Your Olfactive DNA
-        <button class="nav-notes-btn" style="font-size:10px;" onclick="window.exportAuraCard()">Export</button>
-      </div>
-      <div style="margin-bottom:var(--sp-xl);">
-        <div class="dc-name" style="margin-bottom:0; font-size:32px;">${owned.length}</div>
-        <div class="dc-brand" style="margin-bottom:0; font-size:10px;">Fragrances Owned</div>
-      </div>
-      <div class="dc-stats" style="margin-bottom:var(--sp-lg);">
-        ${bars.map(b => `<div class="dc-stat"><div class="sec-label" style="font-size:10px; margin-bottom:4px; opacity:0.8; text-transform:none; letter-spacing:normal;">${b.l}</div><div class="dc-bar"><div class="dc-fill" style="width:${Math.round(b.v*100)}%; background:${b.c}; height:3px;"></div></div></div>`).join('')}
-      </div>
-      <div style="margin-top:var(--sp-xl); border-top:1px solid var(--border-standard); padding-top:var(--sp-md);">
-        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Dominant Families</div>
-        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--sp-md);">
-          ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `<div class="dc-badge" style="background:${FAM[fam]?.color||'#888'}; color:#fff;">${FAM[fam]?.label||fam}</div>`).join('')}
+    
+    const topNote = stats.topNotes[0] ? stats.topNotes[0][0] : 'None';
+    const avgSillage = Math.round(owned.reduce((s,f)=>s+f.sillage,0)/owned.length * 10) / 10;
+    
+    let personaHtml = '';
+    if (owned.length >= 3) {
+      const archId = computeCollectionArchetype(stats);
+      const arch = store.ARCHETYPES[archId];
+      personaHtml = `
+        <div class="dna-divider" style="background:var(--bg-secondary); margin:var(--sp-xl) calc(-1 * var(--sp-xl)); padding:var(--sp-lg) var(--sp-xl); border-top:1px solid var(--border-standard); border-bottom:1px solid var(--border-standard);">
+          <div class="dna-section-label">Your Olfactive Persona</div>
+          <div class="dna-headline" style="font-size:var(--fs-title); color:var(--accent-primary);">${arch.name}</div>
+          <div class="text-body" style="font-family:var(--font-serif); font-size:var(--fs-meta); margin-top:var(--sp-xs); opacity:0.8;">${arch.tagline}</div>
         </div>
-        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Core Notes</div>
-        <div style="font-family:var(--font-serif); font-size:var(--fs-meta); color:var(--text-secondary); line-height:1.4;">${stats.topNotes.slice(0, 5).map(n => n[0]).join(', ')}</div>
+      `;
+    }
+
+    const gapRec = getGapRecommendation(stats);
+    let gapHtml = '';
+    if (gapRec) {
+      gapHtml = `
+        <div class="dna-section-label" style="margin-top:var(--sp-xl);">Collection Gap</div>
+        <div class="text-body" style="font-family:var(--font-serif); font-size:var(--fs-meta); margin-bottom:var(--sp-sm);">
+          Your collection is currently low on <strong>${gapRec.label}</strong>. Consider exploring:
+        </div>
+        <button class="settings-menu-item" style="background:var(--bg-secondary); border-radius:var(--radius-md);" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
+          <div class="picker-fdot" style="background:${(FAM[gapRec.frag.family]||{}).color}"></div>
+          <div style="flex:1; text-align:left;">
+            <div style="font-weight:600;">${gapRec.frag.name}</div>
+            <div style="font-size:10px; opacity:0.6;">${gapRec.frag.brand} · To fill the gap</div>
+          </div>
+        </button>
+      `;
+    }
+
+    dnaSec.innerHTML = `
+      <div class="sec-label" style="display:flex; justify-content:space-between; align-items:center;">
+        Your Olfactive DNA
+        <button class="nav-notes-btn" style="font-size:var(--fs-caption);" onclick="window.exportAuraCard()">Export</button>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-xl); margin-bottom:var(--sp-xl);">
+        <div>
+          <div class="dna-headline">${owned.length}</div>
+          <div class="dna-sub">Fragrances Owned</div>
+        </div>
+        <div>
+          <div class="dna-headline" style="font-size:var(--fs-title);">${avgSillage}<span style="font-size:var(--fs-meta); font-weight:400; color:var(--text-tertiary);">/10</span></div>
+          <div class="dna-sub">Average Sillage</div>
+        </div>
+      </div>
+      
+      ${personaHtml}
+
+      <div class="dna-stats" style="margin-top:var(--sp-xl);">
+        ${bars.map(b => `
+          <div class="dc-stat">
+            <div class="dna-stat-label">${b.l}</div>
+            <div class="dc-bar"><div class="dc-fill" style="width:${Math.round(b.v*100)}%; background:${b.c};"></div></div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="dna-divider">
+        <div class="dna-section-label">Dominant Families</div>
+        <div class="dna-families">
+          ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `
+            <div class="dc-badge" style="background:${FAM[fam]?.color||'#888'}; color:#fff; padding:2px 8px; font-size:10px;">
+              ${FAM[fam]?.label||fam} (${count})
+            </div>
+          `).join('')}
+        </div>
+        <div class="dna-section-label">Signature Material</div>
+        <div class="dna-notes">
+          You frequently gravitate towards <strong>${topNote}</strong>. Other core notes in your collection include ${stats.topNotes.slice(1, 5).map(n => n[0]).join(', ')}.
+        </div>
+        
+        ${gapHtml}
       </div>
     `;
     container.appendChild(dnaSec);
@@ -677,7 +814,7 @@ window.renderSaved = function() {
       pairSec.innerHTML = `<div class="sec-label">Shop Your Stash (Golden Pairs)</div>`;
       const pairWrap = document.createElement('div'); pairWrap.className = 'carousel';
       pairs.forEach(p => {
-        const card = document.createElement('div'); card.className = 'carousel-card'; card.style.width = '240px';
+        const card = document.createElement('div'); card.className = 'carousel-card carousel-card--wide';
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-sm);">
             <div class="dc-badge" style="background:var(--accent-primary); color:var(--paper); font-size:9px;">${p.score}% LAYER MATCH</div>
@@ -982,25 +1119,25 @@ function renderDupeLab(container, anchor) {
         const fm = FAM[f.family] || {label: f.family, color:'#888'};
         const reason = getSwapReason(anchor, f);
         return `
-          <div class="dupe-item" style="margin-bottom:var(--sp-lg); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:var(--sp-md); background:var(--bg-primary);">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-xs);">
+          <div class="dupe-item">
+            <div class="dupe-item-head">
               <div class="dc-name" style="font-size:var(--fs-body); margin-bottom:0;">${f.name}</div>
-              <div style="font-family:var(--font-sans); font-weight:700; color:var(--accent-primary); font-size:var(--fs-ui);">${score}%</div>
+              <div class="dupe-item-score">${score}%</div>
             </div>
             <div class="dc-brand" style="margin-bottom:var(--sp-sm);">${f.brand} · ${fm.label}</div>
-            
-            <div style="height:4px; background:var(--border-subtle); border-radius:2px; margin-bottom:var(--sp-sm); position:relative; overflow:hidden;">
-              <div style="position:absolute; top:0; left:0; height:100%; width:${score}%; background:var(--accent-primary); border-radius:2px;"></div>
+
+            <div class="dupe-meter">
+              <div class="dupe-meter-fill" style="width:${score}%;"></div>
             </div>
-            
-            <div class="dc-description" style="font-size:var(--fs-meta); margin-bottom:var(--sp-sm); line-height:1.4;">${reason}</div>
-            
+
+            <div class="dc-description" style="font-size:var(--fs-meta); margin-bottom:var(--sp-sm); line-height:var(--lh-normal);">${reason}</div>
+
             <details style="margin-bottom:var(--sp-sm);">
-              <summary style="font-size:var(--fs-caption); font-family:var(--font-sans); font-weight:600; color:var(--text-tertiary); cursor:pointer; list-style:none; display:flex; align-items:center; gap:4px;">
+              <summary style="font-size:var(--fs-caption); font-family:var(--font-sans); font-weight:600; color:var(--text-tertiary); cursor:pointer; list-style:none; display:flex; align-items:center; gap:var(--sp-xs);">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                 Why this matches
               </summary>
-              <div style="margin-top:var(--sp-sm); padding-top:var(--sp-sm); border-top:1px dashed var(--border-subtle); font-size:var(--fs-caption); color:var(--text-tertiary); display:flex; flex-direction:column; gap:4px;">
+              <div class="dupe-breakdown">
                 ${(() => {
                   const famScore = (FAM_COMPAT[anchor.family]?.[f.family] ?? 0.5) * 40;
                   const shBase = anchor._nBase.filter(n => f._nBase.includes(n)).length;
@@ -1011,17 +1148,17 @@ function renderDupeLab(container, anchor) {
                   const sillScore = sillDiff <= 2 ? 10 : sillDiff <= 4 ? 5 : 0;
                   const shRoles = anchor.roles.filter(r => f.roles.includes(r)).length;
                   const roleScore = Math.min(20, shRoles * 7);
-                  
+
                   return `
-                    <div style="display:flex; justify-content:space-between;"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Role alignment</span><span>${roleScore}/20</span></div>
+                    <div class="dupe-breakdown-row"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
+                    <div class="dupe-breakdown-row"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
+                    <div class="dupe-breakdown-row"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
+                    <div class="dupe-breakdown-row"><span>Role alignment</span><span>${roleScore}/20</span></div>
                   `;
                 })()}
               </div>
             </details>
-            
+
             <button class="s-name-btn" style="font-size:var(--fs-meta);" onclick="event.stopPropagation(); trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">View Details →</button>
           </div>
         `;
@@ -1067,19 +1204,19 @@ function renderFragDetail(container,frag){
       <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
     </button>
     <div class="dc-stats">
-      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${SW[frag.sillage]}</div></div>
-      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${LW[frag.layering]}</div></div>
+      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${frag.sillage}/10 — ${SW[frag.sillage]}</div></div>
+      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${frag.layering}/10 — ${LW[frag.layering]}</div></div>
     </div>
     <div class="dc-div"></div>
     <div class="sec-label" style="margin-bottom:var(--sp-xs);">Sensory Profile</div>
-    <div style="display:flex; flex-direction:column; gap:var(--sp-sm); margin-bottom:var(--sp-2xl);">
+    <div class="sensory-bars">
       ${(() => {
         const p = computeProfile(frag);
         const bar = (label, val, color) => `
-          <div style="display:flex; align-items:center; gap:var(--sp-sm);">
-            <div style="width:60px; font-size:var(--fs-caption); font-family:var(--font-sans); font-weight:600; text-transform:uppercase; color:var(--text-tertiary);">${label}</div>
-            <div style="flex:1; height:4px; background:var(--border-subtle); border-radius:var(--radius-micro); position:relative;">
-              <div style="position:absolute; top:0; left:0; height:100%; width:${Math.round(val*100)}%; background:${color}; border-radius:var(--radius-micro);"></div>
+          <div class="sensory-bar-row">
+            <div class="sensory-bar-label">${label}</div>
+            <div class="sensory-bar-track">
+              <div class="sensory-bar-fill" style="width:${Math.round(val*100)}%; background:${color};"></div>
             </div>
           </div>`;
         return bar('Fresh', p.freshness, 'var(--fam-citrus)') +
@@ -1089,24 +1226,43 @@ function renderFragDetail(container,frag){
     </div>
 
     <div class="sec-label" style="margin-bottom:var(--sp-md);">Scent Journey</div>
-    <div style="border-left: 2px solid var(--border-standard); margin-left: 6px; padding-left: var(--sp-lg); display:flex; flex-direction:column; gap:var(--sp-lg);">
-      <div style="position:relative;">
-        <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--bg-primary); border:2px solid var(--border-strong);"></div>
+    <div class="journey-timeline">
+      <div class="journey-step">
+        <div class="journey-dot"></div>
         <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Opening <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Top Notes)</span></div>
-        <div class="dc-nv" style="margin-bottom:0;">${linkNotes(frag.top)}</div>
+        <div class="dc-nv">${linkNotes(frag.top)}</div>
       </div>
-      <div style="position:relative;">
-        <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--bg-primary); border:2px solid var(--border-strong);"></div>
+      <div class="journey-step">
+        <div class="journey-dot"></div>
         <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Heart <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Mid Notes)</span></div>
-        <div class="dc-nv" style="margin-bottom:0;">${linkNotes(frag.mid)}</div>
+        <div class="dc-nv">${linkNotes(frag.mid)}</div>
       </div>
-      <div style="position:relative;">
-        <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--border-strong);"></div>
+      <div class="journey-step">
+        <div class="journey-dot journey-dot--filled"></div>
         <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Dry Down <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Base Notes)</span></div>
-        <div class="dc-nv" style="margin-bottom:0;">${linkNotes(frag.base)}</div>
+        <div class="dc-nv">${linkNotes(frag.base)}</div>
       </div>
     </div>
-    <p class="dc-notes-caveat" style="margin-top:var(--sp-xl);">Key materials only — simplified pyramid</p>`;
+    <p class="dc-notes-caveat" style="margin-top:var(--sp-xl); margin-bottom:var(--sp-2xl);">Key materials only — simplified pyramid</p>
+    
+    <div class="sec-label" style="margin-bottom:var(--sp-md);">You might also like</div>
+    <div class="dc-sim-shelf">
+      ${(() => {
+        const simFrags = CAT.filter(f => f.id !== frag.id)
+          .map(f => ({ f, score: Math.round(scoreSimilarity(frag, f)) }))
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 3);
+        return simFrags.map(s => `
+          <button class="settings-menu-item" onclick="pushDetail(c => renderFragDetail(c, CAT_MAP['${s.f.id}']), '${s.f.name.replace(/'/g, "\\'")}')">
+            <div class="picker-fdot" style="background:${(FAM[s.f.family]||{}).color}"></div>
+            <div style="flex:1; text-align:left;">
+              <div style="font-weight:600;">${s.f.name}</div>
+              <div style="font-size:10px; opacity:0.6;">${s.f.brand} · ${s.score}% match</div>
+            </div>
+          </button>
+        `).join('');
+      })()}
+    </div>`;
 
   // Note links
   const brandBtn=container.querySelector('.dc-brand-btn');
@@ -1457,7 +1613,7 @@ function renderHouseDetail(container,brand){
       card.className = 'carousel-card';
       card.innerHTML = `<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
-        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
+        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
       card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       carousel.appendChild(card);
     });
@@ -1936,7 +2092,7 @@ function renderPicker(container,roleId){
       const card=document.createElement('div');card.className='carousel-card';
       card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
-        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
+        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
       card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),frag.name)});
       row.appendChild(card);
     });
@@ -2336,6 +2492,36 @@ function initCatalogControls(){
     if(brandBarM)makeBrandBtn(brand,brand,html,brandBarM);
   });
 
+  // Populate Feelings (Roles)
+  const feelBar = document.getElementById('cat-feel-bar');
+  const feelBarM = document.getElementById('cat-feel-bar-m');
+  const allFeelBtns = [];
+  function makeFeelBtn(label, val, sym, container) {
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (CAT_ROLE_FILTER === val ? ' active' : '');
+    btn.innerHTML = `${sym} ${label}`;
+    btn.dataset.val = val === null ? '' : val;
+    btn.addEventListener('click', () => {
+      CAT_ROLE_FILTER = val;
+      allFeelBtns.forEach(b => {
+        const isActive = b.dataset.val === (val === null ? '' : val);
+        b.classList.toggle('active', isActive);
+      });
+      buildCatalog();
+    });
+    allFeelBtns.push(btn);
+    container.appendChild(btn);
+    return btn;
+  }
+  if (feelBar) {
+    makeFeelBtn('All', null, '◈', feelBar);
+    ROLES.forEach(r => makeFeelBtn(r.name, r.id, r.sym, feelBar));
+  }
+  if (feelBarM) {
+    makeFeelBtn('All', null, '◈', feelBarM);
+    ROLES.forEach(r => makeFeelBtn(r.name, r.id, r.sym, feelBarM));
+  }
+
   // Search (debounced to avoid rebuilding DOM on every keystroke)
   const searchEl=document.getElementById('cat-search');
   const clearBtn=document.getElementById('cat-search-clear');
@@ -2730,8 +2916,16 @@ function go(id,btn){
   closeDesktopDetail();
   // Sync URL with compare tab state
   if(id==='compare'){
-    if(CMP_A&&CMP_B){const[a,b]=[CMP_A.id,CMP_B.id].sort();history.replaceState(null,'','/compare/'+a+'/'+b);}
-    else{history.replaceState(null,'',window.location.pathname.startsWith('/compare/')?'/app':window.location.href.replace(window.location.origin,''));}
+    if(CMP_A&&CMP_B){
+      const[a,b]=[CMP_A.id,CMP_B.id].sort();
+      const newPath = '/compare/'+a+'/'+b;
+      if (window.location.pathname !== newPath) history.replaceState(null,'',newPath);
+    } else {
+      // Only redirect away from /compare/ paths if we are explicitly on one and have no comparison active
+      if (window.location.pathname.startsWith('/compare/') && !CMP_A && !CMP_B) {
+        history.replaceState(null,'','/app');
+      }
+    }
   } else if(window.location.pathname.startsWith('/compare/')){
     history.replaceState(null,'','/app');
   }
@@ -2908,7 +3102,7 @@ function _renderUsResults(query) {
     html += noteMatches.map(n => {
       const tier = n._tier ? (n._tier === 'top' ? 'Top' : n._tier === 'mid' ? 'Heart' : 'Base') : '';
       const sub = [tier, n.family].filter(Boolean).join(' · ');
-      return `<button class="list-item list-item--search" role="option" aria-selected="false" data-us-type="note" data-us-id="${n.name}" data-row-idx="${rowIdx++}">
+      return `<button class="list-item list-item--search" role="option" aria-selected="false" id="us-row-${rowIdx}" data-us-type="note" data-us-id="${n.name}" data-row-idx="${rowIdx++}">
         <span class="list-item-icon">🌿</span>
         <span class="list-item-body">
           <span class="list-item-name">${n.name}</span>
@@ -2927,7 +3121,7 @@ function _renderUsResults(query) {
     html += `<div class="us-section-hdr" role="presentation">Houses</div>`;
     html += brandMatches.map(b => {
       const count = CAT.filter(f => f.brand === b.name).length;
-      return `<button class="list-item list-item--search" role="option" aria-selected="false" data-us-type="house" data-us-id="${b.name}" data-row-idx="${rowIdx++}">
+      return `<button class="list-item list-item--search" role="option" aria-selected="false" id="us-row-${rowIdx}" data-us-type="house" data-us-id="${b.name}" data-row-idx="${rowIdx++}">
         <span class="list-item-icon">🏛</span>
         <span class="list-item-body">
           <span class="list-item-name">${b.name}</span>
@@ -2939,6 +3133,15 @@ function _renderUsResults(query) {
 
   results.innerHTML = html || _usEmptyHtml(query);
   _wireUsRows(results);
+
+  // Announce result count to screen readers (Braille display / JAWS users)
+  const rowCount = results.querySelectorAll('.list-item--search').length;
+  const statusEl = document.getElementById('us-status');
+  if (statusEl) {
+    statusEl.textContent = rowCount
+      ? `${rowCount} result${rowCount !== 1 ? 's' : ''}${query ? ` for "${query}"` : ''}`
+      : query ? `No results for "${query}"` : '';
+  }
 }
 
 function _usFragRowHtml(f, rowIdx, scoreLabel) {
@@ -2948,7 +3151,7 @@ function _usFragRowHtml(f, rowIdx, scoreLabel) {
   const wished = isWish(f.id);
   const badge = owned ? 'Owned' : wished ? 'Wishlist' : '';
   return `<button class="list-item list-item--search" role="option" aria-selected="false"
-    data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
+    id="us-row-${rowIdx}" data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
     <span class="list-item-dot" style="background:${fc.accent}"></span>
     <span class="list-item-body">
       <span class="list-item-name">${f.name}</span>
@@ -3190,199 +3393,10 @@ const CMP_FAM={
 };
 function getCmpFam(fam){return CMP_FAM[fam]||{accent:'#6B6356',light:'#F5F2EC'};}
 
-// 5-dim profile: freshness, sweetness, warmth, intensity, complexity
-// [freshness, sweetness, warmth] family anchors; intensity from sillage; complexity from structure
-const FAM_PROFILE_BASE={
-  citrus:  [0.90,0.28,0.10],
-  green:   [0.82,0.18,0.20],
-  aquatic: [0.92,0.10,0.08],
-  floral:  [0.62,0.58,0.40],
-  chypre:  [0.58,0.30,0.50],
-  woody:   [0.30,0.30,0.72],
-  amber:   [0.18,0.72,0.88],
-  gourmand:[0.10,0.92,0.80],
-  leather: [0.18,0.20,0.82],
-  oud:     [0.08,0.40,1.00],
-};
-// Per-note sensory profiles [freshness, sweetness, warmth] 0–1
-// Blended into computeProfile() at 60% weight; family base anchors at 40%
-const NOTE_PROFILE={
-  'agarwood':          [0.10,0.22,0.90],
-  'aldehydes':         [0.72,0.20,0.38],
-  'almond':            [0.10,0.85,0.60],
-  'amber':             [0.10,0.62,0.90],
-  'ambergris':         [0.20,0.35,0.65],
-  'ambrette':          [0.32,0.50,0.52],
-  'apple':             [0.65,0.55,0.12],
-  'atlas cedar':       [0.35,0.10,0.65],
-  'basil':             [0.72,0.10,0.30],
-  'benzoin':           [0.10,0.65,0.80],
-  'bergamot':          [0.92,0.25,0.10],
-  'birch tar':         [0.15,0.10,0.75],
-  'black currant':     [0.68,0.42,0.22],
-  'black orchid':      [0.20,0.50,0.60],
-  'black pepper':      [0.50,0.10,0.55],
-  'blood orange':      [0.80,0.48,0.12],
-  'caramel':           [0.05,0.90,0.70],
-  'cardamom':          [0.42,0.28,0.78],
-  'casablanca lily':   [0.52,0.38,0.30],
-  'castoreum':         [0.10,0.22,0.80],
-  'cedar':             [0.32,0.10,0.65],
-  'cedarwood':         [0.32,0.10,0.65],
-  'cinnamon':          [0.22,0.50,0.82],
-  'cistus':            [0.25,0.30,0.72],
-  'clove':             [0.20,0.35,0.85],
-  'coconut':           [0.15,0.80,0.55],
-  'coffee':            [0.18,0.50,0.72],
-  'cyclamen':          [0.65,0.28,0.20],
-  'cypriol':           [0.18,0.15,0.75],
-  'driftwood':         [0.35,0.05,0.52],
-  'elemi':             [0.38,0.12,0.68],
-  'eucalyptus':        [0.80,0.05,0.15],
-  'fig':               [0.42,0.50,0.38],
-  'fir':               [0.58,0.05,0.40],
-  'frankincense':      [0.32,0.20,0.75],
-  'freesia':           [0.70,0.35,0.22],
-  'galbanum':          [0.70,0.05,0.22],
-  'gardenia':          [0.42,0.50,0.40],
-  'geranium':          [0.65,0.20,0.35],
-  'ginger':            [0.55,0.20,0.65],
-  'grapefruit':        [0.90,0.20,0.05],
-  'grass':             [0.80,0.10,0.12],
-  'green tea':         [0.75,0.15,0.22],
-  'guaiac wood':       [0.22,0.15,0.70],
-  'heliotrope':        [0.30,0.70,0.50],
-  'honey':             [0.10,0.85,0.65],
-  'honeysuckle':       [0.55,0.55,0.30],
-  'hyacinth':          [0.60,0.30,0.22],
-  'incense':           [0.25,0.15,0.80],
-  'iris':              [0.48,0.32,0.38],
-  'jasmine':           [0.40,0.52,0.55],
-  'labdanum':          [0.10,0.42,0.90],
-  'lapsang':           [0.20,0.10,0.72],
-  'lavender':          [0.70,0.15,0.35],
-  'leather':           [0.10,0.10,0.75],
-  'lemon':             [0.92,0.20,0.05],
-  'lily':              [0.55,0.30,0.30],
-  'lily of the valley':[0.72,0.25,0.20],
-  'lime':              [0.88,0.15,0.05],
-  'magnolia':          [0.52,0.38,0.30],
-  'mandarin':          [0.82,0.45,0.15],
-  'mate':              [0.60,0.10,0.30],
-  'mimosa':            [0.55,0.50,0.40],
-  'mint':              [0.85,0.10,0.10],
-  'musk':              [0.25,0.30,0.50],
-  'myrrh':             [0.15,0.28,0.85],
-  'narcissus':         [0.42,0.38,0.45],
-  'neroli':            [0.75,0.35,0.30],
-  'nutmeg':            [0.30,0.30,0.75],
-  'oakmoss':           [0.30,0.10,0.60],
-  'orange blossom':    [0.60,0.52,0.40],
-  'orchid':            [0.40,0.45,0.42],
-  'oud':               [0.05,0.38,0.95],
-  'palisander':        [0.22,0.18,0.70],
-  'papyrus':           [0.42,0.10,0.35],
-  'patchouli':         [0.10,0.28,0.85],
-  'peach':             [0.55,0.72,0.20],
-  'peony':             [0.60,0.42,0.30],
-  'pepper':            [0.50,0.10,0.55],
-  'pine':              [0.55,0.05,0.45],
-  'pineapple':         [0.65,0.68,0.12],
-  'pink pepper':       [0.58,0.18,0.50],
-  'praline':           [0.05,0.90,0.65],
-  'rose':              [0.50,0.50,0.45],
-  'rosemary':          [0.68,0.08,0.35],
-  'rosewood':          [0.35,0.22,0.60],
-  'saffron':           [0.22,0.30,0.80],
-  'sandalwood':        [0.20,0.32,0.78],
-  'smoke':             [0.15,0.08,0.72],
-  'suede':             [0.22,0.22,0.60],
-  'tea':               [0.62,0.12,0.28],
-  'tiare':             [0.45,0.55,0.50],
-  'tobacco':           [0.12,0.40,0.78],
-  'tonka bean':        [0.10,0.80,0.70],
-  'tuberose':          [0.35,0.55,0.60],
-  'tulip':             [0.60,0.30,0.25],
-  'vanilla':           [0.05,0.90,0.70],
-  'vetiver':           [0.25,0.10,0.72],
-  'violet':            [0.50,0.30,0.35],
-  'violet leaf':       [0.65,0.15,0.20],
-  'waterlily':         [0.80,0.20,0.12],
-  'white musk':        [0.32,0.35,0.42],
-  'ylang-ylang':       [0.30,0.60,0.65],
-  'yuzu':              [0.88,0.20,0.08],
-};
-function computeProfile(frag){
-  if(frag._profile)return frag._profile;
-  const b=FAM_PROFILE_BASE[frag.family]||[0.5,0.5,0.5];
-  // Collect notes with tier weights: top=0.5, mid=1.0, base=1.5
-  const weighted=[
-    ...(frag._nTop||[]).map(n=>({n,w:0.5})),
-    ...(frag._nMid||[]).map(n=>({n,w:1.0})),
-    ...(frag._nBase||[]).map(n=>({n,w:1.5})),
-  ].filter(({n})=>NOTE_PROFILE[n]);
-  if(weighted.length===0){
-    frag._profile={freshness:b[0],sweetness:b[1],warmth:b[2],intensity:(frag.sillage||5)/10,complexity:(frag.layering||5)/10};
-    return frag._profile;
-  }
-  const totalW=weighted.reduce((s,{w})=>s+w,0);
-  const avg=weighted.reduce((acc,{n,w})=>{const p=NOTE_PROFILE[n];acc[0]+=p[0]*w;acc[1]+=p[1]*w;acc[2]+=p[2]*w;return acc;},[0,0,0]).map(v=>v/totalW);
-  // 60% note-derived, 40% family anchor
-  frag._profile={
-    freshness:avg[0]*0.6+b[0]*0.4,
-    sweetness:avg[1]*0.6+b[1]*0.4,
-    warmth:   avg[2]*0.6+b[2]*0.4,
-    intensity:(frag.sillage||5)/10,
-    complexity:(frag.layering||5)/10,
-  };
-  return frag._profile;
-}
-
-/* ── Swap Reason Helper ── */
-function getSwapReason(anchor, candidate){
-  const pa = computeProfile(anchor);
-  const pc = computeProfile(candidate);
-
-  const dInt = pc.intensity - pa.intensity;
-  const dCpx = pc.complexity - pa.complexity;
-  const dSwt = pc.sweetness - pa.sweetness;
-  const dFrs = pc.freshness - pa.freshness;
-  const dWrm = pc.warmth - pa.warmth;
-
-  const famA = (FAM[anchor.family]||{label:anchor.family}).label;
-  const famC = (FAM[candidate.family]||{label:candidate.family}).label;
-  const sameFam = anchor.family === candidate.family;
-
-  const sharedNotes = anchor._nAll.filter(n => candidate._nAll.includes(n));
-  const shNote = sharedNotes.length > 0 ? sharedNotes[0].charAt(0).toUpperCase() + sharedNotes[0].slice(1) : null;
-
-  // Thresholds
-  const TH = 0.15;
-  const TH_LG = 0.3;
-
-  // Hierarchy of reasons
-  if (dInt > TH_LG) return `A bolder, stronger ${sameFam ? 'take' : 'alternative'}${shNote ? ` sharing ${shNote}` : ''}`;
-  if (dInt < -TH_LG) return `A more subtle, intimate ${sameFam ? 'take' : 'alternative'}${shNote ? ` sharing ${shNote}` : ''}`;
-
-  if (dCpx > TH_LG) return `A more complex and layered ${sameFam ? famA : famC}`;
-  if (dCpx < -TH_LG) return `An easier-to-wear, simpler ${sameFam ? famA : famC}`;
-
-  if (dSwt > TH) return `A sweeter, more gourmand approach to ${sameFam ? famA : 'this profile'}`;
-  if (dFrs > TH) return `A fresher, brighter take${sameFam ? ' on '+famA : ''}`;
-  if (dWrm > TH) return `A warmer, cozier alternative${sameFam ? ' on '+famA : ''}`;
-
-  if (dSwt < -TH) return `A less sweet, drier alternative`;
-  if (dFrs < -TH) return `A deeper, less fresh take`;
-
-  // Fallbacks if profiles are very similar
-  if (shNote && sameFam) return `A very similar ${famA} focused on ${shNote}`;
-  if (sameFam) return `A closely related ${famA} to try`;
-  if (shNote) return `A ${famC} alternative sharing ${shNote}`;
-
-  return `An alternative from the ${famC} family`;
-}
-
 /* ── Scoring helpers ── */
+function computeProfile(frag){ return engine.computeProfile(frag); }
+function getSwapReason(anchor, candidate){ return engine.getSwapReason(anchor, candidate, FAM); }
+
 function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
 function _simLabel(pct){if(pct<26)return'Very different';if(pct<51)return'Notably different';if(pct<76)return'Fairly similar';return'Nearly identical';}
 function _layLabel(pct){if(pct<25)return'Poor pairing';if(pct<50)return'Uneasy together';if(pct<75)return'Workable pair';return'Good pairing';}
@@ -3607,7 +3621,7 @@ function renderSuggestionsV2(fa,fb,ca,cb){
   const shortA=fa.name.split(' ').slice(0,2).join(' ');
   const shortB=fb.name.split(' ').slice(0,2).join(' ');
   return`<div class="cmp-sug-v2">
-    <div class="cmp-sug-v2-label">Swap suggestions</div>
+    <div class="sec-label">Swap suggestions</div>
     <div class="cmp-sug-columns">
       <div>
         <div class="cmp-sug-col-head" style="color:${ca.accent}">Swap ${shortA}</div>
@@ -4075,6 +4089,7 @@ function renderCompareResults(fa,fb){
             <div class="cmp-score-tap">Tap to learn more ↗</div>
           </button>
         </div>
+        <button id="cmp-share-btn" class="dc-collect-btn active" style="margin-top:var(--sp-md);width:100%;justify-content:center;">Share Comparison</button>
       </div>
     </div>
 
@@ -4087,6 +4102,21 @@ function renderCompareResults(fa,fb){
   document.getElementById('cmp-score-character')?.addEventListener('click',()=>{
     window.haptic?.('selection');
     openCharacterEdu(fa, fb, ca, cb);
+  });
+
+  document.getElementById('cmp-share-btn')?.addEventListener('click', async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: `Scentmap: ${fa.name} vs ${fb.name}`, url });
+      } catch (err) {
+        console.log('Share canceled or failed', err);
+      }
+    } else {
+      navigator.clipboard.writeText(url).then(() => {
+        showUndoToast('Link copied to clipboard!', () => {});
+      });
+    }
   });
 
   document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
@@ -4585,9 +4615,22 @@ function _renderNoseRound(container){
           result='correct';
         }else if(q.type==='family'&&q._families){
           // Same broad group = close
-          result='wrong';
+          const correctFam = q._families[q.correctIdx];
+          const guessedFam = q._families[idx];
+          const groups = [
+            ['woody', 'oud', 'leather'],
+            ['citrus', 'green'],
+            ['amber', 'gourmand'],
+            ['floral', 'chypre']
+          ];
+          const isClose = groups.some(g => g.includes(correctFam) && g.includes(guessedFam));
+          if(isClose) result = 'close';
         }else if(q.type==='sillage'){
-          // Within 2 points = close
+          // Within 2 points = close (though sillage is binary in this game, so this only applies if we had more choices)
+          // Actually, in sillage round, it's a binary choice between two frags. 
+          // So 'close' doesn't really apply to the binary choice itself, 
+          // but we could mark it close if the silage difference was very small (<= 2).
+          // However, the question gen ensures difference >= 2.
           result='wrong';
         }
 
@@ -4600,12 +4643,18 @@ function _renderNoseRound(container){
             b.setAttribute('aria-label',b.textContent+' — correct answer');
           }
         });
-        if(!isCorrect)btn.classList.add('wrong');
+        if(!isCorrect){
+          btn.classList.add(result==='close'?'close':'wrong');
+        }
         btn.setAttribute('aria-checked','true');
 
-        fb.innerHTML=isCorrect
-          ?`<span class="nose-fb-icon correct">✓</span> Correct! ${q.explanation}`
-          :`<span class="nose-fb-icon wrong">✗</span> Not quite. ${q.explanation}`;
+        if(isCorrect){
+          fb.innerHTML=`<span class="nose-fb-icon correct">✓</span> Correct! ${q.explanation}`;
+        }else if(result==='close'){
+          fb.innerHTML=`<span class="nose-fb-icon close">~</span> Close! ${q.explanation}`;
+        }else{
+          fb.innerHTML=`<span class="nose-fb-icon wrong">✗</span> Not quite. ${q.explanation}`;
+        }
         fb.hidden=false;
 
         _noseState.answers.push(result);
@@ -4802,8 +4851,10 @@ async function init() {
     .then(r => r.json())
     .then(pairs => {
       _popularPairs = pairs;
+      // Don't overwrite a comparison that handleInitialNavigation() already loaded
+      if (CMP_A || CMP_B) return;
       // Auto-select first pair if no comparison is active
-      if (!CMP_A && !CMP_B && pairs.length) {
+      if (pairs.length) {
         const fa = CAT_MAP[pairs[0].a], fb = CAT_MAP[pairs[0].b];
         if (fa && fb) {
           _selectFragForSlot('a', fa);
@@ -4816,6 +4867,7 @@ async function init() {
     .catch(() => {});
 
   handleInitialNavigation();
+  window.addEventListener('hashchange', handleInitialNavigation);
 }
 
 function computeNoteTiers() {
@@ -4838,13 +4890,28 @@ function computeNoteTiers() {
   });
 }
 
+
 function handleInitialNavigation() {
   const hash = window.location.hash.replace('#', '');
-  const _cmpMatch = window.location.pathname.match(/^\/compare\/([a-z0-9-]+)\/([a-z0-9-]+)$/);
+  const pathname = window.location.pathname;
+  // More robust regex for compare routes, allowing for alphanumeric and dashes/underscores
+  const _cmpMatch = pathname.match(/^\/compare\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)\/?(?:index\.html)?$/);
+  const _quizMatch = pathname.match(/^\/quiz\/([a-zA-Z0-9_-]+)\/?(?:index\.html)?$/);
   let _deepLinkedCompare = false;
 
+  const data = store.getData();
+  const currentCatMap = data.catalogMap;
+
+  // Standalone page? Hide unneeded elements
+  if (pathname.startsWith('/compare/') || pathname.startsWith('/quiz/')) {
+    const sidebar = document.querySelector('.catalog-sidebar');
+    if (sidebar) sidebar.style.display = 'none';
+  }
+
   if (_cmpMatch) {
-    const fragA = CAT_MAP[_cmpMatch[1]], fragB = CAT_MAP[_cmpMatch[2]];
+    const idA = _cmpMatch[1].toLowerCase();
+    const idB = _cmpMatch[2].toLowerCase();
+    const fragA = currentCatMap[idA], fragB = currentCatMap[idB];
     if (fragA && fragB) {
       _deepLinkedCompare = true;
       _selectFragForSlot('a', fragA);
@@ -4853,13 +4920,25 @@ function handleInitialNavigation() {
   }
 
   if (_deepLinkedCompare) {
-    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
+  } else if (_quizMatch) {
+    renderStandaloneQuiz(_quizMatch[1]);
   } else if (hash === 'notes') {
-    go('notes', document.querySelector('.global-nav-link[onclick*="notes"]'));
+    go('notes', document.querySelector('.global-nav-link[onclick*="notes"], .mbn-btn[onclick*="notes"]'));
   } else if (hash === 'catalog') {
     go('catalog', null);
-  } else if (hash === 'saved') {
-    go('saved', document.querySelector('.global-nav-link[onclick*="saved"]'));
+  } else if (hash === 'saved' || hash === 'journal' || hash === 'you') {
+    go('saved', document.querySelector('.global-nav-link[onclick*="saved"], .mbn-btn[onclick*="saved"]'));
+  } else if (hash === 'open-search') {
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+    setTimeout(() => openUniversalSearch(), 350);
+  } else if (hash.startsWith('feel=')) {
+    const feel = decodeURIComponent(hash.split('=')[1]);
+    go('catalog', null);
+    setTimeout(() => {
+      const btn = Array.from(document.querySelectorAll('.cat-feel-bar .tab, .cat-feel-bar-m .tab')).find(b => b.textContent.toLowerCase().includes(feel.toLowerCase()));
+      if (btn) btn.click();
+    }, 200);
   } else if (hash.startsWith('search=')) {
     const query = decodeURIComponent(hash.split('=')[1]);
     go('catalog', null);
@@ -4876,8 +4955,32 @@ function handleInitialNavigation() {
       go('catalog', null);
       openFragDetail(frag);
     }
-  } else {
-    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+  } else if (hash === 'compare') {
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
+  } else if (pathname === '/app' || pathname === '/app.html' || pathname === '/') {
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
+  }
+}
+
+async function renderStandaloneQuiz(slug) {
+  // Try to use full quiz logic if available (by loading quiz config)
+  try {
+    const res = await fetch('/data/quiz-config.json');
+    const allConfigs = await res.json();
+    const config = allConfigs[slug];
+    if (config) {
+      // For now, render the Global Quiz or Byredo Quiz if it matches
+      const container = document.getElementById('p-compare'); // Re-use panel for quiz if in standalone shell
+      if (slug === 'find-your-byredo') {
+        go('compare', null); // Hide results, show panel
+        openDetail(c => renderByredoQuiz(c), config.title);
+      } else {
+        go('compare', null);
+        openDetail(c => renderGlobalQuiz(c), config.title);
+      }
+    }
+  } catch (e) {
+    console.warn('[app] renderStandaloneQuiz failed:', e);
   }
 }
 
@@ -4885,7 +4988,7 @@ function handleInitialNavigation() {
 init();
 
 // Load and render changelog
-fetch('CHANGELOG.md').then(r=>r.text()).then(md=>{
+fetch('/CHANGELOG.md').then(r=>r.text()).then(md=>{
   const el=document.getElementById('changelog-body');
   // Minimal Markdown → HTML renderer (supports ## h2, ### h3, - lists, nested  - lists, **bold**, `code`, ---)
   function inlineFmt(s){
