@@ -4,6 +4,31 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-19 (5)
+
+### Fixed
+- **Catalog rows: missing ARIA attributes** — `renderCatRow` now sets `role="button"`, `tabindex="0"`, and `aria-label="<name> by <brand>[— Owned/On wishlist]"` on every catalog row. Without these, keyboard users and screen reader users could not interact with the list at all.
+- **Catalog rows: keyboard activation** — added `keydown` handler on each `.scent-list` so Enter and Space open the fragrance detail panel when a row has focus (in addition to click).
+- **Focus ring clipped by overflow:hidden** — catalog rows use `overflow: hidden` which clips the global `box-shadow` focus ring. Added `.list-item:focus-visible` override with an inset `outline` so the focus indicator is always visible for keyboard navigation.
+- **Note layer hints: no accessible label** — `<span class="note-layer-hint">H</span>` and `…B…` now carry `aria-label="Heart note:"` / `aria-label="Base note:"` so screen readers announce them meaningfully.
+
+### Added
+- **Arrow key navigation in catalog** — when focus is on a catalog row, `ArrowDown`/`ArrowUp` moves to the adjacent row across all brand sections, matching the expected keyboard pattern for lists.
+- **Share button on fragrance detail** — a "↗ Share" button appears in the collect action row. Clicking it copies a `#frag=<id>` deep-link URL to the clipboard and shows a brief "✓ Copied" confirmation. The `#frag=<id>` hash was already parsed by `handleInitialNavigation`, so links work end-to-end.
+
+## 2026-03-19 (4)
+
+### Added
+- **The Nose Knows — daily fragrance trivia game** — 5-round daily quiz with deterministic questions (same for all users each day). Five question types: note identification (4 MC), sillage comparison (binary), family classification (4 MC), note description (4 MC), and shared notes (free text with fuzzy matching). Entry row appears at top of catalog. Also accessible from More sheet. Results screen with emoji grid (🟩🟨🟥), streak tracking, and clipboard share in Wordle-style format. All state persisted in localStorage.
+- **Search: diacritic normalization** — queries like `xinu` now match `Xinú`, `diptique` matches `Diptyque`. Normalized fields (`_nameN`, `_brandN`, `_nAllN`) added to store preprocessing. Applied to catalog search, universal search (⌘K), compare picker, and notes browser.
+- **Search: fuzzy matching** — Levenshtein-based fallback activates when substring match returns no results and query is ≥4 characters. `byedo` finds Byredo (threshold ≤1 for brands), `diptique` finds Diptyque (threshold ≤2 for names).
+- **Search: keyboard navigation** — Arrow Down from search input focuses first catalog result. Arrow Up/Down navigates between results. Escape returns focus to search. Enter on search input opens first result. First result highlighted with `.search-first` background.
+- **`runSearchTests()` dev utility** — 10 unit tests for search helpers, callable from browser console.
+
+### Changed
+- **Engineering review for Phase 2** — added complete implementation plan for The Nose Knows to TODOS.md with architecture decisions, data flow, edge cases, and test plan.
+- **More sheet** — added "Daily Challenge" entry with 🧠 icon as first item.
+
 ## 2026-03-19 (3)
 
 ### Fixed

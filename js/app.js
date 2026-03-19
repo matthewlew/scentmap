@@ -21,6 +21,29 @@ function debounce(fn, delay) {
   return function(...args) { clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), delay); };
 }
 
+/* ── Search helpers: diacritic normalization + fuzzy matching ── */
+function normQ(s){ return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+
+function levenshtein(a,b){
+  const m=a.length,n=b.length;
+  const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i||j));
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function wordFuzzy(q,phrase,threshold){
+  if(levenshtein(q,phrase)<=threshold) return true;
+  return phrase.split(/\s+/).some(w=>w.length>=q.length-1&&levenshtein(q,w)<=threshold);
+}
+
+function matchFrag(f,q){
+  if(!q) return true;
+  if(f._nameN.includes(q)||f._brandN.includes(q)||f._nAllN.some(n=>n.includes(q))) return true;
+  if(q.length<4) return false;
+  return wordFuzzy(q,f._nameN,2)||wordFuzzy(q,f._brandN,1);
+}
+
 /* State */
 function gst(id){return store.getState(id)}
 window.checkRedundancy = function(fragId) {
@@ -1104,8 +1127,22 @@ function renderFragDetail(container,frag){
     trialBtn.className='dc-collect-btn';
     trialBtn.innerHTML=`<span class="dc-collect-icon">⏱</span> Track Trial`;
     trialBtn.addEventListener('click',e=>{e.stopPropagation();window.openTrialSheet(frag.id);});
-    
-    el.appendChild(wishBtn);el.appendChild(ownBtn);el.appendChild(trialBtn);
+
+    const shareBtn=document.createElement('button');
+    shareBtn.className='dc-collect-btn';
+    shareBtn.setAttribute('aria-label','Copy shareable link to this fragrance');
+    shareBtn.innerHTML=`<span class="dc-collect-icon">↗</span> Share`;
+    shareBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const url=location.origin+location.pathname+'#frag='+frag.id;
+      navigator.clipboard.writeText(url).then(()=>{
+        shareBtn.innerHTML=`<span class="dc-collect-icon">✓</span> Copied`;
+        shareBtn.classList.add('active');
+        setTimeout(()=>{shareBtn.innerHTML=`<span class="dc-collect-icon">↗</span> Share`;shareBtn.classList.remove('active');},2000);
+      });
+    });
+
+    el.appendChild(wishBtn);el.appendChild(ownBtn);el.appendChild(trialBtn);el.appendChild(shareBtn);
   }
   renderCollectRow();
 
@@ -2005,11 +2042,8 @@ function buildCatalog(roleFilter){
   if(CAT_BRAND_FILTER)visibleCat=visibleCat.filter(f=>f.brand===CAT_BRAND_FILTER);
   if(CAT_STATE_FILTER==='owned')visibleCat=visibleCat.filter(f=>isOwned(f.id));
   else if(CAT_STATE_FILTER==='wish')visibleCat=visibleCat.filter(f=>isWish(f.id));
-  if(search)visibleCat=visibleCat.filter(f=>
-    f._nameL.includes(search)||
-    f._brandL.includes(search)||
-    f._nAll.some(n=>n.includes(search))
-  );
+  const normSearch = normQ(search);
+  if(normSearch) visibleCat = visibleCat.filter(f => matchFrag(f, normSearch));
 
   if(!visibleCat.length){
     const empty=document.createElement('div');empty.className='cat-empty';
@@ -2025,6 +2059,16 @@ function buildCatalog(roleFilter){
   // Announce result count to screen readers
   const liveEl=document.getElementById('cat-live');if(liveEl)liveEl.textContent=`${visibleCat.length} fragrance${visibleCat.length!==1?'s':''}`;
 
+
+  // Nose Knows entry row (always visible at top, no gate)
+  if(!normSearch&&!CAT_FAM_FILTER&&!CAT_BRAND_FILTER&&CAT_STATE_FILTER!=='owned'&&CAT_STATE_FILTER!=='wish'){
+    const noseEl=document.createElement('div');
+    noseEl.innerHTML=_noseEntryHtml();
+    const noseBtn=noseEl.firstElementChild;
+    noseBtn.addEventListener('click',()=>_openNoseGame());
+    noseBtn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();_openNoseGame();}});
+    body.appendChild(noseBtn);
+  }
 
   const brands=[...new Set(visibleCat.map(f=>f.brand))].sort((a,b)=>a.localeCompare(b));
   brands.forEach(brand=>{
@@ -2071,6 +2115,21 @@ function buildCatalog(roleFilter){
       }
     });
 
+    // Keyboard: Enter/Space opens detail; ArrowUp/Down navigates across all visible rows
+    list.addEventListener('keydown', e=>{
+      const row=e.target.closest('.list-item');if(!row||e.target!==row)return;
+      if(e.key==='Enter'||e.key===' '){
+        e.preventDefault();
+        const frag=CAT_MAP[row.dataset.id];if(frag)openFragDetail(frag);
+      } else if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+        e.preventDefault();
+        const allRows=[...body.querySelectorAll('.list-item[tabindex="0"]')];
+        const idx=allRows.indexOf(row);
+        const next=e.key==='ArrowDown'?allRows[idx+1]:allRows[idx-1];
+        next?.focus();
+      }
+    });
+
     // Long press logic
     list.addEventListener('touchstart', e=>{
       const row=e.target.closest('.list-item');if(!row)return;
@@ -2113,6 +2172,10 @@ function buildCatalog(roleFilter){
     const bcEl=document.getElementById(`bc-${key}`);
     if(bcEl){const o=frags.filter(f=>isOwned(f.id)).length,w=frags.filter(f=>isWish(f.id)).length;bcEl.textContent=[o&&`${o} owned`,w&&`${w} wished`].filter(Boolean).join(' · ')}
   });
+  if(normSearch){
+    const firstRow = body.querySelector('.list-item');
+    if(firstRow) firstRow.classList.add('search-first');
+  }
   updCC();
   // hidden select for filter state (used by role landing)
   let sel=document.getElementById('cat-role-filter');
@@ -2281,7 +2344,33 @@ function initCatalogControls(){
       e.stopPropagation();
       searchEl.value='';clearBtn.classList.remove('visible');buildCatalog();searchEl.blur();
     }
+    if(e.key==='Enter'){
+      const first=document.querySelector('#cat-body .list-item');
+      if(first){first.click();e.preventDefault();}
+    }
+    if(e.key==='ArrowDown'){
+      e.preventDefault();
+      const first=document.querySelector('#cat-body .list-item');
+      if(first) first.focus();
+    }
   });
+  const catBody=document.getElementById('cat-body');
+  if(catBody){
+    catBody.addEventListener('keydown',e=>{
+      if(!['ArrowDown','ArrowUp','Escape'].includes(e.key)) return;
+      e.preventDefault();
+      const rows=[...catBody.querySelectorAll('.list-item')];
+      const idx=rows.indexOf(document.activeElement);
+      if(e.key==='Escape'){ searchEl.focus(); return; }
+      if(e.key==='ArrowUp'){
+        if(idx<=0) searchEl.focus();
+        else{ rows[idx-1].focus(); rows[idx-1].scrollIntoView({block:'nearest'}); }
+      }
+      if(e.key==='ArrowDown'&&idx<rows.length-1){
+        rows[idx+1].focus(); rows[idx+1].scrollIntoView({block:'nearest'});
+      }
+    });
+  }
 
   // Mobile filter toggle
   const toggleBtn=document.getElementById('frag-filter-toggle');
@@ -2297,6 +2386,10 @@ function initCatalogControls(){
 function renderCatRow(row,frag,fm,search){
   const st=gst(frag.id);
   row.className=`list-item${st!=='default'?' list-item--'+st:''}`;
+  row.setAttribute('role','button');
+  row.setAttribute('tabindex','0');
+  const _stLabel=st==='owned'?' — Owned':st==='wish'?' — On wishlist':'';
+  row.setAttribute('aria-label',`${frag.name} by ${frag.brand}${_stLabel}`);
   row.dataset.family=frag.family;
   row.dataset.brand=frag.brand;
   row.dataset.roles=frag.roles.join(' ');
@@ -2331,8 +2424,8 @@ function renderCatRow(row,frag,fm,search){
     const baseNote=(frag.base||[])[0];
     const parts=[];
     if(topNotes)parts.push(topNotes);
-    if(midNote)parts.push(`<span class="note-layer-hint">H</span> ${midNote}`);
-    if(baseNote)parts.push(`<span class="note-layer-hint">B</span> ${baseNote}`);
+    if(midNote)parts.push(`<span class="note-layer-hint" aria-label="Heart note:">H</span> ${midNote}`);
+    if(baseNote)parts.push(`<span class="note-layer-hint" aria-label="Base note:">B</span> ${baseNote}`);
     if(parts.length)notesHtml=`<div class="list-item-meta">${parts.join(' · ')}</div>`;
   }
 
@@ -2479,7 +2572,7 @@ function buildNotes(searchQuery, currentTier){
   // Filter notes by search query and tier
   const sq = notesSearchQuery.toLowerCase().trim();
   const filteredNotes = NI.filter(n => {
-    const matchesQuery = n.name.toLowerCase().includes(sq);
+    const matchesQuery = !sq || (n._nameN ? n._nameN.includes(normQ(sq)) : n.name.toLowerCase().includes(sq));
     let matchesTier = false;
     if (notesTierMode === 'all') matchesTier = true;
     else if (notesTierMode === 'saved') matchesTier = isNoteSaved(n.name);
@@ -2736,10 +2829,7 @@ function _renderUsResults(query) {
       const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
       if (other && f.id === other.id) return false;
       if (!q) return true;
-      return f.name.toLowerCase().includes(q) ||
-             f.brand.toLowerCase().includes(q) ||
-             (f._nTop||[]).some(n=>n.includes(q)) ||
-             (f._nMid||[]).some(n=>n.includes(q));
+      return matchFrag(f, normQ(q));
     });
 
     if (_usScores) {
@@ -2792,13 +2882,8 @@ function _renderUsResults(query) {
   let rowIdx = 0;
 
   // Fragrances (max 6)
-  const fragMatches = CAT.filter(f =>
-    f.name.toLowerCase().includes(q) ||
-    f.brand.toLowerCase().includes(q) ||
-    (f._nTop||[]).some(n=>n.includes(q)) ||
-    (f._nMid||[]).some(n=>n.includes(q)) ||
-    (f._nBase||[]).some(n=>n.includes(q))
-  ).slice(0, 6);
+  const normQStr = normQ(q);
+  const fragMatches = CAT.filter(f => matchFrag(f, normQStr)).slice(0, 6);
 
   if (fragMatches.length) {
     html += `<div class="us-section-hdr" role="presentation">Fragrances</div>`;
@@ -2807,7 +2892,7 @@ function _renderUsResults(query) {
 
   // Notes (max 3)
   const noteMatches = (NI || []).filter(n =>
-    n.name.toLowerCase().includes(q)
+    n._nameN ? n._nameN.includes(normQStr) : n.name.toLowerCase().includes(q)
   ).slice(0, 3);
 
   if (noteMatches.length) {
@@ -3063,6 +3148,7 @@ function openMoreSheet(btn){
     library:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>`,
   };
   const items=[
+    {id:'daily',icon:'<span style="font-size:18px;line-height:18px">🧠</span>', label:'Daily Challenge', action:"closeAllSheets();_openNoseGame()"},
     {id:'saved',icon:_ico.star, label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
     {id:'changelog',icon:_ico.megaphone, label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
     {id:'playground',icon:_ico.library, label:'Design System', action:"window.open('/playground.html', '_blank')"}
@@ -4188,6 +4274,437 @@ const _origCloseNotePopup=closeNotePopup;
   document.getElementById('note-float-bg').removeEventListener('click',_origClose);
   document.getElementById('note-float-bg').addEventListener('click',window.closeNotePopup);
 })();
+
+/* ══ THE NOSE KNOWS — Daily Fragrance Trivia ═══════════════════════ */
+
+function _noseSeed(dateStr){
+  let h=0;
+  for(const c of dateStr) h=((h<<5)-h+c.charCodeAt(0))|0;
+  return Math.abs(h);
+}
+function _noseRng(seed){
+  const next=(seed*1664525+1013904223)&0x7fffffff;
+  return {seed:next, val:next/0x7fffffff};
+}
+function _noseShuffle(arr,seed){
+  const c=[...arr];
+  for(let i=c.length-1;i>0;i--){
+    const r=_noseRng(seed+i);seed=r.seed;
+    const j=Math.floor(r.val*(i+1));
+    [c[i],c[j]]=[c[j],c[i]];
+  }
+  return c;
+}
+function _nosePick(arr,seed,n){return _noseShuffle(arr,seed).slice(0,n);}
+function _noseToday(){return new Date().toISOString().slice(0,10);}
+
+function _noseGenQuestions(){
+  const date=_noseToday();
+  const seed=_noseSeed(date);
+  const questions=[];
+
+  // R1: NOTE_ID — "Which fragrance contains X, Y, Z?"
+  (()=>{
+    const pool=_noseShuffle(CAT.filter(f=>f._nAll.length>=3),seed+1);
+    const frag=pool[0]; if(!frag)return;
+    const notes=_nosePick(frag._nAll,seed+10,3).map(n=>n.charAt(0).toUpperCase()+n.slice(1));
+    const distractors=_noseShuffle(CAT.filter(f=>f.id!==frag.id&&f.family===frag.family),seed+11).slice(0,3);
+    if(distractors.length<3){
+      distractors.push(..._noseShuffle(CAT.filter(f=>f.id!==frag.id&&!distractors.some(d=>d.id===f.id)),seed+12).slice(0,3-distractors.length));
+    }
+    const choices=[frag,...distractors.slice(0,3)];
+    const shuffled=_noseShuffle(choices,seed+13);
+    questions.push({
+      type:'note_id',
+      prompt:`Which fragrance contains ${notes.slice(0,-1).join(', ')} and ${notes[notes.length-1]}?`,
+      choices:shuffled.map(f=>`${f.name}`),
+      correctIdx:shuffled.indexOf(frag),
+      explanation:`${frag.name} by ${frag.brand} features all three notes across its pyramid.`,
+      fragRef:frag
+    });
+  })();
+
+  // R2: SILLAGE — "Higher sillage: A or B?"
+  (()=>{
+    const pool=_noseShuffle(CAT,seed+2);
+    let pair=null;
+    for(let i=0;i<pool.length-1;i++){
+      for(let j=i+1;j<pool.length;j++){
+        if(Math.abs(pool[i].sillage-pool[j].sillage)>=2){
+          pair=[pool[i],pool[j]];break;
+        }
+      }
+      if(pair)break;
+    }
+    if(!pair)pair=[pool[0],pool[1]];
+    const shuffled=_noseShuffle(pair,seed+20);
+    const correctIdx=shuffled[0].sillage>=shuffled[1].sillage?0:1;
+    const winner=shuffled[correctIdx];
+    questions.push({
+      type:'sillage',
+      prompt:`Which has higher sillage?`,
+      choices:shuffled.map(f=>`${f.name} — ${f.brand}`),
+      correctIdx,
+      explanation:`${winner.name} has sillage ${winner.sillage}/10 vs ${shuffled[1-correctIdx].name} at ${shuffled[1-correctIdx].sillage}/10.`,
+      fragRef:winner
+    });
+  })();
+
+  // R3: FAMILY — "What family is X?"
+  (()=>{
+    const frag=_noseShuffle(CAT,seed+3)[0]; if(!frag)return;
+    const correct=frag.family;
+    const others=_noseShuffle(FAM_ORDER.filter(f=>f!==correct),seed+30).slice(0,3);
+    const choices=[correct,...others];
+    const shuffled=_noseShuffle(choices,seed+31);
+    questions.push({
+      type:'family',
+      prompt:`What fragrance family is ${frag.name}?`,
+      choices:shuffled.map(f=>FAM[f]?.label||f),
+      correctIdx:shuffled.indexOf(correct),
+      explanation:`${frag.name} by ${frag.brand} belongs to the ${FAM[correct]?.label||correct} family.`,
+      fragRef:frag,
+      _families:shuffled
+    });
+  })();
+
+  // R4: NOTE_DESC — "Which note is described as '...'?"
+  (()=>{
+    const withDesc=NI.filter(n=>n.desc&&n.desc.length>20);
+    const pool=_noseShuffle(withDesc,seed+4);
+    const note=pool[0]; if(!note)return;
+    const desc=note.desc.length>80?note.desc.slice(0,80).replace(/\s+\S*$/,'')+'…':note.desc;
+    const others=_noseShuffle(withDesc.filter(n=>n.name!==note.name),seed+40).slice(0,3);
+    const choices=[note,...others];
+    const shuffled=_noseShuffle(choices,seed+41);
+    questions.push({
+      type:'note_desc',
+      prompt:`Which note is described as "${desc}"`,
+      choices:shuffled.map(n=>n.name),
+      correctIdx:shuffled.indexOf(note),
+      explanation:`${note.name} — ${note.desc.slice(0,100)}${note.desc.length>100?'…':''}`,
+      fragRef:null
+    });
+  })();
+
+  // R5: SHARED — "These two share N notes. Name one."
+  (()=>{
+    const pool=_noseShuffle(CAT,seed+5);
+    let found=null;
+    for(let i=0;i<Math.min(pool.length,50);i++){
+      for(let j=i+1;j<Math.min(pool.length,50);j++){
+        const shared=pool[i]._nAll.filter(n=>pool[j]._nAll.includes(n));
+        if(shared.length>=2){found={a:pool[i],b:pool[j],shared};break;}
+      }
+      if(found)break;
+    }
+    if(!found)return;
+    questions.push({
+      type:'shared',
+      prompt:`${found.a.name} and ${found.b.name} share ${found.shared.length} note${found.shared.length>1?'s':''}. Name one.`,
+      choices:null,
+      sharedNotes:found.shared.map(n=>n.toLowerCase()),
+      correctIdx:null,
+      explanation:`The shared notes are ${found.shared.map(n=>n.charAt(0).toUpperCase()+n.slice(1)).join(', ')}.`,
+      fragRef:found.a
+    });
+  })();
+
+  return questions;
+}
+
+// -- Nose state --
+let _noseState=null;
+
+function _noseLoadState(){
+  try{
+    const saved=localStorage.getItem('sm_nose_today');
+    if(saved){
+      const parsed=JSON.parse(saved);
+      if(parsed.date===_noseToday())return parsed;
+    }
+  }catch(e){}
+  return null;
+}
+
+function _noseSaveState(){
+  if(!_noseState)return;
+  try{
+    localStorage.setItem('sm_nose_today',JSON.stringify({
+      date:_noseState.date,
+      answers:_noseState.answers,
+      currentRound:_noseState.currentRound
+    }));
+    // Streak
+    const played=localStorage.getItem('sm_nose_played');
+    if(played!==_noseState.date){
+      localStorage.setItem('sm_nose_played',_noseState.date);
+      const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+      const yStr=yesterday.toISOString().slice(0,10);
+      let streak=parseInt(localStorage.getItem('sm_nose_streak')||'0',10);
+      if(played===yStr) streak++;
+      else streak=1;
+      localStorage.setItem('sm_nose_streak',String(streak));
+      const best=parseInt(localStorage.getItem('sm_nose_best')||'0',10);
+      if(streak>best)localStorage.setItem('sm_nose_best',String(streak));
+    }
+  }catch(e){}
+}
+
+function _noseAlreadyPlayed(){
+  const saved=_noseLoadState();
+  return saved&&saved.answers&&saved.answers.length>=5;
+}
+
+function _noseResultEmoji(answers){
+  return(answers||[]).map(a=>a==='correct'?'🟩':a==='close'?'🟨':'🟥').join('');
+}
+
+function _noseScore(answers){
+  return(answers||[]).filter(a=>a==='correct').length;
+}
+
+// -- Nose UI --
+function _openNoseGame(){
+  const isMobile=window.innerWidth<768;
+  const saved=_noseLoadState();
+  if(saved&&saved.answers&&saved.answers.length>=5){
+    // Already played — show results
+    _noseState={date:_noseToday(),questions:_noseGenQuestions(),answers:saved.answers,currentRound:5};
+    if(isMobile)pushSheet(c=>_renderNoseResults(c),'The Nose Knows');
+    else openDesktopDetail(c=>_renderNoseResults(c));
+    return;
+  }
+  _noseState={
+    date:_noseToday(),
+    questions:_noseGenQuestions(),
+    answers:saved?.answers||[],
+    currentRound:saved?.currentRound||0
+  };
+  if(isMobile)pushSheet(c=>_renderNoseRound(c),'The Nose Knows');
+  else openDesktopDetail(c=>_renderNoseRound(c));
+}
+window._openNoseGame=_openNoseGame;
+
+function _renderNoseRound(container){
+  const q=_noseState.questions[_noseState.currentRound];
+  if(!q){_renderNoseResults(container);return;}
+  const round=_noseState.currentRound;
+  const total=_noseState.questions.length;
+
+  const dots=_noseState.questions.map((_,i)=>{
+    let cls='nose-dot';
+    if(i<_noseState.answers.length){
+      cls+=' '+_noseState.answers[i];
+    }else if(i===round){
+      cls+=' current';
+    }
+    return `<span class="${cls}"></span>`;
+  }).join('');
+
+  let choicesHtml='';
+  if(q.type==='shared'){
+    choicesHtml=`<div class="nose-input-wrap">
+      <input type="text" class="nose-text-input" placeholder="Type a note name..." aria-label="Type a note name" aria-describedby="nose-q-text">
+      <button class="dc-collect-btn active nose-submit-btn">Submit</button>
+    </div>`;
+  }else{
+    const cols=q.choices.length===2?'nose-grid-2':'nose-grid-4';
+    choicesHtml=`<div class="nose-answers ${cols}" role="radiogroup" aria-label="Answer choices">
+      ${q.choices.map((c,i)=>`<button class="nose-answer" role="radio" aria-checked="false" aria-label="${c}" data-idx="${i}">${c}</button>`).join('')}
+    </div>`;
+  }
+
+  container.innerHTML=`
+    <div class="nose-game" role="main" aria-label="The Nose Knows daily quiz">
+      <div class="nose-header">
+        <div class="nose-title">The Nose Knows</div>
+        <div class="nose-round-label">Round ${round+1} of ${total}</div>
+      </div>
+      <div class="nose-dots" role="progressbar" aria-valuenow="${round+1}" aria-valuemax="${total}">${dots}</div>
+      <div class="nose-question" id="nose-q-text" role="heading" aria-level="2">${q.prompt}</div>
+      ${choicesHtml}
+      <div class="nose-feedback" id="nose-feedback" hidden></div>
+      <button class="dc-collect-btn active nose-next-btn" hidden>Next round →</button>
+    </div>`;
+
+  // Wire up interactions
+  const fb=container.querySelector('#nose-feedback');
+  const nextBtn=container.querySelector('.nose-next-btn');
+
+  if(q.type==='shared'){
+    const input=container.querySelector('.nose-text-input');
+    const submit=container.querySelector('.nose-submit-btn');
+    const doSubmit=()=>{
+      const val=normQ(input.value.trim());
+      if(!val)return;
+      submit.disabled=true;input.disabled=true;
+      const exact=q.sharedNotes.some(n=>n===val);
+      const fuzzy=!exact&&q.sharedNotes.some(n=>levenshtein(val,n)<=2);
+      // Check if it's a note in either frag but not shared
+      const allNotes=[...(q.fragRef?._nAll||[])];
+      const inFragButNotShared=!exact&&!fuzzy&&allNotes.some(n=>n.toLowerCase()===val||levenshtein(val,n.toLowerCase())<=2);
+
+      let result;
+      if(exact||fuzzy){
+        result='correct';
+        const matchedNote=fuzzy?q.sharedNotes.find(n=>levenshtein(val,n)<=2):val;
+        fb.innerHTML=`<span class="nose-fb-icon correct">✓</span> ${fuzzy?`Close enough! We'll take "${input.value}" for "${matchedNote}".`:'Correct!'} ${q.explanation}`;
+      }else if(inFragButNotShared){
+        result='close';
+        fb.innerHTML=`<span class="nose-fb-icon close">~</span> Close! That note is in one of them, but not shared. ${q.explanation}`;
+      }else{
+        result='wrong';
+        fb.innerHTML=`<span class="nose-fb-icon wrong">✗</span> Not a match. ${q.explanation}`;
+      }
+      fb.hidden=false;
+      _noseState.answers.push(result);
+      _noseSaveState();
+      nextBtn.hidden=false;
+      if(_noseState.currentRound>=_noseState.questions.length-1)nextBtn.textContent='See results →';
+    };
+    submit.addEventListener('click',doSubmit);
+    input.addEventListener('keydown',e=>{if(e.key==='Enter')doSubmit();});
+  }else{
+    container.querySelectorAll('.nose-answer').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const idx=parseInt(btn.dataset.idx,10);
+        const isCorrect=idx===q.correctIdx;
+
+        // Determine "close" for MC
+        let result='wrong';
+        if(isCorrect){
+          result='correct';
+        }else if(q.type==='family'&&q._families){
+          // Same broad group = close
+          result='wrong';
+        }else if(q.type==='sillage'){
+          // Within 2 points = close
+          result='wrong';
+        }
+
+        // Mark all buttons disabled
+        container.querySelectorAll('.nose-answer').forEach(b=>{
+          b.setAttribute('aria-disabled','true');
+          b.style.pointerEvents='none';
+          if(parseInt(b.dataset.idx,10)===q.correctIdx){
+            b.classList.add('correct');
+            b.setAttribute('aria-label',b.textContent+' — correct answer');
+          }
+        });
+        if(!isCorrect)btn.classList.add('wrong');
+        btn.setAttribute('aria-checked','true');
+
+        fb.innerHTML=isCorrect
+          ?`<span class="nose-fb-icon correct">✓</span> Correct! ${q.explanation}`
+          :`<span class="nose-fb-icon wrong">✗</span> Not quite. ${q.explanation}`;
+        fb.hidden=false;
+
+        _noseState.answers.push(result);
+        _noseSaveState();
+        nextBtn.hidden=false;
+        if(_noseState.currentRound>=_noseState.questions.length-1)nextBtn.textContent='See results →';
+      });
+    });
+  }
+
+  nextBtn.addEventListener('click',()=>{
+    _noseState.currentRound++;
+    _noseSaveState();
+    if(_noseState.currentRound>=_noseState.questions.length){
+      _renderNoseResults(container);
+    }else{
+      _renderNoseRound(container);
+    }
+  });
+}
+
+function _renderNoseResults(container){
+  const answers=_noseState.answers;
+  const score=_noseScore(answers);
+  const emoji=_noseResultEmoji(answers);
+  const streak=parseInt(localStorage.getItem('sm_nose_streak')||'0',10);
+  const best=parseInt(localStorage.getItem('sm_nose_best')||'0',10);
+  const perfect=score===_noseState.questions.length;
+
+  const roundTypes=['Note identification','Sillage comparison','Family classification','Note description','Shared notes'];
+  const breakdown=answers.map((a,i)=>{
+    const icon=a==='correct'?'✓':a==='close'?'~':'✗';
+    const label=a==='correct'?'':a==='close'?' close!':' wrong';
+    return `<div class="nose-breakdown-row ${a}"><span class="nose-fb-icon ${a}">${icon}</span> ${roundTypes[i]||'Round '+(i+1)}${label}</div>`;
+  }).join('');
+
+  const shareText=`${emoji} The Nose Knows — ${score}/${_noseState.questions.length}${streak>1?' — Day '+streak+' 🔥':''}\nscentmap.co/daily`;
+
+  container.innerHTML=`
+    <div class="nose-results">
+      <div class="nose-results-label">Today's Results</div>
+      ${perfect?'<div class="nose-perfect">Flawless nose today.</div>':''}
+      <div class="nose-emoji">${emoji}</div>
+      <div class="nose-score-big">${score}/${_noseState.questions.length}</div>
+      <div class="nose-streak-row">
+        ${streak>1?`<span>🔥 Streak: ${streak} day${streak>1?'s':''}</span>`:''}
+        ${best>1?`<span>📊 Best: ${best} day${best>1?'s':''}</span>`:''}
+      </div>
+      <div class="nose-breakdown">${breakdown}</div>
+      <div class="nose-results-ctas">
+        <button class="dc-collect-btn active nose-share-btn">Share score</button>
+        ${_noseState.questions[0]?.fragRef?`<button class="dc-collect-btn nose-explore-btn">Explore ${_noseState.questions[0].fragRef.name} →</button>`:''}
+      </div>
+    </div>`;
+
+  container.querySelector('.nose-share-btn')?.addEventListener('click',()=>{
+    navigator.clipboard.writeText(shareText).then(()=>{
+      const btn=container.querySelector('.nose-share-btn');
+      btn.textContent='Copied!';
+      setTimeout(()=>{btn.textContent='Share score';},1500);
+    }).catch(()=>{});
+  });
+
+  container.querySelector('.nose-explore-btn')?.addEventListener('click',()=>{
+    const frag=_noseState.questions[0].fragRef;
+    if(frag)openFragDetail(frag);
+  });
+
+  // Rebuild catalog to update entry row
+  buildCatalog();
+}
+
+// -- Nose entry row in catalog --
+function _noseEntryHtml(){
+  if(_noseAlreadyPlayed()){
+    const saved=_noseLoadState();
+    const emoji=_noseResultEmoji(saved.answers);
+    const score=_noseScore(saved.answers);
+    return `<button class="list-item nose-entry" role="button" tabindex="0" aria-label="Today's score: ${score} out of 5">
+      <span class="list-item-content"><span class="nose-entry-icon">🧠</span><span class="list-item-body"><span class="list-item-name">Today's Score: ${emoji} ${score}/5</span><span class="list-item-sub">The Nose Knows · Tap to review</span></span></span>
+    </button>`;
+  }
+  return `<button class="list-item nose-entry" role="button" tabindex="0" aria-label="Today's Challenge — The Nose Knows">
+    <span class="list-item-content"><span class="nose-entry-icon">🧠</span><span class="list-item-body"><span class="list-item-name">Today's Challenge</span><span class="list-item-sub">The Nose Knows · 5 rounds · tap to play</span></span></span>
+  </button>`;
+}
+
+// Dev utility: search tests (run in console with runSearchTests())
+function runSearchTests(){
+  const pass=[],fail=[];
+  const chk=(label,got,exp)=>(got===exp?pass:fail).push({label,got,exp});
+  chk('lev same word',levenshtein('diptyque','diptyque'),0);
+  chk('lev 1 edit',levenshtein('diptique','diptyque'),1);
+  chk('lev empty',levenshtein('','test'),4);
+  const mockFrag={_nameN:'gypsy water',_brandN:'byredo',_nAllN:['bergamot','rose','vanilla']};
+  chk('exact brand',matchFrag(mockFrag,'byredo'),true);
+  chk('exact name substring',matchFrag(mockFrag,'gypsy'),true);
+  chk('diacritic: xinu matches xinu note',matchFrag({_nameN:'xinu',_brandN:'brand',_nAllN:[]},normQ('xinú')),true);
+  chk('fuzzy brand byedo→byredo',matchFrag(mockFrag,'byedo'),true);
+  chk('fuzzy name diptique→diptyque',matchFrag({_nameN:'something',_brandN:'diptyque',_nAllN:[]},'diptique'),true);
+  chk('short query no fuzzy (by)',matchFrag({_nameN:'xyz brand',_brandN:'abc',_nAllN:[]},'by'),false);
+  chk('note match',matchFrag(mockFrag,'rose'),true);
+  pass.forEach(t=>console.log(`%cPASS%c ${t.label}`,'color:green',''));
+  fail.forEach(t=>console.error(`FAIL ${t.label}: got ${t.got}, expected ${t.exp}`));
+  console.log(`${pass.length} passed, ${fail.length} failed`);
+}
+window.runSearchTests=runSearchTests;
 
 // Global keyboard shortcuts — ⌘K / Ctrl+K / `/` opens universal search
 document.addEventListener('keydown',function(e){
