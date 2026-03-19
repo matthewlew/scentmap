@@ -413,3 +413,91 @@
   color: var(--g450);
   margin-bottom: var(--sp-xs);
 }
+
+/* ── CATALOG LAYOUT ─────────────────────────────────────────────── */
+
+.catalog-shell {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow: hidden;
+}
+
+.catalog-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  padding: var(--sp-lg);
+  border-right: 1px solid var(--border-subtle);
+  scrollbar-width: none;
+}
+
+.catalog-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.catalog-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.cat-sidebar-section {
+  padding: var(--sp-md) 0 var(--sp-sm);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.cat-sidebar-section:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* Sidebar filter bars: vertical list layout */
+.catalog-sidebar .cat-state-bar,
+.catalog-sidebar .cat-family-bar,
+.catalog-sidebar .cat-feel-bar,
+.catalog-sidebar .cat-brand-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--sp-xs);
+}
+
+.catalog-sidebar .cat-brand-bar {
+  max-height: 260px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.catalog-sidebar .cat-brand-bar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tab/pill alignment inside sidebar */
+.catalog-sidebar .tab,
+.catalog-sidebar .fam-pill {
+  text-align: left;
+  justify-content: flex-start;
+  padding: var(--sp-xs) var(--sp-sm);
+  font-size: var(--fs-meta);
+  border-radius: var(--radius-sm);
+}
+
+.catalog-sidebar .tab.active {
+  background: var(--bg-tertiary);
+  box-shadow: none;
+}
+
+/* Hide desktop sidebar on mobile; show it on desktop */
+@media (max-width: 767px) {
+  .catalog-sidebar {
+    display: none;
+  }
+
+  .catalog-shell {
+    flex-direction: column;
+  }
+}

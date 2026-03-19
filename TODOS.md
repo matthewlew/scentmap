@@ -62,6 +62,148 @@ Fixed in prior session — `.catalog-sidebar` hidden on standalone pages.
 
 ---
 
+## Phase 3: QA Fixes & Design System Polish
+
+**Branch:** `QA-fixes` | **Status:** In progress (2026-03-19)
+
+Tasks are written as self-contained agent prompts. Read `DESIGN.md` and `GEMINI.md` before starting any task.
+
+**Model guide:** Flash = isolated/CSS changes. Pro = multi-file debugging or layout reasoning.
+
+---
+
+### ✅ FIXED (2026-03-19): Stale agent docs (GEMINI.md, PRINCIPLES.md, design-fixes.md, testing-personas.md)
+Port corrected (3000→3001), Session Summary removed, Jules references removed, PRINCIPLES.md Section 6 removed.
+
+### ✅ FIXED (2026-03-19): DESIGN.md component guide created
+`DESIGN.md` now exists with component inventory table (9 components), token rules, pre-PR checklist, and persona descriptions. `CLAUDE.md` updated to reference it. See `DESIGN.md`.
+
+### ✅ FIXED (2026-03-19): Compare URL hard-refresh drops fragrances
+**Root cause:** `renderPopularComparisons()` inside the `popular-comparisons.json` fetch callback was called even when `handleInitialNavigation()` had already set `CMP_A`/`CMP_B`, overwriting the pre-loaded comparison.
+**Fix:** Added `if (CMP_A || CMP_B) return;` guard at top of the `.then()` callback (`js/app.js` ~line 4852). Fetch now bails out immediately if a comparison is already active.
+
+### ✅ FIXED (2026-03-19): List-item swipe tray visible on desktop click
+**Root cause:** `focus-within` CSS rule in `styles/components.css` (lines ~908–914) applied `transform: translateX(-120px)` on desktop click (which focuses the element).
+**Fix:** Wrapped `focus-within` rules in `@media (hover: none), (pointer: coarse)`. Added `@media (hover: hover) and (pointer: fine) { .list-item-actions { display: none; } }` to completely hide the tray on pointer devices.
+
+### ✅ FIXED (2026-03-19): settings-menu-item token alignment
+Added `min-height: var(--touch-target)` (WCAG 2.5.5). Changed `border-radius: var(--radius)` → `var(--radius-sm)`. (`styles/components.css` lines 72–87)
+
+### ✅ FIXED (2026-03-19): carousel-card inline style overrides
+Added `.carousel-card--wide` (width: 240px) and `.carousel-card-family-label` CSS classes. Removed `card.style.width = '240px'` inline override. Replaced `<span style="font-size:.6rem;color:var(--g500)">` with `<span class="carousel-card-family-label">` in all carousel-card family renders.
+
+### ✅ FIXED (2026-03-19): Catalog sidebar layout missing CSS + mobile showing raw stacked filters
+**Root cause:** `.catalog-shell`, `.catalog-sidebar`, `.catalog-main`, `.cat-sidebar-section` had zero CSS. The sidebar appeared unstyled and visible on all viewports.
+**Fix:** Added layout CSS in `styles/layout.css`: flex row shell, 220px fixed sidebar, flex-grow main. Added filter bar vertical layout rules for sidebar. Added `@media (max-width: 767px) { .catalog-sidebar { display: none; } }`.
+
+---
+
+## Phase 4: Design Debt (from design-fixes.md audit)
+
+Tasks migrated from `design-fixes.md` (see that file for original findings). Each task is self-contained and Gemini-ready.
+
+---
+
+### P4-001: Add .landing-card CSS class
+**Model:** Flash | **Effort:** ~20 min
+**What:** The "Trying scents on?" CTA card in the You panel (`js/app.js:611`, renders into `#you-journal-cta`) uses a nonexistent `.landing-card` class with no CSS. The card has no border-radius or padding — content touches the edge.
+**How:** Add `.landing-card` to `styles/components.css`:
+```css
+.landing-card {
+  border-radius: var(--radius-lg);
+  padding: var(--sp-lg);
+  border: 1px solid var(--border-standard);
+  background: var(--bg-secondary);
+}
+```
+Remove any inline `border-color` and `background` attributes from the JS render.
+**Done when:** The CTA card in the You tab has rounded corners, padding, and a consistent border — no inline style overrides.
+
+---
+
+### P4-002: Add border-radius and border to swap suggestion cards
+**Model:** Flash | **Effort:** ~20 min
+**What:** `.cmp-sug-card` (`.list-item--flat`) renders as flat rectangles with no border-radius. They look like bars, not contained surfaces.
+**Where:** `styles/components.css` line ~235 (`.cmp-sug-card`)
+**How:** Add `border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-standard);` to `.cmp-sug-card` or its parent.
+**Done when:** Swap suggestion cards have visible rounded corners on all four corners with a subtle border.
+
+---
+
+### P4-003: Extract DNA card inline styles to CSS classes
+**Model:** Pro | **Effort:** ~1 hour
+**What:** The Olfactive DNA card (`js/app.js:642–668`) uses 100% inline styles: `font-size:32px`, `font-size:10px`, `opacity:0.8`, `margin-bottom:4px`, etc.
+**How:**
+1. Create `.dna-card` in `styles/components.css` with proper padding and background.
+2. Create `.dna-stat-label` with `font-size: var(--fs-label); color: var(--text-tertiary)`.
+3. Create `.dna-section-divider` with `border-top: 1px solid var(--border-subtle); margin: var(--sp-md) 0`.
+4. Replace all inline style attributes in the JS render with these classes.
+**Done when:** Zero inline `style=""` attributes on DNA card elements except data-driven bar widths.
+
+---
+
+### P4-004: Extract sensory profile bars to CSS classes
+**Model:** Flash | **Effort:** ~30 min
+**What:** The "Sensory Profile" section in the detail panel (`js/app.js:1075–1088`) uses raw inline styles for every bar element.
+**How:** Create in `styles/components.css`:
+- `.sensory-bar-row { display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-xs); }`
+- `.sensory-bar-label { font-family: var(--font-sans); font-size: var(--fs-label); color: var(--text-tertiary); width: 56px; flex-shrink: 0; }`
+- `.sensory-bar-track { flex: 1; height: 4px; background: var(--border-standard); border-radius: var(--radius-micro); overflow: hidden; }`
+- `.sensory-bar-fill { height: 100%; background: var(--resin); border-radius: var(--radius-micro); transition: width var(--dur-standard) var(--ease-spring); }`
+The `width` on `.sensory-bar-fill` remains a data-driven inline style (`style="width: ${pct}%"`).
+**Done when:** Sensory bars use the CSS classes; only the `width` value is inline.
+
+---
+
+### P4-005: Extract scent journey timeline to CSS classes
+**Model:** Flash | **Effort:** ~30 min
+**What:** The Opening→Heart→Dry Down timeline (`js/app.js:1092–1108`) uses deeply nested inline styles for the vertical timeline layout.
+**How:** Create in `styles/components.css`:
+- `.journey-timeline { padding-left: var(--sp-lg); border-left: 2px solid var(--border-standard); }`
+- `.journey-step { position: relative; margin-bottom: var(--sp-md); }`
+- `.journey-dot { position: absolute; left: calc(-1 * var(--sp-lg) - 5px); top: 4px; width: 8px; height: 8px; border-radius: var(--radius-circle); border: 2px solid var(--border-strong); background: var(--bg-primary); }`
+- `.journey-dot--filled { background: var(--resin); border-color: var(--resin); }`
+**Done when:** Timeline renders with the same visual as before, but using CSS classes instead of inline styles.
+
+---
+
+### P4-006: Fix compare frag-card padding inconsistency
+**Model:** Flash | **Effort:** ~20 min
+**What:** `.cmp-frag-card-name-row` has mixed padding values with a magic `2px`. Children manage their own horizontal padding instead of the parent.
+**Where:** `styles/components.css` lines 1842, 1849, 1903
+**How:** Add `.cmp-frag-card-body { padding: var(--sp-md); }`. Remove individual horizontal padding from `.cmp-frag-card-name-row`, `.cmp-frag-card-name`, `.cmp-frag-card-brand`. Use `gap` for vertical spacing.
+**Done when:** All padding inside a compare frag card comes from a single `.cmp-frag-card-body` wrapper — no magic pixel values.
+
+---
+
+### P4-007: Fix collection section spacing
+**Model:** Flash | **Effort:** ~15 min
+**What:** `.collection-section` spacing is tight — "OWNED 1" header and list item below have no breathing room. Panel padding is inline on `#p-saved`.
+**Where:** `js/app.js:327–370`; `styles/components.css:3562`; `app/index.html:58`
+**How:**
+1. In `styles/components.css`, add `margin-top: var(--sp-sm)` to `.scent-list` within `.collection-section`.
+2. In `styles/layout.css`, add `#p-saved, #p-changelog { padding: var(--sp-lg); }` and remove inline `style="padding: var(--sp-lg);"` from those panels in `app/index.html`.
+**Done when:** The "OWNED" section header has visible breathing room above the first card; no inline padding on panel elements.
+
+---
+
+### P4-008: Fix cmp-sug-v2-label class name
+**Model:** Flash | **Effort:** ~5 min
+**What:** The "Swap suggestions" heading in JS still uses `.cmp-sug-v2-label` which was migrated to `.sec-label` in CSS.
+**Where:** `js/app.js:3610`
+**How:** Change the class to `sec-label` in the JS template string.
+**Done when:** The swap suggestions heading renders with the same styling as all other `.sec-label` headings.
+
+---
+
+### P4-009: Extract dupe lab items to CSS classes
+**Model:** Flash | **Effort:** ~30 min
+**What:** Each dupe item in the detail panel (`js/app.js:985–1026`) is a `<div>` with ~8 inline styles: border, radius, padding, background, margin, flex.
+**How:** Create `.dupe-item` in `styles/components.css` with `border: 1px solid var(--border-standard); border-radius: var(--radius-lg); padding: var(--sp-md); background: var(--bg-secondary); margin-bottom: var(--sp-sm)`. Reuse `.dc-*` patterns for the score and brand sub-elements.
+**Done when:** Each dupe item uses `.dupe-item` with no inline style other than data-driven score widths.
+
+---
+
 ## Future Ideas (deferred — revisit after DNA Card ships and has usage data)
 
 One-line summaries only. Full specs will be written when these are promoted to active work.

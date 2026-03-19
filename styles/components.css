@@ -74,6 +74,7 @@
   align-items: center;
   gap: var(--sp-sm);
   width: 100%;
+  min-height: var(--touch-target);
   background: none;
   border: none;
   padding: var(--sp-sm) var(--sp-md);
@@ -82,7 +83,7 @@
   color: var(--text-primary);
   text-align: left;
   cursor: pointer;
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   transition: background var(--dur-fast);
 }
 
@@ -905,12 +906,21 @@
   background: var(--bg-secondary);
 }
 
-/* Reveal action buttons on keyboard focus (accessibility: swipe actions not keyboard-accessible otherwise) */
-.list-item:focus-within .list-item-actions {
-  transform: translateX(0);
+/* Reveal action buttons on keyboard focus — touch/keyboard devices only */
+@media (hover: none), (pointer: coarse) {
+  .list-item:focus-within .list-item-actions {
+    transform: translateX(0);
+  }
+  .list-item:focus-within .list-item-content {
+    transform: translateX(-120px);
+  }
 }
-.list-item:focus-within .list-item-content {
-  transform: translateX(-120px);
+
+/* Hide swipe tray entirely on desktop (pointer devices) */
+@media (hover: hover) and (pointer: fine) {
+  .list-item-actions {
+    display: none;
+  }
 }
 
 /* Focus ring: box-shadow is clipped by overflow:hidden — use inset outline instead */
@@ -3244,6 +3254,17 @@ button.cmp-note-pill:hover {
   display: flex;
   align-items: center;
   gap: var(--sp-xs);
+}
+
+.carousel-card-family-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  color: var(--text-tertiary);
+}
+
+/* Wide variant for golden-pairs layering cards */
+.carousel-card--wide {
+  width: 240px;
 }
 
 .fam-dot {

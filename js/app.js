@@ -814,7 +814,7 @@ window.renderSaved = function() {
       pairSec.innerHTML = `<div class="sec-label">Shop Your Stash (Golden Pairs)</div>`;
       const pairWrap = document.createElement('div'); pairWrap.className = 'carousel';
       pairs.forEach(p => {
-        const card = document.createElement('div'); card.className = 'carousel-card'; card.style.width = '240px';
+        const card = document.createElement('div'); card.className = 'carousel-card carousel-card--wide';
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-sm);">
             <div class="dc-badge" style="background:var(--accent-primary); color:var(--paper); font-size:9px;">${p.score}% LAYER MATCH</div>
@@ -1613,7 +1613,7 @@ function renderHouseDetail(container,brand){
       card.className = 'carousel-card';
       card.innerHTML = `<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
-        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
+        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
       card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       carousel.appendChild(card);
     });
@@ -2092,7 +2092,7 @@ function renderPicker(container,roleId){
       const card=document.createElement('div');card.className='carousel-card';
       card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
-        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span style="font-size:.6rem;color:var(--g500)">${fm.label}</span></div>`;
+        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
       card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),frag.name)});
       row.appendChild(card);
     });
@@ -4851,8 +4851,10 @@ async function init() {
     .then(r => r.json())
     .then(pairs => {
       _popularPairs = pairs;
+      // Don't overwrite a comparison that handleInitialNavigation() already loaded
+      if (CMP_A || CMP_B) return;
       // Auto-select first pair if no comparison is active
-      if (!CMP_A && !CMP_B && pairs.length) {
+      if (pairs.length) {
         const fa = CAT_MAP[pairs[0].a], fb = CAT_MAP[pairs[0].b];
         if (fa && fb) {
           _selectFragForSlot('a', fa);

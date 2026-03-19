@@ -1,5 +1,7 @@
 # Design Fixes — Ship-Ready Polish
 
+> **Deprecated** — Open findings migrated to TODOS.md Phase 4 (2026-03-19). This file is kept for historical reference only. Do not add new findings here.
+
 Audit of spacing, border-radius, padding, and layout consistency issues.
 Goal: professional, harmonious UI with design-system-driven spacing.
 

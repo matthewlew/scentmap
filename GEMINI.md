@@ -9,7 +9,7 @@ This file describes the development workflow and conventions for the Scentmap pr
 ```
 index.html          HTML structure only (~180 lines, no inline JS)
 js/
-  app.js            All application logic (~1,950 lines)
+  app.js            All application logic
 styles/
   design-system.css Design tokens (colors, spacing, typography, breakpoints)
   components.css    Component styles
@@ -47,10 +47,10 @@ cp -r /Users/matthewlewair/Documents/scentmap/compare /tmp/scentmap-copy/
 
 **Cache-bust the browser after syncing:**
 ```
-http://localhost:3000/?v=<timestamp>
+http://localhost:3001/?v=<timestamp>
 ```
 
-Use `location.href = 'http://localhost:3000/?v=' + Date.now()` to force a fresh load in the browser.
+Use `location.href = 'http://localhost:3001/?v=' + Date.now()` to force a fresh load in the browser.
 
 ---
 
@@ -85,24 +85,6 @@ Use `location.href = 'http://localhost:3000/?v=' + Date.now()` to force a fresh 
 - **Catalog controls** — `initCatalogControls()` must be called once during init (after data loads) to wire up All/Owned/Wishlist tabs, the search input, and the **Feelings/Role filter bar (`cat-feel-bar`)**.
 - **Deep Linking** — `handleInitialNavigation()` parses the URL hash (e.g., `#notes`, `#saved`, `#feel=solar`) and path (e.g., `/compare/a/b`, `/quiz/slug`) to activate the correct state and pre-load data on startup.
 - **Standalone Engines** — Sub-pages like `/quiz/` use `js/quiz.js`, which renders into `.col-main-content`. It includes a `window.go` redirector to ensure navigation links in the shared shell remain functional.
-
----
-
-## Session Summary (2026-03-19)
-
-### Accomplishments
-- **Phase 0 Routing Hotfix**: Resolved critical issues where standalone `/compare/` and `/quiz/` URLs failed to load data or rendered incorrectly.
-- **Standalone Compare URLs**: Fixed deep-linked fragrance pre-loading by making ID lookup more robust (case-insensitive) and improving regex to support all valid fragrance slugs.
-- **Standalone Quiz Logic**: Fixed a critical syntax error in `quiz.js` and updated container targeting to `.col-main-content`.
-- **SPA Quiz Fallback**: Implemented `renderStandaloneQuiz` in `app.js` to handle quiz routes when the main app shell is loaded via a Single Page App configuration.
-- **Navigation Recovery**: Fixed broken "Feelings" (Role) filters in the Catalog sidebar and ensured navigation links on standalone quiz pages redirect correctly to the main app.
-- **Architecture Stabilization**: Improved `handleInitialNavigation` to robustly handle `#you`, `#journal`, and standalone paths. Refined `go()` redirect logic to prevent unnecessary resets to `/app`.
-- **Visual Cleanup**: Hid `.catalog-sidebar` on standalone pages to prevent visual pollution.
-- **gstack Upgrade**: Upgraded the agent stack to v0.8.5 for improved platform-agnostic review templates and better shipping gates.
-
-### Unresolved / Next Steps
-- **Engineering Review**: Detailed review of architecture, data flow, and test coverage is ongoing for the `QA-fixes` branch.
-- **Unified Navigation**: Consider refactoring `onclick` handlers to event listeners to avoid the need for `window` exposure in ES modules.
 
 ---
 

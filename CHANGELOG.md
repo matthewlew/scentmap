@@ -1,3 +1,18 @@
+## 2026-03-19 (11)
+
+### Fixed
+- **Compare URL hard-refresh race condition** — `renderPopularComparisons()` was called inside the `popular-comparisons.json` fetch callback even when `handleInitialNavigation()` had already populated `CMP_A`/`CMP_B`, overwriting the pre-loaded comparison with popular suggestions. Fixed with `if (CMP_A || CMP_B) return;` guard at top of fetch `.then()`. Hard-refreshing `/compare/<id-a>/<id-b>/` now always loads both fragrances.
+- **List-item swipe tray visible on desktop click** — `focus-within` CSS rule was applying `transform: translateX(-120px)` on the catalog row when a user clicked it on desktop (click → focus triggers `focus-within`). Wrapped the reveal rule in `@media (hover: none), (pointer: coarse)`. Added `@media (hover: hover) and (pointer: fine) { .list-item-actions { display: none; } }` to completely hide swipe actions on pointer devices.
+- **Catalog sidebar missing layout CSS** — `.catalog-shell`, `.catalog-sidebar`, `.catalog-main`, `.cat-sidebar-section` had zero CSS definitions. The sidebar showed as an unstyled vertically-stacked block on all viewports. Added proper flex-row shell, 220px fixed sidebar, flex-grow main content, and `display: none` on mobile (<768px) in `styles/layout.css`.
+
+### Changed
+- **settings-menu-item token alignment** — Added `min-height: var(--touch-target)` (44px, WCAG 2.5.5). Changed `border-radius: var(--radius)` → `var(--radius-sm)` (explicit scoped token).
+- **carousel-card family label** — Replaced `<span style="font-size:.6rem;color:var(--g500)">` inline style with `.carousel-card-family-label` CSS class (`--fs-label` + `--text-tertiary`). Added `.carousel-card--wide` CSS variant (240px) for golden-pairs cards; removed `card.style.width = '240px'` inline override.
+
+### Added
+- **DESIGN.md** — Component inventory (9 components with file:line refs), token rules, pre-PR checklist, and accessibility persona descriptions. Referenced from `CLAUDE.md`.
+- **TODOS.md Phase 3 + Phase 4** — Phase 3 documents all QA fixes with root causes. Phase 4 has 9 self-contained design debt tasks from `design-fixes.md` audit, written as Gemini-ready prompts with model assignments.
+
 ## 2026-03-19 (10)
 
 ### Fixed
