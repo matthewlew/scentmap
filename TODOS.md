@@ -55,7 +55,7 @@ Fixed in prior session — `.catalog-sidebar` hidden on standalone pages.
 
 ## Phase 3: QA Fixes & Design System Polish
 
-**Branch:** `QA-fixes` | **Status:** In progress (2026-03-19)
+**Branch:** `QA-fixes` | **Status:** Complete (2026-03-19)
 
 Tasks are written as self-contained agent prompts. Read `DESIGN.md` and `GEMINI.md` before starting any task.
 
@@ -156,6 +156,30 @@ Tasks migrated from `design-fixes.md` (see that file for original findings). Eac
 ### ✅ FIXED (2026-03-19): Extract dupe lab items to CSS classes (P4-009)
 **What:** Each dupe item in the detail panel (`js/app.js:985–1026`) is a `<div>` with ~8 inline styles: border, radius, padding, background, margin, flex.
 **Fix:** Created `.dupe-item` in `styles/components.css` with proper tokens. Reused `.dc-*` patterns and added sub-element classes for name, score, and description.
+
+---
+
+## Phase 5: Design System Codification (2026-03-19)
+
+**Branch:** `claude-proposal` | **Status:** ✅ Complete
+
+### ✅ DONE (2026-03-19): Codify card taxonomy, section spacing, and list typography
+
+**What:** DESIGN.md was missing three critical specs causing divergent implementations across the codebase.
+
+**Rules added to DESIGN.md (`## Visual Composition Rules`):**
+- **Card taxonomy** — surface color determines border. Card on `--bg-primary` → `--bg-secondary` + no border. Card on `--bg-secondary` → `--bg-primary` + `1px --border-standard`. Interactive card → `--border-subtle` + hover `--border-strong`.
+- **Section spacing** — parent uses `gap: var(--sp-2xl)` (24px). Children carry no `margin-top`/`margin-bottom`. Hierarchy: 24px major → 12px within section → 4px tight label+value.
+- **List typography contract** — `.list-item-name` / `.list-item-sub` / `.list-item-meta` are the only permitted text classes for name+description in list rows and cards. Display heading exception documented.
+
+**Code migrations:**
+- `#cmp-results` and `#cat-body` → flex column with `gap: var(--sp-3xl)`; 6 component `margin-bottom` rules removed
+- `.cmp-frag-card` background fixed from `transparent` → `var(--bg-primary)`
+- `.dc-description`, `.np-desc` fixed from primitive `var(--g600)` → `var(--text-secondary)`
+- `.dc-story`, `.np-insight`, `.np-frags-list` extracted from inline styles to CSS classes
+- `.nf-name`/`.nf-desc` consolidated to `.list-item-name`/`.list-item-sub`
+- `.carousel-card-name`/`.carousel-card-brand` converted to dual-class (layout + typography)
+- Pre-PR checklist extended with 3 new checkboxes
 
 ---
 

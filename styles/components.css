@@ -399,8 +399,18 @@
 
 .dc-description {
   font-size: var(--fs-body);
-  color: var(--g600);
+  color: var(--text-secondary);
   margin-bottom: 0;
+}
+
+/* Callout / story block in detail panel */
+.dc-story {
+  padding: var(--sp-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
 }
 
 /* Collection quick-action row in detail panel */
@@ -1090,11 +1100,14 @@
 
 
 
+#notes-body {
+  padding-top: var(--sp-lg);
+}
+
 .notes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--sp-xl);
-  margin-top: var(--sp-lg);
 }
 
 .notes-card {
@@ -1127,17 +1140,7 @@
   margin-top: 5px;
 }
 
-.nf-name {
-  font-size: var(--fs-body);
-  font-weight: 600;
-}
-
-.nf-desc {
-  font-size: var(--fs-body-sm);
-  color: var(--text-secondary);
-  margin-top: var(--sp-xs);
-  margin-bottom: var(--sp-sm);
-}
+/* .nf-name / .nf-desc — consolidated to .list-item-name / .list-item-sub */
 
 /* ── 9. MISCELLANEOUS ── */
 
@@ -1197,11 +1200,14 @@
 }
 
 .cat-section {
-  margin-bottom: var(--sp-3xl);
+  /* margin-bottom removed — parent #cat-body gap handles section spacing */
 }
 
 #cat-body {
   padding: var(--sp-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xl);
 }
 
 /* ══ CATALOG LAYOUT ══ */
@@ -1734,7 +1740,14 @@ mark.note-match {
 }
 
 .cmp-header {
-  margin-bottom: var(--sp-lg);
+  padding-bottom: var(--sp-lg);
+}
+
+/* Compare results container — flex column; gap handles all section spacing */
+#cmp-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xl);
 }
 
 .cmp-pair-row {
@@ -1800,7 +1813,7 @@ mark.note-match {
   min-height: 120px;
   display: flex;
   flex-direction: column;
-  background: transparent;
+  background: var(--bg-primary);
 }
 
 .cmp-frag-card:hover {
@@ -1989,7 +2002,6 @@ mark.note-match {
   border-radius: var(--radius-xl);
   background: var(--bg-primary);
   padding: var(--sp-lg);
-  margin-bottom: var(--sp-3xl);
   display: flex;
   flex-direction: column;
 }
@@ -2160,7 +2172,7 @@ mark.note-match {
 /* ── Scatter v2 ── */
 
 .cmp-scatter-v2 {
-  margin-bottom: var(--sp-3xl);
+  /* margin-bottom removed — #cmp-results gap handles spacing */
 }
 
 /* .cmp-scatter-v2-label → migrated to .sec-label */
@@ -2175,7 +2187,7 @@ mark.note-match {
 /* ── Notes grid v2 ── */
 
 .cmp-notes-v2 {
-  margin-bottom: var(--sp-3xl);
+  /* margin-bottom removed — #cmp-results gap handles spacing */
 }
 
 /* .cmp-notes-v2-label → migrated to .sec-label */
@@ -2293,7 +2305,7 @@ button.cmp-note-pill:hover {
 /* ── Suggestions v2 ── */
 
 .cmp-sug-v2 {
-  margin-bottom: var(--sp-3xl);
+  /* margin-bottom removed — #cmp-results gap handles spacing */
 }
 
 /* .cmp-sug-v2-label → migrated to .sec-label */
@@ -3009,8 +3021,31 @@ button.cmp-note-pill:hover {
 
 .np-desc {
   font-size: var(--fs-body);
-  color: var(--g600);
+  color: var(--text-secondary);
   margin-bottom: 0;
+}
+
+/* Perfumer's Insight callout block in note detail */
+.np-insight {
+  padding: var(--sp-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-caption);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.np-insight strong {
+  display: block;
+  margin-bottom: var(--sp-xs);
+  color: var(--text-primary);
+}
+
+/* Container for in-catalog list in note popup */
+.np-frags-list {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .np-frags {
@@ -3227,19 +3262,14 @@ button.cmp-note-pill:hover {
   border-color: var(--border-strong);
 }
 
+/* Typography via .list-item-name — layout overrides only */
 .carousel-card-name {
-  font-size: var(--fs-body);
-  font-weight: 600;
   letter-spacing: -0.01em;
-  line-height: var(--lh-tight);
-  margin-bottom: 3px;
-  color: var(--text-primary);
+  margin-bottom: var(--sp-xs);
 }
 
+/* Typography via .list-item-sub — layout overrides only */
 .carousel-card-brand {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  color: var(--text-tertiary);
   letter-spacing: 0.02em;
   margin-bottom: var(--sp-sm);
 }
@@ -3951,7 +3981,7 @@ button.cmp-note-pill:hover {
 /* ── Social Proof (in compare results) ── */
 .cmp-social-proof {
   padding: var(--sp-sm) var(--sp-md);
-  margin: var(--sp-sm) 0 var(--sp-xl);
+  /* margin removed — #cmp-results gap handles spacing */
 }
 .cmp-social-proof-item {
   font-family: var(--font-sans);
