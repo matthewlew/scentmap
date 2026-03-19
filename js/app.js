@@ -690,7 +690,7 @@ window.renderSaved = function() {
   
   if (ctaWrap) {
     ctaWrap.innerHTML = `
-      <div class="landing-card" style="margin-bottom:var(--sp-2xl);">
+      <div class="landing-card">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background:var(--accent-primary);"></span>
           <h3 class="landing-card-title">Trying scents on?</h3>
@@ -1422,7 +1422,7 @@ function buildLayerSuggestions(frag,container){
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
     const row=document.createElement('button');
-    row.className='list-item list-item--flat';
+    row.className='list-item list-item--flat cmp-sug-card';
     row.innerHTML=`
       <div class="list-item-content">
         <div class="list-item-dot" style="background:${fm2.color}"></div>

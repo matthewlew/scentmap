@@ -104,25 +104,13 @@ Tasks migrated from `design-fixes.md` (see that file for original findings). Eac
 
 ---
 
-### P4-001: Add .landing-card CSS class
-**Model:** Flash | **Effort:** ~20 min
-**What:** The "Trying scents on?" CTA card in the You panel (`js/app.js:611`, renders into `#you-journal-cta`) uses a nonexistent `.landing-card` class with no CSS. The card has no border-radius or padding — content touches the edge.
-**How:** Add `.landing-card` to `styles/components.css`:
-```css
-.landing-card {
-  border-radius: var(--radius-lg);
-  padding: var(--sp-lg);
-  border: 1px solid var(--border-standard);
-  background: var(--bg-secondary);
-}
-```
-Remove any inline `border-color` and `background` attributes from the JS render.
-**Done when:** The CTA card in the You tab has rounded corners, padding, and a consistent border — no inline style overrides.
+### ✅ FIXED (2026-03-19): .landing-card CSS class (P4-001)
+**What:** The "Trying scents on?" CTA card in the You panel used a nonexistent `.landing-card` class with no CSS. Card had no radius or padding.
+**Fix:** Added `.landing-card` to `styles/components.css` with proper tokens. Removed 15+ inline `margin-bottom` overrides from `js/app.js`, `app/index.html`, and all standalone pages.
 
 ---
 
-### P4-002: Add border-radius and border to swap suggestion cards
-**Model:** Flash | **Effort:** ~20 min
+### ✅ FIXED (2026-03-19): Add border-radius and border to swap suggestion cards (P4-002)
 **What:** `.cmp-sug-card` (`.list-item--flat`) renders as flat rectangles with no border-radius. They look like bars, not contained surfaces.
 **Where:** `styles/components.css` line ~235 (`.cmp-sug-card`)
 **How:** Add `border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-standard);` to `.cmp-sug-card` or its parent.

@@ -1,3 +1,15 @@
+## 2026-03-19 (13)
+
+### Fixed
+- **Swap suggestion card borders & radius** (P4-002) — Updated `.cmp-sug-card` in `styles/components.css` with `!important` flags for `border`, `border-radius`, and `background` to ensure they override `.list-item` and `.list-item--flat` defaults. Cards now have visible `var(--radius-lg)` corners and a `var(--border-standard)` subtle border.
+- **Layering suggestion card consistency** — Added `.cmp-sug-card` class to "Layer with what you own" suggestion rows in `js/app.js` (`buildLayerSuggestions`) to ensure consistent visual treatment across all suggestion components.
+
+## 2026-03-19 (12)
+
+### Fixed
+- **.landing-card CSS class** (P4-001) — Added `.landing-card` to `styles/components.css` with proper border-radius (`var(--radius-lg)`), padding (`var(--sp-lg)`), border, and background. Moved `margin-bottom: var(--sp-2xl)` from inline styles to the class definition.
+- **Inline style removal (You panel)** — Removed 15+ occurrences of inline `margin-bottom` from the `#you-journal-cta` container and `.landing-card` div across `js/app.js`, `app/index.html`, `app.html`, and all standalone `compare` and `quiz` pages.
+
 ## 2026-03-19 (11)
 
 ### Fixed
