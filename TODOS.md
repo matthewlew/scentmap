@@ -48,63 +48,17 @@ Only items actively planned for the next 2 shipping cycles.
 ---
 
 ## Phase 1: Search Improvements + Quick Wins
-
-### Diacritic normalization + fuzzy matching + keyboard navigation
-**What:** (1) Diacritic stripping so `xinu` matches `xinú`, (2) Levenshtein fuzzy fallback so `diptique` matches `diptyque`, (3) arrow-key navigation from search input through catalog results.
-**Why:** #1 silent failure mode in search. Covers catalog, ⌘K modal, and compare picker.
-**Depends on:** Nothing. Self-contained change to `store.js` + `app.js` + `styles/components.css`.
-**Status:** ✅ SHIPPED (2026-03-19, changelog entry 4).
-**Effort:** S (CC: ~15 min)
-
-### Undo toast for state changes
-**What:** After any owned/wish/remove action, show a 3-second toast with "Undo" button. If tapped, reverts the state change.
-**Why:** Persona: Miguel (essential tremor). Accidentally cycles state frequently due to imprecise clicking. No way to revert without cycling through all 3 states again.
-**Where:** `setState()` in `app.js`. Toast component in `components.css`.
-**Depends on:** Nothing. Self-contained.
-**Effort:** S (CC: ~15 min)
-
-### Share button on Compare results
-**What:** Add a share/copy button to the Compare results section. Uses `navigator.share()` on mobile, clipboard copy on desktop. Compare URLs (`#compare/<id-a>/<id-b>`) already work via `history.replaceState`.
-**Why:** Persona: Jake (in-store shopper). Wants to share comparisons with friends. The URLs exist but there's no UI to copy them.
-**Where:** `renderCompareResults()` in `app.js`.
-**Effort:** S (CC: ~10 min)
-
-### "If you like X" recommendations in detail view
-**What:** At the bottom of `renderFragDetail()`, show "You might also like" with top 3 most similar fragrances (via `scoreSimilarity()`). Each row is a clickable `.list-item--compact`.
-**Why:** Persona: Jake (curious shopper). Arrives via one comparison, sees one fragrance detail, then dead-ends. This keeps exploration going.
-**Where:** `renderFragDetail()` in `app.js`. `scoreSimilarity()` already exists.
-**Effort:** S (CC: ~15 min)
-
-### Plain-language metric labels in detail view
-**What:** Next to sillage and layering scores, show the human-readable label. e.g., "7/10 — Strong (fills a room)" instead of just "7/10". The `SW[]` and `LW[]` arrays already exist with these labels.
-**Why:** Persona: Sarah (gift giver). "Sillage 7/10" means nothing to non-enthusiasts. The labels exist in code but aren't displayed.
-**Where:** `renderFragDetail()` in `app.js`. Just concatenate `SW[score]` / `LW[score]`.
-**Effort:** S (CC: ~5 min)
+**Status:** ✅ SHIPPED (2026-03-19, changelog entry 7).
 
 ---
 
 ## Phase 1.5: Collection Intelligence (before DNA Card)
-
-### Basic collection stats on 'You' tab
-**What:** Above the flat fragrance list on the 'You' / saved panel, show: total owned count, family breakdown (horizontal pill bar), average sillage, most common note across collection.
-**Why:** Persona: Emma (collector, 15 fragrances). Currently the 'You' tab is a dumb list. Even basic stats create collection awareness and prime users for DNA Card.
-**Where:** `buildSavedPanel()` or equivalent in `app.js`. `computeProfile()` can be aggregated across owned fragrances.
-**Depends on:** Nothing. Uses existing functions.
-**Effort:** S (CC: ~20 min)
+**Status:** ✅ SHIPPED (2026-03-19, changelog entry 7).
 
 ---
 
 ## Phase 2: Scent DNA Card
-
-**What:** Wardrobe-derived identity profile. When user has ≥3 owned fragrances, aggregates `computeProfile()` across collection → persona + sensory bars + family breakdown + gap recommendation + shareable card.
-**Why:** The emotional hook. Turns wardrobe data into identity. Creates collection investment and share moments.
-**Status:** Design-complete. Full spec in memory (`project_scent_dna_card.md`).
-**Depends on:** Nothing. Additive feature.
-**Effort:** M (CC: ~30 min)
-
-When shipping DNA Card, also do:
-- Deduplicate `computeProfile()` / `NOTE_PROFILE{}` between app.js and engine.js (~130 lines of exact duplication)
-- Add analytics event stubs (`dna_tab_viewed`, `dna_persona_assigned`, etc.)
+**Status:** ✅ SHIPPED (2026-03-19, changelog entry 7).
 
 ---
 

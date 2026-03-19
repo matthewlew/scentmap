@@ -2,6 +2,9 @@
    Lightweight standalone quiz for /quiz/:slug pages.
    Fetches scent data + quiz config, runs scoring, renders results. */
 
+import { ARCHETYPES } from './store.js';
+import { computeProfile, scoreFragrances as engineScoreFragrances } from './engine.js';
+
 const FAM = {
   citrus:  { label: 'Citrus',   color: '#9A6800' },
   green:   { label: 'Green',    color: '#1A6030' },
@@ -14,82 +17,6 @@ const FAM = {
   gourmand:{ label: 'Gourmand', color: '#7C4C00' },
   oud:     { label: 'Oud',      color: '#4A1850' },
 };
-
-const FAM_PROFILE_BASE = {
-  citrus:  [0.90,0.28,0.10],
-  green:   [0.82,0.18,0.20],
-  aquatic: [0.92,0.10,0.08],
-  floral:  [0.62,0.58,0.40],
-  chypre:  [0.58,0.30,0.50],
-  woody:   [0.30,0.30,0.72],
-  amber:   [0.18,0.72,0.88],
-  gourmand:[0.10,0.92,0.80],
-  leather: [0.18,0.20,0.82],
-  oud:     [0.08,0.40,1.00],
-};
-
-const NOTE_PROFILE = {
-  'agarwood':[0.10,0.22,0.90],'aldehydes':[0.72,0.20,0.38],'almond':[0.10,0.85,0.60],
-  'amber':[0.10,0.62,0.90],'ambergris':[0.20,0.35,0.65],'ambrette':[0.32,0.50,0.52],
-  'apple':[0.65,0.55,0.12],'atlas cedar':[0.35,0.10,0.65],'basil':[0.72,0.10,0.30],
-  'benzoin':[0.10,0.65,0.80],'bergamot':[0.92,0.25,0.10],'birch tar':[0.15,0.10,0.75],
-  'black currant':[0.68,0.42,0.22],'black orchid':[0.20,0.50,0.60],'black pepper':[0.50,0.10,0.55],
-  'blood orange':[0.80,0.48,0.12],'caramel':[0.05,0.90,0.70],'cardamom':[0.42,0.28,0.78],
-  'casablanca lily':[0.52,0.38,0.30],'castoreum':[0.10,0.22,0.80],'cedar':[0.32,0.10,0.65],
-  'cedarwood':[0.32,0.10,0.65],'cinnamon':[0.22,0.50,0.82],'cistus':[0.25,0.30,0.72],
-  'clove':[0.20,0.35,0.85],'coconut':[0.15,0.80,0.55],'coffee':[0.18,0.50,0.72],
-  'cyclamen':[0.65,0.28,0.20],'cypriol':[0.18,0.15,0.75],'driftwood':[0.35,0.05,0.52],
-  'elemi':[0.38,0.12,0.68],'eucalyptus':[0.80,0.05,0.15],'fig':[0.42,0.50,0.38],
-  'fir':[0.58,0.05,0.40],'frankincense':[0.32,0.20,0.75],'freesia':[0.70,0.35,0.22],
-  'galbanum':[0.70,0.05,0.22],'gardenia':[0.42,0.50,0.40],'geranium':[0.65,0.20,0.35],
-  'ginger':[0.55,0.20,0.65],'grapefruit':[0.90,0.20,0.05],'grass':[0.80,0.10,0.12],
-  'green tea':[0.75,0.15,0.22],'guaiac wood':[0.22,0.15,0.70],'heliotrope':[0.30,0.70,0.50],
-  'honey':[0.10,0.85,0.65],'honeysuckle':[0.55,0.55,0.30],'hyacinth':[0.60,0.30,0.22],
-  'incense':[0.25,0.15,0.80],'iris':[0.48,0.32,0.38],'jasmine':[0.40,0.52,0.55],
-  'labdanum':[0.10,0.42,0.90],'lapsang':[0.20,0.10,0.72],'lavender':[0.70,0.15,0.35],
-  'leather':[0.10,0.10,0.75],'lemon':[0.92,0.20,0.05],'lily':[0.55,0.30,0.30],
-  'lily of the valley':[0.72,0.25,0.20],'lime':[0.88,0.15,0.05],'magnolia':[0.52,0.38,0.30],
-  'mandarin':[0.82,0.45,0.15],'mate':[0.60,0.10,0.30],'mimosa':[0.55,0.50,0.40],
-  'mint':[0.85,0.10,0.10],'musk':[0.25,0.30,0.50],'myrrh':[0.15,0.28,0.85],
-  'narcissus':[0.42,0.38,0.45],'neroli':[0.75,0.35,0.30],'nutmeg':[0.30,0.30,0.75],
-  'oakmoss':[0.30,0.10,0.60],'orange blossom':[0.60,0.52,0.40],'orchid':[0.40,0.45,0.42],
-  'oud':[0.05,0.38,0.95],'palisander':[0.22,0.18,0.70],'papyrus':[0.42,0.10,0.35],
-  'patchouli':[0.10,0.28,0.85],'peach':[0.55,0.72,0.20],'peony':[0.60,0.42,0.30],
-  'pepper':[0.50,0.10,0.55],'pine':[0.55,0.05,0.45],'pineapple':[0.65,0.68,0.12],
-  'pink pepper':[0.58,0.18,0.50],'praline':[0.05,0.90,0.65],'rose':[0.50,0.50,0.45],
-  'rosemary':[0.68,0.08,0.35],'rosewood':[0.35,0.22,0.60],'saffron':[0.22,0.30,0.80],
-  'sandalwood':[0.20,0.32,0.78],'smoke':[0.15,0.08,0.72],'suede':[0.22,0.22,0.60],
-  'tea':[0.62,0.12,0.28],'tiare':[0.45,0.55,0.50],'tobacco':[0.12,0.40,0.78],
-  'tonka bean':[0.10,0.80,0.70],'tuberose':[0.35,0.55,0.60],'tulip':[0.60,0.30,0.25],
-  'vanilla':[0.05,0.90,0.70],'vetiver':[0.25,0.10,0.72],'violet':[0.50,0.30,0.35],
-  'violet leaf':[0.65,0.15,0.20],'waterlily':[0.80,0.20,0.12],'white musk':[0.32,0.35,0.42],
-  'ylang-ylang':[0.30,0.60,0.65],'yuzu':[0.88,0.20,0.08],
-};
-
-/* ── Profile computation (ported from app.js) ── */
-function computeProfile(frag) {
-  if (frag._profile) return frag._profile;
-  const b = FAM_PROFILE_BASE[frag.family] || [0.5, 0.5, 0.5];
-  const weighted = [
-    ...(frag.top || []).map(n => ({ n: n.toLowerCase(), w: 0.5 })),
-    ...(frag.mid || []).map(n => ({ n: n.toLowerCase(), w: 1.0 })),
-    ...(frag.base || []).map(n => ({ n: n.toLowerCase(), w: 1.5 })),
-  ].filter(({ n }) => NOTE_PROFILE[n]);
-  if (weighted.length === 0) {
-    frag._profile = { freshness: b[0], sweetness: b[1], warmth: b[2], intensity: (frag.sillage || 5) / 10, complexity: (frag.layering || 5) / 10 };
-    return frag._profile;
-  }
-  const totalW = weighted.reduce((s, { w }) => s + w, 0);
-  const avg = weighted.reduce((acc, { n, w }) => { const p = NOTE_PROFILE[n]; acc[0] += p[0] * w; acc[1] += p[1] * w; acc[2] += p[2] * w; return acc; }, [0, 0, 0]).map(v => v / totalW);
-  frag._profile = {
-    freshness: avg[0] * 0.6 + b[0] * 0.4,
-    sweetness: avg[1] * 0.6 + b[1] * 0.4,
-    warmth: avg[2] * 0.6 + b[2] * 0.4,
-    intensity: (frag.sillage || 5) / 10,
-    complexity: (frag.layering || 5) / 10,
-  };
-  return frag._profile;
-}
 
 /* ── Scoring ── */
 function scoreFragrances(catalog, collectedTags, scoringConfig) {
@@ -198,72 +125,7 @@ function scoreFragrances(catalog, collectedTags, scoringConfig) {
 }
 
 /* ── Archetypes ── */
-const ARCHETYPES = {
-  'quiet-expressionist': {
-    id: 'quiet-expressionist',
-    name: 'The Quiet Expressionist',
-    tagline: 'You let your presence speak before your words do.',
-    desc: 'Understated but unforgettable. You gravitate toward scents that reveal complexity only to those who pay attention — woody, green, and contemplative. Your fragrance is a second language.',
-    families: ['woody', 'green', 'chypre'],
-    tags: ['woody', 'green', 'chypre'],
-  },
-  'sensory-hedonist': {
-    id: 'sensory-hedonist',
-    name: 'The Sensory Hedonist',
-    tagline: 'You collect pleasures the way others collect ideas.',
-    desc: 'Warm, enveloping, and unapologetically indulgent. Amber, vanilla, and rich balsamic notes feel like home to you. You wear fragrance to feel, not to impress.',
-    families: ['amber', 'gourmand', 'floral'],
-    tags: ['amber', 'gourmand', 'warmth'],
-  },
-  'urban-intellectual': {
-    id: 'urban-intellectual',
-    name: 'The Urban Intellectual',
-    tagline: "Complexity in a bottle. You've read the footnotes.",
-    desc: "Chypre, iris, and leather. You find comfort in the unconventional and the cerebral — scents that require a second read and reward patience. You're not interested in crowd-pleasers.",
-    families: ['chypre', 'leather', 'woody'],
-    tags: ['chypre', 'leather', 'woody'],
-  },
-  'sun-chaser': {
-    id: 'sun-chaser',
-    name: 'The Sun Chaser',
-    tagline: 'Perpetually mid-journey. The next destination is always better.',
-    desc: 'Fresh, citric, and kinetic. You wear your scent like sunscreen — a signal that the day has started and anything is possible. Bergamot, lime, and the idea of open air.',
-    families: ['citrus', 'aquatic', 'green'],
-    tags: ['citrus', 'aquatic', 'freshness'],
-  },
-  'romantic': {
-    id: 'romantic',
-    name: 'The Romantic',
-    tagline: "You feel things fully and you're not sorry about it.",
-    desc: "Floral and amber, soft and deep at once. You're drawn to scents that smell like memories you want to keep — rose, jasmine, warm skin. Fragrance is emotional for you.",
-    families: ['floral', 'amber', 'gourmand'],
-    tags: ['floral', 'amber', 'intimate'],
-  },
-  'provocateur': {
-    id: 'provocateur',
-    name: 'The Provocateur',
-    tagline: 'You make an entrance. You meant to.',
-    desc: 'Oud, incense, and smoke. You wear fragrance as a declaration — something that commands a room and defies easy categorization. Subtlety is a choice you rarely make.',
-    families: ['oud', 'leather', 'amber'],
-    tags: ['oud', 'leather', 'intensity'],
-  },
-  'naturalist': {
-    id: 'naturalist',
-    name: 'The Naturalist',
-    tagline: 'Roots, earth, something growing. This is your element.',
-    desc: "Green, woody, and grounded. You're most yourself outdoors, and your scent reflects it — vetiver, pine, fresh air, and the memory of soil after rain.",
-    families: ['green', 'woody', 'citrus'],
-    tags: ['green', 'woody', 'freshness'],
-  },
-  'minimalist': {
-    id: 'minimalist',
-    name: 'The Minimalist',
-    tagline: 'Nothing superfluous. Every molecule earned its place.',
-    desc: 'Clean, precise, and quietly confident. Aquatic, citrus, and white musk. You prefer scents that feel like a second skin — barely there but impossible to forget.',
-    families: ['aquatic', 'citrus', 'woody'],
-    tags: ['aquatic', 'citrus', 'intimate'],
-  },
-};
+// Note: ARCHETYPES are now imported from store.js at the top of the file.
 
 /* ── Zodiac Traits ── */
 const ZODIAC = {

@@ -4,6 +4,21 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-19 (7)
+
+### Added
+- **Scent DNA Persona Mapping** — collection stats now identify users as one of 8 fragrance archetypes (e.g. The Minimalist, The Provocateur) based on their average sensory profile.
+- **Collection Gap Analysis** — the "You" dashboard now identifies weak points in a user's collection (e.g. low freshness) and suggests a specific fragrance to fill the gap.
+- **Global Undo Toast** — after any wishlist or owned state change, a floating toast appears with a 3-second "Undo" window. Allows users to immediately revert accidental clicks without re-cycling through states.
+- **Share Comparison** — added a "Share Comparison" button to the Compare results. Uses native device sharing on mobile and clipboard copy on desktop.
+- **Recommendations in Detail View** — fragrance detail panels now include a "You might also like" section showing the top 3 most mathematically similar fragrances.
+- **Plain-language metric labels** — sillage and structure scores now show human-readable descriptions (e.g. "Strong - fills a room") alongside the numerical value.
+
+### Fixed
+- **Phase 0 Routing** — resolved critical bugs where standalone `/compare/` and `/quiz/` URLs wouldn't load data or rendered the wrong page.
+- **Sidebar Leaking** — hidden the catalog sidebar on standalone pages to prevent visual pollution.
+- **Engine Deduplication** — removed ~300 lines of duplicated profile computation and constants across `app.js` and `quiz.js`, centralizing them in `engine.js` and `store.js`.
+
 ## 2026-03-19 (6)
 
 ### Added
