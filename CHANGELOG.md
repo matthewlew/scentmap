@@ -1,3 +1,11 @@
+## 2026-03-19 (19)
+
+### Fixed
+- **Compare page refresh:** Regenerated all static pages in `/compare/` and `/quiz/` to match the new `app.html` layout structure, fixing broken CSS and "unfinished" look on refresh.
+- **Compare selection state:** Updated `_selectFragForSlot` in `js/app.js` to ensure the URL updates immediately when fragrances are selected, even when already on a comparison page.
+- **Redundant renders:** Added guards to `handleInitialNavigation` to prevent state loops when navigating between comparison pairs.
+- **Universal Search selection:** Improved selection flow in Compare mode to ensure UI and URL stay in sync.
+
 ## 2026-03-19 (18)
 
 ### Changed

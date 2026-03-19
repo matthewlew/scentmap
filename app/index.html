@@ -16,6 +16,17 @@
     <meta name="twitter:description" content="Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.">
     <meta name="twitter:image" content="https://scentmap.co/api/og">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
@@ -53,117 +64,117 @@
     </nav>
 
     <div class="content-row">
-    <div class="col-main">
-    <div class="col-main-content">
-      <div class="panel" id="p-saved">
-        <div id="you-journal-cta"></div>
-        <div id="journal-content"></div>
-        <div class="frag-main-top" style="margin-top:var(--sp-3xl); margin-bottom:var(--sp-lg); border-bottom:none;">
-          <div class="frag-title-row"><span class="frag-title">Your Profile</span></div>
-        </div>
-        <div id="saved-list" class="scent-list"></div>
-      </div>
+      <div class="col-main">
+        <div class="col-main-content">
+          <div class="panel" id="p-saved">
+            <div id="you-journal-cta"></div>
+            <div id="journal-content"></div>
+            <div class="frag-main-top" style="margin-top:var(--sp-3xl); margin-bottom:var(--sp-lg); border-bottom:none;">
+              <div class="frag-title-row"><span class="frag-title">Your Profile</span></div>
+            </div>
+            <div id="saved-list" class="scent-list"></div>
+          </div>
 
-      <div class="panel" id="p-catalog">
-        <div class="catalog-shell">
-          <aside class="catalog-sidebar">
-            <div class="cat-search-wrap">
-              <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
-              <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
-            </div>
-            <div class="cat-sidebar-section">
-              <div class="sec-label">Filters</div>
-              <div class="cat-state-bar" id="cat-state-bar"></div>
-            </div>
-            <div class="cat-sidebar-section">
-              <div class="sec-label">Family</div>
-              <div class="cat-family-bar" id="cat-family-bar"></div>
-            </div>
-            <div class="cat-sidebar-section">
-              <div class="sec-label">Feeling</div>
-              <div class="cat-feel-bar" id="cat-feel-bar"></div>
-            </div>
-            <div class="cat-sidebar-section">
-              <div class="sec-label">Houses</div>
-              <div class="cat-brand-bar" id="cat-brand-bar"></div>
-            </div>
-          </aside>
-          <main class="catalog-main">
-            <div id="cat-live" class="sr-only" aria-live="polite"></div>
-            <div id="cat-body"></div>
-          </main>
-        </div>
-      </div>
-
-      <div class="panel active" id="p-compare">
-        <header class="cmp-header" id="cmp-header">
-          <div class="cmp-pair-row">
-            <div class="cmp-card-wrap">
-              <button class="cmp-frag-card" id="cmp-card-a" aria-label="Select first fragrance">
-                <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance One</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-                <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              </button>
-              <div class="cmp-card-meta" id="cmp-meta-a"></div>
-            </div>
-            <div class="cmp-vs">vs</div>
-            <div class="cmp-card-wrap">
-              <button class="cmp-frag-card" id="cmp-card-b" aria-label="Select second fragrance">
-                <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance Two</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-                <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              </button>
-              <div class="cmp-card-meta" id="cmp-meta-b"></div>
+          <div class="panel" id="p-catalog">
+            <div class="catalog-shell">
+              <aside class="catalog-sidebar">
+                <div class="cat-search-wrap">
+                  <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
+                  <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
+                </div>
+                <div class="cat-sidebar-section">
+                  <div class="sec-label">Filters</div>
+                  <div class="cat-state-bar" id="cat-state-bar"></div>
+                </div>
+                <div class="cat-sidebar-section">
+                  <div class="sec-label">Family</div>
+                  <div class="cat-family-bar" id="cat-family-bar"></div>
+                </div>
+                <div class="cat-sidebar-section">
+                  <div class="sec-label">Feeling</div>
+                  <div class="cat-feel-bar" id="cat-feel-bar"></div>
+                </div>
+                <div class="cat-sidebar-section">
+                  <div class="sec-label">Houses</div>
+                  <div class="cat-brand-bar" id="cat-brand-bar"></div>
+                </div>
+              </aside>
+              <main class="catalog-main">
+                <div id="cat-live" class="sr-only" aria-live="polite"></div>
+                <div id="cat-body"></div>
+              </main>
             </div>
           </div>
-        </header>
-        <div id="cmp-results"></div>
-      </div>
 
-      <div class="panel" id="p-notes">
-        <div class="notes-shell">
-          <div class="notes-nav-bar" id="notes-nav-bar">
-            <button class="notes-nav-btn active" data-tab="explore">Explore</button>
-            <button class="notes-nav-btn" data-tab="search">Search & A-Z</button>
-            <button class="notes-nav-btn" data-tab="saved">My Notes</button>
-          </div>
-          <div class="notes-search-wrap" id="notes-search-wrap" style="display:none">
-            <div class="cat-search-wrap">
-              <input type="text" id="notes-search" class="cat-search-input" placeholder="Search notes...">
-              <button id="notes-search-clear" class="cat-search-clear" style="display:none">✕</button>
-            </div>
-            <div class="cat-sidebar-section" id="notes-tier-filter-wrap" style="display:none; margin-top:var(--sp-md)">
-              <div class="notes-tier-bar" id="notes-tier-bar">
-                <button class="tab active" data-tier="all">All Tiers</button>
-                <button class="tab" data-tier="top">Top</button>
-                <button class="tab" data-tier="mid">Heart</button>
-                <button class="tab" data-tier="base">Base</button>
+          <div class="panel active" id="p-compare">
+            <header class="cmp-header" id="cmp-header">
+              <div class="cmp-pair-row">
+                <div class="cmp-card-wrap">
+                  <button class="cmp-frag-card" id="cmp-card-a" aria-label="Select first fragrance">
+                    <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance One</div><div class="cmp-card-empty-hint">Tap to select</div></div>
+                    <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </button>
+                  <div class="cmp-card-meta" id="cmp-meta-a"></div>
+                </div>
+                <div class="cmp-vs">vs</div>
+                <div class="cmp-card-wrap">
+                  <button class="cmp-frag-card" id="cmp-card-b" aria-label="Select second fragrance">
+                    <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">Fragrance Two</div><div class="cmp-card-empty-hint">Tap to select</div></div>
+                    <span class="cmp-card-chevron"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </button>
+                  <div class="cmp-card-meta" id="cmp-meta-b"></div>
+                </div>
               </div>
+            </header>
+            <div id="cmp-results"></div>
+          </div>
+
+          <div class="panel" id="p-notes">
+            <div class="notes-shell">
+              <div class="notes-nav-bar" id="notes-nav-bar">
+                <button class="notes-nav-btn active" data-tab="explore">Explore</button>
+                <button class="notes-nav-btn" data-tab="search">Search & A-Z</button>
+                <button class="notes-nav-btn" data-tab="saved">My Notes</button>
+              </div>
+              <div class="notes-search-wrap" id="notes-search-wrap" style="display:none">
+                <div class="cat-search-wrap">
+                  <input type="text" id="notes-search" class="cat-search-input" placeholder="Search notes...">
+                  <button id="notes-search-clear" class="cat-search-clear" style="display:none">✕</button>
+                </div>
+                <div class="cat-sidebar-section" id="notes-tier-filter-wrap" style="display:none; margin-top:var(--sp-md)">
+                  <div class="notes-tier-bar" id="notes-tier-bar">
+                    <button class="tab active" data-tier="all">All Tiers</button>
+                    <button class="tab" data-tier="top">Top</button>
+                    <button class="tab" data-tier="mid">Heart</button>
+                    <button class="tab" data-tier="base">Base</button>
+                  </div>
+                </div>
+              </div>
+              <div id="notes-count" class="notes-count-summary"></div>
+              <div id="notes-body"></div>
             </div>
           </div>
-          <div id="notes-count" class="notes-count-summary"></div>
-          <div id="notes-body"></div>
+
+          <div class="panel" id="p-changelog">
+            <div class="changelog-container">
+              <h1 class="text-title">Changelog</h1>
+              <div id="changelog-body" class="changelog-body"></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="panel" id="p-changelog">
-        <div class="changelog-container">
-          <h1 class="text-title">Changelog</h1>
-          <div id="changelog-body" class="changelog-body"></div>
+      <div class="col-detail" id="col-detail">
+        <div class="detail-topbar">
+          <button class="detail-back" id="detail-back" aria-label="Back">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back
+          </button>
+          <button class="detail-close-btn" id="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
         </div>
+        <div class="detail-inner" id="detail-inner"></div>
       </div>
-    </div>
-    </div>
-
-    <div class="col-detail" id="col-detail">
-      <div class="detail-topbar">
-        <button class="detail-back" id="detail-back" aria-label="Back">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Back
-        </button>
-        <button class="detail-close-btn" id="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
-      </div>
-      <div class="detail-inner" id="detail-inner"></div>
-    </div>
-    <div class="detail-scrim" id="detail-scrim"></div>
+      <div class="detail-scrim" id="detail-scrim"></div>
     </div><!-- /.content-row -->
   </div>
 

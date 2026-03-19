@@ -2956,11 +2956,11 @@ function go(id,btn){
     } else {
       // Only redirect away from /compare/ paths if we are explicitly on one and have no comparison active
       if (window.location.pathname.startsWith('/compare/') && !CMP_A && !CMP_B) {
-        history.replaceState(null,'','/app');
+        history.replaceState(null,'','/app.html');
       }
     }
   } else if(window.location.pathname.startsWith('/compare/')){
-    history.replaceState(null,'','/app');
+    history.replaceState(null,'','/app.html');
   }
 }
 window.go = go;
@@ -4030,29 +4030,10 @@ function _renderSocialProof(fa, fb) {
 function renderCompareResults(fa,fb){
   const res=document.getElementById('cmp-results');
   if(!res)return;
-  // Update URL to shareable compare link (canonical: alphabetical ID order)
-  const [idFirst,idSecond] = [fa.id,fb.id].sort();
-  history.replaceState(null, '', '/compare/' + idFirst + '/' + idSecond);
+  
+  // NOTE: URL and Card fills are now handled by _selectFragForSlot
   window.haptic?.('success');
   const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
-  const famLabelA=(FAM[fa.family]||{label:fa.family}).label;
-  const famLabelB=(FAM[fb.family]||{label:fb.family}).label;
-  const matchPct=Math.round(scoreSimilarity(fa,fb));
-  const layerPct=scoreLayeringPct(fa,fb);
-  const verdict=getVerdict(matchPct,layerPct,fa,fb);
-  const matchColor=matchPct>=60?ca.accent:matchPct>=30?'var(--g700)':'var(--g500)';
-  const layerColor=layerPct>=60?cb.accent:layerPct>=30?'var(--g700)':'var(--g500)';
-
-  const famComp=FAM_COMPAT[fa.family]?.[fb.family]??0.5;
-  const famScore=famComp*35;
-  const sillDiff=Math.abs(fa.sillage-fb.sillage);
-  const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
-  const shared=fa._nAll.filter(n=>fb._nAll.includes(n)).length;
-  const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
-  const rawScore = famScore + sillScore + noteScore;
-
-  // Update permanent header cards
-  _fillCard('a',fa);_fillCard('b',fb);
 
   res.innerHTML=`
     <div id="cmp-sticky-bar">
@@ -4193,8 +4174,22 @@ function renderCompareResults(fa,fb){
 function _selectFragForSlot(slot,frag){
   if(slot==='a')CMP_A=frag;else CMP_B=frag;
   _fillCard(slot,frag);
-  // Note: click/keydown listeners on cards are wired once in initCompare(); do not add here to avoid accumulation
-  if(CMP_A&&CMP_B)renderCompareResults(CMP_A,CMP_B);
+
+  // Update URL for partial or full comparison state
+  if (CMP_A && CMP_B) {
+    const [idFirst, idSecond] = [CMP_A.id, CMP_B.id].sort();
+    const newPath = '/compare/' + idFirst + '/' + idSecond;
+    if (window.location.pathname !== newPath) {
+      history.replaceState(null, '', newPath);
+    }
+    renderCompareResults(CMP_A, CMP_B);
+  } else if (CMP_A || CMP_B) {
+    // We don't have a canonical URL for a single-fragrance compare yet, 
+    // but we can clear the deep link if we are on one but only one slot is filled.
+    if (window.location.pathname.startsWith('/compare/')) {
+      history.replaceState(null, '', '/app');
+    }
+  }
 }
 
 function _fillCard(slot,frag){
@@ -4944,6 +4939,14 @@ function handleInitialNavigation() {
   if (_cmpMatch) {
     const idA = _cmpMatch[1].toLowerCase();
     const idB = _cmpMatch[2].toLowerCase();
+    
+    // Skip if current state already matches this pair to prevent loops
+    if (CMP_A && CMP_B) {
+      const [curA, curB] = [CMP_A.id, CMP_B.id].sort();
+      const [reqA, reqB] = [idA, idB].sort();
+      if (curA === reqA && curB === reqB) return;
+    }
+    
     const fragA = currentCatMap[idA], fragB = currentCatMap[idB];
     if (fragA && fragB) {
       _deepLinkedCompare = true;
@@ -5000,7 +5003,7 @@ function handleInitialNavigation() {
     }
   } else if (hash === 'compare') {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
-  } else if (pathname === '/app' || pathname === '/app.html' || pathname === '/') {
+  } else if (pathname === '/app' || pathname === '/app/' || pathname === '/app.html' || pathname === '/app/index.html' || pathname === '/' || pathname === '/index.html') {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
   }
 }

@@ -392,7 +392,7 @@ function renderResults(top3) {
   const resultsHtml = top3.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
-      <a href="/app#frag=${frag.id}" class="quiz-result-card">
+      <a href="/app.html#frag=${frag.id}" class="quiz-result-card">
         <div class="quiz-result-dot" style="background:${fc.color}"></div>
         <div class="quiz-result-info">
           <div class="quiz-result-name">${frag.name}</div>
@@ -418,7 +418,7 @@ function renderResults(top3) {
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
         ${_buildMoreDiscoveryHtml()}
-        <a href="/app" class="quiz-engine-link">Open the full Scentmap engine</a>
+        <a href="/app.html" class="quiz-engine-link">Open the full Scentmap engine</a>
       </div>
     </div>
   `;
@@ -436,7 +436,7 @@ function renderArchetypeResults(archetype, frags) {
   const resultsHtml = frags.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
-      <a href="/app#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
+      <a href="/app.html#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
         <div class="quiz-result-dot" style="background:${fc.color}"></div>
         <div class="quiz-result-info">
           <div class="quiz-result-name">${frag.name}</div>
@@ -468,7 +468,7 @@ function renderArchetypeResults(archetype, frags) {
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
         ${moreQuizzes}
-        <a href="/app" class="quiz-engine-link">Open the full Scentmap engine</a>
+        <a href="/app.html" class="quiz-engine-link">Open the full Scentmap engine</a>
       </div>
     </div>
   `;
@@ -485,7 +485,7 @@ function renderAstroResults(sign, archetype, frags) {
   const resultsHtml = frags.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
-      <a href="/app#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
+      <a href="/app.html#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
         <div class="quiz-result-dot" style="background:${fc.color}"></div>
         <div class="quiz-result-info">
           <div class="quiz-result-name">${frag.name}</div>
@@ -524,7 +524,7 @@ function renderAstroResults(sign, archetype, frags) {
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
         ${moreQuizzes}
-        <a href="/app" class="quiz-engine-link">Open the full Scentmap engine</a>
+        <a href="/app.html" class="quiz-engine-link">Open the full Scentmap engine</a>
       </div>
     </div>
   `;
@@ -678,11 +678,11 @@ async function init() {
 
   // Minimal go() redirector for nav links in standalone shell
   window.go = function(id) {
-    if (id === 'compare') window.location.href = '/app#compare';
-    else if (id === 'notes') window.location.href = '/app#notes';
-    else if (id === 'saved' || id === 'you') window.location.href = '/app#saved';
+    if (id === 'compare') window.location.href = '/app.html#compare';
+    else if (id === 'notes') window.location.href = '/app.html#notes';
+    else if (id === 'saved' || id === 'you') window.location.href = '/app.html#saved';
     else if (id === 'discovery') window.location.href = '/#discovery';
-    else window.location.href = '/app';
+    else window.location.href = '/app.html';
   };
 
   try {

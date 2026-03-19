@@ -221,16 +221,16 @@
     <a href="/" class="global-nav-logo">Scentmap</a>
     <div class="global-nav-links">
       <a href="#discovery" class="global-nav-link">Discovery</a>
-      <a href="/app#compare" class="global-nav-link">Compare</a>
-      <a href="/app#notes" class="global-nav-link">Notes</a>
-      <a href="/app#saved" class="global-nav-link">You</a>
+      <a href="/app.html#compare" class="global-nav-link">Compare</a>
+      <a href="/app.html#notes" class="global-nav-link">Notes</a>
+      <a href="/app.html#saved" class="global-nav-link">You</a>
     </div>
   </div>
   <div class="global-nav-right">
     <button class="nav-search-btn" onclick="openGlobalSearch()" aria-label="Quick search (⌘K)" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; padding:var(--sp-sm); display:flex; align-items:center; justify-content:center; transition:color var(--dur-fast);">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
     </button>
-    <a href="/app" class="nav-signin-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">Open Engine</a>
+    <a href="/app.html" class="nav-signin-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">Open Engine</a>
   </div>
 </nav>
 
@@ -238,13 +238,13 @@
   <h1 class="text-heading">The Mathematical Fragrance Engine</h1>
   <p class="dc-description">Demystify fragrance through data. Compare perfumes side-by-side, take a quiz to find your signature scent, and browse 180+ designer and niche fragrances.</p>
   <div style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--sp-sm);">
-    <form onsubmit="event.preventDefault(); window.location.href='/app#search=' + encodeURIComponent(this.q.value);" style="display: flex; gap: var(--sp-xs); width: 100%;">
+    <form onsubmit="event.preventDefault(); window.location.href='/app.html#search=' + encodeURIComponent(this.q.value);" style="display: flex; gap: var(--sp-xs); width: 100%;">
       <input type="text" name="q" placeholder="Search fragrances, notes, or brands..." style="flex: 1; padding: var(--sp-md); border: 1px solid var(--border-strong); border-radius: var(--radius-md); font-family: var(--font-sans); font-size: var(--fs-ui); background: var(--bg-secondary);">
       <button type="submit" class="dc-collect-btn active" style="padding: var(--sp-md) var(--sp-xl); font-size: var(--fs-ui); border: none; cursor: pointer;">Search</button>
     </form>
     <div class="cta-group" style="margin-top: var(--sp-sm);">
       <a href="/quiz/find-your-scent" class="dc-collect-btn active" style="text-decoration: none; padding: var(--sp-sm) var(--sp-xl);">Take the Quiz</a>
-      <a href="/app#compare" class="dc-collect-btn" style="text-decoration: none; padding: var(--sp-sm) var(--sp-xl);">Compare Scents</a>
+      <a href="/app.html#compare" class="dc-collect-btn" style="text-decoration: none; padding: var(--sp-sm) var(--sp-xl);">Compare Scents</a>
     </div>
   </div>
 </div>
@@ -258,7 +258,7 @@
       <h2 class="text-title">How do you want to feel?</h2>
     </div>
     <div class="landing-grid">
-      <a href="/app#feel=solar" class="landing-card">
+      <a href="/app.html#feel=solar" class="landing-card">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background: #F4E76E;"></span>
           <h3 class="landing-card-title">Solar & Energetic</h3>
@@ -266,7 +266,7 @@
         <p class="landing-card-desc">Bright, uplifting citrus and aquatic notes to start the day with intention.</p>
         <span class="landing-card-cta">Explore feelings</span>
       </a>
-      <a href="/app#feel=grounded" class="landing-card">
+      <a href="/app.html#feel=grounded" class="landing-card">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background: #6E3210;"></span>
           <h3 class="landing-card-title">Grounded & Intellectual</h3>
@@ -274,7 +274,7 @@
         <p class="landing-card-desc">Dry woods and roots for a focused, academic, and calm atmosphere.</p>
         <span class="landing-card-cta">Explore feelings</span>
       </a>
-      <a href="/app#feel=romantic" class="landing-card">
+      <a href="/app.html#feel=romantic" class="landing-card">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background: #902050;"></span>
           <h3 class="landing-card-title">Romantic & Velvety</h3>
@@ -282,7 +282,7 @@
         <p class="landing-card-desc">Rich florals and soft musks that evoke intimacy and classical beauty.</p>
         <span class="landing-card-cta">Explore feelings</span>
       </a>
-      <a href="/app#feel=mysterious" class="landing-card">
+      <a href="/app.html#feel=mysterious" class="landing-card">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background: #4A1850;"></span>
           <h3 class="landing-card-title">Dark & Mysterious</h3>
@@ -297,7 +297,7 @@
   <div class="landing-section">
     <h2 class="text-title landing-section-title">What You Can Do</h2>
     <div class="landing-grid">
-      <a href="/app#journal" class="landing-card" style="border-color:var(--accent-primary); background:var(--bg-secondary);">
+      <a href="/app.html#journal" class="landing-card" style="border-color:var(--accent-primary); background:var(--bg-secondary);">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background: var(--accent-primary);"></span>
           <h3 class="landing-card-title">Scent Journal</h3>
@@ -305,7 +305,7 @@
         <p class="landing-card-desc">At a retail store? Track exactly where you sprayed a scent and how it evolves on your skin over 1 hour.</p>
         <span class="landing-card-cta">Start tracking</span>
       </a>
-      <a href="/app#compare" class="landing-card">
+      <a href="/app.html#compare" class="landing-card">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background: var(--fam-amber);"></span>
           <h3 class="landing-card-title">Compare Fragrances</h3>
@@ -313,7 +313,7 @@
         <p class="landing-card-desc">Put any two perfumes head-to-head. See similarity scores, shared notes, radar charts, and layering compatibility.</p>
         <span class="landing-card-cta">Start comparing</span>
       </a>
-      <a href="/app#notes" class="landing-card">
+      <a href="/app.html#notes" class="landing-card">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background: var(--fam-woody);"></span>
           <h3 class="landing-card-title">Browse Notes</h3>
@@ -436,10 +436,10 @@
         <div class="sitemap-col-title">Engine</div>
         <ul class="sitemap-list">
           <li><a href="/" class="sitemap-link">Home</a></li>
-          <li><a href="/app" class="sitemap-link">Open Engine</a></li>
-          <li><a href="/app#compare" class="sitemap-link">Compare Scents</a></li>
-          <li><a href="/app#notes" class="sitemap-link">Browse Notes</a></li>
-          <li><a href="/app#catalog" class="sitemap-link">Fragrance Catalog</a></li>
+          <li><a href="/app.html" class="sitemap-link">Open Engine</a></li>
+          <li><a href="/app.html#compare" class="sitemap-link">Compare Scents</a></li>
+          <li><a href="/app.html#notes" class="sitemap-link">Browse Notes</a></li>
+          <li><a href="/app.html#catalog" class="sitemap-link">Fragrance Catalog</a></li>
         </ul>
       </div>
       <div class="sitemap-col">
@@ -456,12 +456,12 @@
       <div class="sitemap-col" style="grid-column: span 1;">
         <div class="sitemap-col-title">Brands</div>
         <ul class="sitemap-list">
-          <li><a href="/app#catalog?brand=byredo" class="sitemap-link">Byredo</a></li>
-          <li><a href="/app#catalog?brand=le-labo" class="sitemap-link">Le Labo</a></li>
-          <li><a href="/app#catalog?brand=diptyque" class="sitemap-link">Diptyque</a></li>
-          <li><a href="/app#catalog?brand=tom-ford" class="sitemap-link">Tom Ford</a></li>
-          <li><a href="/app#catalog?brand=chanel" class="sitemap-link">Chanel</a></li>
-          <li><a href="/app#catalog?brand=replica" class="sitemap-link">Maison Margiela</a></li>
+          <li><a href="/app.html#catalog?brand=byredo" class="sitemap-link">Byredo</a></li>
+          <li><a href="/app.html#catalog?brand=le-labo" class="sitemap-link">Le Labo</a></li>
+          <li><a href="/app.html#catalog?brand=diptyque" class="sitemap-link">Diptyque</a></li>
+          <li><a href="/app.html#catalog?brand=tom-ford" class="sitemap-link">Tom Ford</a></li>
+          <li><a href="/app.html#catalog?brand=chanel" class="sitemap-link">Chanel</a></li>
+          <li><a href="/app.html#catalog?brand=replica" class="sitemap-link">Maison Margiela</a></li>
         </ul>
       </div>
       <div class="sitemap-col">
