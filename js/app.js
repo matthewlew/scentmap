@@ -608,13 +608,13 @@ window.renderSaved = function() {
   
   if (ctaWrap) {
     ctaWrap.innerHTML = `
-      <div class="landing-card" style="border-color:var(--accent-primary); background:var(--bg-secondary); margin-bottom:var(--sp-2xl);">
+      <div class="landing-card" style="margin-bottom:var(--sp-2xl);">
         <div class="landing-card-head">
           <span class="picker-fdot" style="background:var(--accent-primary);"></span>
           <h3 class="landing-card-title">Trying scents on?</h3>
         </div>
         <p class="landing-card-desc">Start tracking to see how they evolve over time.</p>
-        <button class="landing-card-cta" style="border:none; background:none; padding:0; text-align:left; cursor:pointer;" onclick="go('catalog')">Find a scent to track</button>
+        <button class="landing-card-cta" onclick="go('catalog')">Find a scent to track</button>
       </div>
     `;
   }
@@ -640,30 +640,28 @@ window.renderSaved = function() {
   if (owned.length > 0) {
     const stats = getCollectionStats(owned);
     const dnaSec = document.createElement('div');
-    dnaSec.className = 'dc-sim-shelf'; 
-    dnaSec.style.padding = 'var(--sp-xl)';
-    dnaSec.style.marginBottom = 'var(--sp-3xl)';
+    dnaSec.className = 'dna-card';
     const profile = stats.avgProfile;
     const bars = [{ l: 'Fresh', v: profile.freshness, c: 'var(--fam-citrus)' }, { l: 'Sweet', v: profile.sweetness, c: 'var(--fam-floral)' }, { l: 'Warm', v: profile.warmth, c: 'var(--fam-amber)' }, { l: 'Bold', v: profile.intensity, c: 'var(--fam-oud)' }];
     dnaSec.innerHTML = `
       <div class="sec-label">
         Your Olfactive DNA
-        <button class="nav-notes-btn" style="font-size:10px;" onclick="window.exportAuraCard()">Export</button>
+        <button class="nav-notes-btn" style="font-size:var(--fs-caption);" onclick="window.exportAuraCard()">Export</button>
       </div>
       <div style="margin-bottom:var(--sp-xl);">
-        <div class="dc-name" style="margin-bottom:0; font-size:32px;">${owned.length}</div>
-        <div class="dc-brand" style="margin-bottom:0; font-size:10px;">Fragrances Owned</div>
+        <div class="dna-headline">${owned.length}</div>
+        <div class="dna-sub">Fragrances Owned</div>
       </div>
-      <div class="dc-stats" style="margin-bottom:var(--sp-lg);">
-        ${bars.map(b => `<div class="dc-stat"><div class="sec-label" style="font-size:10px; margin-bottom:4px; opacity:0.8; text-transform:none; letter-spacing:normal;">${b.l}</div><div class="dc-bar"><div class="dc-fill" style="width:${Math.round(b.v*100)}%; background:${b.c}; height:3px;"></div></div></div>`).join('')}
+      <div class="dna-stats">
+        ${bars.map(b => `<div class="dc-stat"><div class="dna-stat-label">${b.l}</div><div class="dc-bar"><div class="dc-fill" style="width:${Math.round(b.v*100)}%; background:${b.c}; height:3px;"></div></div></div>`).join('')}
       </div>
-      <div style="margin-top:var(--sp-xl); border-top:1px solid var(--border-standard); padding-top:var(--sp-md);">
-        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Dominant Families</div>
-        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--sp-md);">
+      <div class="dna-divider">
+        <div class="dna-section-label">Dominant Families</div>
+        <div class="dna-families">
           ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `<div class="dc-badge" style="background:${FAM[fam]?.color||'#888'}; color:#fff;">${FAM[fam]?.label||fam}</div>`).join('')}
         </div>
-        <div class="sec-label" style="font-size:10px; margin-bottom:var(--sp-sm); opacity:0.6;">Core Notes</div>
-        <div style="font-family:var(--font-serif); font-size:var(--fs-meta); color:var(--text-secondary); line-height:1.4;">${stats.topNotes.slice(0, 5).map(n => n[0]).join(', ')}</div>
+        <div class="dna-section-label">Core Notes</div>
+        <div class="dna-notes">${stats.topNotes.slice(0, 5).map(n => n[0]).join(', ')}</div>
       </div>
     `;
     container.appendChild(dnaSec);
@@ -982,25 +980,25 @@ function renderDupeLab(container, anchor) {
         const fm = FAM[f.family] || {label: f.family, color:'#888'};
         const reason = getSwapReason(anchor, f);
         return `
-          <div class="dupe-item" style="margin-bottom:var(--sp-lg); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:var(--sp-md); background:var(--bg-primary);">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-xs);">
+          <div class="dupe-item">
+            <div class="dupe-item-head">
               <div class="dc-name" style="font-size:var(--fs-body); margin-bottom:0;">${f.name}</div>
-              <div style="font-family:var(--font-sans); font-weight:700; color:var(--accent-primary); font-size:var(--fs-ui);">${score}%</div>
+              <div class="dupe-item-score">${score}%</div>
             </div>
             <div class="dc-brand" style="margin-bottom:var(--sp-sm);">${f.brand} · ${fm.label}</div>
-            
-            <div style="height:4px; background:var(--border-subtle); border-radius:2px; margin-bottom:var(--sp-sm); position:relative; overflow:hidden;">
-              <div style="position:absolute; top:0; left:0; height:100%; width:${score}%; background:var(--accent-primary); border-radius:2px;"></div>
+
+            <div class="dupe-meter">
+              <div class="dupe-meter-fill" style="width:${score}%;"></div>
             </div>
-            
-            <div class="dc-description" style="font-size:var(--fs-meta); margin-bottom:var(--sp-sm); line-height:1.4;">${reason}</div>
-            
+
+            <div class="dc-description" style="font-size:var(--fs-meta); margin-bottom:var(--sp-sm); line-height:var(--lh-normal);">${reason}</div>
+
             <details style="margin-bottom:var(--sp-sm);">
-              <summary style="font-size:var(--fs-caption); font-family:var(--font-sans); font-weight:600; color:var(--text-tertiary); cursor:pointer; list-style:none; display:flex; align-items:center; gap:4px;">
+              <summary style="font-size:var(--fs-caption); font-family:var(--font-sans); font-weight:600; color:var(--text-tertiary); cursor:pointer; list-style:none; display:flex; align-items:center; gap:var(--sp-xs);">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                 Why this matches
               </summary>
-              <div style="margin-top:var(--sp-sm); padding-top:var(--sp-sm); border-top:1px dashed var(--border-subtle); font-size:var(--fs-caption); color:var(--text-tertiary); display:flex; flex-direction:column; gap:4px;">
+              <div class="dupe-breakdown">
                 ${(() => {
                   const famScore = (FAM_COMPAT[anchor.family]?.[f.family] ?? 0.5) * 40;
                   const shBase = anchor._nBase.filter(n => f._nBase.includes(n)).length;
@@ -1011,17 +1009,17 @@ function renderDupeLab(container, anchor) {
                   const sillScore = sillDiff <= 2 ? 10 : sillDiff <= 4 ? 5 : 0;
                   const shRoles = anchor.roles.filter(r => f.roles.includes(r)).length;
                   const roleScore = Math.min(20, shRoles * 7);
-                  
+
                   return `
-                    <div style="display:flex; justify-content:space-between;"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Role alignment</span><span>${roleScore}/20</span></div>
+                    <div class="dupe-breakdown-row"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
+                    <div class="dupe-breakdown-row"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
+                    <div class="dupe-breakdown-row"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
+                    <div class="dupe-breakdown-row"><span>Role alignment</span><span>${roleScore}/20</span></div>
                   `;
                 })()}
               </div>
             </details>
-            
+
             <button class="s-name-btn" style="font-size:var(--fs-meta);" onclick="event.stopPropagation(); trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">View Details →</button>
           </div>
         `;
@@ -1072,14 +1070,14 @@ function renderFragDetail(container,frag){
     </div>
     <div class="dc-div"></div>
     <div class="sec-label" style="margin-bottom:var(--sp-xs);">Sensory Profile</div>
-    <div style="display:flex; flex-direction:column; gap:var(--sp-sm); margin-bottom:var(--sp-2xl);">
+    <div class="sensory-bars">
       ${(() => {
         const p = computeProfile(frag);
         const bar = (label, val, color) => `
-          <div style="display:flex; align-items:center; gap:var(--sp-sm);">
-            <div style="width:60px; font-size:var(--fs-caption); font-family:var(--font-sans); font-weight:600; text-transform:uppercase; color:var(--text-tertiary);">${label}</div>
-            <div style="flex:1; height:4px; background:var(--border-subtle); border-radius:var(--radius-micro); position:relative;">
-              <div style="position:absolute; top:0; left:0; height:100%; width:${Math.round(val*100)}%; background:${color}; border-radius:var(--radius-micro);"></div>
+          <div class="sensory-bar-row">
+            <div class="sensory-bar-label">${label}</div>
+            <div class="sensory-bar-track">
+              <div class="sensory-bar-fill" style="width:${Math.round(val*100)}%; background:${color};"></div>
             </div>
           </div>`;
         return bar('Fresh', p.freshness, 'var(--fam-citrus)') +
@@ -1089,21 +1087,21 @@ function renderFragDetail(container,frag){
     </div>
 
     <div class="sec-label" style="margin-bottom:var(--sp-md);">Scent Journey</div>
-    <div style="border-left: 2px solid var(--border-standard); margin-left: 6px; padding-left: var(--sp-lg); display:flex; flex-direction:column; gap:var(--sp-lg);">
-      <div style="position:relative;">
-        <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--bg-primary); border:2px solid var(--border-strong);"></div>
+    <div class="journey-timeline">
+      <div class="journey-step">
+        <div class="journey-dot"></div>
         <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Opening <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Top Notes)</span></div>
-        <div class="dc-nv" style="margin-bottom:0;">${linkNotes(frag.top)}</div>
+        <div class="dc-nv">${linkNotes(frag.top)}</div>
       </div>
-      <div style="position:relative;">
-        <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--bg-primary); border:2px solid var(--border-strong);"></div>
+      <div class="journey-step">
+        <div class="journey-dot"></div>
         <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Heart <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Mid Notes)</span></div>
-        <div class="dc-nv" style="margin-bottom:0;">${linkNotes(frag.mid)}</div>
+        <div class="dc-nv">${linkNotes(frag.mid)}</div>
       </div>
-      <div style="position:relative;">
-        <div style="position:absolute; left:calc(-1 * var(--sp-lg) - 7px); top:4px; width:10px; height:10px; border-radius:50%; background:var(--border-strong);"></div>
+      <div class="journey-step">
+        <div class="journey-dot journey-dot--filled"></div>
         <div class="dc-nt" style="margin-bottom:var(--sp-xs); width:auto; color:var(--text-primary);">Dry Down <span style="color:var(--text-tertiary);font-weight:400;text-transform:none;">(Base Notes)</span></div>
-        <div class="dc-nv" style="margin-bottom:0;">${linkNotes(frag.base)}</div>
+        <div class="dc-nv">${linkNotes(frag.base)}</div>
       </div>
     </div>
     <p class="dc-notes-caveat" style="margin-top:var(--sp-xl);">Key materials only — simplified pyramid</p>`;
@@ -2908,7 +2906,7 @@ function _renderUsResults(query) {
     html += noteMatches.map(n => {
       const tier = n._tier ? (n._tier === 'top' ? 'Top' : n._tier === 'mid' ? 'Heart' : 'Base') : '';
       const sub = [tier, n.family].filter(Boolean).join(' · ');
-      return `<button class="list-item list-item--search" role="option" aria-selected="false" data-us-type="note" data-us-id="${n.name}" data-row-idx="${rowIdx++}">
+      return `<button class="list-item list-item--search" role="option" aria-selected="false" id="us-row-${rowIdx}" data-us-type="note" data-us-id="${n.name}" data-row-idx="${rowIdx++}">
         <span class="list-item-icon">🌿</span>
         <span class="list-item-body">
           <span class="list-item-name">${n.name}</span>
@@ -2927,7 +2925,7 @@ function _renderUsResults(query) {
     html += `<div class="us-section-hdr" role="presentation">Houses</div>`;
     html += brandMatches.map(b => {
       const count = CAT.filter(f => f.brand === b.name).length;
-      return `<button class="list-item list-item--search" role="option" aria-selected="false" data-us-type="house" data-us-id="${b.name}" data-row-idx="${rowIdx++}">
+      return `<button class="list-item list-item--search" role="option" aria-selected="false" id="us-row-${rowIdx}" data-us-type="house" data-us-id="${b.name}" data-row-idx="${rowIdx++}">
         <span class="list-item-icon">🏛</span>
         <span class="list-item-body">
           <span class="list-item-name">${b.name}</span>
@@ -2939,6 +2937,15 @@ function _renderUsResults(query) {
 
   results.innerHTML = html || _usEmptyHtml(query);
   _wireUsRows(results);
+
+  // Announce result count to screen readers (Braille display / JAWS users)
+  const rowCount = results.querySelectorAll('.list-item--search').length;
+  const statusEl = document.getElementById('us-status');
+  if (statusEl) {
+    statusEl.textContent = rowCount
+      ? `${rowCount} result${rowCount !== 1 ? 's' : ''}${query ? ` for "${query}"` : ''}`
+      : query ? `No results for "${query}"` : '';
+  }
 }
 
 function _usFragRowHtml(f, rowIdx, scoreLabel) {
@@ -2948,7 +2955,7 @@ function _usFragRowHtml(f, rowIdx, scoreLabel) {
   const wished = isWish(f.id);
   const badge = owned ? 'Owned' : wished ? 'Wishlist' : '';
   return `<button class="list-item list-item--search" role="option" aria-selected="false"
-    data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
+    id="us-row-${rowIdx}" data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
     <span class="list-item-dot" style="background:${fc.accent}"></span>
     <span class="list-item-body">
       <span class="list-item-name">${f.name}</span>
@@ -3607,7 +3614,7 @@ function renderSuggestionsV2(fa,fb,ca,cb){
   const shortA=fa.name.split(' ').slice(0,2).join(' ');
   const shortB=fb.name.split(' ').slice(0,2).join(' ');
   return`<div class="cmp-sug-v2">
-    <div class="cmp-sug-v2-label">Swap suggestions</div>
+    <div class="sec-label">Swap suggestions</div>
     <div class="cmp-sug-columns">
       <div>
         <div class="cmp-sug-col-head" style="color:${ca.accent}">Swap ${shortA}</div>
@@ -4840,7 +4847,8 @@ function computeNoteTiers() {
 
 function handleInitialNavigation() {
   const hash = window.location.hash.replace('#', '');
-  const _cmpMatch = window.location.pathname.match(/^\/compare\/([a-z0-9-]+)\/([a-z0-9-]+)$/);
+  const _cmpMatch = window.location.pathname.match(/^\/compare\/([a-z0-9-]+)\/([a-z0-9-]+)\/?(?:index\.html)?$/);
+  const _quizMatch = window.location.pathname.match(/^\/quiz\/([a-z0-9-]+)\/?(?:index\.html)?$/);
   let _deepLinkedCompare = false;
 
   if (_cmpMatch) {
@@ -4854,12 +4862,24 @@ function handleInitialNavigation() {
 
   if (_deepLinkedCompare) {
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+  } else if (_quizMatch) {
+    renderStandaloneQuiz(_quizMatch[1]);
   } else if (hash === 'notes') {
     go('notes', document.querySelector('.global-nav-link[onclick*="notes"]'));
   } else if (hash === 'catalog') {
     go('catalog', null);
-  } else if (hash === 'saved') {
+  } else if (hash === 'saved' || hash === 'journal') {
     go('saved', document.querySelector('.global-nav-link[onclick*="saved"]'));
+  } else if (hash === 'open-search') {
+    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
+    setTimeout(() => openUniversalSearch(), 350);
+  } else if (hash.startsWith('feel=')) {
+    const feel = decodeURIComponent(hash.split('=')[1]);
+    go('catalog', null);
+    setTimeout(() => {
+      const btn = Array.from(document.querySelectorAll('.cat-feel-bar .tab')).find(b => b.textContent.toLowerCase().includes(feel.toLowerCase()));
+      if (btn) btn.click();
+    }, 100);
   } else if (hash.startsWith('search=')) {
     const query = decodeURIComponent(hash.split('=')[1]);
     go('catalog', null);

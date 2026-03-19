@@ -89,6 +89,12 @@
   display: block;
 }
 
+/* Panels that need their own padding (no sidebar/shell wrapper) */
+#p-saved,
+#p-changelog {
+  padding: var(--sp-lg);
+}
+
 /* ── SHEET STACK (Mobile) ── */
 
 .sheet-stack-overlay {

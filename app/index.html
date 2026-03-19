@@ -55,10 +55,10 @@
     <div class="content-row">
     <div class="col-main">
     <div class="col-main-content">
-      <div class="panel" id="p-saved" style="padding: var(--sp-lg);">
+      <div class="panel" id="p-saved">
         <div id="you-journal-cta" style="margin-bottom: var(--sp-2xl);"></div>
         <div id="journal-content"></div>
-        <div class="frag-main-top" style="margin-top: var(--sp-4xl); margin-bottom: var(--sp-lg); border-bottom: none;">
+        <div class="frag-main-top" style="margin-top:var(--sp-3xl); margin-bottom:var(--sp-lg); border-bottom:none;">
           <div class="frag-title-row"><span class="frag-title">Your Profile</span></div>
         </div>
         <div id="saved-list" class="scent-list"></div>
@@ -144,7 +144,7 @@
         </div>
       </div>
 
-      <div class="panel" id="p-changelog" style="padding: var(--sp-lg);">
+      <div class="panel" id="p-changelog">
         <div class="changelog-container">
           <h1 class="text-title">Changelog</h1>
           <div id="changelog-body" class="changelog-body"></div>
@@ -201,10 +201,12 @@
         <input id="us-input" type="text" class="us-input"
                placeholder="Search fragrances, notes, houses..."
                autocomplete="off" spellcheck="false"
+               role="combobox" aria-expanded="true" aria-haspopup="listbox"
                aria-controls="us-results" aria-autocomplete="list">
         <button id="us-close" class="us-close" aria-label="Close search">✕</button>
       </div>
-      <div id="us-results" class="us-results" role="listbox"></div>
+      <div id="us-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+      <div id="us-results" class="us-results" role="listbox" aria-label="Search results"></div>
       <div class="us-hint" aria-hidden="true">↵ open &nbsp;·&nbsp; ↑↓ navigate &nbsp;·&nbsp; esc close</div>
     </div>
   </div>
