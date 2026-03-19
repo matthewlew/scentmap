@@ -8,20 +8,20 @@ Only items actively planned for the next 2 shipping cycles.
 
 ## Phase 0: Fix Broken Routes (do first)
 
-### CRITICAL: Standalone `/compare/` URLs don't pre-load fragrances
-**Repro:** Visit `http://localhost:3001/compare/bleu-de-chanel/sauvage` directly.
-**Impact:** All 6 "Popular Comparisons" links from the homepage footer are broken.
-**Where:** `compare/` directory HTML + JS init logic that should parse `window.location.pathname`.
+### ✅ FIXED (2026-03-19): App module crash — all navigation/search/frags broken
+Duplicate `function` declarations (`scoreSimilarity`, `scoreLayeringPair`, `renderStandaloneQuiz`) caused a `SyntaxError` in ES module strict mode, silently preventing `app.js` from executing entirely. Fixed in commit `23a2e27`.
 
-### CRITICAL: Standalone `/quiz/` URLs render Compare page instead of quiz
-**Repro:** Visit `http://localhost:3001/quiz/find-your-scent`.
-**Impact:** All quiz links from homepage navigate to a broken page.
-**Where:** Quiz page HTML files in `quiz/` + JS init logic in `app.js`.
+### ✅ FIXED (2026-03-19): Quiz duplicate nav bar
+`quiz.js` injected a second `<nav class="global-nav">` on every render step. Removed embedded navs from all 4 render functions. Fixed in commit `23a2e27`.
 
-### MEDIUM: Unstyled catalog sidebar elements on `/compare/` and `/quiz/` pages
-**Repro:** Visit any `/compare/` or `/quiz/` URL and scroll down.
-**Impact:** Visual pollution — catalog filter elements leaking into visible area.
-**Where:** `.catalog-sidebar` HTML in the shared shell — not hidden on standalone pages.
+### ✅ FIXED (2026-03-19): Standalone `/compare/` URLs don't pre-load fragrances
+Fixed in prior session (commit `385448f`) — ID lookup made case-insensitive, regex improved.
+
+### ✅ FIXED (2026-03-19): Standalone `/quiz/` URLs render Compare page instead of quiz
+Fixed in prior session (commit `385448f`) — quiz.js syntax error repaired, container targeting corrected.
+
+### ✅ FIXED (2026-03-19): Unstyled catalog sidebar on `/compare/` and `/quiz/` pages
+Fixed in prior session — `.catalog-sidebar` hidden on standalone pages.
 
 ### LOW: `#feel=solar` and other feel hashes don't activate discovery filtering
 **Repro:** Navigate to `http://localhost:3001/app#feel=solar`.
