@@ -184,27 +184,21 @@
     </div>
   </div>
 
-  <div id="frag-picker" class="frag-picker-overlay">
-    <div class="frag-picker-wrap" role="dialog" aria-modal="true" aria-label="Select fragrance">
-      <div class="frag-picker-header">
-        <div class="frag-picker-sort-bar" id="frag-picker-sort-bar">
-          <div class="frag-picker-sort-pill" id="frag-picker-sort-pill"></div>
-          <button class="frag-picker-sort-btn active" data-sort="brand">House</button>
-          <button class="frag-picker-sort-btn" data-sort="name">A–Z</button>
-          <button class="frag-picker-sort-btn" data-sort="family">Family</button>
-        </div>
-        <button class="frag-picker-close" id="frag-picker-close">✕</button>
+  <!-- Universal Search Modal -->
+  <div id="universal-search" class="us-overlay" role="dialog" aria-modal="true"
+       aria-label="Search fragrances, notes, and houses" hidden>
+    <div class="us-backdrop"></div>
+    <div class="us-modal">
+      <div id="us-context" class="us-context" aria-live="polite" hidden></div>
+      <div class="us-input-wrap">
+        <svg class="us-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="us-input" type="text" class="us-input"
+               autocomplete="off" spellcheck="false"
+               aria-controls="us-results" aria-autocomplete="list">
+        <button id="us-close" class="us-close" aria-label="Close search">✕</button>
       </div>
-      <div class="frag-picker-cols" id="frag-picker-cols">
-        <div class="frag-picker-col" id="frag-picker-col-a">
-          <div class="cat-search-wrap"><input type="text" id="frag-picker-search-a" class="cat-search-input" placeholder="Search..."></div>
-          <div class="frag-picker-list" id="frag-picker-list-a" role="listbox"></div>
-        </div>
-        <div class="frag-picker-col" id="frag-picker-col-b">
-          <div class="cat-search-wrap"><input type="text" id="frag-picker-search-b" class="cat-search-input" placeholder="Search..."></div>
-          <div class="frag-picker-list" id="frag-picker-list-b" role="listbox"></div>
-        </div>
-      </div>
+      <div id="us-results" class="us-results" role="listbox"></div>
+      <div class="us-hint" aria-hidden="true">↵ open &nbsp;·&nbsp; ↑↓ navigate &nbsp;·&nbsp; esc close</div>
     </div>
   </div>
 

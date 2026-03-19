@@ -907,7 +907,15 @@ function pushDetail(renderFn,title){
 }
 window.pushDetail = pushDetail;
 
-function openFragDetail(frag){openDetail(c=>renderFragDetail(c,frag),frag.name)}
+function openFragDetail(frag){
+  // Write to sessionStorage recents for universal search
+  try {
+    const recent = JSON.parse(sessionStorage.getItem('sm_recent') || '[]');
+    const next = [frag.id, ...recent.filter(id => id !== frag.id)].slice(0, 5);
+    sessionStorage.setItem('sm_recent', JSON.stringify(next));
+  } catch(e) { /* storage unavailable — silently skip */ }
+  openDetail(c=>renderFragDetail(c,frag),frag.name);
+}
 window.openFragDetail = openFragDetail;
 
 function linkNotes(arr){
@@ -2626,15 +2634,322 @@ function go(id,btn){
 window.go = go;
 window.closeDesktopDetail = closeDesktopDetail;
 
-/* ── Global Search (⌘K) ── */
-function openGlobalSearch() {
-  go('catalog', null);
-  requestAnimationFrame(() => {
-    const input = document.getElementById('cat-search');
-    if (input) { input.focus(); input.select(); }
+/* ══ UNIVERSAL SEARCH ═══════════════════════════════════════════════ */
+
+const US_POPULAR = ['santal-33', 'bleu-de-chanel', 'bal-dafrique', 'gypsy-water', 'rose-31'];
+
+let _usContext = null; // null | { context: 'compare', slot: 'a'|'b' }
+let _usScores = null;  // Map<fragId, score> — pre-computed in compare mode
+let _usHighlight = -1; // index of highlighted row
+
+function openUniversalSearch(opts = {}) {
+  _usContext = opts.context === 'compare' ? opts : null;
+  _usHighlight = -1;
+  _usScores = null;
+
+  // Pre-compute similarity scores when one compare slot is filled
+  if (_usContext) {
+    const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
+    if (other) {
+      _usScores = new Map();
+      CAT.forEach(f => _usScores.set(f.id, scoreSimilarity(other, f)));
+    }
+  }
+
+  const overlay = document.getElementById('universal-search');
+  const input = document.getElementById('us-input');
+  const ctx = document.getElementById('us-context');
+
+  // Context banner
+  if (_usContext) {
+    const slotLabel = _usContext.slot === 'a' ? 'Fragrance A' : 'Fragrance B';
+    const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
+    ctx.innerHTML = `Selecting <span class="us-context-name">${slotLabel}</span>` +
+      (other ? ` &nbsp;↔&nbsp; <span class="us-context-name">${other.name}</span>` : '');
+    ctx.hidden = false;
+    input.placeholder = 'Search to compare...';
+  } else {
+    ctx.hidden = true;
+    input.placeholder = 'Search fragrances, notes, brands...';
+  }
+
+  overlay.hidden = false;
+  input.value = '';
+  _renderUsResults('');
+
+  _trapFocus(overlay);
+
+  // Backdrop closes modal
+  overlay.querySelector('.us-backdrop').onclick = closeUniversalSearch;
+  document.getElementById('us-close').onclick = closeUniversalSearch;
+
+  input.addEventListener('input', _onUsInput);
+}
+window.openUniversalSearch = openUniversalSearch;
+
+// Keep backward-compatible stub
+function openGlobalSearch() { openUniversalSearch(); }
+window.openGlobalSearch = openGlobalSearch;
+
+function closeUniversalSearch() {
+  const overlay = document.getElementById('universal-search');
+  if (!overlay || overlay.hidden) return;
+  overlay.hidden = true;
+  const input = document.getElementById('us-input');
+  input.removeEventListener('input', _onUsInput);
+  _usContext = null;
+  _usScores = null;
+  _returnFocus();
+}
+window.closeUniversalSearch = closeUniversalSearch;
+
+function _onUsInput(e) {
+  _usHighlight = -1;
+  _renderUsResults(e.target.value.trim());
+}
+
+function _renderUsResults(query) {
+  const results = document.getElementById('us-results');
+  if (!results) return;
+
+  // Loading state — catalog not ready yet
+  if (!CAT || !CAT.length) {
+    results.innerHTML = Array.from({length: 5}, () =>
+      `<div class="us-skeleton">
+        <div class="us-skeleton-dot"></div>
+        <div class="us-skeleton-line" style="width:${40 + Math.random()*40|0}%"></div>
+      </div>`
+    ).join('');
+    return;
+  }
+
+  const q = query.toLowerCase();
+
+  /* ── COMPARE MODE ── */
+  if (_usContext) {
+    let frags = CAT.filter(f => {
+      // Exclude the frag already in the other slot
+      const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
+      if (other && f.id === other.id) return false;
+      if (!q) return true;
+      return f.name.toLowerCase().includes(q) ||
+             f.brand.toLowerCase().includes(q) ||
+             (f._nTop||[]).some(n=>n.includes(q)) ||
+             (f._nMid||[]).some(n=>n.includes(q));
+    });
+
+    if (_usScores) {
+      frags.sort((a, b) => (_usScores.get(b.id)||0) - (_usScores.get(a.id)||0));
+    } else {
+      frags.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    if (!frags.length) {
+      results.innerHTML = _usEmptyHtml(query);
+      return;
+    }
+
+    results.innerHTML = frags.slice(0, 10).map((f, i) =>
+      _usFragRowHtml(f, i, _usScores ? `${_usScores.get(f.id)||0}%` : null)
+    ).join('');
+    _wireUsRows(results);
+    return;
+  }
+
+  /* ── NORMAL MODE — no query: recents + popular ── */
+  if (!q) {
+    let html = '';
+    let rowIdx = 0;
+
+    // Recents
+    try {
+      const recentIds = JSON.parse(sessionStorage.getItem('sm_recent') || '[]');
+      const recentFrags = recentIds.map(id => CAT_MAP[id]).filter(Boolean);
+      if (recentFrags.length) {
+        html += `<div class="us-section-hdr" role="presentation">Recently Opened</div>`;
+        html += recentFrags.map((f, i) => _usFragRowHtml(f, rowIdx++)).join('');
+      }
+    } catch(e) { /* sessionStorage unavailable */ }
+
+    // Popular
+    const popularFrags = US_POPULAR.map(id => CAT_MAP[id]).filter(Boolean);
+    if (popularFrags.length) {
+      html += `<div class="us-section-hdr" role="presentation">Popular</div>`;
+      html += popularFrags.map(f => _usFragRowHtml(f, rowIdx++)).join('');
+    }
+
+    results.innerHTML = html || _usEmptyHtml('');
+    _wireUsRows(results);
+    return;
+  }
+
+  /* ── NORMAL MODE — with query ── */
+  let html = '';
+  let rowIdx = 0;
+
+  // Fragrances (max 6)
+  const fragMatches = CAT.filter(f =>
+    f.name.toLowerCase().includes(q) ||
+    f.brand.toLowerCase().includes(q) ||
+    (f._nTop||[]).some(n=>n.includes(q)) ||
+    (f._nMid||[]).some(n=>n.includes(q)) ||
+    (f._nBase||[]).some(n=>n.includes(q))
+  ).slice(0, 6);
+
+  if (fragMatches.length) {
+    html += `<div class="us-section-hdr" role="presentation">Fragrances</div>`;
+    html += fragMatches.map(f => _usFragRowHtml(f, rowIdx++)).join('');
+  }
+
+  // Notes (max 3)
+  const noteMatches = (NI || []).filter(n =>
+    n.name.toLowerCase().includes(q)
+  ).slice(0, 3);
+
+  if (noteMatches.length) {
+    html += `<div class="us-section-hdr" role="presentation">Notes</div>`;
+    html += noteMatches.map(n => {
+      const tier = n._tier ? (n._tier === 'top' ? 'Top' : n._tier === 'mid' ? 'Heart' : 'Base') : '';
+      const sub = [tier, n.family].filter(Boolean).join(' · ');
+      return `<button class="us-row" role="option" aria-selected="false" data-us-type="note" data-us-id="${n.name}" data-row-idx="${rowIdx++}">
+        <span class="us-row-icon">🌿</span>
+        <span class="us-row-body">
+          <span class="us-row-name">${n.name}</span>
+          ${sub ? `<span class="us-row-sub">${sub}</span>` : ''}
+        </span>
+      </button>`;
+    }).join('');
+  }
+
+  // Houses (max 2) — BRANDS is array of {id, name, desc, url}
+  const brandMatches = (BRANDS || []).filter(b =>
+    b.name.toLowerCase().includes(q)
+  ).slice(0, 2);
+
+  if (brandMatches.length) {
+    html += `<div class="us-section-hdr" role="presentation">Houses</div>`;
+    html += brandMatches.map(b => {
+      const count = CAT.filter(f => f.brand === b.name).length;
+      return `<button class="us-row" role="option" aria-selected="false" data-us-type="house" data-us-id="${b.name}" data-row-idx="${rowIdx++}">
+        <span class="us-row-icon">🏛</span>
+        <span class="us-row-body">
+          <span class="us-row-name">${b.name}</span>
+          <span class="us-row-sub">${count} fragrance${count !== 1 ? 's' : ''}</span>
+        </span>
+      </button>`;
+    }).join('');
+  }
+
+  results.innerHTML = html || _usEmptyHtml(query);
+  _wireUsRows(results);
+}
+
+function _usFragRowHtml(f, rowIdx, scoreLabel) {
+  const fc = getCmpFam(f.family);
+  const famLabel = (FAM[f.family]||{label:f.family}).label;
+  const owned = isOwned(f.id);
+  const wished = isWish(f.id);
+  const badge = owned ? 'Owned' : wished ? 'Wishlist' : '';
+  return `<button class="us-row" role="option" aria-selected="false"
+    data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
+    <span class="us-row-dot" style="background:${fc.accent}"></span>
+    <span class="us-row-body">
+      <span class="us-row-name">${f.name}</span>
+      <span class="us-row-sub">${f.brand} · ${famLabel}</span>
+    </span>
+    ${badge ? `<span class="us-row-badge">${badge}</span>` : ''}
+    ${scoreLabel ? `<span class="us-row-score">${scoreLabel}</span>` : ''}
+  </button>`;
+}
+
+function _usEmptyHtml(query) {
+  return `<div class="us-empty">
+    ${query ? `Nothing matches "<em>${query}</em>"` : 'Start typing to search'}
+    <div class="us-empty-hint">Try a fragrance name, note, or house</div>
+  </div>`;
+}
+
+function _wireUsRows(container) {
+  container.querySelectorAll('.us-row').forEach(row => {
+    row.addEventListener('click', () => _usSelectRow(row));
+  });
+  // Restore highlight if any
+  if (_usHighlight >= 0) _usSetHighlight(_usHighlight);
+}
+
+function _usSelectRow(row) {
+  const type = row.dataset.usType;
+  const id = row.dataset.usId;
+
+  if (type === 'frag') {
+    const frag = CAT_MAP[id];
+    if (!frag) return;
+    if (_usContext) {
+      // Compare mode: fill slot and pulse the other empty slot
+      closeUniversalSearch();
+      _selectFragForSlot(_usContext.slot, frag);
+      const otherSlot = _usContext.slot === 'a' ? 'b' : 'a';
+      const otherCard = document.getElementById(`cmp-card-${otherSlot}`);
+      if (otherCard && !otherCard.classList.contains('filled')) {
+        otherCard.classList.add('us-slot-pulse');
+        otherCard.addEventListener('animationend', () => otherCard.classList.remove('us-slot-pulse'), { once: true });
+      }
+    } else {
+      closeUniversalSearch();
+      openFragDetail(frag);
+    }
+  } else if (type === 'note') {
+    const note = (NI || []).find(n => n.name === id);
+    if (!note) return;
+    closeUniversalSearch();
+    openDetail(c => renderNoteDetail(c, note), note.name);
+  } else if (type === 'house') {
+    closeUniversalSearch();
+    openHouseDetail(id);
+  }
+}
+
+// Keyboard navigation within the modal
+document.getElementById('universal-search').addEventListener('keydown', function(e) {
+  const overlay = this;
+  if (overlay.hidden) return;
+
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    closeUniversalSearch();
+    return;
+  }
+
+  const rows = Array.from(document.querySelectorAll('#us-results .us-row'));
+  if (!rows.length) return;
+
+  if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
+    e.preventDefault();
+    _usHighlight = Math.min(_usHighlight + 1, rows.length - 1);
+    _usSetHighlight(_usHighlight);
+  } else if (e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
+    e.preventDefault();
+    _usHighlight = Math.max(_usHighlight - 1, 0);
+    _usSetHighlight(_usHighlight);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (_usHighlight >= 0 && rows[_usHighlight]) {
+      _usSelectRow(rows[_usHighlight]);
+    }
+  }
+});
+
+function _usSetHighlight(idx) {
+  const rows = Array.from(document.querySelectorAll('#us-results .us-row'));
+  rows.forEach((r, i) => {
+    const active = i === idx;
+    r.setAttribute('aria-selected', active ? 'true' : 'false');
+    if (active) {
+      r.scrollIntoView({ block: 'nearest' });
+      document.getElementById('us-input').setAttribute('aria-activedescendant', r.id || '');
+    }
   });
 }
-window.openGlobalSearch = openGlobalSearch;
 
 function goMobile(id,btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
@@ -3701,7 +4016,7 @@ function renderCompareResults(fa,fb){
 
   // Wire sticky slot taps — pass el as sourceEl so picker anchors below it
   res.querySelectorAll('[data-slot-sticky]').forEach(el=>{
-    el.addEventListener('click',()=>_openFragPicker(el.dataset.slotSticky,el));
+    el.addEventListener('click',()=>openUniversalSearch({context:'compare',slot:el.dataset.slotSticky}));
   });
 
   // Start sticky scroll observer
@@ -3713,248 +4028,6 @@ function renderCompareResults(fa,fb){
   }, 100);
 }
 
-/* ── Fragrance picker — dual-column drum rolodex ── */
-let _pickerSlot=null;
-let _pickerSort='brand'; // 'brand' | 'name' | 'family'
-const PICKER_ITEM_H=48; // must match CSS --picker-item-h
-
-function _openFragPicker(slot){
-  window.haptic?.('light');
-  _pickerSlot=slot;
-  // Each column has its own search; render each with its own current query
-  ['a','b'].forEach(s=>{
-    const q=document.getElementById(`frag-picker-search-${s}`)?.value.trim()||'';
-    _renderPickerList(q,s);
-  });
-  // Highlight the initiating column
-  document.getElementById('frag-picker-col-a')?.classList.toggle('active',slot==='a');
-  document.getElementById('frag-picker-col-b')?.classList.toggle('active',slot==='b');
-  // Position wrap below the header on desktop; use sticky bar if header is scrolled off screen
-  const overlay=document.getElementById('frag-picker');
-  const wrap=overlay?.querySelector('.frag-picker-wrap');
-  if(wrap&&window.innerWidth>=768){
-    const header=document.getElementById('cmp-header');
-    const stickyBar=document.getElementById('cmp-sticky-bar');
-    const headerRect=header?.getBoundingClientRect();
-    const anchor=(headerRect&&headerRect.bottom>0)?header:stickyBar;
-    if(anchor){
-      const r=anchor.getBoundingClientRect();
-      wrap.style.top=(r.bottom+6)+'px';
-      wrap.style.left=r.left+'px';
-      wrap.style.width=r.width+'px';
-      wrap.style.right='auto';
-    }
-  }
-  overlay?.classList.add('open');
-  requestAnimationFrame(()=>_updatePickerSort());
-  // Focus the search input for the initiating slot
-  setTimeout(()=>document.getElementById(`frag-picker-search-${slot}`)?.focus(),120);
-}
-
-function _closeFragPicker(){
-  window.haptic?.('light');
-  document.getElementById('frag-picker')?.classList.remove('open');
-  _pickerSlot=null;
-}
-
-/* Re-render both columns keeping each slot's own search query (used after sort change) */
-function _renderPickerLists(){
-  ['a','b'].forEach(s=>{
-    const q=document.getElementById(`frag-picker-search-${s}`)?.value.trim()||'';
-    _renderPickerList(q,s);
-  });
-}
-
-function _renderPickerList(q,slot){
-  const list=document.getElementById(`frag-picker-list-${slot}`);
-  if(!list)return;
-  const lower=q.toLowerCase();
-  let frags=q.length<1?[...CAT]:CAT.filter(f=>{
-    return f._nameL.includes(lower)||
-      f._brandL.includes(lower)||
-      f._nAll.some(n=>n.includes(lower));
-  });
-  if(_pickerSort==='name'){
-    frags.sort((a,b)=>a.name.localeCompare(b.name));
-  } else if(_pickerSort==='family'){
-    frags.sort((a,b)=>a.family.localeCompare(b.family)||a.name.localeCompare(b.name));
-  } else {
-    frags.sort((a,b)=>a.brand.localeCompare(b.brand)||a.name.localeCompare(b.name));
-  }
-  const curFrag=slot==='a'?CMP_A:CMP_B;
-  const otherFrag=slot==='a'?CMP_B:CMP_A;
-  // Suppress scroll events (and haptic) triggered by innerHTML reset / scrollTop change
-  list.dataset.scrolling='1';
-  list.innerHTML=frags.map(f=>{
-    const fc=getCmpFam(f.family);
-    const isOther=otherFrag&&otherFrag.id===f.id;
-    let sub;
-    if(_pickerSort==='name') sub=`${f.brand} · ${(FAM[f.family]||{}).label||f.family}`;
-    else if(_pickerSort==='family') sub=f.brand;
-    else sub=f.brand;
-    const isCur=!!(curFrag&&curFrag.id===f.id);
-    return`<div class="frag-picker-item${isOther?' other-sel':''}" data-id="${f.id}" role="option" aria-selected="${isCur}">
-      <div class="frag-picker-dot" style="background:${fc.accent}"></div>
-      <div class="frag-picker-item-text">
-        <div class="frag-picker-item-name">${f.name}</div>
-        <div class="frag-picker-item-brand">${sub}</div>
-      </div>
-    </div>`;
-  }).join('');
-  // Tapping an item smooth-scrolls it to center — scroll handler finalises selection
-  list.querySelectorAll('.frag-picker-item').forEach((item,i)=>{
-    item.addEventListener('click',()=>{
-      list.scrollTo({top:i*PICKER_ITEM_H,behavior:'smooth'});
-    });
-  });
-  // Scroll to current selection, or top; mark the centered item immediately
-  requestAnimationFrame(()=>{
-    const items=Array.from(list.querySelectorAll('.frag-picker-item'));
-    let targetIdx=0;
-    if(curFrag){
-      const found=items.findIndex(it=>it.dataset.id===curFrag.id);
-      if(found>=0)targetIdx=found;
-    }
-    list.scrollTop=targetIdx*PICKER_ITEM_H;
-    items.forEach((it,i)=>it.classList.toggle('centered',i===targetIdx));
-    // Keep flag set until after scroll events settle
-    setTimeout(()=>{ delete list.dataset.scrolling; },150);
-  });
-}
-
-/* Per-list drum scroll: auto-selects the centered item, fires haptic per tick */
-function _initPickerDrumScroll(listEl,slot){
-  let _lastIdx=-1,_snapTimer=null;
-  let lastScrollTop = 0, lastScrollTime = 0;
-  listEl.addEventListener('scroll',()=>{
-    const items=Array.from(listEl.querySelectorAll('.frag-picker-item'));
-    if(!items.length)return;
-    const idx=Math.max(0,Math.min(Math.round(listEl.scrollTop/PICKER_ITEM_H),items.length-1));
-    // Always update visual centering and ARIA selection
-    items.forEach((it,i)=>{
-      it.classList.toggle('centered',i===idx);
-      it.setAttribute('aria-selected',i===idx?'true':'false');
-    });
-    // Haptic + selection only on user-initiated scrolls
-    if(listEl.dataset.scrolling)return;
-
-    // Calculate velocity for dynamic haptics
-    const now = Date.now();
-    const dt = now - lastScrollTime;
-    const dy = Math.abs(listEl.scrollTop - lastScrollTop);
-    const velocity = dt > 0 ? dy / dt : 0;
-    lastScrollTop = listEl.scrollTop;
-    lastScrollTime = now;
-
-    if(idx!==_lastIdx){
-      _lastIdx=idx;
-      if (velocity > 1.5) {
-        window.haptic?.('light'); // Fast scroll -> light ticks
-      } else {
-        window.haptic?.('selection'); // Slow scroll -> heavier clicks
-      }
-    }
-    clearTimeout(_snapTimer);
-    _snapTimer=setTimeout(()=>{
-      const f=items[idx]?CAT_MAP[items[idx].dataset.id]:null;
-      const curFrag=slot==='a'?CMP_A:CMP_B;
-      if(f&&f.id!==curFrag?.id){
-        _selectFragForSlot(slot,f);
-        _updateOtherSelMarking(slot);
-      }
-    },180);
-  },{passive:true});
-}
-
-/* Lightweight: update only the other-sel class on the opposite list */
-function _updateOtherSelMarking(slot){
-  const newFrag=slot==='a'?CMP_A:CMP_B;
-  const otherList=document.getElementById(`frag-picker-list-${slot==='a'?'b':'a'}`);
-  if(!otherList)return;
-  const otherSlotFrag=slot==='a'?CMP_B:CMP_A;
-  otherList.querySelectorAll('.frag-picker-item').forEach(it=>{
-    it.classList.toggle('other-sel',!!(newFrag&&it.dataset.id===newFrag.id));
-    it.setAttribute('aria-selected',!!(otherSlotFrag&&it.dataset.id===otherSlotFrag.id)?'true':'false');
-  });
-}
-
-/* Sort bar buttons + horizontal swipe to cycle sort modes */
-function _initPickerSortSwipe(){
-  const sorts=['brand','name','family'];
-  document.querySelectorAll('.frag-picker-sort-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      _pickerSort=btn.dataset.sort;
-      window.haptic?.('selection');
-      _updatePickerSort();
-      _renderPickerLists();
-    });
-  });
-  const cols=document.getElementById('frag-picker-cols');
-  if(!cols)return;
-  let _sx=0,_sy=0;
-  cols.addEventListener('touchstart',e=>{
-    _sx=e.touches[0].clientX;
-    _sy=e.touches[0].clientY;
-  },{passive:true});
-  cols.addEventListener('touchend',e=>{
-    const dx=e.changedTouches[0].clientX-_sx;
-    const dy=e.changedTouches[0].clientY-_sy;
-    if(Math.abs(dx)>44&&Math.abs(dy)<36){
-      const idx=sorts.indexOf(_pickerSort);
-      _pickerSort=dx<0
-        ?sorts[(idx+1)%sorts.length]
-        :sorts[(idx-1+sorts.length)%sorts.length];
-      window.haptic?.('medium');
-      _updatePickerSort();
-      _renderPickerLists();
-    }
-  },{passive:true});
-}
-
-/* Slide the sort pill to the active button */
-function _updatePickerSort(){
-  const bar=document.getElementById('frag-picker-sort-bar');
-  const pill=document.getElementById('frag-picker-sort-pill');
-  if(!bar||!pill)return;
-  document.querySelectorAll('.frag-picker-sort-btn').forEach(btn=>{
-    const active=btn.dataset.sort===_pickerSort;
-    btn.classList.toggle('active',active);
-    btn.setAttribute('aria-pressed',active?'true':'false');
-    if(active){
-      const r=btn.getBoundingClientRect();
-      const barR=bar.getBoundingClientRect();
-      pill.style.left=(r.left-barR.left)+'px';
-      pill.style.width=r.width+'px';
-    }
-  });
-}
-
-/* Arrow keys scroll the drum; Escape closes */
-function _initPickerKeyNav(listEl,slot){
-  listEl.addEventListener('keydown',e=>{
-    const items=Array.from(listEl.querySelectorAll('.frag-picker-item'));
-    if(!items.length)return;
-    const curIdx=Math.max(0,Math.min(Math.round(listEl.scrollTop/PICKER_ITEM_H),items.length-1));
-    if(e.key==='ArrowDown'){
-      e.preventDefault();
-      listEl.scrollTo({top:Math.min(curIdx+1,items.length-1)*PICKER_ITEM_H,behavior:'smooth'});
-    } else if(e.key==='ArrowUp'){
-      e.preventDefault();
-      listEl.scrollTo({top:Math.max(curIdx-1,0)*PICKER_ITEM_H,behavior:'smooth'});
-    } else if(e.key==='Enter'){
-      e.preventDefault();
-      const f=items[curIdx]?CAT_MAP[items[curIdx].dataset.id]:null;
-      if(f){
-        _selectFragForSlot(slot,f);
-        _updateOtherSelMarking(slot);
-      }
-      _closeFragPicker();
-    } else if(e.key==='Escape'){
-      e.preventDefault();
-      _closeFragPicker();
-    }
-  });
-}
 
 function _selectFragForSlot(slot,frag){
   if(slot==='a')CMP_A=frag;else CMP_B=frag;
@@ -4051,27 +4124,15 @@ function initCompare(){
   ['a','b'].forEach(slot=>{
     const card=document.getElementById(`cmp-card-${slot}`);
     if(card){
-      card.addEventListener('click',()=>_openFragPicker(slot));
+      card.addEventListener('click',()=>openUniversalSearch({context:'compare',slot}));
       card.addEventListener('keydown',e=>{
         if(e.key==='Enter'||e.key===' '){
           e.preventDefault();
-          _openFragPicker(slot);
+          openUniversalSearch({context:'compare',slot});
         }
       });
     }
-    const search=document.getElementById(`frag-picker-search-${slot}`);
-    if(search)search.addEventListener('input',()=>_renderPickerList(search.value.trim(),slot));
-    const list=document.getElementById(`frag-picker-list-${slot}`);
-    if(list){
-      _initPickerKeyNav(list,slot);
-      _initPickerDrumScroll(list,slot);
-    }
   });
-  const closeBtn=document.getElementById('frag-picker-close');
-  if(closeBtn)closeBtn.addEventListener('click',_closeFragPicker);
-  const overlay=document.getElementById('frag-picker');
-  if(overlay)overlay.addEventListener('click',e=>{if(e.target===overlay)_closeFragPicker();});
-  _initPickerSortSwipe();
   _setupDragAndDropDropzones();
 }
 window.clearCmpSlot=function(slot){
@@ -4124,15 +4185,34 @@ const _origCloseNotePopup=closeNotePopup;
   document.getElementById('note-float-bg').addEventListener('click',window.closeNotePopup);
 })();
 
+// Global keyboard shortcuts — ⌘K / Ctrl+K / `/` opens universal search
+document.addEventListener('keydown',function(e){
+  // ⌘K or Ctrl+K
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){
+    e.preventDefault();
+    const us=document.getElementById('universal-search');
+    if(us&&!us.hidden){closeUniversalSearch();return;}
+    openUniversalSearch();
+    return;
+  }
+  // `/` when no input is focused — opens universal search
+  if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)){
+    e.preventDefault();
+    const us=document.getElementById('universal-search');
+    if(!us||us.hidden)openUniversalSearch();
+    return;
+  }
+});
+
 // Global Escape key handler — closes topmost open modal/overlay
 document.addEventListener('keydown',function(e){
   if(e.key!=='Escape')return;
   // Score edu overlay (highest z-index)
   const edu=document.getElementById('cmp-edu-overlay');
   if(edu&&edu.classList.contains('open')){closeScoreEdu();return;}
-  // Fragrance picker
-  const picker=document.getElementById('frag-picker');
-  if(picker&&picker.classList.contains('open')){_closeFragPicker();_returnFocus();return;}
+  // Universal search (handled by its own keydown, but guard here too)
+  const us=document.getElementById('universal-search');
+  if(us&&!us.hidden){closeUniversalSearch();return;}
   // Note popup
   const noteOverlay=document.getElementById('note-float-overlay');
   if(noteOverlay&&noteOverlay.classList.contains('open')){

@@ -4,6 +4,18 @@ All notable changes to Scentmap are documented here.
 
 ---
 
+## 2026-03-19
+
+### Added
+- **Universal Search** — ⌘K / Ctrl+K / `/` now opens a context-aware search modal (max-width 560px, `z-index 400`) that works from any page. Idle state shows Recently Opened (sessionStorage `sm_recent`, max 5) and Popular fragrances. Typing filters across Fragrances (max 6), Notes (max 3), and Houses (max 2) grouped by type. Keyboard nav: ↑↓ arrows + Tab move the highlight; Enter selects; Esc closes and returns focus via `_trapFocus`/`_returnFocus`.
+- **Compare mode in universal search** — clicking a compare slot card (or sticky bar chip) opens the modal in compare mode with a context banner ("Selecting Fragrance B ↔ Santal 33"). When the other slot is filled, all fragrances are pre-sorted by `scoreSimilarity()` with live scores shown right-aligned in the result row. Selecting a frag fills the slot and pulses the other empty card (600ms CSS keyframe).
+- **Session recents** — `openFragDetail()` now writes to `sessionStorage['sm_recent']` (JSON array of IDs, max 5, most-recent-first) so the search modal can show recently viewed fragrances.
+
+### Removed
+- **Drum-roller fragrance picker** — replaced entirely by universal search. Removed ~240 lines of JS (`_openFragPicker`, `_closeFragPicker`, `_renderPickerList`, `_renderPickerLists`, `_initPickerDrumScroll`, `_initPickerSortSwipe`, `_updatePickerSort`, `_initPickerKeyNav`, `PICKER_ITEM_H`, `_pickerSlot`, `_pickerSort`) and ~283 lines of CSS (`.frag-picker-overlay` through `.frag-picker-item-text` mobile override). `#frag-picker` HTML block removed from `app/index.html`.
+
+---
+
 ## 2026-03-18
 
 ### Fixed
