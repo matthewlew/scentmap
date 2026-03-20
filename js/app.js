@@ -820,7 +820,7 @@ function renderBrandDiscovery(container) {
     card.className = 'carousel-card carousel-card--brand';
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-label', `Explore ${b.brand} — ${b.bestMatchScore}% match with your collection`);
+    card.setAttribute('aria-label', `Explore ${b.brand} — ${b.score}% match with your collection`);
 
     const famColor = FAM[b.domFamily]?.color || '#888';
     const famLabel = FAM[b.domFamily]?.label || b.domFamily;
