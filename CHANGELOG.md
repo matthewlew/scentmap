@@ -1,3 +1,11 @@
+## v1.2.0 — Stable Release (2026-03-20)
+
+**Wardrobe Gap suggestions, collection context, and list-item system consolidation.**
+
+Core loop-closers: the gap card now surfaces 2–3 specific fragrance recs (not just a browse button); fragrance detail shows your closest owned match; and the entire list-item component was unified into a single, token-clean slot structure across all 15+ render sites.
+
+---
+
 ## 2026-03-20 (36)
 
 ### Changed
