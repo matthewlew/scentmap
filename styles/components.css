@@ -235,16 +235,12 @@
 
 /* ── 3. SUGGESTIONS (V2, used by renderSuggestionsV2) ── */
 .cmp-sug-card {
-  border: 1px solid var(--border-standard) !important;
-  border-radius: var(--radius-lg) !important;
   background: var(--bg-primary) !important;
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  transition: background var(--dur-fast) var(--ease-spring),
-              border-color var(--dur-fast) var(--ease-spring);
+  transition: background var(--dur-fast) var(--ease-spring);
   width: 100%;
-  overflow: hidden !important;
 }
 
 .cmp-sug-card:hover {
@@ -544,7 +540,12 @@
   flex-direction: column;
   border: 1px solid var(--border-standard);
   border-radius: var(--radius-lg);
-  overflow: hidden;
+}
+.dc-sim-shelf .list-item {
+  border-bottom: 1px solid var(--border-standard);
+}
+.dc-sim-shelf .list-item:last-child {
+  border-bottom: none;
 }
 
 

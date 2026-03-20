@@ -1556,24 +1556,6 @@ function renderFragDetail(container,frag){
         </div>
       </div>
       <p class="journey-caveat">Key materials only — simplified pyramid</p>
-    </div>
-
-    <div class="sec-label">You might also like</div>
-    <div class="dc-sim-shelf">
-      ${(() => {
-        const simFrags = CAT.filter(f => f.id !== frag.id)
-          .map(f => ({ f, score: Math.round(scoreSimilarity(frag, f)) }))
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 3);
-        return simFrags.map(s => `
-          <button class="list-item list-item--compact cmp-sug-card" onclick="pushDetail(c => renderFragDetail(c, CAT_MAP['${s.f.id}']), '${s.f.name.replace(/'/g, "\\'")}')">
-            <div class="picker-fdot" style="background:${(FAM[s.f.family]||{}).color}"></div>
-            <div class="list-item-body">
-              <div class="list-item-name">${s.f.name}</div>
-              <div class="list-item-meta">${s.f.brand} · ${s.score}% match</div>
-            </div>
-          </button>`).join('');
-      })()}
     </div>`;
 
   // Note links
