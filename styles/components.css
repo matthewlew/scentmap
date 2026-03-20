@@ -1720,6 +1720,18 @@ mark.note-match {
   border-color: var(--border-strong);
 }
 
+/* drag-over state — CSS class replaces inline style for proper theming */
+.cmp-frag-card--drop-over {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+
+/* list item being dragged — visual feedback via opacity */
+.list-item.dragging {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
 .cmp-card-empty {
   flex: 1;
   display: flex;
@@ -2262,6 +2274,29 @@ button.cmp-note-pill:hover {
 
 .quick-peek-overlay.open .quick-peek-card {
   transform: scale(1);
+}
+
+/* chip dot — replaces raw rgba() inline style */
+.chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-circle);
+  background: var(--on-dark-subtle);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* quick-peek action row */
+.qp-actions {
+  display: flex;
+  gap: var(--sp-md);
+  margin-top: var(--sp-2xl);
+}
+
+.qp-details-btn,
+.qp-compare-btn {
+  flex: 1;
+  justify-content: center;
 }
 
 /* ── Score edu overlay — uses .sheet pattern ── */

@@ -76,18 +76,9 @@ window.getGoldenPairs = function(owned) {
 };
 
 function showUndoToast(msg, onUndo) {
-  let toast = document.getElementById('global-undo-toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'global-undo-toast';
-    toast.className = 'global-toast';
-    toast.innerHTML = `
-      <span class="global-toast-msg"></span>
-      <button class="global-toast-undo">Undo</button>
-    `;
-    document.body.appendChild(toast);
-  }
-  
+  const toast = document.getElementById('global-undo-toast');
+  if (!toast) return;
+
   toast.querySelector('.global-toast-msg').textContent = msg;
   const undoBtn = toast.querySelector('.global-toast-undo');
   
@@ -3100,42 +3091,81 @@ function buildNotes(searchQuery, currentTier){
 }
 
 /* ── QUICK PEEK ── */
+let _qpLastFocus = null;
+let _qpEscapeHandler = null;
+
 function openQuickPeek(frag){
+  _qpLastFocus = document.activeElement;
+
   let overlay=document.getElementById('quick-peek-overlay');
   if(!overlay){
     overlay=document.createElement('div');
     overlay.id='quick-peek-overlay';
     overlay.className='quick-peek-overlay';
+    overlay.setAttribute('role','dialog');
+    overlay.setAttribute('aria-modal','true');
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e=>{
       if(e.target === overlay) closeQuickPeek();
     });
   }
 
+  // Remove any previous Escape handler before adding a new one
+  if(_qpEscapeHandler) document.removeEventListener('keydown', _qpEscapeHandler);
+  _qpEscapeHandler = e => { if(e.key==='Escape'){ e.stopPropagation(); closeQuickPeek(); } };
+  document.addEventListener('keydown', _qpEscapeHandler);
+
   const fm=FAM[frag.family]||{label:frag.family,color:'#888'};
+  const hasSlot = !CMP_A || !CMP_B;
+  overlay.setAttribute('aria-label', `Quick preview: ${frag.name} by ${frag.brand}`);
   overlay.innerHTML=`
     <div class="quick-peek-card">
       <div class="dc-name">${frag.name}</div>
       <div class="dc-brand">${frag.brand}</div>
       <div class="chip" style="background:${fm.color}; margin-bottom: var(--sp-xl);">
-        <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
+        <span class="chip-dot" aria-hidden="true"></span>
         ${fm.label}
       </div>
       <div class="sec-label" style="margin-top:0">Notes</div>
       <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
       <div class="dc-note"><span class="dc-nt">Heart</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
       <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
-      <div style="display:flex;gap:var(--sp-md);margin-top:var(--sp-2xl)">
-        <button class="dc-collect-btn" style="flex:1;justify-content:center" onclick="closeQuickPeek();openFragDetail(CAT_MAP['${frag.id}'])">Full details</button>
+      <div class="qp-actions">
+        <button class="dc-collect-btn qp-details-btn" id="qp-details-btn">Full details</button>
+        ${hasSlot ? `<button class="dc-collect-btn qp-compare-btn" id="qp-compare-btn">Add to compare</button>` : ''}
       </div>
     </div>
   `;
-  requestAnimationFrame(() => overlay.classList.add('open'));
+
+  overlay.querySelector('#qp-details-btn').addEventListener('click', () => {
+    closeQuickPeek();
+    openFragDetail(frag);
+  });
+
+  const cmpBtn = overlay.querySelector('#qp-compare-btn');
+  if(cmpBtn) {
+    cmpBtn.addEventListener('click', () => {
+      const slot = !CMP_A ? 'a' : 'b';
+      closeQuickPeek();
+      _selectFragForSlot(slot, frag);
+      go('compare');
+    });
+  }
+
+  requestAnimationFrame(() => {
+    overlay.classList.add('open');
+    // Focus the first action button for keyboard users
+    const firstBtn = overlay.querySelector('#qp-details-btn');
+    if(firstBtn) firstBtn.focus();
+  });
 }
 
 function closeQuickPeek(){
   const overlay=document.getElementById('quick-peek-overlay');
   if(overlay) overlay.classList.remove('open');
+  if(_qpEscapeHandler){ document.removeEventListener('keydown', _qpEscapeHandler); _qpEscapeHandler=null; }
+  if(_qpLastFocus && typeof _qpLastFocus.focus === 'function') _qpLastFocus.focus();
+  _qpLastFocus = null;
 }
 
 /* ══ NAV ════════════════════════════════════════════════════════════ */
@@ -4493,12 +4523,12 @@ function _setupDragAndDropDropzones() {
       card.addEventListener('dragover', e => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'copy';
-        card.style.boxShadow = '0 0 0 2px var(--accent-primary)';
+        card.classList.add('cmp-frag-card--drop-over');
       });
-      card.addEventListener('dragleave', () => card.style.boxShadow = '');
+      card.addEventListener('dragleave', () => card.classList.remove('cmp-frag-card--drop-over'));
       card.addEventListener('drop', e => {
         e.preventDefault();
-        card.style.boxShadow = '';
+        card.classList.remove('cmp-frag-card--drop-over');
         const fid = e.dataTransfer.getData('text/plain');
         const frag = CAT_MAP[fid];
         if(frag) {

@@ -1,3 +1,14 @@
+## 2026-03-20 (25)
+
+### Fixed
+- **`global-undo-toast` aria-live registration:** Pre-rendered the undo toast element in `app/index.html` (with `role="status"` and `aria-live="polite"`) so screen readers register the region before any content is injected into it. Removed the dynamic creation code from `showUndoToast()` in `app.js`.
+- **Quick peek dialog semantics:** Added `role="dialog"`, `aria-modal="true"`, and `aria-label` to the quick-peek overlay element. Overlay now saves/restores focus and traps Escape to close (consistent with all other modal dialogs in the app).
+- **Raw `rgba()` in quick-peek chip:** Replaced inline `rgba(255,255,255,.3)` with a `.chip-dot` CSS class that uses the `--on-dark-subtle` design token.
+
+### Changed
+- **Drag state CSS classes:** Compare card drag-over feedback now uses `.cmp-frag-card--drop-over` (CSS outline using `--accent-primary` token) instead of an inline `style.boxShadow`. Catalog list items being dragged now use `.list-item.dragging` CSS class (opacity 0.45) instead of no visual state.
+- **Quick peek "Add to compare" action:** When a compare slot is available, quick peek (long-press on mobile) now shows an "Add to compare" button alongside "Full details", providing a keyboard/long-press path into compare without requiring drag.
+
 ## 2026-03-20 (24)
 
 ### Changed
