@@ -233,19 +233,6 @@
   color: var(--text-primary);
 }
 
-/* ── 3. SUGGESTIONS (V2, used by renderSuggestionsV2) ── */
-.cmp-sug-card {
-  background: var(--bg-primary) !important;
-  cursor: pointer;
-  text-align: left;
-  font-family: inherit;
-  transition: background var(--dur-fast) var(--ease-spring);
-  width: 100%;
-}
-
-.cmp-sug-card:hover {
-  background: var(--bg-secondary) !important;
-}
 
 
 .cmp-sug-name {
@@ -535,16 +522,16 @@
 /* Similar shelf */
 /* .dc-sim-lbl → migrated to .sec-label */
 
-.dc-sim-shelf {
+.list-group {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--border-standard);
   border-radius: var(--radius-lg);
 }
-.dc-sim-shelf .list-item {
+.list-group .list-item {
   border-bottom: 1px solid var(--border-standard);
 }
-.dc-sim-shelf .list-item:last-child {
+.list-group .list-item:last-child {
   border-bottom: none;
 }
 
@@ -827,12 +814,13 @@
 }
 
 .list-item {
-  padding: 0;
-  position: relative;
-  background: var(--bg-secondary);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-sm);
+  padding: var(--sp-md) var(--sp-lg);
+  background: var(--bg-primary);
   border-bottom: 1px solid var(--border-standard);
-  transition: opacity var(--dur-fast) ease;
-  overflow: hidden;
+  transition: background var(--dur-fast) var(--ease-spring);
   width: 100%;
   text-align: left;
   border-top: none;
@@ -847,23 +835,8 @@
   border-bottom: none;
 }
 
-.list-item-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--sp-sm);
-  padding: var(--sp-md) var(--sp-lg);
-  background: var(--bg-primary);
-  cursor: pointer;
-  transition: transform var(--dur-standard) var(--ease-spring), background var(--dur-fast) var(--ease-spring);
-  width: 100%;
-}
-
-.list-item:hover .list-item-content {
-  background: var(--bg-secondary);
-}
-.list-item.search-first .list-item-content {
+.list-item:hover,
+.list-item.search-first {
   background: var(--bg-secondary);
 }
 
@@ -874,21 +847,6 @@
   box-shadow: none;
 }
 
-/* Flat variant — compare suggestion cards */
-.list-item--flat {
-  padding: 0;
-  border-bottom: none;
-}
-.list-item--flat .list-item-content {
-  background: transparent;
-  border-radius: var(--radius-lg);
-  padding: var(--sp-md);
-  transform: none;
-  transition: background var(--dur-fast) var(--ease-spring);
-}
-.list-item--flat:hover .list-item-content {
-  background: var(--fade-subtle) !important;
-}
 
 /* Compact variant — note detail, house detail, quiz results */
 .list-item--compact {
@@ -926,7 +884,6 @@
 }
 .list-item--search:hover,
 .list-item--search[aria-selected="true"] { background: var(--bg-secondary); }
-.list-item--search .list-item-name { font-weight: 500; }
 
 
 .s-name-btn {
@@ -947,13 +904,6 @@
   text-decoration-color: var(--text-primary);
 }
 
-.list-item--wish .list-item-name {
-  font-weight: 600;
-}
-
-.list-item--owned .list-item-name {
-  font-weight: 700;
-}
 
 .s-meta {
   font-size: var(--fs-meta);
@@ -1040,7 +990,7 @@
   margin-top: 5px;
 }
 
-/* .nf-name / .nf-desc — consolidated to .list-item-name / .list-item-sub */
+/* .nf-name / .nf-desc — consolidated to .list-item-label / .list-item-sublabel */
 
 /* ── 9. MISCELLANEOUS ── */
 
@@ -1429,7 +1379,13 @@
   flex-shrink: 0;
 }
 
-.list-item-name {
+.list-item-leading {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.list-item-label {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   font-weight: 600;
@@ -1445,13 +1401,14 @@
   flex: 1;
 }
 
-/* Align dot with first text line (name) when parent uses align-items: flex-start */
+/* Align dot with first text line (label) when parent uses align-items: flex-start */
 .list-item .list-item-dot {
   margin-top: 1px;
   flex-shrink: 0;
 }
 
-.list-item-sub {
+.list-item-sublabel {
+  font-family: var(--font-serif);
   font-size: var(--fs-meta);
   color: var(--text-secondary);
   margin-top: 0;
@@ -1460,8 +1417,9 @@
   text-overflow: ellipsis;
 }
 
-.list-item-meta {
-  font-size: var(--fs-meta);
+.list-item-detail {
+  font-family: var(--font-serif);
+  font-size: var(--fs-caption);
   color: var(--text-tertiary);
   margin-top: 2px;
   white-space: nowrap;
@@ -3198,13 +3156,13 @@ button.cmp-note-pill:hover {
   border-color: var(--border-strong);
 }
 
-/* Typography via .list-item-name — layout overrides only */
+/* Typography via .list-item-label — layout overrides only */
 .carousel-card-name {
   letter-spacing: -0.01em;
   margin-bottom: var(--sp-xs);
 }
 
-/* Typography via .list-item-sub — layout overrides only */
+/* Typography via .list-item-sublabel — layout overrides only */
 .carousel-card-brand {
   letter-spacing: 0.02em;
   margin-bottom: var(--sp-sm);

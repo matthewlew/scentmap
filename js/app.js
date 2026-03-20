@@ -881,7 +881,7 @@ function renderBrandDiscovery(container) {
         <div class="fam-dot" style="background:${famColor}" aria-hidden="true"></div>
         <span class="carousel-card-family-label">${famLabel}</span>
       </div>
-      <div class="carousel-card-name list-item-name">${b.brand}</div>
+      <div class="carousel-card-name list-item-label">${b.brand}</div>
       ${reasonText ? `<div class="carousel-card-reason">${reasonText}</div>` : ''}
       ${b.url ? `<a class="s-name-btn carousel-card-shop" href="${b.url}" target="_blank" rel="noopener noreferrer" aria-label="Shop ${b.brand} — opens official website">Shop →</a>` : ''}
     `;
@@ -968,7 +968,7 @@ function renderJournalContent(container) {
   if (activeTrials.length > 0) {
     const trialSec = document.createElement('div'); trialSec.style.marginBottom = 'var(--sp-3xl)';
     trialSec.innerHTML = `<div class="sec-label">Test Bench (Active)</div>`;
-    const trialWrap = document.createElement('div'); trialWrap.className = 'dc-sim-shelf';
+    const trialWrap = document.createElement('div'); trialWrap.className = 'list-group';
     activeTrials.forEach(t => {
       const frag = CAT_MAP[t.id]; const row = document.createElement('div');
       row.className = 'settings-menu-item'; row.style.cursor = 'default';
@@ -981,7 +981,7 @@ function renderJournalContent(container) {
   if (completedTrials.length > 0) {
     const journalSec = document.createElement('div'); journalSec.style.marginBottom = 'var(--sp-3xl)';
     journalSec.innerHTML = `<div class="sec-label">Test History</div>`;
-    const journalWrap = document.createElement('div'); journalWrap.className = 'dc-sim-shelf';
+    const journalWrap = document.createElement('div'); journalWrap.className = 'list-group';
     completedTrials.forEach(t => {
       const frag = CAT_MAP[t.id]; const row = document.createElement('button');
       row.className = 'settings-menu-item';
@@ -1097,11 +1097,11 @@ window.renderSaved = function() {
         <div class="text-meta" style="font-family:var(--font-serif); margin-bottom:var(--sp-sm);">
           Your collection is currently low on <strong>${gapRec.label}</strong>. Consider exploring:
         </div>
-        <button class="list-item list-item--compact cmp-sug-card" style="margin-top:var(--sp-sm);" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
+        <button class="list-item list-item--compact" style="margin-top:var(--sp-sm);" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
           <div class="picker-fdot" style="background:${(FAM[gapRec.frag.family]||{}).color}"></div>
           <div class="list-item-body">
-            <div class="list-item-name">${gapRec.frag.name}</div>
-            <div class="list-item-meta">${gapRec.frag.brand} · To fill the gap</div>
+            <div class="list-item-label">${gapRec.frag.name}</div>
+            <div class="list-item-detail">${gapRec.frag.brand} · To fill the gap</div>
           </div>
         </button>
       `;
@@ -1470,12 +1470,12 @@ function renderDupeLab(container, anchor) {
         const fm = FAM[f.family] || {label: f.family, color:'#888'};
         const reason = getSwapReason(anchor, f);
         return `
-          <div class="list-item list-item--flat cmp-sug-card dupe-item" style="display: block; padding: var(--sp-md); cursor: default;">
+          <div class="list-item dupe-item" style="display: block; padding: var(--sp-md); cursor: default;">
             <div class="dupe-item-head" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--sp-xs);">
-              <div class="list-item-name" style="font-size: var(--fs-body);">${f.name}</div>
+              <div class="list-item-label" style="font-size: var(--fs-body);">${f.name}</div>
               <div class="list-item-score">${score}%</div>
             </div>
-            <div class="list-item-sub" style="margin-bottom: var(--sp-sm);">${f.brand} · ${fm.label}</div>
+            <div class="list-item-sublabel" style="margin-bottom: var(--sp-sm);">${f.brand} · ${fm.label}</div>
 
             <div class="cmp-score-meter" style="margin-bottom: var(--sp-sm);">
               <div class="cmp-score-meter-track">
@@ -1483,7 +1483,7 @@ function renderDupeLab(container, anchor) {
               </div>
             </div>
 
-            <div class="list-item-meta" style="margin-bottom: var(--sp-sm); line-height: var(--lh-normal); color: var(--text-secondary);">${reason}</div>
+            <div class="list-item-detail" style="margin-bottom: var(--sp-sm); line-height: var(--lh-normal); color: var(--text-secondary);">${reason}</div>
 
             <details style="margin-bottom: var(--sp-sm);">
               <summary style="font-size: var(--fs-caption); font-family: var(--font-sans); font-weight: 600; color: var(--text-tertiary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: var(--sp-xs);">
@@ -1560,8 +1560,8 @@ function renderFragDetail(container,frag){
       <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
     </button>
     <div class="dc-stats">
-      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${frag.sillage}/10 — ${SW[frag.sillage]}</div><div class="list-item-meta">${SWD[frag.sillage]}</div></div>
-      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${frag.layering}/10 — ${LW[frag.layering]}</div><div class="list-item-meta">${LWD[frag.layering]}</div></div>
+      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${frag.sillage}/10 — ${SW[frag.sillage]}</div><div class="list-item-detail">${SWD[frag.sillage]}</div></div>
+      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${frag.layering}/10 — ${LW[frag.layering]}</div><div class="list-item-detail">${LWD[frag.layering]}</div></div>
     </div>
     <div class="dc-div"></div>
     <div class="sec-label">Sensory Profile</div>
@@ -1675,7 +1675,7 @@ function renderFragDetail(container,frag){
     const lbl=document.createElement('div');
     lbl.className='sec-label';lbl.textContent='More like this';
     container.appendChild(lbl);
-    const shelf=document.createElement('div');shelf.className='dc-sim-shelf';
+    const shelf=document.createElement('div');shelf.className='list-group';
 
     scored.forEach(({f})=>{
       const fm2=FAM[f.family]||{color:'#888'};
@@ -1683,17 +1683,16 @@ function renderFragDetail(container,frag){
       const reason=getSwapReason(frag,f);
       const badge=classifyDiscovery(frag,f);
       const row=document.createElement('button');
-      row.className='list-item list-item--flat cmp-sug-card';
+      row.className='list-item';
       row.innerHTML=`
-        <div class="list-item-content">
           <div class="list-item-dot" style="background:${fm2.color}"></div>
           <div class="list-item-body" style="flex:1;text-align:left;">
-            <div class="list-item-name">${f.name}</div>
-            <div class="list-item-sub">${f.brand} · ${famLabel2}</div>
+            <div class="list-item-label">${f.name}</div>
+            <div class="list-item-sublabel">${f.brand} · ${famLabel2}</div>
             ${reason ? `<div class="dc-sim-reason">${reason}</div>` : ''}
           </div>
           ${badge&&badge.type!=='similar'?`<div style="flex-shrink:0"><span class="dc-badge ${badge.type}">${badge.label}</span></div>`:''}
-        </div>`;
+        `;
       row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       shelf.appendChild(row);
     });
@@ -1758,24 +1757,23 @@ function buildLayerSuggestions(frag,container){
   const lbl=document.createElement('div');
   lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
-  const shelf=document.createElement('div');shelf.className='dc-sim-shelf';
+  const shelf=document.createElement('div');shelf.className='list-group';
   candidates.forEach(({f,score})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
     const row=document.createElement('button');
-    row.className='list-item list-item--flat cmp-sug-card';
+    row.className='list-item';
     row.innerHTML=`
-      <div class="list-item-content">
         <div class="list-item-dot" style="background:${fm2.color}"></div>
         <div class="list-item-body" style="flex:1">
-          <div class="list-item-name">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
+          <div class="list-item-label">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
           ${reason ? `<div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>` : ''}
         </div>
         <div style="flex-shrink:0; display:flex; align-items:center; gap: 4px;">
           <span class="dc-layer-score-badge">${score}</span>
           <span class="dc-sim-state is-owned">Owned</span>
         </div>
-      </div>`;
+      `;
     row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
     shelf.appendChild(row);
   });
@@ -1863,7 +1861,7 @@ function renderNoteDetail(container,note){
     [...inf].sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
       const fc=getCmpFam(f.family);
       const btn=document.createElement('button');btn.className='list-item list-item--compact';
-      btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div><div class="list-item-body"><div class="list-item-name">${f.name}</div><div class="list-item-sub">${f.brand}</div></div>`;
+      btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div><div class="list-item-body"><div class="list-item-label">${f.name}</div><div class="list-item-sublabel">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       span.appendChild(btn);
     });
@@ -1980,8 +1978,8 @@ function renderHouseDetail(container,brand){
       const fm = FAM[frag.family] || {color: '#888'};
       const card = document.createElement('div');
       card.className = 'carousel-card';
-      card.innerHTML = `<div class="carousel-card-name list-item-name">${frag.name}</div>
-        <div class="carousel-card-brand list-item-sub">${frag.brand}</div>
+      card.innerHTML = `<div class="carousel-card-name list-item-label">${frag.name}</div>
+        <div class="carousel-card-brand list-item-sublabel">${frag.brand}</div>
         <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
       card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       carousel.appendChild(card);
@@ -2015,8 +2013,8 @@ function renderHouseDetail(container,brand){
     btn.className='list-item list-item--compact';
     btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div>
       <div class="list-item-body">
-        <div class="list-item-name">${frag.name}</div>
-        <div class="list-item-sub">${(FAM[frag.family]||{}).label||frag.family}</div>
+        <div class="list-item-label">${frag.name}</div>
+        <div class="list-item-sublabel">${(FAM[frag.family]||{}).label||frag.family}</div>
       </div>`;
     btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag),frag.name);});
     list.appendChild(btn);
@@ -2128,8 +2126,8 @@ function renderByredoQuiz(container) {
       btn.className = 'list-item list-item--compact';
       btn.innerHTML = `<div class="list-item-dot" style="background:${fc.accent}"></div>
         <div class="list-item-body">
-          <div class="list-item-name">${frag.name}</div>
-          <div class="list-item-sub">${(FAM[frag.family] || {}).label || frag.family}</div>
+          <div class="list-item-label">${frag.name}</div>
+          <div class="list-item-sublabel">${(FAM[frag.family] || {}).label || frag.family}</div>
         </div>`;
       btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       list.appendChild(btn);
@@ -2308,8 +2306,8 @@ function renderGlobalQuiz(container) {
       btn.className = 'list-item list-item--compact';
       btn.innerHTML = `<div class="list-item-dot" style="background:${fc.accent}"></div>
         <div class="list-item-body">
-          <div class="list-item-name">${frag.name}</div>
-          <div class="list-item-sub">${frag.brand} · ${(FAM[frag.family] || {}).label || frag.family}</div>
+          <div class="list-item-label">${frag.name}</div>
+          <div class="list-item-sublabel">${frag.brand} · ${(FAM[frag.family] || {}).label || frag.family}</div>
         </div>`;
       btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       list.appendChild(btn);
@@ -2365,7 +2363,7 @@ function openNotePopup(note,triggerEl){
     sortedInf.forEach(f=>{
       const fc=getCmpFam(f.family);
       const btn=document.createElement('button');btn.className='list-item list-item--compact';
-      btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div><div class="list-item-body"><div class="list-item-name">${f.name}</div><div class="list-item-sub">${f.brand}</div></div>`;
+      btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div><div class="list-item-body"><div class="list-item-label">${f.name}</div><div class="list-item-sublabel">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();closeNotePopup();openFragDetail(f)});
       list.appendChild(btn);
     });
@@ -2996,16 +2994,16 @@ function renderCatRow(row,frag,fm,search){
       const rendered=(frag.top||[]).slice(0,3).map((n,i)=>
         (i===topIdx||frag._nTop[i].includes(q))?`<mark class="note-match">${n}</mark>`:n
       ).join(', ');
-      notesHtml=`<div class="list-item-meta">${rendered}</div>`;
+      notesHtml=`<div class="list-item-detail">${rendered}</div>`;
     } else if(midIdx!==-1||baseIdx!==-1){
       // Replace notes line with a "why matched" badge
       const tier=midIdx!==-1?'Mid':'Base';
       const note=midIdx!==-1?frag.mid[midIdx]:frag.base[baseIdx];
-      notesHtml=`<div class="list-item-meta"><span class="match-badge">↳ ${tier} · ${note}</span></div>`;
+      notesHtml=`<div class="list-item-detail"><span class="match-badge">↳ ${tier} · ${note}</span></div>`;
     } else {
       // Name or brand match — show top notes as normal
       const topNotes=(frag.top||[]).slice(0,3).join(', ');
-      if(topNotes)notesHtml=`<div class="list-item-meta">${topNotes}</div>`;
+      if(topNotes)notesHtml=`<div class="list-item-detail">${topNotes}</div>`;
     }
   } else {
     const topNotes=(frag.top||[]).slice(0,3).join(', ');
@@ -3015,19 +3013,18 @@ function renderCatRow(row,frag,fm,search){
     if(topNotes)parts.push(topNotes);
     if(midNote)parts.push(`<span class="note-layer-hint" aria-label="Heart note:">H</span> ${midNote}`);
     if(baseNote)parts.push(`<span class="note-layer-hint" aria-label="Base note:">B</span> ${baseNote}`);
-    if(parts.length)notesHtml=`<div class="list-item-meta">${parts.join(' · ')}</div>`;
+    if(parts.length)notesHtml=`<div class="list-item-detail">${parts.join(' · ')}</div>`;
   }
 
   row.draggable = true;
   row.innerHTML=`
-    <div class="list-item-content">
       <div class="list-item-dot--lg" style="background:${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
       <div class="list-item-body">
-        <div class="list-item-name">${frag.name}</div>
-        <div class="list-item-sub">${frag.brand} · ${famLabel}</div>
+        <div class="list-item-label">${frag.name}</div>
+        <div class="list-item-sublabel">${frag.brand} · ${famLabel}</div>
         ${notesHtml}
       </div>
-    </div>`;
+    `;
 
   // Drag to Compare
   row.addEventListener('dragstart', e => {
@@ -3158,7 +3155,7 @@ function buildNotes(searchQuery, currentTier){
       const card=document.createElement('div');card.className='notes-card';
 
       const header=document.createElement('div');header.className='notes-card-header';
-      header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="list-item-name">${fm.label}</div>${fm.desc?`<div class="list-item-sub">${fm.desc}</div>`:''}</div>`;
+      header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="list-item-label">${fm.label}</div>${fm.desc?`<div class="list-item-sublabel">${fm.desc}</div>`:''}</div>`;
 
       const cardBody=document.createElement('div');cardBody.className='notes-card-body';
       grouped[fk].forEach(note=>{
@@ -3496,8 +3493,8 @@ function _renderUsResults(query) {
       return `<button class="list-item list-item--search" role="option" aria-selected="false" id="us-row-${rowIdx}" data-us-type="note" data-us-id="${n.name}" data-row-idx="${rowIdx++}">
         <span class="list-item-icon">🌿</span>
         <span class="list-item-body">
-          <span class="list-item-name">${n.name}</span>
-          ${sub ? `<span class="list-item-sub">${sub}</span>` : ''}
+          <span class="list-item-label">${n.name}</span>
+          ${sub ? `<span class="list-item-sublabel">${sub}</span>` : ''}
         </span>
       </button>`;
     }).join('');
@@ -3515,8 +3512,8 @@ function _renderUsResults(query) {
       return `<button class="list-item list-item--search" role="option" aria-selected="false" id="us-row-${rowIdx}" data-us-type="house" data-us-id="${b.name}" data-row-idx="${rowIdx++}">
         <span class="list-item-icon">🏛</span>
         <span class="list-item-body">
-          <span class="list-item-name">${b.name}</span>
-          <span class="list-item-sub">${count} fragrance${count !== 1 ? 's' : ''}</span>
+          <span class="list-item-label">${b.name}</span>
+          <span class="list-item-sublabel">${count} fragrance${count !== 1 ? 's' : ''}</span>
         </span>
       </button>`;
     }).join('');
@@ -3545,8 +3542,8 @@ function _usFragRowHtml(f, rowIdx, scoreLabel) {
     id="us-row-${rowIdx}" data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
     <span class="list-item-dot" style="background:${fc.accent}"></span>
     <span class="list-item-body">
-      <span class="list-item-name">${f.name}</span>
-      <span class="list-item-sub">${f.brand} · ${famLabel}</span>
+      <span class="list-item-label">${f.name}</span>
+      <span class="list-item-sublabel">${f.brand} · ${famLabel}</span>
     </span>
     ${badge ? `<span class="list-item-badge">${badge}</span>` : ''}
     ${scoreLabel ? `<span class="list-item-score">${scoreLabel}</span>` : ''}
@@ -3997,16 +3994,14 @@ function renderSuggestionsV2(fa,fb,ca,cb){
     const famLabel=(FAM[frag.family]||{label:frag.family}).label;
     const topNotes=[...(frag.top||[])].slice(0,3).join(', ');
     const reason=getSwapReason(anchor, frag);
-    return`<button class="list-item list-item--flat cmp-sug-card" data-fid="${frag.id}">
-      <div class="list-item-content">
+    return`<button class="list-item" data-fid="${frag.id}">
         <div class="list-item-dot" style="background:${fc.accent}"></div>
         <div class="list-item-body" style="flex:1;text-align:left;">
-          <div class="list-item-name">${frag.name}</div>
-          <div class="list-item-sub">${frag.brand} · ${famLabel}</div>
+          <div class="list-item-label">${frag.name}</div>
+          <div class="list-item-sublabel">${frag.brand} · ${famLabel}</div>
           <div class="dc-sim-reason">${reason}</div>
-          ${topNotes?`<div class="list-item-meta">${topNotes}</div>`:''}
+          ${topNotes?`<div class="list-item-detail">${topNotes}</div>`:''}
         </div>
-      </div>
     </button>`;
   }
   const sugsA=getSugs(fa,fb),sugsB=getSugs(fb,fa);
@@ -4512,7 +4507,7 @@ function renderCompareResults(fa,fb){
   });
 
   // Wire suggestion taps
-  res.querySelectorAll('.cmp-sug-card').forEach(card=>{
+  res.querySelectorAll('button[data-fid]').forEach(card=>{
     card.addEventListener('click',()=>{
       window.haptic?.('light');
       const f=CAT_MAP[card.dataset.fid];
@@ -5126,11 +5121,11 @@ function _noseEntryHtml(){
     const emoji=_noseResultEmoji(saved.answers);
     const score=_noseScore(saved.answers);
     return `<button class="list-item nose-entry" role="button" tabindex="0" aria-label="Today's score: ${score} out of 5">
-      <span class="list-item-content"><span class="nose-entry-icon">🧠</span><span class="list-item-body"><span class="list-item-name">Today's Score: ${emoji} ${score}/5</span><span class="list-item-sub">The Nose Knows · Tap to review</span></span></span>
+      <span class="nose-entry-icon">🧠</span><span class="list-item-body"><span class="list-item-label">Today's Score: ${emoji} ${score}/5</span><span class="list-item-sublabel">The Nose Knows · Tap to review</span></span>
     </button>`;
   }
   return `<button class="list-item nose-entry" role="button" tabindex="0" aria-label="Today's Challenge — The Nose Knows">
-    <span class="list-item-content"><span class="nose-entry-icon">🧠</span><span class="list-item-body"><span class="list-item-name">Today's Challenge</span><span class="list-item-sub">The Nose Knows · 5 rounds · tap to play</span></span></span>
+    <span class="nose-entry-icon">🧠</span><span class="list-item-body"><span class="list-item-label">Today's Challenge</span><span class="list-item-sublabel">The Nose Knows · 5 rounds · tap to play</span></span>
   </button>`;
 }
 

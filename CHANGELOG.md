@@ -1,3 +1,13 @@
+## 2026-03-20 (32)
+
+### Changed
+- **List-item component consolidation:** Unified to a single universal `.list-item` component. Removed `.list-item-content` inner wrapper (padding and hover promoted to `.list-item` base), `.list-item--flat` modifier, and `.cmp-sug-card` duplicate class across ~65 render sites in `app.js`.
+- **Slot renames:** `list-item-name` → `list-item-label`, `list-item-sub` → `list-item-sublabel` (+ `font-family: var(--font-serif)`), `list-item-meta` → `list-item-detail` (+ `font-family: var(--font-serif)`, `font-size: var(--fs-caption)` — 12px step-down from sublabel's 14px).
+- **New slot:** `.list-item-leading` added to CSS (flex-shrink:0 wrapper for dot indicator and other leading elements).
+- **Shelf container:** `.dc-sim-shelf` renamed to `.list-group` throughout CSS and JS. All shelf render sites updated.
+- **Typography contract enforced:** Removed 3 font-weight overrides that violated locked-typography rule (`.list-item--search`, `.list-item--wish`, `.list-item--owned` modifier overrides on the name slot).
+- **Responsive fix:** Removed `@media (max-width:767px) { .list-item { padding: 0 } }` from responsive.css — that rule was correct when `.list-item-content` held the padding, now obsolete.
+
 ## 2026-03-20 (31)
 
 ### Added
