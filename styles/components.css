@@ -1512,9 +1512,10 @@ mark.note-match {
 /* Layer hint badges in catalog row notes preview */
 .note-layer-hint {
   font-family: var(--font-sans);
-  font-size: 9px;
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: 0.04em;
+  padding: 0 var(--sp-xs);
   color: var(--text-disabled);
   vertical-align: 1px;
 }

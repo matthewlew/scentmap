@@ -1,3 +1,12 @@
+## 2026-03-20 (29)
+
+### Added
+- **Carousel keyboard navigation (P1 Feature B):** Brand Discovery carousel now supports roving tabindex arrow-key navigation (WAI-ARIA carousel pattern). First card is tabbable; ArrowRight/ArrowLeft move focus between cards with `scrollIntoView`. `initCarouselKeyNav()` wired after carousel is populated in `renderBrandDiscovery()`. Carousel element gets `role="list"` + `aria-label="Brand Discovery"`; each card changes from `role="button"` to `role="listitem"`. Keyboard-only, JS-only — no new CSS or components.
+
+### Fixed
+- **Note layer badge size:** `.note-layer-hint` font size bumped from hardcoded `9px` to `var(--fs-label)` (12px) with `padding: 0 var(--sp-xs)`. Fixes WCAG AA minimum for Miguel (essential tremor/low vision) persona.
+- **Gap CTA screen reader announcement:** After Wardrobe Gap CTA fires (`buildCatalog()`), `#cat-live` is immediately overridden with a gap-specific message (`Now showing All fragrances — results for <families>`), replacing the generic count that `buildCatalog()` sets. Fixes silent context switch for Nadia (keyboard-first) persona.
+
 ## 2026-03-20 (26)
 
 ### Added

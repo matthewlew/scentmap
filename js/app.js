@@ -703,6 +703,9 @@ function renderWardrobeGap(container) {
           document.getElementById('cat-search-clear')?.classList.add('visible');
         }
         buildCatalog();
+        // Override generic count with gap-specific announcement
+        const liveEl = document.getElementById('cat-live');
+        if (liveEl) liveEl.textContent = `Now showing All fragrances — results for ${gap.ctaFamilies.join(' and ')}`;
       });
     }
   } else {
@@ -800,6 +803,29 @@ function computeBrandScores() {
   return results.sort((a, b) => b.score - a.score).slice(0, 6);
 }
 
+function initCarouselKeyNav(carouselEl) {
+  const cards = Array.from(carouselEl.querySelectorAll('.carousel-card'));
+  if (!cards.length) return;
+
+  // Roving tabindex: first card tabbable, rest removed from tab order
+  cards.forEach((c, i) => c.setAttribute('tabindex', i === 0 ? '0' : '-1'));
+
+  carouselEl.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const current = carouselEl.querySelector('[tabindex="0"]');
+    const idx = cards.indexOf(current);
+    let next = -1;
+    if (e.key === 'ArrowRight') next = Math.min(idx + 1, cards.length - 1);
+    if (e.key === 'ArrowLeft') next = Math.max(idx - 1, 0);
+    if (next === -1 || next === idx) return;
+    e.preventDefault();
+    cards[idx].setAttribute('tabindex', '-1');
+    cards[next].setAttribute('tabindex', '0');
+    cards[next].focus();
+    cards[next].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  });
+}
+
 function renderBrandDiscovery(container) {
   const owned = CAT.filter(f => isOwned(f.id));
   if (!owned.length) return;
@@ -832,11 +858,13 @@ function renderBrandDiscovery(container) {
   wrap.className = 'carousel-wrap';
   const carousel = document.createElement('div');
   carousel.className = 'carousel';
+  carousel.setAttribute('role', 'list');
+  carousel.setAttribute('aria-label', 'Brand Discovery');
 
   brands.forEach(b => {
     const card = document.createElement('div');
     card.className = 'carousel-card carousel-card--brand';
-    card.setAttribute('role', 'button');
+    card.setAttribute('role', 'listitem');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `Explore ${b.brand} — ${b.score}% match with your collection`);
 
@@ -871,6 +899,8 @@ function renderBrandDiscovery(container) {
 
     carousel.appendChild(card);
   });
+
+  initCarouselKeyNav(carousel);
 
   wrap.appendChild(carousel);
   sec.appendChild(wrap);
