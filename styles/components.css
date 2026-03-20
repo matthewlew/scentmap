@@ -113,10 +113,10 @@
 .cat-state-bar {
   position: relative;
   display: flex;
-  gap: 2px;
+  gap: var(--sp-micro);
   background: var(--bg-secondary);
   border-radius: var(--radius);
-  padding: 3px;
+  padding: 3px; /* intentional: inset for sliding pill — equals outer_radius(6) - inner_radius(3) */
 }
 
 .tab {
@@ -197,7 +197,7 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--sp-2xs);
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 600;
@@ -591,7 +591,7 @@
   font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: 0.01em;
-  padding: 2px var(--sp-sm);
+  padding: var(--sp-micro) var(--sp-sm);
   border-radius: var(--radius);
   flex-shrink: 0;
 }
@@ -607,7 +607,7 @@
   font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: 0.01em;
-  padding: 2px var(--sp-sm);
+  padding: var(--sp-micro) var(--sp-sm);
   border-radius: var(--radius);
   flex-shrink: 0;
   white-space: nowrap;
@@ -994,7 +994,7 @@
 
 .s-syms {
   display: flex;
-  gap: 2px;
+  gap: var(--sp-micro);
   flex-shrink: 0;
 }
 
@@ -1155,20 +1155,20 @@
   background: transparent;
   border-radius: 0;
   padding: 0;
-  gap: 2px;
+  gap: var(--sp-micro);
   margin-bottom: 0;
 }
 
 .frag-sidebar .cat-family-bar {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--sp-micro);
 }
 
 .frag-sidebar .cat-brand-bar {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--sp-micro);
   overflow-y: auto;
   max-height: 280px;
   scrollbar-width: none;
@@ -1195,7 +1195,7 @@
 .fam-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--sp-2xs);
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 500;
@@ -1306,7 +1306,7 @@
 @media (max-width: 767px) {
   .frag-mobile-quick-filters {
     display: flex;
-    gap: 2px;
+    gap: var(--sp-micro);
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
     padding: var(--sp-xs);
@@ -1317,7 +1317,7 @@
 @media (max-width: 767px) {
   #cat-state-bar-m {
     display: flex;
-    gap: 2px;
+    gap: var(--sp-micro);
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
     padding: var(--sp-xs);
@@ -3039,7 +3039,7 @@ button.cmp-note-pill:hover {
   display: flex;
   align-items: center;
   gap: var(--sp-sm);
-  padding: 3px 0;
+  padding: var(--sp-micro) 0;
 }
 
 .picker-hero-sec-idx {
@@ -3139,7 +3139,7 @@ button.cmp-note-pill:hover {
   letter-spacing: 0.02em;
   color: var(--text-tertiary);
   flex-shrink: 0;
-  padding: 2px var(--sp-sm);
+  padding: var(--sp-micro) var(--sp-sm);
   border: 1px solid var(--border-standard);
   border-radius: var(--radius);
   background: var(--bg-primary);
@@ -3445,8 +3445,8 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-caption);
   color: var(--text-tertiary);
   border: 1px solid var(--border-standard);
-  border-radius: 3px;
-  padding: 1px 5px;
+  border-radius: var(--radius-small);
+  padding: 1px var(--sp-xs);
   background: var(--bg-primary);
   line-height: 1.6;
   letter-spacing: 0;
@@ -3488,7 +3488,7 @@ button.cmp-note-pill:hover {
   .mbn-btn{
     flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
     background:none;border:none;cursor:pointer;font-family:inherit;
-    font-size:var(--fs-caption);color:var(--text-tertiary);gap:2px;padding:8px 2px 6px;
+    font-size:var(--fs-caption);color:var(--text-tertiary);gap:var(--sp-micro);padding:var(--sp-sm) var(--sp-micro) var(--sp-2xs);
     transition:color var(--dur-fast);letter-spacing:var(--ls-normal);min-height:52px;
     text-decoration:none;
   }
@@ -4071,7 +4071,7 @@ button.cmp-note-pill:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: var(--sp-xs);
   margin: var(--sp-md) 0;
 }
 
@@ -4159,7 +4159,7 @@ button.cmp-note-pill:hover {
 
 .family-card-note-pill {
   font-size: var(--fs-caption);
-  padding: 2px 8px;
+  padding: var(--sp-micro) var(--sp-sm);
   background: var(--bg-secondary);
   border-radius: var(--radius-pill);
   color: var(--text-tertiary);
