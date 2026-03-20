@@ -12,7 +12,7 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 These directly serve the new product direction: wardrobe completion and brand exposure. Design review complete (2026-03-19) — ready for eng review.
 
-### TODO: Brand Discovery Panel
+### ~~TODO: Brand Discovery Panel~~ ✅ Shipped 2026-03-20
 **Design review:** Complete (2026-03-19) — ready for eng review
 **What:** "Brands to Explore" section at the top of the All catalog tab. Surfaces brands the user has zero or few fragrances from, ranked by similarity to their owned collection. Each row includes a brand website link ("Shop →") so users can find where to buy.
 **Why:** Core to the new direction ("surface new brands"). Currently the catalog only reflects what you search for. The "Shop →" link closes the loop from discovery to purchase.
@@ -54,7 +54,7 @@ These directly serve the new product direction: wardrobe completion and brand ex
 
 ---
 
-### TODO: Wardrobe Gap Analysis
+### ~~TODO: Wardrobe Gap Analysis~~ ✅ Shipped 2026-03-20
 **Design review:** Complete (2026-03-19) — ready for eng review
 **What:** Compact block at the top of the Owned tab. Reads the user's collection via `computeProfile()` and generates a sensory-language insight: "Your wardrobe leans warm and resinous. You're missing a light, airy contrast." Includes a CTA to browse the gap family in the catalog.
 **Why:** Turns passive collection ownership into a purposeful next-buy decision. Directly expresses "completing your wardrobe."
