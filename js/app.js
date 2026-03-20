@@ -614,6 +614,7 @@ function computeWardrobeGap() {
     return {
       dominant,
       gapLabel: 'a light, airy contrast',
+      gapAxisShort: 'Fresh',
       ctaFamilies: ['Citrus', 'Green'],
       ctaSearch: 'citrus',
       count: owned.length,
@@ -623,6 +624,7 @@ function computeWardrobeGap() {
     return {
       dominant,
       gapLabel: 'sweetness',
+      gapAxisShort: 'Sweet',
       ctaFamilies: ['Gourmand', 'Floral'],
       ctaSearch: 'gourmand',
       count: owned.length,
@@ -632,6 +634,7 @@ function computeWardrobeGap() {
     return {
       dominant,
       gapLabel: 'warmth and depth',
+      gapAxisShort: 'Warm',
       ctaFamilies: ['Amber', 'Woody', 'Oud'],
       ctaSearch: 'amber',
       count: owned.length,
@@ -641,6 +644,7 @@ function computeWardrobeGap() {
     return {
       dominant,
       gapLabel: 'complexity',
+      gapAxisShort: 'Complex',
       ctaFamilies: ['Chypre', 'Leather'],
       ctaSearch: 'chypre',
       count: owned.length,
@@ -650,6 +654,7 @@ function computeWardrobeGap() {
     return {
       dominant,
       gapLabel: 'presence and projection',
+      gapAxisShort: 'Bold',
       ctaFamilies: [],
       ctaSearch: '',
       count: owned.length,
@@ -666,6 +671,26 @@ function computeWardrobeGap() {
   };
 }
 
+function computeGapSuggestions(gap) {
+  if (!gap.ctaFamilies?.length) return [];
+  const ownedFrags = CAT.filter(f => gst(f.id) === 'owned');
+  const targetLabels = gap.ctaFamilies.map(l => l.toLowerCase());
+  const candidates = CAT.filter(f => {
+    if (gst(f.id) === 'owned' || gst(f.id) === 'wish') return false;
+    const label = (FAM[f.family]?.label || f.family || '').toLowerCase();
+    return targetLabels.includes(label);
+  });
+  if (!candidates.length) return [];
+  return candidates
+    .map(f => {
+      const scores = ownedFrags.map(o => scoreSimilarity(f, o));
+      const avg = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+      return { frag: f, score: Math.round(avg) };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+}
+
 function renderWardrobeGap(container) {
   const gap = computeWardrobeGap();
   if (!gap) return;
@@ -678,16 +703,61 @@ function renderWardrobeGap(container) {
     : '';
 
   if (gap.gapLabel) {
-    const ctaHtml = gap.ctaSearch
-      ? `<button class="gap-cta" aria-label="Browse ${gap.ctaFamilies.join(' and ')} fragrances to fill your collection gap">Browse ${gap.ctaFamilies.join(' & ')}</button>`
-      : '';
-    el.innerHTML = `
-      <p class="dna-headline">Your wardrobe leans ${gap.dominant.join(' and ')}. You're missing ${gap.gapLabel}.</p>
-      ${disclaimer}
-      ${ctaHtml}
-    `;
-    const cta = el.querySelector('.gap-cta');
-    if (cta) {
+    const headline = document.createElement('p');
+    headline.className = 'dna-headline';
+    headline.textContent = `Your wardrobe leans ${gap.dominant.join(' and ')}. You're missing ${gap.gapLabel}.`;
+    el.appendChild(headline);
+
+    const suggestions = computeGapSuggestions(gap);
+    if (suggestions.length >= 2) {
+      const wrap = document.createElement('div');
+      wrap.className = 'carousel-wrap';
+      const carousel = document.createElement('div');
+      carousel.className = 'carousel';
+      carousel.setAttribute('role', 'list');
+      carousel.setAttribute('aria-label', 'Suggested fragrances to fill your gap');
+
+      suggestions.forEach(({ frag }) => {
+        const famColor = FAM[frag.family]?.color || 'var(--border-strong)';
+        const famLabel = FAM[frag.family]?.label || frag.family;
+        const card = document.createElement('button');
+        card.className = 'carousel-card';
+        card.setAttribute('role', 'listitem');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `${frag.name} by ${frag.brand}, ${gap.gapAxisShort} recommendation`);
+        card.innerHTML = `
+          <div class="carousel-card-family">
+            <div class="fam-dot" style="background:${famColor}" aria-hidden="true"></div>
+            <span class="carousel-card-family-label">${gap.gapAxisShort}</span>
+          </div>
+          <div class="carousel-card-name list-item-label">${frag.name}</div>
+          <div class="carousel-card-brand list-item-sublabel">${frag.brand}</div>
+        `;
+        card.addEventListener('click', () => { window.haptic?.('light'); openFragDetail(frag); });
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openFragDetail(frag); }
+        });
+        carousel.appendChild(card);
+      });
+
+      initCarouselKeyNav(carousel);
+      wrap.appendChild(carousel);
+      el.appendChild(wrap);
+    }
+
+    if (disclaimer) {
+      const disc = document.createElement('p');
+      disc.className = 'dna-sub';
+      disc.style.opacity = '0.7';
+      disc.textContent = `Based on ${gap.count} fragrance${gap.count === 1 ? '' : 's'} — add more to refine.`;
+      el.appendChild(disc);
+    }
+
+    if (gap.ctaSearch) {
+      const cta = document.createElement('button');
+      cta.className = 'gap-cta';
+      cta.setAttribute('aria-label', `Browse ${gap.ctaFamilies.join(' and ')} fragrances to fill your collection gap`);
+      cta.textContent = `Browse ${gap.ctaFamilies.join(' & ')}`;
       cta.addEventListener('click', () => {
         // Switch to All tab and search for gap family
         CAT_STATE_FILTER = null;
@@ -707,6 +777,7 @@ function renderWardrobeGap(container) {
         const liveEl = document.getElementById('cat-live');
         if (liveEl) liveEl.textContent = `Now showing All fragrances — results for ${gap.ctaFamilies.join(' and ')}`;
       });
+      el.appendChild(cta);
     }
   } else {
     el.innerHTML = `<p class="dna-headline">Your collection covers all the major sensory dimensions. ${gap.signatureAxis.charAt(0).toUpperCase() + gap.signatureAxis.slice(1)} is your signature.</p>${disclaimer}`;
@@ -1473,7 +1544,7 @@ function renderDupeLab(container, anchor) {
           <div class="list-item dupe-item" style="display: block; padding: var(--sp-md); cursor: default;">
             <div class="dupe-item-head" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--sp-xs);">
               <div class="list-item-label" style="font-size: var(--fs-body);">${f.name}</div>
-              <div class="list-item-score">${score}%</div>
+              <div class="list-item-trailing-label">${score}%</div>
             </div>
             <div class="list-item-sublabel" style="margin-bottom: var(--sp-sm);">${f.brand} · ${fm.label}</div>
 
@@ -1551,6 +1622,7 @@ function renderFragDetail(container,frag){
       </div>
     </div>
     <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
+    <div id="dc-coll-ctx-${frag.id}"></div>
     ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
     ${frag.story?`<div class="dc-story">${frag.story}</div>`:''}
     ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn">Buy from ${frag.brand}</a>`:''}
@@ -1650,6 +1722,37 @@ function renderFragDetail(container,frag){
     el.appendChild(wishBtn);el.appendChild(ownBtn);el.appendChild(trialBtn);el.appendChild(shareBtn);
   }
   renderCollectRow();
+
+  // Collection context — most similar owned fragrance
+  const _ownedMatches=CAT
+    .filter(f=>f.id!==frag.id&&gst(f.id)==='owned')
+    .map(f=>({f,score:scoreSimilarity(frag,f)}))
+    .filter(x=>x.score>=30)
+    .sort((a,b)=>b.score-a.score);
+  const _ctxWrap=container.querySelector(`#dc-coll-ctx-${frag.id}`);
+  if(_ctxWrap&&gst(frag.id)!=='owned'&&_ownedMatches.length){
+    const{f:top,score:topScore}=_ownedMatches[0];
+    const fm2=FAM[top.family]||{label:top.family,color:'#888'};
+    const famLabel2=(FAM[top.family]||{label:top.family}).label;
+    const ctxLbl=document.createElement('div');
+    ctxLbl.className='sec-label';ctxLbl.textContent='In your collection';
+    const ctxShelf=document.createElement('div');ctxShelf.className='list-group';
+    const ctxRow=document.createElement('button');
+    ctxRow.className='list-item';
+    ctxRow.setAttribute('tabindex','0');
+    ctxRow.setAttribute('aria-label',`${top.name} by ${top.brand}, ${topScore}% match — in your collection`);
+    ctxRow.innerHTML=`
+      <div class="list-item-dot" style="background:${fm2.color}"></div>
+      <div class="list-item-body" style="flex:1;text-align:left;">
+        <div class="list-item-label">${top.name}</div>
+        <div class="list-item-sublabel">${top.brand}&thinsp;&middot;&thinsp;${famLabel2}</div>
+      </div>
+      <div class="list-item-trailing-label">${topScore}%</div>`;
+    ctxRow.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,top),top.name);});
+    ctxShelf.appendChild(ctxRow);
+    _ctxWrap.appendChild(ctxLbl);
+    _ctxWrap.appendChild(ctxShelf);
+  }
 
   // Compare CTAs
   _buildCompareCTAs(frag,container.querySelector(`#dc-ctas-${frag.id}`));
@@ -1999,7 +2102,7 @@ function renderHouseDetail(container,brand){
           <div class="list-item-sublabel">${(FAM[frag.family]||{}).label||frag.family}</div>
         </div>
         <div class="list-item-trail">
-          <div class="list-item-score">${score}%</div>
+          <div class="list-item-trailing-label">${score}%</div>
         </div>`;
       btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       bestMatchesList.appendChild(btn);
@@ -2610,16 +2713,6 @@ function buildCatalog(roleFilter){
   // Announce result count to screen readers
   const liveEl=document.getElementById('cat-live');if(liveEl)liveEl.textContent=`${visibleCat.length} fragrance${visibleCat.length!==1?'s':''}`;
 
-
-  // Nose Knows entry row (always visible at top, no gate)
-  if(!normSearch&&!CAT_FAM_FILTER&&!CAT_BRAND_FILTER&&CAT_STATE_FILTER!=='owned'&&CAT_STATE_FILTER!=='wish'){
-    const noseEl=document.createElement('div');
-    noseEl.innerHTML=_noseEntryHtml();
-    const noseBtn=noseEl.firstElementChild;
-    noseBtn.addEventListener('click',()=>_openNoseGame());
-    noseBtn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();_openNoseGame();}});
-    body.appendChild(noseBtn);
-  }
 
   // Brand Discovery section — top of All tab, no filters active
   if(!normSearch&&!CAT_FAM_FILTER&&!CAT_BRAND_FILTER&&CAT_STATE_FILTER!=='owned'&&CAT_STATE_FILTER!=='wish'){
@@ -3546,7 +3639,7 @@ function _usFragRowHtml(f, rowIdx, scoreLabel) {
       <span class="list-item-sublabel">${f.brand} · ${famLabel}</span>
     </span>
     ${badge ? `<span class="list-item-badge">${badge}</span>` : ''}
-    ${scoreLabel ? `<span class="list-item-score">${scoreLabel}</span>` : ''}
+    ${scoreLabel ? `<span class="list-item-trailing-label">${scoreLabel}</span>` : ''}
   </button>`;
 }
 
@@ -3748,7 +3841,6 @@ function openMoreSheet(btn){
     library:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>`,
   };
   const items=[
-    {id:'daily',icon:'<span style="font-size:18px;line-height:18px">🧠</span>', label:'Daily Challenge', action:"closeAllSheets();_openNoseGame()"},
     {id:'saved',icon:_ico.star, label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
     {id:'changelog',icon:_ico.megaphone, label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
     {id:'playground',icon:_ico.library, label:'Design System', action:"window.open('/playground.html', '_blank')"}
@@ -4698,435 +4790,6 @@ const _origCloseNotePopup=closeNotePopup;
   document.getElementById('note-float-bg').removeEventListener('click',_origClose);
   document.getElementById('note-float-bg').addEventListener('click',window.closeNotePopup);
 })();
-
-/* ══ THE NOSE KNOWS — Daily Fragrance Trivia ═══════════════════════ */
-
-function _noseSeed(dateStr){
-  let h=0;
-  for(const c of dateStr) h=((h<<5)-h+c.charCodeAt(0))|0;
-  return Math.abs(h);
-}
-function _noseRng(seed){
-  const next=(seed*1664525+1013904223)&0x7fffffff;
-  return {seed:next, val:next/0x7fffffff};
-}
-function _noseShuffle(arr,seed){
-  const c=[...arr];
-  for(let i=c.length-1;i>0;i--){
-    const r=_noseRng(seed+i);seed=r.seed;
-    const j=Math.floor(r.val*(i+1));
-    [c[i],c[j]]=[c[j],c[i]];
-  }
-  return c;
-}
-function _nosePick(arr,seed,n){return _noseShuffle(arr,seed).slice(0,n);}
-function _noseToday(){return new Date().toISOString().slice(0,10);}
-
-function _noseGenQuestions(){
-  const date=_noseToday();
-  const seed=_noseSeed(date);
-  const questions=[];
-
-  // R1: NOTE_ID — "Which fragrance contains X, Y, Z?"
-  (()=>{
-    const pool=_noseShuffle(CAT.filter(f=>f._nAll.length>=3),seed+1);
-    const frag=pool[0]; if(!frag)return;
-    const notes=_nosePick(frag._nAll,seed+10,3).map(n=>n.charAt(0).toUpperCase()+n.slice(1));
-    const distractors=_noseShuffle(CAT.filter(f=>f.id!==frag.id&&f.family===frag.family),seed+11).slice(0,3);
-    if(distractors.length<3){
-      distractors.push(..._noseShuffle(CAT.filter(f=>f.id!==frag.id&&!distractors.some(d=>d.id===f.id)),seed+12).slice(0,3-distractors.length));
-    }
-    const choices=[frag,...distractors.slice(0,3)];
-    const shuffled=_noseShuffle(choices,seed+13);
-    questions.push({
-      type:'note_id',
-      prompt:`Which fragrance contains ${notes.slice(0,-1).join(', ')} and ${notes[notes.length-1]}?`,
-      choices:shuffled.map(f=>`${f.name}`),
-      correctIdx:shuffled.indexOf(frag),
-      explanation:`${frag.name} by ${frag.brand} features all three notes across its pyramid.`,
-      fragRef:frag
-    });
-  })();
-
-  // R2: SILLAGE — "Higher sillage: A or B?"
-  (()=>{
-    const pool=_noseShuffle(CAT,seed+2);
-    let pair=null;
-    for(let i=0;i<pool.length-1;i++){
-      for(let j=i+1;j<pool.length;j++){
-        if(Math.abs(pool[i].sillage-pool[j].sillage)>=2){
-          pair=[pool[i],pool[j]];break;
-        }
-      }
-      if(pair)break;
-    }
-    if(!pair)pair=[pool[0],pool[1]];
-    const shuffled=_noseShuffle(pair,seed+20);
-    const correctIdx=shuffled[0].sillage>=shuffled[1].sillage?0:1;
-    const winner=shuffled[correctIdx];
-    questions.push({
-      type:'sillage',
-      prompt:`Which has higher sillage?`,
-      choices:shuffled.map(f=>`${f.name} — ${f.brand}`),
-      correctIdx,
-      explanation:`${winner.name} has sillage ${winner.sillage}/10 vs ${shuffled[1-correctIdx].name} at ${shuffled[1-correctIdx].sillage}/10.`,
-      fragRef:winner
-    });
-  })();
-
-  // R3: FAMILY — "What family is X?"
-  (()=>{
-    const frag=_noseShuffle(CAT,seed+3)[0]; if(!frag)return;
-    const correct=frag.family;
-    const others=_noseShuffle(FAM_ORDER.filter(f=>f!==correct),seed+30).slice(0,3);
-    const choices=[correct,...others];
-    const shuffled=_noseShuffle(choices,seed+31);
-    questions.push({
-      type:'family',
-      prompt:`What fragrance family is ${frag.name}?`,
-      choices:shuffled.map(f=>FAM[f]?.label||f),
-      correctIdx:shuffled.indexOf(correct),
-      explanation:`${frag.name} by ${frag.brand} belongs to the ${FAM[correct]?.label||correct} family.`,
-      fragRef:frag,
-      _families:shuffled
-    });
-  })();
-
-  // R4: NOTE_DESC — "Which note is described as '...'?"
-  (()=>{
-    const withDesc=NI.filter(n=>n.desc&&n.desc.length>20);
-    const pool=_noseShuffle(withDesc,seed+4);
-    const note=pool[0]; if(!note)return;
-    const desc=note.desc.length>80?note.desc.slice(0,80).replace(/\s+\S*$/,'')+'…':note.desc;
-    const others=_noseShuffle(withDesc.filter(n=>n.name!==note.name),seed+40).slice(0,3);
-    const choices=[note,...others];
-    const shuffled=_noseShuffle(choices,seed+41);
-    questions.push({
-      type:'note_desc',
-      prompt:`Which note is described as "${desc}"`,
-      choices:shuffled.map(n=>n.name),
-      correctIdx:shuffled.indexOf(note),
-      explanation:`${note.name} — ${note.desc.slice(0,100)}${note.desc.length>100?'…':''}`,
-      fragRef:null
-    });
-  })();
-
-  // R5: SHARED — "These two share N notes. Name one."
-  (()=>{
-    const pool=_noseShuffle(CAT,seed+5);
-    let found=null;
-    for(let i=0;i<Math.min(pool.length,50);i++){
-      for(let j=i+1;j<Math.min(pool.length,50);j++){
-        const shared=pool[i]._nAll.filter(n=>pool[j]._nAll.includes(n));
-        if(shared.length>=2){found={a:pool[i],b:pool[j],shared};break;}
-      }
-      if(found)break;
-    }
-    if(!found)return;
-    questions.push({
-      type:'shared',
-      prompt:`${found.a.name} and ${found.b.name} share ${found.shared.length} note${found.shared.length>1?'s':''}. Name one.`,
-      choices:null,
-      sharedNotes:found.shared.map(n=>n.toLowerCase()),
-      correctIdx:null,
-      explanation:`The shared notes are ${found.shared.map(n=>n.charAt(0).toUpperCase()+n.slice(1)).join(', ')}.`,
-      fragRef:found.a
-    });
-  })();
-
-  return questions;
-}
-
-// -- Nose state --
-let _noseState=null;
-
-function _noseLoadState(){
-  try{
-    const saved=localStorage.getItem('sm_nose_today');
-    if(saved){
-      const parsed=JSON.parse(saved);
-      if(parsed.date===_noseToday())return parsed;
-    }
-  }catch(e){}
-  return null;
-}
-
-function _noseSaveState(){
-  if(!_noseState)return;
-  try{
-    localStorage.setItem('sm_nose_today',JSON.stringify({
-      date:_noseState.date,
-      answers:_noseState.answers,
-      currentRound:_noseState.currentRound
-    }));
-    // Streak
-    const played=localStorage.getItem('sm_nose_played');
-    if(played!==_noseState.date){
-      localStorage.setItem('sm_nose_played',_noseState.date);
-      const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
-      const yStr=yesterday.toISOString().slice(0,10);
-      let streak=parseInt(localStorage.getItem('sm_nose_streak')||'0',10);
-      if(played===yStr) streak++;
-      else streak=1;
-      localStorage.setItem('sm_nose_streak',String(streak));
-      const best=parseInt(localStorage.getItem('sm_nose_best')||'0',10);
-      if(streak>best)localStorage.setItem('sm_nose_best',String(streak));
-    }
-  }catch(e){}
-}
-
-function _noseAlreadyPlayed(){
-  const saved=_noseLoadState();
-  return saved&&saved.answers&&saved.answers.length>=5;
-}
-
-function _noseResultEmoji(answers){
-  return(answers||[]).map(a=>a==='correct'?'🟩':a==='close'?'🟨':'🟥').join('');
-}
-
-function _noseScore(answers){
-  return(answers||[]).filter(a=>a==='correct').length;
-}
-
-// -- Nose UI --
-function _openNoseGame(){
-  const isMobile=window.innerWidth<768;
-  const saved=_noseLoadState();
-  if(saved&&saved.answers&&saved.answers.length>=5){
-    // Already played — show results
-    _noseState={date:_noseToday(),questions:_noseGenQuestions(),answers:saved.answers,currentRound:5};
-    if(isMobile)pushSheet(c=>_renderNoseResults(c),'The Nose Knows');
-    else openDesktopDetail(c=>_renderNoseResults(c));
-    return;
-  }
-  _noseState={
-    date:_noseToday(),
-    questions:_noseGenQuestions(),
-    answers:saved?.answers||[],
-    currentRound:saved?.currentRound||0
-  };
-  if(isMobile)pushSheet(c=>_renderNoseRound(c),'The Nose Knows');
-  else openDesktopDetail(c=>_renderNoseRound(c));
-}
-window._openNoseGame=_openNoseGame;
-
-function _renderNoseRound(container){
-  const q=_noseState.questions[_noseState.currentRound];
-  if(!q){_renderNoseResults(container);return;}
-  const round=_noseState.currentRound;
-  const total=_noseState.questions.length;
-
-  const dots=_noseState.questions.map((_,i)=>{
-    let cls='nose-dot';
-    if(i<_noseState.answers.length){
-      cls+=' '+_noseState.answers[i];
-    }else if(i===round){
-      cls+=' current';
-    }
-    return `<span class="${cls}"></span>`;
-  }).join('');
-
-  let choicesHtml='';
-  if(q.type==='shared'){
-    choicesHtml=`<div class="nose-input-wrap">
-      <input type="text" class="nose-text-input" placeholder="Type a note name..." aria-label="Type a note name" aria-describedby="nose-q-text">
-      <button class="dc-collect-btn active nose-submit-btn">Submit</button>
-    </div>`;
-  }else{
-    const cols=q.choices.length===2?'nose-grid-2':'nose-grid-4';
-    choicesHtml=`<div class="nose-answers ${cols}" role="radiogroup" aria-label="Answer choices">
-      ${q.choices.map((c,i)=>`<button class="nose-answer" role="radio" aria-checked="false" aria-label="${c}" data-idx="${i}">${c}</button>`).join('')}
-    </div>`;
-  }
-
-  container.innerHTML=`
-    <div class="nose-game" role="main" aria-label="The Nose Knows daily quiz">
-      <div class="nose-header">
-        <div class="nose-title">The Nose Knows</div>
-        <div class="nose-round-label">Round ${round+1} of ${total}</div>
-      </div>
-      <div class="nose-dots" role="progressbar" aria-valuenow="${round+1}" aria-valuemax="${total}">${dots}</div>
-      <div class="nose-question" id="nose-q-text" role="heading" aria-level="2">${q.prompt}</div>
-      ${choicesHtml}
-      <div class="nose-feedback" id="nose-feedback" hidden></div>
-      <button class="dc-collect-btn active nose-next-btn" hidden>Next round →</button>
-    </div>`;
-
-  // Wire up interactions
-  const fb=container.querySelector('#nose-feedback');
-  const nextBtn=container.querySelector('.nose-next-btn');
-
-  if(q.type==='shared'){
-    const input=container.querySelector('.nose-text-input');
-    const submit=container.querySelector('.nose-submit-btn');
-    const doSubmit=()=>{
-      const val=normQ(input.value.trim());
-      if(!val)return;
-      submit.disabled=true;input.disabled=true;
-      const exact=q.sharedNotes.some(n=>n===val);
-      const fuzzy=!exact&&q.sharedNotes.some(n=>levenshtein(val,n)<=2);
-      // Check if it's a note in either frag but not shared
-      const allNotes=[...(q.fragRef?._nAll||[])];
-      const inFragButNotShared=!exact&&!fuzzy&&allNotes.some(n=>n.toLowerCase()===val||levenshtein(val,n.toLowerCase())<=2);
-
-      let result;
-      if(exact||fuzzy){
-        result='correct';
-        const matchedNote=fuzzy?q.sharedNotes.find(n=>levenshtein(val,n)<=2):val;
-        fb.innerHTML=`<span class="nose-fb-icon correct">✓</span> ${fuzzy?`Close enough! We'll take "${input.value}" for "${matchedNote}".`:'Correct!'} ${q.explanation}`;
-      }else if(inFragButNotShared){
-        result='close';
-        fb.innerHTML=`<span class="nose-fb-icon close">~</span> Close! That note is in one of them, but not shared. ${q.explanation}`;
-      }else{
-        result='wrong';
-        fb.innerHTML=`<span class="nose-fb-icon wrong">✗</span> Not a match. ${q.explanation}`;
-      }
-      fb.hidden=false;
-      _noseState.answers.push(result);
-      _noseSaveState();
-      nextBtn.hidden=false;
-      if(_noseState.currentRound>=_noseState.questions.length-1)nextBtn.textContent='See results →';
-    };
-    submit.addEventListener('click',doSubmit);
-    input.addEventListener('keydown',e=>{if(e.key==='Enter')doSubmit();});
-  }else{
-    container.querySelectorAll('.nose-answer').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        const idx=parseInt(btn.dataset.idx,10);
-        const isCorrect=idx===q.correctIdx;
-
-        // Determine "close" for MC
-        let result='wrong';
-        if(isCorrect){
-          result='correct';
-        }else if(q.type==='family'&&q._families){
-          // Same broad group = close
-          const correctFam = q._families[q.correctIdx];
-          const guessedFam = q._families[idx];
-          const groups = [
-            ['woody', 'oud', 'leather'],
-            ['citrus', 'green'],
-            ['amber', 'gourmand'],
-            ['floral', 'chypre']
-          ];
-          const isClose = groups.some(g => g.includes(correctFam) && g.includes(guessedFam));
-          if(isClose) result = 'close';
-        }else if(q.type==='sillage'){
-          // Within 2 points = close (though sillage is binary in this game, so this only applies if we had more choices)
-          // Actually, in sillage round, it's a binary choice between two frags. 
-          // So 'close' doesn't really apply to the binary choice itself, 
-          // but we could mark it close if the silage difference was very small (<= 2).
-          // However, the question gen ensures difference >= 2.
-          result='wrong';
-        }
-
-        // Mark all buttons disabled
-        container.querySelectorAll('.nose-answer').forEach(b=>{
-          b.setAttribute('aria-disabled','true');
-          b.style.pointerEvents='none';
-          if(parseInt(b.dataset.idx,10)===q.correctIdx){
-            b.classList.add('correct');
-            b.setAttribute('aria-label',b.textContent+' — correct answer');
-          }
-        });
-        if(!isCorrect){
-          btn.classList.add(result==='close'?'close':'wrong');
-        }
-        btn.setAttribute('aria-checked','true');
-
-        if(isCorrect){
-          fb.innerHTML=`<span class="nose-fb-icon correct">✓</span> Correct! ${q.explanation}`;
-        }else if(result==='close'){
-          fb.innerHTML=`<span class="nose-fb-icon close">~</span> Close! ${q.explanation}`;
-        }else{
-          fb.innerHTML=`<span class="nose-fb-icon wrong">✗</span> Not quite. ${q.explanation}`;
-        }
-        fb.hidden=false;
-
-        _noseState.answers.push(result);
-        _noseSaveState();
-        nextBtn.hidden=false;
-        if(_noseState.currentRound>=_noseState.questions.length-1)nextBtn.textContent='See results →';
-      });
-    });
-  }
-
-  nextBtn.addEventListener('click',()=>{
-    _noseState.currentRound++;
-    _noseSaveState();
-    if(_noseState.currentRound>=_noseState.questions.length){
-      _renderNoseResults(container);
-    }else{
-      _renderNoseRound(container);
-    }
-  });
-}
-
-function _renderNoseResults(container){
-  const answers=_noseState.answers;
-  const score=_noseScore(answers);
-  const emoji=_noseResultEmoji(answers);
-  const streak=parseInt(localStorage.getItem('sm_nose_streak')||'0',10);
-  const best=parseInt(localStorage.getItem('sm_nose_best')||'0',10);
-  const perfect=score===_noseState.questions.length;
-
-  const roundTypes=['Note identification','Sillage comparison','Family classification','Note description','Shared notes'];
-  const breakdown=answers.map((a,i)=>{
-    const icon=a==='correct'?'✓':a==='close'?'~':'✗';
-    const label=a==='correct'?'':a==='close'?' close!':' wrong';
-    return `<div class="nose-breakdown-row ${a}"><span class="nose-fb-icon ${a}">${icon}</span> ${roundTypes[i]||'Round '+(i+1)}${label}</div>`;
-  }).join('');
-
-  const shareText=`${emoji} The Nose Knows — ${score}/${_noseState.questions.length}${streak>1?' — Day '+streak+' 🔥':''}\nscentmap.co/daily`;
-
-  container.innerHTML=`
-    <div class="nose-results">
-      <div class="nose-results-label">Today's Results</div>
-      ${perfect?'<div class="nose-perfect">Flawless nose today.</div>':''}
-      <div class="nose-emoji">${emoji}</div>
-      <div class="nose-score-big">${score}/${_noseState.questions.length}</div>
-      <div class="nose-streak-row">
-        ${streak>1?`<span>🔥 Streak: ${streak} day${streak>1?'s':''}</span>`:''}
-        ${best>1?`<span>📊 Best: ${best} day${best>1?'s':''}</span>`:''}
-      </div>
-      <div class="nose-breakdown">${breakdown}</div>
-      <div class="nose-results-ctas">
-        <button class="dc-collect-btn active nose-share-btn">Share score</button>
-        ${_noseState.questions[0]?.fragRef?`<button class="dc-collect-btn nose-explore-btn">Explore ${_noseState.questions[0].fragRef.name} →</button>`:''}
-      </div>
-    </div>`;
-
-  container.querySelector('.nose-share-btn')?.addEventListener('click',()=>{
-    navigator.clipboard.writeText(shareText).then(()=>{
-      const btn=container.querySelector('.nose-share-btn');
-      btn.textContent='Copied!';
-      setTimeout(()=>{btn.textContent='Share score';},1500);
-    }).catch(()=>{});
-  });
-
-  container.querySelector('.nose-explore-btn')?.addEventListener('click',()=>{
-    const frag=_noseState.questions[0].fragRef;
-    if(frag)openFragDetail(frag);
-  });
-
-  // Rebuild catalog to update entry row
-  buildCatalog();
-}
-
-// -- Nose entry row in catalog --
-function _noseEntryHtml(){
-  if(_noseAlreadyPlayed()){
-    const saved=_noseLoadState();
-    const emoji=_noseResultEmoji(saved.answers);
-    const score=_noseScore(saved.answers);
-    return `<button class="list-item nose-entry" role="button" tabindex="0" aria-label="Today's score: ${score} out of 5">
-      <span class="nose-entry-icon">🧠</span><span class="list-item-body"><span class="list-item-label">Today's Score: ${emoji} ${score}/5</span><span class="list-item-sublabel">The Nose Knows · Tap to review</span></span>
-    </button>`;
-  }
-  return `<button class="list-item nose-entry" role="button" tabindex="0" aria-label="Today's Challenge — The Nose Knows">
-    <span class="nose-entry-icon">🧠</span><span class="list-item-body"><span class="list-item-label">Today's Challenge</span><span class="list-item-sublabel">The Nose Knows · 5 rounds · tap to play</span></span>
-  </button>`;
-}
 
 // Dev utility: search tests (run in console with runSearchTests())
 function runSearchTests(){

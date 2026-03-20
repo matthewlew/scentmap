@@ -23,7 +23,7 @@ This is the single source of truth for component inventory, token rules, and the
 | ↳ Slot: detail | `.list-item-detail` | — | — | Notes / context. Source Serif, fs-caption, 400, text-tertiary. |
 | ↳ Slot: trail | `.list-item-trail` | — | — | Trailing cluster: badge + score. |
 | ↳ Slot: badge | `.list-item-badge` | — | — | State label (Owned, Wish). DM Sans, fs-caption, 600, text-tertiary. |
-| ↳ Slot: score | `.list-item-score` | — | — | Similarity %. DM Sans, fs-meta, 700, accent-primary. |
+| ↳ Slot: trailing-label | `.list-item-trailing-label` | — | — | Trailing text label. DM Sans, fs-meta, 700, accent-primary. |
 | ↳ Slot: actions | `.list-item-actions` | — | — | Full-height action zone outside __inner. Buttons/CTAs. |
 | List Shelf | `.list-shelf` | — | — | Column container with border + radius. Use instead of .dc-sim-shelf. |
 | ⚠️ Deprecated | `.list-item--flat`, `.list-item--compact`, `.cmp-sug-card`, `.dc-sim-shelf`, `.list-item-content`, `.list-item-name`, `.list-item-sub`, `.list-item-meta` | — | — | Do not use in new code. Migrate to .list-item slot structure above. |
@@ -135,7 +135,7 @@ Every component that renders a name plus secondary text **must** use the `.list-
         │     └── .list-item-detail
         └── .list-item-trail    ← flex-shrink: 0
               ├── .list-item-badge
-              └── .list-item-score
+              └── .list-item-trailing-label
   └── .list-item-actions        ← outside __inner; full-height action zone
 ```
 
@@ -151,7 +151,7 @@ Container: `.list-shelf` (bordered column, replaces `.dc-sim-shelf`)
 | Sublabel | `.list-item-sublabel` | `--font-serif` | `--fs-caption` | 400 | `--text-secondary` |
 | Detail | `.list-item-detail` | `--font-serif` | `--fs-caption` | 400 | `--text-tertiary` |
 | Badge | `.list-item-badge` | `--font-sans` | `--fs-caption` | 600 | `--text-tertiary` |
-| Score | `.list-item-score` | `--font-sans` | `--fs-meta` | 700 | `--accent-primary` |
+| Trailing label | `.list-item-trailing-label` | `--font-sans` | `--fs-meta` | 700 | `--accent-primary` |
 
 These values are immutable — no exceptions for any modifier or state class.
 

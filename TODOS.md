@@ -36,25 +36,8 @@ Top 3 fragrances from a brand ranked by `scoreSimilarity()` against owned collec
 
 ---
 
-### TODO: Wardrobe Gap — Specific Fragrance Suggestions
-**What:** 2-3 specific fragrance recs below the gap headline, ranked by gap coverage + collection similarity.
-**Why:** "Browse Citrus & Green" dumps users in a 40-item list. Specific recs close the gap→decision loop.
-**Effort:** S-M (CC: ~30 min)
-**Depends on:** `computeWardrobeGap()`, `scoreSimilarity()`, `computeProfile()` — all exist.
-
-**Design spec (design review 2026-03-20):**
-
-*Presentation:* Horizontal carousel shelf with 2–3 `.carousel-card` suggestions (reusing Brand Discovery layout). Ranking: gap-fill priority (best matches for gap axis), then similarity to owned collection as tiebreaker. "Browse [family]" CTA moves below shelf as secondary fallback. Card hidden if <2 recs available.
-
-*Cards:* Family color dot + name + brand + single-axis label ("Fresh", "Airy", "Bright" — no "recommendation" suffix). Clickable → open detail panel via `openFragDetail()`. No state badges (Owned/Wishlist).
-
-*Interaction:* Mobile shelf scrolls with snap-to-edges, 44px min-height. Desktop: 3 cards visible, no scroll. Keyboard: tab through cards, focus ring via global `:focus-visible`. A11y: `role="list"` on shelf, each card has `aria-label="[Name] [Brand], [reason] recommendation"`.
-
-*Components:* Reuse `.carousel-card` (Brand Discovery), new `.carousel-shelf` shared container class, `--fam-*` tokens for dots, all spacing/typography via semantic tokens (no hard-codes).
-
-*Files:* `js/app.js` `renderWardrobeGap()` (~40 lines), `styles/components.css` `.carousel-shelf` + responsive scroll-snap, `CHANGELOG.md` Added section.
-
-*Full spec:* `/Users/matthewlewair/.claude/plans/peppy-gathering-sketch.md` (all 7 design passes with rationale + QA checklist).
+### ~~TODO: Wardrobe Gap — Specific Fragrance Suggestions~~ ✅ Shipped 2026-03-20
+`computeGapSuggestions()` added. `renderWardrobeGap()` updated to render 2–3 `.carousel-card` items inside `.carousel-wrap` / `.carousel` when ≥2 suggestions available. Cards ranked by `scoreSimilarity()` to owned collection, filtered to gap target families, excluding owned/wishlisted. Each card: family dot (gap axis color) + axis short label ("Sweet", "Fresh", etc.) + frag name + brand. "Browse [family]" CTA moves below shelf. Falls back to button-only if <2 recs. Keyboard nav via `initCarouselKeyNav()`. QA verified: carousel renders, cards open detail panel on click.
 
 ---
 
@@ -232,6 +215,6 @@ These are ideas, not commitments. They stay here until there's evidence they sho
 
 - **Dupe Finder** — strategic positioning unresolved after 3 review cycles. Killed 2026-03-20.
 - **Dupe Lab Share Card** — depends on killed Dupe Finder
-- **The Nose Knows (Daily Game)** — retention mechanic, massive scope, different product entirely
-- **Daily A11y Pass for Nose Knows** — depends on killed game
+- **The Nose Knows (Daily Game)** — retention mechanic, massive scope, different product entirely. ✓ Removed 2026-03-20
+- **Daily A11y Pass for Nose Knows** — depends on killed game. ✓ Removed 2026-03-20
 - **Fragrance-level Retailer Links** — data work for 183 frags, unclear value
