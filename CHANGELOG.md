@@ -1,3 +1,15 @@
+## 2026-03-20 (23)
+
+### Added
+- **Wardrobe Gap Analysis:** Compact insight block at the top of the Owned catalog tab. Aggregates `computeProfile()` across owned fragrances and identifies the lowest sensory axis. Generates a natural-language headline ("Your wardrobe leans warm and sweet. You're missing a light, airy contrast.") with a CTA button that switches to the All tab and pre-fills search with the gap family. Complete state shows signature axis when no gap is found. Hidden when 0 owned. Accessible via `#cat-live` announcements.
+- **Brand Discovery Panel:** "Brands to Explore" section at the top of the All catalog tab. Surfaces up to 6 brands the user hasn't explored (< 2 owned), ranked by average `scoreSimilarity()` against the user's collection. Each row shows the brand name, the closest owned fragrance match with score, and an overall match percentage. Brands with a `url` in `brands.json` get a "Shop →" link (`target="_blank" rel="noopener"`). Hidden when 0 owned; shows "Add more to improve recommendations" when < 3 owned. Full keyboard/a11y support with `role="button"`, `tabindex="0"`, and `aria-label`.
+- **New functions:** `computeWardrobeGap()`, `renderWardrobeGap()`, `computeBrandScores()`, `renderBrandDiscovery()` in `js/app.js`
+- **New CSS:** `.dna-card--gap`, `.dna-headline`, `.dna-sub`, `.gap-cta`, `.brand-discovery`, `.list-item-shop` in `styles/components.css` — all using design system tokens, no hardcoded values
+
+### Changed
+- **Swipe-to-reveal actions removed from catalog rows:** Removed swipe-to-reveal Compare/Wish tray from `.list-item`. Eliminated ~107 lines of swipe CSS (`.list-item-actions`, `.list-item-action`, `--wishlist`, `--compare`, swipe hint `::after`, 4 media query blocks) and all corresponding touch event handlers (`touchstart`/`touchmove`/`touchend`) from `renderCatRow`. Swipe click guard removed from `buildCatalog`. Alternatives remain: double-tap to wish, drag to compare (desktop), detail panel CTAs.
+- **`data/brands.json`:** Added `url` field to all 10 existing brands. Added two new brand entries: Tom Ford and Replica (Maison Margiela).
+
 ## 2026-03-19 (22)
 
 ### Added
