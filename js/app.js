@@ -409,7 +409,7 @@ function renderCollectionSection(container, label, items, type) {
 
   if (type === 'frags') {
     const list = document.createElement('div');
-    list.className = 'scent-list';
+    list.className = 'list-group';
     items.forEach(frag => {
       const row = document.createElement('div');
       renderCatRow(row, frag, FAM[frag.family] || {color:'#888'});
@@ -1689,7 +1689,7 @@ function renderFragDetail(container,frag){
           <div class="list-item-body" style="flex:1;text-align:left;">
             <div class="list-item-label">${f.name}</div>
             <div class="list-item-sublabel">${f.brand} · ${famLabel2}</div>
-            ${reason ? `<div class="dc-sim-reason">${reason}</div>` : ''}
+            ${reason ? `<div class="list-item-detail">${reason}</div>` : ''}
           </div>
           ${badge&&badge.type!=='similar'?`<div style="flex-shrink:0"><span class="dc-badge ${badge.type}">${badge.label}</span></div>`:''}
         `;
@@ -1767,7 +1767,7 @@ function buildLayerSuggestions(frag,container){
         <div class="list-item-dot" style="background:${fm2.color}"></div>
         <div class="list-item-body" style="flex:1">
           <div class="list-item-label">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
-          ${reason ? `<div class="dc-sim-reason" style="margin-bottom: 2px">${reason}</div>` : ''}
+          ${reason ? `<div class="list-item-detail">${reason}</div>` : ''}
         </div>
         <div style="flex-shrink:0; display:flex; align-items:center; gap: 4px;">
           <span class="dc-layer-score-badge">${score}</span>
@@ -2639,7 +2639,7 @@ function buildCatalog(roleFilter){
     sec.innerHTML=`<div class="brand-hdr"><button class="brand-n s-name-btn" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
     // Brand header → house detail
     sec.querySelector('.s-name-btn')?.addEventListener('click',()=>openHouseDetail(brand));
-    const list=document.createElement('div');list.className='scent-list';
+    const list=document.createElement('div');list.className='list-group';
     const lastTapMap = new Map();
     let touchStartX = 0;
     let touchStartY = 0;
@@ -2972,7 +2972,7 @@ function initCatalogControls(){
 
 function renderCatRow(row,frag,fm,search){
   const st=gst(frag.id);
-  row.className=`list-item${st!=='default'?' list-item--'+st:''}`;
+  row.className='list-item';
   row.setAttribute('role','button');
   row.setAttribute('tabindex','0');
   const _stLabel=st==='owned'?' — Owned':st==='wish'?' — On wishlist':'';
@@ -3018,7 +3018,7 @@ function renderCatRow(row,frag,fm,search){
 
   row.draggable = true;
   row.innerHTML=`
-      <div class="list-item-dot--lg" style="background:${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
+      <div class="list-item-dot" style="background:${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
       <div class="list-item-body">
         <div class="list-item-label">${frag.name}</div>
         <div class="list-item-sublabel">${frag.brand} · ${famLabel}</div>
@@ -3999,8 +3999,7 @@ function renderSuggestionsV2(fa,fb,ca,cb){
         <div class="list-item-body" style="flex:1;text-align:left;">
           <div class="list-item-label">${frag.name}</div>
           <div class="list-item-sublabel">${frag.brand} · ${famLabel}</div>
-          <div class="dc-sim-reason">${reason}</div>
-          ${topNotes?`<div class="list-item-detail">${topNotes}</div>`:''}
+          <div class="list-item-detail">${reason}</div>
         </div>
     </button>`;
   }
@@ -4012,11 +4011,11 @@ function renderSuggestionsV2(fa,fb,ca,cb){
     <div class="cmp-sug-columns">
       <div>
         <div class="cmp-sug-col-head" style="color:${ca.accent}">Swap ${shortA}</div>
-        <div class="cmp-sug-col-items">${sugsA.map(({f})=>sugCard(f,fa,ca.accent)).join('')}</div>
+        <div class="list-group">${sugsA.map(({f})=>sugCard(f,fa,ca.accent)).join('')}</div>
       </div>
       <div>
         <div class="cmp-sug-col-head" style="color:${cb.accent}">Swap ${shortB}</div>
-        <div class="cmp-sug-col-items">${sugsB.map(({f})=>sugCard(f,fb,cb.accent)).join('')}</div>
+        <div class="list-group">${sugsB.map(({f})=>sugCard(f,fb,cb.accent)).join('')}</div>
       </div>
     </div>
   </div>`;

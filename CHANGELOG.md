@@ -1,3 +1,13 @@
+## 2026-03-20 (33)
+
+### Changed
+- **List-item component cleanup (follow-up to #32):** `list-item-dot--lg` renamed to `list-item-dot` — the 18px flex dot is now the canonical dot for all standard list-items. Compact and search variants override to 8px via scoped selectors.
+- **State modifier classes removed:** `renderCatRow` no longer appends `list-item--none`, `list-item--owned`, or `list-item--wish` to the row class name — all catalog rows use plain `.list-item`. These decorative modifiers had no CSS rules.
+- **`dc-sim-reason` → `list-item-detail`:** Renamed across all list-item render sites (frag detail shelf, layering shelf, compare suggestions). Compare suggestions also drop the redundant fourth-level `topNotes` detail to comply with the Label+Sublabel+Detail max-3 composition rule.
+- **Containers unified to `.list-group`:** `scent-list` (catalog section container) and `cmp-sug-col-items` (compare swap suggestions column) renamed to `.list-group` in both CSS and JS. Old CSS rules removed.
+- **`.list-item-label` `overflow: hidden` removed** — label text was being clipped; truncation is handled per-slot.
+- **`.list-item-detail` `margin-top: 0`** — removed the 2px top margin from the detail slot base rule.
+
 ## 2026-03-20 (32)
 
 ### Changed

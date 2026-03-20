@@ -174,16 +174,6 @@
 }
 
 /* Family abbreviation inside catalog dots — secondary indicator for colorblind users */
-.list-item-dot--lg {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-}
 
 .fam-abbr {
   font-family: var(--font-sans);
@@ -563,10 +553,6 @@
   font-weight: 400;
 }
 
-.dc-sim-reason {
-  font-size: var(--fs-meta);
-  color: var(--text-secondary);
-}
 
 .dc-sim-brand {
   font-size: var(--fs-meta);
@@ -782,11 +768,6 @@
   cursor: pointer;
 }
 
-.scent-list {
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
 
 /* ── State toast — brief feedback on double-tap state change ── */
 .state-toast {
@@ -1373,10 +1354,22 @@
 
 /* List item body sub-elements — shared across all .list-item variants */
 .list-item-dot {
-  width: 8px;
-  height: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
   border-radius: var(--radius-circle);
   flex-shrink: 0;
+}
+
+/* Compact and search contexts use a smaller dot */
+.list-item--compact .list-item-dot,
+.list-item--search .list-item-dot {
+  width: 8px;
+  height: 8px;
+  display: block;
 }
 
 .list-item-leading {
@@ -1392,7 +1385,6 @@
   color: var(--text-primary);
   line-height: var(--lh-tight);
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -1421,7 +1413,6 @@
   font-family: var(--font-serif);
   font-size: var(--fs-caption);
   color: var(--text-tertiary);
-  margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2192,11 +2183,6 @@ button.cmp-note-pill:hover {
   margin-bottom: var(--sp-sm);
 }
 
-.cmp-sug-col-items {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-sm);
-}
 
 
 /* ── QUICK PEEK ── */
@@ -3796,7 +3782,7 @@ button.cmp-note-pill:hover {
   color: var(--text-tertiary);
 }
 
-.collection-section .scent-list {
+.collection-section .list-group {
   margin-top: var(--sp-sm);
 }
 
