@@ -6,6 +6,11 @@ Core loop-closers: the gap card now surfaces 2–3 specific fragrance recs (not 
 
 ---
 
+## 2026-03-20 (37)
+
+### Changed
+- **Notes A-Z view redesigned:** Replaced pill-style `.cmp-note-pill` buttons with `.list-item--compact` components for better scanability in the alphabetical list. Each note now displays with a colored family dot, label, and optional saved star indicator, providing clearer visual hierarchy and easier alphabetical scanning.
+
 ## 2026-03-20 (36)
 
 ### Changed

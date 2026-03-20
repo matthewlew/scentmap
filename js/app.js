@@ -3216,21 +3216,31 @@ function buildNotes(searchQuery, currentTier){
   }
 
   if (notesSortMode === 'az') {
-    const cardBody = document.createElement('div');
-    cardBody.className = 'notes-card-body';
+    const notesList = document.createElement('div');
+    notesList.style.display = 'flex';
+    notesList.style.flexDirection = 'column';
 
     const sorted = [...filteredNotes].sort((a,b)=>a.name.localeCompare(b.name));
 
     sorted.forEach(note => {
       const fm = FAM[note.family] || {color: '#888'};
       const btn = document.createElement('button');
-      btn.className = 'cmp-note-pill';
-      const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
-      btn.innerHTML = `<span class="nf-dot" style="background:${fm.color}; display:inline-block; vertical-align:middle; margin-right:6px; margin-top:-2px;"></span>${note.name}${savedMark}`;
+      btn.className = 'list-item list-item--compact';
+      btn.style.cursor = 'pointer';
+
+      const isSaved = isNoteSaved(note.name);
+      btn.innerHTML = `
+        <div class="list-item-dot" style="background:${fm.color}"></div>
+        <div class="list-item-body">
+          <div class="list-item-label">${note.name}</div>
+        </div>
+        ${isSaved ? '<span class="list-item-badge">★</span>' : ''}
+      `;
+
       btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c,note), note.name); });
-      cardBody.appendChild(btn);
+      notesList.appendChild(btn);
     });
-    body.appendChild(cardBody);
+    body.appendChild(notesList);
 
   } else {
     // Group by family
