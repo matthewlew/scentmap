@@ -1916,6 +1916,23 @@ function renderHouseDetail(container,brand){
   // We'll just take the first N fragrances in the sorted array
   const topFrags = frags.slice(0, topCount);
 
+  // Compute best matches from owned fragrances
+  const ownedIds = Object.keys(ST).filter(id => gst(id) === 'owned');
+  const ownedFrags = ownedIds.map(id => CAT_MAP[id]).filter(f => f);
+  let bestMatches = [];
+  if (ownedFrags.length > 0) {
+    bestMatches = frags.map(frag => {
+      const scores = ownedFrags.map(ownedFrag => scoreSimilarity(frag, ownedFrag));
+      const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+      return { frag, score: avgScore };
+    })
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.frag.name.localeCompare(b.frag.name); // Tie-break by name
+    })
+    .slice(0, 3);
+  }
+
   container.innerHTML=`<div class="house-detail-wrap" style="display:flex; flex-direction:column; gap:var(--sp-xl);">
     <div class="house-detail-name">${brand}</div>
     ${houseData && houseData.desc ? `<div class="dc-description">${houseData.desc}</div>` : ''}
@@ -1935,6 +1952,13 @@ function renderHouseDetail(container,brand){
       <div class="carousel-wrap">
         <div class="carousel" id="house-known-for-carousel"></div>
       </div>
+    </div>
+    ` : ''}
+
+    ${bestMatches.length > 0 ? `
+    <div class="house-best-matches">
+      <div class="sec-label">Similar From This House</div>
+      <div class="list-shelf" id="house-best-matches-list"></div>
     </div>
     ` : ''}
 
@@ -1961,6 +1985,26 @@ function renderHouseDetail(container,brand){
         <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
       card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       carousel.appendChild(card);
+    });
+  }
+
+  // Populate best matches list
+  if (bestMatches.length > 0) {
+    const bestMatchesList = container.querySelector('#house-best-matches-list');
+    bestMatches.forEach(({ frag, score }) => {
+      const fc = getCmpFam(frag.family);
+      const btn = document.createElement('button');
+      btn.className = 'list-item list-item--compact';
+      btn.innerHTML = `<div class="list-item-dot" style="background:${fc.accent}"></div>
+        <div class="list-item-body">
+          <div class="list-item-label">${frag.name}</div>
+          <div class="list-item-sublabel">${(FAM[frag.family]||{}).label||frag.family}</div>
+        </div>
+        <div class="list-item-trail">
+          <div class="list-item-score">${score}%</div>
+        </div>`;
+      btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
+      bestMatchesList.appendChild(btn);
     });
   }
 

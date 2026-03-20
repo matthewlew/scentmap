@@ -1,3 +1,18 @@
+## 2026-03-20 (31)
+
+### Added
+- **Brand Detail — Best Matches for Your Collection (P2 Feature):** Top 3 fragrances from a brand ranked by `scoreSimilarity()` against user's owned collection, shown in house detail sheet as "Similar From This House" section. Computes average similarity score across all owned fragrances, sorts descending (with alphabetic tie-break), displays top 3 with score percentages. Uses `.list-item--compact` + `.list-shelf` components. Only renders when user owns ≥1 fragrance; hidden otherwise. Placed between "Known For" carousel and full fragrance list for discovery→action closure. No new CSS components or tokens added — pure reuse of existing design system.
+
+## 2026-03-20 (30)
+
+### Added
+- **`--sp-2xs: 6px` spacing token:** Added half-step between `--sp-xs` (4px) and `--sp-sm` (8px) in design-system.css. Formalizes the icon-text inline gap used by chips and family pill buttons — 4px is too tight for icon+label pairs, 8px too loose.
+- **Spacing Audit section in playground.html:** Documents token frequency (sm=122×, xs=109×, md=92×... down to micro=1×), Gestalt proximity role of each spacing step, and a full changelog of hardcoded values replaced with tokens.
+
+### Changed
+- **Eliminated 17 hardcoded spacing values across CSS:** Replaced all `gap: 2px` (8 instances across `.tabs`, `.s-syms`, sidebar filter lists, mobile filter bars, `.catalog-sidebar`) with `var(--sp-micro)`. Replaced `gap: 6px` in `.chip` and `.fam-pill` with `var(--sp-2xs)`. Replaced `gap: 4px` in `.pyramid-visual` with `var(--sp-xs)`. Replaced `padding: 2px …` in `.dc-sim-state`, `.dc-badge`, `.picker-order-badge`, `.family-card-note-pill` with `var(--sp-micro) …`. Replaced mobile nav button inline `gap:2px;padding:8px 2px 6px` with tokenized equivalents. Normalized `.nav-search-bar-kbd` padding to `1px var(--sp-xs)` and radius to `var(--radius-small)`.
+- **Documented intentional optical values:** `padding: 3px` on `.tabs` pill inset and `padding: 3px 0 3px var(--sp-sm)` on `.sec-label` now carry inline comments explaining the optical alignment purpose.
+
 ## 2026-03-20 (29)
 
 ### Added
