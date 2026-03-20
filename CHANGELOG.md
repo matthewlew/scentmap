@@ -1,3 +1,8 @@
+## 2026-03-20 (36)
+
+### Changed
+- **`.list-group` border removed:** Container no longer draws a surrounding box — no outer border or border-radius. Only `border-bottom` dividers between list items remain, giving a flush, edge-to-edge list appearance.
+
 ## 2026-03-20 (35)
 
 ### Added
