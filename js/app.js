@@ -572,6 +572,297 @@ function getCollectionStats(frags) {
   return { avgProfile, topFamilies, topNotes, count: frags.length };
 }
 
+/* ── Wardrobe Gap Analysis ─────────────────────────────────────── */
+const GAP_AXIS_LABELS = {
+  freshness: ['fresh', 'freshness'],
+  sweetness: ['sweet', 'sweetness'],
+  warmth:    ['warm', 'warmth'],
+  intensity: ['bold', 'intensity'],
+  complexity:['complex', 'complexity'],
+};
+
+function computeWardrobeGap() {
+  const owned = CAT.filter(f => isOwned(f.id));
+  if (!owned.length) return null;
+
+  const stats = getCollectionStats(owned);
+  const p = stats.avgProfile;
+
+  // Find the two dominant axes (highest values)
+  const axes = Object.entries(p).sort((a, b) => b[1] - a[1]);
+  const dominant = axes.slice(0, 2).map(([k]) => GAP_AXIS_LABELS[k][0]);
+
+  // Check each axis against thresholds to find the gap
+  if (p.freshness < 0.3) {
+    return {
+      dominant,
+      gapLabel: 'a light, airy contrast',
+      ctaFamilies: ['Citrus', 'Green'],
+      ctaSearch: 'citrus',
+      count: owned.length,
+    };
+  }
+  if (p.sweetness < 0.3) {
+    return {
+      dominant,
+      gapLabel: 'sweetness',
+      ctaFamilies: ['Gourmand', 'Floral'],
+      ctaSearch: 'gourmand',
+      count: owned.length,
+    };
+  }
+  if (p.warmth < 0.3) {
+    return {
+      dominant,
+      gapLabel: 'warmth and depth',
+      ctaFamilies: ['Amber', 'Woody', 'Oud'],
+      ctaSearch: 'amber',
+      count: owned.length,
+    };
+  }
+  if (p.complexity < 0.4) {
+    return {
+      dominant,
+      gapLabel: 'complexity',
+      ctaFamilies: ['Chypre', 'Leather'],
+      ctaSearch: 'chypre',
+      count: owned.length,
+    };
+  }
+  if (p.intensity < 0.3) {
+    return {
+      dominant,
+      gapLabel: 'presence and projection',
+      ctaFamilies: [],
+      ctaSearch: '',
+      count: owned.length,
+    };
+  }
+
+  // No gap — complete collection
+  const signatureAxis = axes[0][0];
+  return {
+    dominant,
+    gapLabel: null,
+    signatureAxis: GAP_AXIS_LABELS[signatureAxis][1],
+    count: owned.length,
+  };
+}
+
+function renderWardrobeGap(container) {
+  const gap = computeWardrobeGap();
+  if (!gap) return;
+
+  const el = document.createElement('div');
+  el.className = 'dna-card dna-card--gap';
+
+  const disclaimer = gap.count <= 2
+    ? `<p class="dna-sub" style="opacity:0.7">Based on ${gap.count} fragrance${gap.count === 1 ? '' : 's'} — add more to refine.</p>`
+    : '';
+
+  if (gap.gapLabel) {
+    const ctaHtml = gap.ctaSearch
+      ? `<button class="gap-cta" aria-label="Browse ${gap.ctaFamilies.join(' and ')} fragrances to fill your collection gap">Browse ${gap.ctaFamilies.join(' & ')}</button>`
+      : '';
+    el.innerHTML = `
+      <p class="dna-headline">Your wardrobe leans ${gap.dominant.join(' and ')}. You're missing ${gap.gapLabel}.</p>
+      ${disclaimer}
+      ${ctaHtml}
+    `;
+    const cta = el.querySelector('.gap-cta');
+    if (cta) {
+      cta.addEventListener('click', () => {
+        // Switch to All tab and search for gap family
+        CAT_STATE_FILTER = null;
+        const allStateBtns = document.querySelectorAll('#cat-state-bar .tab, #cat-state-bar-m .tab');
+        allStateBtns.forEach(b => {
+          const isAll = b.dataset.val === '';
+          b.classList.toggle('active', isAll);
+          b.setAttribute('aria-pressed', isAll ? 'true' : 'false');
+        });
+        const searchEl = document.getElementById('cat-search');
+        if (searchEl) {
+          searchEl.value = gap.ctaSearch;
+          document.getElementById('cat-search-clear')?.classList.add('visible');
+        }
+        buildCatalog();
+      });
+    }
+  } else {
+    el.innerHTML = `<p class="dna-headline">Your collection covers all the major sensory dimensions. ${gap.signatureAxis.charAt(0).toUpperCase() + gap.signatureAxis.slice(1)} is your signature.</p>${disclaimer}`;
+  }
+
+  container.appendChild(el);
+
+  // Announce to screen readers
+  const liveEl = document.getElementById('cat-live');
+  if (liveEl) {
+    liveEl.textContent = gap.gapLabel
+      ? `Your wardrobe gap: missing ${gap.gapLabel}.`
+      : 'Your collection covers all sensory dimensions.';
+  }
+}
+
+/* ── Brand Discovery ───────────────────────────────────────────── */
+function computeBrandScores() {
+  const owned = CAT.filter(f => isOwned(f.id));
+  if (!owned.length) return [];
+
+  const ownedStats = getCollectionStats(owned);
+  const userTopFams = ownedStats.topFamilies.slice(0, 3).map(([f]) => f);
+  const avgProfile = ownedStats.avgProfile;
+  const userAvgSillage = owned.reduce((s, f) => s + f.sillage, 0) / owned.length;
+
+  // Group catalog by brand
+  const brandGroups = {};
+  CAT.forEach(f => {
+    if (!brandGroups[f.brand]) brandGroups[f.brand] = [];
+    brandGroups[f.brand].push(f);
+  });
+
+  const results = [];
+  for (const [brand, frags] of Object.entries(brandGroups)) {
+    const ownedInBrand = frags.filter(f => isOwned(f.id)).length;
+    if (ownedInBrand >= 2) continue; // Already explored
+
+    // Average similarity to each owned frag
+    let totalScore = 0;
+    let bestMatch = null;
+    let bestMatchScore = 0;
+
+    for (const ownedFrag of owned) {
+      let brandBest = 0;
+      for (const brandFrag of frags) {
+        const sim = scoreSimilarity(ownedFrag, brandFrag);
+        totalScore += sim;
+        if (sim > brandBest) brandBest = sim;
+      }
+      if (brandBest > bestMatchScore) {
+        bestMatchScore = brandBest;
+        bestMatch = ownedFrag;
+      }
+    }
+
+    const avgScore = Math.round(totalScore / (owned.length * frags.length));
+    const brandData = BRANDS.find(b => b.name === brand);
+
+    // Dominant family
+    const famCounts = {};
+    frags.forEach(f => { famCounts[f.family] = (famCounts[f.family] || 0) + 1; });
+    const brandTopFams = Object.entries(famCounts).sort((a, b) => b[1] - a[1]);
+    const domFamily = brandTopFams[0]?.[0] || 'woody';
+
+    // Build "Because you like…" reasons from collection overlap
+    const reasons = [];
+    const overlappingFams = brandTopFams
+      .filter(([fam]) => userTopFams.includes(fam))
+      .slice(0, 2)
+      .map(([fam]) => FAM[fam]?.label?.toLowerCase() || fam);
+    reasons.push(...overlappingFams);
+
+    if (reasons.length < 2) {
+      const brandAvgSillage = frags.reduce((s, f) => s + f.sillage, 0) / frags.length;
+      if (userAvgSillage >= 6.5 && brandAvgSillage >= 6.5) reasons.push('high sillage');
+    }
+    if (reasons.length < 2 && avgProfile.sweetness > 0.5) reasons.push('sweet fragrances');
+    if (reasons.length < 2 && avgProfile.warmth > 0.55) reasons.push('warm scents');
+    if (!reasons.length) reasons.push(FAM[domFamily]?.label?.toLowerCase() || domFamily);
+
+    results.push({
+      brand,
+      score: avgScore,
+      bestMatch,
+      bestMatchScore: Math.round(bestMatchScore),
+      fragCount: frags.length,
+      url: brandData?.url || null,
+      domFamily,
+      reasons,
+    });
+  }
+
+  return results.sort((a, b) => b.score - a.score).slice(0, 6);
+}
+
+function renderBrandDiscovery(container) {
+  const owned = CAT.filter(f => isOwned(f.id));
+  if (!owned.length) return;
+
+  const brands = computeBrandScores();
+  if (!brands.length) {
+    const el = document.createElement('div');
+    el.className = 'dna-card dna-card--gap';
+    el.innerHTML = '<p class="dna-headline">You\'ve explored every brand in our catalog.</p>';
+    container.appendChild(el);
+    return;
+  }
+
+  const sec = document.createElement('div');
+  sec.className = 'brand-discovery';
+
+  const hdr = document.createElement('div');
+  hdr.className = 'sec-label';
+  hdr.textContent = 'Brands to Explore';
+  sec.appendChild(hdr);
+
+  if (owned.length < 3) {
+    const note = document.createElement('p');
+    note.className = 'dna-sub';
+    note.textContent = 'Add more to improve recommendations.';
+    sec.appendChild(note);
+  }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'carousel-wrap';
+  const carousel = document.createElement('div');
+  carousel.className = 'carousel';
+
+  brands.forEach(b => {
+    const card = document.createElement('div');
+    card.className = 'carousel-card carousel-card--brand';
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `Explore ${b.brand} — ${b.score}% match with your collection`);
+
+    const famColor = FAM[b.domFamily]?.color || '#888';
+    const famLabel = FAM[b.domFamily]?.label || b.domFamily;
+    const reasonText = b.reasons.length >= 2
+      ? `Because you like ${b.reasons[0]} and ${b.reasons[1]}`
+      : b.reasons.length === 1
+        ? `Because you like ${b.reasons[0]}`
+        : '';
+
+    card.innerHTML = `
+      <div class="carousel-card-family">
+        <div class="fam-dot" style="background:${famColor}" aria-hidden="true"></div>
+        <span class="carousel-card-family-label">${famLabel}</span>
+      </div>
+      <div class="carousel-card-name list-item-name">${b.brand}</div>
+      ${reasonText ? `<div class="carousel-card-reason">${reasonText}</div>` : ''}
+      ${b.url ? `<a class="s-name-btn carousel-card-shop" href="${b.url}" target="_blank" rel="noopener noreferrer" aria-label="Shop ${b.brand} — opens official website">Shop →</a>` : ''}
+    `;
+
+    card.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      openHouseDetail(b.brand);
+    });
+    card.addEventListener('keydown', e => {
+      if ((e.key === 'Enter' || e.key === ' ') && document.activeElement === card) {
+        e.preventDefault();
+        openHouseDetail(b.brand);
+      }
+    });
+
+    carousel.appendChild(card);
+  });
+
+  wrap.appendChild(carousel);
+  sec.appendChild(wrap);
+  container.appendChild(sec);
+
+  const liveEl = document.getElementById('cat-live');
+  if (liveEl) liveEl.textContent = `Showing ${brands.length} brands to explore based on your collection.`;
+}
+
 window.exportAuraCard = function() {
   const owned = CAT.filter(f => isOwned(f.id)); if (!owned.length) return;
   const stats = getCollectionStats(owned); const profile = stats.avgProfile;
@@ -1265,24 +1556,6 @@ function renderFragDetail(container,frag){
         </div>
       </div>
       <p class="journey-caveat">Key materials only — simplified pyramid</p>
-    </div>
-
-    <div class="sec-label">You might also like</div>
-    <div class="dc-sim-shelf">
-      ${(() => {
-        const simFrags = CAT.filter(f => f.id !== frag.id)
-          .map(f => ({ f, score: Math.round(scoreSimilarity(frag, f)) }))
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 3);
-        return simFrags.map(s => `
-          <button class="list-item list-item--compact cmp-sug-card" onclick="pushDetail(c => renderFragDetail(c, CAT_MAP['${s.f.id}']), '${s.f.name.replace(/'/g, "\\'")}')">
-            <div class="picker-fdot" style="background:${(FAM[s.f.family]||{}).color}"></div>
-            <div class="list-item-body">
-              <div class="list-item-name">${s.f.name}</div>
-              <div class="list-item-meta">${s.f.brand} · ${s.score}% match</div>
-            </div>
-          </button>`).join('');
-      })()}
     </div>`;
 
   // Note links
@@ -2259,6 +2532,16 @@ function buildCatalog(roleFilter){
     body.appendChild(noseBtn);
   }
 
+  // Brand Discovery section — top of All tab, no filters active
+  if(!normSearch&&!CAT_FAM_FILTER&&!CAT_BRAND_FILTER&&CAT_STATE_FILTER!=='owned'&&CAT_STATE_FILTER!=='wish'){
+    renderBrandDiscovery(body);
+  }
+
+  // Wardrobe Gap Analysis — top of Owned tab
+  if(CAT_STATE_FILTER==='owned'&&!normSearch){
+    renderWardrobeGap(body);
+  }
+
   const brands=[...new Set(visibleCat.map(f=>f.brand))].sort((a,b)=>a.localeCompare(b));
   brands.forEach(brand=>{
     const frags=visibleCat.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
@@ -2274,10 +2557,6 @@ function buildCatalog(roleFilter){
 
     list.addEventListener('click',e=>{
       const row=e.target.closest('.list-item');if(!row)return;
-      // Prevent click if we swiped
-      const content = row.querySelector('.list-item-content');
-      if(content && content.style.transform && content.style.transform !== 'translateX(0px)') return;
-
       const id=row.dataset.id;const frag=CAT_MAP[id];if(!frag)return;
 
       // Double tap logic
@@ -2650,10 +2929,6 @@ function renderCatRow(row,frag,fm,search){
 
   row.draggable = true;
   row.innerHTML=`
-    <div class="list-item-actions">
-      <button class="list-item-action list-item-action--compare" data-id="${frag.id}">Compare</button>
-      <button class="list-item-action list-item-action--wishlist" data-id="${frag.id}">${st==='wish'?'Unwish':'Wish'}</button>
-    </div>
     <div class="list-item-content">
       <div class="list-item-dot--lg" style="background:${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
       <div class="list-item-body">
@@ -2672,59 +2947,6 @@ function renderCatRow(row,frag,fm,search){
   });
   row.addEventListener('dragend', () => {
     row.classList.remove('dragging');
-  });
-
-  // Swipe to action logic
-  const content = row.querySelector('.list-item-content');
-  if(!content) return;
-  
-  // Disable swipe logic for reduced-motion users (Miguel persona)
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) return;
-
-  let sx=0, sy=0, swiping=false, swiped=false;
-  content.addEventListener('touchstart', e=>{
-    sx = e.touches[0].clientX;
-    sy = e.touches[0].clientY;
-    swiping = true;
-    content.style.transition = 'none';
-  }, {passive:true});
-  content.addEventListener('touchmove', e=>{
-    if(!swiping) return;
-    const dx = e.touches[0].clientX - sx;
-    const dy = e.touches[0].clientY - sy;
-    if(Math.abs(dx) > Math.abs(dy) && dx < 0) { // dragging left
-      content.style.transform = `translateX(${Math.max(-160, dx)}px)`;
-      e.preventDefault(); // prevent vertical scroll if panning horizontally
-    }
-  });
-  content.addEventListener('touchend', e=>{
-    swiping = false;
-    content.style.transition = 'transform 0.28s var(--ease-spring)';
-    const dx = e.changedTouches[0].clientX - sx;
-    if(dx < -60) {
-      content.style.transform = `translateX(-160px)`;
-      swiped = true;
-      window.haptic?.('light');
-    } else {
-      content.style.transform = `translateX(0)`;
-      swiped = false;
-    }
-  });
-
-  // Action listeners
-  row.querySelector('.list-item-action--compare')?.addEventListener('click', e=>{
-    e.stopPropagation();
-    window.haptic?.('success');
-    _selectFragForSlot(CMP_A ? 'b' : 'a', frag);
-    go('compare', document.querySelector('.mbn-btn[onclick*="compare"]'));
-    closeAllSheets?.();
-  });
-  row.querySelector('.list-item-action--wishlist')?.addEventListener('click', e=>{
-    e.stopPropagation();
-    window.haptic?.('success');
-    setState(frag.id, st==='wish'?'none':'wish');
-    refreshAfterStateChange(frag.id);
   });
 }
 function updBC(brand,key){

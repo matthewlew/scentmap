@@ -235,16 +235,12 @@
 
 /* ── 3. SUGGESTIONS (V2, used by renderSuggestionsV2) ── */
 .cmp-sug-card {
-  border: 1px solid var(--border-standard) !important;
-  border-radius: var(--radius-lg) !important;
   background: var(--bg-primary) !important;
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  transition: background var(--dur-fast) var(--ease-spring),
-              border-color var(--dur-fast) var(--ease-spring);
+  transition: background var(--dur-fast) var(--ease-spring);
   width: 100%;
-  overflow: hidden !important;
 }
 
 .cmp-sug-card:hover {
@@ -544,7 +540,12 @@
   flex-direction: column;
   border: 1px solid var(--border-standard);
   border-radius: var(--radius-lg);
-  overflow: hidden;
+}
+.dc-sim-shelf .list-item {
+  border-bottom: 1px solid var(--border-standard);
+}
+.dc-sim-shelf .list-item:last-child {
+  border-bottom: none;
 }
 
 
@@ -859,112 +860,11 @@
   width: 100%;
 }
 
-.list-item-actions {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  display: flex;
-  align-items: stretch;
-  justify-content: flex-end;
-}
-
-.list-item-action {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 var(--sp-lg);
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  font-weight: 700;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--bg-primary);
-  background: var(--g800);
-  border: none;
-  cursor: pointer;
-}
-
-.list-item-action--wishlist {
-  background: var(--wish);
-}
-
-.list-item-action--compare {
-  background: var(--accent-primary);
-}
-
-/* Swipe hint chevron — visible on touch devices to indicate swipeable row */
-.list-item-content::after {
-  content: '‹';
-  position: absolute;
-  right: var(--sp-sm);
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: var(--fs-caption);
-  color: var(--g300);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--dur-fast) var(--ease-spring);
-}
-
-@media (hover: none) and (pointer: coarse) {
-  .list-item-content::after {
-    opacity: 1;
-  }
-}
-
 .list-item:hover .list-item-content {
   background: var(--bg-secondary);
 }
 .list-item.search-first .list-item-content {
   background: var(--bg-secondary);
-}
-
-/* Reveal action buttons on keyboard focus — touch/keyboard devices only */
-@media (hover: none), (pointer: coarse) {
-  .list-item:focus-within .list-item-actions {
-    transform: translateX(0);
-  }
-  .list-item:focus-within .list-item-content {
-    transform: translateX(-120px);
-  }
-}
-
-/* Inline actions for reduced-motion preference (Miguel persona) */
-@media (prefers-reduced-motion: reduce) {
-  .list-item {
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  .list-item-actions {
-    position: static !important;
-    display: flex !important;
-    order: 2 !important;
-    width: 100% !important;
-    transform: none !important;
-    border-top: 1px solid var(--border-subtle);
-  }
-  .list-item-content {
-    position: static !important;
-    order: 1 !important;
-    transform: none !important;
-    padding-right: var(--sp-lg) !important;
-  }
-  .list-item-content::after {
-    display: none !important;
-  }
-  .list-item-action {
-    flex: 1;
-    min-height: var(--touch-target);
-  }
-}
-
-/* Hide swipe tray entirely on desktop (pointer devices) */
-@media (hover: hover) and (pointer: fine) {
-  .list-item-actions {
-    display: none;
-  }
 }
 
 /* Focus ring: box-shadow is clipped by overflow:hidden — use inset outline instead */
@@ -3291,6 +3191,27 @@ button.cmp-note-pill:hover {
   width: 240px;
 }
 
+/* Brand discovery carousel card */
+.carousel-card--brand {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.carousel-card-reason {
+  font-family: var(--font-serif);
+  font-size: var(--fs-meta);
+  color: var(--text-tertiary);
+  line-height: 1.35;
+  flex: 1;
+}
+
+.carousel-card-shop {
+  margin-top: var(--sp-sm);
+  align-self: flex-start;
+}
+
 .fam-dot {
   width: 8px;
   height: 8px;
@@ -3799,6 +3720,66 @@ button.cmp-note-pill:hover {
   color: var(--text-secondary);
   line-height: var(--lh-normal);
 }
+
+/* ── DNA Card: Gap callout variant ──────────────────────────────── */
+
+.dna-card--gap {
+  background: var(--bg-secondary);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--sp-lg);
+  margin-bottom: var(--sp-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+}
+
+.dna-headline {
+  font-family: var(--font-serif);
+  font-size: var(--fs-title);
+  color: var(--text-primary);
+  line-height: var(--lh-normal);
+  margin: 0;
+}
+
+.dna-sub {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  line-height: var(--lh-normal);
+  margin: 0;
+}
+
+.gap-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target);
+  padding: var(--sp-sm) var(--sp-lg);
+  background: var(--accent-primary);
+  color: var(--on-dark-text);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-spring);
+  align-self: flex-start;
+}
+
+.gap-cta:hover {
+  opacity: 0.85;
+}
+
+/* ── Brand Discovery ───────────────────────────────────────────── */
+
+.brand-discovery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+}
+
 
 /* ══ MY COLLECTION SECTIONS ═══════════════════════════════════════ */
 

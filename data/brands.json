@@ -8,46 +8,67 @@
   {
     "id": "fueguia-1833",
     "name": "Fueguia 1833",
-    "desc": "Buenos Aires-based house crafting botanical perfumes inspired by South American landscapes, using natural materials and minimal note pyramids."
+    "desc": "Buenos Aires-based house crafting botanical perfumes inspired by South American landscapes, using natural materials and minimal note pyramids.",
+    "url": "https://www.fueguia.com"
   },
   {
     "id": "xinu",
     "name": "Xinú",
-    "desc": "Mexican perfume house focused on botanical ingredients native to the Americas, highlighting indigenous resins, woods, and plants."
+    "desc": "Mexican perfume house focused on botanical ingredients native to the Americas, highlighting indigenous resins, woods, and plants.",
+    "url": "https://www.xinuperfumes.com"
   },
   {
     "id": "diptyque",
     "name": "Diptyque",
-    "desc": "Parisian house blending French perfumery with travel memories, natural materials, and artistic storytelling since 1961."
+    "desc": "Parisian house blending French perfumery with travel memories, natural materials, and artistic storytelling since 1961.",
+    "url": "https://www.diptyqueparis.com"
   },
   {
     "id": "ds-durga",
     "name": "D.S. & Durga",
-    "desc": "Brooklyn perfume house known for storytelling fragrances inspired by music, landscapes, and Americana."
+    "desc": "Brooklyn perfume house known for storytelling fragrances inspired by music, landscapes, and Americana.",
+    "url": "https://www.dsanddurga.com"
   },
   {
     "id": "le-labo",
     "name": "Le Labo",
-    "desc": "New York house creating hand-blended perfumes centred on a single star ingredient, paired with raw woods, musks, and spices."
+    "desc": "New York house creating hand-blended perfumes centred on a single star ingredient, paired with raw woods, musks, and spices.",
+    "url": "https://www.lelabofragrances.com"
   },
   {
     "id": "aesop",
     "name": "Aesop",
-    "desc": "Australian brand with a botanical philosophy, blending woods, herbs, and resins with quiet, intellectual elegance."
+    "desc": "Australian brand with a botanical philosophy, blending woods, herbs, and resins with quiet, intellectual elegance.",
+    "url": "https://www.aesop.com/fragrance"
+  },
+  {
+    "id": "tom-ford",
+    "name": "Tom Ford",
+    "desc": "Bold, luxurious fragrances blending Eastern and Western references with theatrical opulence.",
+    "url": "https://www.tomford.com/beauty/fragrance"
+  },
+  {
+    "id": "replica",
+    "name": "Replica",
+    "desc": "Maison Margiela's memory-evoking fragrance line, recreating specific moments and places.",
+    "url": "https://www.maisonmargiela.com/en-us/maison-margiela-fragrances/replica"
   },
   {
     "id": "chanel",
     "name": "Chanel",
-    "desc": "Iconic French fashion house renowned for timeless elegance and revolutionary, signature aldehydes and florals."
+    "desc": "Iconic French fashion house renowned for timeless elegance and revolutionary, signature aldehydes and florals.",
+    "url": "https://www.chanel.com/fragrance"
   },
   {
     "id": "dior",
     "name": "Dior",
-    "desc": "Prestigious Parisian house blending classic luxury with modern sophistication, famous for both bold and delicate floral compositions."
+    "desc": "Prestigious Parisian house blending classic luxury with modern sophistication, famous for both bold and delicate floral compositions.",
+    "url": "https://www.dior.com/en_us/beauty/fragrance"
   },
   {
     "id": "loewe",
     "name": "Loewe",
-    "desc": "Spanish luxury house crafting artistic, nature-inspired fragrances with botanical purity and modern minimalism."
+    "desc": "Spanish luxury house crafting artistic, nature-inspired fragrances with botanical purity and modern minimalism.",
+    "url": "https://www.loewe.com/fragrance"
   }
 ]
