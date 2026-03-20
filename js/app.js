@@ -656,10 +656,11 @@ function renderWardrobeGap(container) {
   const el = document.createElement('div');
   el.className = 'dna-card dna-card--gap';
 
+  const disclaimer = gap.count <= 2
+    ? `<p class="dna-sub" style="opacity:0.7">Based on ${gap.count} fragrance${gap.count === 1 ? '' : 's'} — add more to refine.</p>`
+    : '';
+
   if (gap.gapLabel) {
-    const disclaimer = gap.count === 1
-      ? '<p class="dna-sub" style="opacity:0.7">Based on 1 fragrance — add more to refine.</p>'
-      : '';
     const ctaHtml = gap.ctaSearch
       ? `<button class="gap-cta" aria-label="Browse ${gap.ctaFamilies.join(' and ')} fragrances to fill your collection gap">Browse ${gap.ctaFamilies.join(' & ')}</button>`
       : '';
@@ -688,7 +689,7 @@ function renderWardrobeGap(container) {
       });
     }
   } else {
-    el.innerHTML = `<p class="dna-headline">Your collection covers all the major sensory dimensions. ${gap.signatureAxis.charAt(0).toUpperCase() + gap.signatureAxis.slice(1)} is your signature.</p>`;
+    el.innerHTML = `<p class="dna-headline">Your collection covers all the major sensory dimensions. ${gap.signatureAxis.charAt(0).toUpperCase() + gap.signatureAxis.slice(1)} is your signature.</p>${disclaimer}`;
   }
 
   container.appendChild(el);
