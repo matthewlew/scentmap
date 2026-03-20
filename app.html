@@ -216,6 +216,12 @@
     <button class="mbn-btn" onclick="goMobile('saved', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>You</button>
   </nav>
 
+  <!-- Undo toast — pre-rendered so aria-live region is registered before first use -->
+  <div id="global-undo-toast" class="global-toast" role="status" aria-live="polite" aria-atomic="true">
+    <span class="global-toast-msg"></span>
+    <button class="global-toast-undo">Undo</button>
+  </div>
+
   <div class="app-loading" id="app-loading">
     <div class="app-loading-inner">
       <div class="app-loading-dot"></div>
