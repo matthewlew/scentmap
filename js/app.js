@@ -789,7 +789,10 @@ function renderBrandDiscovery(container) {
     row.className = 'list-item';
     row.setAttribute('role', 'button');
     row.setAttribute('tabindex', '0');
-    row.setAttribute('aria-label', `Explore ${b.brand} — ${b.score}% match with your collection`);
+    row.setAttribute('aria-label', `Explore ${b.brand} — ${b.bestMatchScore}% match with your collection`);
+
+    const content = document.createElement('div');
+    content.className = 'list-item-content';
 
     const body = document.createElement('div');
     body.className = 'list-item-body';
@@ -798,32 +801,35 @@ function renderBrandDiscovery(container) {
     name.className = 'list-item-name';
     name.textContent = b.brand;
 
-    const meta = document.createElement('div');
-    meta.className = 'list-item-meta';
-    meta.textContent = `Similar to ${b.bestMatch.name} — ${b.bestMatchScore}%`;
+    const sub = document.createElement('div');
+    sub.className = 'list-item-sub';
+    sub.textContent = `Similar to ${b.bestMatch.name} — ${b.bestMatchScore}% match`;
 
     body.appendChild(name);
-    body.appendChild(meta);
-    row.appendChild(body);
-
-    const trail = document.createElement('div');
-    trail.className = 'list-item-trail';
-    trail.textContent = `${b.score}%`;
-    row.appendChild(trail);
+    body.appendChild(sub);
+    content.appendChild(body);
 
     if (b.url) {
+      const trail = document.createElement('div');
+      trail.className = 'list-item-trail';
       const shop = document.createElement('a');
-      shop.className = 'list-item-shop';
+      shop.className = 's-name-btn';
       shop.href = b.url;
       shop.target = '_blank';
-      shop.rel = 'noopener';
+      shop.rel = 'noopener noreferrer';
       shop.setAttribute('aria-label', `Shop ${b.brand} — opens official website`);
       shop.textContent = 'Shop →';
       shop.addEventListener('click', e => e.stopPropagation());
-      row.appendChild(shop);
+      trail.appendChild(shop);
+      content.appendChild(trail);
     }
 
-    row.addEventListener('click', () => openHouseDetail(b.brand));
+    row.appendChild(content);
+
+    row.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      openHouseDetail(b.brand);
+    });
     row.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
