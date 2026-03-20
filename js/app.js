@@ -9,6 +9,32 @@ const { FAM, FAM_ORDER, FAM_COMPAT, FAM_ABBR } = store;
 
 const SW=['','Skin','Skin','Subtle','Subtle','Moderate','Moderate','Strong','Strong','Enveloping','Enormous'];
 const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered','Layered','Complex','Deep'];
+const SWD=[
+  '',
+  'Barely detectable — skin-close only',
+  'Barely detectable — skin-close only',
+  'Soft presence — close contact only',
+  'Soft presence — close contact only',
+  'Moderate projection — noticeable arm\'s length away',
+  'Moderate projection — noticeable arm\'s length away',
+  'Confident presence — fills a small room',
+  'Confident presence — fills a small room',
+  'Enveloping — noticeable on entry from across the room',
+  'Statement sillage — announces arrival, lingers after'
+];
+const LWD=[
+  '',
+  'Single-note — what you spray is what you get',
+  'Single-note — what you spray is what you get',
+  'Simple arc — opens and settles, little evolution',
+  'Simple arc — opens and settles, little evolution',
+  'Balanced journey — distinct opening, heart, and dry down',
+  'Balanced journey — distinct opening, heart, and dry down',
+  'Layered — opening and base feel like different fragrances',
+  'Layered — opening and base feel like different fragrances',
+  'Complex — notable evolution across all three stages',
+  'Deep transformation — hours of evolving character'
+];
 
 // Analytics stubs
 function trackEvent(name, props) {
@@ -1504,8 +1530,8 @@ function renderFragDetail(container,frag){
       <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
     </button>
     <div class="dc-stats">
-      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${frag.sillage}/10 — ${SW[frag.sillage]}</div></div>
-      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${frag.layering}/10 — ${LW[frag.layering]}</div></div>
+      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${frag.sillage}/10 — ${SW[frag.sillage]}</div><div class="list-item-meta">${SWD[frag.sillage]}</div></div>
+      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${frag.layering}/10 — ${LW[frag.layering]}</div><div class="list-item-meta">${LWD[frag.layering]}</div></div>
     </div>
     <div class="dc-div"></div>
     <div class="sec-label">Sensory Profile</div>

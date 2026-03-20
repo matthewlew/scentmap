@@ -1,3 +1,8 @@
+## 2026-03-20 (26)
+
+### Added
+- **Plain-language metric labels (P1 Feature A):** Added behavioral description lines below the Sillage and Structure score bars in fragrance detail panels. Added `SWD[]` and `LWD[]` arrays (11 entries each) mapping score values to lived-experience descriptions (e.g. "Confident presence — fills a small room" for sillage 7-8, "Balanced journey — distinct opening, heart, and dry down" for structure 5-6). Description text rendered using existing `.list-item-meta` class (`--fs-meta`, `--text-tertiary`). No new components or tokens added.
+
 ## 2026-03-20 (25)
 
 ### Fixed
