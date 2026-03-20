@@ -1,6 +1,6 @@
 # Scentmap — TODOs
 
-Updated 2026-03-20. CEO scope reduction review completed 2026-03-20.
+Updated 2026-03-20. CEO scope reduction reviewed 2026-03-20. List item consolidation design reviewed 2026-03-20 (eng review on branch `claude-proposal`).
 
 **Product direction:** Help people discover fragrances that complete their wardrobe. That's it — not a game platform, not a social app, not a quiz factory.
 
@@ -29,13 +29,10 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ## P2 — Next Cycle (only after P1 ships + QA passes)
 
-**Gate:** Do not start P2 until all 3 P1 items are shipped, QA-verified, and committed. These 4 items close loops in existing shipped features — they do not open new surface area.
+**Gate:** Do not start P2 until all 3 P1 items are shipped, QA-verified, and committed. These 3 remaining items close loops in existing shipped features — they do not open new surface area.
 
-### TODO: Brand Detail — Best Matches for Your Collection
-**What:** Top 3 fragrances from a brand ranked by `scoreSimilarity()` against owned collection, shown in house detail sheet.
-**Why:** Brand Discovery leads users into a house and drops them at an alphabetical list. This closes the discovery→action gap.
-**Effort:** S (CC: ~30 min)
-**Depends on:** `scoreSimilarity()`, house detail render path. Only show when ≥1 owned.
+### ~~TODO: Brand Detail — Best Matches for Your Collection~~ ✅ Shipped 2026-03-20
+Top 3 fragrances from a brand ranked by `scoreSimilarity()` against owned collection, shown in house detail as "Similar From This House" section. Uses `.list-item--compact` + `.list-shelf` components. QA verified.
 
 ---
 
@@ -44,6 +41,20 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 **Why:** "Browse Citrus & Green" dumps users in a 40-item list. Specific recs close the gap→decision loop.
 **Effort:** S-M (CC: ~30 min)
 **Depends on:** `computeWardrobeGap()`, `scoreSimilarity()`, `computeProfile()` — all exist.
+
+**Design spec (design review 2026-03-20):**
+
+*Presentation:* Horizontal carousel shelf with 2–3 `.carousel-card` suggestions (reusing Brand Discovery layout). Ranking: gap-fill priority (best matches for gap axis), then similarity to owned collection as tiebreaker. "Browse [family]" CTA moves below shelf as secondary fallback. Card hidden if <2 recs available.
+
+*Cards:* Family color dot + name + brand + single-axis label ("Fresh", "Airy", "Bright" — no "recommendation" suffix). Clickable → open detail panel via `openFragDetail()`. No state badges (Owned/Wishlist).
+
+*Interaction:* Mobile shelf scrolls with snap-to-edges, 44px min-height. Desktop: 3 cards visible, no scroll. Keyboard: tab through cards, focus ring via global `:focus-visible`. A11y: `role="list"` on shelf, each card has `aria-label="[Name] [Brand], [reason] recommendation"`.
+
+*Components:* Reuse `.carousel-card` (Brand Discovery), new `.carousel-shelf` shared container class, `--fam-*` tokens for dots, all spacing/typography via semantic tokens (no hard-codes).
+
+*Files:* `js/app.js` `renderWardrobeGap()` (~40 lines), `styles/components.css` `.carousel-shelf` + responsive scroll-snap, `CHANGELOG.md` Added section.
+
+*Full spec:* `/Users/matthewlewair/.claude/plans/peppy-gathering-sketch.md` (all 7 design passes with rationale + QA checklist).
 
 ---
 
@@ -60,6 +71,69 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 **Why:** This is a UX bug, not a feature. Losing state on back-nav is broken behavior.
 **Effort:** S (CC: ~20 min)
 **Depends on:** Quiz routes (fixed 2026-03-19).
+
+---
+
+## Design System — Refactor Queue
+
+These are structural refactors that reduce maintenance debt. They do not add features. Each is safe to pick up in a single session independent of P2.
+
+**Gate:** Can be started any time after P1 ships. Does not block or depend on P2.
+
+---
+
+### TODO: List Item Component Consolidation
+
+**What:** Migrate all list-item render sites in `app.js` and `components.css` from the legacy multi-variant system to the canonical Option B slot structure documented in `DESIGN.md`.
+
+**Why:** The current system has 4 inconsistent variants (`--flat`, `--compact`, `--search`, base), a dead inner wrapper (`.list-item-content` left over from swipe-reveal era), a mixin anti-pattern (`.cmp-sug-card` applied alongside other classes), and typography violations where modifier classes override slot font-weight. Consolidating to one component means one block of CSS to maintain, one pattern to remember, and zero modifier conflicts.
+
+**Effort:** M (human: ~1 day / CC: ~45 min)
+
+**Design spec:** `playground.html` → `#list-item-proposals` section. Option B demo is the source of truth for the new structure.
+
+**Class rename map:**
+
+| Old class | New class | Action |
+|---|---|---|
+| `.list-item-content` | `.list-item-inner` | Rename in all JS template strings |
+| `.list-item-name` | `.list-item-label` | Rename |
+| `.list-item-sub` | `.list-item-sublabel` | Rename + change font to `--font-serif` |
+| `.list-item-meta` | `.list-item-detail` | Rename + change font to `--font-serif` |
+| `.list-item--flat` | `.list-item--ghost` | Rename variant |
+| `.cmp-sug-card` | *(remove, absorbed into `--ghost`)* | Delete class from all JS |
+| `.dc-sim-shelf` | `.list-shelf` | Rename container class |
+| *(missing)* | `.list-item-leading` | Add new wrapper slot in JS template strings |
+
+**Typography violations to fix (in `components.css`):**
+- Remove `.list-item--search .list-item-name { font-weight: 500 }` — violates typography lock
+- Remove `.list-item--wish .list-item-name { font-weight: 600 }` — violates typography lock
+- Remove `.list-item--owned .list-item-name { font-weight: 700 }` — violates typography lock
+
+**Migration strategy (CSS-first to avoid broken states):**
+1. Add new slot CSS in `components.css` alongside old classes
+2. Update `app.js` render calls one context at a time (catalog rows → compact rows → flat/ghost rows → search rows)
+3. Remove old CSS classes once all render sites are updated
+4. QA: screenshot all four row contexts before and after; verify keyboard nav and focus rings
+
+**Render sites to update in `app.js` (~15–20 call sites):**
+- `renderCatRow` — catalog list (base `.list-item`)
+- `renderCompare` suggestion shelf — `.list-item--flat .cmp-sug-card` × 2 locations (~lines 1686, 1766, 3956)
+- Gap CTA suggestion row — `.list-item--compact .cmp-sug-card` (~line 1100)
+- Notes panel rows — `.list-item--compact` (~lines 1865, 1971, 2084, 2264, 2323)
+- Universal search results — `.list-item--search` (~lines 3485+)
+- `dc-sim-shelf` container — 3 instances (~lines 971, 984, 1678, 1761)
+
+**Depends on:** `playground.html` Option B demo (done ✓), `DESIGN.md` slot contract (done ✓).
+
+**QA verification checklist:**
+- [ ] Catalog rows render with correct dot, label, sublabel, badge/score/state
+- [ ] Compare suggestion shelf rows render with ghost surface (no border, rounded hover)
+- [ ] Universal search modal rows render with correct height and aria-selected state
+- [ ] Compact rows (notes, house detail) render correctly
+- [ ] Keyboard focus ring visible on all row types (inset outline)
+- [ ] Touch target ≥44px on all row types
+- [ ] No typography violations: inspect `.list-item-label` in DevTools — must show `font-weight: 600` regardless of owned/wish state
 
 ---
 
