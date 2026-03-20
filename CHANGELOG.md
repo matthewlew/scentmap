@@ -1,3 +1,8 @@
+## 2026-03-20 (24)
+
+### Changed
+- **Brand Discovery: carousel cards with "Because you like…" reasoning.** Replaced list rows with a horizontal `.carousel` of `.carousel-card--brand` cards (160px wide). Each card shows: dominant family dot + label, brand name, a personalized "Because you like [family] and [trait]" reason line (derived from family overlap with user's top families, plus sillage/sweetness/warmth signals), and a Shop → link. `computeBrandScores()` now computes `domFamily` and `reasons[]` per brand using `getCollectionStats()` to find overlap between the brand's family mix and the user's top 3 owned families. Added `.carousel-card--brand`, `.carousel-card-reason`, `.carousel-card-shop` CSS using design tokens.
+
 ## 2026-03-20 (23)
 
 ### Added

@@ -3190,6 +3190,27 @@ button.cmp-note-pill:hover {
   width: 240px;
 }
 
+/* Brand discovery carousel card */
+.carousel-card--brand {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.carousel-card-reason {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--text-tertiary);
+  line-height: 1.35;
+  flex: 1;
+}
+
+.carousel-card-shop {
+  margin-top: var(--sp-sm);
+  align-self: flex-start;
+}
+
 .fam-dot {
   width: 8px;
   height: 8px;
@@ -3756,7 +3777,6 @@ button.cmp-note-pill:hover {
   display: flex;
   flex-direction: column;
   gap: var(--sp-md);
-  margin-bottom: var(--sp-lg);
 }
 
 

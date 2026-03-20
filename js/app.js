@@ -707,6 +707,11 @@ function computeBrandScores() {
   const owned = CAT.filter(f => isOwned(f.id));
   if (!owned.length) return [];
 
+  const ownedStats = getCollectionStats(owned);
+  const userTopFams = ownedStats.topFamilies.slice(0, 3).map(([f]) => f);
+  const avgProfile = ownedStats.avgProfile;
+  const userAvgSillage = owned.reduce((s, f) => s + f.sillage, 0) / owned.length;
+
   // Group catalog by brand
   const brandGroups = {};
   CAT.forEach(f => {
@@ -740,6 +745,28 @@ function computeBrandScores() {
     const avgScore = Math.round(totalScore / (owned.length * frags.length));
     const brandData = BRANDS.find(b => b.name === brand);
 
+    // Dominant family
+    const famCounts = {};
+    frags.forEach(f => { famCounts[f.family] = (famCounts[f.family] || 0) + 1; });
+    const brandTopFams = Object.entries(famCounts).sort((a, b) => b[1] - a[1]);
+    const domFamily = brandTopFams[0]?.[0] || 'woody';
+
+    // Build "Because you like…" reasons from collection overlap
+    const reasons = [];
+    const overlappingFams = brandTopFams
+      .filter(([fam]) => userTopFams.includes(fam))
+      .slice(0, 2)
+      .map(([fam]) => FAM[fam]?.label?.toLowerCase() || fam);
+    reasons.push(...overlappingFams);
+
+    if (reasons.length < 2) {
+      const brandAvgSillage = frags.reduce((s, f) => s + f.sillage, 0) / frags.length;
+      if (userAvgSillage >= 6.5 && brandAvgSillage >= 6.5) reasons.push('high sillage');
+    }
+    if (reasons.length < 2 && avgProfile.sweetness > 0.5) reasons.push('sweet fragrances');
+    if (reasons.length < 2 && avgProfile.warmth > 0.55) reasons.push('warm scents');
+    if (!reasons.length) reasons.push(FAM[domFamily]?.label?.toLowerCase() || domFamily);
+
     results.push({
       brand,
       score: avgScore,
@@ -747,6 +774,8 @@ function computeBrandScores() {
       bestMatchScore: Math.round(bestMatchScore),
       fragCount: frags.length,
       url: brandData?.url || null,
+      domFamily,
+      reasons,
     });
   }
 
@@ -781,66 +810,52 @@ function renderBrandDiscovery(container) {
     sec.appendChild(note);
   }
 
-  const list = document.createElement('div');
-  list.className = 'scent-list';
+  const wrap = document.createElement('div');
+  wrap.className = 'carousel-wrap';
+  const carousel = document.createElement('div');
+  carousel.className = 'carousel';
 
   brands.forEach(b => {
-    const row = document.createElement('div');
-    row.className = 'list-item';
-    row.setAttribute('role', 'button');
-    row.setAttribute('tabindex', '0');
-    row.setAttribute('aria-label', `Explore ${b.brand} — ${b.bestMatchScore}% match with your collection`);
+    const card = document.createElement('div');
+    card.className = 'carousel-card carousel-card--brand';
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `Explore ${b.brand} — ${b.bestMatchScore}% match with your collection`);
 
-    const content = document.createElement('div');
-    content.className = 'list-item-content';
+    const famColor = FAM[b.domFamily]?.color || '#888';
+    const famLabel = FAM[b.domFamily]?.label || b.domFamily;
+    const reasonText = b.reasons.length >= 2
+      ? `Because you like ${b.reasons[0]} and ${b.reasons[1]}`
+      : b.reasons.length === 1
+        ? `Because you like ${b.reasons[0]}`
+        : '';
 
-    const body = document.createElement('div');
-    body.className = 'list-item-body';
+    card.innerHTML = `
+      <div class="carousel-card-family">
+        <div class="fam-dot" style="background:${famColor}" aria-hidden="true"></div>
+        <span class="carousel-card-family-label">${famLabel}</span>
+      </div>
+      <div class="carousel-card-name list-item-name">${b.brand}</div>
+      ${reasonText ? `<div class="carousel-card-reason">${reasonText}</div>` : ''}
+      ${b.url ? `<a class="s-name-btn carousel-card-shop" href="${b.url}" target="_blank" rel="noopener noreferrer" aria-label="Shop ${b.brand} — opens official website">Shop →</a>` : ''}
+    `;
 
-    const name = document.createElement('div');
-    name.className = 'list-item-name';
-    name.textContent = b.brand;
-
-    const sub = document.createElement('div');
-    sub.className = 'list-item-sub';
-    sub.textContent = `Similar to ${b.bestMatch.name} — ${b.bestMatchScore}% match`;
-
-    body.appendChild(name);
-    body.appendChild(sub);
-    content.appendChild(body);
-
-    if (b.url) {
-      const trail = document.createElement('div');
-      trail.className = 'list-item-trail';
-      const shop = document.createElement('a');
-      shop.className = 's-name-btn';
-      shop.href = b.url;
-      shop.target = '_blank';
-      shop.rel = 'noopener noreferrer';
-      shop.setAttribute('aria-label', `Shop ${b.brand} — opens official website`);
-      shop.textContent = 'Shop →';
-      shop.addEventListener('click', e => e.stopPropagation());
-      trail.appendChild(shop);
-      content.appendChild(trail);
-    }
-
-    row.appendChild(content);
-
-    row.addEventListener('click', e => {
+    card.addEventListener('click', e => {
       if (e.target.closest('a')) return;
       openHouseDetail(b.brand);
     });
-    row.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
+    card.addEventListener('keydown', e => {
+      if ((e.key === 'Enter' || e.key === ' ') && document.activeElement === card) {
         e.preventDefault();
         openHouseDetail(b.brand);
       }
     });
 
-    list.appendChild(row);
+    carousel.appendChild(card);
   });
 
-  sec.appendChild(list);
+  wrap.appendChild(carousel);
+  sec.appendChild(wrap);
   container.appendChild(sec);
 
   const liveEl = document.getElementById('cat-live');
