@@ -92,6 +92,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 :root{
   --sp-micro: 2px;
   --sp-xs:   4px;
+  --sp-2xs:  6px;  /* icon-text inline gap; half-step between xs and sm */
   --sp-sm:   8px;
   --sp-md:   12px;
   --sp-lg:   16px;

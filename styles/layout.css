@@ -465,7 +465,7 @@
 .catalog-sidebar .cat-brand-bar {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--sp-micro);
   margin-top: var(--sp-xs);
 }
 

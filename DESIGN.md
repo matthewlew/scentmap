@@ -12,11 +12,21 @@ This is the single source of truth for component inventory, token rules, and the
 | Tab / Filter Button | `.tab` | `styles/components.css:121` | `.tab.active` | All filter bars, state tabs, role tabs. Must have `aria-pressed`. |
 | Search Input | `.cat-search-input` | `styles/components.css:672` | — | Catalog and notes search. Uses border-based focus (not ring). |
 | Settings Menu Item | `.settings-menu-item` | `styles/components.css:72` | — | Dropdown nav items only. `min-height: var(--touch-target)`. |
-| List Item (full) | `.list-item` | `styles/components.css:812` | `--compact`, `--flat`, `--search`, `--owned`, `--wish` | Standard catalog/saved rows. Always use sub-element classes below. |
-| ↳ Sub-elements | `.list-item-name`, `.list-item-body`, `.list-item-sub`, `.list-item-meta`, `.list-item-icon`, `.list-item-trail`, `.list-item-badge`, `.list-item-score` | `styles/components.css:1474–1545` | — | Never inline font-size/color on these. |
-| List Item — Compact | `.list-item--compact` | `styles/components.css:940` | — | Notes rows, quiz results, house detail rows. |
-| List Item — Flat | `.list-item--flat` | `styles/components.css:924` | — | Compare suggestion cards. Transparent bg, no border. |
-| List Item — Search | `.list-item--search` | `styles/components.css:959` | — | Universal search result rows only. |
+| List Item | `.list-item` | `styles/components.css:829` | `--compact`, `--ghost`, `--search`, `--owned`, `--wish` | All catalog/saved/suggestion/search rows. Always use slot sub-element classes below. |
+| ↳ Slot: inner wrapper | `.list-item-inner` | — | — | Wraps leading/body/trail. Handles padding + hover-bg transition. |
+| ↳ Slot: leading | `.list-item-leading` | — | — | Holds dot or icon. flex, align-items:center, flex-shrink:0. |
+| ↳ Slot: dot | `.list-item-dot` | — | — | 8px circle, background set via inline `style`. |
+| ↳ Slot: icon | `.list-item-icon` | — | — | Emoji/glyph leading. 18px, text-tertiary. |
+| ↳ Slot: body | `.list-item-body` | — | — | flex:1, min-width:0 text truncation container. |
+| ↳ Slot: label | `.list-item-label` | — | — | Primary name. DM Sans, fs-body, 600, text-primary. |
+| ↳ Slot: sublabel | `.list-item-sublabel` | — | — | Brand / category. Source Serif, fs-caption, 400, text-secondary. |
+| ↳ Slot: detail | `.list-item-detail` | — | — | Notes / context. Source Serif, fs-caption, 400, text-tertiary. |
+| ↳ Slot: trail | `.list-item-trail` | — | — | Trailing cluster: badge + score. |
+| ↳ Slot: badge | `.list-item-badge` | — | — | State label (Owned, Wish). DM Sans, fs-caption, 600, text-tertiary. |
+| ↳ Slot: score | `.list-item-score` | — | — | Similarity %. DM Sans, fs-meta, 700, accent-primary. |
+| ↳ Slot: actions | `.list-item-actions` | — | — | Full-height action zone outside __inner. Buttons/CTAs. |
+| List Shelf | `.list-shelf` | — | — | Column container with border + radius. Use instead of .dc-sim-shelf. |
+| ⚠️ Deprecated | `.list-item--flat`, `.list-item--compact`, `.cmp-sug-card`, `.dc-sim-shelf`, `.list-item-content`, `.list-item-name`, `.list-item-sub`, `.list-item-meta` | — | — | Do not use in new code. Migrate to .list-item slot structure above. |
 | Compare Frag Card | `.cmp-frag-card` | `styles/components.css:1800` | `.cmp-frag-card-name` (layout only), `.cmp-frag-card-brand` (layout only) | Compare slot picker buttons. Typography uses `.list-item-name` / `.list-item-sub` inside layout wrappers. Never inline padding on children. |
 | Carousel Card | `.carousel-card` | `styles/components.css:3208` | `.carousel-card-name` (layout only), `.carousel-card-brand` (layout only), `.carousel-card-family` | Golden pairs, horizontal scrolling lists. Typography uses `.list-item-name` / `.list-item-sub` inside layout wrappers. No inline width/font overrides. |
 | DNA Card | `.dna-card` | `styles/components.css:3748` | `.dna-grid`, `.dna-headline`, `.dna-sub`, `.dna-stats`, `.dna-bar`, `.dna-badge`, `.dna-notes` | Personalization summary on the You panel. Sub-elements defined for card layout only. |
@@ -108,19 +118,63 @@ A section is a top-level block within a panel, sheet, or detail container. The p
 
 ---
 
-### List Item Typography Contract
+### List Item Slot Contract
 
-Every component that renders a name plus secondary text **must** use this three-level class hierarchy. Do not invent per-component alternatives (e.g. `.dc-name`, `.nf-name`, `.cmp-frag-card-name`).
+Every component that renders a name plus secondary text **must** use the `.list-item` slot structure. Do not invent per-component text class equivalents (e.g. `.dc-name`, `.nf-name`, `.cmp-frag-card-name`).
 
-| Level | Class | Font family | Size token | Color token | Purpose |
+#### Structure (Option B — Shell + Inner Wrapper)
+
+```
+.list-item [--compact | --ghost | --search]
+  └── .list-item-inner          ← padding + hover-bg transition
+        ├── .list-item-leading  ← flex-shrink: 0
+        │     └── .list-item-dot  (or .list-item-icon)
+        ├── .list-item-body     ← flex: 1; min-width: 0
+        │     ├── .list-item-label
+        │     ├── .list-item-sublabel
+        │     └── .list-item-detail
+        └── .list-item-trail    ← flex-shrink: 0
+              ├── .list-item-badge
+              └── .list-item-score
+  └── .list-item-actions        ← outside __inner; full-height action zone
+```
+
+Container: `.list-shelf` (bordered column, replaces `.dc-sim-shelf`)
+
+#### Locked Slot Typography
+
+**Rule**: modifier classes (`--compact`, `--ghost`, `--search`) and state classes (`--owned`, `--wish`) may **never** override `font-size`, `font-weight`, `color`, or `line-height` on a slot. State is communicated through `.list-item-badge` only.
+
+| Slot | Class | Font | Size | Weight | Color |
 |---|---|---|---|---|---|
-| Primary | `.list-item-name` | `--font-sans` | `--fs-body` (15px) | `--text-primary` | The item's main label — name, title |
-| Secondary | `.list-item-sub` | `--font-sans` | `--fs-meta` (13px) | `--text-secondary` | Brand, category, short descriptor |
-| Tertiary | `.list-item-meta` | `--font-sans` | `--fs-meta` (13px) | `--text-tertiary` | Count, role, supporting context |
+| Label | `.list-item-label` | `--font-sans` | `--fs-body` | 600 | `--text-primary` |
+| Sublabel | `.list-item-sublabel` | `--font-serif` | `--fs-caption` | 400 | `--text-secondary` |
+| Detail | `.list-item-detail` | `--font-serif` | `--fs-caption` | 400 | `--text-tertiary` |
+| Badge | `.list-item-badge` | `--font-sans` | `--fs-caption` | 600 | `--text-tertiary` |
+| Score | `.list-item-score` | `--font-sans` | `--fs-meta` | 700 | `--accent-primary` |
 
-**Wrapping rule:** nest these inside `.list-item-body` (which provides `flex: 1; min-width: 0` for text truncation). Never apply `font-size`, `color`, or `font-weight` directly to these classes — they inherit from the component definition.
+These values are immutable — no exceptions for any modifier or state class.
 
-**Display heading exception:** Detail panel headings (`.dc-name` at 32px Archivo Black, `.np-name` at 18px Archivo Black, `.cmp-frag-card-name` at 24px Archivo Black) are intentionally larger display headings — they do not need to use `.list-item-name`. These classes are appropriate because they are *not* name-in-a-list — they are section titles for a full-bleed detail view. The test: if the element is inside a scrolling list row or inside a card in a collection, use `.list-item-name`. If it's the main heading of a detail panel, it may use a display heading class.
+#### Separator rule
+
+Use thin-space + middot + thin-space for all dot-separated strings in slot text:
+```html
+<span class="list-item-sublabel">Le Labo&thinsp;&middot;&thinsp;Woody</span>
+```
+Never use a plain space around `·`.
+
+#### Variant guide
+
+| Variant | Class | Use case | Replaces |
+|---|---|---|---|
+| Default | `.list-item` | Catalog rows, detail rows | `.list-item` (base) |
+| Compact | `.list-item--compact` | Notes rows, quiz results, house rows | `.list-item--compact` (no DOM change) |
+| Ghost | `.list-item--ghost` | Suggestion cards, search-in-shelf | `.list-item--flat` + `.cmp-sug-card` |
+| Search | `.list-item--search` | Universal search modal rows | `.list-item--search` (no DOM change) |
+
+#### Display heading exception
+
+Detail panel headings (`.dc-name`, `.np-name`, `.cmp-frag-card-name`) are display-scale headings for full-bleed detail views — they are not list rows and do not use the slot contract. The test: **if it is inside a scrolling list or collection, use slots. If it is the main heading of a detail panel, use a display heading class.**
 
 ---
 
@@ -132,7 +186,7 @@ Run through this before every commit that touches UI:
 - [ ] **No magic numbers** — all spacing/sizing uses `--sp-*` or `--radius-*` tokens
 - [ ] **Parent-managed spacing** — Detail views and cards use `gap` instead of child `margin` for section spacing; use `gap: var(--sp-2xl)` between major sections
 - [ ] **Card taxonomy followed** — cards on `--bg-primary` use `--bg-secondary` + no border; cards on `--bg-secondary` use `--bg-primary` + `--border-standard`; interactive cards use `--border-subtle` + hover `--border-strong`
-- [ ] **List typography contract** — name/brand/desc text uses `.list-item-name` / `.list-item-sub` / `.list-item-meta`; no per-component text class equivalents
+- [ ] **List slot contract** — name/brand/desc text uses `.list-item-label` / `.list-item-sublabel` / `.list-item-detail`; no per-component text class equivalents; no modifier/state class overrides slot typography
 - [ ] **Touch targets ≥44px** — interactive elements have `min-height: var(--touch-target)`
 - [ ] **No inline style for typography/color** — JS template literals use class names, not style attributes for visual properties
 - [ ] **New components documented** — if you added a new CSS class, add it to the Component Inventory table above

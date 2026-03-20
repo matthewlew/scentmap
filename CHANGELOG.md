@@ -1,3 +1,43 @@
+## 2026-03-20 (31)
+
+### Added
+- **Brand Detail — Best Matches for Your Collection (P2 Feature):** Top 3 fragrances from a brand ranked by `scoreSimilarity()` against user's owned collection, shown in house detail sheet as "Similar From This House" section. Computes average similarity score across all owned fragrances, sorts descending (with alphabetic tie-break), displays top 3 with score percentages. Uses `.list-item--compact` + `.list-shelf` components. Only renders when user owns ≥1 fragrance; hidden otherwise. Placed between "Known For" carousel and full fragrance list for discovery→action closure. No new CSS components or tokens added — pure reuse of existing design system.
+
+## 2026-03-20 (30)
+
+### Added
+- **`--sp-2xs: 6px` spacing token:** Added half-step between `--sp-xs` (4px) and `--sp-sm` (8px) in design-system.css. Formalizes the icon-text inline gap used by chips and family pill buttons — 4px is too tight for icon+label pairs, 8px too loose.
+- **Spacing Audit section in playground.html:** Documents token frequency (sm=122×, xs=109×, md=92×... down to micro=1×), Gestalt proximity role of each spacing step, and a full changelog of hardcoded values replaced with tokens.
+
+### Changed
+- **Eliminated 17 hardcoded spacing values across CSS:** Replaced all `gap: 2px` (8 instances across `.tabs`, `.s-syms`, sidebar filter lists, mobile filter bars, `.catalog-sidebar`) with `var(--sp-micro)`. Replaced `gap: 6px` in `.chip` and `.fam-pill` with `var(--sp-2xs)`. Replaced `gap: 4px` in `.pyramid-visual` with `var(--sp-xs)`. Replaced `padding: 2px …` in `.dc-sim-state`, `.dc-badge`, `.picker-order-badge`, `.family-card-note-pill` with `var(--sp-micro) …`. Replaced mobile nav button inline `gap:2px;padding:8px 2px 6px` with tokenized equivalents. Normalized `.nav-search-bar-kbd` padding to `1px var(--sp-xs)` and radius to `var(--radius-small)`.
+- **Documented intentional optical values:** `padding: 3px` on `.tabs` pill inset and `padding: 3px 0 3px var(--sp-sm)` on `.sec-label` now carry inline comments explaining the optical alignment purpose.
+
+## 2026-03-20 (29)
+
+### Added
+- **Carousel keyboard navigation (P1 Feature B):** Brand Discovery carousel now supports roving tabindex arrow-key navigation (WAI-ARIA carousel pattern). First card is tabbable; ArrowRight/ArrowLeft move focus between cards with `scrollIntoView`. `initCarouselKeyNav()` wired after carousel is populated in `renderBrandDiscovery()`. Carousel element gets `role="list"` + `aria-label="Brand Discovery"`; each card changes from `role="button"` to `role="listitem"`. Keyboard-only, JS-only — no new CSS or components.
+
+### Fixed
+- **Note layer badge size:** `.note-layer-hint` font size bumped from hardcoded `9px` to `var(--fs-label)` (12px) with `padding: 0 var(--sp-xs)`. Fixes WCAG AA minimum for Miguel (essential tremor/low vision) persona.
+- **Gap CTA screen reader announcement:** After Wardrobe Gap CTA fires (`buildCatalog()`), `#cat-live` is immediately overridden with a gap-specific message (`Now showing All fragrances — results for <families>`), replacing the generic count that `buildCatalog()` sets. Fixes silent context switch for Nadia (keyboard-first) persona.
+
+## 2026-03-20 (26)
+
+### Added
+- **Plain-language metric labels (P1 Feature A):** Added behavioral description lines below the Sillage and Structure score bars in fragrance detail panels. Added `SWD[]` and `LWD[]` arrays (11 entries each) mapping score values to lived-experience descriptions (e.g. "Confident presence — fills a small room" for sillage 7-8, "Balanced journey — distinct opening, heart, and dry down" for structure 5-6). Description text rendered using existing `.list-item-meta` class (`--fs-meta`, `--text-tertiary`). No new components or tokens added.
+
+## 2026-03-20 (25)
+
+### Fixed
+- **`global-undo-toast` aria-live registration:** Pre-rendered the undo toast element in `app/index.html` (with `role="status"` and `aria-live="polite"`) so screen readers register the region before any content is injected into it. Removed the dynamic creation code from `showUndoToast()` in `app.js`.
+- **Quick peek dialog semantics:** Added `role="dialog"`, `aria-modal="true"`, and `aria-label` to the quick-peek overlay element. Overlay now saves/restores focus and traps Escape to close (consistent with all other modal dialogs in the app).
+- **Raw `rgba()` in quick-peek chip:** Replaced inline `rgba(255,255,255,.3)` with a `.chip-dot` CSS class that uses the `--on-dark-subtle` design token.
+
+### Changed
+- **Drag state CSS classes:** Compare card drag-over feedback now uses `.cmp-frag-card--drop-over` (CSS outline using `--accent-primary` token) instead of an inline `style.boxShadow`. Catalog list items being dragged now use `.list-item.dragging` CSS class (opacity 0.45) instead of no visual state.
+- **Quick peek "Add to compare" action:** When a compare slot is available, quick peek (long-press on mobile) now shows an "Add to compare" button alongside "Full details", providing a keyboard/long-press path into compare without requiring drag.
+
 ## 2026-03-20 (24)
 
 ### Changed
