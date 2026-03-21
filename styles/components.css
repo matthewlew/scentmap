@@ -202,7 +202,7 @@
   padding: 0 var(--sp-md);
   height: 24px;
   white-space: nowrap;
-  color: #fff;
+  color: var(--on-dark-text);
   border: 1px solid transparent;
 }
 
@@ -638,7 +638,7 @@
   font-size: var(--fs-body);
   color: var(--text-secondary);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--link-underline-offset);
   text-decoration-color: var(--g300);
 }
 
@@ -859,7 +859,7 @@
   cursor: pointer;
   text-align: left;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--link-underline-offset);
   text-decoration-color: var(--g300);
   transition: text-decoration-color var(--dur-fast) var(--ease-spring);
 }
@@ -1737,7 +1737,7 @@ mark.note-match {
   cursor: pointer;
   text-align: left;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--link-underline-offset);
   text-decoration-color: var(--g300);
   transition: text-decoration-color var(--dur-fast) var(--ease-spring);
   min-height: var(--touch-target);
@@ -1848,7 +1848,7 @@ mark.note-match {
 /* ── Score cards ── */
 
 .cmp-pair-card {
-  border: 1.5px solid var(--border-standard);
+  border: var(--border-width-heavy) solid var(--border-standard);
   border-radius: var(--radius-xl);
   background: var(--bg-primary);
   padding: var(--sp-lg);
@@ -1900,7 +1900,7 @@ mark.note-match {
   flex: 1;
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-subtle);
+  border: var(--border-width-heavy) solid var(--border-subtle);
   background: var(--bg-secondary);
   text-align: left;
   cursor: pointer;
@@ -1953,7 +1953,7 @@ mark.note-match {
   width: 8px;
   height: 8px;
   border-radius: var(--radius-circle);
-  border: 1.5px solid var(--bg-primary);
+  border: var(--border-width-heavy) solid var(--bg-primary);
   transition: left var(--dur-xslow) var(--ease-spring);
 }
 
@@ -2110,7 +2110,7 @@ mark.note-match {
 
 /* .cmp-grid-layer-lbl → migrated to .sec-label (keeps layout-specific centering) */
 .cmp-grid-layer-lbl {
-  margin-bottom: 2px;
+  margin-bottom: var(--sp-micro);
   width: 100%;
   text-align: center;
 }
@@ -2133,7 +2133,7 @@ button.cmp-note-pill {
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-spring);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--link-underline-offset);
   text-decoration-color: var(--g300);
 }
 
@@ -2339,7 +2339,7 @@ button.cmp-note-pill:hover {
 .cmp-edu-card {
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-standard);
+  border: var(--border-width-heavy) solid var(--border-standard);
   background: var(--bg-primary);
   display: flex;
   flex-direction: column;
@@ -2354,7 +2354,7 @@ button.cmp-note-pill:hover {
 .cmp-edu-quad {
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-standard);
+  border: var(--border-width-heavy) solid var(--border-standard);
   background: var(--bg-primary);
   display: flex;
   flex-direction: column;
@@ -2426,7 +2426,7 @@ button.cmp-note-pill:hover {
 .cmp-edu-suggestion-label {
   font-size: var(--fs-meta);
   color: var(--text-tertiary);
-  margin-bottom: 2px;
+  margin-bottom: var(--sp-micro);
 }
 
 .cmp-edu-suggestion-name {
@@ -3217,7 +3217,7 @@ button.cmp-note-pill:hover {
 .dc-brand-btn:hover {
   color: var(--text-primary);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--link-underline-offset);
 }
 
 .dc-eyebrow {
@@ -3227,7 +3227,7 @@ button.cmp-note-pill:hover {
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin-bottom: 4px;
+  margin-bottom: var(--sp-xs);
 }
 
 .dc-sim-brand-btn {
@@ -3243,7 +3243,7 @@ button.cmp-note-pill:hover {
 .dc-sim-brand-btn:hover {
   color: var(--text-primary);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--link-underline-offset);
 }
 
 .cmp-brand-btn {
@@ -3255,7 +3255,7 @@ button.cmp-note-pill:hover {
   display: block; /* Ensure it behaves like a block element, taking full width if necessary */
   width: 100%;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--link-underline-offset);
   text-decoration-color: var(--g300);
 }
 
@@ -3453,196 +3453,6 @@ button.cmp-note-pill:hover {
   font-size: var(--fs-body);
   font-weight: 700;
   text-align: center;
-}
-
-.auth-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 400;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--sp-lg);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--dur-standard) var(--ease-spring);
-}
-.auth-modal.open {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.auth-modal-scrim {
-  position: absolute;
-  inset: 0;
-  background: var(--scrim-dark);
-}
-
-.auth-modal-wrap {
-  position: relative;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
-  width: 100%;
-  max-width: 400px;
-  transform: scale(0.95);
-  transition: transform var(--dur-standard) var(--ease-spring);
-}
-.auth-modal.open .auth-modal-wrap {
-  transform: scale(1);
-}
-
-.auth-modal-close {
-  position: absolute;
-  top: var(--sp-md);
-  right: var(--sp-md);
-  background: none;
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius);
-  padding: var(--sp-xs) var(--sp-sm);
-  font-size: var(--fs-body);
-  color: var(--text-secondary);
-  cursor: pointer;
-  min-height: var(--touch-target);
-  min-width: var(--touch-target);
-  transition: background var(--dur-fast) var(--ease-spring),
-              border-color var(--dur-fast) var(--ease-spring);
-}
-.auth-modal-close:hover {
-  background: var(--bg-secondary);
-  border-color: var(--border-strong);
-}
-
-.auth-modal-body {
-  padding: var(--sp-3xl) var(--sp-2xl) var(--sp-2xl);
-}
-
-.auth-modal-eyebrow {
-  font-family: var(--font-sans);
-  font-size: var(--fs-label);
-  font-weight: 700;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  margin: 0 0 var(--sp-xs);
-}
-
-.auth-modal-title {
-  font-family: var(--font-display);
-  font-size: var(--fs-title);
-  line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
-  color: var(--text-primary);
-  margin: 0 0 var(--sp-md);
-}
-
-.auth-modal-desc {
-  font-family: var(--font-serif);
-  font-size: var(--fs-body);
-  color: var(--text-secondary);
-  line-height: var(--lh-normal);
-  margin: 0 0 var(--sp-xl);
-}
-
-/* Email magic-link form */
-.auth-email-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-sm);
-  margin-bottom: var(--sp-md);
-}
-
-.auth-email-label {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  font-weight: 600;
-  color: var(--text-secondary);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.auth-email-input {
-  width: 100%;
-  min-height: var(--touch-target);
-  padding: 0 var(--sp-md);
-  font-family: var(--font-sans);
-  font-size: var(--fs-body);
-  color: var(--text-primary);
-  background: var(--bg-primary);
-  border: 1.5px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  box-sizing: border-box;
-  transition: border-color var(--dur-fast) var(--ease-spring);
-}
-.auth-email-input:focus-visible {
-  outline: none;
-  box-shadow: none;
-  border-color: var(--accent-primary);
-}
-.auth-email-input:disabled {
-  opacity: 0.5;
-}
-
-.auth-email-error {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  color: #c0392b;
-  margin: 0;
-}
-
-.auth-btn-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: var(--touch-target);
-  font-family: var(--font-sans);
-  font-size: var(--fs-body);
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  border: none;
-  border-radius: var(--radius-lg);
-  background: var(--ink);
-  color: var(--paper);
-  cursor: pointer;
-  transition: opacity var(--dur-fast) var(--ease-spring),
-              box-shadow var(--dur-fast) var(--ease-spring);
-}
-.auth-btn-primary:hover {
-  opacity: 0.88;
-  box-shadow: var(--shadow-sm);
-}
-.auth-btn-primary:disabled {
-  opacity: 0.45;
-  cursor: default;
-  pointer-events: none;
-}
-
-/* Sent confirmation state */
-.auth-sent-icon {
-  font-size: 2.5rem;
-  margin-bottom: var(--sp-sm);
-  display: block;
-}
-
-.auth-guest-link {
-  display: block;
-  width: 100%;
-  background: none;
-  border: none;
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  color: var(--text-tertiary);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-  padding: var(--sp-sm) 0;
-  text-align: center;
-  transition: color var(--dur-fast) var(--ease-spring);
-}
-.auth-guest-link:hover {
-  color: var(--text-secondary);
 }
 
 /* ══ OLFACTIVE DNA CARD ════════════════════════════════════════════ */
@@ -4014,7 +3824,7 @@ button.cmp-note-pill:hover {
 .pyramid-tier.mid { background: var(--g100); border: 1px solid var(--g300); max-width: 80%; }
 .pyramid-tier.base { background: var(--g200); border: 1px solid var(--g400); max-width: 100%; }
 
-.pyramid-label { font-weight: 700; font-size: var(--fs-body-sm); text-transform: uppercase; letter-spacing: var(--ls-wide); display: block; margin-bottom: 2px; }
+.pyramid-label { font-weight: 700; font-size: var(--fs-body-sm); text-transform: uppercase; letter-spacing: var(--ls-wide); display: block; margin-bottom: var(--sp-micro); }
 .pyramid-dur { font-size: var(--fs-caption); color: var(--text-secondary); }
 
 /* Family Cards */

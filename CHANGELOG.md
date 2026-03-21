@@ -1,3 +1,16 @@
+## 2026-03-21 (Design System Audit — Phases 5–7)
+
+### Removed
+- **Auth modal dead code:** Deleted ~190-line `.auth-modal` / `.auth-*` CSS block from `components.css` and 5 auth functions from `app.js` (`openAuthModal`, `closeAuthModal`, `sendMagicLink`, `_showMagicLinkSent`, `_authTrapFocus`). Feature was never shipped. Sign-out button repurposed with `.dc-collect-btn` styling.
+
+### Changed
+- **Spacing violations fixed:** Replaced `margin-bottom: 2px` with `var(--sp-micro)` (4 sites) and `margin-bottom: 4px` with `var(--sp-xs)` (1 site) in `components.css`. All vertical spacing now uses the token grid.
+- **Token sweep — underline offset:** 7 instances of `text-underline-offset: 3px` replaced with `var(--link-underline-offset)` in `components.css`.
+- **Token sweep — border widths:** 6 instances of `border: 1.5px solid` replaced with `border: var(--border-width-heavy) solid` (`components.css` × 5, `responsive.css` × 1). Bumped from 1.5px to 3px for visual intentionality.
+- **Token sweep — chip text color:** `.chip { color: #fff }` replaced with `var(--on-dark-text)`. No raw color values remain in `components.css`.
+
+---
+
 ## 2026-03-21 (Design System Audit — Phases 2–3)
 
 ### Changed

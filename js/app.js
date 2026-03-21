@@ -197,45 +197,6 @@ function _applyUser(user) {
   updateNavForUser();
 }
 
-function _authTrapFocus(modal) {
-  const focusable = Array.from(modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(el => !el.disabled);
-  const first = focusable[0], last = focusable[focusable.length - 1];
-  function handler(e) {
-    if (e.key === 'Escape') { closeAuthModal(); return; }
-    if (e.key !== 'Tab') return;
-    if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
-    else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
-  }
-  modal._trapHandler = handler;
-  modal.addEventListener('keydown', handler);
-}
-
-function openAuthModal() {
-  const modal = document.getElementById('auth-modal');
-  if (!modal) return;
-  // Reset to entry state
-  document.getElementById('auth-modal-body-enter').hidden = false;
-  document.getElementById('auth-modal-body-sent').hidden  = true;
-  const inp = document.getElementById('auth-email-input');
-  const err = document.getElementById('auth-email-error');
-  const btn = document.getElementById('auth-btn-send');
-  if (inp) { inp.value = ''; inp.disabled = false; }
-  if (err) { err.hidden = true; err.textContent = ''; }
-  if (btn) { btn.disabled = false; btn.textContent = 'Send magic link'; }
-  modal.hidden = false;
-  requestAnimationFrame(() => modal.classList.add('open'));
-  setTimeout(() => { inp ? inp.focus() : document.getElementById('auth-modal-close')?.focus(); }, 50);
-  _authTrapFocus(modal);
-}
-
-function closeAuthModal() {
-  const modal = document.getElementById('auth-modal');
-  if (!modal) return;
-  modal.classList.remove('open');
-  if (modal._trapHandler) modal.removeEventListener('keydown', modal._trapHandler);
-  modal.addEventListener('transitionend', () => { modal.hidden = true; }, {once: true});
-  document.getElementById('nav-signin-btn')?.focus();
-}
 
 function updateNavForUser() {
   const btn = document.getElementById('nav-signin-btn');
@@ -251,7 +212,7 @@ function updateNavForUser() {
     btn.classList.remove('signed-in');
     btn.setAttribute('aria-label', 'Sign in to your account');
     btn.removeAttribute('title');
-    btn.onclick = openAuthModal;
+    btn.onclick = null;
   }
 }
 
@@ -289,7 +250,7 @@ function openProfilePanel() {
       <span id="profile-copy-toast" aria-live="polite" style="display:block;margin-top:var(--sp-xs);font-family:var(--font-sans);font-size:var(--fs-meta);color:var(--text-secondary);min-height:1.2em;"></span>
 
       <div style="margin-top:var(--sp-2xl);border-top:1px solid var(--border-standard);padding-top:var(--sp-xl);">
-        <button class="auth-guest-link" id="profile-signout-btn">Sign out</button>
+        <button class="dc-collect-btn" id="profile-signout-btn" style="width:100%;justify-content:center;">Sign out</button>
       </div>
     `;
 
@@ -312,50 +273,6 @@ function openProfilePanel() {
   }
 }
 
-async function sendMagicLink(email) {
-  const sendBtn = document.getElementById('auth-btn-send');
-  const errEl   = document.getElementById('auth-email-error');
-  const inp     = document.getElementById('auth-email-input');
-
-  // Basic validation
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    if (errEl) { errEl.textContent = 'Please enter a valid email address.'; errEl.hidden = false; }
-    inp?.focus();
-    return;
-  }
-  if (errEl) errEl.hidden = true;
-
-  if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = 'Sending…'; }
-  if (inp)     inp.disabled = true;
-
-  if (!_sb) {
-    // Supabase not configured — mock the sent state
-    setTimeout(() => _showMagicLinkSent(email), 800);
-    return;
-  }
-
-  const { error } = await _sb.auth.signInWithOtp({
-    email,
-    options: { emailRedirectTo: window.location.origin + window.location.pathname }
-  });
-
-  if (error) {
-    if (errEl) { errEl.textContent = error.message; errEl.hidden = false; }
-    if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send magic link'; }
-    if (inp)     inp.disabled = false;
-    inp?.focus();
-  } else {
-    _showMagicLinkSent(email);
-  }
-}
-
-function _showMagicLinkSent(email) {
-  document.getElementById('auth-modal-body-enter').hidden = true;
-  document.getElementById('auth-modal-body-sent').hidden  = false;
-  const sentEmail = document.getElementById('auth-sent-email');
-  if (sentEmail) sentEmail.textContent = email;
-  document.getElementById('auth-btn-back')?.focus();
-}
 
 function copyCollectionToClipboard(toastEl) {
   const owned  = CAT.filter(f => isOwned(f.id));
@@ -3802,16 +3719,7 @@ document.addEventListener('DOMContentLoaded',function(){
     settingsMenu.addEventListener('click',function(e){e.stopPropagation();});
   }
 
-  // Auth modal wiring
-  document.getElementById('auth-modal-scrim')?.addEventListener('click', closeAuthModal);
-  document.getElementById('auth-modal-close')?.addEventListener('click', closeAuthModal);
-  document.getElementById('auth-btn-guest')?.addEventListener('click', closeAuthModal);
-  document.getElementById('auth-email-form')?.addEventListener('submit', e => {
-    e.preventDefault();
-    sendMagicLink(document.getElementById('auth-email-input')?.value.trim());
-  });
-  document.getElementById('auth-btn-back')?.addEventListener('click', openAuthModal);
-  // nav-signin-btn click is managed by updateNavForUser() (toggles between openAuthModal / signOut)
+  // nav-signin-btn click is managed by updateNavForUser()
   updateNavForUser();
   initSupabaseAuth();
 });
