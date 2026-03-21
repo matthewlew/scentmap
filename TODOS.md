@@ -106,9 +106,83 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 ---
 
 ### TODO: Sillage & Layering Data Quality Audit
-**What:** Verify sillage (0–10) and layering (0–10) scores across the 183-frag dataset. Scores are LLM-generated and may be miscalibrated or clustered in a narrow range (e.g. 3–9). Audit: (1) plot score distributions; (2) compare against known references (Santal 33 ≈ high sillage; a skin scent ≈ low). (3) Based on distribution, decide whether to keep the 0–10 display scale, collapse to 3-level (Low/Medium/High), or 5-level (Very Low→Very High). Update score rendering in detail panel and compare metric bars accordingly.
+**What:** Verify sillage (0–10) and layering (0–10) scores across the 213-frag dataset. Scores are LLM-generated and may be miscalibrated or clustered in a narrow range (e.g. 3–9). Audit: (1) plot score distributions; (2) compare against known references (Santal 33 ≈ high sillage; a skin scent ≈ low). (3) Based on distribution, decide whether to keep the 0–10 display scale, collapse to 3-level (Low/Medium/High), or 5-level (Very Low→Very High). Update score rendering in detail panel and compare metric bars accordingly.
 **Why:** If the scale is unreliable, showing numeric bars misleads users. Display granularity should match data reliability.
 **Effort:** M (data + UI) · **Blocks:** Any future score-based filtering or sorting.
+
+---
+
+## Strategic Roadmap (CEO Review 2026-03-21)
+
+**Mode:** SCOPE EXPANSION · **Full vision doc:** `~/.gstack/projects/matthewlew-scentmap/ceo-plans/2026-03-21-product-positioning-trust.md`
+
+**Positioning:** "Your fragrance wardrobe, mapped." Not reviews, not encyclopedia, not marketplace. Wardrobe intelligence with transparent math.
+
+**Scope rule:** P2 ships first. These items layer on top, sequenced by phase.
+
+---
+
+### Phase 1 — Foundation (do first)
+
+#### TODO: Brand Positioning & Manifesto
+**What:** Produce `BRAND.md` — positioning statement, beliefs, refusals, voice guidelines. Update `<meta description>` across all HTML entry points (index.html, app.html, quiz/*/index.html, compare/*/index.html).
+**Why:** Zero articulated positioning. Everything else builds on this — trust, content, monetization all need a brand filter.
+**Effort:** S (~20 min)
+
+---
+
+#### TODO: Custom Supabase Event Analytics
+**What:** Wire existing `trackEvent()` stubs in `js/app.js:14` to Supabase inserts. Table: `events(event_name TEXT, properties JSONB, created_at TIMESTAMPTZ)`. Events: `quiz_complete`, `compare_search`, `frag_owned`, `frag_wished`, `frag_detail_open`, `share_click`, `page_view`. Supabase anon-key already in client code.
+**Why:** Zero analytics. Can't measure engagement, quiz conversion, or feature usage. No PII, no cookies.
+**Effort:** S (~15 min) · **Depends on:** Supabase project table creation.
+
+---
+
+### Phase 2 — Trust + Product
+
+#### TODO: Trust Architecture — "Show Your Math"
+**What:** (1) "How It Works" page explaining scoring in plain English. (2) Expandable "Why this score?" on compare results — show shared notes count, family compatibility, sillage proximity. (3) Data provenance statement. (4) "No Affiliate Bias" pledge.
+**Why:** The anti-AI-slop play. Every score should be auditable. Moat against generated listicle sites.
+**Effort:** M (~45 min) · **Prereq:** Audit `scoreSimilarity()` in `js/engine.js:170` and `computeProfile()` in `js/engine.js:130` for explainability.
+
+---
+
+#### TODO: Compare Stories — "Why This, Not That"
+**What:** New `getCompareNarrative(a, b)` in `js/engine.js`, extending `getSwapReason()` pattern (line 207). Template-based (NOT LLM-generated): profile delta variables drive sentence selection. 2-3 sentences displayed above Venn diagram.
+**Why:** Turns compare from a dashboard into a conversation. People decide between fragrances based on stories, not scores.
+**Effort:** S (~30 min)
+
+---
+
+#### TODO: Zero-State First Visit Experience
+**What:** Expand existing Zero-Owned TODO: (1) You tab: "Start with something you know" + 5 landmark frags (Santal 33, Bleu de Chanel, Acqua di Gio, Black Opium, Chanel No. 5). (2) Brand Discovery: CTA replacing empty carousel. (3) After first mark: immediate wardrobe intelligence. The emotional moment: the first time the app tells you something about yourself.
+**Why:** First 60 seconds determine bounce vs. user. Zero-owned users see empty personalization.
+**Effort:** S (~25 min) · **Note:** Supersedes P2 "Zero-Owned State" TODO — this is the expanded version.
+
+---
+
+### Phase 3 — SEO Content
+
+#### TODO: Individual Fragrance Pages
+**What:** Vercel serverless route `/api/fragrance` following existing `/api/compare` pattern. Rewrite in `vercel.json`: `/fragrance/:id -> /api/fragrance`. Content: notes by tier, sensory profile (from `computeProfile()`), top 5 similar (from `scoreSimilarity()`), role badges. JSON-LD Product schema. Noscript fallback. Generate `sitemap.xml` covering all 213 URLs.
+**Why:** Highest-ROI SEO move. Every fragrance becomes an indexable URL. "[fragrance name] notes" and "[fragrance name] similar" are real search queries.
+**Effort:** M (~1 hr) · **Depends on:** `vercel.json` rewrite, existing `/api/compare` pattern.
+
+---
+
+#### TODO: Family & Brand Landing Pages
+**What:** `/api/family` and `/api/brand` serverless routes. 9 family pages + 12 brand pages = 21 URLs. Content: description, fragrance count, top picks, links to individual fragrance pages. Same Vercel pattern.
+**Why:** "Best woody fragrances" and "Byredo best sellers" are high-intent search queries.
+**Effort:** S (~30 min) · **Depends on:** Fragrance pages template (shared pattern).
+
+---
+
+### Phase 4 — Monetization (after trust layer ships)
+
+#### TODO: Sampling Partnership Infrastructure
+**What:** Add `sampleUrl` field to fragrance JSON (manual curation). "Try a sample" link on detail pages — clearly labeled external. Candidate services: MicroPerfumes, DecantX, Luckyscent.
+**Why:** Aligned incentives: $4 samples, not $300 bottles. No financial incentive to recommend one fragrance over another.
+**Effort:** S-M (~30 min code, ongoing curation) · **Activate when:** Supabase events show >500 monthly quiz/compare sessions.
 
 ---
 
@@ -131,10 +205,21 @@ Require designer specs and/or content deliverables before engineering.
 
 ---
 
+## Infrastructure
+
+### TODO: Scent Data Consolidation
+**What:** Replace 14 scent data files (`scents-flat.json`, `scents-index.json`, `data/scents/*.json`) with a single `data/scents.json` flat array. Reduces startup from 16 HTTP requests (waterfall) to 4 (parallel). Full plan: `data/MIGRATION-SCENTS.md`.
+**Why:** Two parallel schemas in sync, 12-file waterfall on every load, `quiz.js` working from a stale copy missing `url` and `story` fields.
+**Effort:** S (~30 min) · **Gate:** Can start any time, independent of P2.
+
+---
+
 ## Ideas Parking Lot
 
+- Shareable Fragrance Identity / Archetype Cards — collection-based archetype + OG share card (viral mechanic, needs audience first) *(CEO Review 2026-03-21)*
+- Description Rewrite — all 213 descriptions in distinctive Scentmap voice, not AI slop (do incrementally as fragrance pages launch) *(CEO Review 2026-03-21)*
 - Blind Buy Oracle (confidence score)
-- "Smells like..." evocative descriptions (needs copywriter for 183 frags)
+- "Smells like..." evocative descriptions (needs copywriter for 213 frags)
 - Shareable gap card
 - "Surprise Me" Random Compare
 - Collection milestones / gamification

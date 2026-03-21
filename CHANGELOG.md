@@ -1,3 +1,22 @@
+## 2026-03-21 (Project Hygiene)
+
+### Changed
+- **CHANGELOG.md simplified** — 1,189 lines → 108. Collapsed 40+ micro-commits into 6 dated summaries. Stripped token sweeps, class rename minutiae, and routing hotfix chains.
+- **TODOS.md simplified** — ~500 lines → ~170. Removed all shipped ~~TODO~~ entries, stripped verbose design specs from active items, flattened P2-A/B/C/D sub-structure, collapsed P3 into a table. Added Infrastructure section with scent data consolidation TODO.
+- **DESIGN.md fixes** — Removed `.list-item--compact` from deprecated list (conflicted with Variant guide). Added `.list-item-leading` wrapper to slot structure diagram.
+- **CLAUDE.md fixes** — Port corrected 3000 → 3001; `app.js` line count corrected ~5,100 → ~5,000.
+- **testing-personas.md** — Stripped stale Gemini CLI action flows; kept 3 persona profiles with "What breaks for X" framing.
+
+### Added
+- **`data/MIGRATION-SCENTS.md`** — Engineering plan for consolidating 14 scent data files into a single `scents.json`. Reduces startup from 16 HTTP requests (waterfall) to 4 parallel. Includes generation script, exact diffs for `store.js` + `quiz.js`, deployment order, and verification checklist.
+
+### Removed
+- **`GEMINI.md`** — Stale duplicate of `CLAUDE.md` for Gemini CLI. Wrong port, wrong frag count, references deleted architecture.
+- **`agents.md`** — Old UI Refactoring Agent prompt template. Work shipped in design system audit.
+- **`design-fixes.md`** — Self-marked deprecated since 2026-03-19. All 9 findings shipped.
+
+---
+
 ## v1.2.0 — Stable Release (2026-03-20)
 
 Wardrobe Gap suggestions, collection context in detail panels, and design system consolidation.
