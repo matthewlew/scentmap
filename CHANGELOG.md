@@ -1,8 +1,26 @@
+## 2026-03-21
+
+### Fixed
+- **notes-card-header overflow:** Added `min-width: 0` to `.notes-card-header > div` to allow the text wrapper to shrink properly within the flex container, preventing long descriptions from extending beyond card boundaries.
+
+---
+
 ## 2026-03-20 (QA)
 
 ### Fixed
 - **Golden pairs copy — "A undefined alternative":** `getSwapReason` in `engine.js` looked up `.label` on FAM_COMPAT entries (which are compatibility score objects, not label maps), always returning `undefined`. Fixed by using `anchor.family` / `candidate.family` directly as the label strings.
 - **Brand detail sheet empty:** `renderHouseDetail` referenced `ST` (the private `_ST` store variable, not exported). All brand detail sheets opened blank with a silent `ReferenceError`. Fixed by replacing `Object.keys(ST).filter(...)` with `CAT.filter(f => gst(f.id) === 'owned')`, consistent with how the rest of the codebase reads owned state.
+
+---
+
+## 2026-03-20 (38)
+
+### Added
+- **Saved Comparisons:** The Compare screen now remembers your last 5 compare sessions. After running any comparison, the pair is automatically stored in `localStorage` (`sm_compares`). A "Recent" section appears above the picker cards once 2+ valid pairs exist, showing each pair as a `.list-item--ghost` row with fragrance names, brands, and a remove (×) button. Tapping any row fills both picker slots and runs the comparison immediately. Pairs are deduplicated by sorted ID key so A vs B and B vs A count as one entry. Both IDs are validated against the catalog on load — stale entries are silently discarded.
+- **`.list-shelf` component:** Bordered column container (`1px solid var(--border-standard)`, `border-radius: var(--radius-lg)`, `overflow: hidden`) for holding list rows. Replaces ad-hoc shelf containers. Added to `components.css`.
+- **`.list-item--ghost` variant:** Ghost list row — no border, no background, padding and hover handled by `.list-item-inner` button child. Used for suggestion-style rows in shelves. Added to `components.css`.
+- **`.list-item-inner` slot:** Interactive inner wrapper for ghost rows. Button element: `padding: var(--sp-sm) var(--sp-md)`, `flex: 1`, hover background. Added to `components.css`.
+- **`.list-item-actions` slot:** Non-interactive action zone outside `.list-item-inner` for dismiss/remove buttons. `min-height: var(--touch-target)` on child buttons. Added to `components.css`.
 
 ---
 

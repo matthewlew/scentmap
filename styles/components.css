@@ -826,6 +826,80 @@
   box-shadow: none;
 }
 
+/* Ghost variant — suggestion cards, saved comparisons rows */
+/* When used as a modifier on .list-item, padding and cursor are handled by inner button */
+.list-item--ghost {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: default;
+  padding: 0;
+  width: 100%;
+  min-height: var(--touch-target);
+  overflow: visible;
+}
+.list-item--ghost:last-child { border-bottom: none; }
+.list-item--ghost:hover { background: none; }
+
+/* Inner wrapper — padding + hover-bg transition (interactive when button) */
+.list-item-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-md);
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  border-radius: var(--radius-sm);
+  transition: background var(--dur-fast) var(--ease-spring);
+  min-height: var(--touch-target);
+}
+.list-item-inner:hover { background: var(--bg-secondary); }
+.list-item-inner:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+/* Actions zone — outside inner, full-height, flex-shrink: 0 */
+.list-item-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-right: var(--sp-sm);
+}
+.list-item-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-body);
+  transition: color var(--dur-fast), background var(--dur-fast);
+}
+.list-item-actions button:hover { color: var(--text-primary); background: var(--bg-secondary); }
+
+/* List shelf — bordered column container for list rows */
+.list-shelf {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-primary);
+}
 
 /* Compact variant — note detail, house detail, quiz results */
 .list-item--compact {
@@ -956,6 +1030,10 @@
   margin-bottom: 0;
   padding-bottom: var(--sp-sm);
   border-bottom: 1px solid var(--border-subtle);
+}
+
+.notes-card-header > div {
+  min-width: 0;
 }
 
 .notes-card-body {
@@ -1588,6 +1666,9 @@ mark.note-match {
 }
 
 .cmp-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-lg);
   padding-bottom: var(--sp-lg);
 }
 
