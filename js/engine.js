@@ -214,8 +214,8 @@ export function getSwapReason(anchor, candidate, FAM) {
   const dFrs = pc.freshness - pa.freshness;
   const dWrm = pc.warmth - pa.warmth;
 
-  const famA = (FAM[anchor.family] || { label: anchor.family }).label;
-  const famC = (FAM[candidate.family] || { label: candidate.family }).label;
+  const famA = anchor.family;
+  const famC = candidate.family;
   const sameFam = anchor.family === candidate.family;
 
   const sharedNotes = anchor._nAll.filter(n => candidate._nAll.includes(n));

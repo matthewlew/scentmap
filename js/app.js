@@ -2018,8 +2018,7 @@ function renderHouseDetail(container,brand){
   const topFrags = frags.slice(0, topCount);
 
   // Compute best matches from owned fragrances
-  const ownedIds = Object.keys(ST).filter(id => gst(id) === 'owned');
-  const ownedFrags = ownedIds.map(id => CAT_MAP[id]).filter(f => f);
+  const ownedFrags = CAT.filter(f => gst(f.id) === 'owned');
   let bestMatches = [];
   if (ownedFrags.length > 0) {
     bestMatches = frags.map(frag => {

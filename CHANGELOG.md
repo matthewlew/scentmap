@@ -1,3 +1,11 @@
+## 2026-03-20 (QA)
+
+### Fixed
+- **Golden pairs copy — "A undefined alternative":** `getSwapReason` in `engine.js` looked up `.label` on FAM_COMPAT entries (which are compatibility score objects, not label maps), always returning `undefined`. Fixed by using `anchor.family` / `candidate.family` directly as the label strings.
+- **Brand detail sheet empty:** `renderHouseDetail` referenced `ST` (the private `_ST` store variable, not exported). All brand detail sheets opened blank with a silent `ReferenceError`. Fixed by replacing `Object.keys(ST).filter(...)` with `CAT.filter(f => gst(f.id) === 'owned')`, consistent with how the rest of the codebase reads owned state.
+
+---
+
 ## v1.2.0 — Stable Release (2026-03-20)
 
 **Wardrobe Gap suggestions, collection context, and list-item system consolidation.**
