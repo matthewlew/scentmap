@@ -2134,6 +2134,7 @@ mark.note-match {
   border: none;
   border-radius: var(--radius-sm);
   padding: var(--sp-micro) var(--sp-xs);
+  margin: var(--sp-micro);
   cursor: default;
   color: var(--text-primary);
 }
