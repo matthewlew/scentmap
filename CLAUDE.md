@@ -2,7 +2,7 @@
 
 This file describes the development workflow and conventions for the Scentmap project. **Follow these instructions on every session.**
 
-**Component inventory, token rules, and the pre-PR checklist are in [`DESIGN.md`](./DESIGN.md). Read it before modifying any UI.**
+**Component inventory, token rules, and the pre-PR checklist are in [`DESIGN.md`](./DESIGN.md). Read it before modifying any UI. Live component demos are in [`designsystem.html`](./designsystem.html).**
 
 ---
 
@@ -11,7 +11,7 @@ This file describes the development workflow and conventions for the Scentmap pr
 ```
 index.html          HTML structure only (~180 lines, no inline JS)
 js/
-  app.js            All application logic (~5,100 lines)
+  app.js            All application logic (~5,000 lines)
 styles/
   design-system.css Design tokens (colors, spacing, typography, breakpoints)
   components.css    Component styles
@@ -28,7 +28,7 @@ data/
 CHANGELOG.md        Feature log — updated on every commit
 CLAUDE.md           This file
 .claude/
-  launch.json       Dev server config (Ruby WEBrick on port 3000)
+  launch.json       Dev server config (Ruby WEBrick on port 3001)
 ```
 
 ---
@@ -87,7 +87,7 @@ Use `preview_eval` with `location.href = 'http://localhost:3001/?v=' + Date.now(
 
 ## CSS conventions
 
-Full token reference, component inventory, and pre-PR checklist are in **[`DESIGN.md`](./DESIGN.md)** — read it before modifying any UI.
+Full token reference, component inventory, and pre-PR checklist are in **[`DESIGN.md`](./DESIGN.md)** — read it before modifying any UI. Live demos: **[`designsystem.html`](./designsystem.html)**.
 
 **Hard rules (enforced on every change):**
 - Use CSS custom properties only — no hard-coded colors, sizes, or timing values

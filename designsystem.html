@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Scentmap Design System Playground</title>
+<title>Scentmap Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
@@ -55,81 +55,7 @@
   .pg-sheet-demo .sheet { position: absolute; max-width: none; z-index: 1; transform: translateY(30%); border: 1px solid var(--g300); }
   .pg-sheet-demo .sheet.visible { transform: translateY(0); }
 
-  /* Recommendation badge */
-  .pg-rec { display: inline-flex; align-items: center; gap: var(--sp-xs); font-family: var(--font-sans); font-size: var(--fs-caption); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fam-green); }
 
-  /* Completed migration badge */
-  .pg-done { display: inline-flex; align-items: center; gap: var(--sp-xs); font-family: var(--font-sans); font-size: var(--fs-caption); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fam-green); background: color-mix(in srgb, var(--fam-green) 10%, transparent); padding: 2px 8px; border-radius: var(--radius-small); }
-
-  /* ════════════════════════════════════════════════════════════════
-     LIST ITEM — Option B (selected) — playground-only CSS
-     None of these rules touch components.css.
-     Typography slots are LOCKED: modifier/state classes NEVER
-     override font-family, font-size, font-weight, or color on a slot.
-     ════════════════════════════════════════════════════════════════ */
-
-  /* Shared action button */
-  .b-action-btn {
-    font-family: var(--font-sans); font-size: var(--fs-caption); font-weight: 600;
-    color: var(--text-secondary); background: var(--bg-secondary);
-    border: 1px solid var(--border-standard); border-radius: var(--radius);
-    padding: var(--sp-xs) var(--sp-sm); cursor: pointer; white-space: nowrap; line-height: 1;
-    transition: background var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
-  }
-  .b-action-btn:hover {
-    background: var(--bg-primary); border-color: var(--border-strong);
-  }
-
-  /* ── Option B: Shell + Inner Wrapper ── */
-  .opt-b .b-item {
-    position: relative; display: flex; align-items: stretch;
-    background: var(--bg-primary); border: none; border-bottom: 1px solid var(--border-standard);
-    cursor: pointer; font-family: inherit; text-align: left; width: 100%; overflow: hidden;
-    transition: background var(--dur-fast) var(--ease-spring);
-  }
-  .opt-b .b-item:last-child { border-bottom: none; }
-  .opt-b .b-item:hover { background: var(--bg-secondary); }
-  .opt-b .b-item:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: -2px; }
-  .opt-b .b-inner {
-    display: flex; align-items: center; gap: var(--sp-sm);
-    padding: var(--sp-md) var(--sp-lg); min-height: var(--touch-target);
-    flex: 1; min-width: 0;
-  }
-  .opt-b .b-item--compact .b-inner { padding: var(--sp-sm) var(--sp-lg); min-height: unset; }
-  .opt-b .b-item--ghost { border-bottom: none; background: transparent; border-radius: var(--radius-lg); }
-  .opt-b .b-item--ghost .b-inner { padding: var(--sp-sm) var(--sp-md); min-height: unset; }
-  .opt-b .b-item--ghost:hover { background: var(--bg-secondary); }
-  .opt-b .b-item--search { border-bottom: none; background: none; }
-  .opt-b .b-item--search .b-inner { padding: 0 var(--sp-lg); }
-  .opt-b .b-item--search:hover,
-  .opt-b .b-item--search[aria-selected="true"] { background: var(--bg-secondary); }
-
-  .opt-b .b-leading { display: flex; align-items: center; flex-shrink: 0; }
-  .opt-b .b-dot { width: 8px; height: 8px; border-radius: var(--radius-circle); flex-shrink: 0; }
-  .opt-b .b-icon { width: 18px; text-align: center; font-size: var(--fs-body); color: var(--text-tertiary); }
-  .opt-b .b-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-
-  /* Locked typography — Option B */
-  .opt-b .b-label {
-    font-family: var(--font-sans); font-size: var(--fs-body); font-weight: 600;
-    color: var(--text-primary); line-height: var(--lh-tight);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .opt-b .b-sublabel {
-    font-family: var(--font-serif); font-size: var(--fs-meta); font-weight: 400;
-    color: var(--text-secondary); line-height: var(--lh-normal);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .opt-b .b-detail {
-    font-family: var(--font-serif); font-size: var(--fs-caption); font-weight: 400;
-    color: var(--text-tertiary); line-height: var(--lh-normal);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .opt-b .b-trail { display: flex; align-items: center; gap: var(--sp-xs); flex-shrink: 0; }
-  .opt-b .b-badge { font-family: var(--font-sans); font-size: var(--fs-caption); font-weight: 600; color: var(--text-tertiary); }
-  .opt-b .b-score { font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 700; color: var(--accent-primary); min-width: 36px; text-align: right; }
-  .opt-b .b-actions { display: flex; align-items: center; padding: 0 var(--sp-md) 0 0; gap: var(--sp-xs); flex-shrink: 0; }
-  .opt-b .b-shelf { display: flex; flex-direction: column; border: 1px solid var(--border-standard); border-radius: var(--radius-lg); overflow: hidden; }
 
 </style>
 </head>
@@ -137,21 +63,18 @@
   <div class="pg-container">
     <header class="pg-header">
       <h1 class="pg-title">Scentmap Design System</h1>
-      <p class="pg-desc">Post-consolidation component library. Showing canonical patterns only &mdash; all duplicates have been merged.</p>
+      <p class="pg-desc">Component library and token reference. Canonical patterns, usage rules, and live demos.</p>
     </header>
 
     <!-- TABLE OF CONTENTS -->
     <nav class="pg-toc">
-      <a href="#summary">Migration Summary</a>
-      <a href="#spacing-audit">Spacing Audit</a>
       <a href="#tokens">Tokens</a>
       <a href="#typography">Typography</a>
       <a href="#colors">Colors</a>
-      <a href="#list-row">List Row</a>
-      <a href="#list-item-proposals">List Item &mdash; Proposals</a>
+      <a href="#list-item">List Item</a>
       <a href="#cards">Cards</a>
       <a href="#chips">Chips</a>
-      <a href="#tabs">Tabs (Sliding Pill)</a>
+      <a href="#tabs">Tabs</a>
       <a href="#family-pills">Family Pills</a>
       <a href="#buttons">Buttons</a>
       <a href="#inputs">Inputs</a>
@@ -160,181 +83,6 @@
       <a href="#meters">Meters</a>
       <a href="#dots">Dots</a>
     </nav>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         MIGRATION SUMMARY
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="summary">
-      <h2 class="pg-section-title">Migration Summary</h2>
-      <div class="pg-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
-        <div class="pg-callout">
-          <div class="pg-callout-title"><span class="pg-done">Done</span> List Row</div>
-          <div class="pg-callout-body">Removed left-side <code>border-left</code> color indicator. Removed <code>.fam-dim</code> opacity state. All rows now use the flat default style.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title"><span class="pg-done">Done</span> Section Labels</div>
-          <div class="pg-callout-body">16 duplicate classes consolidated to one canonical <code>.sec-label</code>. ~96 lines of duplicate CSS removed. Components add only spacing overrides.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title"><span class="pg-done">Done</span> Tabs &rarr; Sliding Pill</div>
-          <div class="pg-callout-body"><code>.tabs</code>, <code>.cat-state-bar</code> converged to <code>.frag-picker-sort-bar</code> pattern. All use <code>.tab-pill</code> sliding indicator behind active tab.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title"><span class="pg-done">Done</span> Text Links</div>
-          <div class="pg-callout-body"><code>.cmp-card-detail-btn</code> converged to <code>.s-name-btn</code> style (underline, primary color, serif).</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title"><span class="pg-done">Done</span> Search Input</div>
-          <div class="pg-callout-body">Clear button restyled: small circular bg-tertiary pill instead of bare <code>&#10005;</code>. Blends with bg-secondary rest state.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title"><span class="pg-done">Done</span> Sheet Nav Title</div>
-          <div class="pg-callout-body"><code>.sheet-back</code> and <code>.sheet-close</code> given equal <code>width: 56px</code> so <code>.sheet-title</code> centers consistently regardless of content.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title"><span class="pg-done">Done</span> 1-Off Cleanup</div>
-          <div class="pg-callout-body">Deleted <code>.role-landing-card</code> (unused). <code>.cat-empty-clear</code> converged to <code>.dc-collect-btn</code>. <code>.cmp-edu-overlay</code> border aligned to sheet tokens.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title"><span class="pg-done">Done</span> Chips</div>
-          <div class="pg-callout-body">Solid style kept as canonical. <code>.chip--outline</code> retained for role assignment states.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title"><span class="pg-done">Done</span> Swipe Actions Removed</div>
-          <div class="pg-callout-body">Swipe-to-reveal Compare/Wish tray removed from <code>.list-item</code>. Alternatives: double-tap to wish, drag to compare (desktop), detail panel CTAs. ~107 lines of swipe CSS removed.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         SPACING AUDIT
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="spacing-audit">
-      <h2 class="pg-section-title">Spacing Audit <span class="pg-done" style="vertical-align: middle; margin-left: var(--sp-sm);">2026-03-20</span></h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-xl);">Full audit of margin/padding/gap usage across all CSS files. Goal: eliminate 1-off pixel values so all spacing reads as a unified system (Gestalt proximity).</p>
-
-      <h3 class="pg-subsection-title">Token Frequency — Most to Least Used</h3>
-      <div style="display: flex; flex-direction: column; gap: var(--sp-xs); margin-bottom: var(--sp-2xl); max-width: 520px;">
-        <div style="display: flex; align-items: center; gap: var(--sp-md);">
-          <span class="pg-label" style="width: 72px; text-align: right;">--sp-sm</span>
-          <div style="flex: 1; background: var(--bg-secondary); border-radius: var(--radius-sm); height: 18px; position: relative;">
-            <div style="width: 100%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-sm); opacity: 0.85;"></div>
-          </div>
-          <span class="pg-label" style="width: 32px;">122×</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: var(--sp-md);">
-          <span class="pg-label" style="width: 72px; text-align: right;">--sp-xs</span>
-          <div style="flex: 1; background: var(--bg-secondary); border-radius: var(--radius-sm); height: 18px; position: relative;">
-            <div style="width: 89%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-sm); opacity: 0.85;"></div>
-          </div>
-          <span class="pg-label" style="width: 32px;">109×</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: var(--sp-md);">
-          <span class="pg-label" style="width: 72px; text-align: right;">--sp-md</span>
-          <div style="flex: 1; background: var(--bg-secondary); border-radius: var(--radius-sm); height: 18px; position: relative;">
-            <div style="width: 75%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-sm); opacity: 0.85;"></div>
-          </div>
-          <span class="pg-label" style="width: 32px;">92×</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: var(--sp-md);">
-          <span class="pg-label" style="width: 72px; text-align: right;">--sp-lg</span>
-          <div style="flex: 1; background: var(--bg-secondary); border-radius: var(--radius-sm); height: 18px; position: relative;">
-            <div style="width: 61%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-sm); opacity: 0.7;"></div>
-          </div>
-          <span class="pg-label" style="width: 32px;">75×</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: var(--sp-md);">
-          <span class="pg-label" style="width: 72px; text-align: right;">--sp-xl</span>
-          <div style="flex: 1; background: var(--bg-secondary); border-radius: var(--radius-sm); height: 18px; position: relative;">
-            <div style="width: 35%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-sm); opacity: 0.5;"></div>
-          </div>
-          <span class="pg-label" style="width: 32px;">43×</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: var(--sp-md);">
-          <span class="pg-label" style="width: 72px; text-align: right;">--sp-2xl</span>
-          <div style="flex: 1; background: var(--bg-secondary); border-radius: var(--radius-sm); height: 18px; position: relative;">
-            <div style="width: 13%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-sm); opacity: 0.45;"></div>
-          </div>
-          <span class="pg-label" style="width: 32px;">16×</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: var(--sp-md);">
-          <span class="pg-label" style="width: 72px; text-align: right;">--sp-3xl</span>
-          <div style="flex: 1; background: var(--bg-secondary); border-radius: var(--radius-sm); height: 18px; position: relative;">
-            <div style="width: 11%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-sm); opacity: 0.4;"></div>
-          </div>
-          <span class="pg-label" style="width: 32px;">13×</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: var(--sp-md);">
-          <span class="pg-label" style="width: 72px; text-align: right;">--sp-4xl</span>
-          <div style="flex: 1; background: var(--bg-secondary); border-radius: var(--radius-sm); height: 18px; position: relative;">
-            <div style="width: 2.5%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-sm); opacity: 0.35;"></div>
-          </div>
-          <span class="pg-label" style="width: 32px;">3×</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: var(--sp-md);">
-          <span class="pg-label" style="width: 72px; text-align: right; color: var(--text-tertiary);">--sp-micro</span>
-          <div style="flex: 1; background: var(--bg-secondary); border-radius: var(--radius-sm); height: 18px; position: relative;">
-            <div style="width: 1%; height: 100%; background: var(--text-tertiary); border-radius: var(--radius-sm); opacity: 0.4;"></div>
-          </div>
-          <span class="pg-label" style="width: 32px; color: var(--text-tertiary);">1×</span>
-        </div>
-      </div>
-      <p class="pg-label" style="color: var(--text-tertiary); margin-bottom: var(--sp-2xl);">Counts are tokenized uses only (var(--sp-*)). The micro token was practically unused despite many 2px spacings existing — fixed in this audit.</p>
-
-      <h3 class="pg-subsection-title">Gestalt Proximity — Role of Each Step</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-lg); margin-bottom: var(--sp-2xl);">
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">micro 2px &amp; xs 4px — Intra-element</div>
-          <div class="pg-callout-body">Dots, icon stacks, badge icon-text. Signals "these are one unit." Used within a single atomic component (e.g. icon + symbol in <code>.s-syms</code>, tab container rows).</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">2xs 6px — Icon-text inline (new)</div>
-          <div class="pg-callout-body">Gap between an icon/dot and its label inside pill buttons and chips. 4px is too tight (letters collide with icon visually), 8px is too loose. 6px fills the half-step.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">sm 8px &amp; md 12px — Within-component</div>
-          <div class="pg-callout-body">Related items inside a card or row (icon to text, label to value). Most common range — these tokens handle ~214 uses combined. Everything that "belongs together but is still two things."</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">lg 16px &amp; xl 20px — Section breathing room</div>
-          <div class="pg-callout-body">Padding inside panels, gaps between rows in a list, space around section headers. Creates the margin of safety between groups so the eye can parse them as separate.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">2xl 24px &amp; 3xl 32px — Between sections</div>
-          <div class="pg-callout-body">Separates distinct content blocks (e.g. detail panel sections, compare score vs notes grid). Used sparingly — only 29 combined uses across all CSS.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">4xl 48px — Page-level framing</div>
-          <div class="pg-callout-body">Top/bottom page padding, major section breaks. Only 3 uses. Should stay rare — overuse collapses the distinction between section-level and page-level space.</div>
-        </div>
-      </div>
-
-      <h3 class="pg-subsection-title">What Was Fixed</h3>
-      <div class="pg-callout" style="margin-bottom: var(--sp-lg);">
-        <div class="pg-callout-title"><span class="pg-done">Fixed</span> 8 &times; <code>gap: 2px</code> → <code>var(--sp-micro)</code></div>
-        <div class="pg-callout-body">Tabs gap, sidebar filter lists, <code>.s-syms</code> icon row, mobile quick-filter bars. All now use the existing micro token instead of hardcoded px.</div>
-      </div>
-      <div class="pg-callout" style="margin-bottom: var(--sp-lg);">
-        <div class="pg-callout-title"><span class="pg-done">Fixed</span> 2 &times; <code>gap: 6px</code> → <code>var(--sp-2xs)</code> (new token)</div>
-        <div class="pg-callout-body"><code>.chip</code> and <code>.fam-pill</code> icon-text gaps. Added <code>--sp-2xs: 6px</code> to design-system.css to formalize this half-step. Used when 4px is too tight and 8px too loose for icon+label inline pairs.</div>
-      </div>
-      <div class="pg-callout" style="margin-bottom: var(--sp-lg);">
-        <div class="pg-callout-title"><span class="pg-done">Fixed</span> 3 &times; <code>padding: 2px …</code> → <code>var(--sp-micro) …</code></div>
-        <div class="pg-callout-body"><code>.dc-sim-state</code>, <code>.dc-badge</code>, <code>.picker-order-badge</code>. These are tight inline badges where vertical padding is intentionally slim — now uses the token.</div>
-      </div>
-      <div class="pg-callout" style="margin-bottom: var(--sp-lg);">
-        <div class="pg-callout-title"><span class="pg-done">Fixed</span> <code>gap: 4px</code> → <code>var(--sp-xs)</code>, <code>padding: 2px 8px</code> → <code>var(--sp-micro) var(--sp-sm)</code></div>
-        <div class="pg-callout-body"><code>.pyramid-visual</code> tier gap and <code>.family-card-note-pill</code> padding. Also <code>.nav-search-bar-kbd</code> normalized to <code>var(--radius-small)</code> and <code>var(--sp-xs)</code>.</div>
-      </div>
-      <div class="pg-callout" style="margin-bottom: var(--sp-lg);">
-        <div class="pg-callout-title"><span class="pg-done">Fixed</span> Mobile nav button inline gap+padding</div>
-        <div class="pg-callout-body"><code>.mbn-btn</code> inline style <code>gap:2px;padding:8px 2px 6px</code> → <code>gap:var(--sp-micro);padding:var(--sp-sm) var(--sp-micro) var(--sp-2xs)</code>.</div>
-      </div>
-      <div class="pg-callout">
-        <div class="pg-callout-title">Intentional exceptions — left as-is</div>
-        <div class="pg-callout-body"><code>gap: 1px</code> (separator line), <code>padding: 3px</code> on <code>.tabs</code> pill inset (outer-radius 6 minus inner-radius 3 = 3px optical inset, now documented), <code>padding: 1px …</code> on keyboard shortcut badge (border-like, not spacing), <code>margin: -1px</code> on <code>.sr-only</code>.</div>
-      </div>
-    </section>
 
     <!-- ═══════════════════════════════════════════════════════════
          TOKENS
@@ -366,6 +114,34 @@
         <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-xl);"></div><span class="pg-label">xl 10</span></div>
         <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-pill);"></div><span class="pg-label">pill 20</span></div>
         <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-circle);"></div><span class="pg-label">circle 50%</span></div>
+      </div>
+
+      <h3 class="pg-subsection-title">Spacing Semantics — Gestalt Proximity</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-lg);">
+        <div class="pg-callout">
+          <div class="pg-callout-title" style="font-size: var(--fs-meta);">micro 2px &amp; xs 4px — Intra-element</div>
+          <div class="pg-callout-body">Dots, icon stacks, badge icon-text. Signals "these are one unit." Used within a single atomic component (e.g. icon + symbol in <code>.s-syms</code>, tab container rows).</div>
+        </div>
+        <div class="pg-callout">
+          <div class="pg-callout-title" style="font-size: var(--fs-meta);">2xs 6px — Icon-text inline</div>
+          <div class="pg-callout-body">Gap between an icon/dot and its label inside pill buttons and chips. 4px is too tight (letters collide with icon visually), 8px is too loose. 6px fills the half-step.</div>
+        </div>
+        <div class="pg-callout">
+          <div class="pg-callout-title" style="font-size: var(--fs-meta);">sm 8px &amp; md 12px — Within-component</div>
+          <div class="pg-callout-body">Related items inside a card or row (icon to text, label to value). Most common range — these tokens handle the majority of spacing. Everything that "belongs together but is still two things."</div>
+        </div>
+        <div class="pg-callout">
+          <div class="pg-callout-title" style="font-size: var(--fs-meta);">lg 16px &amp; xl 20px — Section breathing room</div>
+          <div class="pg-callout-body">Padding inside panels, gaps between rows in a list, space around section headers. Creates the margin of safety between groups so the eye can parse them as separate.</div>
+        </div>
+        <div class="pg-callout">
+          <div class="pg-callout-title" style="font-size: var(--fs-meta);">2xl 24px &amp; 3xl 32px — Between sections</div>
+          <div class="pg-callout-body">Separates distinct content blocks (e.g. detail panel sections, compare score vs notes grid). Use sparingly — only in parent <code>gap</code> on containers like <code>.detail-inner</code>, <code>.cmp-results</code>.</div>
+        </div>
+        <div class="pg-callout">
+          <div class="pg-callout-title" style="font-size: var(--fs-meta);">4xl 48px — Page-level framing</div>
+          <div class="pg-callout-body">Top/bottom page padding, major section breaks. Should stay rare — overuse collapses the distinction between section-level and page-level space.</div>
+        </div>
       </div>
     </section>
 
@@ -422,65 +198,67 @@
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════
-         LIST ROW (canonical)
+         LIST ITEM (canonical)
          ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="list-row">
-      <h2 class="pg-section-title">List Row <span class="pg-usage pg-usage--high" style="vertical-align: middle; margin-left: var(--sp-sm);">HIGHEST USAGE</span></h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">Canonical row: <strong>dot</strong> + <strong>info</strong> (name, brand) + optional <strong>trailing</strong>. No left border. No family dim state.</p>
+    <section class="pg-section" id="list-item">
+      <h2 class="pg-section-title">List Item <span class="pg-usage pg-usage--high" style="vertical-align: middle; margin-left: var(--sp-sm);">HIGHEST USAGE</span></h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">Canonical row component. Structure: <code>.list-item</code> → <code>.list-item-dot</code> + <code>.list-item-body[.list-item-label, .list-item-sublabel, .list-item-detail]</code> + <code>.list-item-trailing-label</code>. Container: <code>.list-shelf</code>. This matches <code>renderCatRow()</code> exactly.</p>
 
-      <div class="pg-controls" id="row-controls">
-        <button class="pg-ctrl active" onclick="setRowVariant('default')">Default</button>
-        <button class="pg-ctrl" onclick="setRowVariant('owned')">Owned State</button>
-        <button class="pg-ctrl" onclick="setRowVariant('wish')">Wishlist State</button>
-        <button class="pg-ctrl" onclick="setRowVariant('notes')">With Notes Line</button>
-      </div>
-
+      <h3 class="pg-subsection-title">Default — catalog row</h3>
       <div class="pg-box pg-box--full" style="max-width: 480px;">
-        <div class="scent-list" style="width: 100%;">
-          <div class="scent-row" data-family="woody" id="demo-row-1">
-            <div class="scent-row-content">
-              <div class="frag-picker-dot" style="background: var(--fam-woody); margin-top: 1px;"></div>
-              <div class="frag-picker-info">
-                <div class="frag-picker-item-name">Santal 33</div>
-                <div class="frag-picker-item-brand">Le Labo</div>
-                <div class="frag-picker-item-notes" id="demo-row-notes" style="display: none;">Cardamom, Iris, Violet &bull; Sandalwood, Cedarwood</div>
-              </div>
-              <div class="s-syms"><span class="s-sym">&#9728;</span></div>
+        <div class="list-shelf" style="width: 100%; border: none; border-radius: 0;">
+          <div class="list-item" role="button" tabindex="0" data-family="woody" aria-label="Santal 33 by Le Labo">
+            <div class="list-item-dot" style="background: var(--fam-woody);" aria-hidden="true"></div>
+            <div class="list-item-body">
+              <div class="list-item-label">Santal 33</div>
+              <div class="list-item-sublabel">Le Labo&thinsp;&middot;&thinsp;Woody</div>
+              <div class="list-item-detail"><span class="note-layer-hint" aria-label="Heart note:">H</span> Sandalwood &middot; <span class="note-layer-hint" aria-label="Base note:">B</span> Cedarwood</div>
             </div>
           </div>
-          <div class="scent-row" data-family="floral" id="demo-row-2">
-            <div class="scent-row-content">
-              <div class="frag-picker-dot" style="background: var(--fam-floral); margin-top: 1px;"></div>
-              <div class="frag-picker-info">
-                <div class="frag-picker-item-name">Rose 31</div>
-                <div class="frag-picker-item-brand">Le Labo</div>
-              </div>
-              <div class="s-syms"><span class="s-sym">&#9830;</span></div>
+          <div class="list-item" role="button" tabindex="0" data-family="floral" aria-label="Rose 31 by Le Labo — Owned">
+            <div class="list-item-dot" style="background: var(--fam-floral);" aria-hidden="true"></div>
+            <div class="list-item-body">
+              <div class="list-item-label">Rose 31</div>
+              <div class="list-item-sublabel">Le Labo&thinsp;&middot;&thinsp;Floral</div>
             </div>
+            <div class="list-item-badge">Owned</div>
           </div>
-          <div class="scent-row" data-family="amber" id="demo-row-3">
-            <div class="scent-row-content">
-              <div class="frag-picker-dot" style="background: var(--fam-amber); margin-top: 1px;"></div>
-              <div class="frag-picker-info">
-                <div class="frag-picker-item-name">Gypsy Water</div>
-                <div class="frag-picker-item-brand">Byredo</div>
-              </div>
+          <div class="list-item" role="button" tabindex="0" data-family="amber" aria-label="Gypsy Water by Byredo">
+            <div class="list-item-dot" style="background: var(--fam-amber);" aria-hidden="true"></div>
+            <div class="list-item-body">
+              <div class="list-item-label">Gypsy Water</div>
+              <div class="list-item-sublabel">Byredo&thinsp;&middot;&thinsp;Amber</div>
             </div>
+            <div class="list-item-trailing-label">82%</div>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         LIST ITEM — PROPOSALS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="list-item-proposals">
-      <h2 class="pg-section-title">List Item &mdash; Selected Direction</h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-lg);"><strong>Option B selected</strong> &mdash; Shell + Inner Wrapper. Replaces <code>.list-item--flat</code>, <code>.list-item--compact</code>, <code>.list-item--search</code>, and <code>.cmp-sug-card</code> with one canonical component. Typography is <strong>locked per slot</strong> &mdash; no modifier or state class may override font-family, size, weight, or color. See <code>DESIGN.md</code> for migration rules and the full slot contract.</p>
+      <h3 class="pg-subsection-title">Compact variant — house/note detail, quiz results</h3>
+      <div class="pg-box pg-box--full" style="max-width: 480px;">
+        <div class="list-shelf" style="width: 100%;">
+          <div class="list-item list-item--compact" role="button" tabindex="0">
+            <div class="list-item-dot" style="background: var(--fam-woody);" aria-hidden="true"></div>
+            <div class="list-item-body">
+              <div class="list-item-label">Santal 33</div>
+              <div class="list-item-sublabel">Le Labo&thinsp;&middot;&thinsp;Woody</div>
+            </div>
+            <div class="list-item-trailing-label">91%</div>
+          </div>
+          <div class="list-item list-item--compact" role="button" tabindex="0">
+            <div class="list-item-dot" style="background: var(--fam-amber);" aria-hidden="true"></div>
+            <div class="list-item-body">
+              <div class="list-item-label">Gypsy Water</div>
+              <div class="list-item-sublabel">Byredo&thinsp;&middot;&thinsp;Amber</div>
+            </div>
+            <div class="list-item-trailing-label">74%</div>
+          </div>
+        </div>
+      </div>
 
-      <!-- Typography lock table -->
-      <div class="pg-callout" style="margin-bottom: var(--sp-2xl); max-width: 640px;">
-        <div class="pg-callout-title">Locked Slot Typography &mdash; all options</div>
+      <h3 class="pg-subsection-title">Slot contract (locked typography)</h3>
+      <div class="pg-callout" style="max-width: 640px;">
+        <div class="pg-callout-title">Typography is immutable — modifier and state classes may never override slot font/color</div>
         <div class="pg-callout-body" style="overflow-x: auto;">
           <table style="font-family: var(--font-sans); font-size: var(--fs-meta); border-collapse: collapse; width: 100%; margin-top: var(--sp-sm);">
             <thead>
@@ -493,75 +271,17 @@
               </tr>
             </thead>
             <tbody style="color: var(--text-primary);">
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>__label</code></td><td style="padding: var(--sp-xs) var(--sp-md);">DM Sans</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-body</td><td style="padding: var(--sp-xs) var(--sp-md);">600</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-primary</td></tr>
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>__sublabel</code></td><td style="padding: var(--sp-xs) var(--sp-md);">Source Serif</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-caption</td><td style="padding: var(--sp-xs) var(--sp-md);">400</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-secondary</td></tr>
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>__detail</code></td><td style="padding: var(--sp-xs) var(--sp-md);">Source Serif</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-caption</td><td style="padding: var(--sp-xs) var(--sp-md);">400</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-tertiary</td></tr>
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>__badge</code></td><td style="padding: var(--sp-xs) var(--sp-md);">DM Sans</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-caption</td><td style="padding: var(--sp-xs) var(--sp-md);">600</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-tertiary</td></tr>
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>__score</code></td><td style="padding: var(--sp-xs) var(--sp-md);">DM Sans</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-meta</td><td style="padding: var(--sp-xs) var(--sp-md);">700</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">accent-primary</td></tr>
+              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-label</code></td><td style="padding: var(--sp-xs) var(--sp-md);">DM Sans</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-body</td><td style="padding: var(--sp-xs) var(--sp-md);">600</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-primary</td></tr>
+              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-sublabel</code></td><td style="padding: var(--sp-xs) var(--sp-md);">Source Serif</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-caption</td><td style="padding: var(--sp-xs) var(--sp-md);">400</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-secondary</td></tr>
+              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-detail</code></td><td style="padding: var(--sp-xs) var(--sp-md);">Source Serif</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-caption</td><td style="padding: var(--sp-xs) var(--sp-md);">400</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-tertiary</td></tr>
+              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-badge</code></td><td style="padding: var(--sp-xs) var(--sp-md);">DM Sans</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-caption</td><td style="padding: var(--sp-xs) var(--sp-md);">600</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-tertiary</td></tr>
+              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-trailing-label</code></td><td style="padding: var(--sp-xs) var(--sp-md);">DM Sans</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-meta</td><td style="padding: var(--sp-xs) var(--sp-md);">700</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">accent-primary</td></tr>
             </tbody>
           </table>
         </div>
       </div>
-
-      <!-- ── OPTION B ── -->
-      <h3 class="pg-subsection-title">Option B &mdash; Shell + Inner Wrapper</h3>
-      <div class="pg-callout" style="margin-bottom: var(--sp-lg);">
-        <div class="pg-callout-title"><code>__inner</code> wraps leading/body/trail &mdash; <code>__actions</code> lives outside</div>
-        <div class="pg-callout-body">
-          <code>.list-item[--compact|--ghost|--search]</code> &rarr; <code>__inner[__leading[__dot|__icon], __body[__label, __sublabel, __detail], __trail[__badge, __score]]</code> + <code>__actions</code><br>
-          <code>__inner</code> handles padding and hover-bg transition independently. <code>__actions</code> is always full-height &mdash; a clean zone for future swipe or press-hold affordances.
-        </div>
-      </div>
-      <div class="pg-box pg-box--full" style="max-width: 480px;">
-        <div class="opt-b" style="width: 100%;">
-          <button class="b-item">
-            <span class="b-inner">
-              <span class="b-leading"><span class="b-dot" style="background: var(--fam-woody);"></span></span>
-              <span class="b-body">
-                <span class="b-label">Santal 33</span>
-                <span class="b-sublabel">Le Labo&thinsp;&middot;&thinsp;Woody</span>
-                <span class="b-detail">Cardamom, Iris, Violet&thinsp;&middot;&thinsp;Sandalwood</span>
-              </span>
-              <span class="b-trail"><span class="b-badge">Owned</span></span>
-            </span>
-          </button>
-          <button class="b-item">
-            <span class="b-inner">
-              <span class="b-leading"><span class="b-dot" style="background: var(--fam-amber);"></span></span>
-              <span class="b-body">
-                <span class="b-label">Gypsy Water</span>
-                <span class="b-sublabel">Byredo&thinsp;&middot;&thinsp;Amber</span>
-              </span>
-              <span class="b-trail"><span class="b-score">82%</span></span>
-            </span>
-          </button>
-          <div class="b-item">
-            <span class="b-inner">
-              <span class="b-leading"><span class="b-dot" style="background: var(--fam-floral);"></span></span>
-              <span class="b-body">
-                <span class="b-label">Noir de Noir</span>
-                <span class="b-sublabel">Tom Ford&thinsp;&middot;&thinsp;Floral</span>
-              </span>
-            </span>
-            <span class="b-actions"><button class="b-action-btn">Add</button></span>
-          </div>
-          <button class="b-item">
-            <span class="b-inner">
-              <span class="b-leading"><span class="b-icon">🌿</span></span>
-              <span class="b-body">
-                <span class="b-label">Sandalwood</span>
-                <span class="b-sublabel">Base note&thinsp;&middot;&thinsp;Woody</span>
-              </span>
-            </span>
-          </button>
-        </div>
-      </div>
-      <div class="pg-callout" style="margin-top: var(--sp-lg); max-width: 960px;">
-        <div class="pg-callout-title">Tradeoffs</div>
-        <div class="pg-callout-body">&#43; <code>__inner</code> enables independent animation (press-scale, slide-reveal) without restructuring &bull; &#43; <code>__actions</code> zone is always full-height (clean swipe target) &bull; &#43; Natural migration from current <code>.list-item-content</code> pattern &bull; &minus; Extra DOM node per row &bull; &minus; Hover bg requires descendant selector <code>.b-item:hover .b-inner</code></div>
-      </div>
-
     </section>
+
 
     <!-- ═══════════════════════════════════════════════════════════
          CARDS
@@ -658,8 +378,8 @@
          TABS — SLIDING PILL (converged)
          ═══════════════════════════════════════════════════════════ -->
     <section class="pg-section" id="tabs">
-      <h2 class="pg-section-title">Tabs &amp; Segmented Controls <span class="pg-done" style="vertical-align: middle; margin-left: var(--sp-sm);">Converged</span></h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">All tab bars now use the sliding-pill pattern. <code>.tab-pill</code> element slides behind the active <code>.tab</code>. Same visual as <code>.frag-picker-sort-bar</code>.</p>
+      <h2 class="pg-section-title">Tabs &amp; Segmented Controls</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">All tab bars use the sliding-pill pattern. <code>.tab-pill</code> element slides behind the active <code>.tab</code>. Same visual across <code>.tabs</code>, <code>.cat-state-bar</code>, and <code>.frag-picker-sort-bar</code>.</p>
 
       <h3 class="pg-subsection-title">Primary Tabs (.tabs)</h3>
       <div class="pg-box" style="max-width: 400px;">
@@ -729,8 +449,8 @@
         <div class="pg-item"><span class="pg-label">.detail-close-btn</span><div class="pg-box"><button class="detail-close-btn">&#10005; Close</button></div></div>
       </div>
 
-      <h3 class="pg-subsection-title">Text Link (.s-name-btn) <span class="pg-done">Converged</span></h3>
-      <p class="pg-desc" style="margin-bottom: var(--sp-md);">All text links now use <code>.s-name-btn</code> style: serif font, underline, primary color.</p>
+      <h3 class="pg-subsection-title">Text Link (.s-name-btn)</h3>
+      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Canonical text link style: serif font, underline, primary color.</p>
       <div class="pg-box" style="max-width: 300px;">
         <div style="display: flex; flex-direction: column; gap: var(--sp-sm);">
           <button class="s-name-btn">Santal 33</button>
@@ -788,7 +508,7 @@
         </div>
       </div>
 
-      <h3 class="pg-subsection-title">Nav Sub-Sheet (.sheet.nav) <span class="pg-done">Title Centered</span></h3>
+      <h3 class="pg-subsection-title">Nav Sub-Sheet (.sheet.nav)</h3>
       <p class="pg-desc" style="margin-bottom: var(--sp-md);">Back and close buttons now have equal <code>width: 56px</code> so the title always centers.</p>
       <div class="pg-sheet-demo">
         <div class="sheet visible under" style="max-height: 250px;">
@@ -812,8 +532,8 @@
          SECTION LABELS (canonical)
          ═══════════════════════════════════════════════════════════ -->
     <section class="pg-section" id="section-labels">
-      <h2 class="pg-section-title">Section Label <span class="pg-done">Consolidated</span></h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">One class: <code>.sec-label</code>. Previously 16 duplicate classes. Components add only spacing (<code>margin</code>) as needed.</p>
+      <h2 class="pg-section-title">Section Label</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">One canonical class: <code>.sec-label</code>. Components add only spacing (<code>margin</code>) as needed.</p>
       <div class="pg-box pg-box--stack" style="max-width: 400px; gap: var(--sp-xl);">
         <div class="sec-label" style="margin: 0;">Top Notes</div>
         <div class="sec-label" style="margin: 0;">Similar Fragrances</div>
@@ -877,7 +597,7 @@
           <span class="pg-label">12px (md)</span>
         </div>
         <div style="text-align: center;">
-          <div class="frag-picker-dot" style="background: var(--fam-amber); width: 18px; height: 18px; margin: 0 auto var(--sp-xs);">
+          <div class="list-item-dot" style="background: var(--fam-amber); width: 18px; height: 18px; margin: 0 auto var(--sp-xs);">
             <span class="fam-abbr">A</span>
           </div>
           <span class="pg-label">18px (with abbr)</span>
@@ -888,21 +608,6 @@
   </div>
 
   <script>
-    /* ── List Row demo ── */
-    function setRowVariant(variant) {
-      const rows = [document.getElementById('demo-row-1'), document.getElementById('demo-row-2'), document.getElementById('demo-row-3')];
-      const notes = document.getElementById('demo-row-notes');
-      rows.forEach(r => { r.className = 'scent-row'; r.setAttribute('data-family', r.getAttribute('data-family')); });
-      notes.style.display = 'none';
-      document.querySelectorAll('#row-controls .pg-ctrl').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-      switch(variant) {
-        case 'owned': rows[0].classList.add('s-owned'); break;
-        case 'wish': rows[1].classList.add('s-wish'); break;
-        case 'notes': notes.style.display = 'block'; break;
-      }
-    }
-
     /* ── Card demo ── */
     function setCardVariant(variant) {
       document.querySelectorAll('#card-controls .pg-ctrl').forEach(b => b.classList.remove('active'));
