@@ -996,10 +996,10 @@ window.exportLayeringRecipe = function(idA, idB, score) {
   const bx = 850, by = 100, br = 80; ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fillStyle = '#0E0C09'; ctx.fill();
   ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center'; ctx.font = '700 42px Inter, sans-serif'; ctx.fillText(`${score}%`, bx, by + 10);
   ctx.font = '700 14px Inter, sans-serif'; ctx.fillText('MATCH', bx, by + 35);
-  const ca = getCmpFam(fa.family); ctx.textAlign = 'left'; ctx.fillStyle = ca.accent; ctx.font = '700 56px Inter, sans-serif'; ctx.fillText(fa.name.toUpperCase(), 80, 350);
+  const ca = getCmpFam(fa.family); ctx.textAlign = 'left'; ctx.fillStyle = ca.accentHex; ctx.font = '700 56px Inter, sans-serif'; ctx.fillText(fa.name.toUpperCase(), 80, 350);
   ctx.font = '400 32px Inter, sans-serif'; ctx.fillStyle = '#6B6356'; ctx.fillText(fa.brand, 80, 400);
   ctx.fillStyle = '#0E0C0922'; ctx.font = '400 120px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('+', canvas.width / 2, 530);
-  const cb = getCmpFam(fb.family); ctx.textAlign = 'right'; ctx.fillStyle = cb.accent; ctx.font = '700 56px Inter, sans-serif'; ctx.fillText(fb.name.toUpperCase(), 1000, 680);
+  const cb = getCmpFam(fb.family); ctx.textAlign = 'right'; ctx.fillStyle = cb.accentHex; ctx.font = '700 56px Inter, sans-serif'; ctx.fillText(fb.name.toUpperCase(), 1000, 680);
   ctx.font = '400 32px Inter, sans-serif'; ctx.fillStyle = '#6B6356'; ctx.fillText(fb.brand, 1000, 730);
   ctx.beginPath(); ctx.roundRect(80, 820, 920, 180, 20); ctx.fillStyle = '#0E0C0908'; ctx.fill();
   ctx.textAlign = 'center'; ctx.fillStyle = '#0E0C09'; ctx.font = '700 24px Inter, sans-serif'; ctx.fillText('WHY IT WORKS', canvas.width / 2, 875);
@@ -2032,7 +2032,7 @@ function renderHouseDetail(container,brand){
     ${bestMatches.length > 0 ? `
     <div class="house-best-matches">
       <div class="sec-label">Similar From This House</div>
-      <div class="list-shelf" id="house-best-matches-list"></div>
+      <div id="house-best-matches-list"></div>
     </div>
     ` : ''}
 
@@ -3826,7 +3826,7 @@ function openMoreSheet(btn){
   const items=[
     {id:'saved',icon:_ico.star, label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
     {id:'changelog',icon:_ico.megaphone, label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
-    {id:'playground',icon:_ico.library, label:'Design System', action:"window.open('/playground.html', '_blank')"}
+    {id:'playground',icon:_ico.library, label:'Design System', action:"window.open('/designsystem.html', '_blank')"}
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:var(--sp-lg) 0 var(--sp-sm)">
@@ -3843,19 +3843,15 @@ function openMoreSheet(btn){
 /* ══ COMPARE ════════════════════════════════════════════════════════ */
 let CMP_A=null,CMP_B=null;
 
-const CMP_FAM={
-  woody:   {accent:'#8B4513',light:'#FDF5EE'},
-  floral:  {accent:'#B5366E',light:'#FFF4F9'},
-  amber:   {accent:'#B86A00',light:'#FFFBF0'},
-  citrus:  {accent:'#7A8A00',light:'#FAFDE8'},
-  leather: {accent:'#5A2D0C',light:'#FAF5F0'},
-  oud:     {accent:'#6E2080',light:'#F8F0FC'},
-  green:   {accent:'#1A6030',light:'#F0FAF2'},
-  chypre:  {accent:'#2A5C50',light:'#EEF8F5'},
-  gourmand:{accent:'#6B2030',light:'#FAF0F2'},
-  aquatic: {accent:'#004A80',light:'#EEF8FF'},
-};
-function getCmpFam(fam){return CMP_FAM[fam]||{accent:'#6B6356',light:'#F5F2EC'};}
+/* Family colors — CSS is the single source of truth (design-system.css --fam-* tokens).
+   accent: CSS var string for inline style="" attributes.
+   accentHex: computed hex value for canvas 2D fillStyle (CSS vars not supported in canvas).
+   subdued: 18%-opacity wash of accent over paper, for backgrounds and borders. */
+function getCmpFam(fam){
+  const f=(fam&&FAM[fam])?fam:'default';
+  const accentHex=getComputedStyle(document.documentElement).getPropertyValue(`--fam-${f}`).trim()||'#6B6356';
+  return{accent:`var(--fam-${f})`,accentHex,subdued:`var(--fam-${f}-subdued)`};
+}
 
 /* ── Scoring helpers ── */
 function computeProfile(frag){ return engine.computeProfile(frag); }
@@ -4488,7 +4484,7 @@ function renderCompareResults(fa,fb){
     </div>
     <div class="cmp-pair-card">
       <button class="cmp-pair-card-left" id="cmp-score-character">
-        <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accent,cb.accent)}</div>
+        <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accentHex,cb.accentHex)}</div>
         <div class="cmp-char-metrics">
           <div class="cmp-char-metric-row">
             <div class="cmp-char-metric-track left"><div class="cmp-char-metric-fill" style="width:${fa.sillage*10}%;background:${ca.accent}"></div></div>
@@ -4634,7 +4630,7 @@ function _fillCard(slot,frag){
   const fc=getCmpFam(frag.family);
   const famLabel=(FAM[frag.family]||{label:frag.family}).label;
   card.classList.add('filled');
-  card.style.borderColor=`${fc.accent}40`;
+  card.style.borderColor=fc.subdued;
   card.setAttribute('aria-label',`${frag.name} by ${frag.brand} — tap to change`);
   card.innerHTML=`
     <div class="chip" style="background:${fc.accent}; align-self: flex-start; margin: var(--sp-md) var(--sp-md) 0;">${famLabel}</div>

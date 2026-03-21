@@ -1,3 +1,17 @@
+## 2026-03-21 (Design System Audit — Phase 1)
+
+### Changed
+- **Family color single source of truth:** Deleted `CMP_FAM` hardcoded object from `app.js`. `getCmpFam()` now reads from CSS custom properties (`--fam-*` tokens in `design-system.css`) via `getComputedStyle`, returning `{accent, accentHex, subdued}`. Canvas OG image generator and SVG radar chart use `accentHex`; HTML inline styles use `accent` (CSS var string).
+- **Family color token values:** Updated `--fam-*` accent values to more vibrant, UI-appropriate colors. Previously muted values replaced with saturated accent values suitable for dots, borders, and compare UI. `--fam-oud` notably improved: was unusable near-black `#1E0A12`, now distinctive purple `#6E2080`. `--fam-default` updated from `#888` to warmer `#6B6356`. Five families previously missing from the JS object (citrus, leather, oud, green, chypre) — all now correctly resolved instead of falling back to gray.
+- **Family subdued tier:** Added `--fam-{family}-subdued` tokens for all 9 families + default. `color-mix(in srgb, accent 18%, paper)` — opacity-derived. Replaces the `${accent}40` hex-opacity trick used in compare card borders.
+
+### Added
+- **`--border-width: 1px`** and **`--border-width-heavy: 3px`** tokens.
+- **`--link-underline-offset: 3px`** token.
+- **`--sp-micro: 2px`** documented as optical-only exception below the 4px grid rule.
+
+---
+
 ## 2026-03-21
 
 ### Fixed

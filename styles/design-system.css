@@ -45,17 +45,31 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 3. FAMILY COLOR TOKENS ── */
 :root{
-  /* Fragrance family semantic colors */
-  --fam-woody:    #6B4E2A;
-  --fam-floral:   #B5536E;
-  --fam-amber:    #A06800;
-  --fam-citrus:   #8A7000;
-  --fam-leather:  #3E1A08;
-  --fam-oud:      #1E0A12;
-  --fam-green:    #2E5C20;
-  --fam-chypre:   #3C5C2A;
-  --fam-gourmand: #7C3E18;
-  --fam-default:  #888;          /* Fallback for undefined families */
+  /* Fragrance family accent colors — single source of truth.
+     These are the canonical values used everywhere: dots, borders,
+     compare accents, canvas OG images. JS reads via getComputedStyle.
+     Subdued tier: 18% accent mixed with paper — opacity-derived, not hand-picked. */
+  --fam-woody:    #8B4513;
+  --fam-floral:   #B5366E;
+  --fam-amber:    #B86A00;
+  --fam-citrus:   #7A8A00;
+  --fam-leather:  #5A2D0C;
+  --fam-oud:      #6E2080;
+  --fam-green:    #1A6030;
+  --fam-chypre:   #2A5C50;
+  --fam-gourmand: #6B2030;
+  --fam-default:  #6B6356;
+
+  --fam-woody-subdued:    color-mix(in srgb, var(--fam-woody)    18%, var(--paper));
+  --fam-floral-subdued:   color-mix(in srgb, var(--fam-floral)   18%, var(--paper));
+  --fam-amber-subdued:    color-mix(in srgb, var(--fam-amber)    18%, var(--paper));
+  --fam-citrus-subdued:   color-mix(in srgb, var(--fam-citrus)   18%, var(--paper));
+  --fam-leather-subdued:  color-mix(in srgb, var(--fam-leather)  18%, var(--paper));
+  --fam-oud-subdued:      color-mix(in srgb, var(--fam-oud)      18%, var(--paper));
+  --fam-green-subdued:    color-mix(in srgb, var(--fam-green)    18%, var(--paper));
+  --fam-chypre-subdued:   color-mix(in srgb, var(--fam-chypre)   18%, var(--paper));
+  --fam-gourmand-subdued: color-mix(in srgb, var(--fam-gourmand) 18%, var(--paper));
+  --fam-default-subdued:  color-mix(in srgb, var(--fam-default)  18%, var(--paper));
 }
 
 /* ── 4. TYPOGRAPHY TOKENS ── */
@@ -90,7 +104,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 /* ── 5. SPACING SCALE (4px grid) ── */
 :root{
-  --sp-micro: 2px;
+  --sp-micro: 2px;   /* OPTICAL ONLY — below 4px grid. Use for fine alignment nudges, never layout spacing. */
   --sp-xs:   4px;
   --sp-2xs:  6px;  /* icon-text inline gap; half-step between xs and sm */
   --sp-sm:   8px;
@@ -190,6 +204,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
   /* Touch target minimum — WCAG 2.5.5 */
   --touch-target:     44px;
+
+  /* Border width scale */
+  --border-width:       1px;   /* Standard — all default borders */
+  --border-width-heavy: 3px;   /* Data surfaces — compare cards, score meters */
+
+  /* Link decoration */
+  --link-underline-offset: 3px;
 }
 
 /* ── 10. BASE STYLES ── */
