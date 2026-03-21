@@ -9,32 +9,6 @@ const { FAM, FAM_ORDER, FAM_COMPAT, FAM_ABBR } = store;
 
 const SW=['','Skin','Skin','Subtle','Subtle','Moderate','Moderate','Strong','Strong','Enveloping','Enormous'];
 const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered','Layered','Complex','Deep'];
-const SWD=[
-  '',
-  'Barely detectable — skin-close only',
-  'Barely detectable — skin-close only',
-  'Soft presence — close contact only',
-  'Soft presence — close contact only',
-  'Moderate projection — noticeable arm\'s length away',
-  'Moderate projection — noticeable arm\'s length away',
-  'Confident presence — fills a small room',
-  'Confident presence — fills a small room',
-  'Enveloping — noticeable on entry from across the room',
-  'Statement sillage — announces arrival, lingers after'
-];
-const LWD=[
-  '',
-  'Single-note — what you spray is what you get',
-  'Single-note — what you spray is what you get',
-  'Simple arc — opens and settles, little evolution',
-  'Simple arc — opens and settles, little evolution',
-  'Balanced journey — distinct opening, heart, and dry down',
-  'Balanced journey — distinct opening, heart, and dry down',
-  'Layered — opening and base feel like different fragrances',
-  'Layered — opening and base feel like different fragrances',
-  'Complex — notable evolution across all three stages',
-  'Deep transformation — hours of evolving character'
-];
 
 // Analytics stubs
 function trackEvent(name, props) {
@@ -1632,8 +1606,8 @@ function renderFragDetail(container,frag){
       <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
     </button>
     <div class="dc-stats">
-      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div><div class="dc-sval">${frag.sillage}/10 — ${SW[frag.sillage]}</div><div class="list-item-detail">${SWD[frag.sillage]}</div></div>
-      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div><div class="dc-sval">${frag.layering}/10 — ${LW[frag.layering]}</div><div class="list-item-detail">${LWD[frag.layering]}</div></div>
+      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div></div>
+      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div></div>
     </div>
     <div class="dc-div"></div>
     <div class="sec-label">Sensory Profile</div>
@@ -4629,7 +4603,7 @@ function renderCompareResults(fa,fb){
   }, 100);
 
   // Save this pair
-  saveCmpPair(fa.id, fb.id);
+  // (saved comparisons removed)
 }
 
 
@@ -4739,84 +4713,6 @@ function _setupDragAndDropDropzones() {
 }
 
 /* ── Saved Comparisons ── */
-const SM_COMPARES = 'sm_compares';
-
-function _loadSavedCompares() {
-  try {
-    const raw = localStorage.getItem(SM_COMPARES);
-    const pairs = raw ? JSON.parse(raw) : [];
-    // Validate: both IDs must exist in CAT_MAP
-    return pairs.filter(([a, b]) => CAT_MAP[a] && CAT_MAP[b]);
-  } catch (e) { return []; }
-}
-
-function saveCmpPair(idA, idB) {
-  const key = [idA, idB].sort().join('|');
-  let pairs = _loadSavedCompares();
-  // Deduplicate by sorted key
-  pairs = pairs.filter(([a, b]) => [a, b].sort().join('|') !== key);
-  // Latest-first, store as [idA, idB] (original order)
-  pairs.unshift([idA, idB]);
-  // Max 5
-  if (pairs.length > 5) pairs = pairs.slice(0, 5);
-  try { localStorage.setItem(SM_COMPARES, JSON.stringify(pairs)); } catch (e) {}
-  renderSavedCompares();
-}
-
-function _removeSavedCompare(sortedKey) {
-  let pairs = _loadSavedCompares();
-  pairs = pairs.filter(([a, b]) => [a, b].sort().join('|') !== sortedKey);
-  try { localStorage.setItem(SM_COMPARES, JSON.stringify(pairs)); } catch (e) {}
-  renderSavedCompares();
-}
-
-function renderSavedCompares() {
-  const el = document.getElementById('cmp-saved');
-  if (!el) return;
-  const pairs = _loadSavedCompares();
-  if (pairs.length < 2) { el.hidden = true; el.innerHTML = ''; return; }
-
-  const rows = pairs.map(([idA, idB]) => {
-    const fa = CAT_MAP[idA], fb = CAT_MAP[idB];
-    if (!fa || !fb) return '';
-    const sortedKey = [idA, idB].sort().join('|');
-    return `<div class="list-item list-item--ghost" role="listitem">
-      <button class="list-item-inner" data-cmp-a="${idA}" data-cmp-b="${idB}"
-        aria-label="Compare ${fa.name} with ${fb.name}">
-        <div class="list-item-body">
-          <div class="list-item-label">${fa.name} vs ${fb.name}</div>
-          <div class="list-item-sublabel">${fa.brand}&thinsp;&middot;&thinsp;${fb.brand}</div>
-        </div>
-      </button>
-      <div class="list-item-actions">
-        <button aria-label="Remove saved comparison" data-cmp-remove="${sortedKey}">&#215;</button>
-      </div>
-    </div>`;
-  }).filter(Boolean).join('');
-
-  el.hidden = false;
-  el.innerHTML = `<div style="display:flex;flex-direction:column;gap:var(--sp-sm)">
-    <div class="sec-label">Recent</div>
-    <div class="list-shelf" role="list" aria-label="Saved comparisons">${rows}</div>
-  </div>`;
-
-  // Wire row taps
-  el.querySelectorAll('button[data-cmp-a]').forEach(btn => {
-    const fa = CAT_MAP[btn.dataset.cmpA], fb = CAT_MAP[btn.dataset.cmpB];
-    if (!fa || !fb) return;
-    const handler = () => {
-      _selectFragForSlot('a', fa);
-      _selectFragForSlot('b', fb);
-    };
-    btn.addEventListener('click', handler);
-    btn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); } });
-  });
-
-  // Wire remove buttons
-  el.querySelectorAll('button[data-cmp-remove]').forEach(btn => {
-    btn.addEventListener('click', e => { e.stopPropagation(); _removeSavedCompare(btn.dataset.cmpRemove); });
-  });
-}
 
 function initCompare(){
   ['a','b'].forEach(slot=>{
@@ -4832,7 +4728,6 @@ function initCompare(){
     }
   });
   _setupDragAndDropDropzones();
-  renderSavedCompares();
 }
 window.clearCmpSlot=function(slot){
   window.haptic?.('nudge')||window.haptic?.('selection');

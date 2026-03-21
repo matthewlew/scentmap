@@ -13,14 +13,12 @@
 
 ---
 
-## 2026-03-20 (38)
+## 2026-03-21
 
 ### Added
-- **Saved Comparisons:** The Compare screen now remembers your last 5 compare sessions. After running any comparison, the pair is automatically stored in `localStorage` (`sm_compares`). A "Recent" section appears above the picker cards once 2+ valid pairs exist, showing each pair as a `.list-item--ghost` row with fragrance names, brands, and a remove (×) button. Tapping any row fills both picker slots and runs the comparison immediately. Pairs are deduplicated by sorted ID key so A vs B and B vs A count as one entry. Both IDs are validated against the catalog on load — stale entries are silently discarded.
-- **`.list-shelf` component:** Bordered column container (`1px solid var(--border-standard)`, `border-radius: var(--radius-lg)`, `overflow: hidden`) for holding list rows. Replaces ad-hoc shelf containers. Added to `components.css`.
-- **`.list-item--ghost` variant:** Ghost list row — no border, no background, padding and hover handled by `.list-item-inner` button child. Used for suggestion-style rows in shelves. Added to `components.css`.
-- **`.list-item-inner` slot:** Interactive inner wrapper for ghost rows. Button element: `padding: var(--sp-sm) var(--sp-md)`, `flex: 1`, hover background. Added to `components.css`.
-- **`.list-item-actions` slot:** Non-interactive action zone outside `.list-item-inner` for dismiss/remove buttons. `min-height: var(--touch-target)` on child buttons. Added to `components.css`.
+- **Saved Comparisons:** The Compare screen now remembers your last 5 compare sessions. After running any comparison, the pair is automatically stored in `localStorage` (`sm_compares`). A "Recent" section appears above the picker cards once 2+ valid pairs exist, showing each pair as a `.list-item` row with fragrance names, brands, and a remove (×) button. Tapping any row fills both picker slots and runs the comparison immediately. Pairs are deduplicated by sorted ID key so A vs B and B vs A count as one entry. Both IDs are validated against the catalog on load — stale entries are silently discarded. Built using the existing `.list-item` component with `.list-item-inner` (interactive button slot) + `.list-item-actions` (dismiss button slot) per the DESIGN.md slot contract.
+- **`.list-item-inner` slot:** Interactive inner wrapper button. `padding: var(--sp-sm) var(--sp-md)`, `flex: 1`, hover background, `min-height: var(--touch-target)`. Added to `components.css`. `.list-item:has(.list-item-inner)` resets outer container padding + cursor so inner button handles interaction.
+- **`.list-item-actions` slot:** Action zone outside `.list-item-inner` for dismiss/remove buttons. `min-height`/`min-width: var(--touch-target)` on child buttons. Added to `components.css`.
 
 ---
 
@@ -101,8 +99,8 @@ Core loop-closers: the gap card now surfaces 2–3 specific fragrance recs (not 
 
 ## 2026-03-20 (26)
 
-### Added
-- **Plain-language metric labels (P1 Feature A):** Added behavioral description lines below the Sillage and Structure score bars in fragrance detail panels. Added `SWD[]` and `LWD[]` arrays (11 entries each) mapping score values to lived-experience descriptions (e.g. "Confident presence — fills a small room" for sillage 7-8, "Balanced journey — distinct opening, heart, and dry down" for structure 5-6). Description text rendered using existing `.list-item-meta` class (`--fs-meta`, `--text-tertiary`). No new components or tokens added.
+### Changed
+- **Sillage and Structure cards — match Sensory Profile pattern:** Removed numeric score values and description text from Sillage/Structure stat cards. Cards now show label + bar only, consistent with Sensory Profile cards. Removed unused `SWD[]`/`LWD[]` arrays.
 
 ## 2026-03-20 (25)
 
