@@ -10,12 +10,11 @@ This is the single source of truth for component inventory, token rules, and the
 |-----------|-----------|-------------|----------|------------|
 | Section Label | `.sec-label` | `styles/layout.css:293` | — | All filter/section headings. Never use raw `font-size` or `text-transform` inline. |
 | Tab / Filter Button | `.tab` | `styles/components.css:121` | `.tab.active` | All filter bars, state tabs, role tabs. Must have `aria-pressed`. |
-| Search Input | `.cat-search-input` | `styles/components.css:672` | — | Catalog and notes search. Uses border-based focus (not ring). |
+| Search Input | `.cat-search-input` | `styles/components.css:672` | — | Catalog and notes search. Global focus ring applies. |
 | Settings Menu Item | `.settings-menu-item` | `styles/components.css:72` | — | Dropdown nav items only. `min-height: var(--touch-target)`. |
-| List Item | `.list-item` | `styles/components.css:829` | `--compact`, `--ghost`, `--search`, `--owned`, `--wish` | All catalog/saved/suggestion/search rows. Always use slot sub-element classes below. |
-| ↳ Slot: inner wrapper | `.list-item-inner` | — | — | Wraps leading/body/trail. Handles padding + hover-bg transition. |
+| List Item | `.list-item` | `styles/components.css:829` | `--compact`, `--search`, `--owned`, `--wish` | All catalog/saved/suggestion/search rows. Always use slot sub-element classes below. |
 | ↳ Slot: leading | `.list-item-leading` | — | — | Holds dot or icon. flex, align-items:center, flex-shrink:0. |
-| ↳ Slot: dot | `.list-item-dot` | — | — | 8px circle, background set via inline `style`. |
+| ↳ Slot: dot | `.list-item-dot` | — | — | Layout container for leading dot or icon (18px default, 8px compact). Place a `.dot` inside it for the color indicator. |
 | ↳ Slot: icon | `.list-item-icon` | — | — | Emoji/glyph leading. 18px, text-tertiary. |
 | ↳ Slot: body | `.list-item-body` | — | — | flex:1, min-width:0 text truncation container. |
 | ↳ Slot: label | `.list-item-label` | — | — | Primary name. DM Sans, fs-body, 600, text-primary. |
@@ -24,12 +23,11 @@ This is the single source of truth for component inventory, token rules, and the
 | ↳ Slot: trail | `.list-item-trail` | — | — | Trailing cluster: badge + score. |
 | ↳ Slot: badge | `.list-item-badge` | — | — | State label (Owned, Wish). DM Sans, fs-caption, 600, text-tertiary. |
 | ↳ Slot: trailing-label | `.list-item-trailing-label` | — | — | Trailing text label. DM Sans, fs-meta, 700, accent-primary. |
-| ↳ Slot: actions | `.list-item-actions` | — | — | Full-height action zone outside __inner. Buttons/CTAs. |
-| List Shelf | `.list-shelf` | — | — | Column container with border + radius. Use instead of .dc-sim-shelf. |
-| ⚠️ Deprecated | `.list-item--flat`, `.list-item--compact`, `.cmp-sug-card`, `.dc-sim-shelf`, `.list-item-content`, `.list-item-name`, `.list-item-sub`, `.list-item-meta` | — | — | Do not use in new code. Migrate to .list-item slot structure above. |
+| ⚠️ Deprecated | `.list-item--flat`, `.cmp-sug-card`, `.dc-sim-shelf`, `.list-item-content`, `.list-item-name`, `.list-item-sub`, `.list-item-meta` | — | — | Do not use in new code. Migrate to .list-item slot structure above. |
 | Compare Frag Card | `.cmp-frag-card` | `styles/components.css:1800` | `.cmp-frag-card-name` (layout only), `.cmp-frag-card-brand` (layout only) | Compare slot picker buttons. Typography uses `.list-item-name` / `.list-item-sub` inside layout wrappers. Never inline padding on children. |
 | Carousel Card | `.carousel-card` | `styles/components.css:3208` | `.carousel-card-name` (layout only), `.carousel-card-brand` (layout only), `.carousel-card-family` | Golden pairs, horizontal scrolling lists. Typography uses `.list-item-name` / `.list-item-sub` inside layout wrappers. No inline width/font overrides. |
 | DNA Card | `.dna-card` | `styles/components.css:3748` | `.dna-grid`, `.dna-headline`, `.dna-sub`, `.dna-stats`, `.dna-bar`, `.dna-badge`, `.dna-notes` | Personalization summary on the You panel. Sub-elements defined for card layout only. |
+| Dot Indicator | `.dot` | `styles/components.css` | `.dot--md` | Inline 8px color circle for family/category. `.dot--md` = 10px for picker rows. Background set via inline `style="background: var(--fam-woody)"`. Never create component-specific dot classes. |
 
 ---
 
@@ -42,33 +40,48 @@ These rules are absolute. No exceptions without explicit discussion.
 - **Never** use primitive tokens (`var(--g700)`) in component or layout CSS — semantic tokens only
 - Use `var(--wish)` for wishlist/rose states, `var(--resin)` for owned/amber states
 
+### Family Colors
+- All 10 family accent tokens live in `design-system.css` as `--fam-{family}` (woody, floral, amber, citrus, leather, oud, green, chypre, gourmand, default).
+- Each has a paired `--fam-{family}-subdued` computed via `color-mix(in srgb, var(--fam-{family}) 18%, var(--paper))` — opacity-derived, never hand-picked.
+- In JS, use `getCmpFam(family)` → `{accent, accentHex, subdued}`. Use `accent` (CSS var string) in HTML `style=""` attributes; use `accentHex` (raw hex via `getComputedStyle`) for Canvas 2D or SVG presentation attributes which cannot resolve CSS variables.
+- **Never** hardcode family hex values in JS. The old `CMP_FAM` object has been deleted.
+
 ### Spacing
-- All margins, paddings, and gaps must use the 4px grid tokens: `--sp-micro` (2px) → `--sp-4xl` (48px)
+- All margins, paddings, and gaps must use the 4px grid tokens: `--sp-xs` (4px) → `--sp-4xl` (48px)
+- `--sp-micro: 2px` is an **optical-only** exception below the grid. Use only for fine alignment nudges (e.g. `margin-top: var(--sp-micro)` on an icon to optically center against text). **Never** use for layout spacing.
 - **Never** write `margin: 16px` — write `margin: var(--sp-lg)`
 - **Never** use magic numbers like `6px`, `15px`, `22px`
 - **Parent-Managed Spacing:** Vertical spacing between sections in detail containers (`.detail-inner`, `.sheet-content`, `.note-popup`) MUST be handled by the parent's `gap` property. Do NOT add `margin-top` or `margin-bottom` to top-level children in these containers. If elements require tighter grouping, wrap them in a `div`.
 
 ### Typography
-- Font sizes via tokens only: `--fs-label` (12px), `--fs-meta` (13px), `--fs-body` (15px), `--fs-title` (20px), `--fs-heading` (32px)
+- Font sizes via tokens only: `--fs-label` (12px), `--fs-caption` (12px), `--fs-body-sm` (13px), `--fs-meta` (14px), `--fs-body` (16px), `--fs-ui` (18px), `--fs-title` (24px), `--fs-heading` (32px)
 - Font families: `var(--font-serif)` (Source Serif 4), `var(--font-sans)` (DM Sans), `var(--font-display)` (Archivo Black)
 - **Never** write `font-size: 14px` inline in JS template literals
+- Use `var(--link-underline-offset)` (3px) for `text-underline-offset` — never hardcode
 
-### Border Radius
-- Use scoped tokens: `--radius-micro` (2px), `--radius-sm` (4px), `--radius` (8px), `--radius-lg` (12px), `--radius-xl` (16px), `--radius-circle` (50%)
-- **Never** use unscoped `var(--radius)` in new code — pick a specific scale value
+### Border & Border Radius
+- Border widths: `var(--border-width)` (1px) for standard borders; `var(--border-width-heavy)` (3px) for data surfaces (compare cards, score meters, metric bars) where visual weight is intentional.
+- Use scoped radii: `--radius-micro` (2px), `--radius-small` (3px), `--radius-sm` (5px), `--radius` (6px), `--radius-lg` (8px), `--radius-xl` (10px), `--radius-pill` (20px), `--radius-circle` (50%)
+- **Never** hardcode border widths like `1.5px` or `2px` — pick from the token scale
 
 ### Interactive Elements
 - **All** clickable/tappable controls must have `min-height: var(--touch-target)` (44px) — WCAG 2.5.5
 - Applies to: `.tab`, `.settings-menu-item`, `.list-item`, `.cmp-frag-card`, any `<button>` or `role="button"` element
 
 ### Focus
-- Global `:focus-visible` double ring is defined in `design-system.css` — **never** override with `outline: none` on a base style
-- Input-style focus (border, no ring) allowed only via explicit `:focus-visible` override in the component
+- Global `:focus-visible` in `design-system.css` is the **single canonical focus pattern**: double box-shadow (paper gap + resin ring). **Never** override with `outline: none` on a base style, and never add per-component focus overrides that replace the ring with a border-swap or inset-outline.
+- The only exception: elements where a visible border is the primary interactive affordance may suppress the box-shadow and set `border-color` instead — but this must be documented per-component and not used for lists or general controls.
 
 ### Inline Styles in JS
 - **Never** use `style="font-size: ..."`, `style="color: ..."`, `style="padding: ..."` in JS template literals
-- Data-driven values are the only exception: `style="width: ${pct}%"` for bar fills, `style="--family-color: ${color}"` for dynamic color props
+- Data-driven values are the only exception: `style="width: ${pct}%"` for bar fills, `style="background: var(--fam-${f})"` for dynamic family color props
 - If a component needs a visual variant, add a CSS modifier class (e.g. `.carousel-card--wide`) — not inline styles
+
+### Dot Indicators
+- Use `.dot` (8px circle, `var(--radius-circle)`, `flex-shrink: 0`) for all inline family/color indicator dots.
+- Use `.dot--md` (10px) for larger picker-row dots.
+- Set background color via inline `style="background: var(--fam-woody)"` (data-driven exception).
+- **Never** create component-specific dot classes (`.fam-dot`, `.nf-dot`, etc.). All legacy names have been removed.
 
 ---
 
@@ -122,24 +135,21 @@ A section is a top-level block within a panel, sheet, or detail container. The p
 
 Every component that renders a name plus secondary text **must** use the `.list-item` slot structure. Do not invent per-component text class equivalents (e.g. `.dc-name`, `.nf-name`, `.cmp-frag-card-name`).
 
-#### Structure (Option B — Shell + Inner Wrapper)
+#### Structure
 
 ```
-.list-item [--compact | --ghost | --search]
-  └── .list-item-inner          ← padding + hover-bg transition
-        ├── .list-item-leading  ← flex-shrink: 0
-        │     └── .list-item-dot  (or .list-item-icon)
-        ├── .list-item-body     ← flex: 1; min-width: 0
-        │     ├── .list-item-label
-        │     ├── .list-item-sublabel
-        │     └── .list-item-detail
-        └── .list-item-trail    ← flex-shrink: 0
-              ├── .list-item-badge
-              └── .list-item-trailing-label
-  └── .list-item-actions        ← outside __inner; full-height action zone
+.list-item [--compact | --search]
+  ├── .list-item-leading  ← flex, align-items: center, flex-shrink: 0
+  │     ├── .list-item-dot    (background set via inline style — data-driven exception)
+  │     └── .list-item-icon   (emoji/glyph alternative to dot)
+  ├── .list-item-body     ← flex: 1; min-width: 0
+  │     ├── .list-item-label
+  │     ├── .list-item-sublabel
+  │     └── .list-item-detail
+  └── .list-item-trail    ← flex-shrink: 0
+        ├── .list-item-badge
+        └── .list-item-trailing-label
 ```
-
-Container: `.list-shelf` (bordered column, replaces `.dc-sim-shelf`)
 
 #### Locked Slot Typography
 
@@ -169,7 +179,6 @@ Never use a plain space around `·`.
 |---|---|---|---|
 | Default | `.list-item` | Catalog rows, detail rows | `.list-item` (base) |
 | Compact | `.list-item--compact` | Notes rows, quiz results, house rows | `.list-item--compact` (no DOM change) |
-| Ghost | `.list-item--ghost` | Suggestion cards, search-in-shelf | `.list-item--flat` + `.cmp-sug-card` |
 | Search | `.list-item--search` | Universal search modal rows | `.list-item--search` (no DOM change) |
 
 #### Display heading exception

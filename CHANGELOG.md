@@ -1,3 +1,11 @@
+## 2026-03-21 (Design System Audit — Phases 8–9)
+
+### Changed
+- **DESIGN.md updated:** Token rules now document family color two-tier structure (`--fam-*` + `--fam-*-subdued`), `getCmpFam()` contract (accent/accentHex/subdued), canonical dot classes (`.dot`/`.dot--md`), single focus ring pattern (no per-component overrides), new tokens (`--link-underline-offset`, `--border-width`, `--border-width-heavy`), `--sp-micro` as optical-only exception, and revised typography scale tokens. Component inventory adds `.dot` / `.dot--md` row; `.list-item-dot` clarified as layout container. Search input entry updated to reflect unified focus ring.
+- **TODOS.md:** Added data quality audit TODO — verify sillage and layering scores (LLM-generated, may require scale reduction from 0–10 to 3- or 5-level display).
+
+---
+
 ## 2026-03-21 (Design System Audit — Phases 5–7)
 
 ### Removed
