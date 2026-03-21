@@ -1,3 +1,11 @@
+## 2026-03-21 (Design System Audit — Phases 2–3)
+
+### Changed
+- **Focus ring unified:** Removed `.cat-search-input:focus-visible` border-swap override and `.list-item:focus-visible` inset-outline override from `components.css`. Global double-box-shadow (paper gap + resin ring) is now the single canonical focus pattern for all interactive elements.
+- **Dot class consolidation:** Added canonical `.dot` (8px) and `.dot--md` (10px) to `components.css`. Removed 7 duplicate 8px circle definitions (`.dc-cmp-btn-dot`, `.dc-sim-dot`, `.fam-pill-dot`, `.cmp-sticky-dot`, `.fam-dot`, plus the old `.picker-fdot` 10px block). Updated all class names in `app.js` template strings. `.list-item-dot` kept as-is (layout container, not a pure dot). `.notes-card-header .dot` contextual offset preserved.
+
+---
+
 ## 2026-03-21 (Design System Audit — Phase 1)
 
 ### Changed

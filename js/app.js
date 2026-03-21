@@ -701,7 +701,7 @@ function renderWardrobeGap(container) {
         card.setAttribute('aria-label', `${frag.name} by ${frag.brand}, ${gap.gapAxisShort} recommendation`);
         card.innerHTML = `
           <div class="carousel-card-family">
-            <div class="fam-dot" style="background:${famColor}" aria-hidden="true"></div>
+            <div class="dot" style="background:${famColor}" aria-hidden="true"></div>
             <span class="carousel-card-family-label">${gap.gapAxisShort}</span>
           </div>
           <div class="carousel-card-name list-item-label">${frag.name}</div>
@@ -923,7 +923,7 @@ function renderBrandDiscovery(container) {
 
     card.innerHTML = `
       <div class="carousel-card-family">
-        <div class="fam-dot" style="background:${famColor}" aria-hidden="true"></div>
+        <div class="dot" style="background:${famColor}" aria-hidden="true"></div>
         <span class="carousel-card-family-label">${famLabel}</span>
       </div>
       <div class="carousel-card-name list-item-label">${b.brand}</div>
@@ -1084,7 +1084,7 @@ window.renderSaved = function() {
     ctaWrap.innerHTML = `
       <div class="landing-card">
         <div class="landing-card-head">
-          <span class="picker-fdot" style="background:var(--accent-primary);"></span>
+          <span class="dot--md" style="background:var(--accent-primary);"></span>
           <h3 class="landing-card-title">Trying scents on?</h3>
         </div>
         <p class="landing-card-desc">Start tracking to see how they evolve over time.</p>
@@ -1143,7 +1143,7 @@ window.renderSaved = function() {
           Your collection is currently low on <strong>${gapRec.label}</strong>. Consider exploring:
         </div>
         <button class="list-item list-item--compact" style="margin-top:var(--sp-sm);" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
-          <div class="picker-fdot" style="background:${(FAM[gapRec.frag.family]||{}).color}"></div>
+          <div class="dot--md" style="background:${(FAM[gapRec.frag.family]||{}).color}"></div>
           <div class="list-item-body">
             <div class="list-item-label">${gapRec.frag.name}</div>
             <div class="list-item-detail">${gapRec.frag.brand} · To fill the gap</div>
@@ -1786,12 +1786,12 @@ function _buildCompareCTAs(frag,container){
     const btn=document.createElement('button');
     btn.className='dc-collect-btn dc-cmp-btn';
     const inner=existingFrag
-      ?`<span class="dc-cmp-btn-dot" style="background:${fcSelf.accent}"></span>
+      ?`<span class="dot" style="background:${fcSelf.accent}"></span>
         <span class="dc-cmp-btn-name">${frag.name}</span>
         <span class="dc-cmp-btn-vs">vs</span>
-        <span class="dc-cmp-btn-dot" style="background:${fcOther.accent}"></span>
+        <span class="dot" style="background:${fcOther.accent}"></span>
         <span class="dc-cmp-btn-name">${existingFrag.name}</span>`
-      :`<span class="dc-cmp-btn-dot" style="background:${fcSelf.accent}"></span>
+      :`<span class="dot" style="background:${fcSelf.accent}"></span>
         <span class="dc-cmp-btn-name dc-cmp-btn-empty">Compare with ${frag.name}</span>`;
     btn.innerHTML=`
       <span class="dc-cmp-btn-text" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden">${inner}</span>
@@ -2056,7 +2056,7 @@ function renderHouseDetail(container,brand){
       card.className = 'carousel-card';
       card.innerHTML = `<div class="carousel-card-name list-item-label">${frag.name}</div>
         <div class="carousel-card-brand list-item-sublabel">${frag.brand}</div>
-        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
+        <div class="carousel-card-family"><div class="dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
       card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       carousel.appendChild(card);
     });
@@ -2532,7 +2532,7 @@ function renderPicker(container,roleId){
       const info=document.createElement('div');info.className='picker-info';
       info.appendChild(nameBtn);
       const br=document.createElement('div');br.className='picker-brand-row';br.textContent=f.brand;info.appendChild(br);
-      const fdot=document.createElement('div');fdot.className='picker-fdot';fdot.style.background=fm.color;
+      const fdot=document.createElement('div');fdot.className='dot--md';fdot.style.background=fm.color;
       const removeBtn=document.createElement('button');removeBtn.className='tab';removeBtn.style.cssText='font-size:.65rem;padding:3px 7px';removeBtn.textContent='Remove';
       removeBtn.addEventListener('click',e=>{
         e.stopPropagation();
@@ -2555,7 +2555,7 @@ function renderPicker(container,roleId){
       const card=document.createElement('div');card.className='carousel-card';
       card.innerHTML=`<div class="carousel-card-name">${frag.name}</div>
         <div class="carousel-card-brand">${frag.brand}</div>
-        <div class="carousel-card-family"><div class="fam-dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
+        <div class="carousel-card-family"><div class="dot" style="background:${fm.color}"></div><span class="carousel-card-family-label">${fm.label}</span></div>`;
       card.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,frag),frag.name)});
       row.appendChild(card);
     });
@@ -2571,7 +2571,7 @@ function renderPicker(container,roleId){
     const info=document.createElement('div');info.className='picker-info';
     info.appendChild(nameBtn);
     const br=document.createElement('div');br.className='picker-brand-row';br.textContent=frag.brand;info.appendChild(br);
-    const fdot=document.createElement('div');fdot.className='picker-fdot';fdot.style.background=fm.color;
+    const fdot=document.createElement('div');fdot.className='dot--md';fdot.style.background=fm.color;
     const addBtn=document.createElement('button');addBtn.className='tab active';addBtn.style.cssText='font-size:.65rem;padding:3px 7px;background:var(--black);color:#fff;box-shadow:none';addBtn.textContent='Add';
     addBtn.addEventListener('click',e=>{
       e.stopPropagation();
@@ -2883,7 +2883,7 @@ function initCatalogControls(){
     const btn=document.createElement('button');
     btn.className='fam-pill'+(CAT_FAM_FILTER===val?' active':'');
     btn.setAttribute('aria-pressed', CAT_FAM_FILTER===val ? 'true' : 'false');
-    const dot=val?`<span class="fam-pill-dot" style="background:${color}"></span>`:'';
+    const dot=val?`<span class="dot" style="background:${color}"></span>`:'';
     btn.innerHTML=`${dot}${label}`;
     btn.dataset.fam=val===null?'':val;
     btn.addEventListener('click',()=>{
@@ -3231,7 +3231,7 @@ function buildNotes(searchQuery, currentTier){
       const card=document.createElement('div');card.className='notes-card';
 
       const header=document.createElement('div');header.className='notes-card-header';
-      header.innerHTML=`<div class="nf-dot" style="background:${fm.color}"></div><div><div class="list-item-label">${fm.label}</div>${fm.desc?`<div class="list-item-sublabel">${fm.desc}</div>`:''}</div>`;
+      header.innerHTML=`<div class="dot" style="background:${fm.color}"></div><div><div class="list-item-label">${fm.label}</div>${fm.desc?`<div class="list-item-sublabel">${fm.desc}</div>`:''}</div>`;
 
       const cardBody=document.createElement('div');cardBody.className='notes-card-body';
       grouped[fk].forEach(note=>{
@@ -4372,13 +4372,13 @@ function renderPopularComparisons() {
       <span class="pop-cmp-label">${p.label}</span>
       <span class="pop-cmp-pair">
         <span class="pop-cmp-frag">
-          <span class="picker-fdot" style="background:${colorA}"></span>
+          <span class="dot--md" style="background:${colorA}"></span>
           <span class="pop-cmp-name">${fa.name}</span>
           <span class="pop-cmp-brand">${fa.brand}</span>
         </span>
         <span class="pop-cmp-vs">${matchPct}%</span>
         <span class="pop-cmp-frag">
-          <span class="picker-fdot" style="background:${colorB}"></span>
+          <span class="dot--md" style="background:${colorB}"></span>
           <span class="pop-cmp-name">${fb.name}</span>
           <span class="pop-cmp-brand">${fb.brand}</span>
         </span>
@@ -4467,13 +4467,13 @@ function renderCompareResults(fa,fb){
   res.innerHTML=`
     <div id="cmp-sticky-bar">
       <div class="cmp-sticky-slot" data-slot-sticky="a">
-        <span class="cmp-sticky-dot" style="background:${ca.accent}"></span>
+        <span class="dot" style="background:${ca.accent}"></span>
         <span class="cmp-sticky-name">${fa.name}</span>
       </div>
       <span class="cmp-sticky-vs">VS</span>
       <div class="cmp-sticky-slot" data-slot-sticky="b" style="justify-content:flex-end">
         <span class="cmp-sticky-name">${fb.name}</span>
-        <span class="cmp-sticky-dot" style="background:${cb.accent}"></span>
+        <span class="dot" style="background:${cb.accent}"></span>
       </div>
     </div>
 

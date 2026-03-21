@@ -165,10 +165,16 @@
   padding-bottom: var(--sp-4xl);
 }
 
-/* ── DOT — one canonical 8px circular indicator used throughout ── */
-.picker-fdot, .s-fdot, .nf-dot {
+/* ── DOT — canonical family-color circular indicator ── */
+.dot {
   width: 8px;
   height: 8px;
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+}
+.dot--md {
+  width: 10px;
+  height: 10px;
   border-radius: var(--radius-circle);
   flex-shrink: 0;
 }
@@ -466,12 +472,7 @@
   color: var(--text-primary);
 }
 
-.dc-cmp-btn-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-}
+/* .dc-cmp-btn-dot → use .dot */
 
 .dc-cmp-btn-name {
   font-size: var(--fs-body);
@@ -524,12 +525,7 @@
 }
 
 
-.dc-sim-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-}
+/* .dc-sim-dot → use .dot */
 
 .dc-sim-info {
   flex: 1;
@@ -669,11 +665,7 @@
   transition: border-color var(--dur-fast) var(--ease-spring), background var(--dur-fast) var(--ease-spring);
 }
 
-/* Input uses border as focus indicator — override the global box-shadow ring */
 .cat-search-input:focus-visible {
-  outline: none;
-  box-shadow: none;
-  border-color: var(--border-strong);
   background: var(--bg-primary);
 }
 
@@ -819,87 +811,6 @@
   background: var(--bg-secondary);
 }
 
-/* Focus ring: box-shadow is clipped by overflow:hidden — use inset outline instead */
-.list-item:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color);
-  outline-offset: -2px;
-  box-shadow: none;
-}
-
-/* Ghost variant — suggestion cards, saved comparisons rows */
-/* When used as a modifier on .list-item, padding and cursor are handled by inner button */
-.list-item--ghost {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  background: none;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: default;
-  padding: 0;
-  width: 100%;
-  min-height: var(--touch-target);
-  overflow: visible;
-}
-.list-item--ghost:last-child { border-bottom: none; }
-.list-item--ghost:hover { background: none; }
-
-/* Inner wrapper — padding + hover-bg transition (interactive when button) */
-.list-item-inner {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  padding: var(--sp-sm) var(--sp-md);
-  flex: 1;
-  min-width: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  text-align: left;
-  border-radius: var(--radius-sm);
-  transition: background var(--dur-fast) var(--ease-spring);
-  min-height: var(--touch-target);
-}
-.list-item-inner:hover { background: var(--bg-secondary); }
-.list-item-inner:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color);
-  outline-offset: -2px;
-  box-shadow: none;
-}
-
-/* Actions zone — outside inner, full-height, flex-shrink: 0 */
-.list-item-actions {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  padding-right: var(--sp-sm);
-}
-.list-item-actions button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--touch-target);
-  min-width: var(--touch-target);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-tertiary);
-  border-radius: var(--radius-sm);
-  font-size: var(--fs-body);
-  transition: color var(--dur-fast), background var(--dur-fast);
-}
-.list-item-actions button:hover { color: var(--text-primary); background: var(--bg-secondary); }
-
-/* List shelf — bordered column container for list rows */
-.list-shelf {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--bg-primary);
-}
 
 /* Compact variant — note detail, house detail, quiz results */
 .list-item--compact {
@@ -1043,7 +954,8 @@
 }
 
 
-.nf-dot {
+/* Notes card header: dot needs 5px top offset to align with the text baseline */
+.notes-card-header .dot {
   margin-top: 5px;
 }
 
@@ -1228,12 +1140,7 @@
   background: var(--bg-tertiary);
 }
 
-.fam-pill-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-}
+/* .fam-pill-dot → use .dot */
 
 /* Mobile/horizontal family scroll strip */
 .cat-family-scroll {
@@ -1672,6 +1579,13 @@ mark.note-match {
   padding-bottom: var(--sp-lg);
 }
 
+/* Saved comparisons section — label + list grouping */
+#cmp-saved > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+}
+
 /* Compare results container — flex column; gap handles all section spacing */
 #cmp-results {
   display: flex;
@@ -1911,12 +1825,7 @@ mark.note-match {
   background: var(--bg-secondary);
 }
 
-.cmp-sticky-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-}
+/* .cmp-sticky-dot → use .dot */
 
 .cmp-sticky-name {
   font-size: var(--fs-body);
@@ -3114,12 +3023,7 @@ button.cmp-note-pill:hover {
   background: var(--bg-secondary);
 }
 
-.picker-fdot {
-  width: 10px;
-  height: 10px;
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-}
+/* .picker-fdot → use .dot--md */
 
 .picker-info {
   flex: 1;
@@ -3271,12 +3175,7 @@ button.cmp-note-pill:hover {
   align-self: flex-start;
 }
 
-.fam-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-}
+/* .fam-dot → use .dot */
 
 /* ── ROLE-CHIP IN DETAIL PANEL ── */
 
