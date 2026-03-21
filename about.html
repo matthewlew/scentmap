@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>About Scentmap</title>
+  <link rel="stylesheet" href="styles/design-system.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/responsive.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: var(--bg-body);
+      color: var(--black);
+      padding: 24px;
+      font-family: var(--font-base);
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: var(--ls-tight);
+      margin-bottom: 8px;
+    }
+    .intro {
+      font-size: 1.1rem;
+      color: var(--g600);
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--g200);
+      padding-bottom: 8px;
+    }
+    p {
+      margin-bottom: 16px;
+      color: var(--g800);
+    }
+    .concept-card {
+      background: #fff;
+      border: 1px solid var(--g200);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .concept-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .concept-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--g100);
+      font-size: 1.2rem;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      color: var(--g600);
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 0;
+      margin-bottom: 16px;
+      text-decoration: none;
+    }
+    .back-btn:hover { color: var(--black); }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Scentmap
+  </a>
+
+  <h1>The Science of Scentmap</h1>
+  <p class="intro">Demystifying how we measure similarity and predict successful layering combinations.</p>
+
+  <p>Fragrance is subjective, emotional, and deeply personal. However, the structure of a fragrance—its family, its notes, and how far it projects—is quantifiable. Scentmap aims to bridge the gap between poetry and data.</p>
+
+  <h2>Core Concepts</h2>
+
+  <div class="concept-card">
+    <div class="concept-title"><span class="concept-icon">🧬</span> Similarity (Match Percentage)</div>
+    <p>Similarity answers the question: <strong>"Do these smell alike?"</strong></p>
+    <p>We calculate this by looking at shared DNA. If two fragrances belong to the same olfactive family (like Woody or Floral) and share many of the same top, mid, and base notes, they score high in similarity. If they both sit close to the skin (low sillage) or both fill a room (high sillage), their score increases further.</p>
+    <p><em>High Similarity is great for finding alternates, but terrible for layering. If two scents are 90% similar, layering them just creates a louder version of the same smell.</em></p>
+  </div>
+
+  <div class="concept-card">
+    <div class="concept-title"><span class="concept-icon">🧩</span> Layering Compatibility</div>
+    <p>Layering answers the question: <strong>"Do these play well together?"</strong></p>
+    <p>The secret to a great layering combination is <strong>contrast, not repetition</strong>. A high layering score requires two things:</p>
+    <ul style="margin-left:24px; color:var(--g800); margin-bottom:16px;">
+      <li><strong>Structural difference (Sillage gap):</strong> A loud, projecting fragrance layered with a quiet, skin-close fragrance works beautifully because the quiet one acts as an anchor while the loud one projects. Two loud fragrances will fight each other.</li>
+      <li><strong>Complementary, unique notes:</strong> We look for families that historically blend well (like Citrus over Woods, or Floral over Amber). Crucially, the less notes they share, the higher the layering score, because you are creating a new accord rather than muddying an existing one.</li>
+    </ul>
+  </div>
+
+  <h2>Interactive Verdict Simulator</h2>
+  <p>Below is a live demonstration of how our system analyzes two fragrances and generates a final verdict. Adjust the sliders to see how the relationship between Similarity and Layering shapes the recommendation.</p>
+
+  <!-- Interactive Demo Container -->
+  <div id="demo-root"></div>
+
+  <script src="js/about-demo.js"></script>
+</body>
+</html>

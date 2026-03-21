@@ -399,6 +399,62 @@ async function runAll(){
     return !!style.getPropertyValue('--fam-woody').trim();
   });
 
+  // ── SUITE: getVerdict Tests ─────────────────────────────────────────
+  startSuite('getVerdict');
+  // Need to provide FAM inside W if it doesn't exist, though it should from app.js
+  if (!W.FAM) {
+    W.FAM = { woody: { label: 'Woody' }, floral: { label: 'Floral' } };
+  }
+
+  if (typeof W.getVerdict === 'function') {
+    const fA = { name: "FragA One", family: "woody" };
+    const fB = { name: "FragB Two", family: "floral" };
+    const fA_same = { name: "FragA One", family: "woody" };
+    const fB_same = { name: "FragB Two", family: "woody" };
+
+    // High Match, High Layering
+    assert('High match (≥70) and high layering (≥65)',
+      W.getVerdict(70, 65, fA, fB) === 'FragA and FragB are genuinely kindred spirits — they share DNA at the note level and project beautifully together.', `Got: ${W.getVerdict(70, 65, fA, fB)}`);
+
+    // High Match, Low Layering
+    assert('High match (≥70) and lower layering (<65)',
+      W.getVerdict(70, 60, fA, fB) === 'FragA and FragB smell remarkably alike. Better as alternates than a layering pair — their overlap is too high for interesting contrast.', `Got: ${W.getVerdict(70, 60, fA, fB)}`);
+
+    // Low Match, High Layering (Same Family)
+    assert('Low match (<50) and high layering (≥65) - Same Family',
+      W.getVerdict(40, 65, fA_same, fB_same) === 'FragA and FragB share a Woody character but diverge enough in their notes to layer with real depth.', `Got: ${W.getVerdict(40, 65, fA_same, fB_same)}`);
+
+    // Low Match, High Layering (Diff Family)
+    assert('Low match (<50) and high layering (≥65) - Diff Family',
+      W.getVerdict(40, 65, fA, fB) === 'FragA and FragB pair well. Their contrast in character and sillage creates depth without competing.', `Got: ${W.getVerdict(40, 65, fA, fB)}`);
+
+    // Solid Pairing (Match ≥50, Layering ≥50)
+    assert('Solid pairing (match 50-69, layer 50-64)',
+      W.getVerdict(50, 50, fA, fB) === 'A solid pairing. FragA and FragB share enough character to feel cohesive, with enough contrast to layer interestingly.', `Got: ${W.getVerdict(50, 50, fA, fB)}`);
+
+    // Low Match, Low Layering (Same Family)
+    assert('Low match (<35) and low layering (<35) - Same Family',
+      W.getVerdict(30, 30, fA_same, fB_same) === 'FragA and FragB share a Woody family but express it very differently — they may feel like distant cousins rather than a natural pair.', `Got: ${W.getVerdict(30, 30, fA_same, fB_same)}`);
+
+    // Low Match, Low Layering (Diff Family)
+    assert('Low match (<35) and low layering (<35) - Diff Family',
+      W.getVerdict(30, 30, fA, fB) === 'FragA and FragB are quite different — they may feel unrelated or clash if layered.', `Got: ${W.getVerdict(30, 30, fA, fB)}`);
+
+    // Mid Match, Low Layering (Match ≥50)
+    assert('Mid match (≥50) and low layering (<50)',
+      W.getVerdict(50, 40, fA, fB) === 'FragA and FragB share similar character and work well as alternates. They won\'t layer in unexpected ways but feel consistent.', `Got: ${W.getVerdict(50, 40, fA, fB)}`);
+
+    // Final Fallbacks (<50 match, 35-64 layering) - Same Family
+    assert('Final fallback (<50 match, 35-64 layering) - Same Family',
+      W.getVerdict(40, 40, fA_same, fB_same) === 'FragA and FragB sit within the same Woody family but express it differently — interesting to compare, not obvious to layer.', `Got: ${W.getVerdict(40, 40, fA_same, fB_same)}`);
+
+    // Final Fallbacks (<50 match, 35-64 layering) - Diff Family
+    assert('Final fallback (<50 match, 35-64 layering) - Diff Family',
+      W.getVerdict(40, 40, fA, fB) === 'FragA and FragB are distinct enough to explore separately. Treat them as contrasts rather than complements.', `Got: ${W.getVerdict(40, 40, fA, fB)}`);
+  } else {
+    skip('getVerdict function not found on window object.');
+  }
+
   render();
 }
 
