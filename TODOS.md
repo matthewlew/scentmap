@@ -1,6 +1,6 @@
 # Scentmap — TODOs
 
-Updated 2026-03-21.
+Updated 2026-03-22.
 
 **Product direction:** Help people discover fragrances that complete their wardrobe.
 
@@ -10,20 +10,44 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ---
 
-## P2 — Active (ship in order)
+## NOW: Phase 0 — Gift Intelligence Wedge
 
-### TODO: Golden Pairs Carousel — Keyboard Nav
-**What:** Call `initCarouselKeyNav()` on the `pairWrap` element after `pairSec` is built (~line 1252). Apply `role="list"`, `aria-label`, and roving tabindex — same pattern as Brand Discovery carousel.
-**Why:** A11y obligation — `initCarouselKeyNav()` was never called on Golden Pairs at render time.
-**Effort:** XS (~10 min)
+**This blocks P1/P2/P3. Ship these items before continuing anything else.**
+**Full plan + eng review:** `~/.gstack/projects/matthewlew-scentmap/ceo-plans/2026-03-21-gift-intelligence-wedge.md`
+
+### TODO: Gift Intelligence — Ship the wedge
+**What (in order):**
+1. ~~Delete `gift-intelligence` entry from `data/quiz-config.json`~~ — **DEFERRED** (see deferred TODO below)
+2. Add `gift-intelligence` to `QUIZ_META` in `api/quiz.js` with SEO title, description, and `noscriptPopular: ['gypsy-water','santal-33','bal-dafrique','rose-31','mojave-ghost']`
+3. ~~Add `btn.disabled = true` double-tap guard~~ — **DONE** (simplify 2026-03-22)
+4. Call `engine.getSwapReason(top3[0], top3[1], FAM)` in `renderResult()` when `top3.length >= 2` — show 1-sentence narrative between subtitle and first card; apply to **both** `app.js` and `quiz.js renderResults()`
+5. Add `history.replaceState(null,'','?results=' + top3.map(f=>f.id).join(','))` on result render in `app.js`; restore from `?results=` param on load (quiz.js already handles this)
+6. Wrap all `sessionStorage` reads/writes in try/catch (iOS private mode throws)
+7. ~~Show honest empty-state copy when fallback fires~~ — **DONE** (simplify 2026-03-22). ~~Skip `quiz_complete` event when fallback fires~~ — **DONE** (simplify 2026-03-22)
+8. ~~Extract inline styles to `.gift-result-card`, `.gift-sample-link`, `.gift-view-btn`, `.gift-quiz-restart` in `components.css`~~ — **DONE** (simplify 2026-03-22)
+9. Wire `trackEvent()` to Supabase inserts in **both** `app.js` and `quiz.js` — `if (!_sb) return;` null-guard required; `.catch(e => console.warn('[analytics]', e))` on each insert. **Gate:** confirm `events` table exists first (schema: `id uuid pk, name text, props jsonb, ts timestamptz default now()`, anon INSERT RLS enabled)
+10. Add "Try a sample →" CTA to `quiz.js renderResults()` when `config.scoring?.giftMode` is true — fire `sample_link_click` event; success gate depends on this path
+**Why:** Gifter is the highest-intent acquisition wedge. Analytics gate everything else.
+**Success gate:** `sample_link_click > 0` in Supabase within week 1.
+**Effort:** S (~1.5 hrs remaining) · **Reviews:** CEO CLEARED (9/10) + Eng CLEARED (`main`, 2026-03-21)
 
 ---
 
-### TODO: Quiz Result Persistence
-**What:** Store quiz results in `sessionStorage` key `sm_quiz_session`; back-navigation returns to results, not catalog.
-**Schema:** `{quizId: string, timestamp: number, answers: string[], results: string[]}`.
-**Why:** UX bug — losing state on back-nav from detail breaks every gift-giver and casual-shopper session.
-**Effort:** S (~20 min) · **Depends on:** Quiz routes.
+## P2 — Active (ship after Phase 0, in order by effort)
+
+### XS — Quick wins (≤15 min each)
+
+### TODO: Brand Card Hover Affordance
+**What:** Increase brand discovery card hover state from `--border-subtle` to `--border-strong` + light background shift.
+**Why:** Current subtle border change is invisible for imprecise cursor users (Miguel).
+**Effort:** XS (CSS only, ~5 min) · **Depends on:** `.carousel-card` in `components.css`.
+
+---
+
+### TODO: Gift-mode-aware heading in quiz.js renderResults()
+**What:** When `config.scoring?.giftMode` is true, render `"Three gifts worth giving."` and `"Curated from N fragrances across N prestige houses. Each one says something."` instead of the generic `"Your Perfect Matches"` copy.
+**Why:** The standalone page is the primary gifter touchpoint and first SEO contact. Generic copy weakens the gift framing on the page most likely to be shared.
+**Effort:** XS (2-line conditional in `renderResults()`)
 
 ---
 
@@ -34,10 +58,10 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ---
 
-### TODO: Carousel Focus Restoration After Detail Close
-**What:** Push `document.activeElement` when a carousel card triggers `openDesktopDetail()` or a mobile sheet. Pop + restore focus on close. Use a focus stack (`_focusStack = []`) to handle nested carousels.
-**Why:** Keyboard focus jumps to page top after detail close — breaks Nadia's flow every session.
-**Effort:** XS (~15 min) · **Depends on:** `openDesktopDetail()`, `closeDesktopDetail()`, sheet stack.
+### TODO: Golden Pairs Carousel — Keyboard Nav
+**What:** Call `initCarouselKeyNav()` on the `pairWrap` element after `pairSec` is built (~line 1252). Apply `role="list"`, `aria-label`, and roving tabindex — same pattern as Brand Discovery carousel.
+**Why:** A11y obligation — `initCarouselKeyNav()` was never called on Golden Pairs at render time.
+**Effort:** XS (~10 min)
 
 ---
 
@@ -48,17 +72,21 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ---
 
-### TODO: Brand Card Hover Affordance
-**What:** Increase brand discovery card hover state from `--border-subtle` to `--border-strong` + light background shift.
-**Why:** Current subtle border change is invisible for imprecise cursor users (Miguel).
-**Effort:** XS (CSS only, ~5 min) · **Depends on:** `.carousel-card` in `components.css`.
+### TODO: Carousel Focus Restoration After Detail Close
+**What:** Push `document.activeElement` when a carousel card triggers `openDesktopDetail()` or a mobile sheet. Pop + restore focus on close. Use a focus stack (`_focusStack = []`) to handle nested carousels.
+**Why:** Keyboard focus jumps to page top after detail close — breaks Nadia's flow every session.
+**Effort:** XS (~15 min) · **Depends on:** `openDesktopDetail()`, `closeDesktopDetail()`, sheet stack.
 
 ---
 
-### TODO: Carousel Prev/Next Buttons
-**What:** Add `<button class="carousel-prev/next">` to all carousels. Click: `carousel.scrollBy({left: ±300, behavior:'smooth'})`. Buttons hide at scroll start/end. Desktop only (≥1100px).
-**Why:** Miguel (tremor) cannot use horizontal scroll — arrow keys exist but require keyboard-first mode.
-**Effort:** S (~25 min) · **Depends on:** `initCarouselKeyNav()`.
+### S — Standard tasks (20–30 min each)
+
+### TODO: Quiz Result Persistence
+**What:** Store quiz results in `sessionStorage` key `sm_quiz_session`; back-navigation returns to results, not catalog.
+**Schema:** `{quizId: string, timestamp: number, answers: string[], results: string[]}`.
+**Why:** UX bug — losing state on back-nav from detail breaks every gift-giver and casual-shopper session.
+**QA confirmed (2026-03-22):** Clicking "View details →" on a result card and pressing Back resets quiz to Q1 and loses all progress.
+**Effort:** S (~20 min) · **Depends on:** Quiz routes.
 
 ---
 
@@ -83,20 +111,21 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ---
 
-### TODO: Design System — 1-Off Pattern Migration
-**What:** Extract 8 inline-style violations in `app.js` into CSS classes (single CSS-only commit, no behavior change):
-1. `.quiz-attribution` — replaces fully-inline `.dc-quiz-attribution` (~line 1580)
-2. `.stat-cell` / `.stat-cell-value` / `.stat-cell-label` — inline profile stats (~lines 278–285)
-3. `.dc-badge--xs` modifier — replace `style="font-size:9px"` (~line 1216)
-4. Move `font-size` into `.dc-sim-brand` rule — remove `style="font-size:10px"` (~line 1220)
-5. `var(--scrim-dot)` token — replace `rgba(255,255,255,.3)` (~line 1594)
-6. `.tab--xs` modifier — replace `style.cssText` on removeBtn/addBtn (~lines 2536, 2575)
-7. `.chart-legend-item` — replace fully-inline family legend HTML (~line 1984)
-8. `.dupe-card` — remove `.list-item` from dupe finder results that use `display:block` override (~line 1518)
-**Why:** Inline-style violations block future refactors and make the system inconsistent.
-**Effort:** S (~30 min)
+### TODO: Carousel Prev/Next Buttons
+**What:** Add `<button class="carousel-prev/next">` to all carousels. Click: `carousel.scrollBy({left: ±300, behavior:'smooth'})`. Buttons hide at scroll start/end. Desktop only (≥1100px).
+**Why:** Miguel (tremor) cannot use horizontal scroll — arrow keys exist but require keyboard-first mode.
+**Effort:** S (~25 min) · **Depends on:** `initCarouselKeyNav()`.
 
 ---
+
+### TODO: Playwright test — standalone gift quiz flow
+**What:** Extend `run_playwright_tests.py` with a test for `/quiz/gift-intelligence`: page loads → 5 answers → results page renders 3 frag cards → "Try a sample" CTA present.
+**Why:** Zero automated coverage for the quiz.js standalone path. Success gate (`sample_link_click`) depends on this path working correctly. Manual testing only right now.
+**Effort:** S (~30 min) · **Depends on:** quiz dev server at `localhost:3001`
+
+---
+
+### M — Larger tasks (45+ min)
 
 ### TODO: List Item Component Consolidation
 **What:** Migrate all list-item render sites from legacy multi-variant system to canonical slot structure in `DESIGN.md` Option B. Class rename map and ~15–20 render sites documented in previous version of this file (git history: before 2026-03-21 simplification commit).
@@ -118,11 +147,11 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 **Positioning:** "Your fragrance wardrobe, mapped." Not reviews, not encyclopedia, not marketplace. Wardrobe intelligence with transparent math.
 
-**Scope rule:** P2 ships first. These items layer on top, sequenced by phase.
+**Scope rule:** Phase 0 ships first. P2 ships second. These phases layer on top.
 
 ---
 
-### Phase 1 — Foundation (do first)
+### Phase 1 — Foundation (after Phase 0 ships)
 
 #### TODO: Brand Positioning & Manifesto
 **What:** Produce `BRAND.md` — positioning statement, beliefs, refusals, voice guidelines. Update `<meta description>` across all HTML entry points (index.html, app.html, quiz/*/index.html, compare/*/index.html).
@@ -155,7 +184,7 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 ---
 
 #### TODO: Zero-State First Visit Experience
-**What:** Expand existing Zero-Owned TODO: (1) You tab: "Start with something you know" + 5 landmark frags (Santal 33, Bleu de Chanel, Acqua di Gio, Black Opium, Chanel No. 5). (2) Brand Discovery: CTA replacing empty carousel. (3) After first mark: immediate wardrobe intelligence. The emotional moment: the first time the app tells you something about yourself.
+**What:** Expand existing Zero-Owned TODO: (1) You tab: "Start with something you know" + 5 landmark frags (Santal 33, Bleu de Chanel, Acqua di Gio, Black Opium, Chanel No. 5). (2) Brand Discovery: CTA replacing empty carousel. (3) After first mark: immediate wardrobe intelligence.
 **Why:** First 60 seconds determine bounce vs. user. Zero-owned users see empty personalization.
 **Effort:** S (~25 min) · **Note:** Supersedes P2 "Zero-Owned State" TODO — this is the expanded version.
 
@@ -163,17 +192,17 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ### Phase 3 — SEO Content
 
-#### TODO: Individual Fragrance Pages
-**What:** Vercel serverless route `/api/fragrance` following existing `/api/compare` pattern. Rewrite in `vercel.json`: `/fragrance/:id -> /api/fragrance`. Content: notes by tier, sensory profile (from `computeProfile()`), top 5 similar (from `scoreSimilarity()`), role badges. JSON-LD Product schema. Noscript fallback. Generate `sitemap.xml` covering all 213 URLs.
-**Why:** Highest-ROI SEO move. Every fragrance becomes an indexable URL. "[fragrance name] notes" and "[fragrance name] similar" are real search queries.
-**Effort:** M (~1 hr) · **Depends on:** `vercel.json` rewrite, existing `/api/compare` pattern.
+#### TODO: Brand Gift Guide Pages
+**What:** `/api/brand` serverless route. 12 brand pages (e.g. `/brand/byredo`). Content: brand intro, top picks by gifter intent, gift occasion framing, link to gift quiz pre-filtered for that brand. Same Vercel pattern as `/api/compare`. Generate `sitemap.xml` entry for each.
+**Why:** "[brand] gift guide" and "best [brand] fragrance gift" are lower-competition, higher-gifter-intent queries. Primary SEO entry point for the gift wedge.
+**Effort:** S (~30 min) · **Depends on:** Phase 0 gift quiz shipped.
 
 ---
 
-#### TODO: Family & Brand Landing Pages
-**What:** `/api/family` and `/api/brand` serverless routes. 9 family pages + 12 brand pages = 21 URLs. Content: description, fragrance count, top picks, links to individual fragrance pages. Same Vercel pattern.
-**Why:** "Best woody fragrances" and "Byredo best sellers" are high-intent search queries.
-**Effort:** S (~30 min) · **Depends on:** Fragrance pages template (shared pattern).
+#### TODO: Individual Fragrance Pages
+**What:** Vercel serverless route `/api/fragrance` following existing `/api/compare` pattern. Rewrite in `vercel.json`: `/fragrance/:id -> /api/fragrance`. Content: notes by tier, sensory profile, top 5 similar, role badges, "What to get someone who loves [frag]" gifter CTA. JSON-LD Product schema. Noscript fallback. Generate `sitemap.xml` covering all 213 URLs.
+**Why:** "What to get someone who loves [frag]" and "[fragrance name] gift" queries — gifter intent, not encyclopedia queries.
+**Effort:** M (~1 hr) · **Depends on:** `/api/compare` pattern, Brand Gift Guide pages (shared template).
 
 ---
 
@@ -183,6 +212,16 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 **What:** Add `sampleUrl` field to fragrance JSON (manual curation). "Try a sample" link on detail pages — clearly labeled external. Candidate services: MicroPerfumes, DecantX, Luckyscent.
 **Why:** Aligned incentives: $4 samples, not $300 bottles. No financial incentive to recommend one fragrance over another.
 **Effort:** S-M (~30 min code, ongoing curation) · **Activate when:** Supabase events show >500 monthly quiz/compare sessions.
+
+---
+
+## Deferred (blocked — do not start)
+
+### TODO: Delete gift-intelligence from quiz-config.json
+**What:** Delete the `gift-intelligence` entry from `data/quiz-config.json`.
+**Why blocked:** The standalone `/quiz/gift-intelligence` page (quiz.js) reads this config — deleting it causes "Quiz not found." Safe to delete only after quiz.js migration ships the real curated questions.
+**Depends on:** quiz.js migration (currently deferred).
+**Effort:** XS (1-line deletion + smoke test)
 
 ---
 
@@ -230,6 +269,7 @@ Require designer specs and/or content deliverables before engineering.
 
 ## Already Shipped
 
+- **Gift Intelligence Quiz** — `/quiz/gift-intelligence` standalone + in-app path, 5 curated questions, sample CTA (2026-03-22)
 - **Saved Comparisons** — last 5 pairs in `sm_compares`, row tap fills both slots (2026-03-21)
 - **Collection Context in Detail Panel** — "In your collection: X (89%)" below action buttons (`9d63a80`)
 - **Wardrobe Gap — Specific Frag Suggestions** — 2–3 carousel cards per gap axis (`9d63a80`)
