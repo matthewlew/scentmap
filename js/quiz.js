@@ -3,7 +3,12 @@
    Fetches scent data + quiz config, runs scoring, renders results. */
 
 import { ARCHETYPES } from './store.js';
-import { computeProfile, scoreFragrances as engineScoreFragrances } from './engine.js';
+import { computeProfile, scoreFragrances as engineScoreFragrances, getSwapReason } from './engine.js';
+
+// Analytics stub — Supabase SDK is not loaded on quiz pages
+function trackEvent(name, props) {
+  console.log(`[analytics] ${name}`, props);
+}
 
 const FAM = {
   citrus:  { label: 'Citrus',   color: '#9A6800' },
@@ -244,10 +249,65 @@ let _container;
 let _quizConfig;
 let _catalog;
 let _slug;
+let _quizAnswers = []; // Track answer indices for current quiz
 
 function getSlug() {
   const m = window.location.pathname.match(/^\/quiz\/([a-z0-9-]+)/);
   return m ? m[1] : null;
+}
+
+/* ── Session Persistence ── */
+function saveQuizSession(quizId, answers, resultIds, mode, modeData) {
+  const session = {
+    quizId,
+    timestamp: Date.now(),
+    answers,
+    results: resultIds,
+    mode,
+    ...modeData
+  };
+  try {
+    sessionStorage.setItem('sm_quiz_session', JSON.stringify(session));
+  } catch (e) {
+    console.warn('[quiz] Failed to save session:', e);
+  }
+}
+
+function loadQuizSession() {
+  try {
+    const raw = sessionStorage.getItem('sm_quiz_session');
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    console.warn('[quiz] Failed to load session:', e);
+    return null;
+  }
+}
+
+function clearQuizSession() {
+  try {
+    sessionStorage.removeItem('sm_quiz_session');
+  } catch (e) {
+    console.warn('[quiz] Failed to clear session:', e);
+  }
+}
+
+function renderSessionResults(session) {
+  const resultFrags = session.results
+    .map(id => _catalog.find(f => f.id === id))
+    .filter(Boolean);
+
+  if (!resultFrags.length) return;
+
+  if (session.mode === 'archetype') {
+    const archetype = ARCHETYPES[session.archetypeId] || ARCHETYPES['quiet-expressionist'];
+    renderArchetypeResults(archetype, resultFrags);
+  } else if (session.mode === 'astro') {
+    const sign = ZODIAC[session.signId] || ZODIAC['aries'];
+    const archetype = ARCHETYPES[sign.archetypeId] || ARCHETYPES['provocateur'];
+    renderAstroResults(sign, archetype, resultFrags);
+  } else {
+    renderResults(resultFrags);
+  }
 }
 
 function renderQuiz(container, config, catalog) {
@@ -258,6 +318,13 @@ function renderQuiz(container, config, catalog) {
 
   if (!config) {
     container.innerHTML = '<div style="padding:var(--sp-xl);text-align:center;"><p>Quiz not found.</p><a href="/">Back to Scentmap</a></div>';
+    return;
+  }
+
+  // Check for saved quiz session (back-navigation from result detail)
+  const savedSession = loadQuizSession();
+  if (savedSession && savedSession.quizId === _slug) {
+    renderSessionResults(savedSession);
     return;
   }
 
@@ -287,7 +354,7 @@ function renderQuiz(container, config, catalog) {
   renderStep(0, []);
 }
 
-function renderStep(step, collectedTags) {
+function renderStep(step, collectedTags, answerIndices = []) {
   const qs = _quizConfig.questions;
   if (step >= qs.length) {
     if (_quizConfig.scoring?.archetypeMode) {
@@ -295,6 +362,7 @@ function renderStep(step, collectedTags) {
       const ids = frags.map(f => f.id).join(',');
       window._saveQuizResult?.(_slug, _quizConfig.title, archetype, frags);
       history.replaceState(null, '', `/quiz/${_slug}?archetype=${archetype.id}&results=${ids}`);
+      saveQuizSession(_slug, answerIndices, ids, 'archetype', { archetypeId: archetype.id });
       renderArchetypeResults(archetype, frags);
     } else if (_quizConfig.scoring?.astroMode) {
       const { sign, archetype, frags } = scoreAstroMode(_catalog, collectedTags);
@@ -303,6 +371,7 @@ function renderStep(step, collectedTags) {
       const signTag = collectedTags.find(t => t.startsWith('astro:'));
       const signId = signTag ? signTag.slice(6) : 'aries';
       history.replaceState(null, '', `/quiz/${_slug}?sign=${signId}&results=${ids}`);
+      saveQuizSession(_slug, answerIndices, ids, 'astro', { signId });
       renderAstroResults(sign, archetype, frags);
     } else {
       const top3 = scoreFragrances(_catalog, collectedTags, _quizConfig.scoring);
@@ -310,6 +379,7 @@ function renderStep(step, collectedTags) {
         window._saveQuizResult?.(_slug, _quizConfig.title, null, top3);
         const ids = top3.map(f => f.id).join(',');
         history.replaceState(null, '', `/quiz/${_slug}?results=${ids}`);
+        saveQuizSession(_slug, answerIndices, ids, 'standard');
       }
       renderResults(top3);
     }
@@ -352,7 +422,8 @@ function renderStep(step, collectedTags) {
     btn.addEventListener('click', (e) => {
       const idx = parseInt(e.currentTarget.dataset.idx, 10);
       const newTags = [...collectedTags, ...q.a[idx].tags];
-      renderStep(step + 1, newTags);
+      const newAnswers = [...answerIndices, String(idx)];
+      renderStep(step + 1, newTags, newAnswers);
     });
   });
 
@@ -360,27 +431,28 @@ function renderStep(step, collectedTags) {
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
       const newTags = [...collectedTags];
-      // Note: this simple pop assumes each step adds 1 set of tags.
-      // Since q.a[idx].tags is spread, we'd need to know how many tags to pop.
-      // But for current configs, spreading is fine as we're just rebuilding from start mostly.
-      // Actually, we should ideally pass the count or just slice it.
-      // For now, let's just assume we can't easily undo the tags without state management,
-      // OR we just re-run with step-1.
-      newTags.pop(); 
-      renderStep(step - 1, newTags);
+      const newAnswers = [...answerIndices];
+      // Remove the last tag set and corresponding answer
+      if (q.a.length > 0) {
+        const lastTagCount = q.a[0].tags.length;
+        newTags.splice(-lastTagCount);
+        newAnswers.pop();
+      }
+      renderStep(step - 1, newTags, newAnswers);
     });
   }
 }
 
 function _buildMoreDiscoveryHtml() {
   const all = [
-    { slug: 'scent-archetype', label: "Olfactive Archetype Consultation" },
-    { slug: 'astro-scent', label: "Astro Scent Match" },
-    { slug: 'find-your-scent', label: 'Signature Scent Discovery' },
-    { slug: 'best-perfume-for-men-2026', label: 'Men’s Selection Guide' },
-    { slug: 'best-perfume-for-women-2026', label: 'Women’s Selection Guide' },
-    { slug: 'best-perfume-to-gift-2026', label: 'Gift Consultation' },
-    { slug: 'find-your-byredo', label: 'Byredo Brand Guide' },
+    { slug: ‘gift-intelligence’, label: ‘Gift Intelligence — Find the Perfect Gift’ },
+    { slug: ‘scent-archetype’, label: "Olfactive Archetype Consultation" },
+    { slug: ‘astro-scent’, label: "Astro Scent Match" },
+    { slug: ‘find-your-scent’, label: ‘Signature Scent Discovery’ },
+    { slug: ‘best-perfume-for-men-2026’, label: ‘Men’s Selection Guide’ },
+    { slug: ‘best-perfume-for-women-2026’, label: ‘Women’s Selection Guide’ },
+    { slug: ‘best-perfume-to-gift-2026’, label: ‘Gift Consultation’ },
+    { slug: ‘find-your-byredo’, label: ‘Byredo Brand Guide’ },
   ];
   const links = all.filter(q => q.slug !== _slug)
     .map(q => `<a href="/quiz/${q.slug}" class="quiz-more-link">${q.label}</a>`)
@@ -389,8 +461,34 @@ function _buildMoreDiscoveryHtml() {
 }
 
 function renderResults(top3) {
+  let swapNarrative = '';
+  if (top3.length >= 2 && _quizConfig?.scoring?.giftMode) {
+    const reason = getSwapReason(top3[0], top3[1], FAM);
+    if (reason) swapNarrative = `<p class="quiz-subtitle" style="font-style:italic;color:var(--text-tertiary,#B0A898);">${reason}.</p>`;
+  }
+
+  const isGift = _quizConfig?.scoring?.giftMode;
   const resultsHtml = top3.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
+    const sampleQ = encodeURIComponent(`${frag.brand} ${frag.name}`);
+    if (isGift) {
+      return `
+        <div class="quiz-result-card" style="display:block;">
+          <div style="display:flex;align-items:center;gap:var(--sp-md,12px);">
+            <div class="quiz-result-dot" style="background:${fc.color}"></div>
+            <div class="quiz-result-info">
+              <div class="quiz-result-name">${frag.name}</div>
+              <div class="quiz-result-brand">${frag.brand} &middot; ${fc.label}</div>
+              ${frag.description ? `<div class="quiz-result-desc">${frag.description}</div>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;gap:var(--sp-sm,8px);margin-top:var(--sp-md,12px);">
+            <a href="https://www.microperfumes.com/search?q=${sampleQ}" target="_blank" rel="noopener" class="quiz-sample-link" data-frag-id="${frag.id}" style="font-family:var(--font-sans,'DM Sans',sans-serif);font-size:var(--fs-sm,13px);color:var(--text-secondary,#8C8070);text-decoration:underline;text-underline-offset:3px;">Try a sample →</a>
+            <a href="/app.html#frag=${frag.id}" style="font-family:var(--font-sans,'DM Sans',sans-serif);font-size:var(--fs-sm,13px);color:var(--text-tertiary,#B0A898);text-decoration:underline;text-underline-offset:3px;margin-left:auto;">View details</a>
+          </div>
+        </div>
+      `;
+    }
     return `
       <a href="/app.html#frag=${frag.id}" class="quiz-result-card">
         <div class="quiz-result-dot" style="background:${fc.color}"></div>
@@ -409,11 +507,12 @@ function renderResults(top3) {
       <div class="quiz-body">
         <h1 class="quiz-question">Your Perfect Matches</h1>
         <p class="quiz-subtitle">Based on your answers, we recommend these fragrances:</p>
+        ${swapNarrative}
         <div class="quiz-results">
           ${resultsHtml}
         </div>
         <div class="quiz-actions">
-          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
+          <button class="quiz-btn-secondary" onclick="clearQuizSession();history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
           <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
@@ -422,6 +521,15 @@ function renderResults(top3) {
       </div>
     </div>
   `;
+
+  // Wire sample link click tracking for gift mode
+  if (isGift) {
+    _container.querySelectorAll('.quiz-sample-link').forEach(a => {
+      a.addEventListener('click', () => {
+        trackEvent('sample_link_click', { quiz: _slug, frag: a.dataset.fragId });
+      });
+    });
+  }
 }
 
 function renderArchetypeResults(archetype, frags) {
@@ -463,7 +571,7 @@ function renderArchetypeResults(archetype, frags) {
           ${resultsHtml}
         </div>
         <div class="quiz-actions">
-          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
+          <button class="quiz-btn-secondary" onclick="clearQuizSession();history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
           <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
@@ -519,7 +627,7 @@ function renderAstroResults(sign, archetype, frags) {
           ${resultsHtml}
         </div>
         <div class="quiz-actions">
-          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
+          <button class="quiz-btn-secondary" onclick="clearQuizSession();history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
           <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
@@ -735,6 +843,7 @@ async function init() {
 // function declaration and cause infinite recursion when init() calls renderQuiz().
 window._retakeQuiz = function() { renderQuiz(_container, _quizConfig, _catalog); };
 window.copyQuizLink = copyQuizLink;
+window.clearQuizSession = clearQuizSession;
 
 // Run init as soon as DOM is ready — don't wait for module scripts
 if (document.readyState === 'loading') {

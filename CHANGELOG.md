@@ -1,3 +1,29 @@
+## 2026-03-22
+
+### Fixed
+- **Quiz result persistence** — Store quiz session in `sessionStorage` (key `sm_quiz_session`) with schema `{quizId, timestamp, answers, results, mode, [archetypeId|signId]}`. Back-navigation from result detail now returns to results screen (not Q1). Retake button clears session. Prevents UX bug where users lost quiz progress.
+
+### Changed
+- **Design system pattern migration** — 4 inline-style violations extracted into reusable CSS classes (CSS-only, no behavior change):
+  - `.chart-legend-item` added to `components.css`; `legendHTML` in DNA card family breakdown migrated from fully-inline `div` to class + `.dot`.
+  - `.dc-badge--xs` modifier added to `components.css`; Golden Pairs badge `font-size:9px` removed.
+  - `.tab--xs` + `.tab--xs.active` added to `components.css` and `responsive.css`; role picker Remove/Add button `style.cssText` assignments removed.
+  - `.chip-dot` class fixed to use `var(--sp-xs)` + new `--scrim-dot` token (replaces `width:6px; rgba(255,255,255,.3)` inline span in frag detail chip).
+- **`--scrim-dot` token** added to `design-system.css` overlay group — `rgba(255,255,255,.3)` for decorative dots on family-color chips.
+
+---
+
+## 2026-03-21 (Gift Intelligence)
+
+### Added
+- **Gift Intelligence quiz** — new `/quiz/gift-intelligence` route with 5 recipient-focused questions. Asks about the recipient's house preferences, personal style, desired scent mood, avoidances, and occasion. Results: 3 curated fragrance picks with description, top notes, and a "Try a sample" CTA that tracks `sample_link_click` events.
+- **`renderGiftQuiz(container)`** in `app.js` — gift-mode scoring: boosts moderate sillage (4–7) for gifting safety, full blacklist/family/profile matching from existing engine, `trackEvent('quiz_complete', ...)` on result, event-delegated sample link click tracking.
+- **`quiz/gift-intelligence/index.html`** — standalone quiz page with gift-first OG meta, canonical URL, and Twitter card.
+- **`gift-intelligence` in `quiz-config.json`** — 5 questions with recipient-focused framing, `giftMode: true` + `giftIntelligence: true` scoring flags.
+- **Gift Intelligence in `quiz.js` discovery list** — appears first in the "Explore More Discovery" section on all quiz result pages.
+
+---
+
 ## 2026-03-21 (Project Hygiene)
 
 ### Changed
