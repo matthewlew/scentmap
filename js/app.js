@@ -934,7 +934,7 @@ function renderJournalContent(container) {
     activeTrials.forEach(t => {
       const frag = CAT_MAP[t.id]; const row = document.createElement('div');
       row.className = 'settings-menu-item'; row.style.cursor = 'default';
-      row.innerHTML = `<div style="flex:1;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-weight:600;">${frag.name}</div><div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div></div><div style="display:flex; gap:var(--sp-xs);"><button class="dc-collect-btn active" style="padding:4px 12px; font-size:10px;" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button><button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button></div></div></div>`;
+      row.innerHTML = `<div style="flex:1;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-weight:600;">${frag.name}</div><div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div></div><div style="display:flex; gap:var(--sp-xs);"><button class="dc-collect-btn active" style="padding:4px 12px; font-size:10px;" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button><button class="settings-btn" style="padding:4px;" aria-label="Delete trial" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button></div></div></div>`;
       trialWrap.appendChild(row);
     });
     trialSec.appendChild(trialWrap); container.appendChild(trialSec);
@@ -4229,7 +4229,7 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
         <div class="cmp-edu-label">${label}</div>
         <div class="cmp-edu-num">${pct}%</div>
       </div>
-      <button class="cmp-edu-close" id="cmp-edu-close">✕ Close</button>
+      <button class="cmp-edu-close" id="cmp-edu-close" aria-label="Close">✕ Close</button>
     </div>
     <div class="cmp-edu-body">
       ${bodyContent}
