@@ -380,6 +380,7 @@ function renderStep(step, collectedTags, answerIndices = []) {
         const ids = top3.map(f => f.id).join(',');
         history.replaceState(null, '', `/quiz/${_slug}?results=${ids}`);
         saveQuizSession(_slug, answerIndices, ids, 'standard');
+        trackEvent('quiz_complete', { quiz: _slug, results: top3.map(f => f.id) });
       }
       renderResults(top3);
     }
@@ -445,14 +446,14 @@ function renderStep(step, collectedTags, answerIndices = []) {
 
 function _buildMoreDiscoveryHtml() {
   const all = [
-    { slug: ‘gift-intelligence’, label: ‘Gift Intelligence — Find the Perfect Gift’ },
-    { slug: ‘scent-archetype’, label: "Olfactive Archetype Consultation" },
-    { slug: ‘astro-scent’, label: "Astro Scent Match" },
-    { slug: ‘find-your-scent’, label: ‘Signature Scent Discovery’ },
-    { slug: ‘best-perfume-for-men-2026’, label: ‘Men’s Selection Guide’ },
-    { slug: ‘best-perfume-for-women-2026’, label: ‘Women’s Selection Guide’ },
-    { slug: ‘best-perfume-to-gift-2026’, label: ‘Gift Consultation’ },
-    { slug: ‘find-your-byredo’, label: ‘Byredo Brand Guide’ },
+    { slug: 'gift-intelligence', label: 'Gift Intelligence — Find the Perfect Gift' },
+    { slug: 'scent-archetype', label: "Olfactive Archetype Consultation" },
+    { slug: 'astro-scent', label: "Astro Scent Match" },
+    { slug: 'find-your-scent', label: 'Signature Scent Discovery' },
+    { slug: 'best-perfume-for-men-2026', label: "Men's Selection Guide" },
+    { slug: 'best-perfume-for-women-2026', label: "Women's Selection Guide" },
+    { slug: 'best-perfume-to-gift-2026', label: 'Gift Consultation' },
+    { slug: 'find-your-byredo', label: 'Byredo Brand Guide' },
   ];
   const links = all.filter(q => q.slug !== _slug)
     .map(q => `<a href="/quiz/${q.slug}" class="quiz-more-link">${q.label}</a>`)

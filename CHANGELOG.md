@@ -1,7 +1,24 @@
 ## 2026-03-22
 
+### Added
+- **Gift Intelligence SEO** — `gift-intelligence` entry added to `QUIZ_META` in `api/quiz.js` with title, description, OG tags, and `noscriptPopular` for crawler-friendly fallback content.
+- **Swap narrative** — 1-sentence compare reason (via `engine.getSwapReason`) shown between subtitle and first result card in both `app.js` and `quiz.js` gift quiz results. Styled as `.gift-swap-reason` (italic, tertiary).
+- **Shareable result URLs (app.js)** — `history.replaceState` writes `?results=id1,id2,id3` on gift quiz completion; restored on re-open so shared links show results directly.
+- **"Try a sample →" CTA in quiz.js** — gift-mode result cards now show sample link (microperfumes.com) and "View details" link, with `sample_link_click` event tracking.
+- **`quiz_complete` event in quiz.js** — fires on successful scoring (skipped on fallback) for all standard-mode quizzes including gift-intelligence.
+- **Analytics wired to Supabase** — `trackEvent()` in `app.js` now inserts into `events` table when `_sb` client is available; null-guarded with `.catch()` for resilience.
+- **`trackEvent()` stub in quiz.js** — console-only (Supabase SDK not loaded on standalone quiz pages).
+
 ### Fixed
+- **Gift quiz double-click race guard** — `inFlight` flag in `renderGiftQuiz` prevents two rapid answer-button taps from both pushing tags and advancing the step twice.
+- **Quiz fallback no longer pins to first 3 Byredo fragrances** — `renderGiftQuiz` and `renderGlobalQuiz` fallback now uses `bestFrags.filter(x => x.score >= 0)` so zero-score matches are preferred over arbitrary catalog position.
+- **`blacklist_gourmand` scoring bug** — "avoid sweet scents" was incorrectly pushing `'gourmand'` and `'sweet'` to `blacklistRoles` (no-op) instead of `blacklistFamilies`; fixed in both `renderGiftQuiz` and `renderGlobalQuiz`.
+- **Undefined CSS tokens** — replaced `var(--radius-md)` (undefined) with `var(--radius-lg)` in `.gift-result-card`; replaced `var(--fs-sm)` (undefined) with `var(--fs-body-sm)` in 6 gift quiz rules.
+- **`.gift-result-dot` DESIGN.md violation** — custom dot class removed from `components.css`; template updated to use `.dot--md`.
+- **Dead CSS removed** — `.gift-empty-state` rule deleted from `components.css` (class never referenced in JS).
+- **Gift quiz restart clears URL** — "Start over" button now calls `history.replaceState` to strip `?results=` param, preventing stale results on retake.
 - **Quiz result persistence** — Store quiz session in `sessionStorage` (key `sm_quiz_session`) with schema `{quizId, timestamp, answers, results, mode, [archetypeId|signId]}`. Back-navigation from result detail now returns to results screen (not Q1). Retake button clears session. Prevents UX bug where users lost quiz progress.
+- **Quiz standalone pages load quiz.js** — All 8 quiz `index.html` files were loading `app.js` (which rendered the Compare panel), now correctly load `quiz.js` for a clean quiz-only experience.
 
 ### Changed
 - **Design system pattern migration** — 4 inline-style violations extracted into reusable CSS classes (CSS-only, no behavior change):
