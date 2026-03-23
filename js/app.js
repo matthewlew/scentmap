@@ -934,7 +934,7 @@ function renderJournalContent(container) {
     activeTrials.forEach(t => {
       const frag = CAT_MAP[t.id]; const row = document.createElement('div');
       row.className = 'settings-menu-item'; row.style.cursor = 'default';
-      row.innerHTML = `<div style="flex:1;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-weight:600;">${frag.name}</div><div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div></div><div style="display:flex; gap:var(--sp-xs);"><button class="dc-collect-btn active" style="padding:4px 12px; font-size:10px;" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button><button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button></div></div></div>`;
+      row.innerHTML = `<div style="flex:1;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-weight:600;">${frag.name}</div><div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div></div><div style="display:flex; gap:var(--sp-xs);"><button class="dc-collect-btn active" style="padding:4px 12px; font-size:10px;" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button><button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});" aria-label="Delete trial">✕</button></div></div></div>`;
       trialWrap.appendChild(row);
     });
     trialSec.appendChild(trialWrap); container.appendChild(trialSec);
@@ -1131,7 +1131,7 @@ window.renderSaved = function() {
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-sm);">
             <div class="dc-badge" style="background:var(--accent-primary); color:var(--paper); font-size:9px;">${p.score}% LAYER MATCH</div>
-            <button class="settings-btn" style="padding:2px; opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
+            <button class="settings-btn" style="padding:2px; opacity:0.6;" aria-label="Download layering recipe" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
           </div>
           <div class="dc-sim-name">${p.a.name}</div>
           <div class="dc-sim-brand" style="font-size:10px; margin-bottom:var(--sp-xs);">+ ${p.b.name}</div>
@@ -4229,7 +4229,7 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
         <div class="cmp-edu-label">${label}</div>
         <div class="cmp-edu-num">${pct}%</div>
       </div>
-      <button class="cmp-edu-close" id="cmp-edu-close">✕ Close</button>
+      <button class="cmp-edu-close" id="cmp-edu-close" aria-label="Close">✕ Close</button>
     </div>
     <div class="cmp-edu-body">
       ${bodyContent}
