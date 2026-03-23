@@ -167,22 +167,18 @@ const _notify = () => {
 export const initialize = async () => {
   const _nc = { cache: 'no-cache' };
   try {
-    const [roles, notes, brands, scentsIdx] = await Promise.all([
+    const [roles, notes, brands, scents] = await Promise.all([
       fetch('/data/roles.json', _nc).then(r => r.json()),
       fetch('/data/notes.json', _nc).then(r => r.json()),
       fetch('/data/brands.json', _nc).then(r => r.json()),
-      fetch('/data/scents-index.json', _nc).then(r => r.json())
+      fetch('/data/scents.json', _nc).then(r => r.json()),
     ]);
-
-    const scentArrays = await Promise.all(
-      scentsIdx.brands.map(b => fetch(`/data/scents/${b}.json`, _nc).then(r => r.json()))
-    );
 
     _ROLES = roles;
     _NI = notes;
     _NI.forEach(n => _NI_MAP[n.name.toLowerCase()] = n);
     _BRANDS = brands;
-    _CAT = scentArrays.flat();
+    _CAT = scents;
     const _norm = s => (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
     _CAT.forEach(f => {
       _CAT_MAP[f.id] = f;

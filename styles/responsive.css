@@ -456,7 +456,7 @@
     padding: var(--sp-sm) var(--sp-xs);
   }
 
-  .cmp-note-pill {
+  .tag {
     font-size: var(--fs-caption);
   }
 

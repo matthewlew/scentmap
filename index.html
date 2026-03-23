@@ -115,7 +115,7 @@
   .landing-wrap { max-width: 900px; margin: 0 auto; padding: 0 var(--sp-xl); }
   .landing-hero { padding: var(--sp-4xl) var(--sp-xl); text-align: center; background: var(--bg-primary); border-bottom: 1px solid var(--border-standard); }
   .landing-hero .text-heading { margin-bottom: var(--sp-md); }
-  .landing-hero .dc-description { max-width: 600px; margin: 0 auto var(--sp-xl); font-size: var(--fs-ui); }
+  .landing-hero .description { max-width: 600px; margin: 0 auto var(--sp-xl); font-size: var(--fs-ui); }
   .landing-section { padding: var(--sp-3xl) 0; }
   .landing-section-title { text-align: center; margin-bottom: var(--sp-xl); }
   .landing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--sp-lg); }
@@ -228,15 +228,15 @@
 
 <div class="landing-hero">
   <h1 class="text-heading">The Mathematical Fragrance Engine</h1>
-  <p class="dc-description">Demystify fragrance through data. Compare perfumes side-by-side, take a quiz to find your signature scent, and browse 180+ designer and niche fragrances.</p>
+  <p class="description">Demystify fragrance through data. Compare perfumes side-by-side, take a quiz to find your signature scent, and browse 180+ designer and niche fragrances.</p>
   <div style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--sp-sm);">
     <form onsubmit="event.preventDefault(); window.location.href='/app.html#search=' + encodeURIComponent(this.q.value);" style="display: flex; gap: var(--sp-xs); width: 100%;">
       <input type="text" name="q" placeholder="Search fragrances, notes, or brands..." style="flex: 1; padding: var(--sp-md); border: 1px solid var(--border-strong); border-radius: var(--radius-md); font-family: var(--font-sans); font-size: var(--fs-ui); background: var(--bg-secondary);">
-      <button type="submit" class="dc-collect-btn active" style="padding: var(--sp-md) var(--sp-xl); font-size: var(--fs-ui); border: none; cursor: pointer;">Search</button>
+      <button type="submit" class="btn active" style="padding: var(--sp-md) var(--sp-xl); font-size: var(--fs-ui); border: none; cursor: pointer;">Search</button>
     </form>
     <div class="cta-group" style="margin-top: var(--sp-sm);">
-      <a href="/quiz/find-your-scent" class="dc-collect-btn active" style="text-decoration: none; padding: var(--sp-sm) var(--sp-xl);">Take the Quiz</a>
-      <a href="/app.html#compare" class="dc-collect-btn" style="text-decoration: none; padding: var(--sp-sm) var(--sp-xl);">Compare Scents</a>
+      <a href="/quiz/find-your-scent" class="btn active" style="text-decoration: none; padding: var(--sp-sm) var(--sp-xl);">Take the Quiz</a>
+      <a href="/app.html#compare" class="btn" style="text-decoration: none; padding: var(--sp-sm) var(--sp-xl);">Compare Scents</a>
     </div>
   </div>
 </div>
@@ -327,7 +327,7 @@
   <!-- Discovery Promos -->
   <div class="landing-section" id="discovery" style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-3xl);">
     <h2 class="text-title landing-section-title">Olfactive Discovery</h2>
-    <p class="dc-description" style="text-align: center; max-width: 500px; margin: calc(-1 * var(--sp-sm)) auto var(--sp-xl);">Not sure where to start? Our data-driven consultations match you with the perfect fragrance.</p>
+    <p class="description" style="text-align: center; max-width: 500px; margin: calc(-1 * var(--sp-sm)) auto var(--sp-xl);">Not sure where to start? Our data-driven consultations match you with the perfect fragrance.</p>
     <div class="quiz-promo-grid">
       <a href="/quiz/best-perfume-for-men-2026" class="quiz-promo-card">
         <span class="quiz-promo-title">Best Perfume for Men 2026</span>
@@ -416,10 +416,10 @@
   <div class="landing-wrap">
     <div class="footer-cta">
       <h2 class="text-title" style="margin-bottom: var(--sp-md);">Ready to explore?</h2>
-      <p class="dc-description" style="margin-bottom: var(--sp-xl); margin-left: auto; margin-right: auto;">180+ fragrances from Byredo, Le Labo, Diptyque, Tom Ford, Chanel, and more.</p>
+      <p class="description" style="margin-bottom: var(--sp-xl); margin-left: auto; margin-right: auto;">180+ fragrances from Byredo, Le Labo, Diptyque, Tom Ford, Chanel, and more.</p>
       <div class="cta-group">
-        <a href=" /app.html" class="dc-collect-btn active" style="text-decoration: none;">Open the Full Engine</a>
-        <a href="/app.html#catalog" class="dc-collect-btn" style="text-decoration: none;">Browse All Brands</a>
+        <a href=" /app.html" class="btn active" style="text-decoration: none;">Open the Full Engine</a>
+        <a href="/app.html#catalog" class="btn" style="text-decoration: none;">Browse All Brands</a>
       </div>
     </div>
 

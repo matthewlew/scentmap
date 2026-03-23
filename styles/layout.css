@@ -504,3 +504,192 @@
     flex-direction: column;
   }
 }
+
+/* ── DUPES PAGE SHELL ───────────────────────────────────────────── */
+
+.dupes-page {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+.dupes-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-md) var(--sp-xl);
+  border-bottom: var(--border-width) solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  z-index: 10;
+}
+
+.dupes-logo {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: var(--fs-body);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.dupes-nav-link {
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.dupes-nav-link:hover {
+  color: var(--text-primary);
+}
+
+.dupes-main {
+  padding: var(--sp-2xl) var(--sp-xl) var(--sp-4xl);
+}
+
+.dupes-container {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xl);
+}
+
+.dupes-loading,
+.dupes-error {
+  text-align: center;
+  padding: var(--sp-4xl) var(--sp-xl);
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Family color — data-family attribute drives color on dupes page */
+.dupes-family-color[data-family="woody"]    { color: var(--fam-woody); }
+.dupes-family-color[data-family="floral"]   { color: var(--fam-floral); }
+.dupes-family-color[data-family="amber"]    { color: var(--fam-amber); }
+.dupes-family-color[data-family="citrus"]   { color: var(--fam-citrus); }
+.dupes-family-color[data-family="leather"]  { color: var(--fam-leather); }
+.dupes-family-color[data-family="oud"]      { color: var(--fam-oud); }
+.dupes-family-color[data-family="green"]    { color: var(--fam-green); }
+.dupes-family-color[data-family="chypre"]   { color: var(--fam-chypre); }
+.dupes-family-color[data-family="gourmand"] { color: var(--fam-gourmand); }
+
+/* Hero: h1 browser margin reset so gap controls spacing cleanly */
+.dupes-hero {
+  padding: var(--sp-xl) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.dupes-hero h1 {
+  margin: 0;
+}
+
+/* ── TWO-COLUMN ARTICLE LAYOUT ── */
+
+.dupes-article-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--sp-3xl);
+  align-items: start;
+}
+
+.dupes-article-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xl);
+  min-width: 0;
+}
+
+/* Notes panel: sticky alongside the scrolling article */
+.dupes-notes-col {
+  position: sticky;
+  top: var(--sp-4xl); /* 48px — clears the sticky nav bar */
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xl);
+  max-height: calc(100vh - var(--sp-4xl));
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.dupes-notes-col::-webkit-scrollbar {
+  display: none;
+}
+
+/* Allow tab strip to scroll horizontally if names overflow the 320px column */
+.dupes-notes-col .tabs {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.dupes-notes-col .tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tabs in this context don't stretch to equal widths — content-driven */
+.dupes-notes-col .tab {
+  flex: none;
+}
+
+/* ── FRAGRANCE SECTIONS (no card border — spacing only) ── */
+
+.dupes-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3xl);
+}
+
+.dupes-frag-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+}
+
+.dupes-frag-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-sm);
+}
+
+/* ── CTA ── */
+
+.dupes-cta {
+  text-align: center;
+  padding: var(--sp-2xl) var(--sp-xl);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+
+/* ── RESPONSIVE ── */
+
+@media (max-width: 767px) {
+  .dupes-main {
+    padding: var(--sp-lg) var(--sp-md) var(--sp-3xl);
+  }
+
+  .dupes-nav-link {
+    display: none;
+  }
+
+  .dupes-article-layout {
+    grid-template-columns: 1fr;
+    gap: var(--sp-2xl);
+  }
+
+  /* Notes panel above article on mobile (legend before story) */
+  .dupes-notes-col {
+    position: static;
+    order: -1;
+    max-height: none;
+    overflow-y: visible;
+  }
+}

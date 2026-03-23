@@ -242,7 +242,7 @@ async function runAll(){
       const detailOpen=W.document.querySelector('.col-detail.open')||
                        W.document.querySelector('.col-detail[style*="width"]');
       assert('Clicking s-name-btn opens detail panel',!!detailOpen||
-        W.document.querySelector('.dc-name')!==null,'detail col or dc-name present');
+        W.document.querySelector('.panel-title')!==null,'detail col or panel-title present');
     } else skip('name btn not found in first row');
   } else skip('No scent-row found');
 

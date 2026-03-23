@@ -10,24 +10,46 @@ This is the single source of truth for component inventory, token rules, and the
 |-----------|-----------|-------------|----------|------------|
 | Section Label | `.sec-label` | `styles/layout.css:293` | — | All filter/section headings. Never use raw `font-size` or `text-transform` inline. |
 | Tab / Filter Button | `.tab` | `styles/components.css:121` | `.tab.active` | All filter bars, state tabs, role tabs. Must have `aria-pressed`. |
-| Search Input | `.cat-search-input` | `styles/components.css:672` | — | Catalog and notes search. Global focus ring applies. |
+| Search Input | `.cat-search-input` | `styles/components.css:657` | — | Catalog and notes search. Global focus ring applies. |
 | Settings Menu Item | `.settings-menu-item` | `styles/components.css:72` | — | Dropdown nav items only. `min-height: var(--touch-target)`. |
-| List Item | `.list-item` | `styles/components.css:829` | `--compact`, `--search`, `--owned`, `--wish` | All catalog/saved/suggestion/search rows. Always use slot sub-element classes below. |
-| ↳ Slot: leading | `.list-item-leading` | — | — | Holds dot or icon. flex, align-items:center, flex-shrink:0. |
-| ↳ Slot: dot | `.list-item-dot` | — | — | Layout container for leading dot or icon (18px default, 8px compact). Place a `.dot` inside it for the color indicator. |
-| ↳ Slot: icon | `.list-item-icon` | — | — | Emoji/glyph leading. 18px, text-tertiary. |
-| ↳ Slot: body | `.list-item-body` | — | — | flex:1, min-width:0 text truncation container. |
-| ↳ Slot: label | `.list-item-label` | — | — | Primary name. DM Sans, fs-body, 600, text-primary. |
-| ↳ Slot: sublabel | `.list-item-sublabel` | — | — | Brand / category. Source Serif, fs-caption, 400, text-secondary. |
-| ↳ Slot: detail | `.list-item-detail` | — | — | Notes / context. Source Serif, fs-caption, 400, text-tertiary. |
-| ↳ Slot: trail | `.list-item-trail` | — | — | Trailing cluster: badge + score. |
-| ↳ Slot: badge | `.list-item-badge` | — | — | State label (Owned, Wish). DM Sans, fs-caption, 600, text-tertiary. |
-| ↳ Slot: trailing-label | `.list-item-trailing-label` | — | — | Trailing text label. DM Sans, fs-meta, 700, accent-primary. |
-| ⚠️ Deprecated | `.list-item--flat`, `.cmp-sug-card`, `.dc-sim-shelf`, `.list-item-content`, `.list-item-name`, `.list-item-sub`, `.list-item-meta` | — | — | Do not use in new code. Migrate to .list-item slot structure above. |
-| Compare Frag Card | `.cmp-frag-card` | `styles/components.css:1800` | `.cmp-frag-card-name` (layout only), `.cmp-frag-card-brand` (layout only) | Compare slot picker buttons. Typography uses `.list-item-name` / `.list-item-sub` inside layout wrappers. Never inline padding on children. |
-| Carousel Card | `.carousel-card` | `styles/components.css:3208` | `.carousel-card-name` (layout only), `.carousel-card-brand` (layout only), `.carousel-card-family` | Golden pairs, horizontal scrolling lists. Typography uses `.list-item-name` / `.list-item-sub` inside layout wrappers. No inline width/font overrides. |
-| DNA Card | `.dna-card` | `styles/components.css:3748` | `.dna-grid`, `.dna-headline`, `.dna-sub`, `.dna-stats`, `.dna-bar`, `.dna-badge`, `.dna-notes` | Personalization summary on the You panel. Sub-elements defined for card layout only. |
-| Dot Indicator | `.dot` | `styles/components.css` | `.dot--md` | Inline 8px color circle for family/category. `.dot--md` = 10px for picker rows. Background set via inline `style="background: var(--fam-woody)"`. Never create component-specific dot classes. |
+| Button | `.btn` | `styles/components.css` | `.btn.active`, `.btn--spread` | All action buttons and CTA links. `.btn.active` = filled dark state (owned/saved). `.btn--spread` = full-width with space-between (compare slot, buy links). |
+| ↳ Button icon | `.btn-icon` | — | — | Leading icon inside `.btn`. fs-body size. |
+| ↳ Button row | `.btn-row` | — | — | Flex row container for a group of `.btn` elements. gap: sp-sm. |
+| ↳ Button stack | `.btn-stack` | — | — | Flex column container for stacked `.btn` elements. gap: sp-xs. |
+| ↳ Link button | `.link-btn` | — | — | Text-only ghost button (no border, no bg). Cursor pointer, color transition on hover. Use for inline brand/name links. |
+| Panel Title | `.panel-title` | `styles/components.css` | — | Large display heading (Archivo Black, fs-heading) for any detail or full-panel view. |
+| Panel Eyebrow | `.panel-eyebrow` | `styles/components.css` | — | Small caps label above or below a panel title. DM Sans, fs-meta, uppercase, letter-spaced. |
+| Eyebrow | `.eyebrow` | `styles/components.css` | — | Section-level eyebrow label. DM Sans, fs-meta, uppercase. |
+| Callout | `.callout` | `styles/components.css` | — | Tinted block quote / story box. bg-secondary, border-subtle, rounded. |
+| Description | `.description` | `styles/components.css` | — | Body-length descriptive text. fs-body, text-secondary. |
+| Badge | `.badge` | `styles/components.css` | `.badge.contrasts`, `.badge.complements` | Small label chip. DM Sans, fs-meta, 600. Variants for relationship type. |
+| State Badge | `.state-badge` | `styles/components.css` | `.is-owned` | Inline status indicator (Owned, etc). bg-tertiary when owned. |
+| Tag | `.tag` | `styles/components.css` | `.tag.shared` | Note/keyword pill. Use for note names on compare grids, note detail rows. `.tag.shared` = highlighted shared note. |
+| Divider | `.divider` | `styles/components.css` | — | 1px horizontal rule. bg-border-standard. |
+| Metric Bar | `.bar` | `styles/components.css` | — | 2px height track for numeric scores. Always paired with `.bar-fill` inside. |
+| ↳ Bar fill | `.bar-fill` | — | — | Filled portion of `.bar`. Width set via `style="width: ${pct}%"` (data-driven exception). |
+| ↳ Bar label | `.bar-label` | — | — | Value label below a `.bar` (e.g. "7 / 10"). fs-meta, text-secondary. |
+| Stat Grid | `.stat-grid` | `styles/components.css` | — | 2-col grid of `.stat-card` elements. |
+| Stat Card | `.stat-card` | `styles/components.css` | — | Individual metric cell. bg-tertiary, rounded, padding sm/md. |
+| Note Row | `.note-row` | `styles/components.css` | — | Flex row in the notes pyramid (Top / Mid / Base). Border-bottom separator. |
+| ↳ Note tier | `.note-tier` | — | — | Tier label (TOP / MID / BASE). 40px fixed-width, DM Sans, uppercase. |
+| ↳ Note values | `.note-values` | — | — | Flex-wrap chip container for note names within a tier row. |
+| Card Body | `.card-body` | `styles/components.css` | — | Flex-column body content of a similarity/card row. flex:1, min-width:0. |
+| Card Title | `.card-title` | `styles/components.css` | — | Primary name text in a card. fs-body, 500, text-primary. |
+| Card Subtitle | `.card-subtitle` | `styles/components.css` | — | Secondary text in a card. text-secondary, 400. |
+| Card Meta | `.card-meta` | `styles/components.css` | — | Tertiary meta line in a card. fs-meta, text-secondary. |
+| Chip Row | `.chip-row` | `styles/components.css` | — | Flex-wrap row of `.chip` elements. gap: sp-xs. |
+| Label | `.label` | `styles/components.css` | — | Small inline label. fs-meta, 600, text-secondary. |
+| State Wrap | `.state-wrap` | `styles/components.css` | — | Wrapper for the owned/wish state tab bar. Excluded from global tab deactivation. |
+| Compare Frag Card | `.cmp-frag-card` | `styles/components.css:1800` | — | Compare slot picker buttons. Layout-only wrapper — typography uses `.panel-title` / `.panel-eyebrow` inside. |
+| ↳ Slot name | `.slot-name` | — | `.slot-name--empty` | Truncated fragrance name inside compare slot. `.slot-name--empty` = placeholder state. |
+| ↳ Slot vs | `.slot-vs` | — | — | "vs" divider label between slot names. |
+| ↳ Slot arrow | `.slot-arrow` | — | — | Trailing arrow indicator on compare slot button. |
+| ↳ Slot inner | `.slot-inner` | — | — | Inner flex wrapper for slot content alignment. |
+| Carousel Card | `.carousel-card` | `styles/components.css:3208` | `.carousel-card--wide` | Golden pairs and discovery carousels. No inline width/font overrides. |
+| DNA Card | `.dna-card` | `styles/components.css:3748` | `.dna-grid`, `.dna-headline`, `.dna-sub`, `.dna-stats`, `.dna-bar`, `.dna-badge`, `.dna-notes` | Personalization summary. Sub-elements for card layout only. |
+| Dot Indicator | `.dot` | `styles/components.css` | `.dot--md` | 8px color circle. `.dot--md` = 10px. Background via `style="background: var(--fam-woody)"`. Never create component-specific dot classes. |
+| ⚠️ Deprecated | `.list-item--compact`, `.list-item--flat`, `.cmp-sug-card`, `.dc-sim-shelf`, `.list-item-content`, `.list-item-name`, `.list-item-sub`, `.list-item-meta`, all `dc-*` classes | — | — | Do not use. All `dc-` prefixed classes have been renamed to generic equivalents — see table above. |
 
 ---
 
@@ -58,6 +80,7 @@ These rules are absolute. No exceptions without explicit discussion.
 - Font families: `var(--font-serif)` (Source Serif 4), `var(--font-sans)` (DM Sans), `var(--font-display)` (Archivo Black)
 - **Never** write `font-size: 14px` inline in JS template literals
 - Use `var(--link-underline-offset)` (3px) for `text-underline-offset` — never hardcode
+- **No italics** — `font-style: italic` is not accessible (reduced legibility for low-vision users and some dyslexic readers). Never apply `font-style: italic` in any CSS class, inline style, or JS template literal. Use the generic type styles set by the design system; do not add ad-hoc styling to communicate emphasis or mood.
 
 ### Border & Border Radius
 - Border widths: `var(--border-width)` (1px) for standard borders; `var(--border-width-heavy)` (3px) for data surfaces (compare cards, score meters, metric bars) where visual weight is intentional.
@@ -175,15 +198,14 @@ Never use a plain space around `·`.
 
 #### Variant guide
 
-| Variant | Class | Use case | Replaces |
-|---|---|---|---|
-| Default | `.list-item` | Catalog rows, detail rows | `.list-item` (base) |
-| Compact | `.list-item--compact` | Notes rows, quiz results, house rows | `.list-item--compact` (no DOM change) |
-| Search | `.list-item--search` | Universal search modal rows | `.list-item--search` (no DOM change) |
+| Variant | Class | Use case |
+|---|---|---|
+| Default | `.list-item` | Catalog rows, notes rows, quiz results, house rows — compact padding is the default |
+| Search | `.list-item--search` | Universal search modal rows |
 
 #### Display heading exception
 
-Detail panel headings (`.dc-name`, `.np-name`, `.cmp-frag-card-name`) are display-scale headings for full-bleed detail views — they are not list rows and do not use the slot contract. The test: **if it is inside a scrolling list or collection, use slots. If it is the main heading of a detail panel, use a display heading class.**
+Detail panel headings (`.panel-title`, `.panel-eyebrow`, `.card-title`) are display-scale headings for full-bleed detail views — they are not list rows and do not use the slot contract. The test: **if it is inside a scrolling list or collection, use slots. If it is the main heading of a detail panel, use a display heading class.**
 
 ---
 
@@ -198,6 +220,7 @@ Run through this before every commit that touches UI:
 - [ ] **List slot contract** — name/brand/desc text uses `.list-item-label` / `.list-item-sublabel` / `.list-item-detail`; no per-component text class equivalents; no modifier/state class overrides slot typography
 - [ ] **Touch targets ≥44px** — interactive elements have `min-height: var(--touch-target)`
 - [ ] **No inline style for typography/color** — JS template literals use class names, not style attributes for visual properties
+- [ ] **No italics** — `font-style: italic` must not appear anywhere in new or modified CSS/JS; use design system type styles only
 - [ ] **New components documented** — if you added a new CSS class, add it to the Component Inventory table above
 
 ---

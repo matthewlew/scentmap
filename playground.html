@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scentmap — Design System Playground (Audit Violations)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:opsz,wght@8..60,200..900&family=DM+Sans:opsz,wght@9..40,200..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/design-system.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/responsive.css">
+<style>
+  /* ── Playground Layout ── */
+  body { background: var(--bg-primary); color: var(--text-primary); }
+  .pg-container { max-width: 1100px; margin: 0 auto; padding: var(--sp-4xl) var(--sp-xl); }
+  .pg-header { margin-bottom: var(--sp-4xl); padding-bottom: var(--sp-2xl); border-bottom: 2px solid var(--border-strong); }
+  .pg-title { font-family: var(--font-display); font-size: 2rem; line-height: var(--lh-tight); margin-bottom: var(--sp-sm); }
+  .pg-desc { font-size: var(--fs-body); color: var(--text-secondary); max-width: 640px; line-height: var(--lh-normal); }
+  .pg-section { margin-bottom: var(--sp-4xl); }
+  .pg-section-title { font-family: var(--font-sans); font-size: var(--fs-title); font-weight: 700; margin-bottom: var(--sp-lg); padding-bottom: var(--sp-sm); border-bottom: 1px solid var(--border-standard); }
+  .pg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--sp-2xl); }
+  .pg-box { border: 1px dashed var(--border-standard); padding: var(--sp-lg); border-radius: var(--radius-lg); background: var(--bg-primary); }
+  .pg-box--stack { display: flex; flex-direction: column; gap: var(--sp-sm); }
+  .pg-label { font-family: var(--font-sans); font-size: var(--fs-caption); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: var(--ls-wide); display: block; margin-bottom: var(--sp-sm); }
+  .pg-label.violation { color: var(--fam-amber); }
+  .pg-label.solution { color: var(--fam-green); }
+  .pg-subsection { margin-bottom: var(--sp-3xl); }
+  .pg-subsection-title { font-family: var(--font-sans); font-size: var(--fs-ui); font-weight: 600; margin-bottom: var(--sp-lg); color: var(--text-secondary); }
+
+  /* Violation / solution callout pair */
+  .pg-compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-xl); }
+  .pg-compare-col { display: flex; flex-direction: column; gap: var(--sp-sm); }
+  .pg-badge { display: inline-block; font-family: var(--font-sans); font-size: var(--fs-caption); font-weight: 700; padding: 2px var(--sp-sm); border-radius: var(--radius-small); }
+  .pg-badge--violation { background: color-mix(in srgb, var(--fam-amber) 15%, transparent); color: var(--fam-amber); }
+  .pg-badge--solution { background: color-mix(in srgb, var(--fam-green) 15%, transparent); color: var(--fam-green); }
+  .pg-badge--severity { background: color-mix(in srgb, var(--fam-floral) 15%, transparent); color: var(--fam-floral); }
+  .pg-code { font-family: var(--font-sans); font-size: var(--fs-caption); background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-sm); padding: var(--sp-xs) var(--sp-sm); color: var(--text-secondary); }
+  pre.pg-code { padding: var(--sp-md); white-space: pre-wrap; line-height: var(--lh-relaxed); }
+
+  /* TOC */
+  .pg-toc { display: flex; flex-wrap: wrap; gap: var(--sp-sm); margin-bottom: var(--sp-3xl); }
+  .pg-toc a { font-family: var(--font-sans); font-size: var(--fs-meta); color: var(--text-secondary); text-decoration: none; padding: var(--sp-xs) var(--sp-md); border: 1px solid var(--border-standard); border-radius: var(--radius); transition: all var(--dur-fast); }
+  .pg-toc a:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+  /* Summary table */
+  .pg-table { width: 100%; border-collapse: collapse; font-family: var(--font-sans); font-size: var(--fs-meta); }
+  .pg-table th { text-align: left; padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0; color: var(--text-tertiary); font-weight: 600; border-bottom: 1px solid var(--border-standard); }
+  .pg-table td { padding: var(--sp-sm) var(--sp-md) var(--sp-sm) 0; border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+  .pg-table td:first-child code { font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+  <div class="pg-container">
+    <header class="pg-header">
+      <h1 class="pg-title">Design System Playground — Audit Violations</h1>
+      <p class="pg-desc">Live documentation of one-off patterns found in <code>app.js</code> and <code>components.css</code> that bypass the design system. Each entry shows the current violation, the correct migration, and the design system component to use instead.</p>
+      <p class="pg-desc" style="margin-top: var(--sp-sm); color: var(--fam-amber);">⚠ Audit date: 2026-03-23. Source: scheduled design-system audit task.</p>
+    </header>
+
+    <nav class="pg-toc">
+      <a href="#summary">Summary</a>
+      <a href="#magic-numbers">Magic Numbers</a>
+      <a href="#inline-styles">Inline Styles</a>
+      <a href="#score-meter">Score Meter</a>
+      <a href="#dupe-breakdown">Dupe Breakdown</a>
+      <a href="#attribution-box">Attribution Box</a>
+      <a href="#s-name-btn">s-name-btn</a>
+      <a href="#quiz-sections">Quiz Sections</a>
+      <a href="#btn-block">Button Block</a>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SUMMARY TABLE
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="summary">
+      <h2 class="pg-section-title">Violation Summary</h2>
+      <table class="pg-table">
+        <thead>
+          <tr>
+            <th>Class / Pattern</th>
+            <th>Where</th>
+            <th>Severity</th>
+            <th>Migration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>font-size:10px</code></td><td>app.js:1137</td><td><span class="pg-badge pg-badge--severity">CRITICAL</span></td><td>Use <code>var(--fs-caption)</code> (12px)</td></tr>
+          <tr><td><code>font-size:9px</code></td><td>app.js:1133</td><td><span class="pg-badge pg-badge--severity">CRITICAL</span></td><td>Use <code>var(--fs-label)</code> (12px) — below WCAG minimum</td></tr>
+          <tr><td><code>font-size:0.85em</code></td><td>app.js:1409, 1918</td><td><span class="pg-badge pg-badge--severity">CRITICAL</span></td><td>Use <code>var(--fs-meta)</code> absolute token; never relative sizing</td></tr>
+          <tr><td><code>padding:2px</code></td><td>app.js:1134</td><td><span class="pg-badge pg-badge--severity">CRITICAL</span></td><td><code>--sp-micro</code> is optical-only; use <code>--sp-xs</code> for interactive targets</td></tr>
+          <tr><td><code>margin-left:2px</code></td><td>app.js:1409</td><td><span class="pg-badge pg-badge--severity">CRITICAL</span></td><td>Use <code>var(--sp-xs)</code> (4px) minimum</td></tr>
+          <tr><td><code>line-height:1.5</code></td><td>app.js:1451 area</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Use <code>var(--lh-normal)</code> or <code>var(--lh-relaxed)</code></td></tr>
+          <tr><td><code>color:var(--g400)</code></td><td>app.js:3939</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Use semantic <code>var(--text-secondary)</code></td></tr>
+          <tr><td><code>color:var(--g500)</code></td><td>app.js:1847, 2065, 2192</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Use semantic <code>var(--text-tertiary)</code></td></tr>
+          <tr><td><code>.cmp-score-pct</code> + <code>.cmp-score-meter-*</code></td><td>components.css:1866–1914</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Should be renamed to generic <code>.score-display</code> + <code>.score-meter-*</code> and documented</td></tr>
+          <tr><td><code>.dupe-breakdown</code> / <code>.dupe-breakdown-row</code></td><td>components.css:1489–1503</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Replace with <code>&lt;details&gt;</code> + <code>.callout</code> variant; remove one-off class</td></tr>
+          <tr><td>Attribution box (inline in app.js:1497)</td><td>app.js:1497</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Move to <code>.callout</code> variant in CSS; strip inline styles</td></tr>
+          <tr><td><code>.s-name-btn</code></td><td>components.css:817–833</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Merge into <code>.link-btn</code> — identical intent, duplicate definition</td></tr>
+          <tr><td>Quiz step inline styles (<code>style="padding:var(--sp-lg) 0"</code> ×3)</td><td>app.js:2064, 2108, 2191, 2290</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Extract to <code>.quiz-step</code> component class</td></tr>
+          <tr><td>Button block pattern (<code>width:100%; justify-content:center</code>)</td><td>app.js multiple quiz lines</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Add <code>.btn--block</code> modifier to <code>components.css</code></td></tr>
+          <tr><td>Saved-mark span (<code>style="color:var(--accent);..."</code>)</td><td>app.js:1409, 3159, 3918</td><td><span class="pg-badge pg-badge--violation">HIGH</span></td><td>Extract to <code>.saved-mark</code> utility class</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MAGIC NUMBERS
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="magic-numbers">
+      <h2 class="pg-section-title">Magic Numbers &amp; Off-Grid Values</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-xl);">These break the typography scale, the 4px spacing grid, or the semantic token contract. Fix before any future PR touching these lines.</p>
+
+      <div class="pg-grid">
+
+        <div class="pg-subsection">
+          <div class="pg-compare">
+            <div class="pg-compare-col">
+              <span class="pg-badge pg-badge--violation">VIOLATION — app.js:1137</span>
+              <pre class="pg-code">&lt;div class="card-meta"
+  style="font-size:10px; margin-bottom:var(--sp-xs);"&gt;
+  + ${p.b.name}
+&lt;/div&gt;</pre>
+            </div>
+            <div class="pg-compare-col">
+              <span class="pg-badge pg-badge--solution">SOLUTION</span>
+              <pre class="pg-code">&lt;!-- card-meta already has fs-meta in CSS; --&gt;
+&lt;!-- remove inline style entirely --&gt;
+&lt;div class="card-meta"&gt;
+  + ${p.b.name}
+&lt;/div&gt;</pre>
+              <p class="pg-desc" style="font-size:var(--fs-meta);">10px is below the type scale. <code>.card-meta</code> in CSS already sets <code>var(--fs-meta)</code>. Strip the inline style — no CSS change needed.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pg-subsection">
+          <div class="pg-compare">
+            <div class="pg-compare-col">
+              <span class="pg-badge pg-badge--violation">VIOLATION — app.js:1409, 3159, 3918</span>
+              <pre class="pg-code">&lt;span style="color:var(--accent);
+  margin-left:2px;
+  font-size:0.85em;
+  text-decoration:none;
+  display:inline-block;"&gt;★&lt;/span&gt;</pre>
+            </div>
+            <div class="pg-compare-col">
+              <span class="pg-badge pg-badge--solution">SOLUTION — new .saved-mark class</span>
+              <pre class="pg-code">/* Add to components.css */
+.saved-mark {
+  color: var(--accent-primary);
+  margin-left: var(--sp-xs);
+  font-size: var(--fs-meta);
+  text-decoration: none;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+&lt;!-- In JS --&gt;
+&lt;span class="saved-mark"&gt;★&lt;/span&gt;</pre>
+              <p class="pg-desc" style="font-size:var(--fs-meta);">Used in 3 places. <code>2px</code> margin violates grid; <code>0.85em</code> is relative sizing. Consolidate to one class.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pg-subsection">
+          <div class="pg-compare">
+            <div class="pg-compare-col">
+              <span class="pg-badge pg-badge--violation">VIOLATION — app.js:2065, 2192</span>
+              <pre class="pg-code">&lt;div style="font-size:var(--fs-meta);
+  color:var(--g500);
+  margin-bottom:var(--sp-xs);"&gt;
+  Question ${step + 1} of ${qs.length}
+&lt;/div&gt;</pre>
+            </div>
+            <div class="pg-compare-col">
+              <span class="pg-badge pg-badge--solution">SOLUTION</span>
+              <pre class="pg-code">/* var(--g500) is a primitive token —
+   use semantic token instead */
+&lt;div class="panel-eyebrow"&gt;
+  Question ${step + 1} of ${qs.length}
+&lt;/div&gt;</pre>
+              <p class="pg-desc" style="font-size:var(--fs-meta);"><code>var(--g500)</code> is a primitive grey. Use <code>var(--text-tertiary)</code> (semantic). <code>.panel-eyebrow</code> already has correct type and spacing.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pg-subsection">
+          <div class="pg-compare">
+            <div class="pg-compare-col">
+              <span class="pg-badge pg-badge--violation">VIOLATION — app.js:1847</span>
+              <pre class="pg-code">&lt;div style="font-size:var(--fs-caption);
+  color:var(--g500);"&gt;
+  &lt;strong&gt;Extraction:&lt;/strong&gt;
+  ${note.extraction_method}
+&lt;/div&gt;</pre>
+            </div>
+            <div class="pg-compare-col">
+              <span class="pg-badge pg-badge--solution">SOLUTION</span>
+              <pre class="pg-code">&lt;div class="description"&gt;
+  &lt;strong&gt;Extraction:&lt;/strong&gt;
+  ${note.extraction_method}
+&lt;/div&gt;</pre>
+              <p class="pg-desc" style="font-size:var(--fs-meta);"><code>var(--g500)</code> → <code>var(--text-secondary)</code> via <code>.description</code> class.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         INLINE STYLES — STRUCTURE VIOLATIONS
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="inline-styles">
+      <h2 class="pg-section-title">Inline Style Structure Violations</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-xl);">These apply structure (flex, padding, margin) via inline styles in JS. All should be CSS classes per <code>DESIGN.md</code> — inline styles are only allowed for <em>data-driven</em> values (bar widths, family colors).</p>
+
+      <div class="pg-subsection">
+        <div class="pg-compare">
+          <div class="pg-compare-col">
+            <span class="pg-badge pg-badge--violation">VIOLATION — app.js:252, others</span>
+            <pre class="pg-code">&lt;div style="margin-top:var(--sp-2xl);
+  border-top:1px solid var(--border-standard);
+  padding-top:var(--sp-xl);"&gt;</pre>
+          </div>
+          <div class="pg-compare-col">
+            <span class="pg-badge pg-badge--solution">SOLUTION</span>
+            <pre class="pg-code">/* Use parent gap — not child margin/padding.
+   DESIGN.md: sections spaced by parent gap. */
+
+/* Parent container: */
+.detail-inner { gap: var(--sp-2xl); }
+
+/* If divider is genuinely needed: */
+&lt;hr class="divider"&gt;</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="pg-subsection">
+        <div class="pg-compare">
+          <div class="pg-compare-col">
+            <span class="pg-badge pg-badge--violation">VIOLATION — app.js:1048</span>
+            <pre class="pg-code">&lt;div class="text-title"
+  style="color:var(--accent-primary);"&gt;
+  ${arch.name}
+&lt;/div&gt;</pre>
+          </div>
+          <div class="pg-compare-col">
+            <span class="pg-badge pg-badge--solution">SOLUTION — new modifier class</span>
+            <pre class="pg-code">/* Add to components.css: */
+.text-title--accent {
+  color: var(--accent-primary);
+}
+
+&lt;div class="text-title text-title--accent"&gt;
+  ${arch.name}
+&lt;/div&gt;</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="pg-subsection">
+        <div class="pg-compare">
+          <div class="pg-compare-col">
+            <span class="pg-badge pg-badge--violation">VIOLATION — app.js:1497 (attribution)</span>
+            <pre class="pg-code">&lt;div class="attribution"
+  style="padding:var(--sp-sm) var(--sp-md);
+  background:var(--bg-secondary);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-md);
+  font-family:var(--font-sans);
+  font-size:var(--fs-meta);
+  color:var(--text-secondary);
+  display:flex;
+  align-items:center;
+  gap:var(--sp-xs);"&gt;
+  &lt;span style="font-size:1.2em;"&gt;✨&lt;/span&gt;
+  From your scent archetype: ...
+&lt;/div&gt;</pre>
+          </div>
+          <div class="pg-compare-col">
+            <span class="pg-badge pg-badge--solution">SOLUTION — see Attribution Box section below</span>
+            <pre class="pg-code">/* All inline styles move to CSS.
+   See #attribution-box section. */
+&lt;div class="callout callout--attribution"&gt;
+  &lt;span class="callout-icon"
+    aria-hidden="true"&gt;✨&lt;/span&gt;
+  From your scent archetype:
+  &lt;strong&gt;${arch.name}&lt;/strong&gt;
+&lt;/div&gt;</pre>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SCORE METER
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="score-meter">
+      <h2 class="pg-section-title">Score Meter — Rename to Generic</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-xl);">Currently named <code>.cmp-score-pct</code> and <code>.cmp-score-meter-*</code> — "cmp" prefix implies Compare-only, but the same animated score display is reused in the Aura card and profile panel. Rename to generic <code>.score-display</code> / <code>.score-meter-*</code> and document in DESIGN.md.</p>
+
+      <div class="pg-compare">
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--violation">CURRENT — cmp-prefixed, undocumented</span>
+          <pre class="pg-code">/* components.css:1866 */
+.cmp-score-pct { ... }        /* big % number */
+.cmp-score-meter { ... }      /* wrapper */
+.cmp-score-meter-track { ... }
+.cmp-score-meter-fill { ... } /* animated */
+.cmp-score-meter-dot { ... }
+.cmp-score-meter-tick { ... }
+
+/* app.js:1083 */
+&lt;div class="cmp-score-pct"&gt;
+  ${avgSillage}
+  &lt;span class="text-meta"
+    style="font-weight:400;
+    color:var(--text-tertiary);"&gt;
+    /10
+  &lt;/span&gt;
+&lt;/div&gt;</pre>
+        </div>
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--solution">MIGRATION — generic names</span>
+          <pre class="pg-code">/* Rename in components.css: */
+.score-display { ... }        /* was .cmp-score-pct */
+.score-meter { ... }          /* was .cmp-score-meter */
+.score-meter-track { ... }
+.score-meter-fill { ... }
+.score-meter-dot { ... }
+.score-meter-tick { ... }
+
+/* app.js — strip inline from /10 unit: */
+&lt;div class="score-display"&gt;
+  ${avgSillage}
+  &lt;span class="score-display-unit"&gt;
+    /10
+  &lt;/span&gt;
+&lt;/div&gt;
+
+/* New in components.css: */
+.score-display-unit {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 400;
+  color: var(--text-tertiary);
+}</pre>
+          <p class="pg-desc" style="font-size:var(--fs-meta); margin-top: var(--sp-sm);">Keep <code>.cmp-score-pct</code> as a legacy alias (<code>.cmp-score-pct { /* see .score-display */ }</code>) until all call sites are migrated.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--sp-2xl);">
+        <span class="pg-label solution">Live Demo — current .cmp-score-pct rendering</span>
+        <div class="pg-box" style="max-width: 180px;">
+          <div class="cmp-score-pct">87<span class="text-meta" style="font-weight:400; color:var(--text-tertiary);">%</span></div>
+          <div class="cmp-score-meter" style="margin-top: var(--sp-sm);">
+            <div class="cmp-score-meter-track">
+              <div class="cmp-score-meter-fill" style="width: 87%; background: var(--fam-woody);"></div>
+              <div class="cmp-score-meter-dot" style="left: 87%; background: var(--fam-woody);"></div>
+              <div class="cmp-score-meter-tick" style="left: 25%;"></div>
+              <div class="cmp-score-meter-tick" style="left: 50%;"></div>
+              <div class="cmp-score-meter-tick" style="left: 75%;"></div>
+            </div>
+          </div>
+        </div>
+        <p class="pg-desc" style="font-size:var(--fs-meta); margin-top: var(--sp-sm);">This works correctly — it only needs a rename + documentation in DESIGN.md. No visual changes required.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         DUPE BREAKDOWN
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="dupe-breakdown">
+      <h2 class="pg-section-title">Dupe Breakdown — Remove One-Off, Use Callout</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-xl);"><code>.dupe-breakdown</code> and <code>.dupe-breakdown-row</code> are one-off classes used only inside the dupe match cards. The pattern (tinted inset block with key/value rows) matches the existing <code>.callout</code> component. The inner rows match <code>.stat-card</code> inside a <code>.stat-grid</code>.</p>
+
+      <div class="pg-compare">
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--violation">CURRENT — one-off classes in app.js:1455</span>
+          <pre class="pg-code">&lt;details style="margin-bottom:var(--sp-sm);"&gt;
+  &lt;summary style="font-size:var(--fs-caption);
+    font-family:var(--font-sans);
+    font-weight:600;
+    color:var(--text-tertiary);
+    cursor:pointer;
+    list-style:none;
+    display:flex;
+    align-items:center;
+    gap:var(--sp-xs);"&gt;
+    Score breakdown ▸
+  &lt;/summary&gt;
+  &lt;div class="dupe-breakdown"
+    style="margin-top:..."&gt;
+    &lt;div class="dupe-breakdown-row"&gt;
+      &lt;span&gt;Shared notes&lt;/span&gt;
+      &lt;span&gt;8&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/details&gt;</pre>
+        </div>
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--solution">MIGRATION</span>
+          <pre class="pg-code">/* New utility classes for &lt;details&gt; pattern
+   (add to components.css) */
+.details-summary {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+}
+.details-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Reuse .callout for the body block */
+/* Reuse .stat-grid / .stat-card for rows */
+
+&lt;details&gt;
+  &lt;summary class="details-summary"&gt;
+    Score breakdown ▸
+  &lt;/summary&gt;
+  &lt;div class="callout" style="margin-top:var(--sp-sm)"&gt;
+    &lt;div class="stat-grid"&gt;
+      &lt;div class="stat-card"&gt;
+        &lt;div class="sec-label"&gt;Shared notes&lt;/div&gt;
+        &lt;div class="text-title"&gt;8&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/details&gt;</pre>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--sp-2xl);">
+        <span class="pg-label solution">Live Demo — target state using .callout + .stat-grid</span>
+        <div class="pg-box" style="max-width: 360px;">
+          <details open>
+            <summary class="sec-label" style="cursor:pointer; list-style:none; display:flex; align-items:center; gap:var(--sp-xs);">Score breakdown ▸</summary>
+            <div class="callout" style="margin-top: var(--sp-sm);">
+              <div class="stat-grid">
+                <div class="stat-card">
+                  <div class="sec-label">Shared notes</div>
+                  <div class="text-title">8</div>
+                </div>
+                <div class="stat-card">
+                  <div class="sec-label">Family match</div>
+                  <div class="text-title">Yes</div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+        <p class="pg-desc" style="font-size:var(--fs-meta); margin-top: var(--sp-sm);">Delete <code>.dupe-breakdown</code> and <code>.dupe-breakdown-row</code> from <code>components.css</code> once migrated. Also add <code>.details-summary</code> as a documented utility.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         ATTRIBUTION BOX
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="attribution-box">
+      <h2 class="pg-section-title">Attribution Box — Extend .callout</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-xl);">The contextual "From your scent archetype" box (app.js:1497) is a new <em>callout variant</em> — it uses the exact same background/border/radius pattern as <code>.callout</code> but adds an icon slot and horizontal layout. Add a <code>.callout--attribution</code> modifier and a <code>.callout-icon</code> slot. Remove all inline styles.</p>
+
+      <div class="pg-compare">
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--violation">CURRENT — 9 inline styles (app.js:1497)</span>
+          <pre class="pg-code">&lt;div class="attribution"
+  style="padding:var(--sp-sm) var(--sp-md);
+  background:var(--bg-secondary);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-md);
+  font-family:var(--font-sans);
+  font-size:var(--fs-meta);
+  color:var(--text-secondary);
+  display:flex; align-items:center;
+  gap:var(--sp-xs);"&gt;
+  &lt;span style="font-size:1.2em;"&gt;✨&lt;/span&gt;
+  From your scent archetype:
+  &lt;strong style="color:var(--text-primary);"&gt;
+    ${arch.name}
+  &lt;/strong&gt;
+&lt;/div&gt;</pre>
+        </div>
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--solution">SOLUTION — .callout--attribution in CSS</span>
+          <pre class="pg-code">/* Add to components.css after .callout: */
+.callout--attribution {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+}
+.callout-icon {
+  flex-shrink: 0;
+  font-size: var(--fs-ui); /* replaces 1.2em */
+  line-height: 1;
+}
+
+/* app.js — clean markup: */
+&lt;div class="callout callout--attribution"&gt;
+  &lt;span class="callout-icon"
+    aria-hidden="true"&gt;✨&lt;/span&gt;
+  From your scent archetype:
+  &lt;strong&gt;${arch.name}&lt;/strong&gt;
+&lt;/div&gt;</pre>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--sp-2xl);">
+        <span class="pg-label solution">Live Demo — target state</span>
+        <div class="pg-box" style="max-width: 420px; background: var(--bg-secondary);">
+          <!-- Simulating .callout--attribution inline since class doesn't exist yet -->
+          <div class="callout" style="display:flex; align-items:center; gap:var(--sp-xs); font-family:var(--font-sans); font-size:var(--fs-meta); color:var(--text-secondary);">
+            <span style="flex-shrink:0; font-size:var(--fs-ui); line-height:1;" aria-hidden="true">✨</span>
+            From your scent archetype: <strong>The Classicist</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         S-NAME-BTN → LINK-BTN
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="s-name-btn">
+      <h2 class="pg-section-title">.s-name-btn → Merge into .link-btn</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-xl);"><code>.s-name-btn</code> (components.css:817) and <code>.link-btn</code> are functionally identical: both are text-only ghost buttons with underline and hover transition. They have different visual weight settings (<code>s-name-btn</code> is fs-body/500, <code>link-btn</code> is inherited/500) but the same intent. Consolidate to <code>.link-btn</code> and remove the duplicate.</p>
+
+      <div class="pg-compare">
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--violation">CURRENT — duplicate definitions</span>
+          <pre class="pg-code">/* components.css:817 — one-off */
+.s-name-btn {
+  font-size: var(--fs-body);
+  font-weight: 500;
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: var(--link-underline-offset);
+  text-decoration-color: var(--g300);
+  transition: ...;
+}
+
+/* components.css — canonical .link-btn */
+.link-btn {
+  /* same intent, different specifics */
+}</pre>
+        </div>
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--solution">MIGRATION</span>
+          <pre class="pg-code">/* 1. Audit all .s-name-btn usages in app.js.
+      Replace with .link-btn.
+   2. Delete .s-name-btn from components.css.
+   3. If fs-body weight is needed on link-btn,
+      add .link-btn--primary modifier: */
+
+.link-btn--primary {
+  font-size: var(--fs-body);
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration-color: var(--border-standard);
+}
+.link-btn--primary:hover {
+  text-decoration-color: var(--text-primary);
+}</pre>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--sp-2xl);">
+        <span class="pg-label solution">Live Demo — .link-btn variants</span>
+        <div class="pg-box pg-box--stack" style="max-width: 360px;">
+          <button class="link-btn">View brand details →</button>
+          <!-- .s-name-btn simulation: -->
+          <button class="s-name-btn">View Details → <span style="font-size:var(--fs-caption); color:var(--text-tertiary);">(s-name-btn — to be replaced)</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         QUIZ SECTIONS
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="quiz-sections">
+      <h2 class="pg-section-title">Quiz Step — Extract Inline Layout</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-xl);">Quiz question containers repeat <code>style="padding:var(--sp-lg) 0;"</code> on every step render (app.js:2064, 2108, 2191, 2290). These are structural, not data-driven. Extract to <code>.quiz-step</code>.</p>
+
+      <div class="pg-compare">
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--violation">CURRENT — inline padding × 4 uses</span>
+          <pre class="pg-code">/* app.js:2064 */
+&lt;div style="padding:var(--sp-lg) 0;"&gt;
+  &lt;div style="font-size:var(--fs-meta);
+    color:var(--g500);
+    margin-bottom:var(--sp-xs);"&gt;
+    Question 1 of 5
+  &lt;/div&gt;
+  &lt;div class="panel-title"
+    style="margin-bottom:var(--sp-xl);"&gt;
+    ${q.q}
+  &lt;/div&gt;
+  ...
+&lt;/div&gt;</pre>
+        </div>
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--solution">SOLUTION</span>
+          <pre class="pg-code">/* Add to components.css: */
+.quiz-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-lg);
+  padding: var(--sp-lg) 0;
+}
+
+/* app.js: */
+&lt;div class="quiz-step"&gt;
+  &lt;div class="panel-eyebrow"&gt;
+    Question 1 of 5
+  &lt;/div&gt;
+  &lt;div class="panel-title"&gt;
+    ${q.q}
+  &lt;/div&gt;
+  ...
+&lt;/div&gt;</pre>
+          <p class="pg-desc" style="font-size:var(--fs-meta);">Note: <code>style="margin-bottom:var(--sp-xl)"</code> on <code>.panel-title</code> also violates parent-managed spacing rule. The <code>gap</code> on <code>.quiz-step</code> handles this.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         BUTTON BLOCK
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="pg-section" id="btn-block">
+      <h2 class="pg-section-title">Button Block — Add .btn--block Modifier</h2>
+      <p class="pg-desc" style="margin-bottom: var(--sp-xl);">Full-width centered buttons appear in quiz results, gift quiz, and collection exports. Currently each adds <code>style="width:100%; justify-content:center;"</code> individually. Add a single <code>.btn--block</code> modifier.</p>
+
+      <div class="pg-compare">
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--violation">CURRENT — repeated inline style (5+ uses)</span>
+          <pre class="pg-code">/* app.js:2294 */
+&lt;button class="btn"
+  style="margin-top:var(--sp-2xl);
+  width:100%;
+  justify-content:center;
+  background:var(--bg-secondary);
+  color:var(--text-secondary);
+  border:1px solid var(--border-strong);"&gt;
+  Retake Quiz
+&lt;/button&gt;</pre>
+        </div>
+        <div class="pg-compare-col">
+          <span class="pg-badge pg-badge--solution">SOLUTION</span>
+          <pre class="pg-code">/* Add to components.css after .btn: */
+.btn--block {
+  width: 100%;
+  justify-content: center;
+}
+
+/* The secondary ghost variant already exists
+   on .btn — use a class, not inline style: */
+.btn--ghost {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
+}
+
+/* app.js: */
+&lt;button class="btn btn--block btn--ghost"&gt;
+  Retake Quiz
+&lt;/button&gt;</pre>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--sp-2xl);">
+        <span class="pg-label solution">Live Demo — .btn--block (simulated)</span>
+        <div class="pg-box" style="max-width: 360px;">
+          <button class="btn" style="width:100%; justify-content:center;">Primary Block</button>
+          <button class="btn" style="width:100%; justify-content:center; margin-top:var(--sp-sm); background:var(--bg-secondary); color:var(--text-secondary); border-color:var(--border-strong);">Ghost Block (Retake Quiz)</button>
+        </div>
+        <p class="pg-desc" style="font-size:var(--fs-meta); margin-top:var(--sp-sm);">These buttons render correctly now — they just need the inline styles extracted to <code>.btn--block</code> and <code>.btn--ghost</code> modifier classes.</p>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
