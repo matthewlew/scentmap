@@ -299,5 +299,59 @@
         ]
       }
     ]
+  },
+  "gift-intelligence": {
+    "title": "Gift Intelligence — Find the Perfect Fragrance Gift",
+    "subtitle": "5 questions about the recipient. We'll find the gift that says something.",
+    "questionCount": 5,
+    "scoring": {
+      "giftMode": true
+    },
+    "questions": [
+      {
+        "q": "Who are you shopping for?",
+        "a": [
+          { "label": "A partner or spouse", "tags": ["intimate", "signature"] },
+          { "label": "A close friend", "tags": ["casual", "crowd-pleaser"] },
+          { "label": "A family member", "tags": ["safe", "crowd-pleaser"] },
+          { "label": "A coworker or acquaintance", "tags": ["work", "safe"] }
+        ]
+      },
+      {
+        "q": "How would you describe their personal style?",
+        "a": [
+          { "label": "Minimalist and understated", "tags": ["citrus", "green", "woody"] },
+          { "label": "Bold and expressive", "tags": ["oud", "leather", "amber"] },
+          { "label": "Classic and timeless", "tags": ["floral", "woody", "amber"] },
+          { "label": "Adventurous and eclectic", "tags": ["chypre", "oud", "creative"] }
+        ]
+      },
+      {
+        "q": "What's the occasion?",
+        "a": [
+          { "label": "Birthday", "tags": ["signature", "crowd-pleaser"] },
+          { "label": "Holiday or Christmas", "tags": ["cold", "formal", "amber"] },
+          { "label": "Anniversary or Valentine's Day", "tags": ["intimate", "floral"] },
+          { "label": "Just because — no occasion needed", "tags": ["casual", "all"] }
+        ]
+      },
+      {
+        "q": "What feeling should the fragrance evoke?",
+        "a": [
+          { "label": "Warmth and comfort", "tags": ["amber", "gourmand", "woody"] },
+          { "label": "Freshness and energy", "tags": ["citrus", "green", "aquatic"] },
+          { "label": "Mystery and depth", "tags": ["oud", "leather", "intensity"] },
+          { "label": "Romance and softness", "tags": ["floral", "musk", "intimate"] }
+        ]
+      },
+      {
+        "q": "How adventurous is their fragrance taste?",
+        "a": [
+          { "label": "Play it safe — something universally loved", "tags": ["crowd-pleaser", "safe", "signature"] },
+          { "label": "A little interesting — recognizable but unique", "tags": ["woody", "floral", "casual"] },
+          { "label": "Push boundaries — something they wouldn't buy themselves", "tags": ["creative", "oud", "chypre"] }
+        ]
+      }
+    ]
   }
 }

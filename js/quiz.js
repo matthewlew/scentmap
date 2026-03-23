@@ -292,7 +292,10 @@ function clearQuizSession() {
 }
 
 function renderSessionResults(session) {
-  const resultFrags = session.results
+  const resultIds = Array.isArray(session.results)
+    ? session.results
+    : String(session.results).split(',');
+  const resultFrags = resultIds
     .map(id => _catalog.find(f => f.id === id))
     .filter(Boolean);
 

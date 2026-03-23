@@ -40,6 +40,13 @@ const QUIZ_META = {
     questionCount: 3,
     noscriptPopular: ['gypsy-water', 'bal-dafrique', 'mojave-ghost', 'blanche', 'eleventh-hour'],
   },
+  'gift-intelligence': {
+    title: 'Gift Intelligence — Find the Perfect Fragrance Gift | Scentmap',
+    description: '5 questions about the recipient. 213 curated fragrances. A gift that says something — from Byredo, Le Labo, Diptyque, Aesop, and more.',
+    ogTitle: 'Find the Perfect Fragrance Gift — Gift Intelligence',
+    questionCount: 5,
+    noscriptPopular: ['gypsy-water', 'santal-33', 'bal-dafrique', 'rose-31', 'mojave-ghost'],
+  },
 };
 
 function escHtml(s) {

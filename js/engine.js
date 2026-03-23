@@ -218,7 +218,9 @@ export function getSwapReason(anchor, candidate, FAM) {
   const famC = candidate.family;
   const sameFam = anchor.family === candidate.family;
 
-  const sharedNotes = anchor._nAll.filter(n => candidate._nAll.includes(n));
+  const anchorNotes = anchor._nAll || [...(anchor.top || []), ...(anchor.mid || []), ...(anchor.base || [])];
+  const candidateNotes = candidate._nAll || [...(candidate.top || []), ...(candidate.mid || []), ...(candidate.base || [])];
+  const sharedNotes = anchorNotes.filter(n => candidateNotes.includes(n));
   const shNote = sharedNotes.length > 0 ? sharedNotes[0].charAt(0).toUpperCase() + sharedNotes[0].slice(1) : null;
 
   const TH = 0.15;

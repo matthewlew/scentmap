@@ -1,3 +1,23 @@
+## 2026-03-23
+
+### Fixed
+- **Gift Intelligence quiz "Quiz not found"** — Added `gift-intelligence` to both `data/quiz-config.json` (client-side quiz rendering) and `QUIZ_META` in `api/quiz.js` (Vercel SSR/SEO). Root cause: config entries were never added when the quiz page was created.
+- **Quiz session restore crash** — `renderSessionResults` now normalises `session.results` to an array before calling `.map()`. Previously, quiz completion stored results as a comma-joined string (`ids.join(',')`); back-navigation then threw `session.results.map is not a function`.
+- **`getSwapReason` crash in quiz.js context** — `engine.js::getSwapReason` accessed `anchor._nAll` directly. `quiz.js` builds its catalog from `scents-flat.json` without running through `store.js` normalisation (which computes `_nAll`). Fixed by falling back to `[...anchor.top, ...anchor.mid, ...anchor.base]` when `_nAll` is absent.
+- **Quiz cache busting** — Updated `quiz.js?v=` query string from `20260317c` → `20260323a` across all 8 standalone quiz pages to force browsers to load the patched code.
+
+---
+
+## 2026-03-22 (2)
+
+### Added
+- **Fragrance Ladder dupe prototype** — `/dupes/santal-33/` standalone page. Anchor card (Santal 33 full profile + price/oz + sillage bar), Fragrance Ladder strip (4 price tiers: Entry/Mid/Prestige/Niche, pills scroll-link to cards), 4 curated alternatives (ALT Crystal 33 68%, Dossier Woody Sandalwood 68%, Commodity Sandalwood 67%, Lattafa Raghba 53%), 3-column note comparison grid reusing `.cmp-*` CSS classes, similarity score badge, savings-per-oz callout, buy buttons + "Link coming soon" fallback, funnel CTA → scentmap.co. Self-contained with no imports from `app.js` or `engine.js`.
+- **`data/dupes/santal-33.json`** — Manually curated dupe data. Anchor + dupe entries embed price, size_ml, tier, pre-computed similarity scores with `_score_method` comment documenting the formula. Scores computed using `engine.js scoreSimilarity` algorithm.
+- **`js/dupes.js`** — Vanilla ES module. Single fetch, try/catch covers both network and JSON parse errors. Family colors via CSS custom properties (`var(--fam-woody)` etc.), not hardcoded hex.
+- **`styles/dupes.css`** — Dupe-page-specific styles using design tokens only. No hard-coded values. Ladder collapses to 2×2 grid on mobile.
+
+---
+
 ## 2026-03-22
 
 ### Added
