@@ -4366,8 +4366,10 @@ function renderCompareResults(fa,fb){
   // NOTE: URL and Card fills are now handled by _selectFragForSlot
   window.haptic?.('success');
   const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
-  const matchPct=Math.round(scoreSimilarity(fa,fb));
-  const layerPct=scoreLayeringPct(fa,fb);
+  const simDetails=engine.getSimilarityDetails(fa,fb,store.FAM_COMPAT);
+  const layDetails=engine.getLayeringDetails(fa,fb,store.FAM_COMPAT);
+  const matchPct=Math.round(simDetails.total);
+  const layerPct=Math.round(Math.min(100,layDetails.total/75*100));
   const verdict=getVerdict(matchPct,layerPct,fa,fb);
   const matchColor=matchPct>=60?ca.accent:matchPct>=30?'var(--g700)':'var(--g500)';
   const layerColor=layerPct>=60?cb.accent:layerPct>=30?'var(--g700)':'var(--g500)';
@@ -4409,7 +4411,7 @@ function renderCompareResults(fa,fb){
       <div class="cmp-pair-card-right">
         <div class="cmp-pair-card-verdict">${verdict}</div>
         <div class="cmp-pair-card-scores">
-          <button class="cmp-score-card" id="cmp-score-match">
+          <div class="cmp-score-card" id="cmp-score-match">
             <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
             <div class="cmp-score-label">Similarity</div>
             <div class="cmp-score-meter">
@@ -4422,9 +4424,30 @@ function renderCompareResults(fa,fb){
               </div>
             </div>
             <div class="cmp-score-range">${_simLabel(matchPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
-          </button>
-          <button class="cmp-score-card" id="cmp-score-layer">
+            <div class="cmp-edu-math">
+              <div class="cmp-edu-math-row">
+                <span class="cmp-edu-math-label">Family Match</span>
+                <span class="cmp-edu-math-score">${Math.round(simDetails.famScore)}/40</span>
+              </div>
+              <div class="cmp-edu-math-row">
+                <span class="cmp-edu-math-label">Shared Notes</span>
+                <span class="cmp-edu-math-score">${Math.round(simDetails.noteScore)}/30</span>
+              </div>
+              <div class="cmp-edu-math-row">
+                <span class="cmp-edu-math-label">Sillage Match</span>
+                <span class="cmp-edu-math-score">${Math.round(simDetails.sillScore)}/10</span>
+              </div>
+              <div class="cmp-edu-math-row">
+                <span class="cmp-edu-math-label">Role Overlap</span>
+                <span class="cmp-edu-math-score">${Math.round(simDetails.roleScore)}/20</span>
+              </div>
+              <div class="cmp-edu-math-row total">
+                <span class="cmp-edu-math-label">Raw Similarity Score</span>
+                <span class="cmp-edu-math-score">${Math.round(simDetails.total)}/100</span>
+              </div>
+            </div>
+          </div>
+          <div class="cmp-score-card" id="cmp-score-layer">
             <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
             <div class="cmp-score-label">Pairing</div>
             <div class="cmp-score-meter">
@@ -4437,8 +4460,25 @@ function renderCompareResults(fa,fb){
               </div>
             </div>
             <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
-          </button>
+            <div class="cmp-edu-math">
+              <div class="cmp-edu-math-row">
+                <span class="cmp-edu-math-label">Family Compatibility</span>
+                <span class="cmp-edu-math-score">${Math.round(layDetails.famScore)}/35</span>
+              </div>
+              <div class="cmp-edu-math-row">
+                <span class="cmp-edu-math-label">Sillage Contrast</span>
+                <span class="cmp-edu-math-score">${Math.round(layDetails.sillScore)}/20</span>
+              </div>
+              <div class="cmp-edu-math-row">
+                <span class="cmp-edu-math-label">Note Independence</span>
+                <span class="cmp-edu-math-score">${Math.round(layDetails.noteScore)}/20</span>
+              </div>
+              <div class="cmp-edu-math-row total">
+                <span class="cmp-edu-math-label">Raw Layering Score</span>
+                <span class="cmp-edu-math-score">${Math.round(layDetails.total)}/75</span>
+              </div>
+            </div>
+          </div>
         </div>
         <button id="cmp-share-btn" class="dc-collect-btn active" style="width:100%;justify-content:center;">Share Comparison</button>
       </div>
@@ -4468,15 +4508,6 @@ function renderCompareResults(fa,fb){
         showUndoToast('Link copied to clipboard!', () => {});
       });
     }
-  });
-
-  document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openScoreEdu('match',matchPct,layerPct,fa,fb);
-  });
-  document.getElementById('cmp-score-layer')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openScoreEdu('layer',matchPct,layerPct,fa,fb);
   });
 
   // Wire note pill taps in notes grid
