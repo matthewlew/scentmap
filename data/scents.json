@@ -1,0 +1,6063 @@
+[
+  {
+    "id": "gypsy-water",
+    "brand": "Byredo",
+    "name": "Gypsy Water",
+    "family": "woody",
+    "sillage": 3,
+    "layering": 5,
+    "top": [
+      "Juniper",
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Pine",
+      "Incense",
+      "Pepper"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vanilla",
+      "Amber"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "A smoky, earthy unisex scent with bright citrus opening into a pine-campfire warmth, great for relaxed everyday wear.",
+    "url": "https://www.byredo.com/eu_en/gypsy-water-eau-de-parfum-50ml",
+    "story": "“Gypsy Water is an idealizedization of the Romany lifestyle based on a fascination with the myth. The scent of fresh soil, deep forests and campfires evokes the dream of a free, colorful lifestyle close to nature.” – Ben Gorham"
+  },
+  {
+    "id": "eleventh-hour",
+    "brand": "Byredo",
+    "name": "Eleventh Hour",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 8,
+    "top": [
+      "Bergamot",
+      "Pepper",
+      "Plum"
+    ],
+    "mid": [
+      "Rum",
+      "Fig",
+      "Cedar"
+    ],
+    "base": [
+      "Tonka",
+      "Labdanum",
+      "Amber"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "Warm, boozy amber with dried-fruit sweetness and soft woods, ideal for cold evenings and close-to-skin occasions.",
+    "url": "https://www.byredo.com/eu_en/eleventh-hour-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "mixed-emotions",
+    "brand": "Byredo",
+    "name": "Mixed Emotions",
+    "family": "woody",
+    "sillage": 3,
+    "layering": 4,
+    "top": [
+      "Black Currant",
+      "Mate",
+      "Tea"
+    ],
+    "mid": [
+      "Violet Leaf",
+      "Birch"
+    ],
+    "base": [
+      "Papyrus",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Dry, inky tea and woods with a subtle fruitiness, wearing like a contemplative, quiet veil perfect for workdays.",
+    "url": "https://www.byredo.com/eu_en/mixed-emotions-eau-de-parfum-50ml",
+    "story": "“We are in the business of bottling up emotions. I hope that people read the label and identify with that sentiment in its simplest form, and then find something deeper to relate to: the juxtaposition between the familiar and the unfamiliar.” – Ben Gorham"
+  },
+  {
+    "id": "bal-dafrique",
+    "brand": "Byredo",
+    "name": "Bal d'Afrique",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Neroli",
+      "Lemon"
+    ],
+    "mid": [
+      "African Violet",
+      "Cyclamen"
+    ],
+    "base": [
+      "Musk",
+      "Vetiver",
+      "Amber"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A sunlit, slightly sweet floral with sparkling citrus and soft vetiver, great for warm days and joyful casual wear.",
+    "url": "https://www.byredo.com/eu_en/bal-d-afrique-eau-de-parfum-50ml",
+    "story": "“Bal d’Afrique is one of my earliest fragrances. At the time of its formulation, I was obsessed with the translation of memories into scent. At the same time, I felt confident enough to include an imaginary component. My father lived and travelled in Africa for about 10–15 years. I would read his diaries; the way he travelled on freight ships, met all kinds of different people... For me, this was the fantasy of arriving in Africa through somebody else’s words. Bal d’Afrique reflects that; it’s an imaginary journey as well as a complete celebration of how I see African culture and its influence.” – Ben Gorham"
+  },
+  {
+    "id": "blanche",
+    "brand": "Byredo",
+    "name": "Blanche",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Pink Pepper",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Rose",
+      "Peony"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A clean, laundry-fresh floral with soft rose and creamy sandalwood, ideal for office days and low-key settings.",
+    "url": "https://www.byredo.com/eu_en/blanche-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "sunday-cologne",
+    "brand": "Byredo",
+    "name": "Sunday Cologne",
+    "family": "citrus",
+    "sillage": 4,
+    "layering": 3,
+    "top": [
+      "Bergamot",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Violet",
+      "Rose"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Bright, clean citrus opening with a hint of floral and a soft musky base, perfect for warm-weather casual wear.",
+    "url": "https://www.byredo.com/eu_en/sunday-cologne-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "mojave-ghost",
+    "brand": "Byredo",
+    "name": "Mojave Ghost",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Ambrette",
+      "Violet",
+      "Bergamot"
+    ],
+    "mid": [
+      "Magnolia",
+      "Sandalwood",
+      "Sapodilla"
+    ],
+    "base": [
+      "Cedarwood",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "A desert-air blend of magnolia, musk, and sandalwood — ghostly, clean, and quietly intimate. One of the most universally wearable modern scents.",
+    "url": "https://www.byredo.com/eu_en/mojave-ghost-eau-de-parfum-50ml",
+    "story": "“The Mojave Desert is a vast prehistoric landscape spanning southeastern California, southern Nevada, southwestern Utah and northwestern Arizona. It is an immense expanse of climatic extremes. Within this parched and seemingly lifeless environment lives a flower with a phantom-like beauty: the Mohavea confertiflora, also known as the Mojave Ghost.”"
+  },
+  {
+    "id": "bibliotheque",
+    "brand": "Byredo",
+    "name": "Bibliothèque",
+    "family": "woody",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Plum",
+      "Peach",
+      "Violet"
+    ],
+    "mid": [
+      "Orris",
+      "Papyrus",
+      "Birch"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vetiver",
+      "Amber"
+    ],
+    "roles": [
+      "creative",
+      "work"
+    ],
+    "description": "Old books, leather, and dry woods with a ripened-fruit warmth — evokes a well-worn library on a winter afternoon.",
+    "url": "https://www.byredo.com/eu_en/biblioth-que-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "super-cedar",
+    "brand": "Byredo",
+    "name": "Super Cedar",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Apple",
+      "Bergamot"
+    ],
+    "mid": [
+      "Juniper",
+      "Rose"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk",
+      "Labdanum"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A crisp, aromatic cedar sharpened by juniper and green apple — clean and functional, disappears into the skin.",
+    "url": "https://www.byredo.com/eu_en/super-cedar-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "seven-veils",
+    "brand": "Byredo",
+    "name": "Seven Veils",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 8,
+    "top": [
+      "Pink Pepper",
+      "Iris"
+    ],
+    "mid": [
+      "Patchouli",
+      "Rose",
+      "Ylang-Ylang"
+    ],
+    "base": [
+      "Labdanum",
+      "Amber",
+      "Vanilla",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A thick, ceremonial amber with heavy patchouli and labdanum layered over rose and spice — dense, rich, and declarative.",
+    "url": "https://www.byredo.com/eu_en/seven-veils-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "rose-noir",
+    "brand": "Byredo",
+    "name": "Rose Noir",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Incense"
+    ],
+    "mid": [
+      "Rose",
+      "Guaiac Wood"
+    ],
+    "base": [
+      "Vetiver",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A smoky, incense-draped rose with dry guaiac wood — less romantic than sinister, worn as a statement not a gesture.",
+    "url": "https://www.byredo.com/eu_en/rose-noir-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "slow-dance",
+    "brand": "Byredo",
+    "name": "Slow Dance",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Blackcurrant Leaf",
+      "Orange"
+    ],
+    "mid": [
+      "Violet",
+      "Jasmine"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "intimate"
+    ],
+    "description": "A soft floral haze of violet, jasmine, and tart currant — intimate and unhurried, like a slow evening at home.",
+    "url": "https://www.byredo.com/eu_en/slow-dance-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "eau-capitale",
+    "brand": "Byredo",
+    "name": "Eau Capitale",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Black Currant",
+      "Bergamot"
+    ],
+    "mid": [
+      "Rose",
+      "Patchouli"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "A city rose — bold currant and rich patchouli give classic rose a modern, urban edge without sweetness.",
+    "url": "https://www.byredo.com/eu_en/eau-capitale-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "la-tulipe",
+    "brand": "Byredo",
+    "name": "La Tulipe",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Lily of the Valley",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Tulip",
+      "Peony",
+      "Rose"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "A precise, dewy floral centred on tulip — clean and quietly feminine, worn without occasion.",
+    "url": "https://www.byredo.com/eu_en/la-tulipe-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "vetyverio-byredo",
+    "brand": "Byredo",
+    "name": "Vetyverio",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Grapefruit",
+      "Black Pepper"
+    ],
+    "mid": [
+      "Vetiver",
+      "Orris"
+    ],
+    "base": [
+      "Vetiver",
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "Sparkling grapefruit cut by black pepper opens into a cool, earthy vetiver — linear, unisex, and all-season.",
+    "url": "https://www.byredo.com/eu_en/vetyverio-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "pulp",
+    "brand": "Byredo",
+    "name": "Pulp",
+    "family": "chypre",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Blood Orange",
+      "Fig",
+      "Blackcurrant Leaf"
+    ],
+    "mid": [
+      "Rose",
+      "Geranium"
+    ],
+    "base": [
+      "Patchouli",
+      "Labdanum",
+      "Sandalwood"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "Tropical fruit pulp — fig, blood orange, and currant — soured by green notes and grounded in patchouli. Strange, addictive, and difficult to place.",
+    "url": "https://www.byredo.com/eu_en/pulp-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "oud-immortel",
+    "brand": "Byredo",
+    "name": "Oud Immortel",
+    "family": "resin",
+    "sillage": 7,
+    "layering": 8,
+    "top": [
+      "Bergamot",
+      "Clove"
+    ],
+    "mid": [
+      "Rose",
+      "Tobacco"
+    ],
+    "base": [
+      "Oud",
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Spiced rose and tobacco build over a dense oud and amber base — a full, ceremonial scent for cold evenings or formal occasions.",
+    "url": "https://www.byredo.com/eu_en/oud-immortel-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "lil-fleur",
+    "brand": "Byredo",
+    "name": "Lil Fleur",
+    "family": "amber",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Tangerine",
+      "Bergamot"
+    ],
+    "mid": [
+      "Violet",
+      "Cashmere"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "intimate"
+    ],
+    "description": "A soft, slightly powdery amber with warm cashmere and citrus — gentle, comforting, and barely there.",
+    "url": "https://www.byredo.com/eu_en/lil-fleur-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "byredo-1984",
+    "brand": "Byredo",
+    "name": "1984",
+    "family": "leather",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Black Pepper",
+      "Cardamom"
+    ],
+    "mid": [
+      "Patchouli",
+      "Iris"
+    ],
+    "base": [
+      "Leather",
+      "Tobacco",
+      "Vetiver"
+    ],
+    "roles": [
+      "creative",
+      "formal"
+    ],
+    "description": "A dark, smoky leathered iris with tobacco and pepper — named for Orwell, confrontational and politically charged.",
+    "url": "https://www.byredo.com/eu_en/1984-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "casablanca-lily",
+    "brand": "Byredo",
+    "name": "Casablanca Lily",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Green Leaves",
+      "Bergamot"
+    ],
+    "mid": [
+      "Casablanca Lily",
+      "Jasmine",
+      "Narcissus"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "A cool, luminous white lily — expansive and watery, neither sweet nor heavy, centred on the lily's clean petals.",
+    "url": "https://www.byredo.com/eu_en/casablanca-lily-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "accord-oud",
+    "brand": "Byredo",
+    "name": "Accord Oud",
+    "family": "oud",
+    "sillage": 8,
+    "layering": 7,
+    "top": [
+      "Saffron",
+      "Cypriol"
+    ],
+    "mid": [
+      "Rose",
+      "Geranium"
+    ],
+    "base": [
+      "Oud",
+      "Patchouli",
+      "Sandalwood"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A leathery, mineral oud with saffron and rose — darker and more austere than Oud Immortel, with less sweetness.",
+    "url": "https://www.byredo.com/eu_en/accord-oud-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "byredo-unnamed",
+    "brand": "Byredo",
+    "name": "Unnamed",
+    "family": "woody",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Violet Leaf",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Iris",
+      "Violet"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk",
+      "Labdanum"
+    ],
+    "roles": [
+      "signature",
+      "intimate"
+    ],
+    "description": "A deliberate study in ambiguity — powdery iris and violet with clean woods, stripped of any identifying flourish.",
+    "url": "https://www.byredo.com/eu_en/unnamed-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "sundazed",
+    "brand": "Byredo",
+    "name": "Sundazed",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cardamom",
+      "Ginger"
+    ],
+    "mid": [
+      "Neroli",
+      "Orange Blossom",
+      "Coconut"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A warm, tropical-adjacent amber with neroli and coconut — lazy, sun-soaked, and utterly unhurried.",
+    "url": "https://www.byredo.com/eu_en/sundazed-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "byredo-infrared",
+    "brand": "Byredo",
+    "name": "Infrared",
+    "family": "green",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Tomato Leaf",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Vetiver",
+      "Violet"
+    ],
+    "base": [
+      "Amber",
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "creative",
+      "heat"
+    ],
+    "description": "A sharp, acidic tomato-leaf opening that dries into a smooth vetiver-woody base — polarizing, modern, and deliberately odd.",
+    "url": "https://www.byredo.com/eu_en/infrared-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "open-sky",
+    "brand": "Byredo",
+    "name": "Open Sky",
+    "family": "green",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Grapefruit",
+      "Green Tea"
+    ],
+    "mid": [
+      "Violet Leaf",
+      "Birch"
+    ],
+    "base": [
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A transparent, airy green-woody scent evoking open air and altitude — minimal, contemplative, and clean.",
+    "url": "https://www.byredo.com/eu_en/open-sky-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "reine-de-nuit",
+    "brand": "Byredo",
+    "name": "Reine de Nuit",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Pepper"
+    ],
+    "mid": [
+      "Night-Blooming Jasmine",
+      "Tuberose"
+    ],
+    "base": [
+      "Musk",
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "formal",
+      "intimate"
+    ],
+    "description": "A nocturnal white floral — jasmine and tuberose intensified under darkness, sensual and enveloping.",
+    "url": "https://www.byredo.com/eu_en/reine-de-nuit-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "nv-fleur-fantome",
+    "brand": "Byredo",
+    "name": "Night Veils: Fleur Fantome",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Violet",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine"
+    ],
+    "base": [
+      "Amber",
+      "Oud",
+      "Patchouli"
+    ],
+    "roles": [
+      "formal",
+      "creative"
+    ],
+    "description": "A dense floral-amber with oud that blooms in darkness — heavy, ceremonial, and built for the night.",
+    "url": "https://www.byredo.com/eu_en/night-veils-fleur-fantome-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "nv-tobacco-mandarin",
+    "brand": "Byredo",
+    "name": "Night Veils: Tobacco Mandarin",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Mandarin",
+      "Bergamot"
+    ],
+    "mid": [
+      "Tobacco Flower",
+      "Jasmine"
+    ],
+    "base": [
+      "Oud",
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "cold",
+      "signature"
+    ],
+    "description": "Sweet mandarin softens tobacco flower over a warm oud base — the most approachable of the Night Veils collection.",
+    "url": "https://www.byredo.com/eu_en/night-veils-tobacco-mandarin-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "nv-oud-sans-soucis",
+    "brand": "Byredo",
+    "name": "Night Veils: Oud Sans Soucis",
+    "family": "oud",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Pepper"
+    ],
+    "mid": [
+      "Oud",
+      "Leather"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Stripped-down oud without ornamentation — raw, leathery, and austere, for those who want nothing else.",
+    "url": "https://www.byredo.com/eu_en/night-veils-oud-sans-soucis-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "nv-prismatic-dream",
+    "brand": "Byredo",
+    "name": "Night Veils: Prismatic Dream",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Iris",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Rose",
+      "Violet"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Vetiver"
+    ],
+    "roles": [
+      "intimate",
+      "creative"
+    ],
+    "description": "A silvery, ethereal floral-amber with powdery iris and rose — dreamlike and diffuse, like light through crystal.",
+    "url": "https://www.byredo.com/eu_en/night-veils-prismatic-dream-eau-de-parfum-50ml",
+    "story": ""
+  },
+  {
+    "id": "tierra-del-fuego",
+    "brand": "Fueguia 1833",
+    "name": "Tierra del Fuego",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Cypress"
+    ],
+    "base": [
+      "Amber"
+    ],
+    "roles": [
+      "cold",
+      "signature"
+    ],
+    "description": "A smoky amber with sharp pink pepper and cypress, evoking windswept southern forests and distant fires.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "darwin",
+    "brand": "Fueguia 1833",
+    "name": "Darwin",
+    "family": "green",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Grapefruit"
+    ],
+    "mid": [
+      "Jasmine"
+    ],
+    "base": [
+      "Vetiver"
+    ],
+    "roles": [
+      "heat",
+      "signature"
+    ],
+    "description": "Bright grapefruit and airy jasmine drift into a crisp vetiver base, reminiscent of botanical exploration.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "la-cautiva",
+    "brand": "Fueguia 1833",
+    "name": "La Cautiva",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Black Currant"
+    ],
+    "mid": [
+      "Tuberose"
+    ],
+    "base": [
+      "Sandalwood"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A lush tuberose balanced by dark currant and soft sandalwood, rich but airy.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ballena-de-la-pampa",
+    "brand": "Fueguia 1833",
+    "name": "Ballena de la Pampa",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Sea Salt"
+    ],
+    "mid": [
+      "Orchid"
+    ],
+    "base": [
+      "Ambergris"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A salty, musky ambergris scent inspired by whales drifting along the Patagonian coast.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "alerce",
+    "brand": "Fueguia 1833",
+    "name": "Alerce",
+    "family": "woody",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Cedar",
+      "Cypress",
+      "Juniper"
+    ],
+    "base": [
+      "Vetiver",
+      "Patchouli",
+      "Moss"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "Named after the ancient Patagonian larch — dense, resinous wood with cool juniper and earthy vetiver. Timeless and unhurried.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "patagonia-fueguia",
+    "brand": "Fueguia 1833",
+    "name": "Patagonia",
+    "family": "green",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Grapefruit",
+      "Bergamot"
+    ],
+    "mid": [
+      "Geranium",
+      "Green Leaves"
+    ],
+    "base": [
+      "Cedarwood",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "The open air of the Patagonian steppe — bright citrus, wild herbs, and dry grassy vetiver. Clean, spare, and expansive.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "buenos-aires",
+    "brand": "Fueguia 1833",
+    "name": "Buenos Aires",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Lemon",
+      "Petitgrain"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "A sun-warmed Argentine citrus that blooms into soft florals before fading into clean skin musk — elegant and urbane.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "palo-santo",
+    "brand": "Fueguia 1833",
+    "name": "Palo Santo",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Palo Santo",
+      "Bergamot"
+    ],
+    "mid": [
+      "Incense",
+      "Frankincense"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "creative",
+      "cold"
+    ],
+    "description": "Sacred Palo Santo smoke grounded in frankincense and warm amber — meditative, earthy, and deeply resinous.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "costera",
+    "brand": "Fueguia 1833",
+    "name": "Costera",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Sea Salt",
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Marine Accord",
+      "Jasmine"
+    ],
+    "base": [
+      "Ambergris",
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A coastal breeze of salt and citrus over driftwood and ambergris — open, breezy, and oceanic.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eolo",
+    "brand": "Fueguia 1833",
+    "name": "Eolo",
+    "family": "green",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Grapefruit",
+      "Green Leaves"
+    ],
+    "mid": [
+      "Violet Leaf",
+      "Vetiver"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Named for the god of wind — a spare, transparent green-citrus evoking Patagonian open air with nothing superfluous.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "endeavour",
+    "brand": "Fueguia 1833",
+    "name": "Endeavour",
+    "family": "green",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Pink Pepper",
+      "Lemon"
+    ],
+    "mid": [
+      "Hinoki",
+      "Mint",
+      "Geranium"
+    ],
+    "base": [
+      "Palisander",
+      "Cedar"
+    ],
+    "roles": [
+      "signature",
+      "heat"
+    ],
+    "description": "A crisp botanical green — pink pepper and lemon spark over Japanese hinoki and cool mint, grounded by warm palisander. Named for the spirit of exploration.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "pampeana",
+    "brand": "Fueguia 1833",
+    "name": "Pampeana",
+    "family": "chypre",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Herbs",
+      "Hay"
+    ],
+    "mid": [
+      "Tobacco Leaf",
+      "Leather"
+    ],
+    "base": [
+      "Oakmoss",
+      "Vetiver",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "creative"
+    ],
+    "description": "Dry pampas grass, hay, and tobacco — a chypre-leaning earthy scent evoking the Argentine grasslands at dusk.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "huemul",
+    "brand": "Fueguia 1833",
+    "name": "Huemul",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Pine",
+      "Green Leaves"
+    ],
+    "mid": [
+      "Cedar",
+      "Juniper",
+      "Artemisia"
+    ],
+    "base": [
+      "Vetiver",
+      "Patchouli",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "cold"
+    ],
+    "description": "Named for the endangered Andean deer — damp forest pine, juniper, and moss, smelling of cold mountain air.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "malbec",
+    "brand": "Fueguia 1833",
+    "name": "Malbec",
+    "family": "chypre",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Black Grape",
+      "Violet Leaf"
+    ],
+    "mid": [
+      "Rose",
+      "Blackberry"
+    ],
+    "base": [
+      "Leather",
+      "Tobacco",
+      "Sandalwood"
+    ],
+    "roles": [
+      "cold",
+      "formal"
+    ],
+    "description": "Inspired by Argentine wine — dark berry and leather over dry tobacco and wood, simultaneously elegant and rustic.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "cuyen",
+    "brand": "Fueguia 1833",
+    "name": "Cuyen",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Jasmine",
+      "Rose"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "intimate",
+      "casual"
+    ],
+    "description": "Cuyen means 'moon' in Mapuche — a luminous, skin-close floral that glows softly in low light.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "cruz-del-sur",
+    "brand": "Fueguia 1833",
+    "name": "Cruz del Sur",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Citrus",
+      "Pepper"
+    ],
+    "mid": [
+      "Iris",
+      "Rose"
+    ],
+    "base": [
+      "Vetiver",
+      "Sandalwood",
+      "Labdanum"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "Named for the Southern Cross — a cool stellar woody with iris and dry vetiver, elegant and precisely balanced.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "iguazu",
+    "brand": "Fueguia 1833",
+    "name": "Iguazú",
+    "family": "green",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Green Leaves",
+      "Bergamot"
+    ],
+    "mid": [
+      "White Flowers",
+      "Jasmine"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk",
+      "Ambergris"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "The mist and spray of the Iguazú falls — an aquatic-green floral, vast, humid, and alive with movement.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "panal",
+    "brand": "Fueguia 1833",
+    "name": "Panal",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Honey",
+      "Bergamot"
+    ],
+    "mid": [
+      "Beeswax",
+      "Ylang-Ylang"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "intimate"
+    ],
+    "description": "A golden honeyed amber centred on beeswax — warm and sweet without being gourmand, deeply comforting.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "azahar",
+    "brand": "Fueguia 1833",
+    "name": "Azahar",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Orange Blossom"
+    ],
+    "mid": [
+      "Neroli",
+      "Jasmine",
+      "White Rose"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A classic white floral centred on orange blossom and neroli — sun-drenched, open, and Mediterranean.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "katanka",
+    "brand": "Fueguia 1833",
+    "name": "Katanka",
+    "family": "leather",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Pink Pepper",
+      "Cardamom"
+    ],
+    "mid": [
+      "Rose",
+      "Leather"
+    ],
+    "base": [
+      "Amber",
+      "Oud",
+      "Sandalwood"
+    ],
+    "roles": [
+      "formal",
+      "signature"
+    ],
+    "description": "A leathered rose with warm spice and oud — one of the more declarative, formal entries in the Fueguia line.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "selknam",
+    "brand": "Fueguia 1833",
+    "name": "Selknam",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Smoke",
+      "Incense",
+      "Pine Resin"
+    ],
+    "mid": [
+      "Leather",
+      "Cedar"
+    ],
+    "base": [
+      "Oakmoss",
+      "Amber",
+      "Vetiver"
+    ],
+    "roles": [
+      "creative",
+      "cold"
+    ],
+    "description": "Named for the indigenous people of Tierra del Fuego — primal smoke, resin, and earth, raw and atmospheric.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "yapay",
+    "brand": "Fueguia 1833",
+    "name": "Yapay",
+    "family": "green",
+    "sillage": 3,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Tea",
+      "Green Tea",
+      "Violet Leaf"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A clean, spare green tea with delicate violet and dry cedar — contemplative and quiet, perfect for focused mornings.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "salares",
+    "brand": "Fueguia 1833",
+    "name": "Salares",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Salt",
+      "Mineral Accord"
+    ],
+    "mid": [
+      "Iris",
+      "Violet"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "Inspired by Argentina's salt flats — dry, mineral iris over warm amber, arid and otherworldly.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "luciernaga",
+    "brand": "Fueguia 1833",
+    "name": "Luciérnaga",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Peach"
+    ],
+    "mid": [
+      "Jasmine",
+      "White Flowers"
+    ],
+    "base": [
+      "Musk",
+      "Ambergris",
+      "Sandalwood"
+    ],
+    "roles": [
+      "intimate",
+      "heat"
+    ],
+    "description": "Named for the firefly — a luminous, warm white floral with a peachy softness that glows gently on skin.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "oronardo",
+    "brand": "Xinú",
+    "name": "OroNardo",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Neroli"
+    ],
+    "mid": [
+      "Tuberose"
+    ],
+    "base": [
+      "Sandalwood"
+    ],
+    "roles": [
+      "formal",
+      "signature"
+    ],
+    "description": "Radiant tuberose wrapped in creamy sandalwood and citrus blossom, rich yet elegant.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "copala",
+    "brand": "Xinú",
+    "name": "Copála",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 8,
+    "top": [
+      "Incense"
+    ],
+    "mid": [
+      "Copal Resin"
+    ],
+    "base": [
+      "Amber"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Sacred copal resin smoke with glowing amber warmth, reminiscent of ceremonial incense.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "aguamadera",
+    "brand": "Xinú",
+    "name": "Aguamadera",
+    "family": "woody",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Grapefruit"
+    ],
+    "mid": [
+      "Guaiac Wood"
+    ],
+    "base": [
+      "Cedar"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A transparent citrus-wood scent with smooth guaiac and cedar warmth.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "montecristo",
+    "brand": "Xinú",
+    "name": "Montecisto",
+    "family": "green",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Herbs"
+    ],
+    "mid": [
+      "Fig Leaf"
+    ],
+    "base": [
+      "Moss"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "Green fig leaves and herbs over soft moss, evoking tropical gardens.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "numero-uno",
+    "brand": "Xinú",
+    "name": "Número Uno",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Lime",
+      "Petitgrain"
+    ],
+    "mid": [
+      "Jasmine",
+      "Neroli"
+    ],
+    "base": [
+      "Vetiver",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "A clean, sparkling Mexican citrus anchored in vetiver and sandalwood — effortless to wear in any warm setting.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tulipe-xinu",
+    "brand": "Xinú",
+    "name": "Tulipe",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Pink Pepper",
+      "Bergamot"
+    ],
+    "mid": [
+      "Tulip",
+      "Iris"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "creative"
+    ],
+    "description": "A delicate floral that captures the papery quality of a tulip petal — cool, slightly spicy, and architecturally precise.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ore-xinu",
+    "brand": "Xinú",
+    "name": "Ore",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Elemi"
+    ],
+    "mid": [
+      "Copal Resin",
+      "Frankincense"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A blend of pre-Columbian resins — elemi, copal, and frankincense — slow-burning and ceremonial.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tam-dao",
+    "brand": "Diptyque",
+    "name": "Tam Dao",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Cypress"
+    ],
+    "mid": [
+      "Sandalwood"
+    ],
+    "base": [
+      "Amberwood"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "Creamy sandalwood and cypress recalling sacred forests in Vietnam.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "philosykos",
+    "brand": "Diptyque",
+    "name": "Philosykos",
+    "family": "green",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Fig Leaf"
+    ],
+    "mid": [
+      "Fig Milk"
+    ],
+    "base": [
+      "Cedar"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "Green fig leaves and creamy fig milk over dry woods, fresh and Mediterranean.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "do-son",
+    "brand": "Diptyque",
+    "name": "Do Son",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Orange Blossom"
+    ],
+    "mid": [
+      "Tuberose"
+    ],
+    "base": [
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Airy tuberose with orange blossom and soft musk inspired by seaside gardens.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eau-duelle",
+    "brand": "Diptyque",
+    "name": "Eau Duelle",
+    "family": "gourmand",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Vanilla"
+    ],
+    "base": [
+      "Amber"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "Spicy vanilla wrapped in incense and amber warmth.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "lombre-dans-leau",
+    "brand": "Diptyque",
+    "name": "L'Ombre Dans L'Eau",
+    "family": "chypre",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Blackcurrant Leaf"
+    ],
+    "mid": [
+      "Rose"
+    ],
+    "base": [
+      "Moss"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "Green currant leaves and romantic rose with earthy moss.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "oyedo",
+    "brand": "Diptyque",
+    "name": "Oyedo",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 3,
+    "top": [
+      "Mandarin",
+      "Yuzu",
+      "Thyme"
+    ],
+    "mid": [
+      "Orange Blossom"
+    ],
+    "base": [
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A sharply bright Japanese citrus — yuzu, mandarin, and thyme — with almost no transition. Fast-drying, vivid, and outdoorsy.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eau-de-lierre",
+    "brand": "Diptyque",
+    "name": "Eau de Lierre",
+    "family": "green",
+    "sillage": 3,
+    "layering": 4,
+    "top": [
+      "Ivy Leaf",
+      "Bergamot"
+    ],
+    "mid": [
+      "Rose",
+      "Violet"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Crushed ivy leaf and cool violet — fresh, slightly sappy, and garden-damp. Unobtrusive and easy to wear.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eau-rose",
+    "brand": "Diptyque",
+    "name": "Eau Rose",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Lemon",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Rose",
+      "Lychee"
+    ],
+    "base": [
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "A clean, dewy rose brightened with citrus and soft lychee — transparent, modern, and universally easy to wear.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "vetyverio-diptyque",
+    "brand": "Diptyque",
+    "name": "Vetyverio",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Black Pepper",
+      "Bergamot"
+    ],
+    "mid": [
+      "Vetiver",
+      "Sage"
+    ],
+    "base": [
+      "Vetiver",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "A clean, slightly smoky vetiver with pepper and sage — dry and structural, works in any season.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "florabellio",
+    "brand": "Diptyque",
+    "name": "Florabellio",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Apple",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Freesia",
+      "White Flowers"
+    ],
+    "base": [
+      "Driftwood",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A crisp apple-and-flowers opening that softens into driftwood musk — aquatic, airy, and easy on a summer day.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "diptyque-34",
+    "brand": "Diptyque",
+    "name": "Diptyque 34",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Mandarin",
+      "Bergamot",
+      "Green Notes"
+    ],
+    "mid": [
+      "Rose",
+      "Iris",
+      "Cedar"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vetiver",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "A woody-floral homage to Diptyque's Saint-Germain address — books, dried flowers, leather, and warm wood in a Parisian apartment.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eau-moheli",
+    "brand": "Diptyque",
+    "name": "Eau Mohéli",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Ylang-Ylang",
+      "Bergamot"
+    ],
+    "mid": [
+      "Ylang-Ylang",
+      "Jasmine"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A transparent, airy ylang-ylang from the island of Moheli — stripped of tropical weight, rendered clean and dreamlike.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tempo",
+    "brand": "Diptyque",
+    "name": "Tempo",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Patchouli",
+      "Violet Leaf"
+    ],
+    "mid": [
+      "Patchouli",
+      "Rose"
+    ],
+    "base": [
+      "Patchouli",
+      "Musk",
+      "Vetiver"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A modern, textured patchouli softened by violet and rose — earthy and dark without the retro connotations.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eau-de-minthe",
+    "brand": "Diptyque",
+    "name": "Eau de Minthé",
+    "family": "green",
+    "sillage": 5,
+    "layering": 3,
+    "top": [
+      "Mint",
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Spearmint",
+      "Basil"
+    ],
+    "base": [
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A crisp aromatic mint-and-basil refresher — bracing and herbal rather than sweet, built for sharp clarity.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "fleur-de-peau",
+    "brand": "Diptyque",
+    "name": "Fleur de Peau",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Mandarin",
+      "Pink Pepper",
+      "Cardamom"
+    ],
+    "mid": [
+      "Iris",
+      "Rose",
+      "Musk"
+    ],
+    "base": [
+      "Ambrette",
+      "White Musk"
+    ],
+    "roles": [
+      "intimate",
+      "signature"
+    ],
+    "description": "A second-skin iris-musk evoking warm, clean skin — soft, powdery, and deeply intimate without heaviness.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "geranium-pour-monsieur",
+    "brand": "Diptyque",
+    "name": "Geranium pour Monsieur",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Geranium",
+      "Bergamot",
+      "Citrus"
+    ],
+    "mid": [
+      "Geranium",
+      "Mint",
+      "Clary Sage"
+    ],
+    "base": [
+      "Cedarwood",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A sharp, aromatic geranium brightened with mint and sage — dry and classically structured, effortlessly masculine.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "olene",
+    "brand": "Diptyque",
+    "name": "Olene",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Gardenia",
+      "Narcissus",
+      "Honeysuckle"
+    ],
+    "mid": [
+      "Jasmine",
+      "White Rose",
+      "Ylang-Ylang"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood",
+      "Cedarwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A bright, transparent white floral bouquet — springlike and airy, cheerful without being heavy.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eau-des-sens",
+    "brand": "Diptyque",
+    "name": "Eau des Sens",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Grapefruit",
+      "Orange",
+      "Juniper Berry"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Patchouli"
+    ],
+    "base": [
+      "Angelica",
+      "Musk",
+      "Patchouli"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Sparkling orange and juniper with an earthy patchouli undercurrent that adds depth without heaviness.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "orpheon",
+    "brand": "Diptyque",
+    "name": "Orphéon",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Juniper Berry",
+      "Vetiver"
+    ],
+    "mid": [
+      "Iris",
+      "Cedarwood"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood",
+      "Oakmoss"
+    ],
+    "roles": [
+      "creative",
+      "work"
+    ],
+    "description": "A cool, smoky iris-and-juniper over dry woods — unisex and architectural, inspired by a Parisian bar.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "kyoto",
+    "brand": "Diptyque",
+    "name": "Kyoto",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cypress",
+      "Incense"
+    ],
+    "mid": [
+      "Cedarwood",
+      "Papyrus"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A meditative cedar-and-incense evoking a Japanese temple — clean, contemplative, and spare.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ilio",
+    "brand": "Diptyque",
+    "name": "Ilio",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Lemon",
+      "Petitgrain"
+    ],
+    "mid": [
+      "Heliotrope",
+      "Jasmine",
+      "White Flowers"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood",
+      "Ambrette"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A sun-drenched solar floral anchored by heliotrope — warm, slightly powdery, and Mediterranean in spirit.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "volutes",
+    "brand": "Diptyque",
+    "name": "Volutes",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Tobacco",
+      "Orange Blossom"
+    ],
+    "mid": [
+      "Tobacco Flower",
+      "Vanilla",
+      "Iris"
+    ],
+    "base": [
+      "Sandalwood",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "cold",
+      "formal"
+    ],
+    "description": "A warm tobacco-and-vanilla oriental with elegant iris — smoky and sweet in equal measure, sophisticated and unhurried.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eau-capitale-diptyque",
+    "brand": "Diptyque",
+    "name": "Eau Capitale",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Lychee",
+      "Pear"
+    ],
+    "mid": [
+      "Rose",
+      "Peony"
+    ],
+    "base": [
+      "Patchouli",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "signature",
+      "casual"
+    ],
+    "description": "A fresh, fruity Parisian rose with a patchouli-musk base — modern, chic, and feminine without being sweet.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "roses-barres",
+    "brand": "Diptyque",
+    "name": "Roses Barres",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Rose",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Rose",
+      "Geranium"
+    ],
+    "base": [
+      "Musk",
+      "Patchouli",
+      "Vetiver"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A deconstructed, thorny rose stripped of sweetness — peppery and green, smelling of the stem rather than the bloom.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eau-de-campagne",
+    "brand": "Diptyque",
+    "name": "Eau de Campagne",
+    "family": "green",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Tomato Leaf",
+      "Basil",
+      "Lemon"
+    ],
+    "mid": [
+      "Grass",
+      "Lavender"
+    ],
+    "base": [
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A raw, vegetal green — tomato leaf and basil on sun-warmed skin — nostalgic and hyper-naturalistic.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "i-dont-know-what",
+    "brand": "D.S. & Durga",
+    "name": "I Don't Know What",
+    "family": "woody",
+    "sillage": 3,
+    "layering": 10,
+    "top": [
+      "Bergamot"
+    ],
+    "mid": [
+      "Iso E Super"
+    ],
+    "base": [
+      "Vetiver"
+    ],
+    "roles": [
+      "signature",
+      "casual"
+    ],
+    "description": "A transparent woody enhancer built around Iso E Super — it amplifies other fragrances and skin chemistry rather than standing alone.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "debaser",
+    "brand": "D.S. & Durga",
+    "name": "Debaser",
+    "family": "green",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Bergamot"
+    ],
+    "mid": [
+      "Fig"
+    ],
+    "base": [
+      "Coconut Milk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "Milky fig and green leaves with creamy coconut warmth.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "burning-barbershop",
+    "brand": "D.S. & Durga",
+    "name": "Burning Barbershop",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Mint"
+    ],
+    "mid": [
+      "Lavender"
+    ],
+    "base": [
+      "Vanilla"
+    ],
+    "roles": [
+      "creative",
+      "cold"
+    ],
+    "description": "A smoky barbershop scent blending mint, lavender, and caramelized vanilla.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "bowmakers",
+    "brand": "D.S. & Durga",
+    "name": "Bowmakers",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Mahogany"
+    ],
+    "mid": [
+      "Maple"
+    ],
+    "base": [
+      "Resin"
+    ],
+    "roles": [
+      "creative",
+      "formal"
+    ],
+    "description": "Resinous woods evoking violin workshops and polished instruments.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "radio-bombay",
+    "brand": "D.S. & Durga",
+    "name": "Radio Bombay",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Bergamot",
+      "Cardamom"
+    ],
+    "mid": [
+      "Jasmine",
+      "Sandalwood"
+    ],
+    "base": [
+      "Vetiver",
+      "Incense",
+      "Smoke"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "Spiced sandalwood and cardamom drifting through jasmine smoke — a cinematic, Bollywood-radio scent that lodges itself in memory.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "mississippi-medicine",
+    "brand": "D.S. & Durga",
+    "name": "Mississippi Medicine",
+    "family": "green",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Ginger",
+      "Galbanum"
+    ],
+    "mid": [
+      "Bayou Grass",
+      "Basil"
+    ],
+    "base": [
+      "Tobacco",
+      "Vetiver",
+      "Moss"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "Swampy medicinal herbs over tobacco and earthy moss — the American South distilled into a bottle. Unusual and unmistakable.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ds-sundazed",
+    "brand": "D.S. & Durga",
+    "name": "Sundazed",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Grapefruit",
+      "Bergamot"
+    ],
+    "mid": [
+      "Coconut Water",
+      "Marine"
+    ],
+    "base": [
+      "Musk",
+      "Driftwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A bright, hazy citrus with a coconut-water softness — feels like lying in the sun with your eyes closed.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "big-sur-after-rain",
+    "brand": "D.S. & Durga",
+    "name": "Big Sur After Rain",
+    "family": "green",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Eucalyptus",
+      "Wild Grass"
+    ],
+    "mid": [
+      "Sage",
+      "Petrichor"
+    ],
+    "base": [
+      "Cedarwood",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "creative"
+    ],
+    "description": "The California coastline after rainfall — eucalyptus and sage over wet stone and cedar. Meditative and singular.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "santal-33",
+    "brand": "Le Labo",
+    "name": "Santal 33",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Cardamom",
+      "Violet Leaf"
+    ],
+    "mid": [
+      "Iris",
+      "Papyrus",
+      "Leather"
+    ],
+    "base": [
+      "Sandalwood",
+      "Cedarwood",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "creative"
+    ],
+    "description": "A smoky sandalwood and leather scent softened by iris and violet, iconic and instantly recognizable.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "bergamote-22",
+    "brand": "Le Labo",
+    "name": "Bergamote 22",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Grapefruit",
+      "Petitgrain"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Neroli"
+    ],
+    "base": [
+      "Vetiver",
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "Bright bergamot and grapefruit balanced with soft woods and musk, sparkling yet refined.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "another-13",
+    "brand": "Le Labo",
+    "name": "Another 13",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 9,
+    "top": [
+      "Pear",
+      "Apple"
+    ],
+    "mid": [
+      "Ambrette",
+      "Iso E Super"
+    ],
+    "base": [
+      "Musk",
+      "Moss",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "intimate"
+    ],
+    "description": "A clean, musky skin scent with subtle fruit and soft amber, minimal and addictive.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "the-noir-29",
+    "brand": "Le Labo",
+    "name": "Thé Noir 29",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Fig",
+      "Bergamot",
+      "Bay Leaf"
+    ],
+    "mid": [
+      "Black Tea",
+      "Cedar"
+    ],
+    "base": [
+      "Vetiver",
+      "Musk",
+      "Tobacco"
+    ],
+    "roles": [
+      "creative",
+      "work"
+    ],
+    "description": "Dark tea and fig layered over tobacco and woods, moody and slightly sweet.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rose-31",
+    "brand": "Le Labo",
+    "name": "Rose 31",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Rose",
+      "Cumin"
+    ],
+    "mid": [
+      "Cedarwood",
+      "Vetiver"
+    ],
+    "base": [
+      "Musk",
+      "Amber",
+      "Guaiac Wood"
+    ],
+    "roles": [
+      "formal",
+      "signature"
+    ],
+    "description": "A spicy rose with cumin and woods that transforms the floral into something smoky and unisex.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "vetiver-46",
+    "brand": "Le Labo",
+    "name": "Vetiver 46",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Pepper",
+      "Bergamot"
+    ],
+    "mid": [
+      "Vetiver",
+      "Incense"
+    ],
+    "base": [
+      "Guaiac Wood",
+      "Cedar",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Dark, smoky vetiver with incense and woods, powerful and brooding.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tonka-25",
+    "brand": "Le Labo",
+    "name": "Tonka 25",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Orange Blossom",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Tonka",
+      "Vanilla"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "Soft tonka and vanilla wrapped in amber warmth, cozy and slightly powdery.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "lys-41",
+    "brand": "Le Labo",
+    "name": "Lys 41",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Jasmine",
+      "Tuberose"
+    ],
+    "mid": [
+      "Lily",
+      "Gardenia"
+    ],
+    "base": [
+      "Vanilla",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "signature"
+    ],
+    "description": "A lush white floral bouquet with creamy vanilla warmth.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "labdanum-18",
+    "brand": "Le Labo",
+    "name": "Labdanum 18",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 8,
+    "top": [
+      "Bergamot",
+      "Clary Sage"
+    ],
+    "mid": [
+      "Labdanum",
+      "Rose"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "cold",
+      "formal"
+    ],
+    "description": "A dense, resinous amber built on labdanum — dark, animalic, and rich. Intense projection that opens into warm sandalwood.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "geranium-30",
+    "brand": "Le Labo",
+    "name": "Géranium 30",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Geranium",
+      "Mandarin"
+    ],
+    "mid": [
+      "Rose",
+      "Lavender"
+    ],
+    "base": [
+      "Sandalwood",
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A rosy, slightly minty geranium with lavender and warm wood — clean and professional without being anonymous.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "fleur-doranger-27",
+    "brand": "Le Labo",
+    "name": "Fleur d'Oranger 27",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Orange Blossom",
+      "Neroli"
+    ],
+    "mid": [
+      "Jasmine",
+      "Tuberose"
+    ],
+    "base": [
+      "Musk",
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "signature",
+      "heat"
+    ],
+    "description": "Billowing orange blossom with jasmine and tuberose — warm, heady, and slightly narcotic. A solar floral for evenings.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "patchouli-24",
+    "brand": "Le Labo",
+    "name": "Patchouli 24",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Birch",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Patchouli",
+      "Styrax"
+    ],
+    "base": [
+      "Labdanum",
+      "Amber",
+      "Vanilla"
+    ],
+    "roles": [
+      "creative",
+      "cold"
+    ],
+    "description": "Smoky birch tar and thick patchouli over resinous amber — abrasive, masculine, and polarising. Unmistakable.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "aldehyde-44",
+    "brand": "Le Labo",
+    "name": "Aldehyde 44",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Aldehydes",
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Iris",
+      "Rose",
+      "Jasmine"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Musk",
+      "Vetiver"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "A classic aldehyde floral in the Chanel No. 5 tradition — crisp, soapy, and glamorous, but with Le Labo's raw naturalistic edge.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ambrette-9",
+    "brand": "Le Labo",
+    "name": "Ambrette 9",
+    "family": "woody",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Ambrette",
+      "Bergamot"
+    ],
+    "mid": [
+      "Cedarwood",
+      "Vetiver"
+    ],
+    "base": [
+      "Ambrette",
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "intimate",
+      "casual"
+    ],
+    "description": "A skin-close musky-woody built on ambrette seed — soft, slightly nutty, and intimate, a gentler take on Another 13's skin-scent aesthetic.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ambre-29",
+    "brand": "Le Labo",
+    "name": "Ambre 29",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Fir Balsam",
+      "Bergamot"
+    ],
+    "mid": [
+      "Amber",
+      "Labdanum"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "cold",
+      "signature"
+    ],
+    "description": "A forested amber — resinous and warm with a green fir-balsam quality that keeps it from being stuffy.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "cedre-11",
+    "brand": "Le Labo",
+    "name": "Cèdre 11",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Aldehydes",
+      "Bergamot"
+    ],
+    "mid": [
+      "Cedarwood",
+      "Cypress"
+    ],
+    "base": [
+      "Cedarwood",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A spare, austere cedar with cold metallic aldehydes — minimalist and architectural, Scandinavian in its restraint.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "gaiac-10",
+    "brand": "Le Labo",
+    "name": "Gaiac 10",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Mandarin"
+    ],
+    "mid": [
+      "Guaiac Wood",
+      "Vetiver"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "A dry, smoky guaiac wood with soft citrus — clean-burning and uncluttered, almost meditative in its simplicity.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "iris-39",
+    "brand": "Le Labo",
+    "name": "Iris 39",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Violet Leaf",
+      "Bergamot"
+    ],
+    "mid": [
+      "Iris",
+      "Rose"
+    ],
+    "base": [
+      "Vetiver",
+      "Cedarwood",
+      "Amber"
+    ],
+    "roles": [
+      "work",
+      "signature"
+    ],
+    "description": "A cool, chalky iris over violet leaf — earthy, rooty, and powdery in the classical French iris tradition.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "mousse-de-chene-30",
+    "brand": "Le Labo",
+    "name": "Mousse de Chêne 30",
+    "family": "chypre",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Lemon",
+      "Artemisia"
+    ],
+    "mid": [
+      "Oakmoss",
+      "Rose"
+    ],
+    "base": [
+      "Oakmoss",
+      "Cedarwood",
+      "Vetiver"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A raw oakmoss chypre — earthy, damp, and deeply green, one of the few contemporary fragrances that fully commits to real chypre territory.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "neroli-36",
+    "brand": "Le Labo",
+    "name": "Néroli 36",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Neroli",
+      "Bergamot",
+      "Petitgrain"
+    ],
+    "mid": [
+      "Neroli",
+      "Orange Blossom",
+      "White Tea"
+    ],
+    "base": [
+      "Musk",
+      "Cedarwood",
+      "Amberwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A clean, sparkling neroli-and-white-tea — crisp and coastal without sunscreen associations, genuinely elegant.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "oud-27",
+    "brand": "Le Labo",
+    "name": "Oud 27",
+    "family": "oud",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Saffron",
+      "Rose"
+    ],
+    "mid": [
+      "Oud",
+      "Rose",
+      "Geranium"
+    ],
+    "base": [
+      "Oud",
+      "Sandalwood",
+      "Musk",
+      "Patchouli"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Le Labo's approachable oud — rose and geranium temper its resinous darkness, smoky and rich but never medicinal.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "poivre-23",
+    "brand": "Le Labo",
+    "name": "Poivre 23",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Pepper",
+      "Cardamom",
+      "Geranium"
+    ],
+    "mid": [
+      "Black Pepper",
+      "Clary Sage"
+    ],
+    "base": [
+      "Cedarwood",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A dry, assertive pepper-and-cardamom over clean woods — angular and confident, for those who like fragrance with edges.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "santal-26",
+    "brand": "Le Labo",
+    "name": "Santal 26",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cardamom",
+      "Clary Sage"
+    ],
+    "mid": [
+      "Sandalwood",
+      "Amber"
+    ],
+    "base": [
+      "Sandalwood",
+      "Amber",
+      "Musk",
+      "Vanilla"
+    ],
+    "roles": [
+      "casual",
+      "intimate"
+    ],
+    "description": "A creamy, caramelised sandalwood that reads closer to amber-vanilla in dry-down — smooth and more crowd-pleasing than Santal 33.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ylang-49",
+    "brand": "Le Labo",
+    "name": "Ylang 49",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Ylang-Ylang",
+      "Bergamot"
+    ],
+    "mid": [
+      "Ylang-Ylang",
+      "Jasmine",
+      "Rose"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "heat",
+      "signature"
+    ],
+    "description": "A clean ylang-ylang that avoids banana-tropical clichés — reads as white floral and elegant, supported by warm sandalwood.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "musc-25",
+    "brand": "Le Labo",
+    "name": "Musc 25",
+    "family": "woody",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Cardamom",
+      "Bergamot"
+    ],
+    "mid": [
+      "Cedarwood",
+      "White Musk"
+    ],
+    "base": [
+      "Musk",
+      "Ambrette",
+      "Amber"
+    ],
+    "roles": [
+      "intimate",
+      "casual"
+    ],
+    "description": "A clean, powdery white musk with cardamom and soft cedar — refined rather than detergent-flat, worn close to the skin.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "jasmin-17",
+    "brand": "Le Labo",
+    "name": "Jasmin 17",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Green Notes"
+    ],
+    "mid": [
+      "Jasmine",
+      "Rose"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A dewy, natural jasmine — green and watery rather than rich and indolic, evoking jasmine picked in the early morning.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "encens-13",
+    "brand": "Le Labo",
+    "name": "Encens 13",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Frankincense",
+      "Cardamom",
+      "Petitgrain"
+    ],
+    "mid": [
+      "Incense",
+      "Cedarwood",
+      "Myrrh"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Labdanum"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A church-incense and resin scent — smoky frankincense over myrrh and labdanum, deeply meditative and sacral.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tabac-28",
+    "brand": "Le Labo",
+    "name": "Tabac 28",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Violet Leaf"
+    ],
+    "mid": [
+      "Tobacco",
+      "Hay",
+      "Iris"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "creative"
+    ],
+    "description": "A grassy, hay-like tobacco sweetened with iris and dry sandalwood — more aromatic meadow than smoking lounge.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "baie-rose-26",
+    "brand": "Le Labo",
+    "name": "Baie Rose 26",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Pink Pepper",
+      "Bergamot"
+    ],
+    "mid": [
+      "Geranium",
+      "Rose"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk",
+      "Vetiver"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "A fizzy pink pepper and rose over light woods — easy, modern, and slightly fruity in the way pink pepper reads as quasi-berry.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "hwyl",
+    "brand": "Aesop",
+    "name": "Hwyl",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Thyme",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Cypress",
+      "Frankincense"
+    ],
+    "base": [
+      "Vetiver",
+      "Cedarwood",
+      "Moss"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A smoky forest scent inspired by Japanese hinoki woods and temple incense.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tacit",
+    "brand": "Aesop",
+    "name": "Tacit",
+    "family": "citrus",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Yuzu",
+      "Basil",
+      "Bergamot"
+    ],
+    "mid": [
+      "Rosemary",
+      "Mint"
+    ],
+    "base": [
+      "Vetiver",
+      "Cedar"
+    ],
+    "roles": [
+      "heat",
+      "casual",
+      "work"
+    ],
+    "description": "A crisp citrus-herbal scent with basil and yuzu over clean woods.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "marrakech-intense",
+    "brand": "Aesop",
+    "name": "Marrakech Intense",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Clove",
+      "Cardamom",
+      "Bergamot"
+    ],
+    "mid": [
+      "Jasmine",
+      "Neroli",
+      "Rose"
+    ],
+    "base": [
+      "Sandalwood",
+      "Cedar",
+      "Patchouli"
+    ],
+    "roles": [
+      "creative",
+      "cold"
+    ],
+    "description": "Warm spices and florals over sandalwood and patchouli, inspired by Moroccan markets.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "karst",
+    "brand": "Aesop",
+    "name": "Karst",
+    "family": "green",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Juniper",
+      "Pink Pepper",
+      "Bergamot"
+    ],
+    "mid": [
+      "Rosemary",
+      "Sage"
+    ],
+    "base": [
+      "Vetiver",
+      "Sandalwood",
+      "Cumin"
+    ],
+    "roles": [
+      "heat",
+      "signature"
+    ],
+    "description": "Mineral, herbaceous freshness with crisp juniper and dry woods.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eremia",
+    "brand": "Aesop",
+    "name": "Eremia",
+    "family": "green",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Yuzu",
+      "Bergamot"
+    ],
+    "mid": [
+      "Green Tea",
+      "Mimosa"
+    ],
+    "base": [
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "Soft green tea and citrus over musky woods, evoking quiet urban nature.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rozu",
+    "brand": "Aesop",
+    "name": "Rōzu",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Rose",
+      "Shiso",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Guaiac Wood",
+      "Jasmine"
+    ],
+    "base": [
+      "Vetiver",
+      "Patchouli",
+      "Myrrh"
+    ],
+    "roles": [
+      "creative",
+      "formal"
+    ],
+    "description": "A woody rose accented by shiso and spices, elegant and architectural.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "gloam",
+    "brand": "Aesop",
+    "name": "Gloam",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Saffron",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Jasmine",
+      "Iris",
+      "Mimosa"
+    ],
+    "base": [
+      "Patchouli",
+      "Cocoa",
+      "Musk"
+    ],
+    "roles": [
+      "intimate",
+      "cold"
+    ],
+    "description": "A dusky floral with powdery iris and warm cocoa undertones.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "miraceti",
+    "brand": "Aesop",
+    "name": "Miraceti",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Black Pepper",
+      "Elemi"
+    ],
+    "mid": [
+      "Labdanum",
+      "Styrax"
+    ],
+    "base": [
+      "Myrrh",
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A deep resinous amber inspired by maritime trade and spice routes.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eidesis",
+    "brand": "Aesop",
+    "name": "Eidesis",
+    "family": "woody",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Geranium",
+      "Bergamot"
+    ],
+    "mid": [
+      "Cypress",
+      "Sandalwood"
+    ],
+    "base": [
+      "Vetiver",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "A calm, grounding blend of geranium, cypress, and vetiver — quietly confident and easy across all occasions.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "olous",
+    "brand": "Aesop",
+    "name": "Olous",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Neroli",
+      "Bergamot"
+    ],
+    "mid": [
+      "Orris",
+      "Jasmine"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "A bright neroli and iris softened with jasmine and sandalwood — Mediterranean-clean, quietly elegant.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "aganice",
+    "brand": "Aesop",
+    "name": "Aganice",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Rose",
+      "Neroli",
+      "Jasmine"
+    ],
+    "base": [
+      "Cedarwood",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "A cool, luminous aldehyde rose named for an ancient astrologer — bright and airy, grounded in clean cedar.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "numia",
+    "brand": "Aesop",
+    "name": "Numia",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Black Pepper",
+      "Violet Leaf"
+    ],
+    "mid": [
+      "Labdanum",
+      "Patchouli",
+      "Orris"
+    ],
+    "base": [
+      "Benzoin",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "cold",
+      "creative"
+    ],
+    "description": "Earthy and mineral — violet leaf and pepper over dark labdanum and benzoin, evoking dry soil and ancient stone.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ouranos",
+    "brand": "Aesop",
+    "name": "Ouranos",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Aldehydes",
+      "Citrus"
+    ],
+    "mid": [
+      "Iris",
+      "Violet"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk",
+      "Amberwood"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Airy and celestial, with powdery iris and violet lifted on clean aldehydes — named for the sky, weightless and pale.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ptolemy",
+    "brand": "Aesop",
+    "name": "Ptolemy",
+    "family": "chypre",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Black Currant"
+    ],
+    "mid": [
+      "Rose",
+      "Geranium"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vetiver",
+      "Oakmoss"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A classical chypre with fresh berry and rose over mossy, earthy dry-down — structured and quietly distinctive.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "cythera",
+    "brand": "Aesop",
+    "name": "Cythera",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Citrus",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Jasmine",
+      "Ylang-Ylang",
+      "Rose"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk",
+      "Benzoin"
+    ],
+    "roles": [
+      "formal",
+      "heat"
+    ],
+    "description": "Lush and sensual — a full white-floral bouquet warmed by sandalwood and benzoin, island-goddess energy.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-tobacco-vanille",
+    "brand": "Tom Ford",
+    "name": "Tobacco Vanille",
+    "family": "gourmand",
+    "sillage": 8,
+    "layering": 7,
+    "top": [
+      "Tobacco Leaf",
+      "Spices"
+    ],
+    "mid": [
+      "Tobacco Blossom",
+      "Jasmine"
+    ],
+    "base": [
+      "Vanilla",
+      "Tonka",
+      "Cacao",
+      "Dried Fruits"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "A richly indulgent tobacco wrapped in vanilla and cacao — opulent, warm, and unapologetically sweet.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-tuscan-leather",
+    "brand": "Tom Ford",
+    "name": "Tuscan Leather",
+    "family": "leather",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Raspberry",
+      "Saffron",
+      "Thyme"
+    ],
+    "mid": [
+      "Jasmine",
+      "Leather"
+    ],
+    "base": [
+      "Amber",
+      "Suede",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "A bold animalic leather sharpened by raspberry and saffron — assertive, polarizing, and unmistakably confident.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-oud-wood",
+    "brand": "Tom Ford",
+    "name": "Oud Wood",
+    "family": "oud",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Rosewood",
+      "Cardamom",
+      "Chinese Pepper"
+    ],
+    "mid": [
+      "Oud",
+      "Sandalwood",
+      "Vetiver"
+    ],
+    "base": [
+      "Tonka",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "A refined, smoky oud balanced with rosewood and cardamom — more wearable than most ouds, quietly luxurious.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-noir-de-noir",
+    "brand": "Tom Ford",
+    "name": "Noir de Noir",
+    "family": "floral",
+    "sillage": 8,
+    "layering": 8,
+    "top": [
+      "Black Truffle",
+      "Saffron",
+      "Black Pepper"
+    ],
+    "mid": [
+      "Rose",
+      "Oud",
+      "Vanilla"
+    ],
+    "base": [
+      "Patchouli",
+      "Oakmoss",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "An opulent nocturnal rose layered over black truffle and oud — dark, sensual, and ceremonialy rich.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-rose-prick",
+    "brand": "Tom Ford",
+    "name": "Rose Prick",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Berry",
+      "Ginger"
+    ],
+    "mid": [
+      "Rose",
+      "Cyclamen",
+      "Thorns"
+    ],
+    "base": [
+      "Patchouli",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A defiant modern rose — thorny and green, brightened by berry and given attitude by earthy patchouli.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-neroli-portofino",
+    "brand": "Tom Ford",
+    "name": "Neroli Portofino",
+    "family": "citrus",
+    "sillage": 6,
+    "layering": 4,
+    "top": [
+      "Neroli",
+      "Bergamot",
+      "Mandarin"
+    ],
+    "mid": [
+      "Thyme",
+      "Rosemary",
+      "Lavender"
+    ],
+    "base": [
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A sun-drenched Italian Riviera citrus — clean, airy, and instantly transporting, best worn in warm light.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-soleil-blanc",
+    "brand": "Tom Ford",
+    "name": "Soleil Blanc",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Cardamom"
+    ],
+    "mid": [
+      "Ylang-Ylang",
+      "Jasmine",
+      "Tiare"
+    ],
+    "base": [
+      "Sandalwood",
+      "Coconut",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "signature"
+    ],
+    "description": "A luminous, creamy solar scent with tiare and ylang over coconut sandalwood — sunlit, warm, and deeply seductive.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-costa-azzurra",
+    "brand": "Tom Ford",
+    "name": "Costa Azzurra",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Marine Accord",
+      "Oakmoss"
+    ],
+    "mid": [
+      "Mastic",
+      "Rosemary",
+      "Amber"
+    ],
+    "base": [
+      "Sandalwood",
+      "Cypress",
+      "Cedarwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A Mediterranean coastal woody — resinous mastic and oakmoss over dry cypress and sandalwood, salty and sun-warmed.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-sole-di-positano",
+    "brand": "Tom Ford",
+    "name": "Sole di Positano",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Lemon",
+      "Mandarin",
+      "Neroli"
+    ],
+    "mid": [
+      "Tiare",
+      "Jasmine"
+    ],
+    "base": [
+      "Coconut",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A bright Amalfi coast citrus lifted with tiare and jasmine over a tropical coconut base — effortless summer radiance.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-ombre-leather",
+    "brand": "Tom Ford",
+    "name": "Ombré Leather",
+    "family": "leather",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Cardamom",
+      "Jasmine"
+    ],
+    "mid": [
+      "Leather",
+      "Patchouli"
+    ],
+    "base": [
+      "Oakmoss",
+      "White Musk"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "A stark, metallic leather with cool jasmine and cardamom — austere and modern, less animalic than Tuscan Leather.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-santal-blush",
+    "brand": "Tom Ford",
+    "name": "Santal Blush",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cinnamon"
+    ],
+    "mid": [
+      "Rose",
+      "Ylang-Ylang"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "intimate"
+    ],
+    "description": "A soft, creamy sandalwood kissed with warm cinnamon and rose — smooth, understated, and skin-close.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-white-suede",
+    "brand": "Tom Ford",
+    "name": "White Suede",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cardamom",
+      "Freesia"
+    ],
+    "mid": [
+      "Rose",
+      "Orris"
+    ],
+    "base": [
+      "White Suede",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A powdery, delicate suede with a clean white floral heart — soft, clean, and quietly feminine.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-coffee-rose",
+    "brand": "Tom Ford",
+    "name": "Coffee Rose",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Coffee",
+      "Saffron",
+      "Cardamom"
+    ],
+    "mid": [
+      "Rose",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Oud",
+      "Vanilla",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Dark roasted coffee amplifies a rich rose over warm oud and vanilla — a deeply aromatic evening fragrance.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-fucking-fabulous",
+    "brand": "Tom Ford",
+    "name": "Fucking Fabulous",
+    "family": "leather",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Clary Sage",
+      "Orris"
+    ],
+    "mid": [
+      "Leather",
+      "Vetiver"
+    ],
+    "base": [
+      "Tonka",
+      "Almond",
+      "Vanilla"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A provocative leather-almond pairing that straddles masculine and feminine — confident, sweet, and entirely itself.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-lost-cherry",
+    "brand": "Tom Ford",
+    "name": "Lost Cherry",
+    "family": "gourmand",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Black Cherry",
+      "Bitter Almond"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine"
+    ],
+    "base": [
+      "Tonka",
+      "Sandalwood",
+      "Benzoin"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "A lush, boozy cherry with dark almond and warm benzoin — opulent, addictive, and unapologetically hedonistic.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-tobacco-oud",
+    "brand": "Tom Ford",
+    "name": "Tobacco Oud",
+    "family": "oud",
+    "sillage": 9,
+    "layering": 7,
+    "top": [
+      "Tobacco",
+      "Saffron"
+    ],
+    "mid": [
+      "Oud",
+      "Rose"
+    ],
+    "base": [
+      "Leather",
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A powerful marriage of raw tobacco and dark oud over rose and leather — dense, commanding, and built for cold evenings.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-amber-absolute",
+    "brand": "Tom Ford",
+    "name": "Amber Absolute",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 8,
+    "top": [
+      "Saffron",
+      "Ginger"
+    ],
+    "mid": [
+      "Labdanum",
+      "Rose"
+    ],
+    "base": [
+      "Amber",
+      "Myrrh",
+      "Oud"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A voluminous incense-laden amber with saffron and myrrh — near-religious in its richness and gravity.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-italian-cypress",
+    "brand": "Tom Ford",
+    "name": "Italian Cypress",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Italian Cypress",
+      "Cedar"
+    ],
+    "mid": [
+      "Juniper",
+      "Vetiver"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "heat",
+      "signature"
+    ],
+    "description": "A sharp, vertical green wood built around Mediterranean cypress — elemental, sun-bleached, and architectural.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-lavender-extreme",
+    "brand": "Tom Ford",
+    "name": "Lavender Extreme",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Lavender",
+      "Bergamot"
+    ],
+    "mid": [
+      "Lavender Absolute",
+      "Cardamom"
+    ],
+    "base": [
+      "Vetiver",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "An intensified lavender pushed toward the aromatic extreme — fuller and denser than a typical fougère, with a warm amber finish.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-beau-de-jour",
+    "brand": "Tom Ford",
+    "name": "Beau de Jour",
+    "family": "green",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Lavender",
+      "Eucalyptus"
+    ],
+    "mid": [
+      "Geranium",
+      "Thyme"
+    ],
+    "base": [
+      "Oakmoss",
+      "Vetiver",
+      "Amber"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A crisp, elegant fougère rooted in lavender and oakmoss — the quintessential clean barbershop-meets-outdoors masculine.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-noir-extreme",
+    "brand": "Tom Ford",
+    "name": "Noir Extreme",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Mandarin",
+      "Neroli",
+      "Nutmeg"
+    ],
+    "mid": [
+      "Rose",
+      "Cardamom",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Sandalwood",
+      "Amber",
+      "Vanilla",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A warm, honeyed oriental with creamy sandalwood and nutmeg — richer and more opulent than the standard Noir.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-black-orchid",
+    "brand": "Tom Ford",
+    "name": "Black Orchid",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 8,
+    "top": [
+      "Black Truffle",
+      "Bergamot",
+      "Ylang-Ylang"
+    ],
+    "mid": [
+      "Black Orchid",
+      "Jasmine",
+      "Spices"
+    ],
+    "base": [
+      "Amber",
+      "Patchouli",
+      "Sandalwood"
+    ],
+    "roles": [
+      "creative",
+      "formal"
+    ],
+    "description": "A dark, Gothic floral chypre — truffle, black orchid, and patchouli collide in Tom Ford's most theatrical signature.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-velvet-orchid",
+    "brand": "Tom Ford",
+    "name": "Velvet Orchid",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Rum",
+      "Citrus",
+      "Honey"
+    ],
+    "mid": [
+      "Orchid",
+      "Jasmine",
+      "Rose"
+    ],
+    "base": [
+      "Suede",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "A plush, after-dark orchid with rum and honey over velvety suede — sumptuous and seductive.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "tf-grey-vetiver",
+    "brand": "Tom Ford",
+    "name": "Grey Vetiver",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Grapefruit",
+      "Sage",
+      "Petitgrain"
+    ],
+    "mid": [
+      "Orris",
+      "Geranium"
+    ],
+    "base": [
+      "Vetiver",
+      "Oakmoss",
+      "Amber"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A clean, tailored grey vetiver with sage and grapefruit — quietly authoritative, boardroom-ready without effort.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-lazy-sunday-morning",
+    "brand": "Replica",
+    "name": "Lazy Sunday Morning",
+    "family": "floral",
+    "sillage": 3,
+    "layering": 4,
+    "top": [
+      "Pink Pepper",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Iris",
+      "Peony"
+    ],
+    "base": [
+      "White Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "intimate",
+      "casual"
+    ],
+    "description": "The scent of clean white linen on a slow, sunlit morning — powdery, soft, and deeply comforting.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-flower-market",
+    "brand": "Replica",
+    "name": "Flower Market",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Peach",
+      "Cyclamen"
+    ],
+    "mid": [
+      "Rose",
+      "Peony",
+      "Jasmine"
+    ],
+    "base": [
+      "White Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "A fresh, dewy armful of spring flowers — light, natural, and cheerfully alive without being sweet.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-beach-walk",
+    "brand": "Replica",
+    "name": "Beach Walk",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Lemon",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Coconut Milk",
+      "Heliotrope"
+    ],
+    "base": [
+      "Musk",
+      "Ambergris",
+      "Cedarwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "Sunscreen on warm skin, a gentle ocean breeze, and the feel of sand between your toes — a perfect beach day in a bottle.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-sailing-day",
+    "brand": "Replica",
+    "name": "Sailing Day",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Marine Accord",
+      "Cedarwood"
+    ],
+    "base": [
+      "Vetiver",
+      "Ambergris",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "The crisp, salty exhilaration of an open-water sail — citrus and sea spray over dry vetiver and driftwood.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-at-the-barbers",
+    "brand": "Replica",
+    "name": "At the Barber's",
+    "family": "green",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Lavender"
+    ],
+    "mid": [
+      "Iris",
+      "Vetiver"
+    ],
+    "base": [
+      "Suede",
+      "White Musk"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "The nostalgic smell of a classic barbershop — warm leather strop, lavender, and talc-dusted iris.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-lipstick-on",
+    "brand": "Replica",
+    "name": "Lipstick On",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Violet",
+      "Aldehydes"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine",
+      "Iris"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "A vintage powdery lipstick worn on warm skin — retro, softly feminine, and deeply nostalgic.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-jazz-club",
+    "brand": "Replica",
+    "name": "Jazz Club",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Rum",
+      "Musk",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Tobacco Flower",
+      "Vetiver"
+    ],
+    "base": [
+      "Vanilla",
+      "Benzoin"
+    ],
+    "roles": [
+      "cold",
+      "creative"
+    ],
+    "description": "Dim lighting, leather booths, and late-night cigarette smoke at a jazz club — rum, tobacco, and vanilla.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-by-the-fireplace",
+    "brand": "Replica",
+    "name": "By the Fireplace",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Orange Blossom",
+      "Chestnut"
+    ],
+    "mid": [
+      "Guaiac Wood",
+      "Cashmeran"
+    ],
+    "base": [
+      "Vanilla",
+      "Musk",
+      "Benzoin"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "Crackling wood fire, roasted chestnuts, and vanilla smoke drifting through a winter room.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-when-the-rain-breaks",
+    "brand": "Replica",
+    "name": "When the Rain Breaks",
+    "family": "green",
+    "sillage": 4,
+    "layering": 4,
+    "top": [
+      "Petrichor",
+      "Lemon"
+    ],
+    "mid": [
+      "Tea",
+      "Vetiver",
+      "Rain Accord"
+    ],
+    "base": [
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "The precise earthy-mineral smell of the first rain hitting dry pavement — petrichor, green tea, and clean wood.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-whispers-in-the-library",
+    "brand": "Replica",
+    "name": "Whispers in the Library",
+    "family": "woody",
+    "sillage": 3,
+    "layering": 5,
+    "top": [
+      "Paperwhite Accord",
+      "Sandalwood"
+    ],
+    "mid": [
+      "Iris",
+      "Orris"
+    ],
+    "base": [
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "work",
+      "creative"
+    ],
+    "description": "The dusty, contemplative smell of old paper and aged books in a quiet reading room — iris, white wood, and soft amber.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-on-a-date",
+    "brand": "Replica",
+    "name": "On a Date",
+    "family": "gourmand",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cashew",
+      "Raspberry"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine"
+    ],
+    "base": [
+      "Caramel",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "intimate",
+      "casual"
+    ],
+    "description": "A warm, sweetly romantic scent — the anticipation of a first date, with raspberry, rose, and caramel warmth.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-across-sands",
+    "brand": "Replica",
+    "name": "Across Sands",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Ambrette",
+      "Incense"
+    ],
+    "mid": [
+      "Myrrh",
+      "Amber"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "A dry, smoky amber evoking a desert under a vast open sky — incense and myrrh over warm sandalwood.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-under-the-lemon-trees",
+    "brand": "Replica",
+    "name": "Under the Lemon Trees",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Lemon",
+      "Peach"
+    ],
+    "mid": [
+      "Neroli",
+      "White Flowers"
+    ],
+    "base": [
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A sun-warmed afternoon under Italian lemon trees — bright citrus, neroli, and a whisper of peach.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-car-leather-1957",
+    "brand": "Replica",
+    "name": "Car Leather 1957",
+    "family": "leather",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Mint"
+    ],
+    "mid": [
+      "Rose",
+      "Leather"
+    ],
+    "base": [
+      "Vetiver",
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "The distinct smell of pristine leather upholstery in a classic automobile — cool, clean, and deliberately evocative.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-autumn-vibes",
+    "brand": "Replica",
+    "name": "Autumn Vibes",
+    "family": "gourmand",
+    "sillage": 5,
+    "layering": 5,
+    "top": [
+      "Cinnamon",
+      "Clove"
+    ],
+    "mid": [
+      "Cardamom",
+      "Vanilla"
+    ],
+    "base": [
+      "Amber",
+      "Benzoin"
+    ],
+    "roles": [
+      "cold",
+      "casual"
+    ],
+    "description": "A cozy, spiced autumnal warmth of mulled spices — cinnamon, cardamom, and vanilla over resinous amber.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-coffee-break",
+    "brand": "Replica",
+    "name": "Coffee Break",
+    "family": "gourmand",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Coffee",
+      "Bitter Almond"
+    ],
+    "mid": [
+      "White Musk"
+    ],
+    "base": [
+      "Sandalwood",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A mid-morning espresso pause — rich roasted coffee with a clean skin finish that's comforting rather than sweet.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-on-the-beach",
+    "brand": "Replica",
+    "name": "On the Beach",
+    "family": "citrus",
+    "sillage": 4,
+    "layering": 3,
+    "top": [
+      "Coconut Water",
+      "Neroli"
+    ],
+    "mid": [
+      "Jasmine",
+      "Sea Salt"
+    ],
+    "base": [
+      "Ambergris",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A lighter, more watery take on the beach — translucent coconut water and sea salt over a clean ambergris base.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-matcha-meditation",
+    "brand": "Replica",
+    "name": "Matcha Meditation",
+    "family": "green",
+    "sillage": 3,
+    "layering": 4,
+    "top": [
+      "Green Tea",
+      "Matcha"
+    ],
+    "mid": [
+      "White Flowers",
+      "Iris"
+    ],
+    "base": [
+      "Musk",
+      "Cedarwood"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A serene, zen-like green tea and matcha — clean, herbal, and quietly grounding for focused mornings.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-summer-on-the-terrace",
+    "brand": "Replica",
+    "name": "Summer on the Terrace",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Honeysuckle",
+      "Peach"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "Warm evenings on a Mediterranean terrace — bright citrus and honeysuckle with a soft peach warmth at dusk.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-from-the-garden",
+    "brand": "Replica",
+    "name": "From the Garden",
+    "family": "green",
+    "sillage": 4,
+    "layering": 5,
+    "top": [
+      "Tomato Leaf",
+      "Green Leaves"
+    ],
+    "mid": [
+      "Rose",
+      "Peony"
+    ],
+    "base": [
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "heat",
+      "creative"
+    ],
+    "description": "The raw, authentic smell of a working garden — sappy tomato leaf and cut greenery over a fresh rose heart.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "rep-spring-summer-bottle",
+    "brand": "Replica",
+    "name": "Spring/Summer in a Bottle",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 3,
+    "top": [
+      "Bergamot",
+      "Peach"
+    ],
+    "mid": [
+      "Lily of the Valley",
+      "Rose"
+    ],
+    "base": [
+      "White Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A literal bottled season — breezy, sunny, and effortlessly cheerful, wearing like the first warm day of the year.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "chanel-no-5",
+    "brand": "Chanel",
+    "name": "No. 5",
+    "family": "floral",
+    "sillage": 8,
+    "layering": 5,
+    "top": [
+      "Aldehydes",
+      "Ylang-Ylang",
+      "Neroli"
+    ],
+    "mid": [
+      "Jasmine",
+      "Rose",
+      "Iris"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vanilla",
+      "Vetiver"
+    ],
+    "roles": [
+      "formal",
+      "signature"
+    ],
+    "description": "The quintessential floral-aldehyde perfume. Timeless, powdery, and abstractly feminine.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "bleu-de-chanel",
+    "brand": "Chanel",
+    "name": "Bleu de Chanel",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Grapefruit",
+      "Lemon",
+      "Mint"
+    ],
+    "mid": [
+      "Ginger",
+      "Nutmeg",
+      "Jasmine"
+    ],
+    "base": [
+      "Incense",
+      "Vetiver",
+      "Cedar"
+    ],
+    "roles": [
+      "work",
+      "signature"
+    ],
+    "description": "A crisp, clean, and universally appealing woody aromatic with bright citrus and a smoky incense drydown.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "coco-mademoiselle",
+    "brand": "Chanel",
+    "name": "Coco Mademoiselle",
+    "family": "floral",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Orange",
+      "Bergamot",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine",
+      "Litchi"
+    ],
+    "base": [
+      "Patchouli",
+      "Vanilla",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "A modern, vibrant oriental floral with a striking contrast of fresh citrus and sensual patchouli.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "allure-homme-sport",
+    "brand": "Chanel",
+    "name": "Allure Homme Sport",
+    "family": "citrus",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Orange",
+      "Sea Notes",
+      "Blood Mandarin"
+    ],
+    "mid": [
+      "Pepper",
+      "Neroli",
+      "Cedar"
+    ],
+    "base": [
+      "Tonka Bean",
+      "Vanilla",
+      "White Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "An energetic and luminous citrus marine scent over a creamy, musky base.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "chance-eau-tendre",
+    "brand": "Chanel",
+    "name": "Chance Eau Tendre",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Quince",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Hyacinth",
+      "Jasmine"
+    ],
+    "base": [
+      "Musk",
+      "Iris",
+      "Virginia Cedar"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A delicate, fruity-floral interpretation of Chance. Soft, romantic, and endlessly wearable.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "sycomore",
+    "brand": "Chanel",
+    "name": "Sycomore",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Aldehydes",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Vetiver",
+      "Cypress",
+      "Juniper"
+    ],
+    "base": [
+      "Sandalwood",
+      "Tobacco"
+    ],
+    "roles": [
+      "signature",
+      "creative"
+    ],
+    "description": "A masterclass in vetiver. Smoky, earthy, and refined, evoking autumn woods.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "coromandel",
+    "brand": "Chanel",
+    "name": "Coromandel",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 5,
+    "top": [
+      "Bitter Orange",
+      "Neroli",
+      "Citrus"
+    ],
+    "mid": [
+      "Patchouli",
+      "Orris",
+      "Rose"
+    ],
+    "base": [
+      "White Chocolate",
+      "Benzoin",
+      "Incense"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A rich, baroque oriental built around an exquisite, smooth patchouli and white chocolate.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "le-lion",
+    "brand": "Chanel",
+    "name": "Le Lion de Chanel",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Lemon",
+      "Bergamot"
+    ],
+    "mid": [
+      "Labdanum",
+      "Amber"
+    ],
+    "base": [
+      "Patchouli",
+      "Vanilla",
+      "Musk"
+    ],
+    "roles": [
+      "cold",
+      "formal"
+    ],
+    "description": "A bold, majestic amber fragrance dominated by a leathery labdanum and sensual vanilla.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "gabrielle",
+    "brand": "Chanel",
+    "name": "Gabrielle",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Grapefruit",
+      "Mandarin",
+      "Blackcurrant"
+    ],
+    "mid": [
+      "Tuberose",
+      "Ylang-Ylang",
+      "Jasmine",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A radiant, solar white floral bouquet that feels abstract, modern, and luminous.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "platinum-egoiste",
+    "brand": "Chanel",
+    "name": "Platinum Égoïste",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Lavender",
+      "Rosemary",
+      "Neroli"
+    ],
+    "mid": [
+      "Geranium",
+      "Clary Sage",
+      "Jasmine"
+    ],
+    "base": [
+      "Oakmoss",
+      "Vetiver",
+      "Cedar"
+    ],
+    "roles": [
+      "work",
+      "signature"
+    ],
+    "description": "A sharp, metallic, and incredibly crisp fougère that exudes confidence and cleanliness.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "sauvage",
+    "brand": "Dior",
+    "name": "Sauvage",
+    "family": "woody",
+    "sillage": 9,
+    "layering": 4,
+    "top": [
+      "Bergamot",
+      "Pepper"
+    ],
+    "mid": [
+      "Sichuan Pepper",
+      "Lavender",
+      "Pink Pepper",
+      "Vetiver",
+      "Patchouli",
+      "Geranium",
+      "Elemi"
+    ],
+    "base": [
+      "Ambroxan",
+      "Cedar",
+      "Labdanum"
+    ],
+    "roles": [
+      "signature",
+      "casual",
+      "heat"
+    ],
+    "description": "A radically fresh and incredibly powerful scent with spicy bergamot and a potent ambery wood trail.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "jadore",
+    "brand": "Dior",
+    "name": "J'adore",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Pear",
+      "Melon",
+      "Magnolia",
+      "Peach",
+      "Mandarin",
+      "Bergamot"
+    ],
+    "mid": [
+      "Jasmine",
+      "Lily-of-the-Valley",
+      "Tuberose",
+      "Freesia",
+      "Rose",
+      "Orchid",
+      "Plum",
+      "Violet"
+    ],
+    "base": [
+      "Musk",
+      "Vanilla",
+      "Blackberry",
+      "Cedar"
+    ],
+    "roles": [
+      "formal",
+      "signature"
+    ],
+    "description": "An opulent, luminous, and finely crafted bouquet of the world's most beautiful flowers.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "miss-dior",
+    "brand": "Dior",
+    "name": "Miss Dior",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Iris",
+      "Peony",
+      "Lily-of-the-Valley"
+    ],
+    "mid": [
+      "Rose",
+      "Apricot",
+      "Peach"
+    ],
+    "base": [
+      "Vanilla",
+      "Musk",
+      "Tonka",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A sweet, velvety, and colourful floral fragrance that celebrates love and happiness.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "dior-homme-intense",
+    "brand": "Dior",
+    "name": "Dior Homme Intense",
+    "family": "woody",
+    "sillage": 8,
+    "layering": 5,
+    "top": [
+      "Lavender"
+    ],
+    "mid": [
+      "Iris",
+      "Ambrette",
+      "Pear"
+    ],
+    "base": [
+      "Virginia Cedar",
+      "Vetiver"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "A sophisticated, woody, and intensely powdery iris fragrance. Elegant, masculine, and refined.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "fahrenheit",
+    "brand": "Dior",
+    "name": "Fahrenheit",
+    "family": "leather",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Nutmeg",
+      "Lavender",
+      "Cedar",
+      "Chamomile",
+      "Mandarin",
+      "Hawthorn",
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Violet Leaf",
+      "Nutmeg",
+      "Cedar",
+      "Sandalwood",
+      "Carnation",
+      "Honeysuckle",
+      "Jasmine",
+      "Lily-of-the-Valley"
+    ],
+    "base": [
+      "Leather",
+      "Vetiver",
+      "Musk",
+      "Amber",
+      "Patchouli",
+      "Tonka"
+    ],
+    "roles": [
+      "signature",
+      "creative"
+    ],
+    "description": "A unique, polarizing, and legendary fragrance with a signature violet leaf and leather accord that evokes burning wood and gasoline.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "bois-d-argent",
+    "brand": "Dior",
+    "name": "Bois d'Argent",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 8,
+    "top": [
+      "Iris",
+      "Cypress",
+      "Juniper"
+    ],
+    "mid": [
+      "Myrrh",
+      "Patchouli"
+    ],
+    "base": [
+      "Woody Notes",
+      "Honey",
+      "Vanilla",
+      "Amber",
+      "Resins",
+      "Musk",
+      "Leather"
+    ],
+    "roles": [
+      "intimate",
+      "signature"
+    ],
+    "description": "An ethereal, mysterious iris and myrrh scent that weaves a soft, smoky, and powdery spell.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "ambre-nuit",
+    "brand": "Dior",
+    "name": "Ambre Nuit",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Turkish Rose",
+      "Pink Pepper"
+    ],
+    "base": [
+      "Amber"
+    ],
+    "roles": [
+      "cold",
+      "formal"
+    ],
+    "description": "A dark, sensual encounter between the animalistic warmth of amber and the delicate elegance of Turkish rose.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "hypnotic-poison",
+    "brand": "Dior",
+    "name": "Hypnotic Poison",
+    "family": "gourmand",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Coconut",
+      "Plum",
+      "Apricot"
+    ],
+    "mid": [
+      "Brazilian Rosewood",
+      "Jasmine",
+      "Caraway",
+      "Tuberose",
+      "Rose",
+      "Lily-of-the-Valley"
+    ],
+    "base": [
+      "Vanilla",
+      "Almond",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "An intoxicating, magnetic, and deeply sensual oriental vanilla with a bitter almond bite.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "eau-sauvage",
+    "brand": "Dior",
+    "name": "Eau Sauvage",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Lemon",
+      "Bergamot",
+      "Basil",
+      "Rosemary",
+      "Caraway"
+    ],
+    "mid": [
+      "Jasmine",
+      "Coriander",
+      "Carnation",
+      "Patchouli",
+      "Orris Root",
+      "Sandalwood",
+      "Rose"
+    ],
+    "base": [
+      "Oakmoss",
+      "Vetiver",
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "The epitome of French elegance. A timeless, crisp, and refined citrus chypre.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "gris-dior",
+    "brand": "Dior",
+    "name": "Gris Dior",
+    "family": "chypre",
+    "sillage": 7,
+    "layering": 7,
+    "top": [
+      "Bergamot"
+    ],
+    "mid": [
+      "Rose",
+      "Patchouli",
+      "Jasmine"
+    ],
+    "base": [
+      "Oakmoss",
+      "Cedar",
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "A modern, sophisticated chypre that perfectly translates the iconic Dior gray into a seamless blend of rose and patchouli.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "loewe-001-man",
+    "brand": "Loewe",
+    "name": "001 Man",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Cardamom",
+      "Bergamot",
+      "Mandarin"
+    ],
+    "mid": [
+      "Cypress",
+      "Ambrette",
+      "Sandalwood",
+      "Vetiver",
+      "Cedar",
+      "Carrot Seeds"
+    ],
+    "base": [
+      "Violet",
+      "White Musk",
+      "Patchouli"
+    ],
+    "roles": [
+      "work",
+      "intimate"
+    ],
+    "description": "A clean, modern, and sensual woody musk fragrance with a subtle, powdery violet finish.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "loewe-001-woman",
+    "brand": "Loewe",
+    "name": "001 Woman",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 7,
+    "top": [
+      "Italian Tangerine",
+      "Pink Pepper",
+      "Bergamot"
+    ],
+    "mid": [
+      "Sandalwood",
+      "Egyptian Jasmine",
+      "Linen"
+    ],
+    "base": [
+      "Vanilla",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "intimate"
+    ],
+    "description": "A bright, sparkling floral with a unique, cozy linen accord and a creamy vanilla base.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "paulas-ibiza",
+    "brand": "Loewe",
+    "name": "Paula's Ibiza",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Galbanum",
+      "Coconut",
+      "Mandarin"
+    ],
+    "mid": [
+      "Driftwood",
+      "Frangipani",
+      "Narcissus"
+    ],
+    "base": [
+      "Ambergris",
+      "Patchouli",
+      "Bourbon Vanilla"
+    ],
+    "roles": [
+      "heat",
+      "casual"
+    ],
+    "description": "A bohemian, sun-drenched summer fragrance capturing the essence of the Balearic Islands with coconut and driftwood.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "esencia",
+    "brand": "Loewe",
+    "name": "Esencia",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Lavender",
+      "Juniper",
+      "Artemisia",
+      "Bergamot",
+      "Tarragon",
+      "Lemon",
+      "Green Notes",
+      "Galbanum"
+    ],
+    "mid": [
+      "Pine Needles",
+      "Basil",
+      "Nutmeg",
+      "Clary Sage",
+      "Geranium",
+      "Rose",
+      "Jasmine",
+      "Lily-of-the-Valley",
+      "Blackcurrant"
+    ],
+    "base": [
+      "Fir",
+      "Oakmoss",
+      "Leather",
+      "Vetiver",
+      "Styrax",
+      "Cedar",
+      "Patchouli",
+      "Sandalwood",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "A complex, fiercely aromatic fougère. Herbal, woody, and intensely masculine.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "solo-loewe",
+    "brand": "Loewe",
+    "name": "Solo Loewe",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Mandarin",
+      "Guava",
+      "Lavender",
+      "Lemon",
+      "Bergamot",
+      "Rosemary",
+      "Thyme",
+      "Costus"
+    ],
+    "mid": [
+      "Pink Pepper",
+      "Cinnamon",
+      "Tangerine",
+      "Mint",
+      "Nutmeg",
+      "Anise",
+      "Caraway"
+    ],
+    "base": [
+      "Woody Notes",
+      "Amber",
+      "Vanilla",
+      "Oakmoss",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "casual"
+    ],
+    "description": "A unique harmony of contrasting elements: wet stones and dry woods, citrus and spices.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "solo-loewe-cedro",
+    "brand": "Loewe",
+    "name": "Solo Loewe Cedro",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Pink Pepper",
+      "Mandarin"
+    ],
+    "mid": [
+      "Lavender",
+      "Nutmeg"
+    ],
+    "base": [
+      "Cedar",
+      "Benzoin"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "A stripped-back, elegant woody fragrance emphasizing smooth, high-quality cedar.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "aura-floral",
+    "brand": "Loewe",
+    "name": "Aura Floral",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Carrot Seeds",
+      "Bergamot",
+      "Lemon",
+      "Green Notes"
+    ],
+    "mid": [
+      "Violet",
+      "Rose",
+      "Jasmine",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Vanilla",
+      "Musk",
+      "Patchouli",
+      "Leather"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "A radiant, luminous floral bouquet with a subtle, contrasting leather base.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "agua-de-loewe",
+    "brand": "Loewe",
+    "name": "Agua de Loewe",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Bergamot",
+      "Yuzu",
+      "Tangerine",
+      "Rosewood"
+    ],
+    "mid": [
+      "Tea",
+      "Spicy Notes",
+      "White Pepper"
+    ],
+    "base": [
+      "Cedar",
+      "White Musk",
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "heat",
+      "casual",
+      "work"
+    ],
+    "description": "A refreshing, transparent, and unisex citrus-tea fragrance, perfect for hot weather.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "7-loewe",
+    "brand": "Loewe",
+    "name": "7 Loewe",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Pepper",
+      "Apple"
+    ],
+    "mid": [
+      "Incense",
+      "Neroli",
+      "Rose",
+      "Lily-of-the-Valley"
+    ],
+    "base": [
+      "Cedar",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "A mysterious, incense-heavy woody fragrance lifted by a crisp, tart apple note.",
+    "url": "",
+    "story": ""
+  },
+  {
+    "id": "loewe-earth",
+    "brand": "Loewe",
+    "name": "Loewe Earth",
+    "family": "chypre",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Truffle",
+      "Pear",
+      "Elemi"
+    ],
+    "mid": [
+      "Mimosa",
+      "Violet"
+    ],
+    "base": [
+      "Oud",
+      "Vetiver",
+      "Woody Notes"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "A surprising and earthy chypre featuring a unique truffle note over a bed of violet and vetiver.",
+    "url": "",
+    "story": ""
+  }
+]

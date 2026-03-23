@@ -417,6 +417,27 @@
   margin-bottom: var(--sp-xs);
 }
 
+/* ── GENERIC PAGE STRUCTURE ── */
+
+.shell-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--sp-4xl) var(--sp-xl);
+}
+
+.section-group {
+  margin-bottom: var(--sp-4xl);
+}
+
+.sec-header {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  line-height: var(--lh-tight);
+  margin-bottom: var(--sp-lg);
+  padding-bottom: var(--sp-sm);
+  border-bottom: 1px solid var(--border-standard);
+}
+
 /* ── CATALOG LAYOUT ─────────────────────────────────────────────── */
 
 .catalog-shell {
@@ -427,7 +448,7 @@
 }
 
 .catalog-sidebar {
-  width: 220px;
+  width: var(--nav-sidebar);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -462,7 +483,8 @@
 .catalog-sidebar .cat-state-bar,
 .catalog-sidebar .cat-family-bar,
 .catalog-sidebar .cat-feel-bar,
-.catalog-sidebar .cat-brand-bar {
+.catalog-sidebar .cat-brand-bar,
+.catalog-sidebar .notes-tier-bar {
   display: flex;
   flex-direction: column;
   gap: var(--sp-micro);
@@ -489,7 +511,8 @@
   border-radius: var(--radius-sm);
 }
 
-.catalog-sidebar .tab.active {
+.catalog-sidebar .tab.active,
+.catalog-sidebar .fam-pill.active {
   background: var(--bg-tertiary);
   box-shadow: none;
 }

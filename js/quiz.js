@@ -2,21 +2,8 @@
    Lightweight standalone quiz for /quiz/:slug pages.
    Fetches scent data + quiz config, runs scoring, renders results. */
 
-import { ARCHETYPES } from './store.js';
+import { ARCHETYPES, FAM } from './store.js';
 import { computeProfile, scoreFragrances as engineScoreFragrances } from './engine.js';
-
-const FAM = {
-  citrus:  { label: 'Citrus',   color: '#9A6800' },
-  green:   { label: 'Green',    color: '#1A6030' },
-  floral:  { label: 'Floral',   color: '#902050' },
-  woody:   { label: 'Woody',    color: '#6E3210' },
-  amber:   { label: 'Amber',    color: '#984000' },
-  chypre:  { label: 'Chypre',   color: '#285438' },
-  aquatic: { label: 'Aquatic',  color: '#0A4880' },
-  leather: { label: 'Leather',  color: '#42200E' },
-  gourmand:{ label: 'Gourmand', color: '#7C4C00' },
-  oud:     { label: 'Oud',      color: '#4A1850' },
-};
 
 /* ── Scoring ── */
 function scoreFragrances(catalog, collectedTags, scoringConfig) {
@@ -393,7 +380,7 @@ function renderResults(top3) {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
       <a href="/app.html#frag=${frag.id}" class="quiz-result-card">
-        <div class="quiz-result-dot" style="background:${fc.color}"></div>
+        <div class="quiz-result-dot" style="--fam-bg: ${fc.color}"></div>
         <div class="quiz-result-info">
           <div class="quiz-result-name">${frag.name}</div>
           <div class="quiz-result-brand">${frag.brand} &middot; ${fc.label}</div>
@@ -425,10 +412,8 @@ function renderResults(top3) {
 }
 
 function renderArchetypeResults(archetype, frags) {
-  const famColors = { woody:'#6E3210', green:'#1A6030', chypre:'#285438', citrus:'#9A6800', floral:'#902050', amber:'#984000', oud:'#4A1850', leather:'#42200E', gourmand:'#7C4C00', aquatic:'#0A4880' };
   const familyPills = archetype.families.map(f => {
-    const color = famColors[f] || '#8C5E30';
-    return `<span class="quiz-arch-fam" style="background:${color}18;color:${color};border-color:${color}30">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
+    return `<span class="quiz-arch-fam" style="background:color-mix(in srgb, var(--fam-${f}) 10%, transparent); color:var(--fam-${f}); border-color:color-mix(in srgb, var(--fam-${f}) 20%, transparent)">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
   }).join('');
 
   const moreQuizzes = _buildMoreDiscoveryHtml();
@@ -437,7 +422,7 @@ function renderArchetypeResults(archetype, frags) {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
       <a href="/app.html#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
-        <div class="quiz-result-dot" style="background:${fc.color}"></div>
+        <div class="quiz-result-dot" style="--fam-bg: ${fc.color}"></div>
         <div class="quiz-result-info">
           <div class="quiz-result-name">${frag.name}</div>
           <div class="quiz-result-brand">${frag.brand} &middot; ${fc.label}</div>
@@ -476,17 +461,15 @@ function renderArchetypeResults(archetype, frags) {
 
 function renderAstroResults(sign, archetype, frags) {
   const moreQuizzes = _buildMoreDiscoveryHtml();
-  const famColors = { woody:'#6E3210', green:'#1A6030', chypre:'#285438', citrus:'#9A6800', floral:'#902050', amber:'#984000', oud:'#4A1850', leather:'#42200E', gourmand:'#7C4C00', aquatic:'#0A4880' };
   const familyPills = archetype.families.map(f => {
-    const color = famColors[f] || '#8C5E30';
-    return `<span class="quiz-arch-fam" style="background:${color}18;color:${color};border-color:${color}30">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
+    return `<span class="quiz-arch-fam" style="background:color-mix(in srgb, var(--fam-${f}) 10%, transparent); color:var(--fam-${f}); border-color:color-mix(in srgb, var(--fam-${f}) 20%, transparent)">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
   }).join('');
 
   const resultsHtml = frags.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
       <a href="/app.html#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
-        <div class="quiz-result-dot" style="background:${fc.color}"></div>
+        <div class="quiz-result-dot" style="--fam-bg: ${fc.color}"></div>
         <div class="quiz-result-info">
           <div class="quiz-result-name">${frag.name}</div>
           <div class="quiz-result-brand">${frag.brand} &middot; ${fc.label}</div>
@@ -584,7 +567,7 @@ function injectStyles() {
       transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s cubic-bezier(.16,1,.3,1);
     }
     .quiz-result-card:hover { border-color: var(--border-strong, #C4BFAF); box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,.08)); transform: translateY(-1px); }
-    .quiz-result-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .quiz-result-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; background: var(--fam-bg, var(--fam-default)); }
     .quiz-result-info { flex: 1; min-width: 0; }
     .quiz-result-name { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: var(--fs-ui, 14px); letter-spacing: -0.01em; }
     .quiz-result-brand { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-secondary, #8C8070); margin-top: 2px; }
@@ -625,7 +608,7 @@ function injectStyles() {
     .quiz-archetype-card { border: 1px solid var(--border-standard, #DDD8D0); border-radius: var(--radius-lg, 12px); background: var(--bg-primary, #FAF8F4); padding: var(--sp-xl, 24px); margin-bottom: var(--sp-xl, 24px); }
     .quiz-archetype-eyebrow { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: var(--sp-sm, 8px); }
     .quiz-archetype-name { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: clamp(22px, 5vw, 32px); line-height: 1.1; letter-spacing: -0.02em; color: var(--text-primary, #0E0C09); margin: 0 0 var(--sp-sm, 8px); }
-    .quiz-archetype-tagline { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); font-style: italic; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); line-height: 1.5; }
+    .quiz-archetype-tagline { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); line-height: 1.5; }
     .quiz-arch-families { display: flex; flex-wrap: wrap; gap: var(--sp-xs, 4px); margin-bottom: var(--sp-md, 12px); }
     .quiz-arch-fam { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); font-weight: 600; padding: 3px 10px; border-radius: 20px; border: 1px solid transparent; }
     .quiz-archetype-desc { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); color: var(--text-secondary, #8C8070); margin: 0; line-height: 1.6; }
@@ -686,47 +669,15 @@ async function init() {
   };
 
   try {
-    const [scentsRes, configRes] = await Promise.all([
-      fetch('/data/scents-flat.json'),
-      fetch('/data/quiz-config.json'),
+    const [catalog, allConfigs] = await Promise.all([
+      fetch('/data/scents.json').then(r => { if (!r.ok) throw new Error(`scents.json: ${r.status}`); return r.json(); }),
+      fetch('/data/quiz-config.json').then(r => { if (!r.ok) throw new Error(`quiz-config.json: ${r.status}`); return r.json(); }),
     ]);
-
-    if (!scentsRes.ok) throw new Error(`Scents fetch failed: ${scentsRes.status}`);
-    if (!configRes.ok) throw new Error(`Config fetch failed: ${configRes.status}`);
-
-    const scentsMap = await scentsRes.json();
-    const allConfigs = await configRes.json();
-
-    // Convert scents map to array with IDs
-    const catalog = Object.entries(scentsMap).map(([id, f]) => ({ ...f, id }));
     const config = allConfigs[slug] || null;
-
     renderQuiz(container, config, catalog);
   } catch (err) {
     console.error('[quiz] init error:', err);
-    // Fallback: try loading from per-brand files
-    try {
-      const idxRes = await fetch('/data/scents-index.json');
-      if (!idxRes.ok) throw new Error('index fetch failed');
-      const idx = await idxRes.json();
-      const brandArrays = await Promise.all(
-        idx.brands.map(b => fetch(`/data/scents/${b}.json`).then(r => r.json()))
-      );
-      const catalog = brandArrays.flat().map(f => ({
-        ...f,
-        top: typeof f.top === 'string' ? f.top.split(',').map(s => s.trim()) : f.top,
-        mid: typeof f.mid === 'string' ? f.mid.split(',').map(s => s.trim()) : f.mid,
-        base: typeof f.base === 'string' ? f.base.split(',').map(s => s.trim()) : f.base,
-        roles: f.roles || [],
-      }));
-      const cfgRes = await fetch('/data/quiz-config.json');
-      const allConfigs = cfgRes.ok ? await cfgRes.json() : {};
-      const config = allConfigs[slug] || null;
-      renderQuiz(container, config, catalog);
-    } catch (fallbackErr) {
-      console.error('[quiz] fallback error:', fallbackErr);
-      container.innerHTML = `<div class="quiz-page"><div class="quiz-body"><p>Failed to load quiz data. <a href="/">Back to Scentmap</a></p></div></div>`;
-    }
+    container.innerHTML = `<div class="quiz-page"><div class="quiz-body"><p>Failed to load quiz data. <a href="/">Back to Scentmap</a></p></div></div>`;
   }
 }
 

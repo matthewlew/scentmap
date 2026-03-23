@@ -12,652 +12,392 @@
 <link rel="stylesheet" href="styles/layout.css">
 <link rel="stylesheet" href="styles/responsive.css">
 <style>
-  /* ── Playground Layout ── */
-  .pg-container { max-width: 1200px; margin: 0 auto; padding: var(--sp-4xl) var(--sp-xl); }
-  .pg-header { margin-bottom: var(--sp-4xl); padding-bottom: var(--sp-2xl); border-bottom: 2px solid var(--border-strong); }
-  .pg-title { font-family: var(--font-display); font-size: 2.5rem; line-height: var(--lh-tight); margin-bottom: var(--sp-sm); }
-  .pg-desc { font-size: var(--fs-body); color: var(--text-secondary); max-width: 640px; line-height: var(--lh-normal); }
-  .pg-section { margin-bottom: var(--sp-4xl); }
-  .pg-section-title { font-family: var(--font-sans); font-size: var(--fs-title); font-weight: 700; margin-bottom: var(--sp-lg); padding-bottom: var(--sp-sm); border-bottom: 1px solid var(--border-standard); }
-  .pg-subsection-title { font-family: var(--font-sans); font-size: var(--fs-ui); font-weight: 600; margin: var(--sp-2xl) 0 var(--sp-lg); color: var(--text-secondary); }
-  .pg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--sp-2xl); }
-  .pg-item { display: flex; flex-direction: column; gap: var(--sp-md); }
-  .pg-label { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: var(--ls-wide); }
-  .pg-box { border: 1px dashed var(--border-standard); padding: var(--sp-lg); border-radius: var(--radius-lg); background: var(--bg-primary); display: flex; align-items: center; justify-content: center; min-height: 80px; }
-  .pg-box.dark { background: var(--ink); border-color: var(--ink); }
-  .pg-box--stack { flex-direction: column; align-items: stretch; gap: var(--sp-sm); }
-  .pg-box--full { padding: 0; overflow: hidden; }
+  /* ── Shell Layout Overrides ── */
+  html, body { height: 100%; overflow: hidden; margin: 0; padding: 0; }
+  
+  /* ── Sidebar specific design system tweaks ── */
+  .sec-header { font-weight: normal; }
+  .catalog-sidebar .sec-header { border-bottom: none; margin-bottom: var(--sp-xl); padding-bottom: 0; }
+  .catalog-sidebar .sec-header h1 { font-size: var(--fs-ui); margin-bottom: 0; }
+  .catalog-sidebar .tab { 
+    text-decoration: none; 
+    color: var(--text-secondary); 
+    display: flex; 
+    align-items: center; 
+    padding: var(--sp-xs) var(--sp-sm);
+    border-radius: var(--radius-sm);
+  }
+  .catalog-sidebar .tab:hover { color: var(--text-primary); background: var(--bg-secondary); }
+  .catalog-sidebar .tab.active { color: var(--text-primary); font-weight: 600; background: var(--bg-tertiary); }
 
-  /* Storybook controls */
-  .pg-controls { display: flex; gap: var(--sp-xs); margin-bottom: var(--sp-md); flex-wrap: wrap; }
-  .pg-ctrl { font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600; padding: var(--sp-xs) var(--sp-md); border: 1px solid var(--border-standard); border-radius: var(--radius); background: var(--bg-primary); cursor: pointer; color: var(--text-secondary); transition: all var(--dur-fast) var(--ease-spring); }
-  .pg-ctrl:hover { border-color: var(--border-strong); color: var(--text-primary); }
-  .pg-ctrl.active { background: var(--text-primary); border-color: var(--text-primary); color: var(--bg-primary); }
+  /* ── Playground Layout Helpers ── */
+  .story-grid { 
+    display: grid; 
+    grid-template-columns: 1fr var(--nav-sidebar); 
+    gap: var(--sp-lg); 
+    margin-bottom: var(--sp-xl); 
+  }
+  @media (max-width: 900px) { .story-grid { grid-template-columns: 1fr; } }
 
-  /* Badge for usage ranking */
-  .pg-usage { font-family: var(--font-sans); font-size: var(--fs-caption); font-weight: 700; padding: 1px 6px; border-radius: var(--radius-small); display: inline-block; }
-  .pg-usage--high { background: color-mix(in srgb, var(--fam-green) 12%, transparent); color: var(--fam-green); }
-  .pg-usage--med { background: color-mix(in srgb, var(--fam-amber) 12%, transparent); color: var(--fam-amber); }
-  .pg-usage--low { background: var(--bg-secondary); color: var(--text-tertiary); }
+  .canvas { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    min-height: calc(var(--sp-4xl) * 5);
+    background-image: radial-gradient(var(--border-subtle) 1px, transparent 1px); 
+    background-size: var(--sp-xl) var(--sp-xl);
+  }
 
-  /* TOC nav */
-  .pg-toc { display: flex; flex-wrap: wrap; gap: var(--sp-sm); margin-bottom: var(--sp-3xl); }
-  .pg-toc a { font-family: var(--font-sans); font-size: var(--fs-meta); color: var(--text-secondary); text-decoration: none; padding: var(--sp-xs) var(--sp-md); border: 1px solid var(--border-standard); border-radius: var(--radius); transition: all var(--dur-fast); }
-  .pg-toc a:hover { border-color: var(--border-strong); color: var(--text-primary); }
+  /* Canvas content layout helper */
+  .canvas-stage {
+    display: flex;
+    gap: var(--sp-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
-  /* Migration callout */
-  .pg-callout { background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-lg); padding: var(--sp-lg); margin-bottom: var(--sp-lg); }
-  .pg-callout-title { font-family: var(--font-sans); font-size: var(--fs-body); font-weight: 700; margin-bottom: var(--sp-xs); }
-  .pg-callout-body { font-size: var(--fs-meta); color: var(--text-secondary); line-height: var(--lh-normal); }
+  /* Documentation container (list-view inside a card) */
+  .docs-card { padding: 0; overflow: hidden; }
+  .docs-card .sec-label { padding: var(--sp-lg) var(--sp-lg) var(--sp-sm); margin-bottom: 0; }
 
-  /* Inline demo sheet (scaled) */
-  .pg-sheet-demo { position: relative; height: 280px; background: var(--bg-secondary); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-standard); }
-  .pg-sheet-demo .sheet { position: absolute; max-width: none; z-index: 1; transform: translateY(30%); border: 1px solid var(--g300); }
-  .pg-sheet-demo .sheet.visible { transform: translateY(0); }
-
-
-
+  .code-block {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    white-space: pre;
+    overflow-x: auto;
+    margin-top: var(--sp-md);
+    line-height: var(--lh-normal);
+  }
 </style>
 </head>
 <body>
-  <div class="pg-container">
-    <header class="pg-header">
-      <h1 class="pg-title">Scentmap Design System</h1>
-      <p class="pg-desc">Component library and token reference. Canonical patterns, usage rules, and live demos.</p>
-    </header>
+  <div class="catalog-shell">
+    <aside class="catalog-sidebar">
+      <header class="sec-header">
+        <h1 class="text-ui">Design System</h1>
+      </header>
 
-    <!-- TABLE OF CONTENTS -->
-    <nav class="pg-toc">
-      <a href="#tokens">Tokens</a>
-      <a href="#typography">Typography</a>
-      <a href="#colors">Colors</a>
-      <a href="#list-item">List Item</a>
-      <a href="#cards">Cards</a>
-      <a href="#chips">Chips</a>
-      <a href="#tabs">Tabs</a>
-      <a href="#family-pills">Family Pills</a>
-      <a href="#buttons">Buttons</a>
-      <a href="#inputs">Inputs</a>
-      <a href="#sheets">Sheets</a>
-      <a href="#section-labels">Section Label</a>
-      <a href="#meters">Meters</a>
-      <a href="#dots">Dots</a>
-    </nav>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         TOKENS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="tokens">
-      <h2 class="pg-section-title">Design Tokens</h2>
-
-      <h3 class="pg-subsection-title">Spacing Scale (4px grid)</h3>
-      <div style="display: flex; gap: var(--sp-lg); flex-wrap: wrap; align-items: flex-end; margin-bottom: var(--sp-2xl);">
-        <div style="text-align: center;"><div style="width: 2px; height: 2px; background: var(--accent-primary); margin: 0 auto var(--sp-xs);"></div><span class="pg-label">micro 2</span></div>
-        <div style="text-align: center;"><div style="width: 4px; height: 4px; background: var(--accent-primary); margin: 0 auto var(--sp-xs);"></div><span class="pg-label">xs 4</span></div>
-        <div style="text-align: center; position: relative;"><div style="width: 6px; height: 6px; background: var(--accent-primary); margin: 0 auto var(--sp-xs); outline: 2px dashed var(--border-standard); outline-offset: 2px;"></div><span class="pg-label" style="color: var(--accent-primary);">2xs 6 ✦</span></div>
-        <div style="text-align: center;"><div style="width: 8px; height: 8px; background: var(--accent-primary); margin: 0 auto var(--sp-xs);"></div><span class="pg-label">sm 8</span></div>
-        <div style="text-align: center;"><div style="width: 12px; height: 12px; background: var(--accent-primary); margin: 0 auto var(--sp-xs);"></div><span class="pg-label">md 12</span></div>
-        <div style="text-align: center;"><div style="width: 16px; height: 16px; background: var(--accent-primary); margin: 0 auto var(--sp-xs);"></div><span class="pg-label">lg 16</span></div>
-        <div style="text-align: center;"><div style="width: 20px; height: 20px; background: var(--accent-primary); margin: 0 auto var(--sp-xs);"></div><span class="pg-label">xl 20</span></div>
-        <div style="text-align: center;"><div style="width: 24px; height: 24px; background: var(--accent-primary); margin: 0 auto var(--sp-xs);"></div><span class="pg-label">2xl 24</span></div>
-        <div style="text-align: center;"><div style="width: 32px; height: 32px; background: var(--accent-primary); margin: 0 auto var(--sp-xs);"></div><span class="pg-label">3xl 32</span></div>
-        <div style="text-align: center;"><div style="width: 48px; height: 48px; background: var(--accent-primary); margin: 0 auto var(--sp-xs);"></div><span class="pg-label">4xl 48</span></div>
-      </div>
-
-      <h3 class="pg-subsection-title">Border Radius Scale</h3>
-      <div style="display: flex; gap: var(--sp-lg); flex-wrap: wrap; align-items: center; margin-bottom: var(--sp-2xl);">
-        <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-micro);"></div><span class="pg-label">micro 2</span></div>
-        <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-small);"></div><span class="pg-label">small 3</span></div>
-        <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-sm);"></div><span class="pg-label">sm 5</span></div>
-        <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius);"></div><span class="pg-label">default 6</span></div>
-        <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-lg);"></div><span class="pg-label">lg 8</span></div>
-        <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-xl);"></div><span class="pg-label">xl 10</span></div>
-        <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-pill);"></div><span class="pg-label">pill 20</span></div>
-        <div style="text-align: center;"><div style="width: 40px; height: 40px; background: var(--bg-secondary); border: 1px solid var(--border-standard); border-radius: var(--radius-circle);"></div><span class="pg-label">circle 50%</span></div>
-      </div>
-
-      <h3 class="pg-subsection-title">Spacing Semantics — Gestalt Proximity</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-lg);">
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">micro 2px &amp; xs 4px — Intra-element</div>
-          <div class="pg-callout-body">Dots, icon stacks, badge icon-text. Signals "these are one unit." Used within a single atomic component (e.g. icon + symbol in <code>.s-syms</code>, tab container rows).</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">2xs 6px — Icon-text inline</div>
-          <div class="pg-callout-body">Gap between an icon/dot and its label inside pill buttons and chips. 4px is too tight (letters collide with icon visually), 8px is too loose. 6px fills the half-step.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">sm 8px &amp; md 12px — Within-component</div>
-          <div class="pg-callout-body">Related items inside a card or row (icon to text, label to value). Most common range — these tokens handle the majority of spacing. Everything that "belongs together but is still two things."</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">lg 16px &amp; xl 20px — Section breathing room</div>
-          <div class="pg-callout-body">Padding inside panels, gaps between rows in a list, space around section headers. Creates the margin of safety between groups so the eye can parse them as separate.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">2xl 24px &amp; 3xl 32px — Between sections</div>
-          <div class="pg-callout-body">Separates distinct content blocks (e.g. detail panel sections, compare score vs notes grid). Use sparingly — only in parent <code>gap</code> on containers like <code>.detail-inner</code>, <code>.cmp-results</code>.</div>
-        </div>
-        <div class="pg-callout">
-          <div class="pg-callout-title" style="font-size: var(--fs-meta);">4xl 48px — Page-level framing</div>
-          <div class="pg-callout-body">Top/bottom page padding, major section breaks. Should stay rare — overuse collapses the distinction between section-level and page-level space.</div>
+      <div class="cat-sidebar-section">
+        <div class="sec-label">Architecture</div>
+        <div class="cat-state-bar">
+          <a href="#typography" class="tab">Typography</a>
+          <a href="#layout" class="tab">Layout</a>
+          <a href="#labels" class="tab">Labels</a>
+          <a href="#grids" class="tab">Grids</a>
         </div>
       </div>
-    </section>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         TYPOGRAPHY
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="typography">
-      <h2 class="pg-section-title">Typography</h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-xl);">Three typefaces: <strong>Source Serif 4</strong> (body/editorial), <strong>DM Sans</strong> (UI labels), <strong>Archivo Black</strong> (display headings).</p>
-      <div class="pg-grid">
-        <div class="pg-item"><span class="pg-label">.text-heading / Archivo Black 32px</span><div class="text-heading">L'Air du Desért</div></div>
-        <div class="pg-item"><span class="pg-label">.text-title / Source Serif 24px</span><div class="text-title">Eau de Parfum</div></div>
-        <div class="pg-item"><span class="pg-label">.text-ui / Source Serif 18px</span><div class="text-ui">Search fragrances...</div></div>
-        <div class="pg-item"><span class="pg-label">.text-body / Source Serif 16px</span><div class="text-body">A warm, spicy and woody scent inspired by the Sahara at dusk.</div></div>
-        <div class="pg-item"><span class="pg-label">.text-meta / Source Serif 14px</span><div class="text-meta">10 items &bull; Woody Spicy</div></div>
-        <div class="pg-item"><span class="pg-label">.sec-label / DM Sans 12px CAPS</span><div class="sec-label" style="margin: 0;">Top Notes</div></div>
-        <div class="pg-item"><span class="pg-label">.logo / DM Sans 14px CAPS tracking</span><div class="logo">Scentmap</div></div>
+      <div class="cat-sidebar-section">
+        <div class="sec-label">Components</div>
+        <div class="cat-state-bar">
+          <a href="#banners" class="tab">Banners</a>
+          <a href="#cards" class="tab">Cards</a>
+          <a href="#chips" class="tab">Chips</a>
+          <a href="#tags" class="tab">Tags</a>
+          <a href="#lists" class="tab">Lists & Shelves</a>
+        </div>
       </div>
-    </section>
+    </aside>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         COLORS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="colors">
-      <h2 class="pg-section-title">Colors</h2>
+    <main class="catalog-main">
+      <div class="shell-container">
+        <header class="section-group">
+          <h1 class="text-heading">Scentmap Design System</h1>
+          <p class="text-body" style="color: var(--text-secondary); max-width: 640px;">Generic components, baked-in typography, and token-driven layout.</p>
+        </header>
 
-      <h3 class="pg-subsection-title">Core Palette</h3>
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-md); margin-bottom: var(--sp-2xl);">
-        <div><div style="height: 64px; background: var(--paper); border: 1px solid var(--border-standard); border-radius: var(--radius-lg);"></div><span class="pg-label">paper #F5F2EC</span></div>
-        <div><div style="height: 64px; background: var(--stone); border: 1px solid var(--border-standard); border-radius: var(--radius-lg);"></div><span class="pg-label">stone #EAE6DE</span></div>
-        <div><div style="height: 64px; background: var(--resin); border-radius: var(--radius-lg);"></div><span class="pg-label">resin #8C5E30</span></div>
-        <div><div style="height: 64px; background: var(--ink); border-radius: var(--radius-lg);"></div><span class="pg-label">ink #0E0C09</span></div>
-      </div>
+        <!-- TYPOGRAPHY -->
+        <section class="section-group" id="typography">
+          <h2 class="sec-header">Typography (Baked-in Styles)</h2>
+          <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
+            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-heading</div><div class="text-heading">Le Labo Santal 33</div></div>
+            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-title</div><div class="text-title">Discovery Wedge</div></div>
+            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-ui</div><div class="text-ui">Search fragrances...</div></div>
+            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-label</div><div class="text-label">Extraction</div></div>
+            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-body</div><div class="text-body">A warm, spicy and woody scent inspired by the Sahara at dusk.</div></div>
+            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-meta</div><div class="text-meta">Woody &middot; 2026 Release</div></div>
+            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-caption</div><div class="text-caption">Steam Distillation</div></div>
+          </div>
+        </section>
 
-      <h3 class="pg-subsection-title">Family Colors</h3>
-      <div style="display: flex; gap: var(--sp-xs); flex-wrap: wrap; margin-bottom: var(--sp-2xl);">
-        <div style="display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md); background: var(--fam-woody); border-radius: var(--radius-pill); color: #fff; font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600;">Woody</div>
-        <div style="display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md); background: var(--fam-floral); border-radius: var(--radius-pill); color: #fff; font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600;">Floral</div>
-        <div style="display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md); background: var(--fam-amber); border-radius: var(--radius-pill); color: #fff; font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600;">Amber</div>
-        <div style="display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md); background: var(--fam-citrus); border-radius: var(--radius-pill); color: #fff; font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600;">Citrus</div>
-        <div style="display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md); background: var(--fam-leather); border-radius: var(--radius-pill); color: #fff; font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600;">Leather</div>
-        <div style="display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md); background: var(--fam-oud); border-radius: var(--radius-pill); color: #fff; font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600;">Oud</div>
-        <div style="display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md); background: var(--fam-green); border-radius: var(--radius-pill); color: #fff; font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600;">Green</div>
-        <div style="display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md); background: var(--fam-chypre); border-radius: var(--radius-pill); color: #fff; font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600;">Chypre</div>
-        <div style="display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md); background: var(--fam-gourmand); border-radius: var(--radius-pill); color: #fff; font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600;">Gourmand</div>
-      </div>
-
-      <h3 class="pg-subsection-title">Shadows</h3>
-      <div class="pg-grid" style="grid-template-columns: repeat(3, 1fr);">
-        <div class="pg-item"><span class="pg-label">shadow-sm</span><div class="pg-box shadow-sm" style="border: 1px solid var(--border-subtle);"></div></div>
-        <div class="pg-item"><span class="pg-label">shadow-md</span><div class="pg-box shadow-md" style="border: 1px solid var(--border-subtle);"></div></div>
-        <div class="pg-item"><span class="pg-label">shadow-lg</span><div class="pg-box shadow-lg" style="border: 1px solid var(--border-subtle);"></div></div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         LIST ITEM (canonical)
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="list-item">
-      <h2 class="pg-section-title">List Item <span class="pg-usage pg-usage--high" style="vertical-align: middle; margin-left: var(--sp-sm);">HIGHEST USAGE</span></h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">Canonical row component. Structure: <code>.list-item</code> → <code>.list-item-dot</code> + <code>.list-item-body[.list-item-label, .list-item-sublabel, .list-item-detail]</code> + <code>.list-item-trailing-label</code>. Container: <code>.list-shelf</code>. This matches <code>renderCatRow()</code> exactly.</p>
-
-      <h3 class="pg-subsection-title">Default — catalog row</h3>
-      <div class="pg-box pg-box--full" style="max-width: 480px;">
-        <div class="list-shelf" style="width: 100%; border: none; border-radius: 0;">
-          <div class="list-item" role="button" tabindex="0" data-family="woody" aria-label="Santal 33 by Le Labo">
-            <div class="list-item-dot" style="background: var(--fam-woody);" aria-hidden="true"></div>
-            <div class="list-item-body">
-              <div class="list-item-label">Santal 33</div>
-              <div class="list-item-sublabel">Le Labo&thinsp;&middot;&thinsp;Woody</div>
-              <div class="list-item-detail"><span class="note-layer-hint" aria-label="Heart note:">H</span> Sandalwood &middot; <span class="note-layer-hint" aria-label="Base note:">B</span> Cedarwood</div>
+        <!-- LAYOUT -->
+        <section class="section-group" id="layout">
+          <h2 class="sec-header">Layout & Sizing</h2>
+          
+          <div class="story-grid">
+            <div class="card canvas">
+              <div class="canvas-stage">
+                <div class="card" style="width: var(--nav-sidebar); height: calc(var(--sp-4xl) * 3); background: var(--bg-secondary); border: 2px dashed var(--border-standard); display: flex; align-items: center; justify-content: center;">
+                  <span class="text-meta">Sidebar (220px)</span>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="list-item" role="button" tabindex="0" data-family="floral" aria-label="Rose 31 by Le Labo — Owned">
-            <div class="list-item-dot" style="background: var(--fam-floral);" aria-hidden="true"></div>
-            <div class="list-item-body">
-              <div class="list-item-label">Rose 31</div>
-              <div class="list-item-sublabel">Le Labo&thinsp;&middot;&thinsp;Floral</div>
-            </div>
-            <div class="list-item-badge">Owned</div>
-          </div>
-          <div class="list-item" role="button" tabindex="0" data-family="amber" aria-label="Gypsy Water by Byredo">
-            <div class="list-item-dot" style="background: var(--fam-amber);" aria-hidden="true"></div>
-            <div class="list-item-body">
-              <div class="list-item-label">Gypsy Water</div>
-              <div class="list-item-sublabel">Byredo&thinsp;&middot;&thinsp;Amber</div>
-            </div>
-            <div class="list-item-trailing-label">82%</div>
-          </div>
-        </div>
-      </div>
-
-      <h3 class="pg-subsection-title">Compact variant — house/note detail, quiz results</h3>
-      <div class="pg-box pg-box--full" style="max-width: 480px;">
-        <div class="list-shelf" style="width: 100%;">
-          <div class="list-item list-item--compact" role="button" tabindex="0">
-            <div class="list-item-dot" style="background: var(--fam-woody);" aria-hidden="true"></div>
-            <div class="list-item-body">
-              <div class="list-item-label">Santal 33</div>
-              <div class="list-item-sublabel">Le Labo&thinsp;&middot;&thinsp;Woody</div>
-            </div>
-            <div class="list-item-trailing-label">91%</div>
-          </div>
-          <div class="list-item list-item--compact" role="button" tabindex="0">
-            <div class="list-item-dot" style="background: var(--fam-amber);" aria-hidden="true"></div>
-            <div class="list-item-body">
-              <div class="list-item-label">Gypsy Water</div>
-              <div class="list-item-sublabel">Byredo&thinsp;&middot;&thinsp;Amber</div>
-            </div>
-            <div class="list-item-trailing-label">74%</div>
-          </div>
-        </div>
-      </div>
-
-      <h3 class="pg-subsection-title">Slot contract (locked typography)</h3>
-      <div class="pg-callout" style="max-width: 640px;">
-        <div class="pg-callout-title">Typography is immutable — modifier and state classes may never override slot font/color</div>
-        <div class="pg-callout-body" style="overflow-x: auto;">
-          <table style="font-family: var(--font-sans); font-size: var(--fs-meta); border-collapse: collapse; width: 100%; margin-top: var(--sp-sm);">
-            <thead>
-              <tr style="color: var(--text-tertiary); text-align: left; border-bottom: 1px solid var(--border-standard);">
-                <th style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0; font-weight: 600;">Slot</th>
-                <th style="padding: var(--sp-xs) var(--sp-md); font-weight: 600;">Font</th>
-                <th style="padding: var(--sp-xs) var(--sp-md); font-weight: 600;">Size</th>
-                <th style="padding: var(--sp-xs) var(--sp-md); font-weight: 600;">Weight</th>
-                <th style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); font-weight: 600;">Color</th>
-              </tr>
-            </thead>
-            <tbody style="color: var(--text-primary);">
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-label</code></td><td style="padding: var(--sp-xs) var(--sp-md);">DM Sans</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-body</td><td style="padding: var(--sp-xs) var(--sp-md);">600</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-primary</td></tr>
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-sublabel</code></td><td style="padding: var(--sp-xs) var(--sp-md);">Source Serif</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-caption</td><td style="padding: var(--sp-xs) var(--sp-md);">400</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-secondary</td></tr>
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-detail</code></td><td style="padding: var(--sp-xs) var(--sp-md);">Source Serif</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-caption</td><td style="padding: var(--sp-xs) var(--sp-md);">400</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-tertiary</td></tr>
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-badge</code></td><td style="padding: var(--sp-xs) var(--sp-md);">DM Sans</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-caption</td><td style="padding: var(--sp-xs) var(--sp-md);">600</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">text-tertiary</td></tr>
-              <tr><td style="padding: var(--sp-xs) var(--sp-md) var(--sp-xs) 0;"><code>.list-item-trailing-label</code></td><td style="padding: var(--sp-xs) var(--sp-md);">DM Sans</td><td style="padding: var(--sp-xs) var(--sp-md);">fs-meta</td><td style="padding: var(--sp-xs) var(--sp-md);">700</td><td style="padding: var(--sp-xs) 0 var(--sp-xs) var(--sp-md); color: var(--text-tertiary);">accent-primary</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- ═══════════════════════════════════════════════════════════
-         CARDS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="cards">
-      <h2 class="pg-section-title">Cards &amp; Surfaces</h2>
-
-      <h3 class="pg-subsection-title">Compare Frag Card <span class="pg-usage pg-usage--high">HIGH</span></h3>
-      <div class="pg-controls" id="card-controls">
-        <button class="pg-ctrl active" onclick="setCardVariant('empty')">Empty</button>
-        <button class="pg-ctrl" onclick="setCardVariant('filled')">Filled</button>
-      </div>
-      <div class="pg-grid" style="grid-template-columns: 1fr 1fr;">
-        <div id="demo-card-a" class="cmp-frag-card">
-          <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">?</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-        </div>
-        <div id="demo-card-b" class="cmp-frag-card">
-          <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">?</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-        </div>
-      </div>
-
-      <h3 class="pg-subsection-title">Score Card <span class="pg-usage pg-usage--med">MED</span></h3>
-      <div class="pg-grid" style="grid-template-columns: repeat(3, 1fr);">
-        <div class="cmp-score-card">
-          <div class="cmp-score-pct" style="color: var(--fam-amber);">78%</div>
-          <div class="sec-label" style="margin: 0;">Match</div>
-          <div class="cmp-score-meter"><div class="cmp-score-meter-track"><div class="cmp-score-meter-fill" style="width: 78%; background: var(--fam-amber);"></div></div></div>
-        </div>
-        <div class="cmp-score-card">
-          <div class="cmp-score-pct" style="color: var(--fam-woody);">65%</div>
-          <div class="sec-label" style="margin: 0;">Notes</div>
-          <div class="cmp-score-meter"><div class="cmp-score-meter-track"><div class="cmp-score-meter-fill" style="width: 65%; background: var(--fam-woody);"></div></div></div>
-        </div>
-        <div class="cmp-score-card">
-          <div class="cmp-score-pct" style="color: var(--fam-floral);">91%</div>
-          <div class="sec-label" style="margin: 0;">Layer</div>
-          <div class="cmp-score-meter"><div class="cmp-score-meter-track"><div class="cmp-score-meter-fill" style="width: 91%; background: var(--fam-floral);"></div></div></div>
-        </div>
-      </div>
-
-      <h3 class="pg-subsection-title">Notes Card <span class="pg-usage pg-usage--med">MED</span></h3>
-      <div class="pg-grid" style="grid-template-columns: 1fr 1fr;">
-        <div class="notes-card">
-          <div class="notes-card-header">
-            <div class="nf-dot" style="background: var(--fam-woody); width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;"></div>
-            <div><div class="nf-name">Sandalwood</div><div class="nf-desc">Creamy, warm, milky wood</div></div>
-          </div>
-          <div class="notes-card-body">
-            <span class="chip" style="background: var(--fam-woody);">Woody</span>
-          </div>
-        </div>
-        <div class="notes-card">
-          <div class="notes-card-header">
-            <div class="nf-dot" style="background: var(--fam-floral); width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;"></div>
-            <div><div class="nf-name">Rose</div><div class="nf-desc">Rich, dewy, romantic</div></div>
-          </div>
-          <div class="notes-card-body">
-            <span class="chip" style="background: var(--fam-floral);">Floral</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         CHIPS (canonical: solid)
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="chips">
-      <h2 class="pg-section-title">Chips &amp; Badges</h2>
-
-      <h3 class="pg-subsection-title">Solid Chips (canonical)</h3>
-      <div style="display: flex; gap: var(--sp-sm); flex-wrap: wrap; margin-bottom: var(--sp-2xl);">
-        <span class="chip" style="background: var(--fam-woody);">Woody</span>
-        <span class="chip" style="background: var(--fam-floral);">Floral</span>
-        <span class="chip" style="background: var(--fam-amber);">Amber</span>
-        <span class="chip" style="background: var(--fam-citrus);">Citrus</span>
-      </div>
-
-      <h3 class="pg-subsection-title">Outline Chips (role assignment)</h3>
-      <div style="display: flex; gap: var(--sp-sm); flex-wrap: wrap; margin-bottom: var(--sp-2xl);">
-        <span class="chip chip--outline">Unassigned</span>
-        <span class="chip chip--outline assigned-primary">Primary</span>
-        <span class="chip chip--outline assigned-secondary">Secondary</span>
-      </div>
-
-      <h3 class="pg-subsection-title">Note Pill <span class="pg-usage pg-usage--med">MED</span></h3>
-      <div style="display: flex; gap: var(--sp-xs); flex-wrap: wrap;">
-        <span class="cmp-note-pill">Bergamot</span>
-        <button class="cmp-note-pill">Sandalwood</button>
-        <span class="cmp-note-pill shared">Cedarwood</span>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         TABS — SLIDING PILL (converged)
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="tabs">
-      <h2 class="pg-section-title">Tabs &amp; Segmented Controls</h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">All tab bars use the sliding-pill pattern. <code>.tab-pill</code> element slides behind the active <code>.tab</code>. Same visual across <code>.tabs</code>, <code>.cat-state-bar</code>, and <code>.frag-picker-sort-bar</code>.</p>
-
-      <h3 class="pg-subsection-title">Primary Tabs (.tabs)</h3>
-      <div class="pg-box" style="max-width: 400px;">
-        <div class="tabs" style="width: 100%;" id="demo-tabs">
-          <button class="tab active" onclick="demoActivateTab(this)">Catalog</button>
-          <button class="tab" onclick="demoActivateTab(this)">Compare</button>
-          <button class="tab" onclick="demoActivateTab(this)">Notes</button>
-          <div class="tab-pill"></div>
-        </div>
-      </div>
-
-      <h3 class="pg-subsection-title">State Filter Bar (.cat-state-bar)</h3>
-      <div class="pg-box" style="max-width: 300px;">
-        <div class="cat-state-bar" style="width: 100%; margin: 0;" id="demo-state-bar">
-          <button class="tab active" onclick="demoActivateTab(this)">All</button>
-          <button class="tab" onclick="demoActivateTab(this)">Owned</button>
-          <button class="tab" onclick="demoActivateTab(this)">Wishlist</button>
-          <div class="tab-pill"></div>
-        </div>
-      </div>
-
-      <h3 class="pg-subsection-title">Picker Sort Bar (.frag-picker-sort-bar)</h3>
-      <div class="pg-box" style="max-width: 300px;">
-        <div class="frag-picker-sort-bar" style="width: 100%;">
-          <button class="frag-picker-sort-btn active" onclick="activateSort(this)">Brand</button>
-          <button class="frag-picker-sort-btn" onclick="activateSort(this)">Title</button>
-          <button class="frag-picker-sort-btn" onclick="activateSort(this)">Family</button>
-          <div class="frag-picker-sort-pill" style="width: 33.3%; left: 3px;"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         FAMILY FILTER PILLS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="family-pills">
-      <h2 class="pg-section-title">Family Filter Pills</h2>
-
-      <h3 class="pg-subsection-title">Sidebar Layout (vertical)</h3>
-      <div class="pg-controls" id="fampill-controls">
-        <button class="pg-ctrl active" onclick="setFamPillActive('all', this)">All active</button>
-        <button class="pg-ctrl" onclick="setFamPillActive('woody', this)">Woody active</button>
-      </div>
-      <div class="pg-box" style="max-width: 200px; display: flex; flex-direction: column; align-items: stretch; padding: var(--sp-sm);" id="fam-pill-demo">
-        <button class="fam-pill active" data-fam="all">All</button>
-        <button class="fam-pill" data-fam="woody"><span class="fam-pill-dot" style="background: var(--fam-woody);"></span>Woody</button>
-        <button class="fam-pill" data-fam="floral"><span class="fam-pill-dot" style="background: var(--fam-floral);"></span>Floral</button>
-        <button class="fam-pill" data-fam="amber"><span class="fam-pill-dot" style="background: var(--fam-amber);"></span>Amber</button>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         BUTTONS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="buttons">
-      <h2 class="pg-section-title">Buttons</h2>
-
-      <h3 class="pg-subsection-title">Action Button (.dc-collect-btn)</h3>
-      <div class="pg-grid">
-        <div class="pg-item"><span class="pg-label">Default</span><div class="pg-box"><button class="dc-collect-btn"><span class="dc-collect-icon">&#10003;</span> Own</button></div></div>
-        <div class="pg-item"><span class="pg-label">Active</span><div class="pg-box"><button class="dc-collect-btn active"><span class="dc-collect-icon">&#10003;</span> Owned</button></div></div>
-      </div>
-
-      <h3 class="pg-subsection-title">Ghost Buttons</h3>
-      <div class="pg-grid">
-        <div class="pg-item"><span class="pg-label">.nav-back-btn</span><div class="pg-box"><button class="nav-back-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button></div></div>
-        <div class="pg-item"><span class="pg-label">.detail-close-btn</span><div class="pg-box"><button class="detail-close-btn">&#10005; Close</button></div></div>
-      </div>
-
-      <h3 class="pg-subsection-title">Text Link (.s-name-btn)</h3>
-      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Canonical text link style: serif font, underline, primary color.</p>
-      <div class="pg-box" style="max-width: 300px;">
-        <div style="display: flex; flex-direction: column; gap: var(--sp-sm);">
-          <button class="s-name-btn">Santal 33</button>
-          <button class="s-name-btn">View full details</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         INPUTS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="inputs">
-      <h2 class="pg-section-title">Inputs</h2>
-
-      <h3 class="pg-subsection-title">Catalog Search (.cat-search-input)</h3>
-      <div class="pg-grid">
-        <div class="pg-item">
-          <span class="pg-label">Rest state (bg-secondary)</span>
-          <div class="cat-search-wrap"><input type="search" class="cat-search-input" placeholder="Search fragrances, brands, notes..." autocomplete="off"></div>
-        </div>
-        <div class="pg-item">
-          <span class="pg-label">With value + clear pill</span>
-          <div class="cat-search-wrap"><input type="search" class="cat-search-input" value="Santal" autocomplete="off"><button class="cat-search-clear visible" aria-label="Clear search">&#10005;</button></div>
-        </div>
-      </div>
-      <div class="pg-callout" style="margin-top: var(--sp-lg);">
-        <div class="pg-callout-title">Clear button</div>
-        <div class="pg-callout-body">Restyled as a small circular <code>bg-tertiary</code> pill. Blends with the input rest state instead of a bare <code>&times;</code>.</div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         SHEETS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="sheets">
-      <h2 class="pg-section-title">Sheets &amp; Panels</h2>
-
-      <h3 class="pg-subsection-title">Bottom Sheet (.sheet)</h3>
-      <div class="pg-sheet-demo">
-        <div class="sheet visible" style="max-height: 250px;">
-          <div class="sheet-handle"></div>
-          <div class="sheet-inner">
-            <div class="sheet-topbar">
-              <button class="sheet-back hidden">Back</button>
-              <div class="sheet-title">Fragrance Detail</div>
-              <button class="sheet-close">&#10005;</button>
-            </div>
-            <div class="sheet-content" style="padding: 0 0 var(--sp-lg);">
-              <div style="padding: 0 var(--sp-xs);">
-                <div class="dc-name">Santal 33</div>
-                <div class="dc-brand">LE LABO</div>
+            <div class="card docs-card">
+              <div class="sec-label">Width Tokens</div>
+              <div class="list-view">
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label">Sidebar Nav</div>
+                    <div class="list-item-sublabel">Global catalog/app nav.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">--nav-sidebar</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label">Sidesheet</div>
+                    <div class="list-item-sublabel">Mobile & Desktop sheets.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">--sheet-max</span></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <h3 class="pg-subsection-title">Nav Sub-Sheet (.sheet.nav)</h3>
-      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Back and close buttons now have equal <code>width: 56px</code> so the title always centers.</p>
-      <div class="pg-sheet-demo">
-        <div class="sheet visible under" style="max-height: 250px;">
-          <div class="sheet-handle"></div>
-          <div class="sheet-inner"><div class="sheet-topbar"><div class="sheet-title">Previous Sheet</div></div></div>
-        </div>
-        <div class="sheet nav visible" style="max-height: 250px;">
-          <div class="sheet-handle"></div>
-          <div class="sheet-inner">
-            <div class="sheet-topbar">
-              <button class="sheet-back"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
-              <div class="sheet-title">Notes</div>
-              <button class="sheet-close">&#10005;</button>
+          <div class="story-grid">
+            <div class="card canvas">
+              <div class="canvas-stage">
+                <div class="card" style="width: 100%; height: var(--nav-height); background: var(--bg-secondary); border: 2px dashed var(--border-standard); display: flex; align-items: center; justify-content: center;">
+                  <span class="text-meta">Global Nav (50px)</span>
+                </div>
+              </div>
+            </div>
+            <div class="card docs-card">
+              <div class="sec-label">Height Tokens</div>
+              <div class="list-view">
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label">Global Nav</div>
+                    <div class="list-item-sublabel">Top header height.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">--nav-height</span></div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION LABELS (canonical)
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="section-labels">
-      <h2 class="pg-section-title">Section Label</h2>
-      <p class="pg-desc" style="margin-bottom: var(--sp-lg);">One canonical class: <code>.sec-label</code>. Components add only spacing (<code>margin</code>) as needed.</p>
-      <div class="pg-box pg-box--stack" style="max-width: 400px; gap: var(--sp-xl);">
-        <div class="sec-label" style="margin: 0;">Top Notes</div>
-        <div class="sec-label" style="margin: 0;">Similar Fragrances</div>
-        <div class="sec-label" style="margin: 0;">Sillage <span class="sub" style="font-weight: 400; text-transform: none; letter-spacing: 0; font-size: var(--fs-meta); color: var(--text-secondary);">7 / 10</span></div>
-        <div class="sec-label" style="margin: 0;">Compare With</div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         METERS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="meters">
-      <h2 class="pg-section-title">Meters &amp; Progress</h2>
-
-      <h3 class="pg-subsection-title">Detail Bar (.dc-bar / .dc-fill)</h3>
-      <div style="max-width: 300px; margin-bottom: var(--sp-2xl);">
-        <div class="sec-label" style="margin-bottom: var(--sp-sm);">Sillage</div>
-        <div class="dc-bar"><div class="dc-fill" style="width: 70%;"></div></div>
-        <div class="dc-sval">7 / 10</div>
-      </div>
-
-      <h3 class="pg-subsection-title">Score Meter (.cmp-score-meter)</h3>
-      <div style="max-width: 300px; margin-bottom: var(--sp-2xl);">
-        <div class="cmp-score-meter">
-          <div class="cmp-score-meter-track">
-            <div class="cmp-score-meter-fill" style="width: 78%; background: var(--fam-amber);"></div>
-            <div class="cmp-score-meter-dot" style="left: 78%; background: var(--fam-amber);"></div>
+        <!-- LABELS -->
+        <section class="section-group" id="labels">
+          <h2 class="sec-header">Labels & Metadata</h2>
+          
+          <div class="story-grid">
+            <div class="card canvas">
+              <div class="canvas-stage">
+                <div class="sec-label" style="margin-bottom: 0;">Generic Section Label</div>
+              </div>
+            </div>
+            <div class="card docs-card">
+              <div class="sec-label">Usage</div>
+              <div class="list-view">
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label">Section Label</div>
+                    <div class="list-item-sublabel">Uppercase 700. For dividing areas.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.sec-label</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label">Metadata Tag</div>
+                    <div class="list-item-sublabel">Rectangular, fixed height.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.tag</span></div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <h3 class="pg-subsection-title">Mirrored Bars (.cmp-char-metric)</h3>
-      <div style="max-width: 400px;">
-        <div class="cmp-char-metrics" style="border: none; padding: 0; margin: 0;">
-          <div class="cmp-char-metric-row">
-            <div class="cmp-char-metric-track left"><div class="cmp-char-metric-fill" style="width: 70%; background: var(--fam-woody);"></div></div>
-            <div class="cmp-char-metric-lbl">Sillage</div>
-            <div class="cmp-char-metric-track"><div class="cmp-char-metric-fill" style="width: 50%; background: var(--fam-floral);"></div></div>
+        <!-- BANNERS -->
+        <section class="section-group" id="banners">
+          <h2 class="sec-header">Banners</h2>
+          <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
+            <div style="width: 100%; max-width: 520px;">
+              <div class="sec-label" style="margin-bottom:var(--sp-xs)">Generic .banner</div>
+              <div class="banner">
+                <div class="banner-head">
+                  <span class="dot dot--md" style="background:var(--accent-primary)"></span>
+                  <div class="text-title">Trying scents on?</div>
+                </div>
+                <div class="text-meta">Start tracking to see how they evolve over time.</div>
+                <button class="s-name-btn">Find a scent to track</button>
+              </div>
+            </div>
           </div>
-          <div class="cmp-char-metric-row">
-            <div class="cmp-char-metric-track left"><div class="cmp-char-metric-fill" style="width: 60%; background: var(--fam-woody);"></div></div>
-            <div class="cmp-char-metric-lbl">Depth</div>
-            <div class="cmp-char-metric-track"><div class="cmp-char-metric-fill" style="width: 80%; background: var(--fam-floral);"></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         DOTS
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="pg-section" id="dots">
-      <h2 class="pg-section-title">Dots</h2>
-      <div style="display: flex; gap: var(--sp-2xl); align-items: center;">
-        <div style="text-align: center;">
-          <div class="picker-fdot" style="background: var(--fam-woody); margin: 0 auto var(--sp-xs);"></div>
-          <span class="pg-label">8px (default)</span>
-        </div>
-        <div style="text-align: center;">
-          <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--fam-floral); margin: 0 auto var(--sp-xs);"></div>
-          <span class="pg-label">12px (md)</span>
-        </div>
-        <div style="text-align: center;">
-          <div class="list-item-dot" style="background: var(--fam-amber); width: 18px; height: 18px; margin: 0 auto var(--sp-xs);">
-            <span class="fam-abbr">A</span>
+        <!-- CARDS -->
+        <section class="section-group" id="cards">
+          <h2 class="sec-header">Cards</h2>
+          <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
+            <div style="width: 100%; max-width: 520px;">
+              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.card (Primary)</div>
+              <div class="card">
+                <div class="text-title">Amber Notes</div>
+                <div class="text-body">Resinous and warm base notes that provide longevity.</div>
+              </div>
+            </div>
+            <div style="width: 100%; max-width: 520px;">
+              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.card--secondary</div>
+              <div class="card card--secondary">
+                <div class="text-meta"><strong>Pro Tip:</strong> Layer with citrus to brighten.</div>
+              </div>
+            </div>
+            <div style="width: 100%; max-width: 520px;">
+              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.card--interactive</div>
+              <div class="card card--interactive">
+                <div class="text-ui">Clickable Surface</div>
+              </div>
+            </div>
           </div>
-          <span class="pg-label">18px (with abbr)</span>
-        </div>
-      </div>
-    </section>
+        </section>
 
+        <!-- CHIPS -->
+        <section class="section-group" id="chips">
+          <h2 class="sec-header">Chips (Pills)</h2>
+          
+          <div class="story-grid">
+            <div class="card canvas">
+              <div class="canvas-stage">
+                <div class="chip">Default</div>
+                <div class="chip chip--family" style="--fam-bg:var(--fam-woody)20; --fam-color:var(--fam-woody);">
+                  <span class="dot" style="--fam-bg: var(--fam-woody)"></span>
+                  Woody
+                </div>
+                <div class="chip chip--accent">Layer Match</div>
+                <div class="chip chip--xs is-owned">Owned</div>
+                <div class="chip chip--xs chip--outline">Secondary</div>
+              </div>
+            </div>
+
+            <div class="card docs-card">
+              <div class="sec-label">Variants</div>
+              <div class="list-view">
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label">Base</div>
+                    <div class="list-item-sublabel">Default status pill.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.chip</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label">Small</div>
+                    <div class="list-item-sublabel">Compact status variant.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.chip--xs</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card--secondary code-block" style="margin-top:var(--sp-md)">
+&lt;div class="chip"&gt;Default&lt;/div&gt;
+&lt;div class="chip chip--family" style="--fam-bg:..."&gt; ... &lt;/div&gt;</div>
+        </section>
+
+        <!-- TAGS -->
+        <section class="section-group" id="tags">
+          <h2 class="sec-header">Tags (Metadata)</h2>
+          <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
+            <div style="width: 100%; max-width: 520px;">
+              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.tag (Directory style)</div>
+              <div style="display:flex; gap:var(--sp-xs); flex-wrap:wrap;">
+                <span class="tag text-meta">Sandalwood</span>
+                <button class="tag text-meta">Cedarwood</button>
+                <span class="tag text-meta shared">Bergamot ★</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- LISTS -->
+        <section class="section-group" id="lists">
+          <h2 class="sec-header">Lists &amp; Shelves</h2>
+          <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
+            <div style="width: 100%; max-width: 520px;">
+              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-view > .list-item (Wrapped)</div>
+              <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-lg); overflow:hidden;">
+                <div class="list-item">
+                  <div class="list-item-dot" style="--fam-bg: var(--fam-woody)"></div>
+                  <div class="list-item-body">
+                    <div class="list-item-label">Santal 33</div>
+                    <div class="list-item-sublabel">Le Labo &middot; A very long description that should wrap to multiple lines to show the new default behavior.</div>
+                  </div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-dot" style="--fam-bg: var(--fam-floral)"></div>
+                  <div class="list-item-body">
+                    <div class="list-item-label">Rose 31</div>
+                    <div class="list-item-sublabel">Le Labo &middot; Floral</div>
+                  </div>
+                  <div class="list-item-trail"><div class="chip chip--xs">Owned</div></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="width: 100%; max-width: 520px;">
+              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-item--truncate</div>
+              <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-lg); overflow:hidden;">
+                <div class="list-item list-item--truncate">
+                  <div class="list-item-dot" style="--fam-bg: var(--fam-citrus)"></div>
+                  <div class="list-item-body">
+                    <div class="list-item-label">Bergamote 22</div>
+                    <div class="list-item-sublabel">This very long sublabel will truncate instead of wrapping because of the modifier.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- GRIDS -->
+        <section class="section-group" id="grids">
+          <h2 class="sec-header">Grids</h2>
+          <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
+            <div style="max-width:none;">
+              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.grid (Responsive columns)</div>
+              <div class="grid">
+                <div class="card"><div class="text-meta">Card 1</div></div>
+                <div class="card"><div class="text-meta">Card 2</div></div>
+                <div class="card"><div class="text-meta">Card 3</div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
   </div>
-
   <script>
-    /* ── Card demo ── */
-    function setCardVariant(variant) {
-      document.querySelectorAll('#card-controls .pg-ctrl').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-      const a = document.getElementById('demo-card-a');
-      const b = document.getElementById('demo-card-b');
-      if (variant === 'empty') {
-        a.innerHTML = '<div class="cmp-card-empty"><div class="cmp-card-empty-lbl">?</div><div class="cmp-card-empty-hint">Tap to select</div></div>';
-        b.innerHTML = a.innerHTML;
-      } else {
-        a.innerHTML = '<div style="height: 8px; background: var(--fam-woody); border-radius: var(--radius-lg) var(--radius-lg) 0 0;"></div><div class="cmp-frag-card-name-row"><div class="cmp-frag-card-name" style="padding:0;flex:1;">Santal 33</div></div><div class="cmp-frag-card-brand">Le Labo</div>';
-        b.innerHTML = '<div style="height: 8px; background: var(--fam-floral); border-radius: var(--radius-lg) var(--radius-lg) 0 0;"></div><div class="cmp-frag-card-name-row"><div class="cmp-frag-card-name" style="padding:0;flex:1;">Rose 31</div></div><div class="cmp-frag-card-brand">Le Labo</div>';
-      }
-    }
+    // Simple intersection observer to highlight active section in sidebar
+    const tabs = document.querySelectorAll('.catalog-sidebar .tab');
+    const sections = document.querySelectorAll('.section-group');
+    
+    const observerOptions = {
+      root: document.querySelector('.catalog-main'),
+      threshold: 0.1,
+      rootMargin: '-10% 0px -80% 0px'
+    };
 
-    /* ── Family pill demo ── */
-    function setFamPillActive(fam, ctrl) {
-      document.querySelectorAll('#fampill-controls .pg-ctrl').forEach(b => b.classList.remove('active'));
-      ctrl.classList.add('active');
-      document.querySelectorAll('#fam-pill-demo .fam-pill').forEach(b => {
-        b.classList.toggle('active', b.dataset.fam === fam);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          tabs.forEach(tab => {
+            tab.classList.toggle('active', tab.getAttribute('href') === '#' + id);
+          });
+        }
       });
-    }
+    }, observerOptions);
 
-    /* ── Tab sliding pill ── */
-    function syncPill(container) {
-      const active = container.querySelector('.tab.active, .frag-picker-sort-btn.active');
-      const pill = container.querySelector('.tab-pill, .frag-picker-sort-pill');
-      if (!active || !pill) return;
-      pill.style.width = active.offsetWidth + 'px';
-      pill.style.left = active.offsetLeft + 'px';
-    }
+    sections.forEach(section => observer.observe(section));
 
-    function demoActivateTab(el) {
-      const parent = el.parentElement;
-      parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
-      requestAnimationFrame(() => syncPill(parent));
-    }
-
-    function activateSort(el) {
-      const bar = el.parentElement;
-      bar.querySelectorAll('.frag-picker-sort-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      requestAnimationFrame(() => syncPill(bar));
-    }
-
-    /* Init pills on load */
-    window.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.tabs, .cat-state-bar, .frag-picker-sort-bar').forEach(c => syncPill(c));
+    // Manual click override
+    tabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
     });
   </script>
 </body>

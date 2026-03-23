@@ -1,3 +1,26 @@
+## v1.3.0 — Stable Release (2026-03-23)
+
+Fragrance detail pages (213 URLs), deep-link routing, consolidated scent data (scents.json), and design system refinement.
+
+---
+
+## 2026-03-23
+
+### Added
+- **Individual fragrance pages** — `/fragrance/:id` serverless route (213 URLs). SEO meta tags, JSON-LD Product schema, FAQ structured data targeting gift-intent queries ("What to get someone who loves [frag]", "Is [frag] a good gift?"), noscript fallback with full note pyramid and gifter CTA. Reuses `app.html` shell + existing `openFragDetail()` client-side renderer.
+- **Fragrance deep-link routing** — `handleInitialNavigation` now handles `/fragrance/:id` pathname, auto-opens detail panel for the matched fragrance.
+- **Sitemap expanded** — 213 fragrance URLs added (`/fragrance/{id}`, priority 0.7). Total indexable URLs: ~230.
+- **Fragrance API test suite** — `test/fragrance-api.test.js` (16 assertions): valid/invalid IDs, XSS prevention, JSON-LD integrity, all 213 fragrances render, sitemap coverage check. Run with `node test/fragrance-api.test.js`.
+- **Browser integration tests** — new "Fragrance page deep-link" suite in `tests.html`: regex validation, `openFragDetail` renders detail + similar shelf.
+
+### Changed
+- **Scent data consolidated** — replaced `scents-flat.json` + `scents-index.json` + 12 per-brand files with a single `data/scents.json` flat array (213 fragrances). Startup HTTP requests reduced from 16 (waterfall) to 4 (parallel).
+- **`store.js`** — two-phase waterfall fetch replaced with single `Promise.all` fetching `scents.json` directly.
+- **`quiz.js`** — primary fetch updated to `scents.json`; removed 20-line fallback that re-did the per-brand waterfall. Quiz result cards now have access to `frag.url`.
+
+### Added
+- **`data/scents.json`** — canonical 213-fragrance flat array with `id`, `brand`, `name`, `family`, `sillage`, `layering`, `top[]`, `mid[]`, `base[]`, `roles[]`, `description`, `url`, `story` fields.
+
 ## 2026-03-21 (Project Hygiene)
 
 ### Changed

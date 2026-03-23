@@ -223,7 +223,7 @@
   }
 
   .cat-family-scroll .fam-pill.active .fam-pill-dot {
-    border: var(--border-width-heavy) solid var(--bg-primary);
+    border: 1px solid var(--bg-primary);
   }
 
   .frag-filter-toggle {
