@@ -10,6 +10,28 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ---
 
+## Design System — Audit Violations
+
+~~**Scheduled audit (2026-03-23)** found 15+ violations. All items fixed 2026-03-23.~~
+
+### ✅ FIXED (2026-03-23 scheduled task)
+- Magic numbers: `font-size:10px` → `var(--fs-caption)`; `color:var(--g500)` → `var(--text-tertiary)` (4 sites)
+- `.saved-mark` utility class added; 3 inline spans replaced
+- `.callout--attribution` + `.callout-icon` added; 9 inline styles stripped from attribution box
+- `.s-name-btn` deleted; all usages migrated to `.link-btn.link-btn--primary`
+- `.dupe-breakdown` / `.dupe-breakdown-row` redundant inline styles stripped (CSS already defined them)
+- `.quiz-step` class added; 4× inline padding replaced
+- `.btn--block` + `.btn--ghost` added; inline width/bg styles replaced
+- `.text-title--accent` modifier added; inline color override replaced
+- `.score-display` + `.score-meter-*` canonical aliases added; `.cmp-score-*` kept as legacy aliases
+
+### Won't fix for now
+- **Score meter full rename** — `.cmp-score-pct` → `.score-display` in JS call sites (30+ sites). CSS aliases added; full rename deferred until Compare panel is refactored.
+- **Dupe breakdown class rename** — `.dupe-breakdown` → `.callout` structure change. Current CSS is correct; structural rename risks visual regression. Deferred.
+- **`.cmp-card-detail-btn`** — Still in use in Compare panel. Migrate to `.link-btn.link-btn--primary` when Compare panel is refactored.
+
+---
+
 ## NOW: Phase 0 — Gift Intelligence Wedge
 
 **This blocks P1/P2/P3. Ship these items before continuing anything else.**
@@ -18,7 +40,7 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 ### TODO: Gift Intelligence — Ship the wedge
 **What (in order):**
 1. ~~Delete `gift-intelligence` entry from `data/quiz-config.json`~~ — **DEFERRED** (see deferred TODO below)
-2. Add `gift-intelligence` to `QUIZ_META` in `api/quiz.js` with SEO title, description, and `noscriptPopular: ['gypsy-water','santal-33','bal-dafrique','rose-31','mojave-ghost']`
+2. ~~Add `gift-intelligence` to `QUIZ_META` in `api/quiz.js` with SEO title, description, and `noscriptPopular: ['gypsy-water','santal-33','bal-dafrique','rose-31','mojave-ghost']`~~ — **DONE by /qa 2026-03-23** (also added to `data/quiz-config.json`; quiz was showing "Quiz not found.")
 3. ~~Add `btn.disabled = true` double-tap guard~~ — **DONE** (simplify 2026-03-22)
 4. Call `engine.getSwapReason(top3[0], top3[1], FAM)` in `renderResult()` when `top3.length >= 2` — show 1-sentence narrative between subtitle and first card; apply to **both** `app.js` and `quiz.js renderResults()`
 5. Add `history.replaceState(null,'','?results=' + top3.map(f=>f.id).join(','))` on result render in `app.js`; restore from `?results=` param on load (quiz.js already handles this)
@@ -81,12 +103,10 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ### S — Standard tasks (20–30 min each)
 
-### TODO: Quiz Result Persistence
-**What:** Store quiz results in `sessionStorage` key `sm_quiz_session`; back-navigation returns to results, not catalog.
-**Schema:** `{quizId: string, timestamp: number, answers: string[], results: string[]}`.
-**Why:** UX bug — losing state on back-nav from detail breaks every gift-giver and casual-shopper session.
-**QA confirmed (2026-03-22):** Clicking "View details →" on a result card and pressing Back resets quiz to Q1 and loses all progress.
-**Effort:** S (~20 min) · **Depends on:** Quiz routes.
+### ~~TODO: Quiz Result Persistence~~ — **FIXED by /qa 2026-03-23**
+~~**What:** Store quiz results in `sessionStorage` key `sm_quiz_session`; back-navigation returns to results, not catalog.~~
+**Fixed:** Session was already being saved but `results` was stored as a comma-joined string. `renderSessionResults` crashed with `.map is not a function`. Fixed in `js/quiz.js` by normalising to array on read. Back-navigation now correctly restores results.
+**Remaining tech debt (minor):** `saveQuizSession` still passes `ids.join(',')` as a string; the fix is in the consumer (`renderSessionResults`). A cleaner fix would pass the array directly — low priority.
 
 ---
 
@@ -122,6 +142,21 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 **What:** Extend `run_playwright_tests.py` with a test for `/quiz/gift-intelligence`: page loads → 5 answers → results page renders 3 frag cards → "Try a sample" CTA present.
 **Why:** Zero automated coverage for the quiz.js standalone path. Success gate (`sample_link_click`) depends on this path working correctly. Manual testing only right now.
 **Effort:** S (~30 min) · **Depends on:** quiz dev server at `localhost:3001`
+
+---
+
+### TODO: Playwright test — dupe page
+**What:** Extend `run_playwright_tests.py` with a test for `/dupes/santal-33/`: page loads → anchor card renders → 3+ dupe cards render → Ladder strip visible → funnel CTA present.
+**Why:** Zero automated coverage for the dupe page. Add before any SEO/domain work.
+**Effort:** S (~20 min) · **Gate:** Add before going beyond prototype stage.
+
+---
+
+### TODO: Extract note-diff logic into engine.js
+**What:** Move the note comparison function (currently reimplemented inline in `js/dupes.js`) into `js/engine.js` as an exported `renderNoteGrid(fa, fb, anchorAccent, dupeAccent, opts)`. Remove `NI_MAP` / `isNoteSaved` dependencies so the function is importable from standalone modules without app.js globals.
+**Why:** `app.js:render3x3Notes()` and `js/dupes.js` now contain two copies of the same ~45-line note-diffing + grid-rendering logic. A 3rd standalone consumer (e.g. gift guide pages, individual fragrance pages) would require a 3rd copy.
+**When:** After the dupe prototype validates AND a 2nd standalone consumer exists.
+**Effort:** S (~20 min) · **Depends on:** `app.js:3900 render3x3Notes()`, `js/dupes.js:renderNoteGrid()`.
 
 ---
 
@@ -269,6 +304,7 @@ Require designer specs and/or content deliverables before engineering.
 
 ## Already Shipped
 
+- **Fragrance Ladder Dupe Prototype** — `/dupes/santal-33/` — 4 curated Santal 33 alternatives, Fragrance Ladder strip, 3-col note grids, score badges, savings-per-oz, funnel CTA (2026-03-22)
 - **Gift Intelligence Quiz** — `/quiz/gift-intelligence` standalone + in-app path, 5 curated questions, sample CTA (2026-03-22)
 - **Saved Comparisons** — last 5 pairs in `sm_compares`, row tap fills both slots (2026-03-21)
 - **Collection Context in Detail Panel** — "In your collection: X (89%)" below action buttons (`9d63a80`)

@@ -259,6 +259,10 @@ html, body {
   line-height: var(--lh-tight);
 }
 
+.text-title--accent {
+  color: var(--accent-primary);
+}
+
 .text-heading {
   font-size: var(--fs-heading);
   font-weight: 500;

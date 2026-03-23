@@ -204,6 +204,7 @@
   white-space: nowrap;
   color: var(--on-dark-text);
   border: 1px solid transparent;
+  text-decoration: none;
 }
 
 .chip--outline {
@@ -296,7 +297,7 @@
   }
 }
 
-.dc-name {
+.panel-title {
   font-family: var(--font-display);
   font-size: var(--fs-heading);
   line-height: var(--lh-tight);
@@ -304,7 +305,7 @@
   margin-bottom: 0;
 }
 
-.dc-brand {
+.panel-eyebrow {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 600;
@@ -314,9 +315,9 @@
   margin-bottom: 0;
 }
 
-/* .dc-nlbl → migrated to .sec-label */
+/* note tier label → migrated to .sec-label */
 
-.dc-note {
+.note-row {
   display: flex;
   gap: var(--sp-sm);
   padding: var(--sp-xs) 0;
@@ -324,11 +325,11 @@
   align-items: center;
 }
 
-.dc-note:last-of-type {
+.note-row:last-of-type {
   border-bottom: none;
 }
 
-.dc-nt {
+.note-tier {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 700;
@@ -340,14 +341,14 @@
   padding-top: 0;
 }
 
-.dc-nv {
+.note-values {
   display: flex;
   flex-wrap: wrap;
   gap: var(--sp-xs);
   flex: 1;
 }
 
-.dc-notes-caveat {
+.notes-caveat {
   font-family: var(--font-sans);
   font-size: var(--text-xs, 10px);
   color: var(--text-tertiary);
@@ -356,34 +357,33 @@
 }
 
 
-/* .dc-slbl → migrated to .sec-label */
+/* stat label → migrated to .sec-label */
 
-.dc-fill {
+.bar-fill {
   background: var(--border-strong);
   height: 2px;
   border-radius: var(--radius-micro);
 }
 
-.dc-bar {
+.bar {
   height: 2px;
   background: var(--border-standard);
   border-radius: var(--radius-micro);
   margin-bottom: var(--sp-xs);
 }
 
-.dc-sval {
+.bar-label {
   font-size: var(--fs-meta);
   color: var(--text-secondary);
 }
 
-.dc-description {
+.description {
   font-size: var(--fs-body);
   color: var(--text-secondary);
-  margin-bottom: 0;
 }
 
 /* Callout / story block in detail panel */
-.dc-story {
+.callout {
   padding: var(--sp-md);
   background: var(--bg-secondary);
   border-radius: var(--radius-sm);
@@ -392,14 +392,42 @@
   border: 1px solid var(--border-subtle);
 }
 
+/* Attribution / quiz-source callout variant */
+.callout--attribution {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  padding: var(--sp-sm) var(--sp-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+}
+
+.callout-icon {
+  font-size: 1.2em;
+  flex-shrink: 0;
+}
+
+/* Saved note star mark — inline after note names */
+.saved-mark {
+  color: var(--accent);
+  margin-left: var(--sp-xs);
+  font-size: var(--fs-caption);
+  display: inline-block;
+  text-decoration: none;
+}
+
 /* Collection quick-action row in detail panel */
-.dc-collect-row {
+.btn-row {
   display: flex;
   gap: var(--sp-sm);
   margin: 0;
 }
 
-.dc-collect-btn {
+.btn {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-xs);
@@ -418,63 +446,66 @@
               color var(--dur-fast) var(--ease-spring);
 }
 
-.dc-collect-btn:hover {
+.btn:hover {
   background: var(--bg-secondary);
   border-color: var(--border-strong);
   color: var(--text-primary);
 }
 
-.dc-collect-btn.active {
+.btn.active {
   background: var(--text-primary);
   border-color: var(--text-primary);
   color: var(--bg-primary);
 }
 
-.dc-collect-icon {
+.btn-icon {
   font-size: var(--fs-body);
   line-height: var(--lh-tight);
 }
 
 /* Compare CTAs in detail panel */
-/* .dc-cmp-cta-label → migrated to .sec-label */
+/* compare CTA label → migrated to .sec-label */
 
-.dc-cmp-ctas {
+.btn-stack {
   display: flex;
   flex-direction: column;
   gap: var(--sp-xs);
   margin-bottom: 0;
 }
 
-.dc-cmp-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-xs);
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  padding: var(--sp-xs) var(--sp-md);
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius);
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  cursor: pointer;
+.btn--spread {
   width: 100%;
   justify-content: space-between;
-  transition: background var(--dur-fast) var(--ease-spring),
-              border-color var(--dur-fast) var(--ease-spring),
-              color var(--dur-fast) var(--ease-spring);
 }
 
-.dc-cmp-btn:hover {
+.btn--spread:hover {
   background: var(--bg-secondary);
   border-color: var(--border-strong);
   color: var(--text-primary);
 }
 
-/* .dc-cmp-btn-dot → use .dot */
+/* Full-width centered button (replaces style="width:100%;justify-content:center;") */
+.btn--block {
+  width: 100%;
+  justify-content: center;
+}
 
-.dc-cmp-btn-name {
+/* Ghost / muted button (replaces inline bg/border overrides) */
+.btn--ghost {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
+}
+
+.btn--ghost:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+/* slot dot → use .dot */
+
+.slot-name {
   font-size: var(--fs-body);
   font-weight: 500;
   color: var(--text-primary);
@@ -484,13 +515,13 @@
   max-width: 80px;
 }
 
-.dc-cmp-btn-empty {
+.slot-name--empty {
   color: var(--text-secondary);
   font-weight: 400;
   max-width: none;
 }
 
-.dc-cmp-btn-vs {
+.slot-vs {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 600;
@@ -499,19 +530,18 @@
   flex-shrink: 0;
 }
 
-.dc-cmp-btn-arrow {
+.slot-arrow {
   font-size: var(--fs-body);
   color: var(--text-tertiary);
   flex-shrink: 0;
   transition: color var(--dur-fast) var(--ease-spring);
 }
 
-.dc-cmp-btn:hover .dc-cmp-btn-arrow {
+.btn--spread:hover .slot-arrow {
   color: var(--text-secondary);
 }
 
 /* Similar shelf */
-/* .dc-sim-lbl → migrated to .sec-label */
 
 .list-group {
   display: flex;
@@ -525,9 +555,9 @@
 }
 
 
-/* .dc-sim-dot → use .dot */
+/* similar dot → use .dot */
 
-.dc-sim-info {
+.card-body {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -535,25 +565,25 @@
   gap: 1px;
 }
 
-.dc-sim-name {
+.card-title {
   font-size: var(--fs-body);
   font-weight: 500;
   color: var(--text-primary);
   line-height: var(--lh-tight);
 }
 
-.dc-sim-name-brand {
+.card-subtitle {
   color: var(--text-secondary);
   font-weight: 400;
 }
 
 
-.dc-sim-brand {
+.card-meta {
   font-size: var(--fs-meta);
   color: var(--text-secondary);
 }
 
-.dc-sim-state {
+.state-badge {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 600;
@@ -563,13 +593,13 @@
   flex-shrink: 0;
 }
 
-.dc-sim-state.is-owned {
+.state-badge.is-owned {
   background: var(--bg-tertiary);
   color: var(--text-secondary);
 }
 
 /* Discovery badges */
-.dc-badge {
+.badge {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 600;
@@ -581,12 +611,12 @@
 }
 
 
-.dc-badge.contrasts {
+.badge.contrasts {
   background: color-mix(in srgb, var(--g500) 12%, transparent);
   color: var(--text-secondary);
 }
 
-.dc-badge.complements {
+.badge.complements {
   background: color-mix(in srgb, var(--g400) 15%, transparent);
   color: var(--text-secondary);
 }
@@ -705,18 +735,18 @@
 
 /* ── 6. BADGES & TAGS ── */
 
-.dc-state-wrap {
+.state-wrap {
   margin-bottom: 0;
 }
 
-.dc-stats {
+.stat-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--sp-sm);
   margin-bottom: 0;
 }
 
-.dc-stat {
+.stat-card {
   background: var(--bg-tertiary);
   border-radius: var(--radius);
   padding: var(--sp-sm) var(--sp-md);
@@ -788,7 +818,7 @@
   display: flex;
   align-items: flex-start;
   gap: var(--sp-sm);
-  padding: var(--sp-md) var(--sp-lg);
+  padding: var(--sp-sm) var(--sp-md);
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-standard);
   transition: background var(--dur-fast) var(--ease-spring);
@@ -812,25 +842,6 @@
 }
 
 
-/* Compact variant — note detail, house detail, quiz results */
-.list-item--compact {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  padding: var(--sp-sm) var(--sp-md);
-  background: var(--bg-primary);
-  border: none;
-  border-bottom: 1px solid var(--border-standard);
-  cursor: pointer;
-  font-family: inherit;
-  text-align: left;
-  transition: background var(--dur-fast) var(--ease-spring);
-  overflow: hidden;
-  width: 100%;
-}
-.list-item--compact:last-child { border-bottom: none; }
-.list-item--compact:hover { background: var(--bg-secondary); }
-
 /* Search variant — universal search modal */
 .list-item--search {
   display: flex;
@@ -850,23 +861,7 @@
 .list-item--search[aria-selected="true"] { background: var(--bg-secondary); }
 
 
-.s-name-btn {
-  font-size: var(--fs-body);
-  font-weight: 500;
-  color: var(--text-primary);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  text-decoration: underline;
-  text-underline-offset: var(--link-underline-offset);
-  text-decoration-color: var(--g300);
-  transition: text-decoration-color var(--dur-fast) var(--ease-spring);
-}
-
-.s-name-btn:hover {
-  text-decoration-color: var(--text-primary);
-}
+/* .s-name-btn → deleted; use .link-btn.link-btn--primary instead */
 
 
 .s-meta {
@@ -1308,7 +1303,7 @@
   font-size: var(--fs-body);
 }
 
-/* .cat-empty-clear → converged to .dc-collect-btn pattern */
+/* .cat-empty-clear → converged to .btn pattern */
 .cat-empty-clear {
   display: inline-flex;
   align-items: center;
@@ -1348,7 +1343,7 @@
 }
 
 /* Compact and search contexts use a smaller dot */
-.list-item--compact .list-item-dot,
+.list-item .list-item-dot,
 .list-item--search .list-item-dot {
   width: 8px;
   height: 8px;
@@ -1441,41 +1436,24 @@ mark.note-match {
   font-weight: 600;
 }
 
-/* Layer hint badges in catalog row notes preview */
-.note-layer-hint {
-  font-family: var(--font-sans);
-  font-size: var(--fs-label);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 0 var(--sp-xs);
-  color: var(--text-disabled);
-  vertical-align: 1px;
-}
-
 .match-badge {
   color: var(--accent-primary);
   letter-spacing: 0.01em;
 }
 
-.dc-role-chips {
+.chip-row {
   display: flex;
   flex-wrap: wrap;
   gap: var(--sp-xs);
 }
 
-.dc-div {
+.divider {
   height: 1px;
   background: var(--border-standard);
   margin: 0;
 }
 
-.dc-desc {
-  font-size: var(--fs-body);
-  color: var(--g600);
-  margin: var(--sp-sm) 0 var(--sp-md);
-}
-
-.dc-roles-lbl {
+.label {
   font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -1727,7 +1705,7 @@ mark.note-match {
   right: var(--sp-sm);
 }
 
-/* .cmp-card-detail-btn → converged to .s-name-btn style */
+/* .cmp-card-detail-btn — still in use; migrate to .link-btn.link-btn--primary when Compare panel is refactored */
 .cmp-card-detail-btn {
   font-size: var(--fs-body);
   font-weight: 500;
@@ -1916,7 +1894,9 @@ mark.note-match {
   border-color: var(--border-standard);
 }
 
-.cmp-score-pct {
+/* Canonical name: .score-display. Legacy alias: .cmp-score-pct (kept for existing call sites) */
+.cmp-score-pct,
+.score-display {
   font-family: var(--font-display);
   font-size: var(--fs-heading);
   line-height: var(--lh-tight);
@@ -1925,11 +1905,14 @@ mark.note-match {
 
 /* .cmp-score-label → migrated to .sec-label */
 
-.cmp-score-meter {
+/* Canonical name: .score-meter. Legacy alias: .cmp-score-meter (kept for existing call sites) */
+.cmp-score-meter,
+.score-meter {
   margin: var(--sp-xs) 0;
 }
 
-.cmp-score-meter-track {
+.cmp-score-meter-track,
+.score-meter-track {
   position: relative;
   height: 4px;
   background: var(--bg-tertiary);
@@ -1937,7 +1920,8 @@ mark.note-match {
   overflow: visible;
 }
 
-.cmp-score-meter-fill {
+.cmp-score-meter-fill,
+.score-meter-fill {
   position: absolute;
   top: 0;
   left: 0;
@@ -1946,7 +1930,8 @@ mark.note-match {
   transition: width var(--dur-xslow) var(--ease-spring);
 }
 
-.cmp-score-meter-dot {
+.cmp-score-meter-dot,
+.score-meter-dot {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -1957,7 +1942,8 @@ mark.note-match {
   transition: left var(--dur-xslow) var(--ease-spring);
 }
 
-.cmp-score-meter-tick {
+.cmp-score-meter-tick,
+.score-meter-tick {
   position: absolute;
   top: -2px;
   bottom: -2px;
@@ -2115,7 +2101,7 @@ mark.note-match {
   text-align: center;
 }
 
-.cmp-note-pill {
+.tag {
   display: inline-flex;
   align-items: center;
   font-size: var(--fs-meta);
@@ -2128,7 +2114,7 @@ mark.note-match {
   color: var(--text-primary);
 }
 
-button.cmp-note-pill {
+button.tag {
   background: var(--bg-tertiary);
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-spring);
@@ -2137,14 +2123,21 @@ button.cmp-note-pill {
   text-decoration-color: var(--g300);
 }
 
-button.cmp-note-pill:hover {
+button.tag:hover {
   background: var(--border-standard);
   text-decoration-color: var(--text-primary);
 }
 
-.cmp-note-pill.shared {
+.tag.shared {
   background: var(--fade-subtle);
   font-weight: 500;
+}
+
+/* Tag disabled state — used on dupes page to show which anchor notes
+   are absent from the selected alternative. aria-disabled for accessibility. */
+.tag[aria-disabled="true"] {
+  opacity: 0.25;
+  transition: opacity var(--dur-standard);
 }
 
 .cmp-grid-empty {
@@ -2920,7 +2913,7 @@ button.cmp-note-pill:hover {
   margin-top: 0;
 }
 
-/* .np-frags uses .list-item.list-item--compact — no additional overrides needed */
+/* .np-frags uses .list-item — no additional overrides needed */
 
 /* ── PICKER PANEL ── */
 
@@ -3200,7 +3193,7 @@ button.cmp-note-pill:hover {
 }
 
 
-.dc-brand-btn {
+.link-btn {
   font-family: var(--font-sans);
   font-size: var(--fs-body-sm);
   font-weight: 500;
@@ -3212,15 +3205,35 @@ button.cmp-note-pill:hover {
   padding: 0;
   text-align: left;
   transition: color var(--dur-fast) var(--ease-spring);
+  pointer-events: auto;
 }
 
-.dc-brand-btn:hover {
+.link-btn:hover {
   color: var(--text-primary);
   text-decoration: underline;
   text-underline-offset: var(--link-underline-offset);
 }
 
-.dc-eyebrow {
+/* Primary link-button — inherits .link-btn, adds underline + primary color.
+   Replaces .s-name-btn (deprecated — see comment below). */
+.link-btn--primary {
+  color: var(--text-primary);
+  font-size: var(--fs-body);
+  text-decoration: underline;
+  text-underline-offset: var(--link-underline-offset);
+  text-decoration-color: var(--g300);
+}
+
+.link-btn--primary:hover {
+  text-decoration-color: var(--text-primary);
+}
+
+/* Quiz step wrapper — replaces style="padding:var(--sp-lg) 0;" */
+.quiz-step {
+  padding: var(--sp-lg) 0;
+}
+
+.eyebrow {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
   font-weight: 700;
@@ -3228,22 +3241,6 @@ button.cmp-note-pill:hover {
   text-transform: uppercase;
   color: var(--text-tertiary);
   margin-bottom: var(--sp-xs);
-}
-
-.dc-sim-brand-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  text-align: left;
-  transition: color var(--dur-fast) var(--ease-spring);
-  pointer-events: auto; /* ensure we can click this */
-}
-
-.dc-sim-brand-btn:hover {
-  color: var(--text-primary);
-  text-decoration: underline;
-  text-underline-offset: var(--link-underline-offset);
 }
 
 .cmp-brand-btn {

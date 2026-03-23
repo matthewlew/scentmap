@@ -109,13 +109,13 @@ function setState(id,s){
           <div class="detail-inner" style="text-align:center;">
             <div style="font-size:32px; margin-bottom:var(--sp-md);">⚖️</div>
             <div class="sec-label" style="justify-content:center;">Redundancy Alert</div>
-            <div class="dc-name" style="margin-bottom:var(--sp-md);">Wait, you might not need this.</div>
+            <div class="panel-title" style="margin-bottom:var(--sp-md);">Wait, you might not need this.</div>
             <p class="text-body" style="font-family:var(--font-serif); color:var(--text-secondary); margin-bottom:var(--sp-xl); line-height:1.5;">
               <strong>${frag.name}</strong> is a <strong>${redun.score}% mathematical match</strong> to <strong>${redun.match.name}</strong> which you already own.
             </p>
             <div style="display:flex; flex-direction:column; gap:var(--sp-sm);">
-              <button class="dc-collect-btn active" style="width:100%; justify-content:center; padding:var(--sp-md);" onclick="popSheet()">Actually, skip it</button>
-              <button class="dc-collect-btn" style="width:100%; justify-content:center; padding:var(--sp-md); border:none;" id="force-wish">Save anyway</button>
+              <button class="btn active" style="width:100%; justify-content:center; padding:var(--sp-md);" onclick="popSheet()">Actually, skip it</button>
+              <button class="btn" style="width:100%; justify-content:center; padding:var(--sp-md); border:none;" id="force-wish">Save anyway</button>
             </div>
           </div>
         `;
@@ -250,7 +250,7 @@ function openProfilePanel() {
       <span id="profile-copy-toast" aria-live="polite" style="display:block;margin-top:var(--sp-xs);font-family:var(--font-sans);font-size:var(--fs-meta);color:var(--text-secondary);min-height:1.2em;"></span>
 
       <div style="margin-top:var(--sp-2xl);border-top:1px solid var(--border-standard);padding-top:var(--sp-xl);">
-        <button class="dc-collect-btn" id="profile-signout-btn" style="width:100%;justify-content:center;">Sign out</button>
+        <button class="btn" id="profile-signout-btn" style="width:100%;justify-content:center;">Sign out</button>
       </div>
     `;
 
@@ -304,7 +304,7 @@ function renderCollectionSection(container, label, items, type) {
     items.forEach(frag => {
       const row = document.createElement('div');
       renderCatRow(row, frag, FAM[frag.family] || {color:'#888'});
-      row.className = row.className.replace('list-item--compact', '').trim();
+      // list-item--compact removed (compact is now default)
       row.addEventListener('click', () => openFragDetail(frag));
       list.appendChild(row);
     });
@@ -314,7 +314,7 @@ function renderCollectionSection(container, label, items, type) {
     wrap.className = 'collection-notes-wrap';
     items.forEach(note => {
       const btn = document.createElement('button');
-      btn.className = 'cmp-note-pill';
+      btn.className = 'tag';
       btn.textContent = note.name;
       btn.addEventListener('click', e => { e.stopPropagation(); openNotePopup(note, btn); });
       wrap.appendChild(btn);
@@ -369,24 +369,24 @@ window.openTrialSheet = function(fragId) {
     container.innerHTML = `
       <div class="detail-inner">
         <div class="sec-label">New Test Bench Entry</div>
-        <div class="dc-name">${frag.name}</div>
-        <div class="dc-brand">${frag.brand}</div>
+        <div class="panel-title">${frag.name}</div>
+        <div class="panel-eyebrow">${frag.brand}</div>
         
         <div class="sec-label" style="margin-top:var(--sp-xl);">Where did you spray it?</div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
           ${['Left Wrist', 'Right Wrist', 'Left Elbow', 'Right Elbow', 'Neck', 'Chest', 'Paper Strip'].map(loc => `
-            <button class="dc-collect-btn trial-loc-btn" data-loc="${loc}" style="justify-content:center;">${loc}</button>
+            <button class="btn trial-loc-btn" data-loc="${loc}" style="justify-content:center;">${loc}</button>
           `).join('')}
         </div>
 
         <div class="sec-label">Initial Impression</div>
         <div style="display:flex; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
           ${[1, 2, 3, 4, 5].map(v => `
-            <button class="dc-collect-btn trial-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+            <button class="btn trial-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
           `).join('')}
         </div>
 
-        <button class="dc-collect-btn active" id="save-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md);">Add to Test Bench</button>
+        <button class="btn active" id="save-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md);">Add to Test Bench</button>
       </div>
     `;
 
@@ -427,18 +427,18 @@ window.openTrialUpdateSheet = function(fragId, timestamp) {
     container.innerHTML = `
       <div class="detail-inner">
         <div class="sec-label">Final Review</div>
-        <div class="dc-name">${frag.name}</div>
+        <div class="panel-title">${frag.name}</div>
         
         <p class="text-body" style="font-family:var(--font-serif); margin-bottom:var(--sp-xl); color:var(--text-secondary);">How has the scent developed? Give it another sniff and rate it again.</p>
 
         <div class="sec-label">New Rating</div>
         <div style="display:flex; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
           ${[1, 2, 3, 4, 5].map(v => `
-            <button class="dc-collect-btn update-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+            <button class="btn update-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
           `).join('')}
         </div>
 
-        <button class="dc-collect-btn active" id="update-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md);">Complete Review</button>
+        <button class="btn active" id="update-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md);">Complete Review</button>
       </div>
     `;
 
@@ -845,7 +845,7 @@ function renderBrandDiscovery(container) {
       </div>
       <div class="carousel-card-name list-item-label">${b.brand}</div>
       ${reasonText ? `<div class="carousel-card-reason">${reasonText}</div>` : ''}
-      ${b.url ? `<a class="s-name-btn carousel-card-shop" href="${b.url}" target="_blank" rel="noopener noreferrer" aria-label="Shop ${b.brand} — opens official website">Shop →</a>` : ''}
+      ${b.url ? `<a class="link-btn link-btn--primary carousel-card-shop" href="${b.url}" target="_blank" rel="noopener noreferrer" aria-label="Shop ${b.brand} — opens official website">Shop →</a>` : ''}
     `;
 
     card.addEventListener('click', e => {
@@ -934,7 +934,7 @@ function renderJournalContent(container) {
     activeTrials.forEach(t => {
       const frag = CAT_MAP[t.id]; const row = document.createElement('div');
       row.className = 'settings-menu-item'; row.style.cursor = 'default';
-      row.innerHTML = `<div style="flex:1;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-weight:600;">${frag.name}</div><div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div></div><div style="display:flex; gap:var(--sp-xs);"><button class="dc-collect-btn active" style="padding:4px 12px; font-size:10px;" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button><button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button></div></div></div>`;
+      row.innerHTML = `<div style="flex:1;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-weight:600;">${frag.name}</div><div style="font-size:10px; color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div></div><div style="display:flex; gap:var(--sp-xs);"><button class="btn active" style="padding:4px 12px; font-size:10px;" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button><button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button></div></div></div>`;
       trialWrap.appendChild(row);
     });
     trialSec.appendChild(trialWrap); container.appendChild(trialSec);
@@ -1021,7 +1021,7 @@ window.renderSaved = function() {
 
   if (!owned.length && !wished.length && !notes.length && !brands.length) {
     const empty = document.createElement('div');
-    empty.style.cssText = 'padding:var(--sp-lg);color:var(--g500);font-family:var(--font-serif);';
+    empty.style.cssText = 'padding:var(--sp-lg);color:var(--text-tertiary);font-family:var(--font-serif);';
     empty.textContent = 'Nothing saved yet. Swipe a fragrance to wishlist it, or open a note or brand to save it.';
     container.appendChild(empty);
     return;
@@ -1045,7 +1045,7 @@ window.renderSaved = function() {
       personaHtml = `
         <div class="dna-divider">
           <div class="sec-label">Your Olfactive Persona</div>
-          <div class="text-title" style="color:var(--accent-primary);">${arch.name}</div>
+          <div class="text-title text-title--accent">${arch.name}</div>
           <div class="text-meta" style="font-family:var(--font-serif); opacity:0.8;">${arch.tagline}</div>
         </div>
       `;
@@ -1059,7 +1059,7 @@ window.renderSaved = function() {
         <div class="text-meta" style="font-family:var(--font-serif); margin-bottom:var(--sp-sm);">
           Your collection is currently low on <strong>${gapRec.label}</strong>. Consider exploring:
         </div>
-        <button class="list-item list-item--compact" style="margin-top:var(--sp-sm);" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
+        <button class="list-item" style="margin-top:var(--sp-sm);" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
           <div class="dot--md" style="background:${(FAM[gapRec.frag.family]||{}).color}"></div>
           <div class="list-item-body">
             <div class="list-item-label">${gapRec.frag.name}</div>
@@ -1130,12 +1130,12 @@ window.renderSaved = function() {
         const card = document.createElement('div'); card.className = 'carousel-card carousel-card--wide';
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-sm);">
-            <div class="dc-badge" style="background:var(--accent-primary); color:var(--paper); font-size:9px;">${p.score}% LAYER MATCH</div>
+            <div class="badge" style="background:var(--accent-primary); color:var(--paper); font-size:9px;">${p.score}% LAYER MATCH</div>
             <button class="settings-btn" style="padding:2px; opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
           </div>
-          <div class="dc-sim-name">${p.a.name}</div>
-          <div class="dc-sim-brand" style="font-size:10px; margin-bottom:var(--sp-xs);">+ ${p.b.name}</div>
-          <div class="dc-sim-reason" style="font-family:var(--font-serif); line-height:1.3;">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
+          <div class="card-title">${p.a.name}</div>
+          <div class="card-meta" style="font-size:var(--fs-caption); margin-bottom:var(--sp-xs);">+ ${p.b.name}</div>
+          <div class="card-reason" style="font-family:var(--font-serif); line-height:1.3;">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
         `;
         card.onclick = () => { _selectFragForSlot('a', p.a); _selectFragForSlot('b', p.b); go('compare'); };
         pairWrap.appendChild(card);
@@ -1406,8 +1406,8 @@ window.openFragDetail = openFragDetail;
 function linkNotes(arr){
   return arr.map(n=>{
     const key=n.toLowerCase();const note=NI_MAP[key];
-    const savedMark = note && isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
-    return note?`<button class="cmp-note-pill" data-note="${n}">${n}${savedMark}</button>`: `<span class="cmp-note-pill">${n}</span>`;
+    const savedMark = note && isNoteSaved(note.name) ? ' <span class="saved-mark">★</span>' : '';
+    return note?`<button class="tag" data-note="${n}">${n}${savedMark}</button>`: `<span class="tag">${n}</span>`;
   }).join('');
 }
 
@@ -1424,8 +1424,8 @@ function renderDupeLab(container, anchor) {
     .slice(0, 10);
 
   container.innerHTML = `
-    <div class="dc-name">Dupe Lab</div>
-    <div class="dc-brand" style="margin-bottom:var(--sp-xl);">Finding matches for ${anchor.name}</div>
+    <div class="panel-title">Dupe Lab</div>
+    <div class="panel-eyebrow" style="margin-bottom:var(--sp-xl);">Finding matches for ${anchor.name}</div>
     
     <div class="dupe-list" style="display: flex; flex-direction: column; gap: var(--sp-md);">
       ${dupes.map(({f, score}) => {
@@ -1452,7 +1452,7 @@ function renderDupeLab(container, anchor) {
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                 Why this matches
               </summary>
-              <div class="dupe-breakdown" style="margin-top: var(--sp-sm); padding-top: var(--sp-sm); border-top: 1px dashed var(--border-subtle); font-size: var(--fs-caption); color: var(--text-tertiary); display: flex; flex-direction: column; gap: var(--sp-xs);">
+              <div class="dupe-breakdown">
                 ${(() => {
                   const famScore = (FAM_COMPAT[anchor.family]?.[f.family] ?? 0.5) * 40;
                   const shBase = anchor._nBase.filter(n => f._nBase.includes(n)).length;
@@ -1465,16 +1465,16 @@ function renderDupeLab(container, anchor) {
                   const roleScore = Math.min(20, shRoles * 7);
 
                   return `
-                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
-                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
-                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
-                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Role alignment</span><span>${roleScore}/20</span></div>
+                    <div class="dupe-breakdown-row"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
+                    <div class="dupe-breakdown-row"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
+                    <div class="dupe-breakdown-row"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
+                    <div class="dupe-breakdown-row"><span>Role alignment</span><span>${roleScore}/20</span></div>
                   `;
                 })()}
               </div>
             </details>
 
-            <button class="s-name-btn" style="font-size: var(--fs-meta);" onclick="event.stopPropagation(); trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">View Details →</button>
+            <button class="link-btn link-btn--primary" style="font-size: var(--fs-meta);" onclick="event.stopPropagation(); trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">View Details →</button>
           </div>
         `;
       }).join('')}
@@ -1494,8 +1494,8 @@ function renderFragDetail(container,frag){
       const arch = ARCHETYPES[archMatch[1]];
       if (arch) {
         quizAttribution = `
-          <div class="dc-quiz-attribution" style="padding:var(--sp-sm) var(--sp-md); background:var(--bg-secondary); border:1px solid var(--border-subtle); border-radius:var(--radius-md); font-family:var(--font-sans); font-size:var(--fs-meta); color:var(--text-secondary); display:flex; align-items:center; gap:var(--sp-xs);">
-            <span style="font-size:1.2em;">✨</span> From your scent archetype: <strong style="color:var(--text-primary);">${arch.name}</strong>
+          <div class="callout--attribution">
+            <span class="callout-icon">✨</span> From your scent archetype: <strong style="color:var(--text-primary);">${arch.name}</strong>
           </div>`;
       }
     }
@@ -1504,35 +1504,35 @@ function renderFragDetail(container,frag){
   container.innerHTML=`
     ${quizAttribution}
     <div>
-      <div class="dc-name">${frag.name}</div>
-      <button class="dc-brand-btn" style="margin-bottom: var(--sp-sm);">${frag.brand}</button>
+      <div class="panel-title">${frag.name}</div>
+      <button class="link-btn" style="margin-bottom: var(--sp-sm);">${frag.brand}</button>
       <br>
       <div class="chip" style="background:${fm.color};">
         <span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);display:inline-block;flex-shrink:0"></span>
         ${fm.label}
       </div>
     </div>
-    <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
-    <div id="dc-coll-ctx-${frag.id}"></div>
-    ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
-    ${frag.story?`<div class="dc-story">${frag.story}</div>`:''}
-    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn">Buy from ${frag.brand}</a>`:''}
+    <div class="btn-row" id="btn-row-${frag.id}"></div>
+    <div id="ctx-${frag.id}"></div>
+    ${frag.description?`<div class="description">${frag.description}</div>`:''}
+    ${frag.story?`<div class="callout">${frag.story}</div>`:''}
+    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="btn">Buy from ${frag.brand}</a>`:''}
     <div class="sec-label">Compare with</div>
-    <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
-    <button class="dc-collect-btn" id="find-dupes-${frag.id}" style="width:100%; justify-content:center;">
-      <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
+    <div class="btn-stack" id="btn-stack-${frag.id}"></div>
+    <button class="btn btn--block" id="find-dupes-${frag.id}">
+      <span class="btn-icon">🔍</span> Find Dupes in Catalog
     </button>
-    <div class="dc-stats">
-      <div class="dc-stat"><div class="sec-label">Sillage</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div></div>
-      <div class="dc-stat"><div class="sec-label">Structure</div><div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div></div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="sec-label">Sillage</div><div class="bar"><div class="bar-fill" style="width:${frag.sillage*10}%"></div></div></div>
+      <div class="stat-card"><div class="sec-label">Structure</div><div class="bar"><div class="bar-fill" style="width:${frag.layering*10}%"></div></div></div>
     </div>
-    <div class="dc-div"></div>
+    <div class="divider"></div>
     <div class="sec-label">Sensory Profile</div>
-    <div class="dc-stats">
+    <div class="stat-grid">
       ${(() => {
         const p = computeProfile(frag);
         const bar = (label, val, color) => `
-          <div class="dc-stat">
+          <div class="stat-card">
             <div class="sec-label">${label}</div>
             <div class="cmp-score-meter">
               <div class="cmp-score-meter-track">
@@ -1552,61 +1552,61 @@ function renderFragDetail(container,frag){
         <div class="journey-step">
           <div class="journey-dot"></div>
           <div class="journey-step-title">Opening <span class="journey-step-meta">(Top Notes)</span></div>
-          <div class="dc-nv">${linkNotes(frag.top)}</div>
+          <div class="note-values">${linkNotes(frag.top)}</div>
         </div>
         <div class="journey-step">
           <div class="journey-dot"></div>
           <div class="journey-step-title">Heart <span class="journey-step-meta">(Mid Notes)</span></div>
-          <div class="dc-nv">${linkNotes(frag.mid)}</div>
+          <div class="note-values">${linkNotes(frag.mid)}</div>
         </div>
         <div class="journey-step">
           <div class="journey-dot journey-dot--filled"></div>
           <div class="journey-step-title">Dry Down <span class="journey-step-meta">(Base Notes)</span></div>
-          <div class="dc-nv">${linkNotes(frag.base)}</div>
+          <div class="note-values">${linkNotes(frag.base)}</div>
         </div>
       </div>
       <p class="journey-caveat">Key materials only — simplified pyramid</p>
     </div>`;
 
   // Note links
-  const brandBtn=container.querySelector('.dc-brand-btn');
+  const brandBtn=container.querySelector('.link-btn');
   if(brandBtn)brandBtn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
-  container.querySelectorAll('.cmp-note-pill[data-note]').forEach(btn=>{
+  container.querySelectorAll('.tag[data-note]').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),note.name)});
   });
 
   // Collection action row
   function renderCollectRow(){
-    const el=container.querySelector(`#dc-collect-${frag.id}`);if(!el)return;
+    const el=container.querySelector(`#btn-row-${frag.id}`);if(!el)return;
     const st=gst(frag.id);
     el.innerHTML='';
     const wishBtn=document.createElement('button');
-    wishBtn.className='dc-collect-btn'+(st==='wish'?' active':'');
+    wishBtn.className='btn'+(st==='wish'?' active':'');
     wishBtn.setAttribute('aria-pressed',st==='wish'?'true':'false');
-    wishBtn.innerHTML=`<span class="dc-collect-icon">${st==='wish'?'♥':'♡'}</span> Wishlist`;
+    wishBtn.innerHTML=`<span class="btn-icon">${st==='wish'?'♥':'♡'}</span> Wishlist`;
     wishBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='wish'?'none':'wish');refreshAfterStateChange(frag.id);renderCollectRow();});
     const ownBtn=document.createElement('button');
-    ownBtn.className='dc-collect-btn'+(st==='owned'?' active':'');
+    ownBtn.className='btn'+(st==='owned'?' active':'');
     ownBtn.setAttribute('aria-pressed',st==='owned'?'true':'false');
-    ownBtn.innerHTML=`<span class="dc-collect-icon">${st==='owned'?'✓':''}</span> ${st==='owned'?'Owned':'Mark owned'}`;
+    ownBtn.innerHTML=`<span class="btn-icon">${st==='owned'?'✓':''}</span> ${st==='owned'?'Owned':'Mark owned'}`;
     ownBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='owned'?'none':'owned');refreshAfterStateChange(frag.id);renderCollectRow();});
     
     const trialBtn=document.createElement('button');
-    trialBtn.className='dc-collect-btn';
-    trialBtn.innerHTML=`<span class="dc-collect-icon">⏱</span> Track Trial`;
+    trialBtn.className='btn';
+    trialBtn.innerHTML=`<span class="btn-icon">⏱</span> Track Trial`;
     trialBtn.addEventListener('click',e=>{e.stopPropagation();window.openTrialSheet(frag.id);});
 
     const shareBtn=document.createElement('button');
-    shareBtn.className='dc-collect-btn';
+    shareBtn.className='btn';
     shareBtn.setAttribute('aria-label','Copy shareable link to this fragrance');
-    shareBtn.innerHTML=`<span class="dc-collect-icon">↗</span> Share`;
+    shareBtn.innerHTML=`<span class="btn-icon">↗</span> Share`;
     shareBtn.addEventListener('click',e=>{
       e.stopPropagation();
       const url=location.origin+location.pathname+'#frag='+frag.id;
       navigator.clipboard.writeText(url).then(()=>{
-        shareBtn.innerHTML=`<span class="dc-collect-icon">✓</span> Copied`;
+        shareBtn.innerHTML=`<span class="btn-icon">✓</span> Copied`;
         shareBtn.classList.add('active');
-        setTimeout(()=>{shareBtn.innerHTML=`<span class="dc-collect-icon">↗</span> Share`;shareBtn.classList.remove('active');},2000);
+        setTimeout(()=>{shareBtn.innerHTML=`<span class="btn-icon">↗</span> Share`;shareBtn.classList.remove('active');},2000);
       });
     });
 
@@ -1620,7 +1620,7 @@ function renderFragDetail(container,frag){
     .map(f=>({f,score:scoreSimilarity(frag,f)}))
     .filter(x=>x.score>=30)
     .sort((a,b)=>b.score-a.score);
-  const _ctxWrap=container.querySelector(`#dc-coll-ctx-${frag.id}`);
+  const _ctxWrap=container.querySelector(`#ctx-${frag.id}`);
   if(_ctxWrap&&gst(frag.id)!=='owned'&&_ownedMatches.length){
     const{f:top,score:topScore}=_ownedMatches[0];
     const fm2=FAM[top.family]||{label:top.family,color:'#888'};
@@ -1646,7 +1646,7 @@ function renderFragDetail(container,frag){
   }
 
   // Compare CTAs
-  _buildCompareCTAs(frag,container.querySelector(`#dc-ctas-${frag.id}`));
+  _buildCompareCTAs(frag,container.querySelector(`#btn-stack-${frag.id}`));
 
   // Find Dupes button
   const dupeBtn = container.querySelector(`#find-dupes-${frag.id}`);
@@ -1685,7 +1685,7 @@ function renderFragDetail(container,frag){
             <div class="list-item-sublabel">${f.brand} · ${famLabel2}</div>
             ${reason ? `<div class="list-item-detail">${reason}</div>` : ''}
           </div>
-          ${badge&&badge.type!=='similar'?`<div style="flex-shrink:0"><span class="dc-badge ${badge.type}">${badge.label}</span></div>`:''}
+          ${badge&&badge.type!=='similar'?`<div style="flex-shrink:0"><span class="badge ${badge.type}">${badge.label}</span></div>`:''}
         `;
       row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       shelf.appendChild(row);
@@ -1701,18 +1701,18 @@ function _buildCompareCTAs(frag,container){
     const fcSelf=getCmpFam(frag.family);
     const fcOther=existingFrag?getCmpFam(existingFrag.family):null;
     const btn=document.createElement('button');
-    btn.className='dc-collect-btn dc-cmp-btn';
+    btn.className='btn btn--spread';
     const inner=existingFrag
       ?`<span class="dot" style="background:${fcSelf.accent}"></span>
-        <span class="dc-cmp-btn-name">${frag.name}</span>
-        <span class="dc-cmp-btn-vs">vs</span>
+        <span class="slot-name">${frag.name}</span>
+        <span class="slot-vs">vs</span>
         <span class="dot" style="background:${fcOther.accent}"></span>
-        <span class="dc-cmp-btn-name">${existingFrag.name}</span>`
+        <span class="slot-name">${existingFrag.name}</span>`
       :`<span class="dot" style="background:${fcSelf.accent}"></span>
-        <span class="dc-cmp-btn-name dc-cmp-btn-empty">Compare with ${frag.name}</span>`;
+        <span class="slot-name slot-name--empty">Compare with ${frag.name}</span>`;
     btn.innerHTML=`
-      <span class="dc-cmp-btn-text" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden">${inner}</span>
-      <span class="dc-cmp-btn-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2L10 7l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+      <span class="slot-inner" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden">${inner}</span>
+      <span class="slot-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2L10 7l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
     btn.addEventListener('click',()=>{
       window.haptic?.('medium');
       if(existingFrag){
@@ -1760,19 +1760,19 @@ function buildLayerSuggestions(frag,container){
     row.innerHTML=`
         <div class="list-item-dot" style="background:${fm2.color}"></div>
         <div class="list-item-body" style="flex:1">
-          <div class="list-item-label">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
+          <div class="list-item-label">${f.name} <span class="link-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
           ${reason ? `<div class="list-item-detail">${reason}</div>` : ''}
         </div>
         <div style="flex-shrink:0; display:flex; align-items:center; gap: 4px;">
-          <span class="dc-layer-score-badge">${score}</span>
-          <span class="dc-sim-state is-owned">Owned</span>
+          <span class="score-badge">${score}</span>
+          <span class="state-badge is-owned">Owned</span>
         </div>
       `;
     row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
     shelf.appendChild(row);
   });
   container.appendChild(shelf);
-  container.querySelectorAll('.dc-sim-brand-btn').forEach(btn => {
+  container.querySelectorAll('.link-btn').forEach(btn => {
     btn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(btn.textContent.replace(' · ','').trim());});
   });
 }
@@ -1819,9 +1819,9 @@ function renderNoteSaveBtn(container, note) {
   const isSaved = isNoteSaved(note.name);
   container.innerHTML = '';
   const btn = document.createElement('button');
-  btn.className = 'dc-collect-btn' + (isSaved ? ' active' : '');
+  btn.className = 'btn' + (isSaved ? ' active' : '');
   btn.style.marginTop = '0';
-  btn.innerHTML = `<span class="dc-collect-icon">${isSaved ? '★' : '☆'}</span> ${isSaved ? 'Saved Note' : 'Save Note'}`;
+  btn.innerHTML = `<span class="btn-icon">${isSaved ? '★' : '☆'}</span> ${isSaved ? 'Saved Note' : 'Save Note'}`;
   btn.addEventListener('click', e => {
     e.stopPropagation();
     toggleNoteSaved(note.name);
@@ -1844,7 +1844,7 @@ function renderNoteDetail(container,note){
     </div>
     <div class="np-desc">${note.desc}</div>
     <div id="${saveId}"></div>
-    ${note.extraction_method?`<div style="font-size:var(--fs-caption); color:var(--g500);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
+    ${note.extraction_method?`<div style="font-size:var(--fs-caption); color:var(--text-tertiary);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
     ${note.insider_fact?`<div class="np-insight"><strong>Perfumer's Insight</strong>${note.insider_fact}</div>`:''}
     ${inf.length?`<div class="np-frags"><div class="sec-label">In catalog (${inf.length})</div><div id="_nfl" class="np-frags-list"></div></div>`:''}`;
 
@@ -1854,7 +1854,7 @@ function renderNoteDetail(container,note){
     const span=container.querySelector('#_nfl');
     [...inf].sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
       const fc=getCmpFam(f.family);
-      const btn=document.createElement('button');btn.className='list-item list-item--compact';
+      const btn=document.createElement('button');btn.className='list-item';
       btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div><div class="list-item-body"><div class="list-item-label">${f.name}</div><div class="list-item-sublabel">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       span.appendChild(btn);
@@ -1867,8 +1867,8 @@ function renderBrandSaveBtn(container, brandData) {
   container.innerHTML = '';
   const saved = isBrandSaved(brandData.id);
   const btn = document.createElement('button');
-  btn.className = 'dc-collect-btn' + (saved ? ' active' : '');
-  btn.innerHTML = `<span class="dc-collect-icon">${saved ? '★' : '☆'}</span> ${saved ? 'Saved Brand' : 'Save Brand'}`;
+  btn.className = 'btn' + (saved ? ' active' : '');
+  btn.innerHTML = `<span class="btn-icon">${saved ? '★' : '☆'}</span> ${saved ? 'Saved Brand' : 'Save Brand'}`;
   btn.addEventListener('click', e => {
     e.stopPropagation();
     toggleBrandSave(brandData.id);
@@ -1926,10 +1926,10 @@ function renderHouseDetail(container,brand){
 
   container.innerHTML=`<div class="house-detail-wrap" style="display:flex; flex-direction:column; gap:var(--sp-xl);">
     <div class="house-detail-name">${brand}</div>
-    ${houseData && houseData.desc ? `<div class="dc-description">${houseData.desc}</div>` : ''}
+    ${houseData && houseData.desc ? `<div class="description">${houseData.desc}</div>` : ''}
     <div id="house-brand-save-wrap"></div>
-    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn">Visit ${brand} Website</a>` : ''}
-    ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
+    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="btn">Visit ${brand} Website</a>` : ''}
+    ${brand.toLowerCase() === 'byredo' ? `<button class="btn byredo-quiz-btn" style="display:flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
 
     <div>
       <div class="sec-label">Fragrance Families</div>
@@ -1985,7 +1985,7 @@ function renderHouseDetail(container,brand){
     bestMatches.forEach(({ frag, score }) => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
-      btn.className = 'list-item list-item--compact';
+      btn.className = 'list-item';
       btn.innerHTML = `<div class="list-item-dot" style="background:${fc.accent}"></div>
         <div class="list-item-body">
           <div class="list-item-label">${frag.name}</div>
@@ -2003,7 +2003,7 @@ function renderHouseDetail(container,brand){
   frags.forEach(frag=>{
     const fc=getCmpFam(frag.family);
     const btn=document.createElement('button');
-    btn.className='list-item list-item--compact';
+    btn.className='list-item';
     btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div>
       <div class="list-item-body">
         <div class="list-item-label">${frag.name}</div>
@@ -2061,12 +2061,12 @@ function renderByredoQuiz(container) {
     }
     const q = qs[step];
     container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div style="font-size:var(--fs-meta); color:var(--g500); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
-        <div class="dc-name" style="margin-bottom:var(--sp-xl);">${q.q}</div>
+      <div class="quiz-step">
+        <div style="font-size:var(--fs-meta); color:var(--text-tertiary); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
+        <div class="panel-title" style="margin-bottom:var(--sp-xl);">${q.q}</div>
         <div style="display:flex; flex-direction:column; gap:var(--sp-md);">
           ${q.a.map((ans, i) => `
-            <button class="dc-collect-btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal;">${ans.label}</button>
+            <button class="btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal;">${ans.label}</button>
           `).join('')}
         </div>
       </div>
@@ -2105,9 +2105,9 @@ function renderByredoQuiz(container) {
     }
 
     container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div class="dc-name" style="margin-bottom:var(--sp-xl);">Your Byredo Signatures</div>
-        <div class="dc-description" style="margin-bottom:var(--sp-xl);">Based on your preferences, we recommend exploring these fragrances next time you are at a Byredo counter:</div>
+      <div class="quiz-step">
+        <div class="panel-title" style="margin-bottom:var(--sp-xl);">Your Byredo Signatures</div>
+        <div class="description" style="margin-bottom:var(--sp-xl);">Based on your preferences, we recommend exploring these fragrances next time you are at a Byredo counter:</div>
         <div class="house-detail-list"></div>
       </div>
     `;
@@ -2116,7 +2116,7 @@ function renderByredoQuiz(container) {
     top3.forEach(frag => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
-      btn.className = 'list-item list-item--compact';
+      btn.className = 'list-item';
       btn.innerHTML = `<div class="list-item-dot" style="background:${fc.accent}"></div>
         <div class="list-item-body">
           <div class="list-item-label">${frag.name}</div>
@@ -2178,20 +2178,22 @@ function renderGlobalQuiz(container) {
 
   let step = 0;
   let collectedTags = [];
+  let inFlight = false;
 
   function renderStep() {
+    inFlight = false;
     if (step >= qs.length) {
       renderResult();
       return;
     }
     const q = qs[step];
     container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div style="font-size:var(--fs-meta); color:var(--g500); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
-        <div class="dc-name" style="margin-bottom:var(--sp-xl);">${q.q}</div>
+      <div class="quiz-step">
+        <div style="font-size:var(--fs-meta); color:var(--text-tertiary); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
+        <div class="panel-title" style="margin-bottom:var(--sp-xl);">${q.q}</div>
         <div style="display:flex; flex-direction:column; gap:var(--sp-md);">
           ${q.a.map((ans, i) => `
-            <button class="dc-collect-btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal; text-align:left;">${ans.label}</button>
+            <button class="btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal; text-align:left;">${ans.label}</button>
           `).join('')}
         </div>
       </div>
@@ -2199,6 +2201,8 @@ function renderGlobalQuiz(container) {
 
     container.querySelectorAll('.quiz-ans-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
+        if (inFlight) return;
+        inFlight = true;
         window.haptic?.('light');
         const ansIdx = parseInt(e.target.dataset.idx, 10);
         collectedTags.push(...q.a[ansIdx].tags);
@@ -2229,8 +2233,7 @@ function renderGlobalQuiz(container) {
       else if (tag.startsWith('blacklist_')) {
         const bl = tag.replace('blacklist_', '');
         if (bl === 'gourmand') {
-          prefs.blacklistRoles.push('gourmand', 'sweet');
-          prefs.blacklistFamilies.push('amber'); // Often overlap
+          prefs.blacklistFamilies.push('gourmand', 'amber');
         } else {
           prefs.blacklistFamilies.push(bl);
         }
@@ -2278,17 +2281,17 @@ function renderGlobalQuiz(container) {
     // Get top 3
     let top3 = bestFrags.filter(x => x.score > 0).map(x => x.frag).slice(0, 3);
 
-    // Fallback if scoring failed
-    if (top3.length === 0 && CAT.length > 2) {
-      top3 = [CAT[0], CAT[1], CAT[2]];
+    // Fallback if scoring failed — use non-blacklisted frags sorted by score
+    if (top3.length === 0) {
+      top3 = bestFrags.filter(x => x.score >= 0).map(x => x.frag).slice(0, 3);
     }
 
     container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div class="dc-name" style="margin-bottom:var(--sp-xl);">Your Perfect Matches</div>
-        <div class="dc-description" style="margin-bottom:var(--sp-xl);">Based on your unique scent profile, we highly recommend exploring these three fragrances:</div>
+      <div class="quiz-step">
+        <div class="panel-title" style="margin-bottom:var(--sp-xl);">Your Perfect Matches</div>
+        <div class="description" style="margin-bottom:var(--sp-xl);">Based on your unique scent profile, we highly recommend exploring these three fragrances:</div>
         <div class="house-detail-list"></div>
-        <button class="dc-collect-btn" onclick="pushDetail(c => renderGlobalQuiz(c), 'Fragrance Match')" style="margin-top:var(--sp-2xl); width:100%; justify-content:center; background:var(--bg-secondary); color:var(--text-secondary); border:1px solid var(--border-strong);">Retake Quiz</button>
+        <button class="btn btn--block btn--ghost" onclick="pushDetail(c => renderGlobalQuiz(c), 'Fragrance Match')" style="margin-top:var(--sp-2xl);">Retake Quiz</button>
       </div>
     `;
 
@@ -2296,7 +2299,7 @@ function renderGlobalQuiz(container) {
     top3.forEach(frag => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
-      btn.className = 'list-item list-item--compact';
+      btn.className = 'list-item';
       btn.innerHTML = `<div class="list-item-dot" style="background:${fc.accent}"></div>
         <div class="list-item-body">
           <div class="list-item-label">${frag.name}</div>
@@ -2355,7 +2358,7 @@ function openNotePopup(note,triggerEl){
     const list=document.createElement('div');list.style.cssText='border:1px solid var(--g200);border-radius:8px;overflow:hidden';
     sortedInf.forEach(f=>{
       const fc=getCmpFam(f.family);
-      const btn=document.createElement('button');btn.className='list-item list-item--compact';
+      const btn=document.createElement('button');btn.className='list-item';
       btn.innerHTML=`<div class="list-item-dot" style="background:${fc.accent}"></div><div class="list-item-body"><div class="list-item-label">${f.name}</div><div class="list-item-sublabel">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();closeNotePopup();openFragDetail(f)});
       list.appendChild(btn);
@@ -2619,9 +2622,9 @@ function buildCatalog(roleFilter){
     const frags=visibleCat.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
     const key=brand.replace(/\s+/g,'-')+(roleFilter||'');
     const sec=document.createElement('div');sec.className='cat-section';
-    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n s-name-btn" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
+    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n link-btn link-btn--primary" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
     // Brand header → house detail
-    sec.querySelector('.s-name-btn')?.addEventListener('click',()=>openHouseDetail(brand));
+    sec.querySelector('.link-btn--primary')?.addEventListener('click',()=>openHouseDetail(brand));
     const list=document.createElement('div');list.className='list-group';
     const lastTapMap = new Map();
     let touchStartX = 0;
@@ -2994,8 +2997,8 @@ function renderCatRow(row,frag,fm,search){
     const baseNote=(frag.base||[])[0];
     const parts=[];
     if(topNotes)parts.push(topNotes);
-    if(midNote)parts.push(`<span class="note-layer-hint" aria-label="Heart note:">H</span> ${midNote}`);
-    if(baseNote)parts.push(`<span class="note-layer-hint" aria-label="Base note:">B</span> ${baseNote}`);
+    if(midNote)parts.push(`${midNote}`);
+    if(baseNote)parts.push(`${baseNote}`);
     if(parts.length)notesHtml=`<div class="list-item-detail">${parts.join(' · ')}</div>`;
   }
 
@@ -3115,7 +3118,7 @@ function buildNotes(searchQuery, currentTier){
     sorted.forEach(note => {
       const fm = FAM[note.family] || {color: '#888'};
       const btn = document.createElement('button');
-      btn.className = 'list-item list-item--compact';
+      btn.className = 'list-item';
       btn.style.cursor = 'pointer';
 
       const isSaved = isNoteSaved(note.name);
@@ -3152,8 +3155,8 @@ function buildNotes(searchQuery, currentTier){
 
       const cardBody=document.createElement('div');cardBody.className='notes-card-body';
       grouped[fk].forEach(note=>{
-        const btn=document.createElement('button');btn.className='cmp-note-pill';
-        const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:4px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+        const btn=document.createElement('button');btn.className='tag';
+        const savedMark = isNoteSaved(note.name) ? ' <span class="saved-mark">★</span>' : '';
         btn.innerHTML = `${note.name}${savedMark}`;
         btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
         cardBody.appendChild(btn);
@@ -3171,7 +3174,7 @@ function buildNotes(searchQuery, currentTier){
   const quizBtnWrap = document.createElement('div');
   quizBtnWrap.style.marginTop = 'var(--sp-2xl)';
   quizBtnWrap.style.textAlign = 'center';
-  quizBtnWrap.innerHTML = `<button class="dc-collect-btn global-quiz-btn" style="display:inline-flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Perfect Fragrance (Quiz)</button>`;
+  quizBtnWrap.innerHTML = `<button class="btn global-quiz-btn" style="display:inline-flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Perfect Fragrance (Quiz)</button>`;
   body.appendChild(quizBtnWrap);
 
   quizBtnWrap.querySelector('.global-quiz-btn').addEventListener('click', (e) => {
@@ -3210,19 +3213,19 @@ function openQuickPeek(frag){
   overlay.setAttribute('aria-label', `Quick preview: ${frag.name} by ${frag.brand}`);
   overlay.innerHTML=`
     <div class="quick-peek-card">
-      <div class="dc-name">${frag.name}</div>
-      <div class="dc-brand">${frag.brand}</div>
+      <div class="panel-title">${frag.name}</div>
+      <div class="panel-eyebrow">${frag.brand}</div>
       <div class="chip" style="background:${fm.color}; margin-bottom: var(--sp-xl);">
         <span class="chip-dot" aria-hidden="true"></span>
         ${fm.label}
       </div>
       <div class="sec-label" style="margin-top:0">Notes</div>
-      <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
-      <div class="dc-note"><span class="dc-nt">Heart</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
-      <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
+      <div class="note-row"><span class="note-tier">Top</span><span class="note-values">${linkNotes(frag.top)}</span></div>
+      <div class="note-row"><span class="note-tier">Heart</span><span class="note-values">${linkNotes(frag.mid)}</span></div>
+      <div class="note-row"><span class="note-tier">Base</span><span class="note-values">${linkNotes(frag.base)}</span></div>
       <div class="qp-actions">
-        <button class="dc-collect-btn qp-details-btn" id="qp-details-btn">Full details</button>
-        ${hasSlot ? `<button class="dc-collect-btn qp-compare-btn" id="qp-compare-btn">Add to compare</button>` : ''}
+        <button class="btn qp-details-btn" id="qp-details-btn">Full details</button>
+        ${hasSlot ? `<button class="btn qp-compare-btn" id="qp-compare-btn">Add to compare</button>` : ''}
       </div>
     </div>
   `;
@@ -3264,7 +3267,7 @@ function go(id,btn){
   if (id === 'journal') panelId = 'saved';
 
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link, .mbn-btn').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab:not(.state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link, .mbn-btn').forEach(t=>t.classList.remove('active'));
   
   const panel = document.getElementById('p-'+panelId);
   if(panel) panel.classList.add('active');
@@ -3911,8 +3914,8 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
   // Render notes as pills — consistent presentation; clickable if in NI_MAP
   const pill=(n,isSh=false)=>{
     const ni=NI_MAP[n];
-    const cls=`cmp-note-pill${isSh?' shared':''}`;
-    const savedMark = isNoteSaved(n) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+    const cls=`tag${isSh?' shared':''}`;
+    const savedMark = isNoteSaved(n) ? ' <span class="saved-mark">★</span>' : '';
     return ni?`<button class="${cls}" data-note="${cap(n)}">${cap(n)}${savedMark}</button>`
              :`<span class="${cls}">${cap(n)}</span>`;
   };
@@ -4440,7 +4443,7 @@ function renderCompareResults(fa,fb){
             <div class="cmp-score-tap">Tap to learn more ↗</div>
           </button>
         </div>
-        <button id="cmp-share-btn" class="dc-collect-btn active" style="width:100%;justify-content:center;">Share Comparison</button>
+        <button id="cmp-share-btn" class="btn btn--block active">Share Comparison</button>
       </div>
     </div>
 

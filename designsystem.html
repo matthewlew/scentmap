@@ -154,6 +154,7 @@
       <div class="pg-grid">
         <div class="pg-item"><span class="pg-label">.text-heading / Archivo Black 32px</span><div class="text-heading">L'Air du Desért</div></div>
         <div class="pg-item"><span class="pg-label">.text-title / Source Serif 24px</span><div class="text-title">Eau de Parfum</div></div>
+        <div class="pg-item"><span class="pg-label">.text-title--accent / accent color modifier</span><div class="text-title text-title--accent">The Minimalist</div></div>
         <div class="pg-item"><span class="pg-label">.text-ui / Source Serif 18px</span><div class="text-ui">Search fragrances...</div></div>
         <div class="pg-item"><span class="pg-label">.text-body / Source Serif 16px</span><div class="text-body">A warm, spicy and woody scent inspired by the Sahara at dusk.</div></div>
         <div class="pg-item"><span class="pg-label">.text-meta / Source Serif 14px</span><div class="text-meta">10 items &bull; Woody Spicy</div></div>
@@ -212,7 +213,7 @@
             <div class="list-item-body">
               <div class="list-item-label">Santal 33</div>
               <div class="list-item-sublabel">Le Labo&thinsp;&middot;&thinsp;Woody</div>
-              <div class="list-item-detail"><span class="note-layer-hint" aria-label="Heart note:">H</span> Sandalwood &middot; <span class="note-layer-hint" aria-label="Base note:">B</span> Cedarwood</div>
+              <div class="list-item-detail">Sandalwood &middot; Cedarwood</div>
             </div>
           </div>
           <div class="list-item" role="button" tabindex="0" data-family="floral" aria-label="Rose 31 by Le Labo — Owned">
@@ -234,10 +235,10 @@
         </div>
       </div>
 
-      <h3 class="pg-subsection-title">Compact variant — house/note detail, quiz results</h3>
+      <h3 class="pg-subsection-title">Compact variant — now the default (.list-item)</h3>
       <div class="pg-box pg-box--full" style="max-width: 480px;">
         <div class="list-shelf" style="width: 100%;">
-          <div class="list-item list-item--compact" role="button" tabindex="0">
+          <div class="list-item" role="button" tabindex="0">
             <div class="list-item-dot" style="background: var(--fam-woody);" aria-hidden="true"></div>
             <div class="list-item-body">
               <div class="list-item-label">Santal 33</div>
@@ -245,7 +246,7 @@
             </div>
             <div class="list-item-trailing-label">91%</div>
           </div>
-          <div class="list-item list-item--compact" role="button" tabindex="0">
+          <div class="list-item" role="button" tabindex="0">
             <div class="list-item-dot" style="background: var(--fam-amber);" aria-hidden="true"></div>
             <div class="list-item-body">
               <div class="list-item-label">Gypsy Water</div>
@@ -368,9 +369,9 @@
 
       <h3 class="pg-subsection-title">Note Pill <span class="pg-usage pg-usage--med">MED</span></h3>
       <div style="display: flex; gap: var(--sp-xs); flex-wrap: wrap;">
-        <span class="cmp-note-pill">Bergamot</span>
-        <button class="cmp-note-pill">Sandalwood</button>
-        <span class="cmp-note-pill shared">Cedarwood</span>
+        <span class="tag">Bergamot</span>
+        <button class="tag">Sandalwood</button>
+        <span class="tag shared">Cedarwood</span>
       </div>
     </section>
 
@@ -437,10 +438,10 @@
     <section class="pg-section" id="buttons">
       <h2 class="pg-section-title">Buttons</h2>
 
-      <h3 class="pg-subsection-title">Action Button (.dc-collect-btn)</h3>
+      <h3 class="pg-subsection-title">Action Button (.btn)</h3>
       <div class="pg-grid">
-        <div class="pg-item"><span class="pg-label">Default</span><div class="pg-box"><button class="dc-collect-btn"><span class="dc-collect-icon">&#10003;</span> Own</button></div></div>
-        <div class="pg-item"><span class="pg-label">Active</span><div class="pg-box"><button class="dc-collect-btn active"><span class="dc-collect-icon">&#10003;</span> Owned</button></div></div>
+        <div class="pg-item"><span class="pg-label">Default</span><div class="pg-box"><button class="btn"><span class="btn-icon">&#10003;</span> Own</button></div></div>
+        <div class="pg-item"><span class="pg-label">Active</span><div class="pg-box"><button class="btn active"><span class="btn-icon">&#10003;</span> Owned</button></div></div>
       </div>
 
       <h3 class="pg-subsection-title">Ghost Buttons</h3>
@@ -449,12 +450,50 @@
         <div class="pg-item"><span class="pg-label">.detail-close-btn</span><div class="pg-box"><button class="detail-close-btn">&#10005; Close</button></div></div>
       </div>
 
-      <h3 class="pg-subsection-title">Text Link (.s-name-btn)</h3>
-      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Canonical text link style: serif font, underline, primary color.</p>
+      <h3 class="pg-subsection-title">Link Buttons (.link-btn, .link-btn--primary)</h3>
+      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Use <code>.link-btn</code> for secondary-color navigation links. Use <code>.link-btn.link-btn--primary</code> for primary-color underlined links (replaces deprecated <code>.s-name-btn</code>).</p>
       <div class="pg-box" style="max-width: 300px;">
         <div style="display: flex; flex-direction: column; gap: var(--sp-sm);">
-          <button class="s-name-btn">Santal 33</button>
-          <button class="s-name-btn">View full details</button>
+          <button class="link-btn">Secondary nav link</button>
+          <button class="link-btn link-btn--primary">Santal 33</button>
+          <button class="link-btn link-btn--primary">View full details →</button>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Block &amp; Ghost Buttons</h3>
+      <p class="pg-desc" style="margin-bottom: var(--sp-md);"><code>.btn--block</code> replaces <code>style="width:100%;justify-content:center;"</code>. <code>.btn--ghost</code> replaces inline bg/border overrides for muted CTAs.</p>
+      <div class="pg-box pg-box--stack" style="max-width: 360px;">
+        <button class="btn btn--block">Find Dupes in Catalog</button>
+        <button class="btn btn--block active">Share Comparison</button>
+        <button class="btn btn--block btn--ghost" style="margin-top: var(--sp-sm);">Retake Quiz</button>
+      </div>
+
+      <h3 class="pg-subsection-title">Quiz Step (.quiz-step)</h3>
+      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Replaces <code>style="padding:var(--sp-lg) 0;"</code> on quiz step wrappers.</p>
+      <div class="pg-box pg-box--stack pg-box--full" style="padding: 0; max-width: 360px;">
+        <div class="quiz-step" style="padding-left: var(--sp-lg); padding-right: var(--sp-lg);">
+          <div style="font-size:var(--fs-meta); color:var(--text-tertiary); margin-bottom:var(--sp-xs);">Question 1 of 5</div>
+          <div class="panel-title" style="margin-bottom:var(--sp-xl);">What occasions do you gift for?</div>
+          <button class="btn" style="justify-content:flex-start; font-weight:normal; width:100%;">Romantic occasions</button>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Attribution Callout (.callout--attribution)</h3>
+      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Replaces 9 inline styles in the attribution box. Used when navigating to detail from quiz result.</p>
+      <div class="pg-box" style="max-width: 400px;">
+        <div class="callout--attribution">
+          <span class="callout-icon">✨</span> From your scent archetype: <strong style="color:var(--text-primary);">The Minimalist</strong>
+        </div>
+      </div>
+
+      <h3 class="pg-subsection-title">Saved Mark (.saved-mark)</h3>
+      <p class="pg-desc" style="margin-bottom: var(--sp-md);">Inline ★ after saved note names. Replaces 3× inline <code>style</code> spans.</p>
+      <div class="pg-box" style="max-width: 400px;">
+        <div style="display: flex; gap: var(--sp-sm); flex-wrap: wrap;">
+          <button class="tag">Bergamot</button>
+          <button class="tag">Sandalwood <span class="saved-mark">★</span></button>
+          <button class="tag">Vetiver <span class="saved-mark">★</span></button>
+          <button class="tag">Iris</button>
         </div>
       </div>
     </section>
@@ -500,8 +539,8 @@
             </div>
             <div class="sheet-content" style="padding: 0 0 var(--sp-lg);">
               <div style="padding: 0 var(--sp-xs);">
-                <div class="dc-name">Santal 33</div>
-                <div class="dc-brand">LE LABO</div>
+                <div class="panel-title">Santal 33</div>
+                <div class="panel-eyebrow">LE LABO</div>
               </div>
             </div>
           </div>
@@ -548,11 +587,11 @@
     <section class="pg-section" id="meters">
       <h2 class="pg-section-title">Meters &amp; Progress</h2>
 
-      <h3 class="pg-subsection-title">Detail Bar (.dc-bar / .dc-fill)</h3>
+      <h3 class="pg-subsection-title">Detail Bar (.bar / .bar-fill)</h3>
       <div style="max-width: 300px; margin-bottom: var(--sp-2xl);">
         <div class="sec-label" style="margin-bottom: var(--sp-sm);">Sillage</div>
-        <div class="dc-bar"><div class="dc-fill" style="width: 70%;"></div></div>
-        <div class="dc-sval">7 / 10</div>
+        <div class="bar"><div class="bar-fill" style="width: 70%;"></div></div>
+        <div class="bar-label">7 / 10</div>
       </div>
 
       <h3 class="pg-subsection-title">Score Meter (.cmp-score-meter)</h3>

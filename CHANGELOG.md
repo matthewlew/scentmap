@@ -1,3 +1,21 @@
+## 2026-03-23 (2)
+
+### Changed
+- **Design system consolidation** — Resolved 15+ one-off inline style and single-use class violations found in the 2026-03-23 audit:
+  - Added `.callout--attribution` + `.callout-icon` — replaces 9 inline styles on the quiz-source attribution box in detail panels
+  - Added `.saved-mark` — replaces 3× repeated inline `★` spans in note pill renders (`linkNotes`, `renderNoteDetail`, `render3x3Notes`)
+  - Added `.link-btn--primary` — replaces deprecated `.s-name-btn`; migrated all 3 call sites (carousel shop link, dupe lab, catalog brand header); deleted `.s-name-btn` from `components.css`
+  - Added `.quiz-step` — replaces 4× `style="padding:var(--sp-lg) 0;"` in quiz renders (Byredo quiz step, result; global quiz step, result)
+  - Added `.btn--block` + `.btn--ghost` — replaces inline `width:100%;justify-content:center` and bg/border overrides (find-dupes btn, share comparison btn, retake quiz btn)
+  - Added `.text-title--accent` to `design-system.css` — replaces `style="color:var(--accent-primary)"` on `.text-title` in DNA Card persona render
+  - Added `.score-display` + `.score-meter-*` canonical aliases to `components.css` — `.cmp-score-*` kept as legacy aliases; full rename deferred
+  - Fixed `font-size:10px` magic number → `var(--fs-caption)` (golden pairs card-meta)
+  - Fixed `color:var(--g500)` → `color:var(--text-tertiary)` at 4 sites (saves empty state, note extraction, quiz step counters)
+  - Stripped redundant inline styles from `.dupe-breakdown` / `.dupe-breakdown-row` (CSS already defined them)
+- **designsystem.html** — Updated Buttons section: removed stale `.s-name-btn` demo, added `.link-btn` + `.link-btn--primary`, `.btn--block` + `.btn--ghost`, `.quiz-step`, `.callout--attribution`, and `.saved-mark` live demos; added `.text-title--accent` to Typography
+
+---
+
 ## 2026-03-23
 
 ### Fixed
@@ -30,12 +48,10 @@
 - **`trackEvent()` stub in quiz.js** — console-only (Supabase SDK not loaded on standalone quiz pages).
 
 ### Fixed
-- **Gift quiz double-click race guard** — `inFlight` flag in `renderGiftQuiz` prevents two rapid answer-button taps from both pushing tags and advancing the step twice.
-- **Quiz fallback no longer pins to first 3 Byredo fragrances** — `renderGiftQuiz` and `renderGlobalQuiz` fallback now uses `bestFrags.filter(x => x.score >= 0)` so zero-score matches are preferred over arbitrary catalog position.
-- **`blacklist_gourmand` scoring bug** — "avoid sweet scents" was incorrectly pushing `'gourmand'` and `'sweet'` to `blacklistRoles` (no-op) instead of `blacklistFamilies`; fixed in both `renderGiftQuiz` and `renderGlobalQuiz`.
-- **Undefined CSS tokens** — replaced `var(--radius-md)` (undefined) with `var(--radius-lg)` in `.gift-result-card`; replaced `var(--fs-sm)` (undefined) with `var(--fs-body-sm)` in 6 gift quiz rules.
-- **`.gift-result-dot` DESIGN.md violation** — custom dot class removed from `components.css`; template updated to use `.dot--md`.
-- **Dead CSS removed** — `.gift-empty-state` rule deleted from `components.css` (class never referenced in JS).
+- **Quiz double-click race guard** — `inFlight` flag in `renderGlobalQuiz` prevents two rapid answer-button taps from both pushing tags and incrementing `step` twice (shared mutable state).
+- **Quiz fallback no longer pins to first 3 Byredo fragrances** — `renderGlobalQuiz` fallback now uses `bestFrags.filter(x => x.score >= 0).map(x => x.frag).slice(0, 3)` so non-blacklisted frags sorted by score are used instead of positional catalog entries.
+- **`blacklist_gourmand` scoring bug** — "avoid sweet/food-like scents" was pushing `'gourmand'` and `'sweet'` to `blacklistRoles` (no-op; roles are lifestyle tags not family names) and blacklisting `'amber'` instead of `'gourmand'`; fixed to `blacklistFamilies.push('gourmand', 'amber')` in `renderGlobalQuiz`.
+- **Dead CSS removed** — `.gift-empty-state` rule deleted from `components.css` (class never referenced in any template).
 - **Gift quiz restart clears URL** — "Start over" button now calls `history.replaceState` to strip `?results=` param, preventing stale results on retake.
 - **Quiz result persistence** — Store quiz session in `sessionStorage` (key `sm_quiz_session`) with schema `{quizId, timestamp, answers, results, mode, [archetypeId|signId]}`. Back-navigation from result detail now returns to results screen (not Q1). Retake button clears session. Prevents UX bug where users lost quiz progress.
 - **Quiz standalone pages load quiz.js** — All 8 quiz `index.html` files were loading `app.js` (which rendered the Compare panel), now correctly load `quiz.js` for a clean quiz-only experience.
