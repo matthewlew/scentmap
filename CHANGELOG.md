@@ -1,3 +1,13 @@
+## v1.3.2 — 2026-03-24
+
+### Fixed
+- **Fragrance deep-link auto-select guard** — `_fragDeepLinked` flag prevents popular-pair auto-select from overwriting a `/fragrance/:id` deep-link after init; both `#frag=` hash and `/fragrance/:id` path forms now set the flag.
+
+### Changed
+- **Domain migration** — all URLs updated from `scentmap.co` to `scentmap.vercel.app` across API handlers, build scripts, HTML canonical/OG tags, robots.txt, llms.txt, sitemap.xml, and test fixtures.
+
+---
+
 ## v1.3.1 — Stable Release (2026-03-24)
 
 Design system QA pass, discovery shelf bug fixes, and fragrance detail stat grid repair.
