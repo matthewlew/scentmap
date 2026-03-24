@@ -39,6 +39,7 @@ function escHtml(s) {
 }
 
 const SITE = 'https://scentmap.co';
+const ALL_FRAGS = Object.entries(SCENTS); // pre-computed once at module load: [[id, frag], ...]
 
 let _appHtml;
 function getAppHtml() {
@@ -78,11 +79,10 @@ module.exports = function handler(req, res) {
   const famLabel = FAM_LABELS[frag.family] || frag.family;
   const allNotes = [...frag.top, ...frag.mid, ...frag.base];
 
-  // Top 5 similar fragrances
-  const allFrags = Object.values(SCENTS);
-  const similar = allFrags
-    .filter(f => f.name !== frag.name)
-    .map(f => ({ f, score: scoreSimilarity(frag, f) }))
+  // Top 5 similar fragrances — filter by ID, not name (some names appear in multiple brands)
+  const similar = ALL_FRAGS
+    .filter(([k]) => k !== id)
+    .map(([, f]) => ({ f, score: scoreSimilarity(frag, f) }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 5);
 
