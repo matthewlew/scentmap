@@ -33,6 +33,11 @@ for (const slug of quizSlugs) {
   urls.add(`${SITE}/quiz/${slug}`);
 }
 
+// Individual fragrance pages
+for (const id of Object.keys(scents)) {
+  urls.add(`${SITE}/fragrance/${id}`);
+}
+
 // Popular curated pairs
 for (const p of popular) {
   const [a, b] = [p.a, p.b].sort();

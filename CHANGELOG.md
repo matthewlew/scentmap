@@ -1,6 +1,13 @@
 ## 2026-03-24
 
+### Changed
+- **Unified list item component** — Collapsed two `.list-item` variants (18px dot + `flex-start`, and 8px dot + compact) into a single style. Base `.list-item` now uses compact sizing throughout: `align-items: center`, `padding: --sp-sm --sp-md`, 8px dot. `.list-item--compact` modifier is now a no-op.
+- **Removed `fam-abbr`** — Family abbreviation text inside catalog row dots removed; color alone communicates family.
+- **Removed `note-layer-hint`** — H/B layer badges removed from catalog row notes detail. Notes now display as plain joined text (`top · mid · base`).
+- **More menu icon slot** — "More" bottom sheet items now use `.list-item-icon` (correct 18px icon slot) instead of `.list-item-dot` for SVG icons.
+
 ### Added
+- **New fragrances** — Added 7 new classic/essential fragrances: Chergui, Comme des Garçons 2, Encre Noire, Spicebomb, Terre d'Hermès, Timbuktu, and Wonderwood.
 - **State bar collection counts** — Owned and Wishlist tabs now show live counts: "Owned (2)", "Wishlist (1)". Updates on every catalog rebuild.
 - **Quiz result persistence** — Quiz results saved to `sessionStorage` key `sm_quiz_session`; navigating away and back restores results without re-taking the quiz.
 - **Carousel keyboard activation** — Enter/Space now activates the focused carousel card in addition to ArrowLeft/ArrowRight navigation.
