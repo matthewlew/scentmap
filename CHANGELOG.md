@@ -1,3 +1,21 @@
+## v1.3.1 — Stable Release (2026-03-24)
+
+Design system QA pass, discovery shelf bug fixes, and fragrance detail stat grid repair.
+
+### Fixed
+- **Discovery shelf badges** — `.chip.contrasts` and `.chip.complements` CSS added; Contrasts/Complements badges in Brand Discovery now render with correct accent colors.
+- **Fragrance detail stat grid** — `stat-grid` and `stat-card` CSS classes added; Sillage, Structure, and Sensory Profile metrics now have proper layout and spacing.
+- **Deep-link col-main restore** — `closeDesktopDetail` now restores `.col-main` visibility after `/fragrance/:id` entry; navigating away from a deep-linked fragrance no longer hides the catalog column.
+- **DESIGN.md accuracy** — removed phantom `--owned`/`--wish` list-item variants; replaced nonexistent `.list-item-chip` with `.list-item-badge` in slot contract diagram.
+- **`aria-pressed` on role filter tabs** — `makeFeelBtn()` now sets and toggles `aria-pressed`, matching all other filter bars.
+- **Migrated `.cmp-note-pill` → `.tag`** — Compare notes and detail note links use the generic `.tag` component; 30 lines of deprecated CSS removed.
+
+### Added
+- **designsystem.html demos** — `.list-item--compact`, `.list-item--search`, and full slot structure demos added to the Lists section.
+- **CSS comments** — annotated intentional off-grid px values in components.css and layout.css.
+
+---
+
 ## v1.3.0 — Stable Release (2026-03-23)
 
 Fragrance detail pages (213 URLs), deep-link routing, consolidated scent data (scents.json), and design system refinement.
