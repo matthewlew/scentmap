@@ -262,7 +262,7 @@ export default async function handler(req) {
           backgroundColor: '#EDEAE4',
         }}>
           <span style={{ fontSize: '14px', color: '#8C8070' }}>
-            scentmap.co/compare/{[idA, idB].sort().join('/')}
+            scentmap.vercel.app/compare/{[idA, idB].sort().join('/')}
           </span>
         </div>
       </div>

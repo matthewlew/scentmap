@@ -2,7 +2,7 @@ const { readFileSync } = require('fs');
 const { join } = require('path');
 const SCENTS = require('../data/scents-flat.json');
 
-const SITE = 'https://scentmap.co';
+const SITE = 'https://scentmap.vercel.app';
 
 const QUIZ_META = {
   'find-your-scent': {

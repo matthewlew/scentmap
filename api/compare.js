@@ -37,7 +37,7 @@ function escHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-const SITE = 'https://scentmap.co';
+const SITE = 'https://scentmap.vercel.app';
 
 // Cache app.html in memory (cold start reads once)
 let _appHtml;

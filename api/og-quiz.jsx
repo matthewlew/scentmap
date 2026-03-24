@@ -70,7 +70,7 @@ export default async function handler(req) {
 
           {/* Bottom bar */}
           <div style={{ display: 'flex', justifyContent: 'center', padding: '16px 48px', borderTop: '1px solid #DDD8D0', backgroundColor: '#EDEAE4' }}>
-            <span style={{ fontSize: '14px', color: '#8C8070' }}>scentmap.co/quiz/{quizSlug}</span>
+            <span style={{ fontSize: '14px', color: '#8C8070' }}>scentmap.vercel.app/quiz/{quizSlug}</span>
           </div>
         </div>
       ),
@@ -109,7 +109,7 @@ export default async function handler(req) {
 
         {/* Bottom bar */}
         <div style={{ display: 'flex', justifyContent: 'center', padding: '16px 48px', borderTop: '1px solid #DDD8D0', backgroundColor: '#EDEAE4' }}>
-          <span style={{ fontSize: '14px', color: '#8C8070' }}>scentmap.co/quiz/{quizSlug}</span>
+          <span style={{ fontSize: '14px', color: '#8C8070' }}>scentmap.vercel.app/quiz/{quizSlug}</span>
         </div>
       </div>
     ),

@@ -1,8 +1,8 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://scentmap.co/sitemap.xml
+Sitemap: https://scentmap.vercel.app/sitemap.xml
 
 # AI-readable site summary
 # https://llmstxt.org/
-# LLMs-Txt: https://scentmap.co/llms.txt
+# LLMs-Txt: https://scentmap.vercel.app/llms.txt

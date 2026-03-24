@@ -38,7 +38,7 @@ function escHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-const SITE = 'https://scentmap.co';
+const SITE = 'https://scentmap.vercel.app';
 const ALL_FRAGS = Object.entries(SCENTS); // pre-computed once at module load: [[id, frag], ...]
 
 let _appHtml;
