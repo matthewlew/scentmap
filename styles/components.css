@@ -180,7 +180,7 @@
   font-weight: 600;
   border-radius: var(--radius-pill);
   padding: 0 var(--sp-md);
-  height: 24px;
+  height: 24px; /* Component-specific: pill height — not on spacing grid */
   white-space: nowrap;
   background: var(--bg-tertiary);
   color: var(--text-secondary);
@@ -204,7 +204,7 @@
 }
 
 .chip--xs {
-  height: 18px;
+  height: 18px; /* Component-specific: compact pill height */
   padding: 0 var(--sp-sm);
   font-size: calc(var(--fs-caption) - 1px);
 }
@@ -225,6 +225,44 @@
   color: var(--text-primary);
 }
 
+/* Discovery shelf badge variants */
+.chip.contrasts {
+  background: color-mix(in srgb, var(--fam-oud) 12%, transparent);
+  color: var(--fam-oud);
+}
+
+.chip.complements {
+  background: color-mix(in srgb, var(--fam-floral) 12%, transparent);
+  color: var(--fam-floral);
+}
+
+/* Stat grid — fragrance detail metrics */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-md);
+}
+
+.stat-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-md);
+}
+
+.stat-card-value {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  color: var(--text-primary);
+  line-height: var(--lh-tight);
+}
+
+.stat-card-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  margin-top: var(--sp-xs);
+}
 
 
 .cmp-sug-name {
@@ -331,7 +369,7 @@
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
-  width: 40px;
+  width: 40px; /* Fixed label column for T/H/B tier abbreviations */
   flex-shrink: 0;
   padding-top: 0;
 }
@@ -585,8 +623,9 @@ button.tag:hover {
 }
 
 .tag.shared {
-  background: var(--bg-tertiary);
+  background: var(--fade-subtle);
   border-color: var(--border-standard);
+  font-weight: 500;
 }
 
 /* ── 7. PICKERS & SELECTIONS ── */
@@ -2140,37 +2179,6 @@ mark.note-match {
   text-align: center;
 }
 
-.cmp-note-pill {
-  display: inline-flex;
-  align-items: center;
-  font-size: var(--fs-meta);
-  font-family: var(--font-serif);
-  background: none;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: var(--sp-micro) var(--sp-xs);
-  cursor: default;
-  color: var(--text-primary);
-}
-
-button.cmp-note-pill {
-  background: var(--bg-tertiary);
-  cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-spring);
-  text-decoration: underline;
-  text-underline-offset: var(--link-underline-offset);
-  text-decoration-color: var(--g300);
-}
-
-button.cmp-note-pill:hover {
-  background: var(--border-standard);
-  text-decoration-color: var(--text-primary);
-}
-
-.cmp-note-pill.shared {
-  background: var(--fade-subtle);
-  font-weight: 500;
-}
 
 .cmp-grid-empty {
   font-size: var(--fs-meta);

@@ -16,7 +16,7 @@ This is the single source of truth for component inventory, token rules, and the
 | Grid | `.grid` | `styles/components.css` | — | Auto-filling responsive grid (`minmax(280px, 1fr)`). Use for directory views. |
 | Shelf | `.list-view` | `styles/components.css` | — | Vertical list of `.list-item` with separators. |
 | Tab / Filter Button | `.tab` | `styles/components.css` | `.tab.active` | All filter bars, state tabs, role tabs. Must have `aria-pressed`. |
-| List Item | `.list-item` | `styles/components.css` | `--compact`, `--truncate`, `--search`, `--owned`, `--wish` | All catalog/saved/suggestion/search rows. Always use slot sub-element classes below. |
+| List Item | `.list-item` | `styles/components.css` | `--compact`, `--truncate`, `--search` | All catalog/saved/suggestion/search rows. Always use slot sub-element classes below. |
 | ↳ Slot: leading | `.list-item-leading` | — | — | Holds dot or icon. flex, align-items:center, flex-shrink:0. |
 | ↳ Slot: dot | `.list-item-dot` | — | — | Layout container for leading dot or icon (18px default, 8px compact). Place a `.dot` inside it for the color indicator. |
 | ↳ Slot: body | `.list-item-body` | — | — | flex:1, min-width:0. Allows wrapping by default unless parent has `--truncate`. |
@@ -24,7 +24,7 @@ This is the single source of truth for component inventory, token rules, and the
 | ↳ Slot: sublabel | `.list-item-sublabel` | — | — | Brand / category. Source Serif, fs-caption, 400, text-secondary. |
 | ↳ Slot: detail | `.list-item-detail` | — | — | Notes / context. Source Serif, fs-caption, 400, text-tertiary. |
 | ↳ Slot: trail | `.list-item-trail` | — | — | Trailing cluster: chip + score. |
-| ⚠️ Deprecated | `.badge`, `.dc-badge`, `.landing-card`, `.notes-grid`, `.notes-card`, `.notes-card-header`, `.cmp-note-pill` | — | — | Do not use in new code. Migrate to generic components above. |
+| ⚠️ Deprecated | `.badge`, `.dc-badge`, `.landing-card`, `.notes-grid`, `.notes-card`, `.notes-card-header` | — | — | Do not use in new code. Migrate to generic components above. |
 
 ---
 
@@ -61,7 +61,7 @@ Every component that renders a name plus secondary text **must** use the `.list-
   │     ├── .list-item-sublabel
   │     └── .list-item-detail
   └── .list-item-trail
-        ├── .list-item-chip
+        ├── .list-item-badge
         └── .list-item-trailing-label
 ```
 

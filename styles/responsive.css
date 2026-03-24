@@ -456,9 +456,6 @@
     padding: var(--sp-sm) var(--sp-xs);
   }
 
-  .cmp-note-pill {
-    font-size: var(--fs-caption);
-  }
 
   .cmp-sug-columns {
     grid-template-columns: 1fr;

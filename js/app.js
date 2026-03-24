@@ -314,7 +314,7 @@ function renderCollectionSection(container, label, items, type) {
     wrap.className = 'collection-notes-wrap';
     items.forEach(note => {
       const btn = document.createElement('button');
-      btn.className = 'cmp-note-pill';
+      btn.className = 'tag text-meta';
       btn.textContent = note.name;
       btn.addEventListener('click', e => { e.stopPropagation(); openNotePopup(note, btn); });
       wrap.appendChild(btn);
@@ -1283,6 +1283,9 @@ function closeDesktopDetail(){
   detailStack.length=0;
   document.getElementById('col-detail')?.classList.remove('open');
   document.getElementById('detail-scrim')?.classList.remove('open');
+  // Restore catalog column if it was hidden by /fragrance/:id deep-link
+  const colMain=document.querySelector('.col-main');
+  if(colMain&&colMain.style.display==='none')colMain.style.display='';
   for(let i=0;i<len;i++)_returnFocus();
 }
 function popDesktopDetail(){
@@ -1428,7 +1431,7 @@ function linkNotes(arr){
   return arr.map(n=>{
     const key=n.toLowerCase();const note=NI_MAP[key];
     const savedMark = note && isNoteSaved(note.name) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
-    return note?`<button class="cmp-note-pill" data-note="${n}">${n}${savedMark}</button>`: `<span class="cmp-note-pill">${n}</span>`;
+    return note?`<button class="tag text-meta" data-note="${n}">${n}${savedMark}</button>`: `<span class="tag text-meta">${n}</span>`;
   }).join('');
 }
 
@@ -1600,7 +1603,7 @@ function renderFragDetail(container,frag){
   // Note links
   const brandBtn=container.querySelector('.dc-brand-btn');
   if(brandBtn)brandBtn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
-  container.querySelectorAll('.cmp-note-pill[data-note]').forEach(btn=>{
+  container.querySelectorAll('.tag[data-note]').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),note.name)});
   });
 
@@ -2917,11 +2920,13 @@ function initCatalogControls(){
     btn.className = 'tab' + (CAT_ROLE_FILTER === val ? ' active' : '');
     btn.innerHTML = `${sym} ${label}`;
     btn.dataset.val = val === null ? '' : val;
+    btn.setAttribute('aria-pressed', CAT_ROLE_FILTER === val ? 'true' : 'false');
     btn.addEventListener('click', () => {
       CAT_ROLE_FILTER = val;
       allFeelBtns.forEach(b => {
         const isActive = b.dataset.val === (val === null ? '' : val);
         b.classList.toggle('active', isActive);
+        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
       buildCatalog();
     });
@@ -3958,7 +3963,7 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
   // Render notes as pills — consistent presentation; clickable if in NI_MAP
   const pill=(n,isSh=false)=>{
     const ni=NI_MAP[n];
-    const cls=`cmp-note-pill${isSh?' shared':''}`;
+    const cls=`tag text-meta${isSh?' shared':''}`;
     const savedMark = isNoteSaved(n) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
     return ni?`<button class="${cls}" data-note="${cap(n)}">${cap(n)}${savedMark}</button>`
              :`<span class="${cls}">${cap(n)}</span>`;
@@ -4925,6 +4930,9 @@ function handleInitialNavigation() {
     const fragObj = currentCatMap[fragId];
     if (fragObj) {
       go('catalog', null);
+      // Hide catalog column after go() (go calls closeDesktopDetail which would undo it)
+      const colMain = document.querySelector('.col-main');
+      if (colMain) colMain.style.display = 'none';
       openFragDetail(fragObj);
     }
   } else if (hash === 'notes') {

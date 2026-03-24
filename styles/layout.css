@@ -368,7 +368,7 @@
   font-size: var(--fs-heading);
   line-height: var(--lh-tight);
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 2px; /* Optical alignment: emoji baseline with text */
 }
 
 .picker-hero-info {
@@ -381,7 +381,7 @@
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: var(--lh-tight);
-  margin-bottom: 1px;
+  margin-bottom: 1px; /* Optical alignment: tighten name-brand gap */
 }
 
 .picker-hero-brand {
