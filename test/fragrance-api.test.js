@@ -26,7 +26,7 @@ function test(name, fn) {
 function mockReqRes(pathname) {
   const req = {
     url: pathname,
-    headers: { host: 'scentmap.co' },
+    headers: { host: 'scentmap.vercel.app' },
   };
   let _status = 200;
   let _headers = {};
@@ -58,7 +58,7 @@ test('HTML contains correct <title>', () => {
 });
 
 test('HTML contains canonical URL', () => {
-  assert.ok(s1.getBody().includes('href="https://scentmap.co/fragrance/gypsy-water"'));
+  assert.ok(s1.getBody().includes('href="https://scentmap.vercel.app/fragrance/gypsy-water"'));
 });
 
 test('HTML contains JSON-LD Product schema', () => {
@@ -174,7 +174,7 @@ test('every fragrance ID has a sitemap entry', () => {
 });
 
 test('sitemap fragrance URLs use correct format', () => {
-  const fragUrls = sitemap.match(/scentmap\.co\/fragrance\/[a-z0-9-]+/g) || [];
+  const fragUrls = sitemap.match(/scentmap\.vercel\.app\/fragrance\/[a-z0-9-]+/g) || [];
   assert.strictEqual(fragUrls.length, ids.length, `Expected ${ids.length} fragrance URLs, found ${fragUrls.length}`);
 });
 

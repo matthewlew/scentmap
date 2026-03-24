@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Scentmap | The Mathematical Fragrance Engine</title>
 <meta name="description" content="Demystify fragrance through data. Compare perfumes side-by-side, browse 180+ fragrances, and discover perfect layering recipes.">
-<link rel="canonical" href="https://scentmap.co/">
+<link rel="canonical" href="https://scentmap.vercel.app/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Scentmap — The Mathematical Fragrance Engine">
 <meta property="og:description" content="Compare perfumes side-by-side and browse 180+ designer and niche fragrances with data-driven analysis.">
-<meta property="og:url" content="https://scentmap.co/">
+<meta property="og:url" content="https://scentmap.vercel.app/">
 <meta property="og:site_name" content="Scentmap">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Scentmap — The Mathematical Fragrance Engine">
@@ -19,11 +19,11 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Scentmap",
-  "url": "https://scentmap.co/",
+  "url": "https://scentmap.vercel.app/",
   "description": "The Mathematical Fragrance Engine — compare fragrances, analyze note overlap, and discover layering recipes.",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://scentmap.co/app.html#search={search_term_string}",
+    "target": "https://scentmap.vercel.app/app.html#search={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 }
@@ -33,7 +33,7 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Scentmap",
-  "url": "https://scentmap.co",
+  "url": "https://scentmap.vercel.app",
   "description": "Data-driven fragrance comparison and discovery engine covering 180+ designer and niche perfumes.",
   "sameAs": []
 }
@@ -94,12 +94,12 @@
   "description": "Most searched perfume comparisons on Scentmap",
   "numberOfItems": 6,
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Bleu de Chanel vs Sauvage", "url": "https://scentmap.co/compare/bleu-de-chanel/sauvage" },
-    { "@type": "ListItem", "position": 2, "name": "Santal 33 vs Another 13", "url": "https://scentmap.co/compare/another-13/santal-33" },
-    { "@type": "ListItem", "position": 3, "name": "Bal d'Afrique vs Gypsy Water", "url": "https://scentmap.co/compare/bal-dafrique/gypsy-water" },
-    { "@type": "ListItem", "position": 4, "name": "Rose 31 vs Rose Prick", "url": "https://scentmap.co/compare/rose-31/tf-rose-prick" },
-    { "@type": "ListItem", "position": 5, "name": "Santal 33 vs Santal Blush", "url": "https://scentmap.co/compare/santal-33/tf-santal-blush" },
-    { "@type": "ListItem", "position": 6, "name": "Gypsy Water vs Santal 33", "url": "https://scentmap.co/compare/gypsy-water/santal-33" }
+    { "@type": "ListItem", "position": 1, "name": "Bleu de Chanel vs Sauvage", "url": "https://scentmap.vercel.app/compare/bleu-de-chanel/sauvage" },
+    { "@type": "ListItem", "position": 2, "name": "Santal 33 vs Another 13", "url": "https://scentmap.vercel.app/compare/another-13/santal-33" },
+    { "@type": "ListItem", "position": 3, "name": "Bal d'Afrique vs Gypsy Water", "url": "https://scentmap.vercel.app/compare/bal-dafrique/gypsy-water" },
+    { "@type": "ListItem", "position": 4, "name": "Rose 31 vs Rose Prick", "url": "https://scentmap.vercel.app/compare/rose-31/tf-rose-prick" },
+    { "@type": "ListItem", "position": 5, "name": "Santal 33 vs Santal Blush", "url": "https://scentmap.vercel.app/compare/santal-33/tf-santal-blush" },
+    { "@type": "ListItem", "position": 6, "name": "Gypsy Water vs Santal 33", "url": "https://scentmap.vercel.app/compare/gypsy-water/santal-33" }
   ]
 }
 </script>
@@ -109,6 +109,7 @@
 <link rel="stylesheet" href="/styles/design-system.css">
 <link rel="stylesheet" href="/styles/components.css">
 <link rel="stylesheet" href="/styles/layout.css">
+<script src="/js/home-search.js" defer></script>
 <style>
   h1, h2, h3 { font-weight: normal; margin: 0; }
   body { background: var(--bg-secondary); }
@@ -164,7 +165,6 @@
   .vibe-card:hover { transform: translateY(-4px); border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
   .vibe-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent); }
   .vibe-card span { position: relative; z-index: 1; color: white; font-family: var(--font-display); font-size: var(--fs-body); letter-spacing: -0.01em; font-weight: 700; }
-  }
   .landing-cmp-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--border-strong); }
   .landing-cmp-title { font-family: var(--font-display); font-size: var(--fs-ui); line-height: var(--lh-tight); letter-spacing: var(--ls-tight); }
   .landing-cmp-label { font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text-tertiary); }
@@ -204,6 +204,27 @@
     .sitemap-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-xl); }
     .footer-bottom { flex-direction: column; text-align: center; }
   }
+  
+  #home-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    margin-top: var(--sp-xs);
+    max-height: 420px;
+    overflow-y: auto;
+  }
+  .us-empty {
+    padding: var(--sp-lg);
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: var(--fs-meta);
+  }
 </style>
 </head>
 <body>
@@ -218,10 +239,14 @@
       <a href="/app.html#saved" class="global-nav-link">You</a>
     </div>
   </div>
+
+  <div class="nav-search-bar">
+    <svg class="nav-search-bar-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" class="nav-search-input" placeholder="Search..." aria-label="Quick search (⌘K)" autocomplete="off" onkeydown="if(event.key==='Enter') window.location.href='/app.html#search='+encodeURIComponent(this.value)">
+    <kbd class="nav-search-bar-kbd">⌘K</kbd>
+  </div>
+
   <div class="global-nav-right">
-    <button class="nav-search-btn" onclick="openGlobalSearch()" aria-label="Quick search (⌘K)" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; padding:var(--sp-sm); display:flex; align-items:center; justify-content:center; transition:color var(--dur-fast);">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    </button>
     <a href="/app.html" class="nav-signin-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">Open Engine</a>
   </div>
 </nav>
@@ -230,7 +255,7 @@
   <h1 class="text-heading">The Mathematical Fragrance Engine</h1>
   <p class="dc-description">Demystify fragrance through data. Compare perfumes side-by-side, take a quiz to find your signature scent, and browse 180+ designer and niche fragrances.</p>
   <div style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--sp-sm);">
-    <form onsubmit="event.preventDefault(); window.location.href='/app.html#search=' + encodeURIComponent(this.q.value);" style="display: flex; gap: var(--sp-xs); width: 100%;">
+    <form onsubmit="event.preventDefault(); window.location.href='/app.html#search=' + encodeURIComponent(this.q.value);" style="display: flex; gap: var(--sp-xs); width: 100%; position: relative;">
       <input type="text" name="q" placeholder="Search fragrances, notes, or brands..." style="flex: 1; padding: var(--sp-md); border: 1px solid var(--border-strong); border-radius: var(--radius-md); font-family: var(--font-sans); font-size: var(--fs-ui); background: var(--bg-secondary);">
       <button type="submit" class="dc-collect-btn active" style="padding: var(--sp-md) var(--sp-xl); font-size: var(--fs-ui); border: none; cursor: pointer;">Search</button>
     </form>

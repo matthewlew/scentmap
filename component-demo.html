@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Consolidation — Scentmap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/design-system.css">
+  <link rel="stylesheet" href="/styles/components.css">
+  <style>
+    /* ── Demo scaffolding only — not part of the design system ── */
+    body { padding: 48px 32px; max-width: 860px; margin: 0 auto; }
+
+    .demo-page-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--sp-xs);
+    }
+    .demo-page-sub {
+      font-family: var(--font-sans);
+      font-size: var(--fs-meta);
+      color: var(--text-secondary);
+      margin-bottom: var(--sp-4xl);
+    }
+    .demo-section { margin-bottom: 56px; }
+    .demo-section-title {
+      font-family: var(--font-sans);
+      font-size: var(--fs-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: var(--sp-lg);
+      padding-bottom: var(--sp-sm);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .demo-desc {
+      font-family: var(--font-sans);
+      font-size: var(--fs-meta);
+      color: var(--text-secondary);
+      margin-bottom: var(--sp-xl);
+      line-height: 1.6;
+    }
+    .demo-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--sp-lg);
+    }
+    .demo-row-label {
+      font-family: var(--font-sans);
+      font-size: var(--fs-caption);
+      color: var(--text-tertiary);
+      font-weight: 600;
+      min-width: 100px;
+    }
+    .demo-items {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      flex-wrap: wrap;
+    }
+    code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--fade-subtle);
+      color: var(--text-secondary);
+      padding: 2px var(--sp-xs);
+      border-radius: var(--radius-small);
+      border: 1px solid var(--border-subtle);
+    }
+    .demo-token-note {
+      font-family: var(--font-sans);
+      font-size: var(--fs-caption);
+      color: var(--text-tertiary);
+      margin-top: var(--sp-sm);
+      line-height: 1.5;
+    }
+    .demo-token-note strong {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* Migration table */
+    .migration-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: var(--fs-meta);
+      margin-top: var(--sp-xl);
+    }
+    .migration-table th {
+      text-align: left;
+      font-size: var(--fs-caption);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: var(--sp-xs) var(--sp-sm);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .migration-table td {
+      padding: var(--sp-sm);
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+    .migration-table td:first-child { color: var(--text-primary); }
+    .kill { text-decoration: line-through; color: var(--text-tertiary); }
+    .arrow { color: var(--text-tertiary); padding: 0 var(--sp-xs); }
+    hr.demo-divider {
+      border: none;
+      border-top: 1px solid var(--border-subtle);
+      margin: var(--sp-3xl) 0;
+    }
+
+    /* ── Tab underline variant (proposed .tab--underline modifier) ── */
+    .tab--underline {
+      flex: none;
+      min-height: 0;
+      padding: var(--sp-xs) 0;
+      background: none !important;
+      box-shadow: none !important;
+      border-radius: 0;
+      color: var(--text-tertiary);
+      font-weight: 600;
+    }
+    .tab--underline:hover { color: var(--text-secondary); }
+    .tab--underline.active {
+      color: var(--text-primary);
+      background: none !important;
+      box-shadow: none !important;
+    }
+    .tab--underline.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; /* overlaps the parent container's border-bottom */
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--text-primary);
+    }
+
+    /* ── Typography consistency callout ── */
+    .token-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--sp-sm);
+      margin-top: var(--sp-lg);
+    }
+    .token-cell {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: var(--sp-md);
+    }
+    .token-cell-label {
+      font-family: var(--font-sans);
+      font-size: var(--fs-caption);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: var(--sp-sm);
+    }
+    .token-cell-items {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-xs);
+    }
+    .token-cell-item {
+      font-family: var(--font-sans);
+      font-size: var(--fs-caption);
+      color: var(--text-secondary);
+    }
+    .token-cell-item code { font-size: 10px; }
+  </style>
+</head>
+<body>
+
+  <div class="demo-page-title">Component Consolidation</div>
+  <p class="demo-page-sub">4 canonical components replacing 14 one-offs. Approve → migrate.</p>
+
+  <!-- ── 1. TAG ── -->
+  <div class="demo-section">
+    <div class="demo-section-title">1 — Tag</div>
+    <p class="demo-desc">
+      Interactive pill for notes. Always <code>button.tag</code> — all tags link to a note detail page.
+      <code>.tag.shared</code> for notes appearing in both sides of a compare.
+      Typography baked in — no extra utility class needed.
+    </p>
+
+    <div class="demo-row">
+      <div class="demo-items">
+        <button class="tag">Bergamot</button>
+        <button class="tag">Sandalwood</button>
+        <button class="tag shared">Vetiver</button>
+        <button class="tag shared">Cedarwood</button>
+        <button class="tag">Patchouli</button>
+        <button class="tag">Iris</button>
+        <button class="tag">Musk</button>
+      </div>
+    </div>
+
+    <table class="migration-table">
+      <thead><tr><th>Kill this</th><th></th><th>Use instead</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="kill">button.chip.text-meta</span> (notes grid)</td>
+          <td class="arrow">→</td>
+          <td><code>button.tag</code></td>
+        </tr>
+        <tr>
+          <td><span class="kill">.saved-brand-chip</span></td>
+          <td class="arrow">→</td>
+          <td><code>button.tag</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 2. CHIP — FAMILY ── -->
+  <div class="demo-section">
+    <div class="demo-section-title">2 — Chip · Family</div>
+    <p class="demo-desc">
+      Solid pill for fragrance family identity. Always <code>div.chip.chip--family</code>.
+      Set <code>--fam-bg</code> (color at ~12% opacity) and <code>--fam-color</code> as inline custom properties.
+    </p>
+
+    <div class="demo-row">
+      <div class="demo-items">
+        <div class="chip chip--family" style="--fam-bg:#B5366E20;--fam-color:#B5366E">Floral</div>
+        <div class="chip chip--family" style="--fam-bg:#8B451320;--fam-color:#8B4513">Woody</div>
+        <div class="chip chip--family" style="--fam-bg:#B86A0020;--fam-color:#B86A00">Amber</div>
+        <div class="chip chip--family" style="--fam-bg:#7A8A0020;--fam-color:#7A8A00">Citrus</div>
+        <div class="chip chip--family" style="--fam-bg:#6E208020;--fam-color:#6E2080">Oud</div>
+        <div class="chip chip--family" style="--fam-bg:#1A603020;--fam-color:#1A6030">Green</div>
+        <div class="chip chip--family" style="--fam-bg:#2A5C5020;--fam-color:#2A5C50">Chypre</div>
+        <div class="chip chip--family" style="--fam-bg:#5A2D0C20;--fam-color:#5A2D0C">Leather</div>
+        <div class="chip chip--family" style="--fam-bg:#0A488020;--fam-color:#0A4880">Aquatic</div>
+        <div class="chip chip--family" style="--fam-bg:#7C4C0020;--fam-color:#7C4C00">Gourmand</div>
+      </div>
+    </div>
+
+    <table class="migration-table">
+      <thead><tr><th>Kill this</th><th></th><th>Use instead</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="kill">div.chip.cmp-frag-card-fam-chip</span> (compare card)</td>
+          <td class="arrow">→</td>
+          <td><code>div.chip.chip--family</code></td>
+        </tr>
+        <tr>
+          <td><span class="kill">.chip.complements</span> / <span class="kill">.chip.contrasts</span></td>
+          <td class="arrow">→</td>
+          <td><code>div.chip.chip--family</code> with appropriate fam vars</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 3. CHIP ── -->
+  <div class="demo-section">
+    <div class="demo-section-title">3 — Chip</div>
+    <p class="demo-desc">
+      Role labels only. Neutral-fill pill, 24px height.
+      The outline/selection pattern is out of scope here — that's a separate <strong>chip-select</strong> concept (role assignment UI) to be specced independently.
+    </p>
+
+    <div class="demo-row">
+      <div class="demo-items">
+        <div class="chip">The Romantic</div>
+        <div class="chip">The Naturalist</div>
+        <div class="chip">The Minimalist</div>
+        <div class="chip">The Provocateur</div>
+        <div class="chip">The Sun Chaser</div>
+      </div>
+    </div>
+
+    <table class="migration-table">
+      <thead><tr><th>Kill this</th><th></th><th>Use instead</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="kill">.chip--accent</span> (score highlight)</td>
+          <td class="arrow">→</td>
+          <td>base <code>.chip</code> — neutral fill is sufficient</td>
+        </tr>
+        <tr>
+          <td><span class="kill">.chip--xs</span> showing Owned / Wishlist</td>
+          <td class="arrow">→</td>
+          <td>icon (✓ / ♥) + <code>span.text-caption</code> — not a chip</td>
+        </tr>
+        <tr>
+          <td><span class="kill">.chip--outline</span> (role toggle)</td>
+          <td class="arrow">→</td>
+          <td><code>chip-select</code> — separate component, TBD</td>
+        </tr>
+        <tr>
+          <td><span class="kill">.picker-order-badge</span></td>
+          <td class="arrow">→</td>
+          <td>base <code>.chip</code></td>
+        </tr>
+        <tr>
+          <td><span class="kill">.dc-sim-state.is-owned</span>, <span class="kill">.note-layer-hint</span>, <span class="kill">.match-badge</span>, <span class="kill">.brand-count-chip</span>, <span class="kill">.list-item-badge</span>, <span class="kill">.cmp-edu-quad-tag</span></td>
+          <td class="arrow">→</td>
+          <td><code>span.text-caption</code> or <code>span.text-label</code> — typography only, no component needed</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 4. TAB ── -->
+  <div class="demo-section">
+    <div class="demo-section-title">4 — Tab</div>
+    <p class="demo-desc">
+      Two variants from one component.
+      <strong>Pill-in-bar</strong> for filter/state bars. 44px min-height is intentional — WCAG 2.5.5 touch target.
+      <strong>Underline</strong> for within-panel navigation. Proposed <code>.tab--underline</code> modifier: active indicator is an <code>::after</code> at <code>bottom: -1px</code>, overlapping the parent container's <code>border-bottom</code>.
+    </p>
+
+    <div class="demo-row" style="align-items:flex-start; flex-direction:column; gap:var(--sp-xl);">
+      <div>
+        <p class="demo-token-note" style="margin-bottom:var(--sp-sm)"><strong>Pill-in-bar</strong></p>
+        <div class="tabs" style="width:320px">
+          <button class="tab active">All</button>
+          <button class="tab">Owned</button>
+          <button class="tab">Wishlist</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="demo-token-note" style="margin-bottom:var(--sp-sm)"><strong>Underline</strong> (proposed <code>.tab--underline</code>)</p>
+        <div style="display:flex; gap:var(--sp-lg); border-bottom:1px solid var(--border-subtle);">
+          <button class="tab tab--underline active">Explore</button>
+          <button class="tab tab--underline">Search &amp; A–Z</button>
+          <button class="tab tab--underline">Saved</button>
+        </div>
+      </div>
+    </div>
+
+    <table class="migration-table">
+      <thead><tr><th>Kill this</th><th></th><th>Use instead</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="kill">.notes-nav-btn</span> + <span class="kill">.notes-nav-bar</span></td>
+          <td class="arrow">→</td>
+          <td><code>button.tab.tab--underline</code> in a flex container with <code>border-bottom</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── DESIGN SYSTEM CONSISTENCY ── -->
+  <hr class="demo-divider">
+  <div class="demo-section">
+    <div class="demo-section-title">Design System Consistency</div>
+    <p class="demo-desc">
+      <strong>How do all 4 components use the same typography, sizing, and corner radius?</strong><br>
+      Every component in <code>components.css</code> references tokens from <code>design-system.css</code> only — never hardcoded values.
+      The token scales are the enforcement mechanism. If you're writing a new component, the rule is simple:
+      if the value doesn't have a token, it doesn't belong in the component.
+    </p>
+
+    <div class="token-grid">
+      <div class="token-cell">
+        <div class="token-cell-label">Typography</div>
+        <div class="token-cell-items">
+          <div class="token-cell-item">Font family → <code>var(--font-sans)</code></div>
+          <div class="token-cell-item">Font size → <code>var(--fs-caption)</code><br><code>var(--fs-meta)</code><br><code>var(--fs-body)</code></div>
+          <div class="token-cell-item">Weight → <code>600</code> (UI element standard)<br>or <code>500</code> (secondary)</div>
+          <div class="token-cell-item" style="color:var(--text-disabled)">❌ No raw <code>12px</code>, <code>14px</code>, etc.</div>
+        </div>
+      </div>
+      <div class="token-cell">
+        <div class="token-cell-label">Corner Radius</div>
+        <div class="token-cell-items">
+          <div class="token-cell-item">Pill → <code>var(--radius-pill)</code> (20px)</div>
+          <div class="token-cell-item">Tag → <code>var(--radius-sm)</code> (5px)</div>
+          <div class="token-cell-item">Tab → <code>calc(var(--radius) - 2px)</code><br>(inset from container)</div>
+          <div class="token-cell-item" style="color:var(--text-disabled)">❌ No raw <code>border-radius: 4px</code></div>
+        </div>
+      </div>
+      <div class="token-cell">
+        <div class="token-cell-label">Spacing</div>
+        <div class="token-cell-items">
+          <div class="token-cell-item">Padding → <code>var(--sp-xs)</code> through <code>var(--sp-md)</code></div>
+          <div class="token-cell-item">Gap → <code>var(--sp-2xs)</code> or <code>var(--sp-sm)</code></div>
+          <div class="token-cell-item">Heights → component-specific (24px chip, 44px tab) — documented as exceptions</div>
+          <div class="token-cell-item" style="color:var(--text-disabled)">❌ No raw <code>padding: 4px 8px</code></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="demo-token-note" style="margin-top:var(--sp-lg)">
+      <strong>The current one-offs break this rule.</strong> Classes like <code>.saved-brand-chip</code>, <code>.picker-order-badge</code>, and <code>.notes-nav-btn</code> define their own redundant typography and spacing
+      instead of inheriting from the canonical component. Migration fixes this by collapsing them to components that already use the token system correctly.
+    </p>
+  </div>
+
+  <!-- ── SUMMARY ── -->
+  <hr class="demo-divider">
+  <div class="demo-section">
+    <div class="demo-section-title">Summary</div>
+    <table class="migration-table">
+      <thead><tr><th>Component</th><th>Kills</th><th>CSS delta</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>.tag</code></td>
+          <td><code class="kill">button.chip.text-meta</code>, <code class="kill">.saved-brand-chip</code></td>
+          <td>−1 class, ~20 lines</td>
+        </tr>
+        <tr>
+          <td><code>.chip--family</code></td>
+          <td><code class="kill">.cmp-frag-card-fam-chip</code>, <code class="kill">.chip.complements</code>, <code class="kill">.chip.contrasts</code></td>
+          <td>−3 classes, ~18 lines</td>
+        </tr>
+        <tr>
+          <td><code>.chip</code></td>
+          <td><code class="kill">.chip--accent</code>, <code class="kill">.chip--xs</code> (owned/wish), <code class="kill">.picker-order-badge</code>, <code class="kill">.dc-sim-state</code>, <code class="kill">.note-layer-hint</code>, <code class="kill">.match-badge</code>, <code class="kill">.brand-count-chip</code>, <code class="kill">.list-item-badge</code>, <code class="kill">.cmp-edu-quad-tag</code></td>
+          <td>−9 classes, ~60 lines</td>
+        </tr>
+        <tr>
+          <td><code>.tab--underline</code> (new modifier)</td>
+          <td><code class="kill">.notes-nav-btn</code>, <code class="kill">.notes-nav-bar</code></td>
+          <td>+6 lines, −22 lines</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-family:var(--font-sans);font-size:var(--fs-meta);color:var(--text-secondary);margin-top:var(--sp-lg);">
+      Net: <strong style="color:var(--text-primary)">~114 lines removed</strong> from components.css,
+      ~15–20 template strings updated in app.js.
+      Zero visual changes to users.
+    </p>
+  </div>
+
+</body>
+</html>

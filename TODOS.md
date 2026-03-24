@@ -1,6 +1,6 @@
 # Scentmap — TODOs
 
-Updated 2026-03-21.
+Updated 2026-03-24 (QA pass — `add-fragrances` branch).
 
 **Product direction:** Help people discover fragrances that complete their wardrobe.
 
@@ -12,10 +12,8 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ## P2 — Active (ship in order)
 
-### TODO: Golden Pairs Carousel — Keyboard Nav
-**What:** Call `initCarouselKeyNav()` on the `pairWrap` element after `pairSec` is built (~line 1252). Apply `role="list"`, `aria-label`, and roving tabindex — same pattern as Brand Discovery carousel.
-**Why:** A11y obligation — `initCarouselKeyNav()` was never called on Golden Pairs at render time.
-**Effort:** XS (~10 min)
+### ~~TODO: Golden Pairs Carousel — Missing ARIA Roles~~
+**Status: Shipped (2026-03-24).** `role="list/listitem"` and `aria-label` logic added to `js/app.js` line 1160. **QA 2026-03-24:** confirmed.
 
 ---
 
@@ -23,35 +21,31 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 **What:** Store quiz results in `sessionStorage` key `sm_quiz_session`; back-navigation returns to results, not catalog.
 **Schema:** `{quizId: string, timestamp: number, answers: string[], results: string[]}`.
 **Why:** UX bug — losing state on back-nav from detail breaks every gift-giver and casual-shopper session.
-**Effort:** S (~20 min) · **Depends on:** Quiz routes.
+**Effort:** S (~20 min) · **Depends on:** Quiz routes. · **QA 2026-03-24:** confirmed not done. Completed quiz at `/quiz/best-perfume-for-men-2026/` — zero `sm_quiz_session` in sessionStorage after completion. App also navigated to compare URL after quiz finished.
 
 ---
 
 ### TODO: DNA Card Profile Bars — ARIA
 **What:** Replace visual-only profile bars on the DNA Card with `<meter>` elements (`min="0"` `max="100"` `value="{n}"` `aria-label="Freshness: {n}%"`).
 **Why:** Screen readers skip the current bars entirely — a11y obligation for a shipped feature.
-**Effort:** XS (~10 min) · **Depends on:** DNA card markup in `app.js`.
+**Effort:** XS (~10 min) · **Depends on:** DNA card markup in `app.js`. · **QA 2026-03-24:** confirmed zero `<meter>` elements in DOM; bars use `div.cmp-score-meter > .cmp-score-meter-fill`.
 
 ---
 
 ### TODO: Carousel Focus Restoration After Detail Close
 **What:** Push `document.activeElement` when a carousel card triggers `openDesktopDetail()` or a mobile sheet. Pop + restore focus on close. Use a focus stack (`_focusStack = []`) to handle nested carousels.
 **Why:** Keyboard focus jumps to page top after detail close — breaks Nadia's flow every session.
-**Effort:** XS (~15 min) · **Depends on:** `openDesktopDetail()`, `closeDesktopDetail()`, sheet stack.
+**Effort:** XS (~15 min) · **Depends on:** `openDesktopDetail()`, `closeDesktopDetail()`, sheet stack. · **QA 2026-03-24:** confirmed — after sheet close, `document.activeElement` = `<body>` (no class, no id). Not done.
 
 ---
 
-### TODO: State Bar Collection Count Text
-**What:** Add "N items" text beside the active state tab (Owned/Wishlist) in the catalog filter bar.
-**Why:** Users want to know collection size without scanning the list.
-**Effort:** XS (~10 min) · **Depends on:** `CAT_STATE_FILTER`, owned/wish counts from `ST{}`.
+### ~~TODO: State Bar Collection Count Text~~
+**Status: Shipped (equivalent).** Tabs now render as "Owned (5)" / "Wishlist (2)" inline — counts visible at all times regardless of which tab is active. Original spec said "beside active tab" but inline-in-label is cleaner. **QA 2026-03-24:** confirmed.
 
 ---
 
-### TODO: Brand Card Hover Affordance
-**What:** Increase brand discovery card hover state from `--border-subtle` to `--border-strong` + light background shift.
-**Why:** Current subtle border change is invisible for imprecise cursor users (Miguel).
-**Effort:** XS (CSS only, ~5 min) · **Depends on:** `.carousel-card` in `components.css`.
+### ~~TODO: Brand Card Hover Affordance~~
+**Status: Shipped.** `.carousel-card--brand:hover` now sets `border-color: var(--border-strong)` + `background: var(--bg-secondary)`. **QA 2026-03-24:** confirmed in `components.css` line 3154.
 
 ---
 
@@ -72,14 +66,14 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 ### TODO: "More Like This" Diversity Boost
 **What:** Replace rank 5 of the 5-result block with a family-diverse wildcard — highest `scoreSimilarity()` frag from the least-represented family, labelled "Something different →".
 **Why:** Current suggestions are too samey for same-family frags.
-**Effort:** S (~20 min) · **Depends on:** `scoreSimilarity()`, family data on `CAT[]`.
+**Effort:** S (~20 min) · **Depends on:** `scoreSimilarity()`, family data on `CAT[]`. · **QA 2026-03-24:** confirmed not done. Tobacco Vanille (Gourmand) shows 6 results: 4 are Amber family, all detail text reads "A less sweet, drier alternative" — no family diversity, no "Something different →" label.
 
 ---
 
 ### TODO: Zero-Owned State — Onboarding Prompt
 **What:** Two pieces: (1) Brand Discovery: if `owned.length === 0`, replace carousel with a CTA card → opens catalog. (2) You Tab: show "Start with something you know" + 5 hardcoded landmark frags (Acqua di Gio, Santal 33, Chloé EDP, Black Opium, Terre d'Hermès) — look up IDs via brand+name match against `CAT[]`. Both disappear once any frag is owned.
 **Why:** Zero-owned users see empty personalization — the app's best features are invisible to new users.
-**Effort:** S (~25 min) · **Depends on:** `ST{}` owned count, Brand Discovery and You tab render functions.
+**Effort:** S (~25 min) · **Depends on:** `ST{}` owned count, Brand Discovery and You tab render functions. · **QA 2026-03-24:** confirmed not done. Zero-owned state shows "Nothing saved yet. Swipe a fragrance to wishlist it…" — no landmark frags shown, no CTA.
 
 ---
 
@@ -98,10 +92,8 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ---
 
-### TODO: List Item Component Consolidation
-**What:** Migrate all list-item render sites from legacy multi-variant system to canonical slot structure in `DESIGN.md` Option B. Class rename map and ~15–20 render sites documented in previous version of this file (git history: before 2026-03-21 simplification commit).
-**Why:** 4 inconsistent variants, dead inner wrapper, mixin anti-pattern, typography violations.
-**Effort:** M (~45 min) · **Depends on:** `designsystem.html` Option B demo.
+### ~~TODO: List Item Component Consolidation~~
+**Status: Shipped (2026-03-24).** Base `.list-item` handles all contexts; `.list-item--compact` removed; dot sizing and alignment unified. **QA 2026-03-24:** confirmed.
 
 ---
 
@@ -228,8 +220,34 @@ Require designer specs and/or content deliverables before engineering.
 
 ---
 
+---
+
+## QA Findings — 2026-03-24 (`add-fragrances` branch)
+
+**Branch summary:** 7 new fragrances added. UI refactor for list items, sticky search, and universal search shortcuts. Full domain migration to `scentmap.vercel.app`.
+
+### ~~BUG: `app.html` catalog search not moved~~
+**Status: Fixed (2026-03-24).** `app.html` search layout synced with `app/index.html` (sticky `catalog-main-search`). **QA 2026-03-24:** confirmed.
+
+### ~~OBSERVATION: `/` shortcut opens universal search, not `#cat-search`~~
+**Status: Fixed (2026-03-24).** `/` now focuses `#cat-search` if the catalog panel is active, matching the intended behavior. **QA 2026-03-24:** confirmed.
+
+### ~~OBSERVATION: `app.html` canonical URL uses `scentmap.co`~~
+**Status: Fixed (2026-03-24).** All canonical and OG URLs migrated to `scentmap.vercel.app` across all files. **QA 2026-03-24:** confirmed.
+
+### BUG: Quiz navigates away from results to compare URL
+**What:** After completing `/quiz/best-perfume-for-men-2026/`, the app pushed history to `/compare/bal-dafrique/gypsy-water` — the previously-saved compare pair. The quiz results page was overwritten.
+**Root cause:** App init reads the `sm_compares` localStorage and may auto-navigate on load, or the compare hash redirect fires on top of the quiz results.
+**Impact:** Every quiz completion is at risk of being hijacked by a saved compare URL.
+**Effort:** S (~20 min) · investigate init flow in `app.js` and quiz page JS.
+
+---
+
 ## Already Shipped
 
+- **Unified List Items & Sticky Search** — Base component handles all contexts; search moved to main header (2026-03-24, `add-fragrances` branch)
+- **Production Domain Migration** — All 2,400+ URLs migrated to `scentmap.vercel.app` (2026-03-24, `add-fragrances` branch)
+- **7 New Fragrances** — Comme des Garçons ×2, Hermès, L'Artisan Parfumeur, Lalique, Serge Lutens, Viktor&Rolf (2026-03-24, `add-fragrances` branch) · all data fields verified clean
 - **Saved Comparisons** — last 5 pairs in `sm_compares`, row tap fills both slots (2026-03-21)
 - **Collection Context in Detail Panel** — "In your collection: X (89%)" below action buttons (`9d63a80`)
 - **Wardrobe Gap — Specific Frag Suggestions** — 2–3 carousel cards per gap axis (`9d63a80`)

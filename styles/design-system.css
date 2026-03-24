@@ -300,8 +300,7 @@ html, body {
 */
 :focus-visible {
   outline: none;
-  box-shadow: 0 0 0 var(--focus-ring-offset) var(--bg-primary),
-              0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+  box-shadow: 0 0 0 1px var(--bg-primary), 0 0 0 2px var(--border-strong);
 }
 
 /* Transition utilities */

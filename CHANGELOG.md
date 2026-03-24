@@ -8,6 +8,14 @@
 
 ### Added
 - **New fragrances** — Added 7 new classic/essential fragrances: Chergui, Comme des Garçons 2, Encre Noire, Spicebomb, Terre d'Hermès, Timbuktu, and Wonderwood.
+- **Sitemap domain migration** — Migrated all internal and SEO URLs from `scentmap.co` to `scentmap.vercel.app` (Production canonical).
+- **Golden Pairs ARIA roles** — Added `role="list/listitem"` and descriptive labels to the Golden Pairs carousel for screen reader support.
+
+### Changed
+- **UI Refactor: Unified list items** — Base `.list-item` component now handles all contexts (Catalog, Detail, Search). Legacy `.list-item--compact` removed.
+- **UI Refactor: Sticky Search** — Catalog search bar moved from sidebar to a sticky top header in the main catalog view.
+- **Universal Search shortcuts** — `/` key now focuses the catalog search bar when on the catalog tab, and universal search elsewhere.
+- **Universal Search Polish** — Auto-selects first non-disabled result; increased result limits; disabled "already selected" frags in compare mode.
 - **State bar collection counts** — Owned and Wishlist tabs now show live counts: "Owned (2)", "Wishlist (1)". Updates on every catalog rebuild.
 - **Quiz result persistence** — Quiz results saved to `sessionStorage` key `sm_quiz_session`; navigating away and back restores results without re-taking the quiz.
 - **Carousel keyboard activation** — Enter/Space now activates the focused carousel card in addition to ArrowLeft/ArrowRight navigation.

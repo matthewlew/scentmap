@@ -45,7 +45,13 @@ function matchFrag(f,q){
   if(ws.some(w=>w.startsWith(q))) return true;
   // Fuzzy prefix: "dipti" → diptyque (lev("dipti","dipty")=1), "byrd" → byredo
   if(q.length>=3&&ws.some(w=>{const p=w.slice(0,q.length);return p.length===q.length&&levenshtein(q,p)<=1;})) return true;
-  if(q.length<4) return false;
+  if(q.replace(/\s/g,'').length < 3) return false;
+  // Space-stripped fuzzy: "dipty que" → "diptye" still matches "diptyque"
+  const qc=q.replace(/\s/g,'');
+  if(qc!==q&&qc.length>=3){
+    if(ws.some(w=>w.startsWith(qc))) return true;
+    if(ws.some(w=>{const p=w.slice(0,qc.length);return p.length===qc.length&&levenshtein(qc,p)<=1;})) return true;
+  }
   return wordFuzzy(q,f._nameN,2)||wordFuzzy(q,f._brandN,1);
 }
 
@@ -1153,12 +1159,16 @@ window.renderSaved = function() {
       const pairSec = document.createElement('div'); pairSec.style.marginBottom = 'var(--sp-3xl)';
       pairSec.innerHTML = `<div class="sec-label">Shop Your Stash (Golden Pairs)</div>`;
       const pairWrap = document.createElement('div'); pairWrap.className = 'carousel';
+      pairWrap.setAttribute('role', 'list');
+      pairWrap.setAttribute('aria-label', 'Golden Pairs');
       pairs.forEach(p => {
         const card = document.createElement('div'); card.className = 'carousel-card carousel-card--wide card card--interactive';
+        card.setAttribute('role', 'listitem');
+        card.setAttribute('aria-label', `${p.a.name} and ${p.b.name}, ${p.score}% layering match`);
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-xs);">
             <div class="chip chip--accent chip--xs">${p.score}% LAYER MATCH</div>
-            <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
+            <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})" aria-label="Export layering recipe">⤓</button>
           </div>
           <div class="list-item-label">${p.a.name}</div>
           <div class="list-item-sublabel">+ ${p.b.name}</div>
@@ -3060,14 +3070,14 @@ function renderCatRow(row,frag,fm,search){
     const baseNote=(frag.base||[])[0];
     const parts=[];
     if(topNotes)parts.push(topNotes);
-    if(midNote)parts.push(`<span class="note-layer-hint" aria-label="Heart note:">H</span> ${midNote}`);
-    if(baseNote)parts.push(`<span class="note-layer-hint" aria-label="Base note:">B</span> ${baseNote}`);
+    if(midNote)parts.push(midNote);
+    if(baseNote)parts.push(baseNote);
     if(parts.length)notesHtml=`<div class="list-item-detail">${parts.join(' · ')}</div>`;
   }
 
   row.draggable = true;
   row.innerHTML=`
-      <div class="list-item-dot" style="--fam-bg: ${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
+      <div class="list-item-dot" style="--fam-bg: ${fm.color}" aria-hidden="true"></div>
       <div class="list-item-body">
         <div class="list-item-label">${frag.name}</div>
         <div class="list-item-sublabel">${frag.brand} · ${famLabel}</div>
@@ -3423,8 +3433,11 @@ function openUniversalSearch(opts = {}) {
   }
 
   overlay.hidden = false;
-  input.value = '';
-  _renderUsResults('');
+  
+  // Use initial query if provided (e.g. from nav input)
+  const initialQuery = opts.query || '';
+  input.value = initialQuery;
+  _renderUsResults(initialQuery);
 
   _trapFocus(overlay);
 
@@ -3433,6 +3446,9 @@ function openUniversalSearch(opts = {}) {
   document.getElementById('us-close').onclick = closeUniversalSearch;
 
   input.addEventListener('input', _onUsInput);
+  
+  // If we have an initial query, ensure input is focused at end
+  input.focus();
 }
 window.openUniversalSearch = openUniversalSearch;
 
@@ -3448,12 +3464,17 @@ function closeUniversalSearch() {
   input.removeEventListener('input', _onUsInput);
   _usContext = null;
   _usScores = null;
+  
+  // Clear persistent nav input too
+  const navInput = document.getElementById('nav-search-input');
+  if (navInput) navInput.value = '';
+  
   _returnFocus();
 }
 window.closeUniversalSearch = closeUniversalSearch;
 
 function _onUsInput(e) {
-  _usHighlight = -1;
+  _usHighlight = -1; // reset before render; _renderUsResults will set to 0
   _renderUsResults(e.target.value.trim());
 }
 
@@ -3476,12 +3497,11 @@ function _renderUsResults(query) {
 
   /* ── COMPARE MODE ── */
   if (_usContext) {
+    const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
     let frags = CAT.filter(f => {
-      // Exclude the frag already in the other slot
-      const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
-      if (other && f.id === other.id) return false;
       if (!q) return true;
-      return matchFrag(f, normQ(q));
+      // Always include the other-slot frag if it matches (will be shown disabled)
+      return matchFrag(f, normQ(q)) || (other && f.id === other.id);
     });
 
     if (_usScores) {
@@ -3490,14 +3510,20 @@ function _renderUsResults(query) {
       frags.sort((a, b) => a.name.localeCompare(b.name));
     }
 
+    // When no query, still include the other-slot frag if not already in list
+    if (!q && other && !frags.find(f => f.id === other.id)) {
+      frags = [other, ...frags];
+    }
+
     if (!frags.length) {
       results.innerHTML = _usEmptyHtml(query);
       return;
     }
 
-    results.innerHTML = frags.slice(0, 10).map((f, i) =>
-      _usFragRowHtml(f, i, _usScores ? `${_usScores.get(f.id)||0}%` : null)
-    ).join('');
+    results.innerHTML = frags.slice(0, 20).map((f, i) => {
+      const isDisabled = other && f.id === other.id;
+      return _usFragRowHtml(f, i, _usScores ? `${_usScores.get(f.id)||0}%` : null, isDisabled);
+    }).join('');
     _wireUsRows(results);
     return;
   }
@@ -3533,19 +3559,19 @@ function _renderUsResults(query) {
   let html = '';
   let rowIdx = 0;
 
-  // Fragrances (max 6)
+  // Fragrances (max 20)
   const normQStr = normQ(q);
-  const fragMatches = CAT.filter(f => matchFrag(f, normQStr)).slice(0, 6);
+  const fragMatches = CAT.filter(f => matchFrag(f, normQStr)).slice(0, 20);
 
   if (fragMatches.length) {
     html += `<div class="us-section-hdr" role="presentation">Fragrances</div>`;
     html += fragMatches.map(f => _usFragRowHtml(f, rowIdx++)).join('');
   }
 
-  // Notes (max 3)
+  // Notes (max 5)
   const noteMatches = (NI || []).filter(n =>
     n._nameN ? n._nameN.includes(normQStr) : n.name.toLowerCase().includes(q)
-  ).slice(0, 3);
+  ).slice(0, 5);
 
   if (noteMatches.length) {
     html += `<div class="us-section-hdr" role="presentation">Notes</div>`;
@@ -3562,10 +3588,10 @@ function _renderUsResults(query) {
     }).join('');
   }
 
-  // Houses (max 2) — BRANDS is array of {id, name, desc, url}
+  // Houses (max 3) — BRANDS is array of {id, name, desc, url}
   const brandMatches = (BRANDS || []).filter(b =>
     b.name.toLowerCase().includes(q)
-  ).slice(0, 2);
+  ).slice(0, 3);
 
   if (brandMatches.length) {
     html += `<div class="us-section-hdr" role="presentation">Houses</div>`;
@@ -3594,21 +3620,23 @@ function _renderUsResults(query) {
   }
 }
 
-function _usFragRowHtml(f, rowIdx, scoreLabel) {
+function _usFragRowHtml(f, rowIdx, scoreLabel, disabled) {
   const fc = getCmpFam(f.family);
   const famLabel = (FAM[f.family]||{label:f.family}).label;
   const owned = isOwned(f.id);
   const wished = isWish(f.id);
-  const badge = owned ? 'Owned' : wished ? 'Wishlist' : '';
-  return `<button class="list-item list-item--search" role="option" aria-selected="false"
+  const badge = disabled ? '' : (owned ? 'Owned' : wished ? 'Wishlist' : '');
+  const disabledAttrs = disabled ? ' disabled aria-disabled="true"' : '';
+  const disabledClass = disabled ? ' list-item--disabled' : '';
+  return `<button class="list-item list-item--search${disabledClass}" role="option" aria-selected="false"${disabledAttrs}
     id="us-row-${rowIdx}" data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
     <span class="list-item-dot" style="--fam-bg: ${fc.accent}"></span>
     <span class="list-item-body">
       <span class="list-item-label">${f.name}</span>
       <span class="list-item-sublabel">${f.brand} · ${famLabel}</span>
     </span>
-    ${badge ? `<span class="list-item-badge">${badge}</span>` : ''}
-    ${scoreLabel ? `<span class="list-item-trailing-label">${scoreLabel}</span>` : ''}
+    ${disabled ? `<span class="list-item-badge list-item-badge--muted">Already selected</span>` : badge ? `<span class="list-item-badge">${badge}</span>` : ''}
+    ${!disabled && scoreLabel ? `<span class="list-item-trailing-label">${scoreLabel}</span>` : ''}
   </button>`;
 }
 
@@ -3623,8 +3651,17 @@ function _wireUsRows(container) {
   container.querySelectorAll('.list-item--search').forEach(row => {
     row.addEventListener('click', () => _usSelectRow(row));
   });
-  // Restore highlight if any
-  if (_usHighlight >= 0) _usSetHighlight(_usHighlight);
+  // Auto-select first non-disabled result so Enter immediately works
+  if (_usHighlight < 0) {
+    const rows = Array.from(container.querySelectorAll('.list-item--search'));
+    const firstIdx = rows.findIndex(r => !r.disabled);
+    if (firstIdx >= 0) {
+      _usHighlight = firstIdx;
+      _usSetHighlight(firstIdx);
+    }
+  } else {
+    _usSetHighlight(_usHighlight);
+  }
 }
 
 function _usSelectRow(row) {
@@ -3810,7 +3847,7 @@ function openMoreSheet(btn){
       <div style="font-size:var(--fs-label);font-weight:700;letter-spacing:var(--ls-wide);text-transform:uppercase;color:var(--text-secondary);padding:0 var(--sp-lg) var(--sp-md)">More</div>
       ${items.map(it=>`
         <button class="list-item" onclick="${it.action}">
-          <span class="list-item-dot" style="background:none;">${it.icon}</span>
+          <span class="list-item-icon">${it.icon}</span>
           <div class="list-item-body">
             <div class="list-item-label">${it.label}</div>
           </div>
@@ -4704,6 +4741,11 @@ function initCompare(){
       });
     }
   });
+  // Homepage search bar — opens universal search in normal mode
+  const cmpSearchTrigger = document.getElementById('cmp-search-trigger');
+  if (cmpSearchTrigger) {
+    cmpSearchTrigger.addEventListener('click', () => openUniversalSearch());
+  }
   _setupDragAndDropDropzones();
 }
 window.clearCmpSlot=function(slot){
@@ -4777,24 +4819,50 @@ function runSearchTests(){
 }
 window.runSearchTests=runSearchTests;
 
-// Global keyboard shortcuts — ⌘K / Ctrl+K / `/` opens universal search
+// Global keyboard shortcuts — ⌘K / Ctrl+K / `/` focuses persistent nav search
 document.addEventListener('keydown',function(e){
   // ⌘K or Ctrl+K
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){
     e.preventDefault();
-    const us=document.getElementById('universal-search');
-    if(us&&!us.hidden){closeUniversalSearch();return;}
-    openUniversalSearch();
+    const ni = document.getElementById('nav-search-input');
+    if (ni) ni.focus();
     return;
   }
-  // `/` when no input is focused — opens universal search
+  // `/` when no input is focused
   if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)){
     e.preventDefault();
-    const us=document.getElementById('universal-search');
-    if(!us||us.hidden)openUniversalSearch();
+    const ni = document.getElementById('nav-search-input');
+    if (ni) ni.focus();
     return;
   }
 });
+
+function _initNavSearch() {
+  const ni = document.getElementById('nav-search-input');
+  if (!ni) return;
+
+  ni.addEventListener('focus', () => {
+    // Only open if not already open
+    const us = document.getElementById('universal-search');
+    if (us && us.hidden) {
+      openUniversalSearch({ query: ni.value });
+    }
+  });
+
+  ni.addEventListener('input', (e) => {
+    const us = document.getElementById('universal-search');
+    if (us && us.hidden) {
+      openUniversalSearch({ query: e.target.value });
+    } else {
+      // Sync to US input
+      const usi = document.getElementById('us-input');
+      if (usi) {
+        usi.value = e.target.value;
+        _onUsInput({ target: usi });
+      }
+    }
+  });
+}
 
 // Global Escape key handler — closes topmost open modal/overlay
 document.addEventListener('keydown',function(e){
@@ -4838,6 +4906,8 @@ async function init() {
   BRANDS = data.brands;
   BRANDS_MAP = Object.fromEntries(BRANDS.map(b => [b.name.toLowerCase(), b]));
   RM = Object.fromEntries(ROLES.map(r => [r.id, r]));
+
+  _initNavSearch();
 
   // Hide loading overlay
   const loadingEl = document.getElementById('app-loading');

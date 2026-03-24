@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
 <title>Scentmap — Compare Fragrances</title>
     <meta name="description" content="Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.">
-    <link rel="canonical" href="https://scentmap.co /app.html">
+    <link rel="canonical" href="https://scentmap.vercel.app/app.html">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Scentmap — Compare Fragrances">
     <meta property="og:description" content="Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.">
-    <meta property="og:image" content="https://scentmap.co/api/og">
-    <meta property="og:url" content="https://scentmap.co /app.html">
+    <meta property="og:image" content="https://scentmap.vercel.app/api/og">
+    <meta property="og:url" content="https://scentmap.vercel.app/app.html">
     <meta property="og:site_name" content="Scentmap">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Scentmap — Compare Fragrances">
     <meta name="twitter:description" content="Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.">
-    <meta name="twitter:image" content="https://scentmap.co/api/og">
+    <meta name="twitter:image" content="https://scentmap.vercel.app/api/og">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   
   
@@ -78,10 +78,6 @@
           <div class="panel" id="p-catalog">
             <div class="catalog-shell">
               <aside class="catalog-sidebar">
-                <div class="cat-search-wrap">
-                  <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
-                  <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
-                </div>
                 <div class="cat-sidebar-section">
                   <div class="sec-label">Filters</div>
                   <div class="cat-state-bar" id="cat-state-bar"></div>
@@ -100,6 +96,12 @@
                 </div>
               </aside>
               <main class="catalog-main">
+                <div class="catalog-main-search">
+                  <div class="cat-search-wrap">
+                    <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
+                    <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
+                  </div>
+                </div>
                 <div id="cat-live" class="sr-only" aria-live="polite"></div>
                 <div id="cat-body"></div>
               </main>
@@ -107,6 +109,12 @@
           </div>
 
           <div class="panel active" id="p-compare">
+            <div class="cmp-search-bar-wrap">
+              <button class="cmp-search-bar" id="cmp-search-trigger" aria-label="Search fragrances" aria-haspopup="dialog">
+                <svg class="cmp-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span class="cmp-search-placeholder">Search fragrances...</span>
+              </button>
+            </div>
             <header class="cmp-header" id="cmp-header">
               <div id="cmp-saved" hidden></div>
               <div class="cmp-pair-row">

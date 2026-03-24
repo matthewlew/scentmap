@@ -469,6 +469,15 @@
   overflow-y: auto;
 }
 
+.catalog-main-search {
+  padding: var(--sp-md) var(--sp-lg);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  z-index: 10;
+}
+
 .cat-sidebar-section {
   padding: var(--sp-md) 0 var(--sp-sm);
   border-top: 1px solid var(--border-subtle);
