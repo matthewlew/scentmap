@@ -20,11 +20,11 @@ styles/
 data/
   roles.json        8 fragrance roles (id, name, sym, desc)
   notes.json        Note reference index (177 entries)
-  scents-index.json Brand list used to fan out scent fetches
-  scents/
-    byredo.json     Per-brand fragrance arrays (183 total across all brands)
-    diptyque.json
-    ...
+  scents.json       Canonical 213-fragrance flat array (all brands, single file)
+api/
+  fragrance.js      Vercel serverless: /fragrance/:id pages (213 URLs)
+test/
+  fragrance-api.test.js  Server-side tests (16 assertions, run: node test/fragrance-api.test.js)
 CHANGELOG.md        Feature log — updated on every commit
 CLAUDE.md           This file
 .claude/
@@ -75,7 +75,7 @@ Use `preview_eval` with `location.href = 'http://localhost:3001/?v=' + Date.now(
 
 - **HTML + JS + CSS separated** — `index.html` is HTML structure only (~180 lines). All JS is in `js/app.js`. All styling is in `styles/` organized by concern (design system, components, layout, responsive).
 - **CSS organization** — See "CSS conventions" below for design tokens. Use semantic variables instead of hard-coded values. Consolidate duplicate rules using CSS custom properties.
-- **Data is fetched from JSON** — on startup, `js/app.js` fetches `data/roles.json`, `data/notes.json`, and per-brand files from `data/scents/` (via `data/scents-index.json`). `f.top`, `f.mid`, `f.base` are comma-separated strings; split them with `.split(',').map(s=>s.trim())` when you need arrays.
+- **Data is fetched from JSON** — on startup, `js/app.js` fetches `data/roles.json`, `data/notes.json`, and `data/scents.json` (213 fragrances, single flat array). `f.top`, `f.mid`, `f.base` are comma-separated strings; split them with `.split(',').map(s=>s.trim())` when you need arrays.
 - **Sheet stack** — mobile bottom sheets use `pushSheet(renderFn)` / `popSheet()` / `closeAllSheets()`. First sheet slides up from bottom; subsequent (sub-nav) sheets get class `.nav` and slide in from the right.
 - **Desktop detail panel** — `pushDesktopDetail(renderFn)` / `openDesktopDetail(renderFn)` / `closeDesktopDetail()`. Use `_renderDeskDetail(true)` to animate on push.
 - **Nav** — `go(id, btn)` for desktop tab navigation; `goMobile(id, btn)` for mobile bottom nav. Both activate the corresponding `#p-{id}` panel.
