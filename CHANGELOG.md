@@ -1,3 +1,19 @@
+## 2026-03-24
+
+### Added
+- **State bar collection counts** — Owned and Wishlist tabs now show live counts: "Owned (2)", "Wishlist (1)". Updates on every catalog rebuild.
+- **Quiz result persistence** — Quiz results saved to `sessionStorage` key `sm_quiz_session`; navigating away and back restores results without re-taking the quiz.
+- **Carousel keyboard activation** — Enter/Space now activates the focused carousel card in addition to ArrowLeft/ArrowRight navigation.
+- **Golden Pairs keyboard nav** — `initCarouselKeyNav` wired to the Golden Pairs carousel; all carousels now have roving tabindex + keyboard activation.
+
+### Changed
+- **"More Like This" diversity** — 5th suggestion is now a family-diverse wildcard (different family from top 4) instead of purely rank-5 by similarity.
+- **Profile bar ARIA** — Sensory Profile bars now include a visually-hidden `<meter>` element with `aria-label` for screen readers. Visual appearance unchanged.
+- **Brand card hover** — `.carousel-card--brand` now has an explicit `:hover`/`:focus-visible` state (background + border) for imprecise-cursor users.
+
+### Fixed
+- **Inline style violations** — `padding:2px` → `var(--sp-xs)`, `marginBottom:6px` → `var(--sp-xs)` (off-grid values); `.cmp-score-meter` margin-top consolidated into base CSS rule.
+
 ## v1.3.1 — Stable Release (2026-03-24)
 
 Design system QA pass, discovery shelf bug fixes, and fragrance detail stat grid repair.

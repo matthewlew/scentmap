@@ -773,8 +773,13 @@ function initCarouselKeyNav(carouselEl) {
   cards.forEach((c, i) => c.setAttribute('tabindex', i === 0 ? '0' : '-1'));
 
   carouselEl.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     const current = carouselEl.querySelector('[tabindex="0"]');
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      current?.click();
+      return;
+    }
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     const idx = cards.indexOf(current);
     let next = -1;
     if (e.key === 'ArrowRight') next = Math.min(idx + 1, cards.length - 1);
@@ -1153,7 +1158,7 @@ window.renderSaved = function() {
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-xs);">
             <div class="chip chip--accent chip--xs">${p.score}% LAYER MATCH</div>
-            <button class="settings-btn" style="padding:2px; opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
+            <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
           </div>
           <div class="list-item-label">${p.a.name}</div>
           <div class="list-item-sublabel">+ ${p.b.name}</div>
@@ -1163,6 +1168,7 @@ window.renderSaved = function() {
       });
       const cw = document.createElement('div'); cw.className = 'carousel-wrap'; cw.appendChild(pairWrap);
       pairSec.appendChild(cw); container.appendChild(pairSec);
+      initCarouselKeyNav(pairWrap);
     }
   }
 
@@ -1565,12 +1571,13 @@ function renderFragDetail(container,frag){
           <div class="stat-card">
             <div class="stat-card-value">${Math.round(val*100)}%</div>
             <div class="stat-card-label">${label}</div>
-            <div class="cmp-score-meter" style="margin-top:var(--sp-sm);">
+            <div class="cmp-score-meter">
               <div class="cmp-score-meter-track">
                 <div class="cmp-score-meter-fill" style="width:${Math.round(val*100)}%; background:${color};"></div>
                 <div class="dot" style="position:absolute; left:calc(${Math.round(val*100)}% - 4px); top:-2px; background:${color}; border:2px solid var(--bg-secondary); width:8px; height:8px;"></div>
               </div>
             </div>
+            <meter class="sr-only" min="0" max="100" value="${Math.round(val*100)}" aria-label="${label}: ${Math.round(val*100)}%"></meter>
           </div>`;
         return card('Fresh', p.freshness, 'var(--fam-citrus)') +
                card('Sweet', p.sweetness, 'var(--fam-floral)') +
@@ -1687,13 +1694,16 @@ function renderFragDetail(container,frag){
     openDupeLab(frag);
   });
 
-  // Similar shelf
-  const scored=CAT
+  // Similar shelf — top 4 by score, 5th is family-diverse wildcard
+  const allScored=CAT
     .filter(f=>f.id!==frag.id)
     .map(f=>({f,score:scoreSimilarity(frag,f)}))
     .filter(x=>x.score>=30)
-    .sort((a,b)=>b.score-a.score)
-    .slice(0,5);
+    .sort((a,b)=>b.score-a.score);
+  const top4=allScored.slice(0,4);
+  const usedFamilies=new Set(top4.map(x=>x.f.family));
+  const wildcard=allScored.slice(4).find(x=>!usedFamilies.has(x.f.family));
+  const scored=wildcard?[...top4,wildcard]:allScored.slice(0,5);
 
   _setupDetailSwipe(container, frag);
 
@@ -2389,7 +2399,7 @@ function openNotePopup(note,triggerEl){
   const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
   if(sortedInf.length){
-    const lbl=document.createElement('div');lbl.className='sec-label';lbl.style.marginBottom='6px';lbl.textContent=`In catalog (${sortedInf.length})`;
+    const lbl=document.createElement('div');lbl.className='sec-label';lbl.style.marginBottom='var(--sp-xs)';lbl.textContent=`In catalog (${sortedInf.length})`;
     fe.appendChild(lbl);
     const list=document.createElement('div');list.className='list-view';
     sortedInf.forEach(f=>{
@@ -2641,7 +2651,7 @@ function buildCatalog(roleFilter){
     }
     body.appendChild(empty);
     const liveEl=document.getElementById('cat-live');if(liveEl)liveEl.textContent='No fragrances found.';
-    updCC();return;
+    updCC();window._updateStateCounts?.();return;
   }
   // Announce result count to screen readers
   const liveEl=document.getElementById('cat-live');if(liveEl)liveEl.textContent=`${visibleCat.length} fragrance${visibleCat.length!==1?'s':''}`;
@@ -2760,6 +2770,7 @@ function buildCatalog(roleFilter){
     if(firstRow) firstRow.classList.add('search-first');
   }
   updCC();
+  window._updateStateCounts?.();
   // hidden select for filter state (used by role landing)
   let sel=document.getElementById('cat-role-filter');
   if(!sel){sel=document.createElement('select');sel.id='cat-role-filter';sel.style.display='none';document.body.appendChild(sel);}
@@ -2798,6 +2809,16 @@ function initCatalogControls(){
     makeStateBtn(label,val,stateBar);
     if(stateBarM)makeStateBtn(label,val,stateBarM);
   });
+
+  window._updateStateCounts=function(){
+    const nOwned=CAT.filter(f=>isOwned(f.id)).length;
+    const nWish=CAT.filter(f=>isWish(f.id)).length;
+    allStateBtns.forEach(b=>{
+      if(b.dataset.val==='owned')b.textContent=nOwned?`Owned (${nOwned})`:'Owned';
+      if(b.dataset.val==='wish')b.textContent=nWish?`Wishlist (${nWish})`:'Wishlist';
+    });
+  };
+  window._updateStateCounts(); // initial render — buildCatalog ran before this was defined
 
   const notesSearch = document.getElementById('notes-search');
   const notesSearchClear = document.getElementById('notes-search-clear');

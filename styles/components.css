@@ -3151,6 +3151,12 @@ mark.note-match {
   width: 180px;
 }
 
+.carousel-card--brand:hover,
+.carousel-card--brand:focus-visible {
+  background: var(--bg-secondary);
+  border-color: var(--border-strong);
+}
+
 /* ── 9. MISCELLANEOUS ── */
 
 .chip-sym {
