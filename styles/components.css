@@ -69,34 +69,10 @@
   z-index: 100;
 }
 
-.settings-menu-item {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  width: 100%;
-  min-height: var(--touch-target);
-  background: none;
-  border: none;
-  padding: var(--sp-sm) var(--sp-md);
-  font-family: inherit;
-  font-size: var(--fs-body-sm);
-  color: var(--text-primary);
-  text-align: left;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  transition: background var(--dur-fast);
-}
-
-.settings-menu-item:hover {
-  background: var(--bg-secondary);
-}
-
-.settings-menu-icon {
-  font-size: var(--fs-ui);
-  width: 20px;
-  text-align: center;
-  flex-shrink: 0;
-  color: var(--text-secondary);
+.tab--xs {
+  font-size: var(--fs-caption);
+  padding: var(--sp-micro) var(--sp-2xs);
+  min-height: 0; /* Override standard touch target for micro-actions */
 }
 
 .logo {
@@ -144,6 +120,9 @@
 
 .tab.active {
   color: var(--text-primary);
+  font-weight: 600;
+  background: var(--bg-primary);
+  box-shadow: 0 1px 2px var(--fade-medium);
 }
 
 /* Sliding pill behind active tab — same as .frag-picker-sort-pill */
@@ -171,12 +150,14 @@
   height: 8px;
   border-radius: var(--radius-circle);
   flex-shrink: 0;
+  background: var(--fam-bg, var(--fam-default));
 }
 .dot--md {
   width: 10px;
   height: 10px;
   border-radius: var(--radius-circle);
   flex-shrink: 0;
+  background: var(--fam-bg, var(--fam-default));
 }
 
 /* Family abbreviation inside catalog dots — secondary indicator for colorblind users */
@@ -195,14 +176,14 @@
   align-items: center;
   gap: var(--sp-2xs);
   font-family: var(--font-sans);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   font-weight: 600;
-  letter-spacing: var(--ls-normal);
   border-radius: var(--radius-pill);
   padding: 0 var(--sp-md);
-  height: 24px;
+  height: 24px; /* Component-specific: pill height — not on spacing grid */
   white-space: nowrap;
-  color: var(--on-dark-text);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
   border: 1px solid transparent;
 }
 
@@ -210,9 +191,24 @@
   background: transparent !important;
   color: var(--text-secondary);
   border: 1px solid var(--border-standard);
-  letter-spacing: 0.02em;
-  text-transform: none;
 }
+
+.chip--accent {
+  background: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  color: var(--accent-primary);
+}
+
+.chip--family {
+  background: var(--fam-bg);
+  color: var(--fam-color);
+}
+
+.chip--xs {
+  height: 18px; /* Component-specific: compact pill height */
+  padding: 0 var(--sp-sm);
+  font-size: calc(var(--fs-caption) - 1px);
+}
+
 .chip--outline:hover {
   background: var(--bg-tertiary) !important;
   border-color: var(--border-strong);
@@ -229,6 +225,44 @@
   color: var(--text-primary);
 }
 
+/* Discovery shelf badge variants */
+.chip.contrasts {
+  background: color-mix(in srgb, var(--fam-oud) 12%, transparent);
+  color: var(--fam-oud);
+}
+
+.chip.complements {
+  background: color-mix(in srgb, var(--fam-floral) 12%, transparent);
+  color: var(--fam-floral);
+}
+
+/* Stat grid — fragrance detail metrics */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-md);
+}
+
+.stat-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-md);
+}
+
+.stat-card-value {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  color: var(--text-primary);
+  line-height: var(--lh-tight);
+}
+
+.stat-card-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  margin-top: var(--sp-xs);
+}
 
 
 .cmp-sug-name {
@@ -335,7 +369,7 @@
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
-  width: 40px;
+  width: 40px; /* Fixed label column for T/H/B tier abbreviations */
   flex-shrink: 0;
   padding-top: 0;
 }
@@ -478,10 +512,8 @@
   font-size: var(--fs-body);
   font-weight: 500;
   color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 80px;
+  min-width: 0;
+  flex: 1;
 }
 
 .dc-cmp-btn-empty {
@@ -513,14 +545,14 @@
 /* Similar shelf */
 /* .dc-sim-lbl → migrated to .sec-label */
 
-.list-group {
+.list-view {
   display: flex;
   flex-direction: column;
 }
-.list-group .list-item {
+.list-view .list-item {
   border-bottom: 1px solid var(--border-standard);
 }
-.list-group .list-item:last-child {
+.list-view .list-item:last-child {
   border-bottom: none;
 }
 
@@ -549,7 +581,7 @@
 
 
 .dc-sim-brand {
-  font-size: var(--fs-meta);
+  font-size: var(--fs-caption);
   color: var(--text-secondary);
 }
 
@@ -568,30 +600,35 @@
   color: var(--text-secondary);
 }
 
-/* Discovery badges */
-.dc-badge {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  padding: var(--sp-micro) var(--sp-sm);
-  border-radius: var(--radius);
-  flex-shrink: 0;
-  white-space: nowrap;
+.tag {
+  background: var(--bg-secondary);
+  padding: var(--sp-xs) var(--sp-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-micro);
+  transition: all var(--dur-fast);
 }
 
-
-.dc-badge.contrasts {
-  background: color-mix(in srgb, var(--g500) 12%, transparent);
-  color: var(--text-secondary);
+button.tag {
+  cursor: pointer;
+  background: none;
 }
 
-.dc-badge.complements {
-  background: color-mix(in srgb, var(--g400) 15%, transparent);
-  color: var(--text-secondary);
+button.tag:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-standard);
+  color: var(--text-primary);
 }
 
-/* ── 4. CARDS & SURFACES ── */
+.tag.shared {
+  background: var(--fade-subtle);
+  border-color: var(--border-standard);
+  font-weight: 500;
+}
+
+/* ── 7. PICKERS & SELECTIONS ── */
 
 .picker-header {
   background: var(--bg-primary);
@@ -604,42 +641,86 @@
   margin-bottom: var(--sp-xl);
 }
 
-/* .role-landing-card — deleted (roles panel removed) */
-
-/* Landing CTA card (You panel) */
-.landing-card {
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius-lg);
+.stat-cell {
   background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-md);
+  text-align: left;
+}
+
+.stat-cell-value {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  color: var(--text-primary);
+  line-height: var(--lh-tight);
+}
+
+.stat-cell-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  margin-top: var(--sp-xs);
+}
+
+/* ── 4. CARDS & SURFACES ── */
+
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-xl);
   padding: var(--sp-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+}
+
+.card--secondary {
+  background: var(--bg-secondary);
+  border: none;
+}
+
+.card--interactive {
+  cursor: pointer;
+  transition: border-color var(--dur-fast), background var(--dur-fast);
+}
+
+.card--interactive:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-secondary);
+}
+
+.callout {
+  padding: var(--sp-sm) var(--sp-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+}
+
+.banner {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
   margin-bottom: var(--sp-2xl);
 }
 
-.landing-card-head {
+.banner-head {
   display: flex;
   align-items: center;
   gap: var(--sp-sm);
-  margin-bottom: var(--sp-xs);
 }
 
-.landing-card-title {
-  font-family: var(--font-display);
-  font-size: var(--fs-body);
-  letter-spacing: var(--ls-tight);
-}
-
-.landing-card-desc {
-  font-size: var(--fs-body);
+.chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  margin-right: var(--sp-md);
+  font-size: var(--fs-meta);
   color: var(--text-secondary);
-  margin-bottom: var(--sp-xs);
-}
-
-.landing-card-cta {
-  font-size: var(--fs-body);
-  color: var(--text-secondary);
-  text-decoration: underline;
-  text-underline-offset: var(--link-underline-offset);
-  text-decoration-color: var(--g300);
 }
 
 /* ── 5. INPUTS & FORMS ── */
@@ -918,48 +999,11 @@
   padding-top: var(--sp-lg);
 }
 
-.notes-grid {
+.grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--sp-xl);
 }
-
-.notes-card {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius-xl);
-  padding: var(--sp-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-md);
-}
-
-.notes-card-header {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--sp-sm);
-  margin-bottom: 0;
-  padding-bottom: var(--sp-sm);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.notes-card-header > div {
-  min-width: 0;
-}
-
-.notes-card-body {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-xs);
-}
-
-
-/* Notes card header: dot needs 5px top offset to align with the text baseline */
-.notes-card-header .dot {
-  margin-top: 5px;
-}
-
-/* .nf-name / .nf-desc — consolidated to .list-item-label / .list-item-sublabel */
 
 /* ── 9. MISCELLANEOUS ── */
 
@@ -1345,6 +1389,7 @@
   height: 18px;
   border-radius: var(--radius-circle);
   flex-shrink: 0;
+  background: var(--fam-bg, var(--fam-default));
 }
 
 /* Compact and search contexts use a smaller dot */
@@ -1387,6 +1432,10 @@
   font-size: var(--fs-meta);
   color: var(--text-secondary);
   margin-top: 0;
+}
+
+.list-item--truncate .list-item-label,
+.list-item--truncate .list-item-sublabel {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1659,8 +1708,23 @@ mark.note-match {
   background: var(--bg-primary);
 }
 
+.cmp-frag-card.filled {
+  border-color: var(--fam-bg-subdued);
+}
+
 .cmp-frag-card:hover {
   border-color: var(--border-strong);
+}
+
+.cmp-frag-card.filled:hover {
+  border-color: var(--fam-bg);
+}
+
+.cmp-frag-card-fam-chip {
+  align-self: flex-start;
+  margin: var(--sp-md) var(--sp-md) 0;
+  background: var(--fam-bg);
+  color: var(--on-dark-text);
 }
 
 /* drag-over state — CSS class replaces inline style for proper theming */
@@ -1848,7 +1912,7 @@ mark.note-match {
 /* ── Score cards ── */
 
 .cmp-pair-card {
-  border: var(--border-width-heavy) solid var(--border-standard);
+  border: 1px solid var(--border-standard);
   border-radius: var(--radius-xl);
   background: var(--bg-primary);
   padding: var(--sp-lg);
@@ -1900,7 +1964,7 @@ mark.note-match {
   flex: 1;
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: var(--border-width-heavy) solid var(--border-subtle);
+  border: 1px solid var(--border-subtle);
   background: var(--bg-secondary);
   text-align: left;
   cursor: pointer;
@@ -1953,7 +2017,7 @@ mark.note-match {
   width: 8px;
   height: 8px;
   border-radius: var(--radius-circle);
-  border: var(--border-width-heavy) solid var(--bg-primary);
+  border: 1px solid var(--bg-primary);
   transition: left var(--dur-xslow) var(--ease-spring);
 }
 
@@ -2115,37 +2179,6 @@ mark.note-match {
   text-align: center;
 }
 
-.cmp-note-pill {
-  display: inline-flex;
-  align-items: center;
-  font-size: var(--fs-meta);
-  font-family: var(--font-serif);
-  background: none;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: var(--sp-micro) var(--sp-xs);
-  cursor: default;
-  color: var(--text-primary);
-}
-
-button.cmp-note-pill {
-  background: var(--bg-tertiary);
-  cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-spring);
-  text-decoration: underline;
-  text-underline-offset: var(--link-underline-offset);
-  text-decoration-color: var(--g300);
-}
-
-button.cmp-note-pill:hover {
-  background: var(--border-standard);
-  text-decoration-color: var(--text-primary);
-}
-
-.cmp-note-pill.shared {
-  background: var(--fade-subtle);
-  font-weight: 500;
-}
 
 .cmp-grid-empty {
   font-size: var(--fs-meta);
@@ -2164,11 +2197,6 @@ button.cmp-note-pill:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--sp-lg);
-}
-
-/* .cmp-sug-col-head → migrated to .sec-label (keeps spacing) */
-.cmp-sug-col-head {
-  margin-bottom: var(--sp-sm);
 }
 
 
@@ -2339,7 +2367,7 @@ button.cmp-note-pill:hover {
 .cmp-edu-card {
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: var(--border-width-heavy) solid var(--border-standard);
+  border: 1px solid var(--border-standard);
   background: var(--bg-primary);
   display: flex;
   flex-direction: column;
@@ -2354,7 +2382,7 @@ button.cmp-note-pill:hover {
 .cmp-edu-quad {
   padding: var(--sp-md);
   border-radius: var(--radius-lg);
-  border: var(--border-width-heavy) solid var(--border-standard);
+  border: 1px solid var(--border-standard);
   background: var(--bg-primary);
   display: flex;
   flex-direction: column;
@@ -3110,43 +3138,7 @@ button.cmp-note-pill:hover {
 .carousel-card {
   flex-shrink: 0;
   width: 136px;
-  padding: var(--sp-md);
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius-lg);
-  cursor: pointer;
-  background: var(--bg-primary);
   scroll-snap-align: start;
-  transition: background var(--dur-fast) var(--ease-spring),
-              border-color var(--dur-fast) var(--ease-spring);
-}
-
-.carousel-card:hover {
-  background: var(--bg-secondary);
-  border-color: var(--border-strong);
-}
-
-/* Typography via .list-item-label — layout overrides only */
-.carousel-card-name {
-  letter-spacing: -0.01em;
-  margin-bottom: var(--sp-xs);
-}
-
-/* Typography via .list-item-sublabel — layout overrides only */
-.carousel-card-brand {
-  letter-spacing: 0.02em;
-  margin-bottom: var(--sp-sm);
-}
-
-.carousel-card-family {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-xs);
-}
-
-.carousel-card-family-label {
-  font-family: var(--font-sans);
-  font-size: var(--fs-label);
-  color: var(--text-tertiary);
 }
 
 /* Wide variant for golden-pairs layering cards */
@@ -3156,29 +3148,10 @@ button.cmp-note-pill:hover {
 
 /* Brand discovery carousel card */
 .carousel-card--brand {
-  width: 160px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-xs);
+  width: 180px;
 }
 
-.carousel-card-reason {
-  font-family: var(--font-serif);
-  font-size: var(--fs-meta);
-  color: var(--text-tertiary);
-  line-height: 1.35;
-  flex: 1;
-}
-
-.carousel-card-shop {
-  margin-top: var(--sp-sm);
-  align-self: flex-start;
-}
-
-/* .fam-dot → use .dot */
-
-/* ── ROLE-CHIP IN DETAIL PANEL ── */
-
+/* ── 9. MISCELLANEOUS ── */
 
 .chip-sym {
   font-size: var(--fs-body);
@@ -3570,7 +3543,7 @@ button.cmp-note-pill:hover {
   color: var(--text-tertiary);
 }
 
-.collection-section .list-group {
+.collection-section .list-view {
   margin-top: var(--sp-sm);
 }
 

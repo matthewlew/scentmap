@@ -2,6 +2,7 @@
   "outputDirectory": ".",
   "buildCommand": "",
   "rewrites": [
+    { "source": "/fragrance/:id", "destination": "/api/fragrance" },
     { "source": "/compare/:a/:b", "destination": "/api/compare" },
     { "source": "/quiz/:slug", "destination": "/api/quiz" },
     { "source": "/app", "destination": "/app.html" },

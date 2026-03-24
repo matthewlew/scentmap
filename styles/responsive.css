@@ -223,7 +223,7 @@
   }
 
   .cat-family-scroll .fam-pill.active .fam-pill-dot {
-    border: var(--border-width-heavy) solid var(--bg-primary);
+    border: 1px solid var(--bg-primary);
   }
 
   .frag-filter-toggle {
@@ -456,9 +456,6 @@
     padding: var(--sp-sm) var(--sp-xs);
   }
 
-  .cmp-note-pill {
-    font-size: var(--fs-caption);
-  }
 
   .cmp-sug-columns {
     grid-template-columns: 1fr;

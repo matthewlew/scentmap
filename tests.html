@@ -399,6 +399,28 @@ async function runAll(){
     return !!style.getPropertyValue('--fam-woody').trim();
   });
 
+  // ── SUITE: Fragrance page deep-link ─────────────────────────
+  startSuite('Fragrance page deep-link');
+  if(W.CAT_MAP&&W.CAT_MAP['gypsy-water']){
+    // Test #frag= hash deep-link (existing handler)
+    assert('handleInitialNavigation exists',typeof W.handleInitialNavigation==='function');
+
+    // Test that /fragrance/ pathname regex matches correctly
+    const fragRegex=/^\/fragrance\/([a-zA-Z0-9_-]+)\/?$/;
+    assert('fragrance regex matches /fragrance/gypsy-water',fragRegex.test('/fragrance/gypsy-water'));
+    assert('fragrance regex matches /fragrance/bleu-de-chanel',fragRegex.test('/fragrance/bleu-de-chanel'));
+    assert('fragrance regex rejects /fragrance/',!fragRegex.test('/fragrance/'));
+    assert('fragrance regex rejects /fragrance/a/b',!fragRegex.test('/fragrance/a/b'));
+
+    // Test openFragDetail renders detail content
+    W.openFragDetail(W.CAT_MAP['gypsy-water']);
+    await new Promise(r=>setTimeout(r,350));
+    const dcName=W.document.querySelector('.dc-name');
+    assert('openFragDetail renders dc-name',!!dcName&&dcName.textContent==='Gypsy Water');
+    const moreLike=W.document.querySelectorAll('.list-view .list-item');
+    assert('Similar fragrances shelf rendered (≥1 items)',moreLike.length>=1,`${moreLike.length} items`);
+  } else skip('Fragrance deep-link — CAT_MAP not loaded');
+
   render();
 }
 

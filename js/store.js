@@ -5,16 +5,16 @@
 
 // --- 1. CONFIGURATION & CONSTANTS ---
 export const FAM = {
-  citrus:  {label:'Citrus',  color:'#9A6800', desc:'Bright and fleeting. Pressed from rinds — bergamot, lemon, grapefruit. Often the first thing you smell, and the first to fade. Works in heat; rarely works alone.'},
-  green:   {label:'Green',   color:'#1A6030', desc:'Crisp, alive, and vegetal — cut grass, fig leaf, violet leaf. The smell of growing things rather than flowering ones. Fresh but rooted.'},
-  floral:  {label:'Floral',  color:'#902050', desc:'Derived from flowers — rose, jasmine, tuberose, iris. The broadest family. Ranges from powdery and romantic to bright and dewy. The backbone of most commercial perfumery.'},
-  woody:   {label:'Woody',   color:'#6E3210', desc:'Dry, earthy warmth from woods and roots — cedar, sandalwood, vetiver, patchouli. A broad family spanning cool dry cedar to rich creamy sandalwood.'},
-  amber:   {label:'Amber',   color:'#984000', desc:'Warm, resinous, and slightly sweet. Labdanum, benzoin, vanilla, resins. Rich base materials that linger for hours. The classic "oriental" register.'},
-  chypre:  {label:'Chypre',  color:'#285438', desc:'A structured accord: bergamot up top, labdanum at the base, oakmoss in the heart. Earthy, sophisticated, mossy. Named after Cyprus; backbone of classic perfumery.'},
-  aquatic: {label:'Aquatic', color:'#0A4880', desc:'Marine, watery, ozonic. Invented in the 1990s. The smell of imagined sea air — ozone, salt, and calone — rather than actual ocean. Fresh and weightless.'},
-  leather: {label:'Leather', color:'#42200E', desc:'Reconstructed from birch tar, labdanum, and castoreum. Dry, dark, slightly smoky. Evokes tanned hides, saddles, and worn books. Difficult to wear casually.'},
-  gourmand:{label:'Gourmand',color:'#7C4C00', desc:'Edible-smelling notes — vanilla, caramel, tonka, praline. Emerged in the 1990s. Warm, sweet, and comforting. Fragrance as food memory.'},
-  oud:     {label:'Oud',     color:'#4A1850', desc:'Dark, animalic resin from infected agarwood. Deep, smoky, and complex. The most prized raw material in Arabian perfumery — priced by weight, not volume. Polarising.'},
+  citrus:  {label:'Citrus',  color:'var(--fam-citrus)',  colorHex:'#7A8A00', desc:'Bright and fleeting. Pressed from rinds — bergamot, lemon, grapefruit. Often the first thing you smell, and the first to fade. Works in heat; rarely works alone.'},
+  green:   {label:'Green',   color:'var(--fam-green)',   colorHex:'#1A6030', desc:'Crisp, alive, and vegetal — cut grass, fig leaf, violet leaf. The smell of growing things rather than flowering ones. Fresh but rooted.'},
+  floral:  {label:'Floral',  color:'var(--fam-floral)',  colorHex:'#B5366E', desc:'Derived from flowers — rose, jasmine, tuberose, iris. The broadest family. Ranges from powdery and romantic to bright and dewy. The backbone of most commercial perfumery.'},
+  woody:   {label:'Woody',   color:'var(--fam-woody)',   colorHex:'#8B4513', desc:'Dry, earthy warmth from woods and roots — cedar, sandalwood, vetiver, patchouli. A broad family spanning cool dry cedar to rich creamy sandalwood.'},
+  amber:   {label:'Amber',   color:'var(--fam-amber)',   colorHex:'#B86A00', desc:'Warm, resinous, and slightly sweet. Labdanum, benzoin, vanilla, resins. Rich base materials that linger for hours. The classic "oriental" register.'},
+  chypre:  {label:'Chypre',  color:'var(--fam-chypre)',  colorHex:'#2A5C50', desc:'A structured accord: bergamot up top, labdanum at the base, oakmoss in the heart. Earthy, sophisticated, mossy. Named after Cyprus; backbone of classic perfumery.'},
+  aquatic: {label:'Aquatic', color:'var(--fam-aquatic)', colorHex:'#0A4880', desc:'Marine, watery, ozonic. Invented in the 1990s. The smell of imagined sea air — ozone, salt, and calone — rather than actual ocean. Fresh and weightless.'},
+  leather: {label:'Leather', color:'var(--fam-leather)', colorHex:'#5A2D0C', desc:'Reconstructed from birch tar, labdanum, and castoreum. Dry, dark, slightly smoky. Evokes tanned hides, saddles, and worn books. Difficult to wear casually.'},
+  gourmand:{label:'Gourmand',color:'var(--fam-gourmand)',colorHex:'#7C4C00', desc:'Edible-smelling notes — vanilla, caramel, tonka, praline. Emerged in the 1990s. Warm, sweet, and comforting. Fragrance as food memory.'},
+  oud:     {label:'Oud',     color:'var(--fam-oud)',     colorHex:'#6E2080', desc:'Dark, animalic resin from infected agarwood. Deep, smoky, and complex. The most prized raw material in Arabian perfumery — priced by weight, not volume. Polarising.'},
 };
 
 export const FAM_COMPAT = {
@@ -167,22 +167,18 @@ const _notify = () => {
 export const initialize = async () => {
   const _nc = { cache: 'no-cache' };
   try {
-    const [roles, notes, brands, scentsIdx] = await Promise.all([
+    const [roles, notes, brands, scents] = await Promise.all([
       fetch('/data/roles.json', _nc).then(r => r.json()),
       fetch('/data/notes.json', _nc).then(r => r.json()),
       fetch('/data/brands.json', _nc).then(r => r.json()),
-      fetch('/data/scents-index.json', _nc).then(r => r.json())
+      fetch('/data/scents.json', _nc).then(r => r.json()),
     ]);
-
-    const scentArrays = await Promise.all(
-      scentsIdx.brands.map(b => fetch(`/data/scents/${b}.json`, _nc).then(r => r.json()))
-    );
 
     _ROLES = roles;
     _NI = notes;
     _NI.forEach(n => _NI_MAP[n.name.toLowerCase()] = n);
     _BRANDS = brands;
-    _CAT = scentArrays.flat();
+    _CAT = scents;
     const _norm = s => (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
     _CAT.forEach(f => {
       _CAT_MAP[f.id] = f;
