@@ -129,9 +129,9 @@
           <div class="panel" id="p-notes">
             <div class="notes-shell">
               <div class="notes-nav-bar" id="notes-nav-bar">
-                <button class="notes-nav-btn active" data-tab="explore">Explore</button>
-                <button class="notes-nav-btn" data-tab="search">Search & A-Z</button>
-                <button class="notes-nav-btn" data-tab="saved">My Notes</button>
+                <button class="notes-nav-btn active" data-tab="explore" aria-pressed="true">Explore</button>
+                <button class="notes-nav-btn" data-tab="search" aria-pressed="false">Search & A-Z</button>
+                <button class="notes-nav-btn" data-tab="saved" aria-pressed="false">My Notes</button>
               </div>
               <div class="notes-search-wrap" id="notes-search-wrap" style="display:none">
                 <div class="cat-search-wrap">
@@ -140,10 +140,10 @@
                 </div>
                 <div class="cat-sidebar-section" id="notes-tier-filter-wrap" style="display:none; margin-top:var(--sp-md)">
                   <div class="notes-tier-bar" id="notes-tier-bar">
-                    <button class="tab active" data-tier="all">All Tiers</button>
-                    <button class="tab" data-tier="top">Top</button>
-                    <button class="tab" data-tier="mid">Heart</button>
-                    <button class="tab" data-tier="base">Base</button>
+                    <button class="tab active" data-tier="all" aria-pressed="true">All Tiers</button>
+                    <button class="tab" data-tier="top" aria-pressed="false">Top</button>
+                    <button class="tab" data-tier="mid" aria-pressed="false">Heart</button>
+                    <button class="tab" data-tier="base" aria-pressed="false">Base</button>
                   </div>
                 </div>
               </div>
