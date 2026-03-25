@@ -94,6 +94,7 @@
           <a href="#cards" class="tab">Cards</a>
           <a href="#chips" class="tab">Chips</a>
           <a href="#tags" class="tab">Tags</a>
+          <a href="#search" class="tab">Search</a>
           <a href="#lists" class="tab">Lists & Shelves</a>
         </div>
       </div>
@@ -311,18 +312,72 @@
           </div>
         </section>
 
+        <!-- SEARCH -->
+        <section class="section-group" id="search">
+          <h2 class="sec-header">Search &amp; Navigation</h2>
+          
+          <div class="story-grid">
+            <div class="card canvas" style="flex-direction:column; gap:var(--sp-xl);">
+              <div class="nav-search-bar" style="position:relative; transform:none; left:0; width:320px;">
+                <svg class="nav-search-bar-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" class="nav-search-input" placeholder="Search..." disabled>
+                <kbd class="nav-search-bar-kbd">⌘K</kbd>
+              </div>
+
+              <div style="position:relative; width:100%; max-width:var(--chart-max);">
+                <div class="us-results-container" style="position:static; margin-top:0;">
+                  <div class="us-section-hdr">Fragrances</div>
+                  <div class="list-item list-item--search">
+                    <div class="list-item-dot" style="--fam-bg: var(--fam-woody)"></div>
+                    <div class="list-item-body">
+                      <div class="list-item-label">Santal 33</div>
+                      <div class="list-item-sublabel">Le Labo</div>
+                    </div>
+                  </div>
+                  <div class="us-section-hdr">Notes</div>
+                  <div class="list-item list-item--search">
+                    <div class="list-item-icon">🌿</div>
+                    <div class="list-item-body"><div class="list-item-label">Sandalwood</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card docs-card">
+              <div class="sec-label">Search Patterns</div>
+              <div class="list-view">
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label">Persistent Nav</div>
+                    <div class="list-item-sublabel">Spotify-style visible input.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.nav-search-bar</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label">Dropdown Results</div>
+                    <div class="list-item-sublabel">Used for fuzzy matching.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.us-results-container</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- LISTS -->
         <section class="section-group" id="lists">
           <h2 class="sec-header">Lists &amp; Shelves</h2>
           <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
             <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-view > .list-item (Wrapped)</div>
+              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-view > .list-item</div>
               <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-lg); overflow:hidden;">
                 <div class="list-item">
                   <div class="list-item-dot" style="--fam-bg: var(--fam-woody)"></div>
                   <div class="list-item-body">
                     <div class="list-item-label">Santal 33</div>
-                    <div class="list-item-sublabel">Le Labo &middot; A very long description that should wrap to multiple lines to show the new default behavior.</div>
+                    <div class="list-item-sublabel">Le Labo &middot; Woody</div>
+                    <div class="list-item-detail">Cedar, Iris, Violet &middot; Papyrus &middot; Amber</div>
                   </div>
                 </div>
                 <div class="list-item">
@@ -349,26 +404,7 @@
               </div>
             </div>
 
-            <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-item--compact</div>
-              <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-lg); overflow:hidden;">
-                <div class="list-item list-item--compact">
-                  <div class="list-item-dot" style="--fam-bg: var(--fam-amber)"></div>
-                  <div class="list-item-body">
-                    <div class="list-item-label">Ambre Nuit</div>
-                    <div class="list-item-sublabel">Dior Priv&eacute;</div>
-                  </div>
-                </div>
-                <div class="list-item list-item--compact">
-                  <div class="list-item-dot" style="--fam-bg: var(--fam-oud)"></div>
-                  <div class="list-item-body">
-                    <div class="list-item-label">Oud Wood</div>
-                    <div class="list-item-sublabel">Tom Ford</div>
-                  </div>
-                  <div class="list-item-trail"><div class="chip chip--xs">Owned</div></div>
-                </div>
-              </div>
-            </div>
+            <!-- .list-item--compact removed 2026-03-24 — base .list-item now uses compact sizing throughout -->
 
             <div style="width: 100%; max-width: 520px;">
               <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-item--search</div>

@@ -45,7 +45,13 @@ function matchFrag(f,q){
   if(ws.some(w=>w.startsWith(q))) return true;
   // Fuzzy prefix: "dipti" → diptyque (lev("dipti","dipty")=1), "byrd" → byredo
   if(q.length>=3&&ws.some(w=>{const p=w.slice(0,q.length);return p.length===q.length&&levenshtein(q,p)<=1;})) return true;
-  if(q.length<4) return false;
+  if(q.replace(/\s/g,'').length < 3) return false;
+  // Space-stripped fuzzy: "dipty que" → "diptye" still matches "diptyque"
+  const qc=q.replace(/\s/g,'');
+  if(qc!==q&&qc.length>=3){
+    if(ws.some(w=>w.startsWith(qc))) return true;
+    if(ws.some(w=>{const p=w.slice(0,qc.length);return p.length===qc.length&&levenshtein(qc,p)<=1;})) return true;
+  }
   return wordFuzzy(q,f._nameN,2)||wordFuzzy(q,f._brandN,1);
 }
 
@@ -106,16 +112,16 @@ function setState(id,s){
       pushSheet(c => {
         const frag = CAT_MAP[id];
         c.innerHTML = `
-          <div class="detail-inner" style="text-align:center;">
-            <div style="font-size:32px; margin-bottom:var(--sp-md);">⚖️</div>
-            <div class="sec-label" style="justify-content:center;">Redundancy Alert</div>
-            <div class="dc-name" style="margin-bottom:var(--sp-md);">Wait, you might not need this.</div>
-            <p class="text-body" style="font-family:var(--font-serif); color:var(--text-secondary); margin-bottom:var(--sp-xl); line-height:1.5;">
-              <strong>${frag.name}</strong> is a <strong>${redun.score}% mathematical match</strong> to <strong>${redun.match.name}</strong> which you already own.
+          <div style="text-align:center; padding:var(--sp-xl) 0;">
+            <div style="font-size:48px; margin-bottom:var(--sp-xl);">⚖️</div>
+            <div class="sec-label" style="justify-content:center; margin-bottom:var(--sp-sm);">Redundancy Alert</div>
+            <div class="dc-name" style="margin-bottom:var(--sp-md);">You might not need this</div>
+            <p class="text-body" style="color:var(--text-secondary); margin-bottom:var(--sp-3xl); line-height:var(--lh-relaxed);">
+              <strong style="color:var(--text-primary);">${frag.name}</strong> is a <strong style="color:var(--accent-primary);">${redun.score}% match</strong> to <strong style="color:var(--text-primary);">${redun.match.name}</strong> which is already in your collection.
             </p>
-            <div style="display:flex; flex-direction:column; gap:var(--sp-sm);">
-              <button class="dc-collect-btn active" style="width:100%; justify-content:center; padding:var(--sp-md);" onclick="popSheet()">Actually, skip it</button>
-              <button class="dc-collect-btn" style="width:100%; justify-content:center; padding:var(--sp-md); border:none;" id="force-wish">Save anyway</button>
+            <div style="display:flex; flex-direction:column; gap:var(--sp-md);">
+              <button class="dc-collect-btn active" style="width:100%; justify-content:center; padding:var(--sp-md); font-size:var(--fs-body);" onclick="popSheet()">Skip it</button>
+              <button class="dc-collect-btn" style="width:100%; justify-content:center; padding:var(--sp-md); border:none; font-size:var(--fs-meta);" id="force-wish">Add anyway</button>
             </div>
           </div>
         `;
@@ -128,7 +134,7 @@ function setState(id,s){
             refreshAfterStateChange(id);
           });
         };
-      });
+      }, 'Comparison');
       return; 
     }
   }
@@ -222,35 +228,32 @@ function openProfilePanel() {
     const wished = CAT.filter(f => isWish(f.id));
     const initial = currentUser.name.charAt(0).toUpperCase();
 
-    // detail-inner already provides padding: var(--sp-lg) var(--sp-2xl)
-    // sheet-inner already provides padding: 0 var(--sp-lg)
-    // so no outer wrapper needed — use margins on sections only
     container.innerHTML = `
       <div style="display:flex;align-items:center;gap:var(--sp-md);padding-bottom:var(--sp-xl);margin-bottom:var(--sp-xl);border-bottom:1px solid var(--border-standard);">
-        <div style="width:44px;height:44px;flex-shrink:0;background:var(--text-primary);color:var(--bg-primary);border-radius:var(--radius-circle);display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:var(--fs-ui);font-weight:700;" aria-hidden="true">${initial}</div>
+        <div style="width:48px;height:48px;flex-shrink:0;background:var(--text-primary);color:var(--bg-primary);border-radius:var(--radius-circle);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:var(--fs-ui);font-weight:700;" aria-hidden="true">${initial}</div>
         <div style="min-width:0;overflow:hidden;">
           <div style="font-family:var(--font-sans);font-size:var(--fs-body);font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${currentUser.name}</div>
-          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${currentUser.email}</div>
+          <div style="font-family:var(--font-sans);font-size:var(--fs-meta);color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${currentUser.email}</div>
         </div>
       </div>
 
-      <div class="sec-label" style="margin-bottom:var(--sp-md);">Collection</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm);margin-bottom:var(--sp-xl);">
-        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-md);">
+      <div class="sec-label" style="margin-bottom:var(--sp-lg);">Collection</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-md);margin-bottom:var(--sp-2xl);">
+        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-lg);">
           <div style="font-family:var(--font-display);font-size:var(--fs-title);color:var(--text-primary);line-height:1;">${owned.length}</div>
-          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);margin-top:var(--sp-xs);">Owned</div>
+          <div style="font-family:var(--font-sans);font-size:var(--fs-caption);font-weight:700;text-transform:uppercase;letter-spacing:var(--ls-wide);color:var(--text-tertiary);margin-top:var(--sp-sm);">Owned</div>
         </div>
-        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-md);">
+        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-lg);">
           <div style="font-family:var(--font-display);font-size:var(--fs-title);color:var(--text-primary);line-height:1;">${wished.length}</div>
-          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);margin-top:var(--sp-xs);">Wishlist</div>
+          <div style="font-family:var(--font-sans);font-size:var(--fs-caption);font-weight:700;text-transform:uppercase;letter-spacing:var(--ls-wide);color:var(--text-tertiary);margin-top:var(--sp-sm);">Wishlist</div>
         </div>
       </div>
 
-      <button class="copy-collection-btn" id="profile-copy-btn" style="width:100%;justify-content:center;">Export collection</button>
-      <span id="profile-copy-toast" aria-live="polite" style="display:block;margin-top:var(--sp-xs);font-family:var(--font-sans);font-size:var(--fs-meta);color:var(--text-secondary);min-height:1.2em;"></span>
+      <button class="dc-collect-btn" id="profile-copy-btn" style="width:100%;justify-content:center;padding:var(--sp-md);"><span class="dc-collect-icon">↓</span> Export collection</button>
+      <span id="profile-copy-toast" aria-live="polite" style="display:block;margin-top:var(--sp-xs);font-family:var(--font-sans);font-size:var(--fs-caption);color:var(--text-tertiary);min-height:1.2em;text-align:center;"></span>
 
-      <div style="margin-top:var(--sp-2xl);border-top:1px solid var(--border-standard);padding-top:var(--sp-xl);">
-        <button class="dc-collect-btn" id="profile-signout-btn" style="width:100%;justify-content:center;">Sign out</button>
+      <div style="margin-top:auto; padding-top:var(--sp-4xl);">
+        <button class="dc-collect-btn" id="profile-signout-btn" style="width:100%;justify-content:center;padding:var(--sp-md);border:none;background:var(--bg-secondary);color:var(--text-tertiary);">Sign out</button>
       </div>
     `;
 
@@ -267,7 +270,7 @@ function openProfilePanel() {
   }
 
   if (isDesktop() || isTablet()) {
-    openDesktopDetail(renderProfile);
+    openDesktopDetail(renderProfile, 'Profile');
   } else {
     pushSheet(renderProfile, 'Profile');
   }
@@ -367,7 +370,7 @@ window.openTrialSheet = function(fragId) {
   if (!frag) return;
   pushSheet(container => {
     container.innerHTML = `
-      <div class="detail-inner">
+      <div>
         <div class="sec-label">New Test Bench Entry</div>
         <div class="dc-name">${frag.name}</div>
         <div class="dc-brand">${frag.brand}</div>
@@ -425,7 +428,7 @@ window.openTrialUpdateSheet = function(fragId, timestamp) {
   if (!frag) return;
   pushSheet(container => {
     container.innerHTML = `
-      <div class="detail-inner">
+      <div>
         <div class="sec-label">Final Review</div>
         <div class="dc-name">${frag.name}</div>
         
@@ -773,8 +776,13 @@ function initCarouselKeyNav(carouselEl) {
   cards.forEach((c, i) => c.setAttribute('tabindex', i === 0 ? '0' : '-1'));
 
   carouselEl.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     const current = carouselEl.querySelector('[tabindex="0"]');
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      current?.click();
+      return;
+    }
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     const idx = cards.indexOf(current);
     let next = -1;
     if (e.key === 'ArrowRight') next = Math.min(idx + 1, cards.length - 1);
@@ -1148,12 +1156,16 @@ window.renderSaved = function() {
       const pairSec = document.createElement('div'); pairSec.style.marginBottom = 'var(--sp-3xl)';
       pairSec.innerHTML = `<div class="sec-label">Shop Your Stash (Golden Pairs)</div>`;
       const pairWrap = document.createElement('div'); pairWrap.className = 'carousel';
+      pairWrap.setAttribute('role', 'list');
+      pairWrap.setAttribute('aria-label', 'Golden Pairs');
       pairs.forEach(p => {
         const card = document.createElement('div'); card.className = 'carousel-card carousel-card--wide card card--interactive';
+        card.setAttribute('role', 'listitem');
+        card.setAttribute('aria-label', `${p.a.name} and ${p.b.name}, ${p.score}% layering match`);
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-xs);">
             <div class="chip chip--accent chip--xs">${p.score}% LAYER MATCH</div>
-            <button class="settings-btn" style="padding:2px; opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
+            <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})" aria-label="Export layering recipe">⤓</button>
           </div>
           <div class="list-item-label">${p.a.name}</div>
           <div class="list-item-sublabel">+ ${p.b.name}</div>
@@ -1163,6 +1175,7 @@ window.renderSaved = function() {
       });
       const cw = document.createElement('div'); cw.className = 'carousel-wrap'; cw.appendChild(pairWrap);
       pairSec.appendChild(cw); container.appendChild(pairSec);
+      initCarouselKeyNav(pairWrap);
     }
   }
 
@@ -1250,16 +1263,20 @@ function isDesktop(){return window.innerWidth>=1100}
 function isTablet(){return window.innerWidth>=768&&window.innerWidth<1100}
 
 const detailStack=[];
-function openDesktopDetail(renderFn){
+function openDesktopDetail(renderFn, title){
   detailStack.length=0;
   detailStack.push(renderFn);
+  const titleEl = document.getElementById('detail-title');
+  if(titleEl) titleEl.textContent = title || '';
   _renderDeskDetail();
   document.getElementById('col-detail').classList.add('open');
   if(isTablet())document.getElementById('detail-scrim').classList.add('open');
   _trapFocus(document.getElementById('col-detail'));
 }
-function pushDesktopDetail(renderFn){
+function pushDesktopDetail(renderFn, title){
   detailStack.push(renderFn);
+  const titleEl = document.getElementById('detail-title');
+  if(titleEl) titleEl.textContent = title || '';
   _renderDeskDetail(true);
   _trapFocus(document.getElementById('col-detail'));
 }
@@ -1267,14 +1284,21 @@ function _renderDeskDetail(animateIn, animClass){
   const top=detailStack[detailStack.length-1];if(!top)return;
   const inner=document.getElementById('detail-inner');
   if(!inner)return;
+  
   inner.classList.remove('slide');
   if(animClass){inner.classList.remove('slide-left','slide-right');}
+  
+  // Render content
   inner.innerHTML='';
   top(inner);
-  // Scroll to top on every new detail render
-  const col=document.getElementById('col-detail');
-  if(col) col.scrollTop=0;
-  document.getElementById('detail-back')?.classList.toggle('visible',detailStack.length>1);
+  
+  // Scroll internal container to top
+  inner.scrollTop = 0;
+  
+  // Toggle back button visibility
+  const backBtn = document.getElementById('detail-back');
+  if(backBtn) backBtn.classList.toggle('visible', detailStack.length > 1);
+  
   if(animateIn){inner.offsetWidth;inner.classList.add('slide')}
   if(animClass){inner.offsetWidth;inner.classList.add(animClass)}
 }
@@ -1283,6 +1307,8 @@ function closeDesktopDetail(){
   detailStack.length=0;
   document.getElementById('col-detail')?.classList.remove('open');
   document.getElementById('detail-scrim')?.classList.remove('open');
+  const titleEl = document.getElementById('detail-title');
+  if(titleEl) titleEl.textContent = '';
   // Restore catalog column if it was hidden by /fragrance/:id deep-link
   const colMain=document.querySelector('.col-main');
   if(colMain&&colMain.style.display==='none')colMain.style.display='';
@@ -1324,14 +1350,15 @@ function pushSheet(renderFn,title){
   const overlay=document.getElementById('sheet-stack');
   const el=document.createElement('div');
   el.className='sheet'+(isSubNav?' nav':'');
-  el.innerHTML=`<div class="sheet-inner"><div class="sheet-handle" aria-hidden="true"></div>
+  el.innerHTML=`<div class="sheet-inner">
+    <div class="sheet-handle" aria-hidden="true"></div>
     <div class="sheet-topbar">
-      <button class="sheet-back hidden"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+      <button class="sheet-back hidden"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back</button>
       ${title?`<div class="sheet-title">${title}</div>`:''}
       <button class="sheet-close" aria-label="Close">Close</button>
     </div>
     <div class="sheet-content"></div></div>`;
-  const handle=el.querySelector('.sheet-topbar'); // Drag from the whole topbar
+  const handle=el.querySelector('.sheet-topbar'); 
   let ds=null;
   let _swipeStartTime = 0;
   handle.addEventListener('touchstart',e=>{
@@ -1345,17 +1372,15 @@ function pushSheet(renderFn,title){
     if(dy>0) {
       el.style.transform=`translateY(${dy}px)`;
     } else {
-      // Rubber-band resistance if pulled up
       el.style.transform=`translateY(${dy * 0.25}px)`;
     }
   },{passive:true});
   handle.addEventListener('touchend',e=>{
     const dy=e.changedTouches[0].clientY-(ds||0);
     const elapsed = Date.now() - _swipeStartTime;
-    const velocity = elapsed > 0 ? dy / elapsed : 0; // px/ms
-    el.style.transition = 'transform 0.28s var(--ease-spring)';
+    const velocity = elapsed > 0 ? dy / elapsed : 0; 
+    el.style.transition = ''; // Restore CSS transition
     if(dy > 80 || velocity > 0.3) {
-      el.style.transform='translateY(100%)';
       popSheet();
     } else {
       el.style.transform='';
@@ -1405,13 +1430,13 @@ document.getElementById('sheet-backdrop').addEventListener('click',closeAllSheet
 
 /* ══ OPEN HELPERS ══════════════════════════════════════════════════ */
 function openDetail(renderFn,title){
-  if(isDesktop()||isTablet())openDesktopDetail(renderFn);
+  if(isDesktop()||isTablet())openDesktopDetail(renderFn, title);
   else pushSheet(c=>renderFn(c),title);
 }
 window.openDetail = openDetail;
 
 function pushDetail(renderFn,title){
-  if(isDesktop()||isTablet())pushDesktopDetail(renderFn);
+  if(isDesktop()||isTablet())pushDesktopDetail(renderFn, title);
   else pushSheet(c=>renderFn(c),title);
 }
 window.pushDetail = pushDetail;
@@ -1527,48 +1552,48 @@ function renderFragDetail(container,frag){
 
   container.innerHTML=`
     ${quizAttribution}
-    <div>
-      <div class="dc-name">${frag.name}</div>
-      <button class="dc-brand-btn" style="margin-bottom: var(--sp-sm);">${frag.brand}</button>
-      <br>
+    <div style="margin-bottom:var(--sp-xl);">
+      <div class="dc-brand">${frag.brand}</div>
+      <div class="dc-name" style="margin-top:var(--sp-xs); margin-bottom:var(--sp-md);">${frag.name}</div>
       <div class="chip chip--family" style="--fam-bg:${fm.color}20; --fam-color:${fm.color};">
-        <span class="dot" style="--fam-bg: ${fm.color}"></span>
+        <span class="dot" style="background: ${fm.color}"></span>
         ${fm.label}
       </div>
     </div>
-    <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
-    <div id="dc-coll-ctx-${frag.id}"></div>
-    ${frag.description?`<div class="text-body" style="margin-bottom:var(--sp-md);">${frag.description}</div>`:''}
-    ${frag.story?`<div class="card card--secondary text-meta"><strong>The Story:</strong> ${frag.story}</div>`:''}
-    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="margin-top:var(--sp-md);">Buy from ${frag.brand}</a>`:''}
-    <div class="sec-label">Compare with</div>
-    <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
-    <button class="dc-collect-btn" id="find-dupes-${frag.id}" style="width:100%; justify-content:center;">
-      <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
+    <div class="dc-collect-row" id="dc-collect-${frag.id}" style="margin-bottom:var(--sp-xl);"></div>
+    <div id="dc-coll-ctx-${frag.id}" style="margin-bottom:var(--sp-xl);"></div>
+    ${frag.description?`<p class="text-body" style="margin-bottom:var(--sp-xl); color:var(--text-secondary); line-height:var(--lh-relaxed);">${frag.description}</p>`:''}
+    ${frag.story?`<div class="card card--secondary" style="margin-bottom:var(--sp-xl); padding:var(--sp-lg); font-family:var(--font-serif); font-size:var(--fs-meta); color:var(--text-secondary); border-left:3px solid var(--border-standard);"><strong>The Story:</strong> ${frag.story}</div>`:''}
+    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn active" style="width:100%; justify-content:center; padding:var(--sp-md); margin-bottom:var(--sp-xl);">Buy from ${frag.brand}</a>`:''}
+    <div class="sec-label">Comparison</div>
+    <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}" style="margin-bottom:var(--sp-xl);"></div>
+    <button class="dc-collect-btn" id="find-dupes-${frag.id}" style="width:100%; justify-content:center; padding:var(--sp-md); margin-bottom:var(--sp-2xl);">
+      <span class="dc-collect-icon">🔍</span> Find matches in Catalog
     </button>
-    <div class="stat-grid">
+    <div class="stat-grid" style="margin-bottom:var(--sp-2xl);">
       <div class="stat-card">
         <div class="stat-card-label">Sillage</div>
-        <div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div>
+        <div class="dc-bar" style="margin-top:var(--sp-sm);"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div>
       </div>
       <div class="stat-card">
         <div class="stat-card-label">Structure</div>
-        <div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div>
+        <div class="dc-bar" style="margin-top:var(--sp-sm);"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div>
       </div>
     </div>
-    <div class="dc-div"></div>
+
     <div class="sec-label">Sensory Profile</div>
-    <div class="stat-grid">
+    <div class="stat-grid" style="margin-bottom:var(--sp-2xl);">
       ${(() => {
         const p = computeProfile(frag);
         const card = (label, val, color) => `
           <div class="stat-card">
-            <div class="stat-card-value">${Math.round(val*100)}%</div>
-            <div class="stat-card-label">${label}</div>
-            <div class="cmp-score-meter" style="margin-top:var(--sp-sm);">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--sp-xs);">
+              <div class="stat-card-label" style="margin-top:0;">${label}</div>
+              <div class="stat-card-value" style="font-size:var(--fs-body);">${Math.round(val*100)}%</div>
+            </div>
+            <div class="cmp-score-meter">
               <div class="cmp-score-meter-track">
                 <div class="cmp-score-meter-fill" style="width:${Math.round(val*100)}%; background:${color};"></div>
-                <div class="dot" style="position:absolute; left:calc(${Math.round(val*100)}% - 4px); top:-2px; background:${color}; border:2px solid var(--bg-secondary); width:8px; height:8px;"></div>
               </div>
             </div>
           </div>`;
@@ -1579,7 +1604,7 @@ function renderFragDetail(container,frag){
     </div>
 
     <div class="sec-label">Scent Journey</div>
-    <div>
+    <div style="margin-bottom:var(--sp-3xl);">
       <div class="journey-timeline">
         <div class="journey-step">
           <div class="journey-dot"></div>
@@ -1597,7 +1622,7 @@ function renderFragDetail(container,frag){
           <div class="dc-nv">${linkNotes(frag.base)}</div>
         </div>
       </div>
-      <p class="journey-caveat">Key materials only — simplified pyramid</p>
+      <p class="journey-caveat" style="margin-bottom:0;">Key materials only — simplified pyramid</p>
     </div>`;
 
   // Note links
@@ -1687,13 +1712,16 @@ function renderFragDetail(container,frag){
     openDupeLab(frag);
   });
 
-  // Similar shelf
-  const scored=CAT
+  // Similar shelf — top 4 by score, 5th is family-diverse wildcard
+  const allScored=CAT
     .filter(f=>f.id!==frag.id)
     .map(f=>({f,score:scoreSimilarity(frag,f)}))
     .filter(x=>x.score>=30)
-    .sort((a,b)=>b.score-a.score)
-    .slice(0,5);
+    .sort((a,b)=>b.score-a.score);
+  const top4=allScored.slice(0,4);
+  const usedFamilies=new Set(top4.map(x=>x.f.family));
+  const wildcard=allScored.slice(4).find(x=>!usedFamilies.has(x.f.family));
+  const scored=wildcard?[...top4,wildcard]:allScored.slice(0,5);
 
   _setupDetailSwipe(container, frag);
 
@@ -1871,17 +1899,33 @@ function renderNoteDetail(container,note){
   const saveId = `nd-save-${note.name.replace(/\s+/g,'-')}`;
   container.innerHTML=`
     <div style="margin-bottom:var(--sp-xl);">
-      <div class="text-heading">${note.name}</div>
-      <div class="chip chip--family" style="margin-top:var(--sp-xs); --fam-bg:${fm.color}20; --fam-color:${fm.color};">
-        <span class="dot" style="--fam-bg: ${fm.color}"></span>
+      <div class="dc-name" style="margin-bottom:var(--sp-md);">${note.name}</div>
+      <div class="chip chip--family" style="--fam-bg:${fm.color}20; --fam-color:${fm.color};">
+        <span class="dot" style="background: ${fm.color}"></span>
         ${fm.label}
       </div>
     </div>
-    <div class="text-body" style="margin-bottom:var(--sp-lg);">${note.desc}</div>
-    <div id="${saveId}" style="margin-bottom:var(--sp-xl);"></div>
-    ${note.extraction_method?`<div class="text-meta" style="margin-bottom:var(--sp-md);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
-    ${note.insider_fact?`<div class="card card--secondary text-meta"><strong>Perfumer's Insight:</strong> ${note.insider_fact}</div>`:''}
-    ${inf.length?`<div style="margin-top:var(--sp-2xl);"><div class="sec-label">In catalog (${inf.length})</div><div id="_nfl" class="list-view"></div></div>`:''}`;
+    
+    <div class="text-body" style="margin-bottom:var(--sp-xl); color:var(--text-secondary); line-height:var(--lh-relaxed);">${note.desc}</div>
+    
+    <div id="${saveId}" style="margin-bottom:var(--sp-2xl);"></div>
+    
+    <div style="display:flex; flex-direction:column; gap:var(--sp-md); margin-bottom:var(--sp-3xl);">
+      ${note.extraction_method?`
+        <div class="card card--secondary" style="padding:var(--sp-md);">
+          <div class="sec-label" style="font-size:var(--fs-caption); margin-bottom:var(--sp-xs);">Extraction</div>
+          <div class="text-meta" style="color:var(--text-primary);">${note.extraction_method}</div>
+        </div>`:''}
+      ${note.insider_fact?`
+        <div class="card card--secondary" style="padding:var(--sp-md); border-left:3px solid var(--border-standard);">
+          <div class="sec-label" style="font-size:var(--fs-caption); margin-bottom:var(--sp-xs);">Perfumer's Insight</div>
+          <div class="text-meta" style="color:var(--text-secondary); font-family:var(--font-serif);">${note.insider_fact}</div>
+        </div>`:''}
+    </div>
+
+    ${inf.length?`
+      <div class="sec-label">In catalog (${inf.length})</div>
+      <div id="_nfl" class="list-view" style="margin-bottom:var(--sp-3xl);"></div>`:''}`;
 
   renderNoteSaveBtn(container.querySelector(`#${saveId}`), note);
 
@@ -1933,14 +1977,12 @@ function renderHouseDetail(container,brand){
     }));
 
   const barHTML = famStats.map(f => `<div style="height:100%; width:${f.pct}%; background:${f.color};" title="${f.label} (${Math.round(f.pct)}%)"></div>`).join('');
-  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); font-size:var(--fs-meta); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
+  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); font-size:var(--fs-caption); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
 
   let topCount = 0;
   if (frags.length >= 10) topCount = 5;
   else if (frags.length >= 5) topCount = 3;
   else if (frags.length >= 1) topCount = 2;
-
-  // We'll just take the first N fragrances in the sorted array
   const topFrags = frags.slice(0, topCount);
 
   // Compute best matches from owned fragrances
@@ -1952,47 +1994,52 @@ function renderHouseDetail(container,brand){
       const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
       return { frag, score: avgScore };
     })
-    .sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      return a.frag.name.localeCompare(b.frag.name); // Tie-break by name
-    })
+    .sort((a, b) => b.score - a.score || a.frag.name.localeCompare(b.frag.name))
     .slice(0, 3);
   }
 
-  container.innerHTML=`<div class="house-detail-wrap" style="display:flex; flex-direction:column; gap:var(--sp-xl);">
-    <div class="house-detail-name">${brand}</div>
-    ${houseData && houseData.desc ? `<div class="card card--secondary text-meta" style="margin-bottom:var(--sp-xl);">${houseData.desc}</div>` : ''}
-    <div id="house-brand-save-wrap"></div>
-    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn">Visit ${brand} Website</a>` : ''}
-    ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
-
-    <div>
-      <div class="sec-label">Fragrance Families</div>
-      <div style="height:var(--sp-sm); width:100%; display:flex; border-radius:var(--radius); overflow:hidden; margin-bottom:var(--sp-sm);">${barHTML}</div>
-      <div style="display:flex; flex-wrap:wrap; gap:var(--sp-xs);">${legendHTML}</div>
+  container.innerHTML=`
+    <div style="margin-bottom:var(--sp-2xl);">
+      <div class="dc-name" style="margin-bottom:var(--sp-md);">${brand}</div>
+      ${houseData && houseData.desc ? `<div class="card card--secondary" style="padding:var(--sp-md); font-family:var(--font-serif); font-size:var(--fs-meta); color:var(--text-secondary); line-height:var(--lh-relaxed); margin-bottom:var(--sp-lg);">${houseData.desc}</div>` : ''}
+      <div id="house-brand-save-wrap" style="margin-bottom:var(--sp-lg);"></div>
+      ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn active" style="width:100%; justify-content:center; padding:var(--sp-md);">Visit Official Website</a>` : ''}
     </div>
 
+    <div style="margin-bottom:var(--sp-3xl);">
+      <div class="sec-label">Brand Signature</div>
+      <div style="height:var(--sp-sm); width:100%; display:flex; border-radius:var(--radius); overflow:hidden; margin-bottom:var(--sp-md); background:var(--bg-secondary);">${barHTML}</div>
+      <div style="display:flex; flex-wrap:wrap; gap:var(--sp-sm);">${legendHTML}</div>
+    </div>
+
+    ${brand.toLowerCase() === 'byredo' ? `
+      <div class="banner" style="margin-bottom:var(--sp-3xl); background:var(--bg-tertiary); border:none;">
+        <div class="banner-head">
+          <span class="dot" style="background:var(--text-primary);"></span>
+          <h3 class="text-title" style="font-size:var(--fs-body); font-family:var(--font-sans);">Find Your Byredo</h3>
+        </div>
+        <p class="text-meta">Our concierge quiz can help you navigate the collection.</p>
+        <button class="dc-collect-btn active byredo-quiz-btn" style="align-self:flex-start; margin-top:var(--sp-xs);">Start Quiz</button>
+      </div>` : ''}
+
     ${topFrags.length > 0 ? `
-    <div class="house-known-for">
+    <div style="margin-bottom:var(--sp-3xl);">
       <div class="sec-label">Known For</div>
       <div class="carousel-wrap">
         <div class="carousel" id="house-known-for-carousel"></div>
       </div>
-    </div>
-    ` : ''}
+    </div>` : ''}
 
     ${bestMatches.length > 0 ? `
-    <div class="house-best-matches">
+    <div style="margin-bottom:var(--sp-3xl);">
       <div class="sec-label">Similar From This House</div>
-      <div id="house-best-matches-list"></div>
-    </div>
-    ` : ''}
+      <div id="house-best-matches-list" class="list-view"></div>
+    </div>` : ''}
 
     <div>
-      <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
-      <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
-    </div>
-  </div>`;
+      <div class="sec-label">${frags.length} Fragrances</div>
+      <div class="list-view" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
+    </div>`;
 
   const brandSaveWrap = container.querySelector('#house-brand-save-wrap');
   if (brandSaveWrap) {
@@ -2004,28 +2051,27 @@ function renderHouseDetail(container,brand){
     const carousel = container.querySelector('#house-known-for-carousel');
     topFrags.forEach(frag => {
       const fm = FAM[frag.family] || {color: '#888'};
-      const card = document.createElement('div');
+      const card = document.createElement('button');
       card.className = 'carousel-card card card--interactive';
       card.innerHTML = `
         <div class="list-item-label">${frag.name}</div>
-        <div class="list-item-sublabel">${frag.brand}</div>
         <div style="display:flex; align-items:center; gap:var(--sp-xs); margin-top:auto;">
-          <div class="dot" style="--fam-bg: ${fm.color}"></div>
-          <span class="text-meta">${fm.label}</span>
+          <div class="dot" style="background: ${fm.color}"></div>
+          <span class="text-meta" style="font-size:var(--fs-caption);">${fm.label}</span>
         </div>`;
       card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       carousel.appendChild(card);
     });
+    initCarouselKeyNav(carousel);
   }
 
-  // Populate best matches list
   if (bestMatches.length > 0) {
     const bestMatchesList = container.querySelector('#house-best-matches-list');
     bestMatches.forEach(({ frag, score }) => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
-      btn.className = 'list-item list-item--compact';
-      btn.innerHTML = `<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div>
+      btn.className = 'list-item';
+      btn.innerHTML = `<div class="list-item-dot" style="background: ${fc.accent}"></div>
         <div class="list-item-body">
           <div class="list-item-label">${frag.name}</div>
           <div class="list-item-sublabel">${(FAM[frag.family]||{}).label||frag.family}</div>
@@ -2038,12 +2084,12 @@ function renderHouseDetail(container,brand){
     });
   }
 
-  const list=container.querySelector('.house-detail-list');
+  const list=container.querySelector('[id^="house-list-"]');
   frags.forEach(frag=>{
     const fc=getCmpFam(frag.family);
     const btn=document.createElement('button');
-    btn.className='list-item list-item--compact';
-    btn.innerHTML=`<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div>
+    btn.className='list-item';
+    btn.innerHTML=`<div class="list-item-dot" style="background: ${fc.accent}"></div>
       <div class="list-item-body">
         <div class="list-item-label">${frag.name}</div>
         <div class="list-item-sublabel">${(FAM[frag.family]||{}).label||frag.family}</div>
@@ -2389,7 +2435,7 @@ function openNotePopup(note,triggerEl){
   const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
   if(sortedInf.length){
-    const lbl=document.createElement('div');lbl.className='sec-label';lbl.style.marginBottom='6px';lbl.textContent=`In catalog (${sortedInf.length})`;
+    const lbl=document.createElement('div');lbl.className='sec-label';lbl.style.marginBottom='var(--sp-xs)';lbl.textContent=`In catalog (${sortedInf.length})`;
     fe.appendChild(lbl);
     const list=document.createElement('div');list.className='list-view';
     sortedInf.forEach(f=>{
@@ -2641,7 +2687,7 @@ function buildCatalog(roleFilter){
     }
     body.appendChild(empty);
     const liveEl=document.getElementById('cat-live');if(liveEl)liveEl.textContent='No fragrances found.';
-    updCC();return;
+    updCC();window._updateStateCounts?.();return;
   }
   // Announce result count to screen readers
   const liveEl=document.getElementById('cat-live');if(liveEl)liveEl.textContent=`${visibleCat.length} fragrance${visibleCat.length!==1?'s':''}`;
@@ -2760,6 +2806,7 @@ function buildCatalog(roleFilter){
     if(firstRow) firstRow.classList.add('search-first');
   }
   updCC();
+  window._updateStateCounts?.();
   // hidden select for filter state (used by role landing)
   let sel=document.getElementById('cat-role-filter');
   if(!sel){sel=document.createElement('select');sel.id='cat-role-filter';sel.style.display='none';document.body.appendChild(sel);}
@@ -2798,6 +2845,16 @@ function initCatalogControls(){
     makeStateBtn(label,val,stateBar);
     if(stateBarM)makeStateBtn(label,val,stateBarM);
   });
+
+  window._updateStateCounts=function(){
+    const nOwned=CAT.filter(f=>isOwned(f.id)).length;
+    const nWish=CAT.filter(f=>isWish(f.id)).length;
+    allStateBtns.forEach(b=>{
+      if(b.dataset.val==='owned')b.textContent=nOwned?`Owned (${nOwned})`:'Owned';
+      if(b.dataset.val==='wish')b.textContent=nWish?`Wishlist (${nWish})`:'Wishlist';
+    });
+  };
+  window._updateStateCounts(); // initial render — buildCatalog ran before this was defined
 
   const notesSearch = document.getElementById('notes-search');
   const notesSearchClear = document.getElementById('notes-search-clear');
@@ -3039,14 +3096,14 @@ function renderCatRow(row,frag,fm,search){
     const baseNote=(frag.base||[])[0];
     const parts=[];
     if(topNotes)parts.push(topNotes);
-    if(midNote)parts.push(`<span class="note-layer-hint" aria-label="Heart note:">H</span> ${midNote}`);
-    if(baseNote)parts.push(`<span class="note-layer-hint" aria-label="Base note:">B</span> ${baseNote}`);
+    if(midNote)parts.push(midNote);
+    if(baseNote)parts.push(baseNote);
     if(parts.length)notesHtml=`<div class="list-item-detail">${parts.join(' · ')}</div>`;
   }
 
   row.draggable = true;
   row.innerHTML=`
-      <div class="list-item-dot" style="--fam-bg: ${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
+      <div class="list-item-dot" style="--fam-bg: ${fm.color}" aria-hidden="true"></div>
       <div class="list-item-body">
         <div class="list-item-label">${frag.name}</div>
         <div class="list-item-sublabel">${frag.brand} · ${famLabel}</div>
@@ -3402,8 +3459,11 @@ function openUniversalSearch(opts = {}) {
   }
 
   overlay.hidden = false;
-  input.value = '';
-  _renderUsResults('');
+  
+  // Use initial query if provided (e.g. from nav input)
+  const initialQuery = opts.query || '';
+  input.value = initialQuery;
+  _renderUsResults(initialQuery);
 
   _trapFocus(overlay);
 
@@ -3412,6 +3472,9 @@ function openUniversalSearch(opts = {}) {
   document.getElementById('us-close').onclick = closeUniversalSearch;
 
   input.addEventListener('input', _onUsInput);
+  
+  // If we have an initial query, ensure input is focused at end
+  input.focus();
 }
 window.openUniversalSearch = openUniversalSearch;
 
@@ -3427,12 +3490,17 @@ function closeUniversalSearch() {
   input.removeEventListener('input', _onUsInput);
   _usContext = null;
   _usScores = null;
+  
+  // Clear persistent nav input too
+  const navInput = document.getElementById('nav-search-input');
+  if (navInput) navInput.value = '';
+  
   _returnFocus();
 }
 window.closeUniversalSearch = closeUniversalSearch;
 
 function _onUsInput(e) {
-  _usHighlight = -1;
+  _usHighlight = -1; // reset before render; _renderUsResults will set to 0
   _renderUsResults(e.target.value.trim());
 }
 
@@ -3455,12 +3523,11 @@ function _renderUsResults(query) {
 
   /* ── COMPARE MODE ── */
   if (_usContext) {
+    const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
     let frags = CAT.filter(f => {
-      // Exclude the frag already in the other slot
-      const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
-      if (other && f.id === other.id) return false;
       if (!q) return true;
-      return matchFrag(f, normQ(q));
+      // Always include the other-slot frag if it matches (will be shown disabled)
+      return matchFrag(f, normQ(q)) || (other && f.id === other.id);
     });
 
     if (_usScores) {
@@ -3469,14 +3536,20 @@ function _renderUsResults(query) {
       frags.sort((a, b) => a.name.localeCompare(b.name));
     }
 
+    // When no query, still include the other-slot frag if not already in list
+    if (!q && other && !frags.find(f => f.id === other.id)) {
+      frags = [other, ...frags];
+    }
+
     if (!frags.length) {
       results.innerHTML = _usEmptyHtml(query);
       return;
     }
 
-    results.innerHTML = frags.slice(0, 10).map((f, i) =>
-      _usFragRowHtml(f, i, _usScores ? `${_usScores.get(f.id)||0}%` : null)
-    ).join('');
+    results.innerHTML = frags.slice(0, 20).map((f, i) => {
+      const isDisabled = other && f.id === other.id;
+      return _usFragRowHtml(f, i, _usScores ? `${_usScores.get(f.id)||0}%` : null, isDisabled);
+    }).join('');
     _wireUsRows(results);
     return;
   }
@@ -3512,19 +3585,19 @@ function _renderUsResults(query) {
   let html = '';
   let rowIdx = 0;
 
-  // Fragrances (max 6)
+  // Fragrances (max 20)
   const normQStr = normQ(q);
-  const fragMatches = CAT.filter(f => matchFrag(f, normQStr)).slice(0, 6);
+  const fragMatches = CAT.filter(f => matchFrag(f, normQStr)).slice(0, 20);
 
   if (fragMatches.length) {
     html += `<div class="us-section-hdr" role="presentation">Fragrances</div>`;
     html += fragMatches.map(f => _usFragRowHtml(f, rowIdx++)).join('');
   }
 
-  // Notes (max 3)
+  // Notes (max 5)
   const noteMatches = (NI || []).filter(n =>
     n._nameN ? n._nameN.includes(normQStr) : n.name.toLowerCase().includes(q)
-  ).slice(0, 3);
+  ).slice(0, 5);
 
   if (noteMatches.length) {
     html += `<div class="us-section-hdr" role="presentation">Notes</div>`;
@@ -3541,10 +3614,10 @@ function _renderUsResults(query) {
     }).join('');
   }
 
-  // Houses (max 2) — BRANDS is array of {id, name, desc, url}
+  // Houses (max 3) — BRANDS is array of {id, name, desc, url}
   const brandMatches = (BRANDS || []).filter(b =>
     b.name.toLowerCase().includes(q)
-  ).slice(0, 2);
+  ).slice(0, 3);
 
   if (brandMatches.length) {
     html += `<div class="us-section-hdr" role="presentation">Houses</div>`;
@@ -3573,21 +3646,23 @@ function _renderUsResults(query) {
   }
 }
 
-function _usFragRowHtml(f, rowIdx, scoreLabel) {
+function _usFragRowHtml(f, rowIdx, scoreLabel, disabled) {
   const fc = getCmpFam(f.family);
   const famLabel = (FAM[f.family]||{label:f.family}).label;
   const owned = isOwned(f.id);
   const wished = isWish(f.id);
-  const badge = owned ? 'Owned' : wished ? 'Wishlist' : '';
-  return `<button class="list-item list-item--search" role="option" aria-selected="false"
+  const badge = disabled ? '' : (owned ? 'Owned' : wished ? 'Wishlist' : '');
+  const disabledAttrs = disabled ? ' disabled aria-disabled="true"' : '';
+  const disabledClass = disabled ? ' list-item--disabled' : '';
+  return `<button class="list-item list-item--search${disabledClass}" role="option" aria-selected="false"${disabledAttrs}
     id="us-row-${rowIdx}" data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
     <span class="list-item-dot" style="--fam-bg: ${fc.accent}"></span>
     <span class="list-item-body">
       <span class="list-item-label">${f.name}</span>
       <span class="list-item-sublabel">${f.brand} · ${famLabel}</span>
     </span>
-    ${badge ? `<span class="list-item-badge">${badge}</span>` : ''}
-    ${scoreLabel ? `<span class="list-item-trailing-label">${scoreLabel}</span>` : ''}
+    ${disabled ? `<span class="list-item-badge list-item-badge--muted">Already selected</span>` : badge ? `<span class="list-item-badge">${badge}</span>` : ''}
+    ${!disabled && scoreLabel ? `<span class="list-item-trailing-label">${scoreLabel}</span>` : ''}
   </button>`;
 }
 
@@ -3602,8 +3677,17 @@ function _wireUsRows(container) {
   container.querySelectorAll('.list-item--search').forEach(row => {
     row.addEventListener('click', () => _usSelectRow(row));
   });
-  // Restore highlight if any
-  if (_usHighlight >= 0) _usSetHighlight(_usHighlight);
+  // Auto-select first non-disabled result so Enter immediately works
+  if (_usHighlight < 0) {
+    const rows = Array.from(container.querySelectorAll('.list-item--search'));
+    const firstIdx = rows.findIndex(r => !r.disabled);
+    if (firstIdx >= 0) {
+      _usHighlight = firstIdx;
+      _usSetHighlight(firstIdx);
+    }
+  } else {
+    _usSetHighlight(_usHighlight);
+  }
 }
 
 function _usSelectRow(row) {
@@ -3789,7 +3873,7 @@ function openMoreSheet(btn){
       <div style="font-size:var(--fs-label);font-weight:700;letter-spacing:var(--ls-wide);text-transform:uppercase;color:var(--text-secondary);padding:0 var(--sp-lg) var(--sp-md)">More</div>
       ${items.map(it=>`
         <button class="list-item" onclick="${it.action}">
-          <span class="list-item-dot" style="background:none;">${it.icon}</span>
+          <span class="list-item-icon">${it.icon}</span>
           <div class="list-item-body">
             <div class="list-item-label">${it.label}</div>
           </div>
@@ -3963,7 +4047,7 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
   // Render notes as pills — consistent presentation; clickable if in NI_MAP
   const pill=(n,isSh=false)=>{
     const ni=NI_MAP[n];
-    const cls=`tag text-meta${isSh?' shared':''}`;
+    const cls=`tag${isSh?' shared':''}`;
     const savedMark = isNoteSaved(n) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
     return ni?`<button class="${cls}" data-note="${cap(n)}">${cap(n)}${savedMark}</button>`
              :`<span class="${cls}">${cap(n)}</span>`;
@@ -3982,7 +4066,7 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
     </div>`;
   }
   return`<div class="cmp-notes-v2">
-    <div class="cmp-notes-v2-label">Notes</div>
+    <div class="sec-label">Notes</div>
     <div class="cmp-grid-col-heads three">
       <div class="cmp-grid-col-head" style="color:${caAccent}">${shortA}</div>
       <div class="cmp-grid-col-head" style="color:var(--g400)">Shared</div>
@@ -4684,6 +4768,11 @@ function initCompare(){
       });
     }
   });
+  // Homepage search bar — opens universal search in normal mode
+  const cmpSearchTrigger = document.getElementById('cmp-search-trigger');
+  if (cmpSearchTrigger) {
+    cmpSearchTrigger.addEventListener('click', () => openUniversalSearch());
+  }
   _setupDragAndDropDropzones();
 }
 window.clearCmpSlot=function(slot){
@@ -4757,24 +4846,50 @@ function runSearchTests(){
 }
 window.runSearchTests=runSearchTests;
 
-// Global keyboard shortcuts — ⌘K / Ctrl+K / `/` opens universal search
+// Global keyboard shortcuts — ⌘K / Ctrl+K / `/` focuses persistent nav search
 document.addEventListener('keydown',function(e){
   // ⌘K or Ctrl+K
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){
     e.preventDefault();
-    const us=document.getElementById('universal-search');
-    if(us&&!us.hidden){closeUniversalSearch();return;}
-    openUniversalSearch();
+    const ni = document.getElementById('nav-search-input');
+    if (ni) ni.focus();
     return;
   }
-  // `/` when no input is focused — opens universal search
+  // `/` when no input is focused
   if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)){
     e.preventDefault();
-    const us=document.getElementById('universal-search');
-    if(!us||us.hidden)openUniversalSearch();
+    const ni = document.getElementById('nav-search-input');
+    if (ni) ni.focus();
     return;
   }
 });
+
+function _initNavSearch() {
+  const ni = document.getElementById('nav-search-input');
+  if (!ni) return;
+
+  ni.addEventListener('focus', () => {
+    // Only open if not already open
+    const us = document.getElementById('universal-search');
+    if (us && us.hidden) {
+      openUniversalSearch({ query: ni.value });
+    }
+  });
+
+  ni.addEventListener('input', (e) => {
+    const us = document.getElementById('universal-search');
+    if (us && us.hidden) {
+      openUniversalSearch({ query: e.target.value });
+    } else {
+      // Sync to US input
+      const usi = document.getElementById('us-input');
+      if (usi) {
+        usi.value = e.target.value;
+        _onUsInput({ target: usi });
+      }
+    }
+  });
+}
 
 // Global Escape key handler — closes topmost open modal/overlay
 document.addEventListener('keydown',function(e){
@@ -4818,6 +4933,14 @@ async function init() {
   BRANDS = data.brands;
   BRANDS_MAP = Object.fromEntries(BRANDS.map(b => [b.name.toLowerCase(), b]));
   RM = Object.fromEntries(ROLES.map(r => [r.id, r]));
+
+  _initNavSearch();
+
+  // Mobile persistent search bar trigger
+  const mobileST = document.getElementById('mobile-search-trigger');
+  if (mobileST) {
+    mobileST.addEventListener('click', () => openUniversalSearch());
+  }
 
   // Hide loading overlay
   const loadingEl = document.getElementById('app-loading');

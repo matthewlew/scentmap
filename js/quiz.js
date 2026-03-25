@@ -248,7 +248,7 @@ function renderQuiz(container, config, catalog) {
     return;
   }
 
-  // Check for pre-loaded results in URL
+  // Check for pre-loaded results in URL, then sessionStorage fallback
   const urlParams = new URLSearchParams(window.location.search);
   const resultsParam = urlParams.get('results');
   if (resultsParam) {
@@ -271,6 +271,27 @@ function renderQuiz(container, config, catalog) {
     }
   }
 
+  // Restore from sessionStorage if same quiz slug (handles panel navigation away + back)
+  try {
+    const saved = JSON.parse(sessionStorage.getItem('sm_quiz_session') || 'null');
+    if (saved && saved.slug === _slug && saved.results) {
+      const resultFrags = saved.results.map(id => catalog.find(f => f.id === id)).filter(Boolean);
+      if (resultFrags.length > 0) {
+        if (saved.mode === 'archetype' && saved.archetypeId) {
+          const archetype = ARCHETYPES[saved.archetypeId] || ARCHETYPES['quiet-expressionist'];
+          renderArchetypeResults(archetype, resultFrags);
+        } else if (saved.mode === 'astro' && saved.signId) {
+          const sign = ZODIAC[saved.signId] || ZODIAC['aries'];
+          const archetype = ARCHETYPES[sign.archetypeId] || ARCHETYPES['provocateur'];
+          renderAstroResults(sign, archetype, resultFrags);
+        } else {
+          renderResults(resultFrags);
+        }
+        return;
+      }
+    }
+  } catch(e) { /* storage unavailable — silently skip */ }
+
   renderStep(0, []);
 }
 
@@ -282,6 +303,7 @@ function renderStep(step, collectedTags) {
       const ids = frags.map(f => f.id).join(',');
       window._saveQuizResult?.(_slug, _quizConfig.title, archetype, frags);
       history.replaceState(null, '', `/quiz/${_slug}?archetype=${archetype.id}&results=${ids}`);
+      try { sessionStorage.setItem('sm_quiz_session', JSON.stringify({ slug: _slug, mode: 'archetype', archetypeId: archetype.id, results: frags.map(f => f.id) })); } catch(e) {}
       renderArchetypeResults(archetype, frags);
     } else if (_quizConfig.scoring?.astroMode) {
       const { sign, archetype, frags } = scoreAstroMode(_catalog, collectedTags);
@@ -290,6 +312,7 @@ function renderStep(step, collectedTags) {
       const signTag = collectedTags.find(t => t.startsWith('astro:'));
       const signId = signTag ? signTag.slice(6) : 'aries';
       history.replaceState(null, '', `/quiz/${_slug}?sign=${signId}&results=${ids}`);
+      try { sessionStorage.setItem('sm_quiz_session', JSON.stringify({ slug: _slug, mode: 'astro', signId, results: frags.map(f => f.id) })); } catch(e) {}
       renderAstroResults(sign, archetype, frags);
     } else {
       const top3 = scoreFragrances(_catalog, collectedTags, _quizConfig.scoring);
@@ -297,6 +320,7 @@ function renderStep(step, collectedTags) {
         window._saveQuizResult?.(_slug, _quizConfig.title, null, top3);
         const ids = top3.map(f => f.id).join(',');
         history.replaceState(null, '', `/quiz/${_slug}?results=${ids}`);
+        try { sessionStorage.setItem('sm_quiz_session', JSON.stringify({ slug: _slug, mode: 'standard', results: top3.map(f => f.id) })); } catch(e) {}
       }
       renderResults(top3);
     }

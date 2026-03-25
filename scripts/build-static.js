@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const SCENTS = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'scents-flat.json'), 'utf8'));
+const scentsArr = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'scents.json'), 'utf8'));
+const SCENTS = Object.fromEntries(scentsArr.map(f => [f.id, f]));
 
 const QUIZ_META = {
   'find-your-scent': {

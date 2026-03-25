@@ -126,6 +126,12 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 /* ── 5b. LAYOUT DIMENSIONS ── */
 :root{
   --col-nav-h: 50px;  /* Height of .global-nav sticky header (sp-md + line + sp-sm) */
+  --nav-search-w: 320px;
+  --nav-search-w-md: 240px;
+  --nav-search-h: 36px;
+  --us-dropdown-h: 420px;
+  --landing-wrap-max: 900px;
+  --card-min-w: 250px;
 }
 
 /* ── 6. BORDER-RADIUS SCALE ── */
@@ -300,8 +306,7 @@ html, body {
 */
 :focus-visible {
   outline: none;
-  box-shadow: 0 0 0 var(--focus-ring-offset) var(--bg-primary),
-              0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+  box-shadow: 0 0 0 1px var(--bg-primary), 0 0 0 2px var(--border-strong);
 }
 
 /* Transition utilities */

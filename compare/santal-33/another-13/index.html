@@ -47,18 +47,28 @@
           <button class="global-nav-link" onclick="go('saved', this)">You</button>
         </div>
       </div>
+      <div class="nav-search-bar">
+        <svg class="nav-search-bar-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="nav-search-input" class="nav-search-input" placeholder="Search..." aria-label="Quick search (⌘K)" autocomplete="off">
+        <kbd class="nav-search-bar-kbd">⌘K</kbd>
+      </div>
       <div class="global-nav-right">
-        <button class="nav-search-bar" onclick="openGlobalSearch()" aria-label="Quick search (⌘K)">
-          <svg class="nav-search-bar-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <span class="nav-search-bar-text">Search...</span>
-          <kbd class="nav-search-bar-kbd">⌘K</kbd>
-        </button>
         <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
         <button class="nav-signin-btn" id="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
         <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings" aria-haspopup="true" aria-expanded="false">⚙</button>
         <div class="settings-menu" id="settings-menu" hidden>
-          <button class="settings-menu-item" onclick="settingsGo('changelog')"><span class="settings-menu-icon">↩</span>Changelog</button>
-          <button class="settings-menu-item" onclick="window.open('/designsystem.html', '_blank')"><span class="settings-menu-icon">❖</span>Design System</button>
+          <button class="list-item" onclick="settingsGo('changelog')">
+            <span class="list-item-dot" style="font-size:14px; background:none;">↩</span>
+            <div class="list-item-body">
+              <div class="list-item-label">Changelog</div>
+            </div>
+          </button>
+          <button class="list-item" onclick="window.open('/designsystem.html', '_blank')">
+            <span class="list-item-dot" style="font-size:14px; background:none;">❖</span>
+            <div class="list-item-body">
+              <div class="list-item-label">Design System</div>
+            </div>
+          </button>
         </div>
       </div>
     </nav>
@@ -76,12 +86,14 @@
           </div>
 
           <div class="panel" id="p-catalog">
+            <div class="catalog-main-search">
+              <div class="cat-search-wrap">
+                <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
+                <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
+              </div>
+            </div>
             <div class="catalog-shell">
               <aside class="catalog-sidebar">
-                <div class="cat-search-wrap">
-                  <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
-                  <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
-                </div>
                 <div class="cat-sidebar-section">
                   <div class="sec-label">Filters</div>
                   <div class="cat-state-bar" id="cat-state-bar"></div>
@@ -107,6 +119,12 @@
           </div>
 
           <div class="panel active" id="p-compare">
+            <div class="cmp-search-bar-wrap">
+              <button class="cmp-search-bar" id="cmp-search-trigger" aria-label="Search fragrances" aria-haspopup="dialog">
+                <svg class="cmp-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span class="cmp-search-placeholder">Search fragrances...</span>
+              </button>
+            </div>
             <header class="cmp-header" id="cmp-header">
               <div class="cmp-pair-row">
                 <div class="cmp-card-wrap">
@@ -167,10 +185,11 @@
       <div class="col-detail" id="col-detail">
         <div class="detail-topbar">
           <button class="detail-back" id="detail-back" aria-label="Back">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
             Back
           </button>
-          <button class="detail-close-btn" id="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
+          <div class="sheet-title" id="detail-title"></div>
+          <button class="detail-close-btn" id="detail-close-btn" aria-label="Close">Close</button>
         </div>
         <div class="detail-inner" id="detail-inner"></div>
       </div>
@@ -228,6 +247,12 @@
     <button class="mbn-btn" onclick="goMobile('notes', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/><path d="M10 2c1 .5 2 2 2 5"/></svg></span>Notes</button>
     <button class="mbn-btn" onclick="goMobile('saved', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>You</button>
   </nav>
+
+  <!-- Undo toast — pre-rendered so aria-live region is registered before first use -->
+  <div id="global-undo-toast" class="global-toast" role="status" aria-live="polite" aria-atomic="true">
+    <span class="global-toast-msg"></span>
+    <button class="global-toast-undo">Undo</button>
+  </div>
 
   <div class="app-loading" id="app-loading">
     <div class="app-loading-inner">

@@ -1,3 +1,54 @@
+## v1.4.0 — Stable Release (2026-03-25)
+
+Massive fragrance catalog expansion: 151 new fragrances across 27 new brands. Catalog grows from 220 → 371 fragrances (45 brands). Mobile persistent search bar, tablet nav search improvements.
+
+---
+
+## 2026-03-25
+
+### Added
+- **Fragrance expansion: Tier 5** — 40 new fragrances across 8 brands. Maison Francis Kurkdjian (8), Mugler (5), Jean Paul Gaultier (5), Givenchy (5), Carolina Herrera (5), Narciso Rodriguez (4), Issey Miyake (4), Montblanc (4). Catalog grows from 331 → 371 fragrances across 45 brands.
+- **Fragrance expansion: Tier 3 + Tier 4** — 59 new fragrances across 10 brands. Tier 3 (mass prestige): Versace (6), Dolce & Gabbana (6), Giorgio Armani (6), Calvin Klein (5), Valentino (4). Tier 4 (mid-niche): Creed (10), Amouage (6), Parfums de Marly (6), Initio Parfums (5), Acqua di Parma (5). Catalog grows from 272 → 331 fragrances across 37 brands.
+- **Fragrance expansion: Tier 1 + Tier 2** — 52 new fragrances across 9 brands. Tier 1 (mainstream): YSL (5), Jo Malone (6), Gucci (5), Paco Rabanne (4), Lancôme (4), Marc Jacobs (4), Viktor&Rolf (3). Tier 2 (craft niche): Frederic Malle (8), Penhaligon's (3). Catalog grows from 220 → 272 fragrances. Note: 3 entries skipped (Serge Lutens Chergui, L'Artisan Timbuktu, Diptyque Geranium pour Monsieur already existed).
+- **Mobile persistent search bar** — Always-visible search trigger row on mobile (below the global nav), tapping opens the universal search modal. Replaces the hidden icon-only search on mobile.
+
+### Changed
+- **Tablet nav search** — Nav search bar now shows the full text input and ⌘K hint on tablet (768–1099px); previously collapsed to an icon-only button.
+
+### Fixed
+- **Removed broken validate.js** — Deleted orphaned validation script that referenced deleted data files (scents-index.json, per-brand JSON files). Script was not in package.json and would crash if run.
+
+## 2026-03-24
+
+### Changed
+- **Unified list item component** — Collapsed two `.list-item` variants (18px dot + `flex-start`, and 8px dot + compact) into a single style. Base `.list-item` now uses compact sizing throughout: `align-items: center`, `padding: --sp-sm --sp-md`, 8px dot. `.list-item--compact` modifier is now a no-op.
+- **Removed `fam-abbr`** — Family abbreviation text inside catalog row dots removed; color alone communicates family.
+- **Removed `note-layer-hint`** — H/B layer badges removed from catalog row notes detail. Notes now display as plain joined text (`top · mid · base`).
+- **More menu icon slot** — "More" bottom sheet items now use `.list-item-icon` (correct 18px icon slot) instead of `.list-item-dot` for SVG icons.
+
+### Added
+- **New fragrances** — Added 7 new classic/essential fragrances: Chergui, Comme des Garçons 2, Encre Noire, Spicebomb, Terre d'Hermès, Timbuktu, and Wonderwood.
+- **Sitemap domain migration** — Migrated all internal and SEO URLs from `scentmap.co` to `scentmap.vercel.app` (Production canonical).
+- **Golden Pairs ARIA roles** — Added `role="list/listitem"` and descriptive labels to the Golden Pairs carousel for screen reader support.
+
+### Changed
+- **UI Refactor: Unified list items** — Base `.list-item` component now handles all contexts (Catalog, Detail, Search). Legacy `.list-item--compact` removed.
+- **UI Refactor: Sticky Search** — Catalog search bar moved from sidebar to a sticky top header in the main catalog view.
+- **Universal Search shortcuts** — `/` key now focuses the catalog search bar when on the catalog tab, and universal search elsewhere.
+- **Universal Search Polish** — Auto-selects first non-disabled result; increased result limits; disabled "already selected" frags in compare mode.
+- **State bar collection counts** — Owned and Wishlist tabs now show live counts: "Owned (2)", "Wishlist (1)". Updates on every catalog rebuild.
+- **Quiz result persistence** — Quiz results saved to `sessionStorage` key `sm_quiz_session`; navigating away and back restores results without re-taking the quiz.
+- **Carousel keyboard activation** — Enter/Space now activates the focused carousel card in addition to ArrowLeft/ArrowRight navigation.
+- **Golden Pairs keyboard nav** — `initCarouselKeyNav` wired to the Golden Pairs carousel; all carousels now have roving tabindex + keyboard activation.
+
+### Changed
+- **"More Like This" diversity** — 5th suggestion is now a family-diverse wildcard (different family from top 4) instead of purely rank-5 by similarity.
+- **Profile bar ARIA** — Sensory Profile bars now include a visually-hidden `<meter>` element with `aria-label` for screen readers. Visual appearance unchanged.
+- **Brand card hover** — `.carousel-card--brand` now has an explicit `:hover`/`:focus-visible` state (background + border) for imprecise-cursor users.
+
+### Fixed
+- **Inline style violations** — `padding:2px` → `var(--sp-xs)`, `marginBottom:6px` → `var(--sp-xs)` (off-grid values); `.cmp-score-meter` margin-top consolidated into base CSS rule.
+
 ## v1.3.2 — 2026-03-24
 
 ### Fixed

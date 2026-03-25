@@ -34,12 +34,12 @@
           <button class="global-nav-link" onclick="go('saved', this)">You</button>
         </div>
       </div>
+      <div class="nav-search-bar">
+        <svg class="nav-search-bar-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="nav-search-input" class="nav-search-input" placeholder="Search..." aria-label="Quick search (⌘K)" autocomplete="off">
+        <kbd class="nav-search-bar-kbd">⌘K</kbd>
+      </div>
       <div class="global-nav-right">
-        <button class="nav-search-bar" onclick="openGlobalSearch()" aria-label="Quick search (⌘K)">
-          <svg class="nav-search-bar-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <span class="nav-search-bar-text">Search...</span>
-          <kbd class="nav-search-bar-kbd">⌘K</kbd>
-        </button>
         <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
         <button class="nav-signin-btn" id="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
         <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings" aria-haspopup="true" aria-expanded="false">⚙</button>
@@ -73,12 +73,14 @@
           </div>
 
           <div class="panel" id="p-catalog">
+            <div class="catalog-main-search">
+              <div class="cat-search-wrap">
+                <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
+                <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
+              </div>
+            </div>
             <div class="catalog-shell">
               <aside class="catalog-sidebar">
-                <div class="cat-search-wrap">
-                  <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
-                  <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
-                </div>
                 <div class="cat-sidebar-section">
                   <div class="sec-label">Filters</div>
                   <div class="cat-state-bar" id="cat-state-bar"></div>
@@ -104,6 +106,12 @@
           </div>
 
           <div class="panel active" id="p-compare">
+            <div class="cmp-search-bar-wrap">
+              <button class="cmp-search-bar" id="cmp-search-trigger" aria-label="Search fragrances" aria-haspopup="dialog">
+                <svg class="cmp-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span class="cmp-search-placeholder">Search fragrances...</span>
+              </button>
+            </div>
             <header class="cmp-header" id="cmp-header">
               <div class="cmp-pair-row">
                 <div class="cmp-card-wrap">
@@ -164,10 +172,11 @@
       <div class="col-detail" id="col-detail">
         <div class="detail-topbar">
           <button class="detail-back" id="detail-back" aria-label="Back">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
             Back
           </button>
-          <button class="detail-close-btn" id="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
+          <div class="sheet-title" id="detail-title"></div>
+          <button class="detail-close-btn" id="detail-close-btn" aria-label="Close">Close</button>
         </div>
         <div class="detail-inner" id="detail-inner"></div>
       </div>
