@@ -7,6 +7,9 @@
 ### Changed
 - **Tablet nav search** — Nav search bar now shows the full text input and ⌘K hint on tablet (768–1099px); previously collapsed to an icon-only button.
 
+### Fixed
+- **Removed broken validate.js** — Deleted orphaned validation script that referenced deleted data files (scents-index.json, per-brand JSON files). Script was not in package.json and would crash if run.
+
 ## 2026-03-24
 
 ### Changed
