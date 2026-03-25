@@ -1,6 +1,8 @@
 ## 2026-03-25
 
 ### Added
+- **Fragrance expansion: Tier 5** — 40 new fragrances across 8 brands. Maison Francis Kurkdjian (8), Mugler (5), Jean Paul Gaultier (5), Givenchy (5), Carolina Herrera (5), Narciso Rodriguez (4), Issey Miyake (4), Montblanc (4). Catalog grows from 331 → 371 fragrances across 45 brands.
+- **Fragrance expansion: Tier 3 + Tier 4** — 59 new fragrances across 10 brands. Tier 3 (mass prestige): Versace (6), Dolce & Gabbana (6), Giorgio Armani (6), Calvin Klein (5), Valentino (4). Tier 4 (mid-niche): Creed (10), Amouage (6), Parfums de Marly (6), Initio Parfums (5), Acqua di Parma (5). Catalog grows from 272 → 331 fragrances across 37 brands.
 - **Fragrance expansion: Tier 1 + Tier 2** — 52 new fragrances across 9 brands. Tier 1 (mainstream): YSL (5), Jo Malone (6), Gucci (5), Paco Rabanne (4), Lancôme (4), Marc Jacobs (4), Viktor&Rolf (3). Tier 2 (craft niche): Frederic Malle (8), Penhaligon's (3). Catalog grows from 220 → 272 fragrances. Note: 3 entries skipped (Serge Lutens Chergui, L'Artisan Timbuktu, Diptyque Geranium pour Monsieur already existed).
 - **Mobile persistent search bar** — Always-visible search trigger row on mobile (below the global nav), tapping opens the universal search modal. Replaces the hidden icon-only search on mobile.
 

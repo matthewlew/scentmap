@@ -7647,5 +7647,2929 @@
     "description": "Spicy cardamom and dry hay create an unconventional, earthy fragrance evoking horse and circus atmospheres.",
     "story": "",
     "url": ""
+  },
+  {
+    "id": "eros",
+    "brand": "Versace",
+    "name": "Eros",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 5,
+    "top": [
+      "Mint",
+      "Green Apple",
+      "Lemon"
+    ],
+    "mid": [
+      "Tonka Bean",
+      "Ambroxan",
+      "Geranium"
+    ],
+    "base": [
+      "Vanilla",
+      "Vetiver",
+      "Oakmoss",
+      "Cedar"
+    ],
+    "roles": [
+      "signature",
+      "heat"
+    ],
+    "description": "Bold minty sweetness over a warm amber-vanilla base. A confident evening or night-out staple that announces your arrival.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "bright-crystal",
+    "brand": "Versace",
+    "name": "Bright Crystal",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Pomegranate",
+      "Yuzu",
+      "Frost Accord"
+    ],
+    "mid": [
+      "Peony",
+      "Magnolia",
+      "Lotus"
+    ],
+    "base": [
+      "Musk",
+      "Mahogany",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Sheer fruity florals with an icy transparency. Light enough for daily wear, elegant enough for warm-weather events.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "dylan-blue",
+    "brand": "Versace",
+    "name": "Dylan Blue",
+    "family": "aquatic",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Calabrian Bergamot",
+      "Grapefruit",
+      "Fig Leaf"
+    ],
+    "mid": [
+      "Violet Leaf",
+      "Papyrus",
+      "Ambroxan"
+    ],
+    "base": [
+      "Musk",
+      "Tonka Bean",
+      "Saffron",
+      "Incense"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "Aquatic-aromatic backbone with violet leaf and incense depth. A versatile everyday scent with broad masculine appeal.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "crystal-noir",
+    "brand": "Versace",
+    "name": "Crystal Noir",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Ginger",
+      "Cardamom",
+      "Pepper"
+    ],
+    "mid": [
+      "Gardenia",
+      "Peony",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "intimate",
+      "formal"
+    ],
+    "description": "Spiced florals wrapped in dark amber warmth. Seductive and smooth for evening occasions and cooler months.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "pour-homme-versace",
+    "brand": "Versace",
+    "name": "Pour Homme",
+    "family": "citrus",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Neroli",
+      "Citron",
+      "Bergamot"
+    ],
+    "mid": [
+      "Cedar",
+      "Sage",
+      "Blue Hyacinth"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Sycamore Wood"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Clean Mediterranean citrus over warm cedar and sage. An understated daily driver for office and weekend alike.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "versace-pour-femme",
+    "brand": "Versace",
+    "name": "Pour Femme",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Raspberry Sorbet",
+      "Freesia",
+      "Jasmine"
+    ],
+    "mid": [
+      "Rose",
+      "Magnolia",
+      "Osmanthus"
+    ],
+    "base": [
+      "Musk",
+      "Blonde Wood",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Airy florals with fruity brightness and a soft woody landing. Easygoing femininity for daytime and spring.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "light-blue",
+    "brand": "Dolce & Gabbana",
+    "name": "Light Blue",
+    "family": "citrus",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Sicilian Lemon",
+      "Apple",
+      "Cedar"
+    ],
+    "mid": [
+      "Bamboo",
+      "Jasmine",
+      "White Rose"
+    ],
+    "base": [
+      "Cedar",
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Crisp Sicilian lemon and apple over light white florals. The definitive Mediterranean summer scent for any setting.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "the-one",
+    "brand": "Dolce & Gabbana",
+    "name": "The One",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Grapefruit",
+      "Coriander",
+      "Basil"
+    ],
+    "mid": [
+      "Ginger",
+      "Orange Blossom",
+      "Cedar"
+    ],
+    "base": [
+      "Tobacco",
+      "Amber",
+      "Labdanum"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Warm ginger-tobacco heart cradled in smooth amber. A refined masculine staple for dates, dinners, and evening wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "k",
+    "brand": "Dolce & Gabbana",
+    "name": "K",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Blood Orange",
+      "Juniper",
+      "Sicilian Lemon"
+    ],
+    "mid": [
+      "Clary Sage",
+      "Geranium",
+      "Lavender"
+    ],
+    "base": [
+      "Cedarwood",
+      "Vetiver",
+      "Patchouli"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "Sun-warmed citrus and aromatic herbs over sturdy cedarwood. A modern king-of-the-hill daily signature.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "light-blue-forever",
+    "brand": "Dolce & Gabbana",
+    "name": "Light Blue Forever",
+    "family": "aquatic",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Grapefruit",
+      "Mandarin",
+      "Ozonic Notes"
+    ],
+    "mid": [
+      "Sea Notes",
+      "Geranium",
+      "Rosemary"
+    ],
+    "base": [
+      "Musk",
+      "Oakmoss",
+      "Amberwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Deeper aquatic-ozonic take on the original, with more lasting power. Ideal for beach days and summer nights.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "the-one-edp",
+    "brand": "Dolce & Gabbana",
+    "name": "The One Eau de Parfum",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Grapefruit",
+      "Coriander",
+      "Basil"
+    ],
+    "mid": [
+      "Cardamom",
+      "Ginger",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Tobacco",
+      "Amber",
+      "Oud",
+      "Benzoin"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Richer, longer-lasting amber-tobacco intensity. The cold-weather upgrade — opulent without heaviness.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "dolce",
+    "brand": "Dolce & Gabbana",
+    "name": "Dolce",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Neroli",
+      "Papaya Flower"
+    ],
+    "mid": [
+      "White Amaryllis",
+      "White Daffodil",
+      "White Water Lily"
+    ],
+    "base": [
+      "Cashmeran",
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Delicate white florals with a creamy cashmere dry-down. A soft, approachable daytime floral for spring and summer.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "acqua-di-gio",
+    "brand": "Giorgio Armani",
+    "name": "Acqua di Giò",
+    "family": "aquatic",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Bergamot",
+      "Neroli",
+      "Green Tangerine"
+    ],
+    "mid": [
+      "Jasmine",
+      "Calone",
+      "Sea Notes"
+    ],
+    "base": [
+      "White Musk",
+      "Cedar",
+      "Patchouli",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "The original aquatic masterpiece — transparent sea notes and citrus over warm cedar. Effortless warm-weather elegance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "si",
+    "brand": "Giorgio Armani",
+    "name": "Sì",
+    "family": "chypre",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Blackcurrant",
+      "Mandarin"
+    ],
+    "mid": [
+      "Rose de Mai",
+      "Freesia"
+    ],
+    "base": [
+      "Vanilla",
+      "Patchouli",
+      "Woody Amber"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "Blackcurrant brightness over a chypre base of patchouli and vanilla. Polished and feminine for boardroom to evening.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "armani-code",
+    "brand": "Giorgio Armani",
+    "name": "Armani Code",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Star Anise",
+      "Olive Blossom"
+    ],
+    "base": [
+      "Guaiac Wood",
+      "Tonka Bean",
+      "Leather"
+    ],
+    "roles": [
+      "intimate",
+      "formal"
+    ],
+    "description": "Smoky olive blossom and tonka in a sleek amber frame. A nighttime classic built for close encounters and formal events.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "acqua-di-gio-profumo",
+    "brand": "Giorgio Armani",
+    "name": "Acqua di Giò Profumo",
+    "family": "aquatic",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Sea Notes",
+      "Aquatic Accord"
+    ],
+    "mid": [
+      "Geranium",
+      "Sage",
+      "Rosemary"
+    ],
+    "base": [
+      "Patchouli",
+      "Incense",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "The original's aquatic DNA deepened with incense and patchouli. Year-round versatility with serious projection.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "my-way",
+    "brand": "Giorgio Armani",
+    "name": "My Way",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Orange Blossom"
+    ],
+    "mid": [
+      "Tuberose",
+      "Indian Jasmine"
+    ],
+    "base": [
+      "Cedarwood",
+      "White Musk",
+      "Vanilla"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "Luminous tuberose and jasmine grounded by creamy cedarwood. A modern floral that bridges casual and dressed-up moments.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "armani-prive-rose-darabie",
+    "brand": "Giorgio Armani",
+    "name": "Armani Privé Rose d'Arabie",
+    "family": "oud",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Rose",
+      "Saffron"
+    ],
+    "mid": [
+      "Oud",
+      "Papyrus"
+    ],
+    "base": [
+      "Amber",
+      "Vanilla",
+      "Sandalwood"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Opulent Taif rose entwined with smoky oud and saffron. A statement scent for special occasions and cooler evenings.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "ck-one",
+    "brand": "Calvin Klein",
+    "name": "CK One",
+    "family": "citrus",
+    "sillage": 3,
+    "layering": 8,
+    "top": [
+      "Pineapple",
+      "Mandarin",
+      "Papaya",
+      "Bergamot"
+    ],
+    "mid": [
+      "Jasmine",
+      "Violet",
+      "Rose",
+      "Nutmeg"
+    ],
+    "base": [
+      "Musk",
+      "Cedar",
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "The original unisex citrus-musk — sheer, clean, and shareable. Effortless everyday freshness since 1994.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "eternity",
+    "brand": "Calvin Klein",
+    "name": "Eternity",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 6,
+    "top": [
+      "Freesia",
+      "Mandarin",
+      "Sage"
+    ],
+    "mid": [
+      "Rose",
+      "Lily",
+      "Marigold",
+      "Narcissus"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk",
+      "Patchouli",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Timeless romantic florals with a soft, powdery trail. A cornerstone feminine scent for office days and weekends.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "euphoria",
+    "brand": "Calvin Klein",
+    "name": "Euphoria",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Pomegranate",
+      "Persimmon",
+      "Green Accord"
+    ],
+    "mid": [
+      "Black Orchid",
+      "Lotus"
+    ],
+    "base": [
+      "Mahogany",
+      "Amber",
+      "Cream",
+      "Musk"
+    ],
+    "roles": [
+      "intimate",
+      "formal"
+    ],
+    "description": "Dark exotic fruits and black orchid sinking into rich mahogany-amber. Sensual and mysterious for evening occasions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "obsession",
+    "brand": "Calvin Klein",
+    "name": "Obsession",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 4,
+    "top": [
+      "Mandarin",
+      "Bergamot",
+      "Vanilla",
+      "Peach"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Jasmine",
+      "Sandalwood"
+    ],
+    "base": [
+      "Amber",
+      "Musk",
+      "Vanilla",
+      "Civet"
+    ],
+    "roles": [
+      "intimate",
+      "cold"
+    ],
+    "description": "Heady vanilla-amber intensity with animalic warmth beneath. A provocative powerhouse for cold nights and bold moods.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "ck-everyone",
+    "brand": "Calvin Klein",
+    "name": "CK Everyone",
+    "family": "citrus",
+    "sillage": 3,
+    "layering": 8,
+    "top": [
+      "Orange Peel",
+      "Ginger"
+    ],
+    "mid": [
+      "Blue Tea Accord"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Clean citrus-ginger simplicity with a blue tea twist. A modern, genderless everyday scent for warm weather.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "donna-born-in-roma",
+    "brand": "Valentino",
+    "name": "Donna Born in Roma",
+    "family": "gourmand",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Jasmine"
+    ],
+    "mid": [
+      "Bourbon Vanilla",
+      "Jasmine Grandiflorum"
+    ],
+    "base": [
+      "Cashmeran",
+      "Woody Notes",
+      "Benzoin"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Jasmine-drenched vanilla with a warm cashmeran cocoon. A sweet-sophisticated signature for fall, winter, and nights out.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "uomo-born-in-roma",
+    "brand": "Valentino",
+    "name": "Uomo Born in Roma",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Ginger",
+      "Green Earl Grey"
+    ],
+    "mid": [
+      "Sage",
+      "Mineral Accord"
+    ],
+    "base": [
+      "Smoked Vetiver",
+      "Guaiac Wood",
+      "Benzoin"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Smoky vetiver and sage with ginger brightness. A sharp, contemporary masculine for evening events and cooler seasons.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "voce-viva",
+    "brand": "Valentino",
+    "name": "Voce Viva",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Italian Mandarin"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Gardenia",
+      "Jasmine"
+    ],
+    "base": [
+      "Crystal Moss",
+      "Sandalwood",
+      "Vanilla"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "Radiant gardenia and orange blossom over a mossy-vanilla base. Confident femininity for day-to-night transitions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "valentino-donna",
+    "brand": "Valentino",
+    "name": "Valentino Donna",
+    "family": "leather",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Bulgarian Rose",
+      "Iris"
+    ],
+    "base": [
+      "Leather",
+      "Patchouli",
+      "Vanilla"
+    ],
+    "roles": [
+      "formal",
+      "signature"
+    ],
+    "description": "Iris and rose over supple leather with a patchouli base. A refined, statement-making scent for special occasions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "interlude",
+    "brand": "Amouage",
+    "name": "Interlude Man",
+    "family": "oud",
+    "sillage": 9,
+    "layering": 3,
+    "top": [
+      "Oregano",
+      "Bergamot",
+      "Pimento Berry"
+    ],
+    "mid": [
+      "Frankincense",
+      "Opoponax",
+      "Labdanum"
+    ],
+    "base": [
+      "Oud",
+      "Sandalwood",
+      "Amber",
+      "Leather"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Controlled chaos — smoky incense and oud layered over herbal spice. A monumental beast-mode scent for bold spirits.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "jubilation-xxv",
+    "brand": "Amouage",
+    "name": "Jubilation XXV",
+    "family": "woody",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Tarragon",
+      "Blackberry",
+      "Orange"
+    ],
+    "mid": [
+      "Rose",
+      "Frankincense",
+      "Orchid",
+      "Cinnamon"
+    ],
+    "base": [
+      "Myrrh",
+      "Oud",
+      "Musk",
+      "Cedar"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Regal fruit-spice opening dissolving into myrrh-oud grandeur. The pinnacle of luxurious cold-weather sophistication.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "reflection",
+    "brand": "Amouage",
+    "name": "Reflection Man",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Rosemary",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Neroli",
+      "Jasmine",
+      "Orris"
+    ],
+    "base": [
+      "Sandalwood",
+      "Cedar",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "work",
+      "formal"
+    ],
+    "description": "Elegant jasmine-neroli uplift over creamy sandalwood. A refined masculine floral for boardrooms and black-tie events.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "memoir",
+    "brand": "Amouage",
+    "name": "Memoir Man",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 4,
+    "top": [
+      "Basil",
+      "Lavender",
+      "Wormwood"
+    ],
+    "mid": [
+      "Incense",
+      "Guaiac Wood",
+      "Cardamom"
+    ],
+    "base": [
+      "Vetiver",
+      "Oud",
+      "Tonka Bean",
+      "Musk"
+    ],
+    "roles": [
+      "creative",
+      "cold"
+    ],
+    "description": "Herbal bitterness and incense spiraling into dark vetiver-oud. A brooding, intellectual scent for contemplative moods.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "dia",
+    "brand": "Amouage",
+    "name": "Dia Woman",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Blackcurrant",
+      "Pink Pepper",
+      "Bergamot"
+    ],
+    "mid": [
+      "Rose",
+      "Peony",
+      "Lily"
+    ],
+    "base": [
+      "Cedar",
+      "Musk",
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "work",
+      "signature"
+    ],
+    "description": "Lush rose-peony bouquet softened by cedar and musk. Graceful and composed for daytime elegance and professional settings.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "honour",
+    "brand": "Amouage",
+    "name": "Honour Woman",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 4,
+    "top": [
+      "Pepper",
+      "Frankincense"
+    ],
+    "mid": [
+      "Tuberose",
+      "Jasmine",
+      "Gardenia"
+    ],
+    "base": [
+      "Musk",
+      "Cedar",
+      "Benzoin"
+    ],
+    "roles": [
+      "formal",
+      "signature"
+    ],
+    "description": "Towering white florals with smoky incense edges. A dramatic, commanding presence for evening and special occasions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "aventus",
+    "brand": "Creed",
+    "name": "Aventus",
+    "family": "chypre",
+    "sillage": 8,
+    "layering": 5,
+    "top": [
+      "Pineapple",
+      "Blackcurrant",
+      "Apple",
+      "Bergamot"
+    ],
+    "mid": [
+      "Birch",
+      "Jasmine",
+      "Patchouli"
+    ],
+    "base": [
+      "Musk",
+      "Oakmoss",
+      "Ambergris",
+      "Vanilla"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "Smoky pineapple-birch opening with an oakmoss-musk foundation. The most hyped masculine fragrance of the decade.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "green-irish-tweed",
+    "brand": "Creed",
+    "name": "Green Irish Tweed",
+    "family": "green",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Lemon Verbena",
+      "Iris"
+    ],
+    "mid": [
+      "Violet Leaf",
+      "Iris"
+    ],
+    "base": [
+      "Sandalwood",
+      "Ambergris",
+      "Musk"
+    ],
+    "roles": [
+      "work",
+      "signature"
+    ],
+    "description": "Cool green violet leaf and iris with aristocratic sandalwood depth. A timeless masculine for all seasons and occasions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "silver-mountain-water",
+    "brand": "Creed",
+    "name": "Silver Mountain Water",
+    "family": "green",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Mandarin",
+      "Neroli"
+    ],
+    "mid": [
+      "Green Tea",
+      "Black Currant"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood",
+      "Galbanum"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Crisp green tea and blackcurrant evoking alpine streams. A clean, invigorating scent for warm weather and active days.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "millesime-imperial",
+    "brand": "Creed",
+    "name": "Millésime Impérial",
+    "family": "aquatic",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Sea Salt",
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Iris",
+      "Melon"
+    ],
+    "base": [
+      "Musk",
+      "Ambergris",
+      "Wood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Sea salt and melon with an iris-musk glow. Refined coastal freshness for summer days and resort evenings.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "viking",
+    "brand": "Creed",
+    "name": "Viking",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Pink Pepper",
+      "Lemon"
+    ],
+    "mid": [
+      "Rose",
+      "Geranium",
+      "Lavender"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vetiver",
+      "Patchouli"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Spiced citrus and rose over rugged sandalwood-vetiver. A powerful cold-weather signature with Viking-era boldness.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "aventus-cologne",
+    "brand": "Creed",
+    "name": "Aventus Cologne",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Green Apple",
+      "Mandarin",
+      "Ginger"
+    ],
+    "mid": [
+      "Blue Sage",
+      "Pink Pepper"
+    ],
+    "base": [
+      "Styrax",
+      "Musk",
+      "Birch",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Lighter, citrus-forward cousin of Aventus with green apple and sage. An easygoing warm-weather daily wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "royal-oud",
+    "brand": "Creed",
+    "name": "Royal Oud",
+    "family": "oud",
+    "sillage": 7,
+    "layering": 4,
+    "top": [
+      "Pink Pepper",
+      "Lemon",
+      "Bergamot"
+    ],
+    "mid": [
+      "Galbanum",
+      "Cedar",
+      "Oud"
+    ],
+    "base": [
+      "Sandalwood",
+      "Tonka Bean",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Refined cedar-oud sophistication tempered by pink pepper and sandalwood. Understated luxury for formal occasions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "original-santal",
+    "brand": "Creed",
+    "name": "Original Santal",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Lavender",
+      "Juniper"
+    ],
+    "mid": [
+      "Sandalwood",
+      "Cinnamon",
+      "Star Anise"
+    ],
+    "base": [
+      "Vanilla",
+      "Tonka Bean",
+      "Musk"
+    ],
+    "roles": [
+      "intimate",
+      "cold"
+    ],
+    "description": "Rich sandalwood and warm spices embraced by creamy vanilla. A cozy, inviting scent for close moments and cool evenings.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "wind-flowers",
+    "brand": "Creed",
+    "name": "Wind Flowers",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Orange Blossom",
+      "Jasmine"
+    ],
+    "mid": [
+      "Tuberose",
+      "Iris",
+      "Rose"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk",
+      "Ambroxan"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "An airy white floral bouquet lifted by orange blossom and grounded in sandalwood. Modern feminine grace for every day.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "love-in-white",
+    "brand": "Creed",
+    "name": "Love in White",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Orange Blossom",
+      "Magnolia",
+      "Bergamot"
+    ],
+    "mid": [
+      "Iris",
+      "Rice Husk",
+      "Daffodil"
+    ],
+    "base": [
+      "Sandalwood",
+      "Ambergris",
+      "Musk",
+      "Vanilla"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "Luminous magnolia and iris with a powdery rice-husk note. An elegant, pristine floral for confident daily wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "oud-for-greatness",
+    "brand": "Initio Parfums",
+    "name": "Oud for Greatness",
+    "family": "oud",
+    "sillage": 9,
+    "layering": 3,
+    "top": [
+      "Saffron",
+      "Nutmeg",
+      "Lavender"
+    ],
+    "mid": [
+      "Agarwood (Oud)",
+      "Patchouli"
+    ],
+    "base": [
+      "Musk",
+      "Amber",
+      "Benzoin"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Saffron-lit oud over a potent musk-amber base. An unapologetic beast-mode statement for those who want to be noticed.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "side-effect",
+    "brand": "Initio Parfums",
+    "name": "Side Effect",
+    "family": "gourmand",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Rum",
+      "Cinnamon"
+    ],
+    "mid": [
+      "Tobacco",
+      "Vanilla",
+      "Benzoin"
+    ],
+    "base": [
+      "Musk",
+      "Hedione",
+      "Cashmeran"
+    ],
+    "roles": [
+      "intimate",
+      "cold"
+    ],
+    "description": "Boozy rum and cinnamon-laced tobacco sinking into creamy vanilla. An addictive gourmand for cold nights and close company.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "musk-therapy",
+    "brand": "Initio Parfums",
+    "name": "Musk Therapy",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Bergamot",
+      "Lavender"
+    ],
+    "mid": [
+      "Musk",
+      "Hedione",
+      "Rose"
+    ],
+    "base": [
+      "Sandalwood",
+      "Ambroxan",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual",
+      "intimate"
+    ],
+    "description": "Pure skin-musk warmth with lavender calm and sandalwood glow. A comforting, second-skin scent for quiet intimacy.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "absolute-aphrodisiac",
+    "brand": "Initio Parfums",
+    "name": "Absolute Aphrodisiac",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 3,
+    "top": [
+      "Saffron",
+      "Myrrh"
+    ],
+    "mid": [
+      "Rose",
+      "Orris",
+      "Oud"
+    ],
+    "base": [
+      "Vanilla",
+      "Cashmeran",
+      "Musk"
+    ],
+    "roles": [
+      "intimate",
+      "signature"
+    ],
+    "description": "Dark saffron-myrrh opening melting into animalic rose and vanilla. Designed to mesmerize at close range after dark.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "psychedelic-love",
+    "brand": "Initio Parfums",
+    "name": "Psychedelic Love",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Rose",
+      "Hedione",
+      "Myrrh"
+    ],
+    "base": [
+      "Vanilla",
+      "Musk",
+      "Ambroxan"
+    ],
+    "roles": [
+      "signature",
+      "intimate"
+    ],
+    "description": "Hypnotic rose-hedione radiance amplified by vanilla warmth. A magnetic, molecule-driven scent that draws people in.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "layton",
+    "brand": "Parfums de Marly",
+    "name": "Layton",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 5,
+    "top": [
+      "Apple",
+      "Bergamot",
+      "Lavender"
+    ],
+    "mid": [
+      "Jasmine",
+      "Violet",
+      "Geranium"
+    ],
+    "base": [
+      "Vanilla",
+      "Cardamom",
+      "Sandalwood",
+      "Pepper"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Apple-lavender freshness fading into spiced vanilla warmth. The breakout niche hit — crowd-pleasing and long-lasting.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "delina",
+    "brand": "Parfums de Marly",
+    "name": "Delina",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Lychee",
+      "Rhubarb",
+      "Nutmeg"
+    ],
+    "mid": [
+      "Turkish Rose",
+      "Peony",
+      "Vanilla"
+    ],
+    "base": [
+      "Cashmeran",
+      "Musk",
+      "Cedar",
+      "Incense"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Juicy lychee-rose over a warm cashmeran base. A romantic, head-turning floral for dates and dressed-up occasions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "pegasus",
+    "brand": "Parfums de Marly",
+    "name": "Pegasus",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Heliotrope"
+    ],
+    "mid": [
+      "Almond",
+      "Jasmine",
+      "Lavender"
+    ],
+    "base": [
+      "Vanilla",
+      "Sandalwood",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Creamy almond-heliotrope sweetness anchored by sandalwood-vanilla. A smooth, crowd-pleasing cold-weather signature.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "herod",
+    "brand": "Parfums de Marly",
+    "name": "Herod",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Cinnamon",
+      "Pepper",
+      "Osmanthus"
+    ],
+    "mid": [
+      "Tobacco",
+      "Incense",
+      "Iso E Super"
+    ],
+    "base": [
+      "Vanilla",
+      "Cypriol",
+      "Vetiver",
+      "Cedar"
+    ],
+    "roles": [
+      "cold",
+      "intimate"
+    ],
+    "description": "Rich cinnamon-tobacco warmth fading into smoky vetiver-vanilla. A cozy, masculine beast for cold nights and fireside.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "sedley",
+    "brand": "Parfums de Marly",
+    "name": "Sedley",
+    "family": "citrus",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Spearmint",
+      "Bergamot",
+      "Lime"
+    ],
+    "mid": [
+      "Geranium",
+      "Lavender",
+      "Black Currant Bud"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vetiver",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Minty-citrus freshness with a green herbal heart. A crisp, easy-wearing warm-weather scent for casual days.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "layton-exclusif",
+    "brand": "Parfums de Marly",
+    "name": "Layton Exclusif",
+    "family": "amber",
+    "sillage": 9,
+    "layering": 3,
+    "top": [
+      "Apple",
+      "Bergamot",
+      "Lavender"
+    ],
+    "mid": [
+      "Floral Notes",
+      "Amber"
+    ],
+    "base": [
+      "Vanilla",
+      "Oud",
+      "Guaiac Wood",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Layton's darker, oud-laced cousin with amplified vanilla-amber depth. A nuclear-projection winter signature.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "colonia",
+    "brand": "Acqua di Parma",
+    "name": "Colonia",
+    "family": "citrus",
+    "sillage": 4,
+    "layering": 8,
+    "top": [
+      "Sicilian Citrus",
+      "Lavender",
+      "Verbena"
+    ],
+    "mid": [
+      "Bulgarian Rose",
+      "Jasmine"
+    ],
+    "base": [
+      "Vetiver",
+      "Sandalwood",
+      "Patchouli",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Bright Italian citrus and lavender over a clean woody base. Timeless Mediterranean elegance for warm days and layering.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "fico-di-amalfi",
+    "brand": "Acqua di Parma",
+    "name": "Fico di Amalfi",
+    "family": "green",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Bergamot",
+      "Grapefruit",
+      "Citron"
+    ],
+    "mid": [
+      "Fig Nectar",
+      "Fig Leaf",
+      "Pink Pepper"
+    ],
+    "base": [
+      "Cedar",
+      "Benzoin",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Sun-ripened fig and citrus evoking the Amalfi coast. A joyful, natural green scent for summer days and garden parties.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "blu-mediterraneo-arancia",
+    "brand": "Acqua di Parma",
+    "name": "Blu Mediterraneo Arancia di Capri",
+    "family": "citrus",
+    "sillage": 3,
+    "layering": 8,
+    "top": [
+      "Orange",
+      "Mandarin",
+      "Petit Grain"
+    ],
+    "mid": [
+      "Cardamom",
+      "Pink Pepper"
+    ],
+    "base": [
+      "Musk",
+      "Amber",
+      "Caramel"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Pure Italian orange and mandarin with a subtle caramel warmth. A sparkling, mood-lifting citrus for sunny days.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "mandorlo-di-sicilia",
+    "brand": "Acqua di Parma",
+    "name": "Blu Mediterraneo Mandorlo di Sicilia",
+    "family": "gourmand",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Star Anise",
+      "Bitter Almond",
+      "Orange"
+    ],
+    "mid": [
+      "Vanilla",
+      "Tonka Bean",
+      "Coffee"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual",
+      "creative"
+    ],
+    "description": "Toasted Sicilian almond and vanilla with a hint of coffee. A cheerful gourmand for brunch, travel, and easy weekends.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "rosa-nobile",
+    "brand": "Acqua di Parma",
+    "name": "Rosa Nobile",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Sicilian Mandarin",
+      "Pepper",
+      "Peony"
+    ],
+    "mid": [
+      "Centifolia Rose",
+      "Violet",
+      "Lily of the Valley"
+    ],
+    "base": [
+      "Musk",
+      "Cedar",
+      "Ambergris"
+    ],
+    "roles": [
+      "work",
+      "signature"
+    ],
+    "description": "Noble centifolia rose with peppery brightness and a clean musk trail. An elegant daily floral for polished settings.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "baccarat-rouge-540",
+    "brand": "Maison Francis Kurkdjian",
+    "name": "Baccarat Rouge 540",
+    "family": "amber",
+    "sillage": 9,
+    "layering": 4,
+    "top": [
+      "Saffron",
+      "Jasmine"
+    ],
+    "mid": [
+      "Amberwood",
+      "Ambergris"
+    ],
+    "base": [
+      "Fir Resin",
+      "Cedar",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Luminous saffron-amber with crystalline sweetness and a resinous glow. The defining scent of a generation — unmistakable in a crowd.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "baccarat-rouge-540-extrait",
+    "brand": "Maison Francis Kurkdjian",
+    "name": "Baccarat Rouge 540 Extrait de Parfum",
+    "family": "amber",
+    "sillage": 10,
+    "layering": 3,
+    "top": [
+      "Bitter Almond",
+      "Saffron"
+    ],
+    "mid": [
+      "Egyptian Jasmine",
+      "Cedar"
+    ],
+    "base": [
+      "Ambergris",
+      "Fir Balsam",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Deeper, more resinous intensity with bitter almond and balsamic warmth. The nuclear-projection cold-weather upgrade.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "grand-soir",
+    "brand": "Maison Francis Kurkdjian",
+    "name": "Grand Soir",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Saffron",
+      "Cinnamon"
+    ],
+    "mid": [
+      "Benzoin",
+      "Amber"
+    ],
+    "base": [
+      "Tonka Bean",
+      "Vanilla",
+      "Musk"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Liquid amber and benzoin warmth with a cinnamon-saffron spark. A velvety evening companion for black-tie and winter nights.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "gentle-fluidity-silver",
+    "brand": "Maison Francis Kurkdjian",
+    "name": "Gentle Fluidity Silver",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Juniper Berry",
+      "Nutmeg",
+      "Coriander"
+    ],
+    "mid": [
+      "Musk",
+      "Amber"
+    ],
+    "base": [
+      "Vanilla",
+      "Sandalwood",
+      "Woods"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Clean juniper-musk transparency over soft woods. A versatile, genderless everyday scent with effortless elegance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "gentle-fluidity-gold",
+    "brand": "Maison Francis Kurkdjian",
+    "name": "Gentle Fluidity Gold",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Juniper Berry",
+      "Coriander",
+      "Nutmeg"
+    ],
+    "mid": [
+      "Amber",
+      "Musk"
+    ],
+    "base": [
+      "Vanilla",
+      "Sandalwood",
+      "Tolu Balsam"
+    ],
+    "roles": [
+      "signature",
+      "intimate"
+    ],
+    "description": "The warmer, sweeter sibling — vanilla-balsam richness with the same juniper-musk core. Inviting and skin-close.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "petit-matin",
+    "brand": "Maison Francis Kurkdjian",
+    "name": "Petit Matin",
+    "family": "citrus",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Lemon",
+      "Litchi",
+      "Magnolia"
+    ],
+    "mid": [
+      "Musk",
+      "Rose"
+    ],
+    "base": [
+      "White Musk",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Dewy lemon-litchi freshness with a clean musky landing. Like the first hour of a perfect summer morning.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "amyris-homme",
+    "brand": "Maison Francis Kurkdjian",
+    "name": "Amyris Homme",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Rosemary",
+      "Bergamot"
+    ],
+    "mid": [
+      "Iris",
+      "Amyris Wood"
+    ],
+    "base": [
+      "Tonka Bean",
+      "Musk",
+      "Leather"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "Herbal rosemary brightness dissolving into creamy iris-wood warmth. A refined, no-effort daily wear for any setting.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "a-la-rose",
+    "brand": "Maison Francis Kurkdjian",
+    "name": "À la rose",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Rose",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Damascena Rose",
+      "Centifolia Rose",
+      "Peony"
+    ],
+    "base": [
+      "Musk",
+      "Violet",
+      "Cedar"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "A multifaceted rose study — fresh, dewy, and luminous without powderiness. The modern benchmark for wearable rose.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "angel",
+    "brand": "Mugler",
+    "name": "Angel",
+    "family": "gourmand",
+    "sillage": 9,
+    "layering": 3,
+    "top": [
+      "Bergamot",
+      "Cotton Candy",
+      "Coconut"
+    ],
+    "mid": [
+      "Honey",
+      "Caramel",
+      "Red Berries"
+    ],
+    "base": [
+      "Patchouli",
+      "Dark Chocolate",
+      "Vanilla"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "The original gourmand — patchouli-chocolate decadence with cotton candy sweetness. A love-it-or-hate-it icon since 1992.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "alien",
+    "brand": "Mugler",
+    "name": "Alien",
+    "family": "woody",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Jasmine Sambac"
+    ],
+    "mid": [
+      "Cashmeran",
+      "Tiger Wood"
+    ],
+    "base": [
+      "White Amber",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Radiant jasmine powered by cashmeran-amber warmth. An otherworldly feminine presence that commands attention.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "angel-nova",
+    "brand": "Mugler",
+    "name": "Angel Nova",
+    "family": "gourmand",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Raspberry",
+      "Lychee"
+    ],
+    "mid": [
+      "Rose",
+      "Damask Rose"
+    ],
+    "base": [
+      "Akigalawood",
+      "Benzoin",
+      "Vanilla"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "Angel reimagined with fruity raspberry brightness and rose. A more approachable, daytime-friendly take on the icon.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "alien-goddess",
+    "brand": "Mugler",
+    "name": "Alien Goddess",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Coconut Milk"
+    ],
+    "mid": [
+      "Jasmine Sambac",
+      "Osmanthus"
+    ],
+    "base": [
+      "Bourbon Vanilla",
+      "Cashmere Wood",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "intimate"
+    ],
+    "description": "Coconut-jasmine luminosity grounded by vanilla cashmere. A softer, more sensual evolution of the Alien DNA.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "aura",
+    "brand": "Mugler",
+    "name": "Aura",
+    "family": "green",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Rhubarb Leaf",
+      "Green Notes"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Wolfwood"
+    ],
+    "base": [
+      "Bourbon Vanilla",
+      "Animalic Musk",
+      "Tiger Wood"
+    ],
+    "roles": [
+      "creative",
+      "signature"
+    ],
+    "description": "Wild rhubarb-green opening with animalic depth and vanilla warmth. An unconventional, nature-inspired statement scent.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "le-male",
+    "brand": "Jean Paul Gaultier",
+    "name": "Le Male",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Lavender",
+      "Mint",
+      "Bergamot",
+      "Cardamom"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Cinnamon",
+      "Cumin"
+    ],
+    "base": [
+      "Vanilla",
+      "Tonka Bean",
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "The iconic lavender-vanilla powerhouse. Sweet, spicy, unmistakably masculine — a pillar of 90s fragrance culture.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "le-male-le-parfum",
+    "brand": "Jean Paul Gaultier",
+    "name": "Le Male Le Parfum",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Cardamom",
+      "Lavender"
+    ],
+    "mid": [
+      "Iris",
+      "Lavandin"
+    ],
+    "base": [
+      "Vanilla",
+      "Woody Notes",
+      "Amber"
+    ],
+    "roles": [
+      "intimate",
+      "cold"
+    ],
+    "description": "Darker, more intense Le Male with iris depth and amplified vanilla-amber. Built for cold-weather seduction.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "scandal",
+    "brand": "Jean Paul Gaultier",
+    "name": "Scandal",
+    "family": "gourmand",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Blood Orange",
+      "Mandarin"
+    ],
+    "mid": [
+      "Honey",
+      "Gardenia",
+      "Jasmine"
+    ],
+    "base": [
+      "Caramel",
+      "Patchouli",
+      "Beeswax"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Honeyed gardenia with a caramel-patchouli base. Sweet, provocative femininity designed for nights that make headlines.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "classique",
+    "brand": "Jean Paul Gaultier",
+    "name": "Classique",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Rose",
+      "Star Anise",
+      "Pear"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Iris",
+      "Orchid"
+    ],
+    "base": [
+      "Vanilla",
+      "Sandalwood",
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "intimate"
+    ],
+    "description": "Warm orange blossom and vanilla-powdered florals. A sensual, comforting classic that defined accessible femininity.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "scandal-pour-homme",
+    "brand": "Jean Paul Gaultier",
+    "name": "Scandal Pour Homme",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Mandarin",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Caramel",
+      "Vetiver"
+    ],
+    "base": [
+      "Tonka Bean",
+      "Leather",
+      "Cedarwood"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Sweet caramel and leather over smoky vetiver. A bold, modern masculine that bridges gourmand and aromatic worlds.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "for-her",
+    "brand": "Narciso Rodriguez",
+    "name": "For Her",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Rose",
+      "Peach"
+    ],
+    "mid": [
+      "Musk",
+      "Amber",
+      "Osmanthus"
+    ],
+    "base": [
+      "Patchouli",
+      "Sandalwood",
+      "Vetiver"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "The musk masterclass — a warm, skin-hugging blend of rose, amber, and patchouli. Effortlessly sensual for every occasion.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "for-her-edt",
+    "brand": "Narciso Rodriguez",
+    "name": "For Her Eau de Toilette",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Rose",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Musk"
+    ],
+    "base": [
+      "Patchouli",
+      "Vetiver",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Lighter, more transparent take on the original musk formula. Orange blossom freshness for easy daytime elegance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "for-him",
+    "brand": "Narciso Rodriguez",
+    "name": "For Him",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Nutmeg",
+      "Cardamom"
+    ],
+    "mid": [
+      "Musk",
+      "Violet Leaf",
+      "Iris"
+    ],
+    "base": [
+      "Vetiver",
+      "Cedar",
+      "Patchouli"
+    ],
+    "roles": [
+      "work",
+      "signature"
+    ],
+    "description": "Clean musk and violet leaf over vetiver-patchouli depth. A subtle, modern masculine for the quietly confident.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "pure-musc",
+    "brand": "Narciso Rodriguez",
+    "name": "Pure Musc",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Pink Pepper",
+      "Rose"
+    ],
+    "mid": [
+      "Musk",
+      "Cashmeran",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Amber",
+      "Cedarwood",
+      "Patchouli"
+    ],
+    "roles": [
+      "intimate",
+      "signature"
+    ],
+    "description": "Stripped-back musk distilled to its purest form with cashmeran warmth. Minimalist sensuality worn close to the skin.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "linterdit",
+    "brand": "Givenchy",
+    "name": "L'Interdit",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "White Pepper",
+      "Pear Blossom"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Jasmine",
+      "Tuberose"
+    ],
+    "base": [
+      "Vetiver",
+      "Patchouli",
+      "Ambroxan"
+    ],
+    "roles": [
+      "signature",
+      "work"
+    ],
+    "description": "Luminous white florals clashed against dark vetiver-patchouli. A beautiful tension between innocence and rebellion.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "gentleman",
+    "brand": "Givenchy",
+    "name": "Gentleman Eau de Parfum",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Cardamom",
+      "Pepper"
+    ],
+    "mid": [
+      "Iris",
+      "Lavender"
+    ],
+    "base": [
+      "Patchouli",
+      "Leather",
+      "Cedar"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Sharp iris-cardamom over a patchouli-leather base. Refined, composed masculinity for evening and colder months.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "irresistible",
+    "brand": "Givenchy",
+    "name": "Irresistible",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Pear",
+      "Ambrette"
+    ],
+    "mid": [
+      "Rose",
+      "Iris"
+    ],
+    "base": [
+      "Musk",
+      "Blonde Wood",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "Sparkling pear and rose with a warm musky glow. Joyful, charming femininity for brunch through evening drinks.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "ange-ou-demon",
+    "brand": "Givenchy",
+    "name": "Ange ou Démon",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Mandarin",
+      "Saffron",
+      "Thyme"
+    ],
+    "mid": [
+      "Lily",
+      "Orchid",
+      "Ylang Ylang"
+    ],
+    "base": [
+      "Tonka Bean",
+      "Vanilla",
+      "Oakmoss",
+      "Oud"
+    ],
+    "roles": [
+      "formal",
+      "signature"
+    ],
+    "description": "Mysterious lily-orchid heart with saffron warmth and oud depth. A dramatic, shape-shifting scent for evening occasions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "amarige",
+    "brand": "Givenchy",
+    "name": "Amarige",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 4,
+    "top": [
+      "Violet",
+      "Plum",
+      "Rosewood"
+    ],
+    "mid": [
+      "Mimosa",
+      "Gardenia",
+      "Ylang Ylang"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk",
+      "Vanilla",
+      "Amber"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Bold gardenia-mimosa radiance with rich amber warmth. A powerhouse floral from the golden era of fragrance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "good-girl",
+    "brand": "Carolina Herrera",
+    "name": "Good Girl",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 4,
+    "top": [
+      "Almond",
+      "Coffee",
+      "Bergamot"
+    ],
+    "mid": [
+      "Tuberose",
+      "Jasmine Sambac",
+      "Rose"
+    ],
+    "base": [
+      "Tonka Bean",
+      "Cocoa",
+      "Sandalwood",
+      "Cedar"
+    ],
+    "roles": [
+      "signature",
+      "formal"
+    ],
+    "description": "Coffee-cocoa richness meets tuberose florals in a stiletto-shaped bottle. Bold, glamorous femininity for the night.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "212",
+    "brand": "Carolina Herrera",
+    "name": "212",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Bergamot",
+      "Mandarin",
+      "Green Notes"
+    ],
+    "mid": [
+      "Camellia",
+      "Gardenia",
+      "Lily"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk",
+      "Incense"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Fresh camellia-gardenia with clean musk and incense. A breezy, modern urban scent for everyday city life.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "212-vip",
+    "brand": "Carolina Herrera",
+    "name": "212 VIP",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Passion Fruit",
+      "Rum"
+    ],
+    "mid": [
+      "Gardenia",
+      "Musk",
+      "Benzoin"
+    ],
+    "base": [
+      "Vanilla",
+      "Tonka Bean",
+      "King Wood"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "Passion fruit and rum party vibes grounded by gardenia and vanilla warmth. A night-out scent with VIP energy.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "bad-boy",
+    "brand": "Carolina Herrera",
+    "name": "Bad Boy",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Black Pepper",
+      "Bergamot",
+      "Green Notes"
+    ],
+    "mid": [
+      "Sage",
+      "Cocoa"
+    ],
+    "base": [
+      "Tonka Bean",
+      "Amberwood",
+      "Leather"
+    ],
+    "roles": [
+      "signature",
+      "cold"
+    ],
+    "description": "Peppery cocoa and sage backed by warm tonka-leather. Confident and edgy for cold-weather nights and social scenes.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "very-good-girl",
+    "brand": "Carolina Herrera",
+    "name": "Very Good Girl",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 5,
+    "top": [
+      "Lychee",
+      "Red Currant"
+    ],
+    "mid": [
+      "Rose",
+      "Vetiver"
+    ],
+    "base": [
+      "Vanilla",
+      "Benzoin",
+      "Musk"
+    ],
+    "roles": [
+      "signature",
+      "intimate"
+    ],
+    "description": "Fruity lychee-rose sweetness over a warm vanilla-vetiver base. A playful, seductive evolution of the Good Girl line.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "leau-dissey",
+    "brand": "Issey Miyake",
+    "name": "L'Eau d'Issey",
+    "family": "aquatic",
+    "sillage": 4,
+    "layering": 8,
+    "top": [
+      "Lotus",
+      "Freesia",
+      "Cyclamen"
+    ],
+    "mid": [
+      "Peony",
+      "Lily",
+      "Water Notes"
+    ],
+    "base": [
+      "Tuberose",
+      "Osmanthus",
+      "Musk",
+      "Cedar"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Pioneering aquatic florals — water lily, peony, and a crystalline finish. The scent that launched a thousand aquatics.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "leau-dissey-pour-homme",
+    "brand": "Issey Miyake",
+    "name": "L'Eau d'Issey Pour Homme",
+    "family": "aquatic",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Yuzu",
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Nutmeg",
+      "Water Lily",
+      "Sage"
+    ],
+    "base": [
+      "Vetiver",
+      "Musk",
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Clean yuzu-citrus over aromatic sage and vetiver. The original aquatic masculine — effortless summer freshness.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "nuit-dissey",
+    "brand": "Issey Miyake",
+    "name": "Nuit d'Issey",
+    "family": "leather",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Leather",
+      "Black Pepper"
+    ],
+    "base": [
+      "Vetiver",
+      "Patchouli",
+      "Tonka Bean",
+      "Incense"
+    ],
+    "roles": [
+      "formal",
+      "cold"
+    ],
+    "description": "Dark leather and incense — the nocturnal counterpoint to the daytime aquatic. Moody sophistication for evening wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "a-drop-dissey",
+    "brand": "Issey Miyake",
+    "name": "A Drop d'Issey",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 7,
+    "top": [
+      "Lilac",
+      "Pear"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Jasmine",
+      "Rose"
+    ],
+    "base": [
+      "Musk",
+      "Almond Milk",
+      "Blonde Wood"
+    ],
+    "roles": [
+      "casual",
+      "work"
+    ],
+    "description": "Delicate lilac and almond milk with airy florals. A gentle, comforting everyday scent like morning light on linen.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "explorer",
+    "brand": "Montblanc",
+    "name": "Explorer",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Pink Pepper",
+      "Clary Sage"
+    ],
+    "mid": [
+      "Leather",
+      "Vetiver",
+      "Indonesian Patchouli"
+    ],
+    "base": [
+      "Akigalawood",
+      "Cacao",
+      "Cashmeran",
+      "Ambroxan"
+    ],
+    "roles": [
+      "casual",
+      "signature"
+    ],
+    "description": "Bergamot-patchouli-vetiver in the Aventus family at a fraction of the price. A versatile daily masculine that punches up.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "legend",
+    "brand": "Montblanc",
+    "name": "Legend",
+    "family": "woody",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Lavender",
+      "Pineapple Leaf"
+    ],
+    "mid": [
+      "Rose",
+      "Geranium",
+      "Apple"
+    ],
+    "base": [
+      "Sandalwood",
+      "Tonka Bean",
+      "Oakmoss",
+      "Musk"
+    ],
+    "roles": [
+      "work",
+      "casual"
+    ],
+    "description": "Clean lavender-geranium over warm sandalwood. A dependable, office-safe masculine for those who value consistency.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "legend-spirit",
+    "brand": "Montblanc",
+    "name": "Legend Spirit",
+    "family": "aquatic",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Grapefruit",
+      "Pink Pepper",
+      "Bergamot"
+    ],
+    "mid": [
+      "Lavender",
+      "Cardamom",
+      "Aquatic Notes"
+    ],
+    "base": [
+      "Oakmoss",
+      "Cashmere Wood",
+      "White Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Fresh aquatic-citrus with lavender and cashmere wood. A light, sporty alternative for warm weather and active days.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "explorer-ultra-blue",
+    "brand": "Montblanc",
+    "name": "Explorer Ultra Blue",
+    "family": "aquatic",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Lemon",
+      "Starfruit"
+    ],
+    "mid": [
+      "Cypress",
+      "Amberwood"
+    ],
+    "base": [
+      "Leather",
+      "Patchouli",
+      "Musk"
+    ],
+    "roles": [
+      "casual",
+      "heat"
+    ],
+    "description": "Bright citrus and tropical starfruit over cypress-leather depth. A fresh, summer-ready evolution of the Explorer line.",
+    "story": "",
+    "url": ""
   }
 ]
