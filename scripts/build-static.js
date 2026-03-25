@@ -107,8 +107,8 @@ buildPage(
   'Scentmap — Compare Fragrances',
   'Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.',
   'Scentmap — Compare Fragrances',
-  'https://scentmap.co/app',
-  'https://scentmap.co/api/og'
+  'https://scentmap.vercel.app/app',
+  'https://scentmap.vercel.app/api/og'
 );
 
 // 2. Quiz pages
@@ -118,8 +118,8 @@ for (const [slug, meta] of Object.entries(QUIZ_META)) {
     meta.title,
     meta.description,
     meta.ogTitle,
-    `https://scentmap.co/quiz/${slug}`,
-    `https://scentmap.co/api/og-quiz?quiz=${slug}`,
+    `https://scentmap.vercel.app/quiz/${slug}`,
+    `https://scentmap.vercel.app/api/og-quiz?quiz=${slug}`,
     true
   );
 }
@@ -134,7 +134,7 @@ for (const [idA, idB] of POPULAR_COMPARISONS) {
     titleText,
     descText,
     titleText,
-    `https://scentmap.co/compare/${idA}/${idB}`,
-    `https://scentmap.co/api/og?a=${idA}&b=${idB}`
+    `https://scentmap.vercel.app/compare/${idA}/${idB}`,
+    `https://scentmap.vercel.app/api/og?a=${idA}&b=${idB}`
   );
 }

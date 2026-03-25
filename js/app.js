@@ -4335,6 +4335,7 @@ function _initStickyScroll(){
 
 /* ── Popular Comparisons (shown when compare results area is empty) ── */
 let _popularPairs = [];
+let _fragDeepLinked = false; // set true when #frag= deep-link is handled; blocks popular-pair auto-select
 function renderPopularComparisons() {
   const res = document.getElementById('cmp-results');
   if (!res || !_popularPairs.length) return;
@@ -4865,8 +4866,8 @@ async function init() {
     .then(r => r.json())
     .then(pairs => {
       _popularPairs = pairs;
-      // Don't overwrite a comparison that handleInitialNavigation() already loaded
-      if (CMP_A || CMP_B) return;
+      // Don't overwrite a comparison or fragrance deep-link that handleInitialNavigation() already loaded
+      if (CMP_A || CMP_B || _fragDeepLinked) return;
       // Auto-select first pair if no comparison is active
       if (pairs.length) {
         const fa = CAT_MAP[pairs[0].a], fb = CAT_MAP[pairs[0].b];
@@ -4950,6 +4951,7 @@ function handleInitialNavigation() {
     const fragId = _fragMatch[1].toLowerCase();
     const fragObj = currentCatMap[fragId];
     if (fragObj) {
+      _fragDeepLinked = true;
       go('catalog', null);
       // Hide catalog column after go() (go calls closeDesktopDetail which would undo it)
       const colMain = document.querySelector('.col-main');
@@ -4995,6 +4997,7 @@ function handleInitialNavigation() {
     const fragId = params.get('id');
     const frag = CAT_MAP[fragId];
     if (frag) {
+      _fragDeepLinked = true;
       go('catalog', null);
       openFragDetail(frag);
     }

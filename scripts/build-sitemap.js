@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SITE = 'https://scentmap.co';
+const SITE = 'https://scentmap.vercel.app';
 const dataDir = path.join(__dirname, '..', 'data');
 const scents = JSON.parse(fs.readFileSync(path.join(dataDir, 'scents-flat.json'), 'utf8'));
 const popular = JSON.parse(fs.readFileSync(path.join(dataDir, 'popular-comparisons.json'), 'utf8'));
@@ -39,6 +39,11 @@ for (const p of popular) {
   urls.add(`${SITE}/compare/${a}/${b}`);
 }
 
+// Individual fragrance detail pages
+for (const id of Object.keys(scents)) {
+  urls.add(`${SITE}/fragrance/${id}`);
+}
+
 // Same-brand pairs (highest search volume — "X vs Y same brand")
 const byBrand = {};
 for (const [id, s] of Object.entries(scents)) {
@@ -64,8 +69,9 @@ for (const url of urls) {
   const isHome = url === SITE + '/';
   const isQuiz = url.includes('/quiz/');
   const isApp = url === SITE + '/app';
-  const priority = isHome ? '1.0' : isQuiz ? '0.8' : isApp ? '0.9' : '0.6';
-  const changefreq = isHome || isApp ? 'weekly' : isQuiz ? 'monthly' : 'monthly';
+  const isFrag = url.includes('/fragrance/');
+  const priority = isHome ? '1.0' : isApp ? '0.9' : isQuiz ? '0.8' : isFrag ? '0.7' : '0.6';
+  const changefreq = isHome || isApp ? 'weekly' : 'monthly';
   xml += `  <url>
     <loc>${url}</loc>
     <lastmod>${today}</lastmod>
