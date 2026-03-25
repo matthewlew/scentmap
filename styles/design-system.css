@@ -126,6 +126,12 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 /* ── 5b. LAYOUT DIMENSIONS ── */
 :root{
   --col-nav-h: 50px;  /* Height of .global-nav sticky header (sp-md + line + sp-sm) */
+  --nav-search-w: 320px;
+  --nav-search-w-md: 240px;
+  --nav-search-h: 36px;
+  --us-dropdown-h: 420px;
+  --landing-wrap-max: 900px;
+  --card-min-w: 250px;
 }
 
 /* ── 6. BORDER-RADIUS SCALE ── */

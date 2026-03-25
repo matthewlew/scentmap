@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
 <title>Scentmap — Compare Fragrances</title>
     <meta name="description" content="Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.">
-    <link rel="canonical" href="https://scentmap.vercel.app/app.html">
+    <link rel="canonical" href="https://scentmap.vercel.app/app">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Scentmap — Compare Fragrances">
     <meta property="og:description" content="Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.">
     <meta property="og:image" content="https://scentmap.vercel.app/api/og">
-    <meta property="og:url" content="https://scentmap.vercel.app/app.html">
+    <meta property="og:url" content="https://scentmap.vercel.app/app">
     <meta property="og:site_name" content="Scentmap">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Scentmap — Compare Fragrances">
@@ -47,21 +47,40 @@
           <button class="global-nav-link" onclick="go('saved', this)">You</button>
         </div>
       </div>
+      <div class="nav-search-bar">
+        <svg class="nav-search-bar-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="nav-search-input" class="nav-search-input" placeholder="Search..." aria-label="Quick search (⌘K)" autocomplete="off">
+        <kbd class="nav-search-bar-kbd">⌘K</kbd>
+      </div>
       <div class="global-nav-right">
-        <button class="nav-search-bar" onclick="openGlobalSearch()" aria-label="Quick search (⌘K)">
-          <svg class="nav-search-bar-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <span class="nav-search-bar-text">Search...</span>
-          <kbd class="nav-search-bar-kbd">⌘K</kbd>
-        </button>
         <button class="nav-back-btn" id="nav-back-btn" hidden onclick="navBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Compare</button>
         <button class="nav-signin-btn" id="nav-signin-btn" aria-label="Sign in to your account">Sign In</button>
         <button class="settings-btn" id="settings-btn" aria-label="Settings" title="Settings" aria-haspopup="true" aria-expanded="false">⚙</button>
         <div class="settings-menu" id="settings-menu" hidden>
-          <button class="settings-menu-item" onclick="settingsGo('changelog')"><span class="settings-menu-icon">↩</span>Changelog</button>
-          <button class="settings-menu-item" onclick="window.open('/designsystem.html', '_blank')"><span class="settings-menu-icon">❖</span>Design System</button>
+          <button class="list-item" onclick="settingsGo('changelog')">
+            <span class="list-item-dot" style="font-size:14px; background:none;">↩</span>
+            <div class="list-item-body">
+              <div class="list-item-label">Changelog</div>
+            </div>
+          </button>
+          <button class="list-item" onclick="window.open('/designsystem.html', '_blank')">
+            <span class="list-item-dot" style="font-size:14px; background:none;">❖</span>
+            <div class="list-item-body">
+              <div class="list-item-label">Design System</div>
+            </div>
+          </button>
         </div>
       </div>
     </nav>
+
+    <!-- Mobile-only persistent search bar — always visible, opens universal search modal -->
+    <div class="mobile-search-row" id="mobile-search-row">
+      <button class="mobile-search-trigger" id="mobile-search-trigger"
+        aria-label="Search fragrances, notes, or brands" aria-haspopup="dialog">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span>Search fragrances, notes, or brands...</span>
+      </button>
+    </div>
 
     <div class="content-row">
       <div class="col-main">
@@ -76,6 +95,12 @@
           </div>
 
           <div class="panel" id="p-catalog">
+            <div class="catalog-main-search">
+              <div class="cat-search-wrap">
+                <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
+                <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
+              </div>
+            </div>
             <div class="catalog-shell">
               <aside class="catalog-sidebar">
                 <div class="cat-sidebar-section">
@@ -96,12 +121,6 @@
                 </div>
               </aside>
               <main class="catalog-main">
-                <div class="catalog-main-search">
-                  <div class="cat-search-wrap">
-                    <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
-                    <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
-                  </div>
-                </div>
                 <div id="cat-live" class="sr-only" aria-live="polite"></div>
                 <div id="cat-body"></div>
               </main>
@@ -116,7 +135,6 @@
               </button>
             </div>
             <header class="cmp-header" id="cmp-header">
-              <div id="cmp-saved" hidden></div>
               <div class="cmp-pair-row">
                 <div class="cmp-card-wrap">
                   <button class="cmp-frag-card" id="cmp-card-a" aria-label="Select first fragrance">
@@ -176,10 +194,11 @@
       <div class="col-detail" id="col-detail">
         <div class="detail-topbar">
           <button class="detail-back" id="detail-back" aria-label="Back">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
             Back
           </button>
-          <button class="detail-close-btn" id="detail-close-btn" onclick="closeDesktopDetail()" aria-label="Close details">✕</button>
+          <div class="sheet-title" id="detail-title"></div>
+          <button class="detail-close-btn" id="detail-close-btn" aria-label="Close">Close</button>
         </div>
         <div class="detail-inner" id="detail-inner"></div>
       </div>

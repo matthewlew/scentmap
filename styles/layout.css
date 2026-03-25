@@ -51,16 +51,25 @@
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   background: var(--bg-primary);
+  z-index: 80;
 }
 
 .col-detail.open {
   width: var(--col-detail);
   border-left: 1px solid var(--border-strong);
+}
+
+.detail-inner {
+  padding: var(--sp-xl) var(--sp-xl) var(--sp-4xl);
+  flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2xl);
 }
 
 /* Detail panel scrim overlay */
@@ -92,7 +101,7 @@
 /* Panels that need their own padding (no sidebar/shell wrapper) */
 #p-saved,
 #p-changelog {
-  padding: var(--sp-lg);
+  padding: var(--sp-xl);
 }
 
 /* ── SHEET STACK (Mobile) ── */
@@ -132,9 +141,9 @@
   background: var(--bg-primary);
   border: 1px solid var(--g300);
   border-bottom: none;
-  border-radius: 16px 16px 0 0;
+  border-radius: 20px 20px 0 0;
   transform: translateY(100%);
-  transition: transform var(--dur-standard) var(--ease-spring);
+  transition: transform var(--dur-standard) var(--ease-spring), opacity var(--dur-standard) var(--ease-spring);
   z-index: 201;
   pointer-events: auto;
   display: flex;
@@ -146,13 +155,14 @@
 }
 
 .sheet.under {
-  transform: translateY(6px);
-  filter: brightness(0.94);
+  transform: scale(0.96);
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .sheet.nav {
   transform: translateX(100%);
-  border-radius: 16px 16px 0 0;
+  border-radius: 20px 20px 0 0;
 }
 
 .sheet.nav.visible {
@@ -160,8 +170,9 @@
 }
 
 .sheet.nav.under {
-  transform: translateX(-22%);
-  filter: brightness(0.92);
+  transform: translateX(-15%);
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .sheet-inner {
@@ -169,7 +180,7 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  padding: 0 var(--sp-lg);
+  padding: 0 var(--sp-xl);
 }
 
 .sheet-content {
@@ -182,26 +193,28 @@
   padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
-  gap: var(--sp-xl);
+  gap: var(--sp-2xl);
 }
 
 .sheet-handle {
-  width: 38px;
-  height: 5px;
+  width: 32px;
+  height: 4px;
   border-radius: 2px;
   background: var(--g300);
-  margin: var(--sp-md) auto 0;
+  margin: var(--sp-sm) auto 0;
+  opacity: 0.6;
 }
 
 .sheet-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--sp-md) 0 var(--sp-lg);
+  padding: var(--sp-sm) 0 var(--sp-md);
   position: sticky;
   top: 0;
   z-index: 10;
   background: var(--bg-primary);
+  min-height: 56px;
 }
 
 .sheet-back {

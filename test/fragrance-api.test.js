@@ -5,7 +5,7 @@
  */
 const assert = require('assert');
 const handler = require('../api/fragrance');
-const SCENTS = require('../data/scents-flat.json');
+const SCENTS = Object.fromEntries(require('../data/scents.json').map(f => [f.id, f]));
 const fs = require('fs');
 
 let passed = 0;

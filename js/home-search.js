@@ -29,7 +29,6 @@ async function initHomeSearch() {
   if (navInput) {
     const bar = navInput.closest('.nav-search-bar');
     if (bar) {
-      bar.style.position = 'absolute'; // Ensure relative/absolute for dropdown
       bar.appendChild(navResultsWrap);
       setupInput(navInput, navResultsWrap);
     }
@@ -38,7 +37,7 @@ async function initHomeSearch() {
   // Load data
   try {
     const [scents, notes, houses] = await Promise.all([
-      fetch('/data/scents-flat.json').then(r => r.json()),
+      fetch('/data/scents.json').then(r => r.json()),
       fetch('/data/notes.json').then(r => r.json()),
       fetch('/data/brands.json').then(r => r.json())
     ]);

@@ -120,7 +120,6 @@
 
 .tab.active {
   color: var(--text-primary);
-  font-weight: 600;
   background: var(--bg-primary);
   box-shadow: 0 1px 2px var(--fade-medium);
 }
@@ -128,10 +127,10 @@
 /* Sliding pill behind active tab — same as .frag-picker-sort-pill */
 .tab-pill {
   position: absolute;
-  top: 3px;
-  bottom: 3px;
+  top: var(--sp-micro);
+  bottom: var(--sp-micro);
   background: var(--bg-primary);
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: calc(var(--radius) - var(--sp-micro));
   box-shadow: 0 1px 3px var(--fade-subtle);
   pointer-events: none;
   transition: left var(--dur-standard) var(--ease-spring),
@@ -165,7 +164,6 @@
 .fam-abbr {
   font-family: var(--font-sans);
   font-size: 8px;
-  font-weight: 700;
   line-height: 1;
   color: var(--on-dark-text);
   letter-spacing: -0.02em;
@@ -285,44 +283,80 @@
 
 /* ── 3. DETAIL PANEL ── */
 
-.detail-topbar {
+.detail-topbar,
+.sheet-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--sp-md) var(--sp-lg) var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-xl);
   flex-shrink: 0;
   border-bottom: 1px solid var(--border-standard);
+  background: var(--bg-primary);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: 56px;
 }
 
-.detail-back {
+.sheet-topbar {
+  padding: var(--sp-sm) 0 var(--sp-md); /* mobile sheet handles its own horizontal padding via .sheet-inner */
+}
+
+.detail-back,
+.sheet-back {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  min-width: 64px;
+  min-height: 44px;
+  transition: color var(--dur-fast);
+}
+
+.detail-back:not(.visible),
+.sheet-back.hidden {
   opacity: 0;
   pointer-events: none;
-  min-width: 52px;
-  transition: opacity var(--dur-fast);
+  visibility: hidden;
 }
 
-.detail-back.visible {
-  opacity: 1;
-  pointer-events: auto;
+.detail-close-btn,
+.sheet-close {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  min-width: 64px;
+  min-height: 44px;
+  transition: color var(--dur-fast);
 }
 
 .detail-inner {
-  padding: var(--sp-lg) var(--sp-2xl);
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-xl);
+  /* Padding and scroll behavior handled in layout.css */
 }
 
 .detail-inner.slide {
-  animation: detail-slidein var(--dur-fast) ease-out forwards;
+  animation: detail-slidein var(--dur-standard) var(--ease-spring) forwards;
 }
 
 @keyframes detail-slidein {
   from {
     opacity: 0;
-    transform: translateX(10px);
+    transform: translateX(12px);
   }
   to {
     opacity: 1;
@@ -336,15 +370,16 @@
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
   margin-bottom: 0;
+  color: var(--text-primary);
 }
 
 .dc-brand {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
-  color: var(--g450);
+  color: var(--accent-primary);
   margin-bottom: 0;
 }
 
@@ -1076,7 +1111,7 @@ button.tag:hover {
 
 .catalog-main-search .cat-search-wrap {
   width: 100%;
-  max-width: 560px;
+  max-width: var(--chart-max);
 }
 
 .frag-layout {
@@ -1402,7 +1437,6 @@ button.tag:hover {
 .list-item-label {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
-  font-weight: 600;
   color: var(--text-primary);
   line-height: var(--lh-tight);
   white-space: nowrap;
@@ -1488,7 +1522,6 @@ button.tag:hover {
 mark.note-match {
   background: none;
   color: var(--accent-primary);
-  font-weight: 600;
 }
 
 
@@ -1930,6 +1963,7 @@ mark.note-match {
 /* .cmp-sticky-dot → use .dot */
 
 .cmp-sticky-name {
+  font-family: var(--font-sans);
   font-size: var(--fs-body);
   font-weight: 600;
   white-space: nowrap;
@@ -2154,8 +2188,14 @@ mark.note-match {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-/* .cmp-grid-col-head → migrated to .sec-label (keeps layout-specific padding/alignment) */
+/* .cmp-grid-col-head — sec-label typography + layout-specific padding/alignment */
 .cmp-grid-col-head {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
   padding: 0 var(--sp-sm);
 }
 
@@ -2210,8 +2250,14 @@ mark.note-match {
   text-align: right;
 }
 
-/* .cmp-grid-layer-lbl → migrated to .sec-label (keeps layout-specific centering) */
+/* .cmp-grid-layer-lbl — sec-label typography + layout-specific centering */
 .cmp-grid-layer-lbl {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
   margin-bottom: var(--sp-micro);
   width: 100%;
   text-align: center;
@@ -2690,7 +2736,6 @@ mark.note-match {
 }
 
 .us-context-name {
-  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -2761,7 +2806,7 @@ mark.note-match {
   box-shadow: var(--shadow-lg);
   z-index: 1000;
   margin-top: var(--sp-xs);
-  max-height: 420px;
+  max-height: var(--us-dropdown-h);
   overflow-y: auto;
 }
 
@@ -3335,7 +3380,6 @@ mark.note-match {
 .global-nav-link {
   font-family: var(--font-sans);
   font-size: var(--fs-meta);
-  font-weight: 600;
   color: var(--text-tertiary);
   text-decoration: none;
   background: none;
@@ -3347,7 +3391,6 @@ mark.note-match {
   height: 100%;
   display: flex;
   align-items: center;
-  margin-top: 2px; /* optical alignment with logo */
 }
 
 .global-nav-link:hover {
@@ -3376,13 +3419,13 @@ mark.note-match {
   border: 1px solid var(--border-standard);
   border-radius: var(--radius-pill);
   padding: 0 var(--sp-md);
-  height: 36px;
+  height: var(--nav-search-h);
   cursor: text;
   transition: all var(--dur-fast);
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  max-width: 320px;
+  max-width: var(--nav-search-w);
   width: 100%;
 }
 
@@ -3414,13 +3457,12 @@ mark.note-match {
 
 .nav-search-bar-kbd {
   font-family: var(--font-sans);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: var(--fs-label);
   color: var(--text-disabled);
   background: var(--bg-tertiary);
   border-radius: var(--radius-micro);
-  padding: 1px 4px;
-  letter-spacing: 0.05em;
+  padding: 1px var(--sp-xs);
+  letter-spacing: var(--ls-wide);
   flex-shrink: 0;
 }
 
@@ -3428,20 +3470,14 @@ mark.note-match {
   .nav-search-bar {
     position: static;
     transform: none;
-    flex: 0 1 auto;
-    width: auto;
-    max-width: none;
-    border-color: transparent;
-    padding: var(--sp-sm);
-    gap: 0;
+    flex: 1;
+    max-width: var(--nav-search-w-md);
   }
-  .nav-search-bar:hover,
-  .nav-search-bar:focus-within {
-    background: var(--bg-secondary);
-    border-color: var(--border-standard);
-  }
-  .nav-search-input,
-  .nav-search-bar-kbd {
+}
+
+@media (max-width: 767px) {
+  /* On mobile the persistent .mobile-search-row handles search — hide nav bar */
+  .nav-search-bar {
     display: none;
   }
 }
@@ -3472,6 +3508,56 @@ mark.note-match {
   .mbn-icon svg{width:20px;height:20px}
   /* Compare sticky bar: offset by global-nav on mobile */
   #cmp-sticky-bar { top: var(--col-nav-h); }
+}
+
+/* ══ MOBILE PERSISTENT SEARCH BAR ════════════════════════════════ */
+/* Hidden on desktop/tablet — shown only on mobile as an always-visible
+   search entry point above the panel content */
+.mobile-search-row {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-search-row {
+    display: block;
+    padding: var(--sp-xs) var(--sp-md);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky;
+    top: var(--col-nav-h);
+    z-index: 20;
+  }
+
+  .mobile-search-trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-sm);
+    width: 100%;
+    padding: var(--sp-sm) var(--sp-md);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-pill);
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+    font-size: var(--fs-meta);
+    cursor: pointer;
+    text-align: left;
+    min-height: var(--touch-target);
+    transition: background var(--dur-fast), border-color var(--dur-fast);
+  }
+
+  .mobile-search-trigger:hover,
+  .mobile-search-trigger:active {
+    background: var(--bg-primary);
+    border-color: var(--border-strong);
+  }
+
+  .mobile-search-trigger:focus-visible {
+    outline: none;
+    box-shadow: none;
+    border-color: var(--border-strong);
+    background: var(--bg-primary);
+  }
 }
 
 /* ══ AUTH MODAL ═══════════════════════════════════════════════════ */

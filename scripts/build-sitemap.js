@@ -12,7 +12,7 @@ const path = require('path');
 
 const SITE = 'https://scentmap.vercel.app';
 const dataDir = path.join(__dirname, '..', 'data');
-const scents = JSON.parse(fs.readFileSync(path.join(dataDir, 'scents-flat.json'), 'utf8'));
+const scents = JSON.parse(fs.readFileSync(path.join(dataDir, 'scents.json'), 'utf8'));
 const popular = JSON.parse(fs.readFileSync(path.join(dataDir, 'popular-comparisons.json'), 'utf8'));
 
 const urls = new Set();
@@ -33,22 +33,18 @@ for (const slug of quizSlugs) {
   urls.add(`${SITE}/quiz/${slug}`);
 }
 
-// Individual fragrance pages
-for (const id of Object.keys(scents)) {
-  urls.add(`${SITE}/fragrance/${id}`);
+// Individual fragrance pages + same-brand grouping in one pass
+const byBrand = {};
+for (const f of scents) {
+  urls.add(`${SITE}/fragrance/${f.id}`);
+  if (!byBrand[f.brand]) byBrand[f.brand] = [];
+  byBrand[f.brand].push(f.id);
 }
 
 // Popular curated pairs
 for (const p of popular) {
   const [a, b] = [p.a, p.b].sort();
   urls.add(`${SITE}/compare/${a}/${b}`);
-}
-
-// Same-brand pairs (highest search volume — "X vs Y same brand")
-const byBrand = {};
-for (const [id, s] of Object.entries(scents)) {
-  if (!byBrand[s.brand]) byBrand[s.brand] = [];
-  byBrand[s.brand].push(id);
 }
 for (const ids of Object.values(byBrand)) {
   ids.sort();
