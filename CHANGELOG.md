@@ -1,3 +1,9 @@
+## v1.4.0 — Stable Release (2026-03-25)
+
+Massive fragrance catalog expansion: 151 new fragrances across 27 new brands. Catalog grows from 220 → 371 fragrances (45 brands). Mobile persistent search bar, tablet nav search improvements.
+
+---
+
 ## 2026-03-25
 
 ### Added
