@@ -3553,7 +3553,7 @@
     "id": "oud-immortel",
     "brand": "Byredo",
     "name": "Oud Immortel",
-    "family": "resin",
+    "family": "amber",
     "sillage": 7,
     "layering": 8,
     "top": [
@@ -6274,5 +6274,1378 @@
     "description": "A clean ylang-ylang that avoids banana-tropical clichés — reads as white floral and elegant, supported by warm sandalwood.",
     "url": "",
     "story": ""
+  },
+  {
+    "id": "black-opium",
+    "brand": "Yves Saint Laurent",
+    "name": "Black Opium",
+    "family": "amber",
+    "sillage": 9,
+    "layering": 7,
+    "top": [
+      "Coffee",
+      "Vanilla"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Jasmine"
+    ],
+    "base": [
+      "Vanilla",
+      "Cedarwood",
+      "Amber"
+    ],
+    "roles": [
+      "formal"
+    ],
+    "description": "Dark coffee and warm vanilla create an intoxicating, sensual scent perfect for evening wear and special occasions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "libre",
+    "brand": "Yves Saint Laurent",
+    "name": "Libre",
+    "family": "floral",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Lavender",
+      "Bergamot"
+    ],
+    "mid": [
+      "Jasmine",
+      "Orange Blossom"
+    ],
+    "base": [
+      "Amber",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Lavender and amber blend into a bold, free-spirited fragrance that works for day or evening with quiet confidence.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "mon-paris",
+    "brand": "Yves Saint Laurent",
+    "name": "Mon Paris",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Raspberry",
+      "Blackcurrant"
+    ],
+    "mid": [
+      "Peony",
+      "Rose"
+    ],
+    "base": [
+      "Patchouli",
+      "Vanilla"
+    ],
+    "roles": [
+      "formal",
+      "intimate"
+    ],
+    "description": "Romantic berry and peony dance together in a luxurious scent ideal for date nights and intimate moments.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "opium",
+    "brand": "Yves Saint Laurent",
+    "name": "Opium",
+    "family": "amber",
+    "sillage": 9,
+    "layering": 8,
+    "top": [
+      "Mandarin",
+      "Ginger",
+      "Cardamom"
+    ],
+    "mid": [
+      "Jasmine",
+      "Carnation"
+    ],
+    "base": [
+      "Sandalwood",
+      "Cedarwood",
+      "Amber"
+    ],
+    "roles": [
+      "formal"
+    ],
+    "description": "Spiced and sensual with warm amber undertones, this iconic oriental fragrance projects confidence and timeless elegance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "y",
+    "brand": "Yves Saint Laurent",
+    "name": "Y",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Ginger",
+      "Bergamot"
+    ],
+    "mid": [
+      "Ambroxan",
+      "Cedarwood"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vetiver"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Clean woody and aromatic with a touch of spice, offering a versatile scent for modern daily wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "wood-sage-and-sea-salt",
+    "brand": "Jo Malone",
+    "name": "Wood Sage & Sea Salt",
+    "family": "green",
+    "sillage": 4,
+    "layering": 8,
+    "top": [
+      "Sage",
+      "Sea Salt"
+    ],
+    "mid": [
+      "Driftwood",
+      "Ambrette"
+    ],
+    "base": [
+      "Driftwood",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Crisp coastal herbs and mineral sea salt evoke a breezy seaside walk; perfect for layering or everyday freshness.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "lime-basil-and-mandarin",
+    "brand": "Jo Malone",
+    "name": "Lime Basil & Mandarin",
+    "family": "citrus",
+    "sillage": 4,
+    "layering": 8,
+    "top": [
+      "Lime",
+      "Basil",
+      "Mandarin"
+    ],
+    "mid": [
+      "Jasmine",
+      "Green Notes"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Zesty citrus and herbaceous basil create a bright, uplifting scent ideal for daytime and layering versatility.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "peony-and-blush-suede",
+    "brand": "Jo Malone",
+    "name": "Peony & Blush Suede",
+    "family": "floral",
+    "sillage": 3,
+    "layering": 9,
+    "top": [
+      "Peony",
+      "Blush Accord"
+    ],
+    "mid": [
+      "Peony",
+      "Rose"
+    ],
+    "base": [
+      "Suede",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Delicate peony with soft suede and musk creates a tender, intimate fragrance perfect for romantic moments and layering.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "english-pear-and-freesia",
+    "brand": "Jo Malone",
+    "name": "English Pear & Freesia",
+    "family": "floral",
+    "sillage": 4,
+    "layering": 8,
+    "top": [
+      "Pear",
+      "Freesia"
+    ],
+    "mid": [
+      "Freesia",
+      "Peony"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Succulent pear and airy freesia blend into a light, elegant scent that feels both fruity and floral throughout the day.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "velvet-rose-and-oud",
+    "brand": "Jo Malone",
+    "name": "Velvet Rose & Oud",
+    "family": "oud",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Rose",
+      "Cardamom"
+    ],
+    "mid": [
+      "Rose",
+      "Oud"
+    ],
+    "base": [
+      "Oud",
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Rich rose and creamy oud create a luxurious, sensual composition that bridges floral romance with woody depth.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "myrrh-and-tonka",
+    "brand": "Jo Malone",
+    "name": "Myrrh & Tonka",
+    "family": "amber",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Myrrh",
+      "Ginger"
+    ],
+    "mid": [
+      "Myrrh",
+      "Tonka"
+    ],
+    "base": [
+      "Tonka",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Warm myrrh and creamy tonka create a comforting, sensual fragrance with subtle spice and underlying sweetness.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "bloom",
+    "brand": "Gucci",
+    "name": "Bloom",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Tuberose",
+      "Freesia"
+    ],
+    "mid": [
+      "Tuberose",
+      "Jasmine"
+    ],
+    "base": [
+      "Vetiver",
+      "Patchouli"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Intoxicating tuberose and jasmine create a lush, romantic floral that transitions beautifully from day to evening.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "guilty-pour-femme",
+    "brand": "Gucci",
+    "name": "Guilty Pour Femme",
+    "family": "floral",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Pineapple",
+      "Peach"
+    ],
+    "mid": [
+      "Jasmine",
+      "Lilac"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Fruity top notes and creamy florals blend into an intoxicating, guilty-pleasure scent perfect for evening wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "memoire-dune-odeur",
+    "brand": "Gucci",
+    "name": "Mémoire d'une Odeur",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Citrus"
+    ],
+    "mid": [
+      "Iris",
+      "Cedar"
+    ],
+    "base": [
+      "Vetiver",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Clean aromatic and woody notes create a subtle, sophisticated memory of a moment—equally worn by all.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "flora-gorgeous-gardenia",
+    "brand": "Gucci",
+    "name": "Flora Gorgeous Gardenia",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Peach",
+      "Honeyed Notes"
+    ],
+    "mid": [
+      "Gardenia",
+      "Jasmine"
+    ],
+    "base": [
+      "Amber",
+      "Patchouli"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Honeyed gardenia and soft peach create a warm, romantic floral perfect for daytime elegance and intimate moments.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "guilty-pour-homme",
+    "brand": "Gucci",
+    "name": "Guilty Pour Homme",
+    "family": "woody",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Lemon",
+      "Lavender"
+    ],
+    "mid": [
+      "Cedar",
+      "Incense"
+    ],
+    "base": [
+      "Amber",
+      "Leather",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Aromatic lavender and spicy cedar transition to warm amber and leather, creating a sophisticated masculine fragrance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "1-million",
+    "brand": "Paco Rabanne",
+    "name": "1 Million",
+    "family": "amber",
+    "sillage": 9,
+    "layering": 6,
+    "top": [
+      "Grapefruit",
+      "Cinnamon"
+    ],
+    "mid": [
+      "Amber",
+      "Honey"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Tonka"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Spiced amber and honey create a bold, intoxicating fragrance that projects luxury and sensuality.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "olympea",
+    "brand": "Paco Rabanne",
+    "name": "Olympéa",
+    "family": "aquatic",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Pear"
+    ],
+    "mid": [
+      "Coconut",
+      "Jasmine"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Tropical coconut and creamy vanilla evoke a sun-drenched island escape, blending aquatic freshness with warmth.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "invictus",
+    "brand": "Paco Rabanne",
+    "name": "Invictus",
+    "family": "woody",
+    "sillage": 9,
+    "layering": 6,
+    "top": [
+      "Grapefruit",
+      "Ambroxan"
+    ],
+    "mid": [
+      "Guaiac Wood",
+      "Amber"
+    ],
+    "base": [
+      "Guaiac Wood",
+      "Amber"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Fresh grapefruit and woody ambroxan create a conquering, athletic fragrance perfect for confident daytime wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "pure-xs",
+    "brand": "Paco Rabanne",
+    "name": "Pure XS",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Apple",
+      "Juniper"
+    ],
+    "mid": [
+      "Cedarwood",
+      "Amber"
+    ],
+    "base": [
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Crisp apple and juniper soften into creamy amber and sandalwood, creating a modern, clean-yet-warm scent.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "la-vie-est-belle",
+    "brand": "Lancôme",
+    "name": "La Vie Est Belle",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Iris",
+      "Bergamot"
+    ],
+    "mid": [
+      "Patchouli",
+      "Praline"
+    ],
+    "base": [
+      "Vanilla",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Rich praline and creamy vanilla celebrate life's beautiful moments with warm, enveloping elegance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "idole",
+    "brand": "Lancôme",
+    "name": "Idôle",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Floralien",
+      "Bergamot"
+    ],
+    "mid": [
+      "Tuberose",
+      "Jasmine"
+    ],
+    "base": [
+      "Sandalwood",
+      "Vanilla"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "A modern floral tribute celebrating iconic femininity with tuberose, jasmine, and creamy sandalwood.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "tresor",
+    "brand": "Lancôme",
+    "name": "Trésor",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Peach",
+      "Apricot"
+    ],
+    "mid": [
+      "Rose",
+      "Jasmine"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Vanilla"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Fruity florals and warm amber create a precious, romantic scent that feels like a treasured memory.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "la-nuit-tresor",
+    "brand": "Lancôme",
+    "name": "La Nuit Trésor",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Peach",
+      "Bergamot"
+    ],
+    "mid": [
+      "Jasmine",
+      "Orchid"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Nocturnal floral with sensual jasmine and warm amber, perfect for romantic evenings and special occasions.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "daisy",
+    "brand": "Marc Jacobs",
+    "name": "Daisy",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Violet Leaf"
+    ],
+    "mid": [
+      "Daisy",
+      "Jasmine"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Innocent daisy with soft musk creates a cheerful, approachable floral perfect for youthful, everyday wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "dot",
+    "brand": "Marc Jacobs",
+    "name": "Dot",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Apple",
+      "Plum"
+    ],
+    "mid": [
+      "Tuberose",
+      "Jasmine"
+    ],
+    "base": [
+      "Amber",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Playful fruity top and creamy floral heart create a youthful, approachable scent with warmth and charm.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "lola",
+    "brand": "Marc Jacobs",
+    "name": "Lola",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Apple",
+      "Cinnamon"
+    ],
+    "mid": [
+      "Amber",
+      "Caramel"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Spiced apple and creamy caramel create a flirtatious, warm scent that feels both playful and sensual.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "honey",
+    "brand": "Marc Jacobs",
+    "name": "Honey",
+    "family": "amber",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Almond",
+      "Honey"
+    ],
+    "mid": [
+      "Honey",
+      "Tonka"
+    ],
+    "base": [
+      "Tonka",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Golden honey and creamy tonka evoke warmth and comfort; a sweet, approachable scent for daily wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "flowerbomb",
+    "brand": "Viktor & Rolf",
+    "name": "Flowerbomb",
+    "family": "floral",
+    "sillage": 9,
+    "layering": 5,
+    "top": [
+      "Bergamot",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Sambac Jasmine",
+      "Freesia",
+      "Osmanthus"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "An explosive floral bouquet that captivates with tuberose and jasmine intensity; bold evening fragrance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "bonbon",
+    "brand": "Viktor & Rolf",
+    "name": "Bonbon",
+    "family": "amber",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Caramel",
+      "Almond"
+    ],
+    "mid": [
+      "Caramel",
+      "Amber"
+    ],
+    "base": [
+      "Tonka",
+      "Sandalwood",
+      "Vanilla"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Gourmand caramel and tonka wrap you in sweetness; a playful, luxurious scent for evening indulgence.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "flowerbomb-nectar",
+    "brand": "Viktor & Rolf",
+    "name": "Flowerbomb Nectar",
+    "family": "floral",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Passion Fruit"
+    ],
+    "mid": [
+      "Freesia",
+      "Osmanthus"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Fruity floral variation of Flowerbomb with passion fruit sweetness and creamy base for sensual evenings.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "portrait-of-a-lady",
+    "brand": "Frederic Malle",
+    "name": "Portrait of a Lady",
+    "family": "floral",
+    "sillage": 8,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Tangerine"
+    ],
+    "mid": [
+      "Rose",
+      "Iris"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "A sophisticated rose iris with warm amber and sandalwood creates an artistic, timeless feminine portrait.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "carnal-flower",
+    "brand": "Frederic Malle",
+    "name": "Carnal Flower",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Lemon"
+    ],
+    "mid": [
+      "Tuberose",
+      "Hyacinth"
+    ],
+    "base": [
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Intoxicating tuberose and creamy musk create a sensual, indolic floral that feels utterly seductive.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "musc-ravageur",
+    "brand": "Frederic Malle",
+    "name": "Musc Ravageur",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Pink Pepper"
+    ],
+    "mid": [
+      "Iris",
+      "Rose"
+    ],
+    "base": [
+      "Musk",
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Spicy iris and seductive musk blend into an addictive, sensual fragrance for confident, provocative wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "noir-epices",
+    "brand": "Frederic Malle",
+    "name": "Noir Épices",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Pink Pepper",
+      "Cardamom"
+    ],
+    "mid": [
+      "Cedar",
+      "Incense"
+    ],
+    "base": [
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Warm spices and smoky incense create a mysterious, complex scent perfect for evening sophistication.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "en-passant",
+    "brand": "Frederic Malle",
+    "name": "En Passant",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Grapefruit",
+      "Bergamot"
+    ],
+    "mid": [
+      "Iris",
+      "Hyacinth"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Delicate iris and soft musk create a fleeting, graceful fragrance that evokes a tender moment in passing.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "lipstick-rose",
+    "brand": "Frederic Malle",
+    "name": "Lipstick Rose",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Pink Pepper",
+      "Bergamot"
+    ],
+    "mid": [
+      "Rose",
+      "Iris"
+    ],
+    "base": [
+      "Musk",
+      "Amber"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "A creamy, feminine rose with spicy pink pepper creates an elegant, confident fragrance with soft sexiness.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "geranium-pour-monsieur-fm",
+    "brand": "Frederic Malle",
+    "name": "Geranium pour Monsieur",
+    "family": "green",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Geranium Leaf",
+      "Citrus"
+    ],
+    "mid": [
+      "Geranium",
+      "Sage"
+    ],
+    "base": [
+      "Cedar",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Fresh, minty geranium and herbal sage create a clean, masculine fragrance perfect for sophisticated daytime wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "eau-de-magnolia",
+    "brand": "Frederic Malle",
+    "name": "Eau de Magnolia",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 6,
+    "top": [
+      "Lemon",
+      "Grapefruit"
+    ],
+    "mid": [
+      "Magnolia",
+      "Iris"
+    ],
+    "base": [
+      "Musk",
+      "Cedar"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Creamy magnolia and soft citrus create a refined, airy fragrance ideal for fresh, feminine daytime elegance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "ambre-sultan",
+    "brand": "Serge Lutens",
+    "name": "Ambre Sultan",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Labdanum",
+      "Spices"
+    ],
+    "mid": [
+      "Amber",
+      "Incense"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Dark, resinous amber and incense create an opulent, mysterious scent that wraps you in sensual warmth.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "feminite-du-bois",
+    "brand": "Serge Lutens",
+    "name": "Féminité du Bois",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Lemon",
+      "Bergamot"
+    ],
+    "mid": [
+      "Iris",
+      "Lily"
+    ],
+    "base": [
+      "Cedar",
+      "Sandalwood",
+      "Vetiver"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Delicate iris over dry cedarwood creates a feminine, sophisticated woody fragrance for refined everyday wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "borneo-1834",
+    "brand": "Serge Lutens",
+    "name": "Borneo 1834",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Nutmeg",
+      "Clove"
+    ],
+    "mid": [
+      "Cedar",
+      "Incense"
+    ],
+    "base": [
+      "Sandalwood",
+      "Cedarwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Warm spices and smoky cedarwood evoke colonial exploration with sophisticated, contemplative depth.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "fleurs-doranger",
+    "brand": "Serge Lutens",
+    "name": "Fleurs d'Oranger",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Neroli",
+      "Orange Blossom"
+    ],
+    "mid": [
+      "Orange Blossom",
+      "Tuberose"
+    ],
+    "base": [
+      "Sandalwood",
+      "Amber"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Delicate orange blossom and soft sandalwood create an elegant, slightly creamy floral for daytime softness.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "sa-majeste-la-rose",
+    "brand": "Serge Lutens",
+    "name": "Sa Majesté la Rose",
+    "family": "floral",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Rose",
+      "Bergamot"
+    ],
+    "mid": [
+      "Rose",
+      "Iris"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "A regal rose with soft iris and musk creates a refined, creamy floral that feels simultaneously fresh and warm.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "fumerie-turque",
+    "brand": "Serge Lutens",
+    "name": "Fumerie Turque",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Tobacco",
+      "Spices"
+    ],
+    "mid": [
+      "Tobacco",
+      "Leather"
+    ],
+    "base": [
+      "Amber",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Smoky tobacco and rich amber evoke an exotic Turkish bazaar; complex and intoxicating for evening wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "santal-majuscule",
+    "brand": "Serge Lutens",
+    "name": "Santal Majuscule",
+    "family": "woody",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Citrus"
+    ],
+    "mid": [
+      "Sandalwood",
+      "Iris"
+    ],
+    "base": [
+      "Sandalwood",
+      "Cedar"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Creamy sandalwood with soft iris and citrus creates a refined, masculine woody fragrance for daily sophistication.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "halfeti",
+    "brand": "Penhaligon's",
+    "name": "Halfeti",
+    "family": "floral",
+    "sillage": 6,
+    "layering": 6,
+    "top": [
+      "Rose",
+      "Bergamot"
+    ],
+    "mid": [
+      "Rose",
+      "Damask Rose"
+    ],
+    "base": [
+      "Musk",
+      "Cedar"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Deep damask rose with soft musk and cedarwood creates a romantic, sophisticated floral with melancholic beauty.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "endymion",
+    "brand": "Penhaligon's",
+    "name": "Endymion",
+    "family": "woody",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Neroli",
+      "Bergamot"
+    ],
+    "mid": [
+      "Carnation",
+      "Cedarwood"
+    ],
+    "base": [
+      "Cedarwood",
+      "Sandalwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Aromatic neroli and carnation transition to dry cedarwood, creating a timeless masculine fragrance with quiet elegance.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "the-tragedy-of-lord-george",
+    "brand": "Penhaligon's",
+    "name": "The Tragedy of Lord George",
+    "family": "amber",
+    "sillage": 7,
+    "layering": 6,
+    "top": [
+      "Bergamot",
+      "Cinnamon"
+    ],
+    "mid": [
+      "Cedarwood",
+      "Leather"
+    ],
+    "base": [
+      "Amber",
+      "Leather",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Spiced amber and smoky leather evoke Gothic drama; a sophisticated, moody scent for evening sophistication.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "mure-et-musc",
+    "brand": "L'Artisan Parfumeur",
+    "name": "Mûre et Musc",
+    "family": "gourmand",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Blackberry",
+      "Violet Leaf"
+    ],
+    "mid": [
+      "Blackberry",
+      "Iris"
+    ],
+    "base": [
+      "Musk",
+      "Sandalwood"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Juicy blackberry and soft musk create an intimate, slightly tart fragrance perfect for layering and daily wear.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "premier-figuier",
+    "brand": "L'Artisan Parfumeur",
+    "name": "Premier Figuier",
+    "family": "floral",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Fig Leaf",
+      "Bergamot"
+    ],
+    "mid": [
+      "Fig",
+      "Jasmine"
+    ],
+    "base": [
+      "Cedarwood",
+      "Musk"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Fresh fig leaf and creamy jasmine evoke Mediterranean gardens; ideal for warm days and subtle sophistication.",
+    "story": "",
+    "url": ""
+  },
+  {
+    "id": "dzing",
+    "brand": "L'Artisan Parfumeur",
+    "name": "Dzing!",
+    "family": "green",
+    "sillage": 5,
+    "layering": 7,
+    "top": [
+      "Cardamom",
+      "Spices"
+    ],
+    "mid": [
+      "Hay",
+      "Leather"
+    ],
+    "base": [
+      "Hay",
+      "Tobacco",
+      "Leather"
+    ],
+    "roles": [
+      "casual"
+    ],
+    "description": "Spicy cardamom and dry hay create an unconventional, earthy fragrance evoking horse and circus atmospheres.",
+    "story": "",
+    "url": ""
   }
 ]

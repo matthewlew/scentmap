@@ -1,3 +1,12 @@
+## 2026-03-25
+
+### Added
+- **Fragrance expansion: Tier 1 + Tier 2** — 52 new fragrances across 9 brands. Tier 1 (mainstream): YSL (5), Jo Malone (6), Gucci (5), Paco Rabanne (4), Lancôme (4), Marc Jacobs (4), Viktor&Rolf (3). Tier 2 (craft niche): Frederic Malle (8), Penhaligon's (3). Catalog grows from 220 → 272 fragrances. Note: 3 entries skipped (Serge Lutens Chergui, L'Artisan Timbuktu, Diptyque Geranium pour Monsieur already existed).
+- **Mobile persistent search bar** — Always-visible search trigger row on mobile (below the global nav), tapping opens the universal search modal. Replaces the hidden icon-only search on mobile.
+
+### Changed
+- **Tablet nav search** — Nav search bar now shows the full text input and ⌘K hint on tablet (768–1099px); previously collapsed to an icon-only button.
+
 ## 2026-03-24
 
 ### Changed
