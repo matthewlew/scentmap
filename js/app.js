@@ -1478,15 +1478,7 @@ function renderDupeLab(container, anchor) {
               </summary>
               <div class="dupe-breakdown" style="margin-top: var(--sp-sm); padding-top: var(--sp-sm); border-top: 1px dashed var(--border-subtle); font-size: var(--fs-caption); color: var(--text-tertiary); display: flex; flex-direction: column; gap: var(--sp-xs);">
                 ${(() => {
-                  const famScore = (FAM_COMPAT[anchor.family]?.[f.family] ?? 0.5) * 40;
-                  const shBase = anchor._nBase.filter(n => f._nBase.includes(n)).length;
-                  const shMid = anchor._nMid.filter(n => f._nMid.includes(n)).length;
-                  const shTop = anchor._nTop.filter(n => f._nTop.includes(n)).length;
-                  const noteScore = Math.min(30, shBase * 5 + shMid * 3 + shTop * 2);
-                  const sillDiff = Math.abs(anchor.sillage - f.sillage);
-                  const sillScore = sillDiff <= 2 ? 10 : sillDiff <= 4 ? 5 : 0;
-                  const shRoles = anchor.roles.filter(r => f.roles.includes(r)).length;
-                  const roleScore = Math.min(20, shRoles * 7);
+                  const { famScore, noteScore, sillScore, roleScore } = engine.getSimilarityDetails(anchor, f, store.FAM_COMPAT);
 
                   return `
                     <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
@@ -4199,16 +4191,7 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
   ];
   let bodyContent = '';
   if (isMatch) {
-    const famScore=(FAM_COMPAT[fa.family]?.[fb.family]??0.5)*40;
-    const shBase=fa._nBase.filter(n=>fb._nBase.includes(n)).length;
-    const shMid=fa._nMid.filter(n=>fb._nMid.includes(n)).length;
-    const shTop=fa._nTop.filter(n=>fb._nTop.includes(n)).length;
-    const noteScore=Math.min(30,shBase*5+shMid*3+shTop*2);
-    const sillDiff=Math.abs(fa.sillage-fb.sillage);
-    const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
-    const shRoles=fa.roles.filter(r=>fb.roles.includes(r)).length;
-    const roleScore=Math.min(20,shRoles*7);
-    const rawScore = famScore + noteScore + sillScore + roleScore;
+    const { famScore, noteScore, sillScore, roleScore, total: rawScore } = engine.getSimilarityDetails(fa, fb, store.FAM_COMPAT);
 
     bodyContent = `
       <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
@@ -4240,13 +4223,7 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
       </div>
     `;
   } else {
-    const famComp=FAM_COMPAT[fa.family]?.[fb.family]??0.5;
-    const famScore=famComp*35;
-    const sillDiff=Math.abs(fa.sillage-fb.sillage);
-    const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
-    const shared=fa._nAll.filter(n=>fb._nAll.includes(n)).length;
-    const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
-    const rawScore = famScore + sillScore + noteScore;
+    const { famScore, sillScore, noteScore, total: rawScore } = engine.getLayeringDetails(fa, fb, store.FAM_COMPAT);
 
     bodyContent = `
       <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
