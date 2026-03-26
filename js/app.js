@@ -3103,6 +3103,7 @@ function switchNotesTab(tab) {
   // Update button active states
   document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.tab === tab);
+    btn.setAttribute('aria-pressed', btn.dataset.tab === tab ? 'true' : 'false');
   });
   // Show/hide search controls
   const searchWrap = document.getElementById('notes-search-wrap');
