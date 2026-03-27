@@ -1,3 +1,33 @@
+## 2026-03-27
+
+### Changed
+- **Compare card touch targets** — Swap chevron moved inline with the fragrance name (was `position:absolute` at bottom-right). Name + icon form a single clear "tap to change" row. Removed family accent `border-color` from filled card state — the family chip already communicates membership.
+- **Nested button removed** — Brand name inside tappable compare card was an accessibility violation (nested interactive elements). Brand is now non-interactive `text-meta` inside the card; brand link and "Details ↗" move to the action area below the card as `.text-link` buttons.
+- **Score cards stacked vertically** — Side-by-side layout implied the cards belonged to left/right fragrances respectively. Now full-width, stacked, unambiguous.
+- **Score label consistency** — `_simLabel` unified with edu sheet language: "Different worlds" / "Distinct contrast" / "Good match" / "Kindred spirits". `_layLabel` likewise: "Better as alternates" / "Possible, with care" / "Works together" / "Complementary pair".
+- **Score education sheet** — Custom header (emoji close, `cmp-edu-header`) replaced with standard `.sheet-topbar` / `.sheet-title` / `.sheet-close` using `ICONS.close`. Custom element-level `cmp-edu-*` typography classes removed; replaced with design system classes (`text-meta`, `text-ui-strong`, `text-body`). Score math breakdown replaced with `.list-view` / `.list-item` rows.
+- **Character map heading** — "Character" label now uses `.sec-label` for correct eyebrow typography. Mobile: SVG centered via flex on `.cmp-radar-v2-wrap`.
+- **Character map radar** — Polygon B dashed stroke removed; color alone differentiates the two fragrances. Labels pulled ~8% closer to polygon edge (radius 1.22 from 1.32).
+- **Social proof integrated** — Shared note count no longer appears as an orphan paragraph. Woven into the verdict sentence ("They share N notes — more overlap than X% of cross-brand pairs.").
+- **Share Comparison button removed** — No clear sharing destination; cut.
+- **Notes grid column headers** — Fragrance name columns now use `.sec-label`; Top/Heart/Base layer label uses `.text-meta`.
+- **CSS cleanup** — Deleted `cmp-edu-header`, `cmp-edu-intro`, `cmp-edu-quad-tag/title`, `cmp-edu-card-title/desc`, `cmp-edu-card-notes-frag/list`, `cmp-edu-suggestion-label/name`, `cmp-edu-math*`, absolute chevron rule, dashed legend line, and filled card border-color rule.
+
+## 2026-03-25
+
+### Changed
+- **Panel spacing standardization** — Global padding moved from `.col-main-content` to individual `.panel` elements. Panels now use `display: flex; flex-direction: column; gap: var(--sp-3xl)` (32px) for consistent top-level section spacing.
+- **`.section-group` component** — New canonical wrapper for `.sec-label` and its content. Enforces `gap: var(--sp-md)` (12px) for proximity while letting the parent panel's larger gap handle inter-group spacing.
+- **Saved panel hierarchy refactor** — "Your Profile" title standardized to `.text-heading`. "Your Olfactive DNA", "Shop Your Stash", and "Your Journal" sections now use the `.section-group` pattern, eliminating all magic margin numbers and inline styles.
+- **Quiz result & question refactor** — Standardized spacing in both Byredo and Global quizzes. Questions and results now follow the `.section-group` pattern for consistent visual weight.
+- **Compare results standardization** — Notes grid, Scatter plot, and Suggestions sections wrapped in `.section-group`. Removed redundant bottom margins from swap columns.
+- **Note popup & gallery cleanup** — Removed all remaining inline magic margins from the note popup and family cards. Wrapped "In catalog" and "Extraction/Fact" sections in `.section-group`.
+- **Spacing system: section label proximity** — `.sec-label` margin-bottom reduced from 16px → 8px (`--sp-lg` → `--sp-sm`). Labels now sit closer to the content they title, satisfying gestalt proximity.
+- **`.detail-section` grouping container** — New CSS rule converts `.detail-section` from a bottom-margin pattern to a flex column with `gap: var(--sp-sm)` (8px label-to-content). Overrides `.sec-label margin-bottom` to zero inside groupings. Parent `.detail-inner gap: var(--sp-2xl)` (24px) now drives all inter-section spacing.
+- **`renderFragDetail` spacing refactor** — Wrapped "Compare with", "Sensory Profile", and "Scent Journey" sections in `.detail-section`. Removed all inline `style="margin-bottom:var(--sp-*)"` from direct children (eliminated double-spacing with parent gap). Removed redundant `.dc-div` divider.
+- **`renderHouseDetail` spacing refactor** — Wrapped "Fragrance Families", "Known For", "Similar From This House", and "Fragrances" sections in `.detail-section`. Removed `margin-bottom:var(--sp-3xl)` inline wrappers (was adding 32px on top of parent 20px gap = 52px total).
+- **`renderNoteDetail` spacing refactor** — Removed all inline `margin-bottom` from header, description, save-btn, and metadata divs. Wrapped "In catalog (n)" section in `.detail-section`.
+
 ## 2026-03-24
 
 ### Added

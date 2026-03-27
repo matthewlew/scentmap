@@ -5,7 +5,31 @@ import * as engine from './engine.js';
 let { ROLES, CAT, CAT_MAP, NI, NI_MAP, BRANDS } = store.getData();
 let RM = {};
 let BRANDS_MAP = {};
-const { FAM, FAM_ORDER, FAM_COMPAT, FAM_ABBR } = store;
+const { FAM, FAM_ORDER, FAM_COMPAT } = store;
+
+/* ── ICON REGISTRY ─────────────────────────────────────────────────
+   Single source of truth for all SVG icons used in JS-rendered UI.
+   Static HTML icons (nav, index.html) should reference these names
+   in comments but remain inline for zero-JS rendering.
+   ──────────────────────────────────────────────────────────────── */
+const ICONS = {
+  // Navigation chrome — Phosphor Icons (phosphoricons.com)
+  chevronLeft:  `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M168.49,199.51a12,12,0,0,1-17,17l-80-80a12,12,0,0,1,0-17l80-80a12,12,0,0,1,17,17L97,128Z"/></svg>`,
+  chevronRight: `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg>`,
+  chevronDown:  `<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"/></svg>`,
+  sortUpDown:   `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,167.51a12,12,0,0,1,0,17l-48,48a12,12,0,0,1-17,0l-48-48a12,12,0,0,1,17-17L128,207l39.51-39.52A12,12,0,0,1,184.49,167.51Zm-96-79L128,49l39.51,39.52a12,12,0,0,0,17-17l-48-48a12,12,0,0,0-17,0l-48,48a12,12,0,0,0,17,17Z"/></svg>`,
+  close:        `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>`,
+  search:       `<svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>`,
+  // Mobile bottom nav
+  discovery:    `<svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.42,72.84l-64,32a8.05,8.05,0,0,0-3.58,3.58l-32,64A8,8,0,0,0,80,184a8.1,8.1,0,0,0,3.58-.84l64-32a8.05,8.05,0,0,0,3.58-3.58l32-64a8,8,0,0,0-10.74-10.74ZM138,138,97.89,158.11,118,118l40.15-20.07Z"/></svg>`,
+  compare:      `<svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,181.66l-32,32a8,8,0,0,1-11.32-11.32L188.69,184H48a8,8,0,0,1,0-16H188.69l-18.35-18.34a8,8,0,0,1,11.32-11.32l32,32A8,8,0,0,1,213.66,181.66Zm-139.32-64a8,8,0,0,0,11.32-11.32L67.31,88H208a8,8,0,0,0,0-16H67.31L85.66,53.66A8,8,0,0,0,74.34,42.34l-32,32a8,8,0,0,0,0,11.32Z"/></svg>`,
+  notes:        `<svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M223.45,40.07a8,8,0,0,0-7.52-7.52C139.8,28.08,78.82,51,52.82,94a87.09,87.09,0,0,0-12.76,49c.57,15.92,5.21,32,13.79,47.85l-19.51,19.5a8,8,0,0,0,11.32,11.32l19.5-19.51C81,210.73,97.09,215.37,113,215.94q1.67.06,3.33.06A86.93,86.93,0,0,0,162,203.18C205,177.18,227.93,116.21,223.45,40.07ZM153.75,189.5c-22.75,13.78-49.68,14-76.71.77l88.63-88.62a8,8,0,0,0-11.32-11.32L65.73,179c-13.19-27-13-54,.77-76.71,22.09-36.47,74.6-56.44,141.31-54.06C210.2,114.89,190.22,167.41,153.75,189.5Z"/></svg>`,
+  person:       `<svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"/></svg>`,
+  // UI actions
+  star:         `<svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M239.18,97.26A16.38,16.38,0,0,0,224.92,86l-59-4.76L143.14,26.15a16.36,16.36,0,0,0-30.27,0L90.11,81.23,31.08,86a16.46,16.46,0,0,0-9.37,28.86l45,38.83L53,211.75a16.38,16.38,0,0,0,24.5,17.82L128,198.49l50.53,31.08A16.4,16.4,0,0,0,203,211.75l-13.76-58.07,45-38.83A16.43,16.43,0,0,0,239.18,97.26Zm-15.34,5.47-48.7,42a8,8,0,0,0-2.56,7.91l14.88,62.8a.37.37,0,0,1-.17.48c-.18.14-.23.11-.38,0l-54.72-33.65a8,8,0,0,0-8.38,0L69.09,215.94c-.15.09-.19.12-.38,0a.37.37,0,0,1-.17-.48l14.88-62.8a8,8,0,0,0-2.56-7.91l-48.7-42c-.12-.1-.23-.19-.13-.5s.18-.27.33-.29l63.92-5.16A8,8,0,0,0,103,91.86l24.62-59.61c.08-.17.11-.25.35-.25s.27.08.35.25L153,91.86a8,8,0,0,0,6.75,4.92l63.92,5.16c.15,0,.24,0,.33.29S224,102.63,223.84,102.73Z"/></svg>`,
+  megaphone:    `<svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M248,120a48.05,48.05,0,0,0-48-48H160.2c-2.91-.17-53.62-3.74-101.91-44.24A16,16,0,0,0,32,40V200a16,16,0,0,0,26.29,12.25c37.77-31.68,77-40.76,93.71-43.3v31.72A16,16,0,0,0,159.12,214l11,7.33A16,16,0,0,0,194.5,212l11.77-44.36A48.07,48.07,0,0,0,248,120ZM48,199.93V40h0c42.81,35.91,86.63,45,104,47.24v65.48C134.65,155,90.84,164.07,48,199.93Zm131,8,0,.11-11-7.33V168h21.6ZM200,152H168V88h32a32,32,0,1,1,0,64Z"/></svg>`,
+  library:      `<svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M231.65,194.55,198.46,36.75a16,16,0,0,0-19-12.39L132.65,34.42a16.08,16.08,0,0,0-12.3,19l33.19,157.8A16,16,0,0,0,169.16,224a16.25,16.25,0,0,0,3.38-.36l46.81-10.06A16.09,16.09,0,0,0,231.65,194.55ZM136,50.15c0-.06,0-.09,0-.09l46.8-10,3.33,15.87L139.33,66Zm6.62,31.47,46.82-10.05,3.34,15.9L146,97.53Zm6.64,31.57,46.82-10.06,13.3,63.24-46.82,10.06ZM216,197.94l-46.8,10-3.33-15.87L212.67,182,216,197.85C216,197.91,216,197.94,216,197.94ZM104,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V48A16,16,0,0,0,104,32ZM56,48h48V64H56Zm0,32h48v96H56Zm48,128H56V192h48v16Z"/></svg>`,
+};
 
 const SW=['','Skin','Skin','Subtle','Subtle','Moderate','Moderate','Strong','Strong','Enveloping','Enormous'];
 const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered','Layered','Complex','Deep'];
@@ -106,16 +130,19 @@ function setState(id,s){
       pushSheet(c => {
         const frag = CAT_MAP[id];
         c.innerHTML = `
-          <div class="detail-inner" style="text-align:center;">
-            <div style="font-size:32px; margin-bottom:var(--sp-md);">⚖️</div>
-            <div class="sec-label" style="justify-content:center;">Redundancy Alert</div>
-            <div class="dc-name" style="margin-bottom:var(--sp-md);">Wait, you might not need this.</div>
-            <p class="text-body" style="font-family:var(--font-serif); color:var(--text-secondary); margin-bottom:var(--sp-xl); line-height:1.5;">
-              <strong>${frag.name}</strong> is a <strong>${redun.score}% mathematical match</strong> to <strong>${redun.match.name}</strong> which you already own.
-            </p>
-            <div style="display:flex; flex-direction:column; gap:var(--sp-sm);">
-              <button class="dc-collect-btn active" style="width:100%; justify-content:center; padding:var(--sp-md);" onclick="popSheet()">Actually, skip it</button>
-              <button class="dc-collect-btn" style="width:100%; justify-content:center; padding:var(--sp-md); border:none;" id="force-wish">Save anyway</button>
+          <div class="detail-inner u-text-center">
+            <div class="u-icon-lg">⚖️</div>
+            <div class="section-group">
+              <div class="sec-label u-justify-center">Redundancy Alert</div>
+              <div class="dc-name">Wait, you might not need this.</div>
+              <p class="text-body u-font-serif u-text-secondary">
+                <strong>${frag.name}</strong> is a <strong>${redun.score}% mathematical match</strong> to <strong>${redun.match.name}</strong> which you already own.
+              </p>
+
+            </div>
+            <div class="u-flex-column u-gap-sm">
+              <button class="btn btn--primary u-w-full" onclick="popSheet()">Actually, skip it</button>
+              <button class="btn btn--secondary u-w-full u-border-none" id="force-wish">Save anyway</button>
             </div>
           </div>
         `;
@@ -222,35 +249,39 @@ function openProfilePanel() {
     const wished = CAT.filter(f => isWish(f.id));
     const initial = currentUser.name.charAt(0).toUpperCase();
 
-    // detail-inner already provides padding: var(--sp-lg) var(--sp-2xl)
-    // sheet-inner already provides padding: 0 var(--sp-lg)
-    // so no outer wrapper needed — use margins on sections only
+    // detail-inner already provides padding and gap via CSS
     container.innerHTML = `
-      <div style="display:flex;align-items:center;gap:var(--sp-md);padding-bottom:var(--sp-xl);margin-bottom:var(--sp-xl);border-bottom:1px solid var(--border-standard);">
-        <div style="width:44px;height:44px;flex-shrink:0;background:var(--text-primary);color:var(--bg-primary);border-radius:var(--radius-circle);display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:var(--fs-ui);font-weight:700;" aria-hidden="true">${initial}</div>
-        <div style="min-width:0;overflow:hidden;">
-          <div style="font-family:var(--font-sans);font-size:var(--fs-body);font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${currentUser.name}</div>
-          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${currentUser.email}</div>
+      <div class="card card--secondary u-flex-column u-gap-md">
+        <div class="u-flex-row u-align-center u-gap-md">
+          <div class="profile-avatar">${initial}</div>
+          <div class="u-flex-column u-min-w-0">
+            <div class="text-ui-strong">${currentUser.name}</div>
+            <div class="text-meta u-text-secondary">${currentUser.email}</div>
+          </div>
         </div>
       </div>
 
-      <div class="sec-label" style="margin-bottom:var(--sp-md);">Collection</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-sm);margin-bottom:var(--sp-xl);">
-        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-md);">
-          <div style="font-family:var(--font-display);font-size:var(--fs-title);color:var(--text-primary);line-height:1;">${owned.length}</div>
-          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);margin-top:var(--sp-xs);">Owned</div>
-        </div>
-        <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:var(--sp-md);">
-          <div style="font-family:var(--font-display);font-size:var(--fs-title);color:var(--text-primary);line-height:1;">${wished.length}</div>
-          <div style="font-family:var(--font-sans);font-size:var(--fs-body-sm);color:var(--text-secondary);margin-top:var(--sp-xs);">Wishlist</div>
+      <div class="section-group">
+        <div class="sec-label">Wardrobe Intelligence</div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-card-value">${owned.length}</div>
+            <div class="stat-card-label">Owned</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-value">${wished.length}</div>
+            <div class="stat-card-label">Wishlist</div>
+          </div>
         </div>
       </div>
 
-      <button class="copy-collection-btn" id="profile-copy-btn" style="width:100%;justify-content:center;">Export collection</button>
-      <span id="profile-copy-toast" aria-live="polite" style="display:block;margin-top:var(--sp-xs);font-family:var(--font-sans);font-size:var(--fs-meta);color:var(--text-secondary);min-height:1.2em;"></span>
+      <div class="section-group">
+        <button class="copy-collection-btn u-w-full u-justify-center" id="profile-copy-btn">Export collection</button>
+        <span id="profile-copy-toast" aria-live="polite" class="profile-copy-toast"></span>
+      </div>
 
-      <div style="margin-top:var(--sp-2xl);border-top:1px solid var(--border-standard);padding-top:var(--sp-xl);">
-        <button class="dc-collect-btn" id="profile-signout-btn" style="width:100%;justify-content:center;">Sign out</button>
+      <div style="margin-top:auto;border-top:1px solid var(--border-standard);padding-top:var(--sp-xl);">
+        <button class="btn btn--secondary u-w-full" id="profile-signout-btn">Sign out</button>
       </div>
     `;
 
@@ -292,10 +323,10 @@ function copyCollectionToClipboard(toastEl) {
 function renderCollectionSection(container, label, items, type) {
   if (!items.length) return;
   const section = document.createElement('div');
-  section.className = 'collection-section';
+  section.className = 'section-group';
   const hdr = document.createElement('div');
-  hdr.className = 'collection-section-hdr';
-  hdr.innerHTML = `<span>${label}</span><span class="collection-section-count">${items.length}</span>`;
+  hdr.className = 'sec-label';
+  hdr.innerHTML = `<span>${label}</span><span class="brand-total">${items.length}</span>`;
   section.appendChild(hdr);
 
   if (type === 'frags') {
@@ -304,7 +335,6 @@ function renderCollectionSection(container, label, items, type) {
     items.forEach(frag => {
       const row = document.createElement('div');
       renderCatRow(row, frag, FAM[frag.family] || {color:'#888'});
-      row.className = row.className.replace('list-item--compact', '').trim();
       row.addEventListener('click', () => openFragDetail(frag));
       list.appendChild(row);
     });
@@ -368,25 +398,31 @@ window.openTrialSheet = function(fragId) {
   pushSheet(container => {
     container.innerHTML = `
       <div class="detail-inner">
-        <div class="sec-label">New Test Bench Entry</div>
-        <div class="dc-name">${frag.name}</div>
-        <div class="dc-brand">${frag.brand}</div>
+        <div class="section-group">
+          <div class="sec-label">New Test Bench Entry</div>
+          <div class="dc-name">${frag.name}</div>
+          <div class="dc-brand">${frag.brand}</div>
+        </div>
         
-        <div class="sec-label" style="margin-top:var(--sp-xl);">Where did you spray it?</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
-          ${['Left Wrist', 'Right Wrist', 'Left Elbow', 'Right Elbow', 'Neck', 'Chest', 'Paper Strip'].map(loc => `
-            <button class="dc-collect-btn trial-loc-btn" data-loc="${loc}" style="justify-content:center;">${loc}</button>
-          `).join('')}
+        <div class="section-group">
+          <div class="sec-label">Where did you spray it?</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-sm);">
+            ${['Left Wrist', 'Right Wrist', 'Left Elbow', 'Right Elbow', 'Neck', 'Chest', 'Paper Strip'].map(loc => `
+              <button class="btn btn--secondary trial-loc-btn" data-loc="${loc}">${loc}</button>
+            `).join('')}
+          </div>
         </div>
 
-        <div class="sec-label">Initial Impression</div>
-        <div style="display:flex; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
-          ${[1, 2, 3, 4, 5].map(v => `
-            <button class="dc-collect-btn trial-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
-          `).join('')}
+        <div class="section-group">
+          <div class="sec-label">Initial Impression</div>
+          <div style="display:flex; gap:var(--sp-sm);">
+            ${[1, 2, 3, 4, 5].map(v => `
+              <button class="btn btn--secondary trial-rate-btn u-flex-1 text-title" data-val="${v}">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+            `).join('')}
+          </div>
         </div>
 
-        <button class="dc-collect-btn active" id="save-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md);">Add to Test Bench</button>
+        <button class="btn btn--primary u-w-full" id="save-trial-btn" disabled>Add to Test Bench</button>
       </div>
     `;
 
@@ -426,19 +462,22 @@ window.openTrialUpdateSheet = function(fragId, timestamp) {
   pushSheet(container => {
     container.innerHTML = `
       <div class="detail-inner">
-        <div class="sec-label">Final Review</div>
-        <div class="dc-name">${frag.name}</div>
-        
-        <p class="text-body" style="font-family:var(--font-serif); margin-bottom:var(--sp-xl); color:var(--text-secondary);">How has the scent developed? Give it another sniff and rate it again.</p>
-
-        <div class="sec-label">New Rating</div>
-        <div style="display:flex; gap:var(--sp-sm); margin-bottom:var(--sp-xl);">
-          ${[1, 2, 3, 4, 5].map(v => `
-            <button class="dc-collect-btn update-rate-btn" data-val="${v}" style="flex:1; justify-content:center; font-size:var(--fs-title);">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
-          `).join('')}
+        <div class="section-group">
+          <div class="sec-label">Final Review</div>
+          <div class="dc-name">${frag.name}</div>
+          <p class="text-body" style="font-family:var(--font-serif); color:var(--text-secondary);">How has the scent developed? Give it another sniff and rate it again.</p>
         </div>
 
-        <button class="dc-collect-btn active" id="update-trial-btn" disabled style="width:100%; justify-content:center; padding:var(--sp-md);">Complete Review</button>
+        <div class="section-group">
+          <div class="sec-label">New Rating</div>
+          <div style="display:flex; gap:var(--sp-sm);">
+            ${[1, 2, 3, 4, 5].map(v => `
+              <button class="btn btn--secondary update-rate-btn u-flex-1 text-title" data-val="${v}">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <button class="btn btn--primary u-w-full" id="update-trial-btn" disabled>Complete Review</button>
       </div>
     `;
 
@@ -612,7 +651,7 @@ function renderWardrobeGap(container) {
         const famColor = FAM[frag.family]?.color || 'var(--border-strong)';
         const famLabel = FAM[frag.family]?.label || frag.family;
         const card = document.createElement('button');
-        card.className = 'carousel-card';
+        card.className = 'carousel-card card card--interactive';
         card.setAttribute('role', 'listitem');
         card.setAttribute('tabindex', '0');
         card.setAttribute('aria-label', `${frag.name} by ${frag.brand}, ${gap.gapAxisShort} recommendation`);
@@ -830,7 +869,7 @@ function renderBrandDiscovery(container) {
 
   brands.forEach(b => {
     const card = document.createElement('div');
-    card.className = 'carousel-card carousel-card--brand';
+    card.className = 'carousel-card carousel-card--brand card card--interactive';
     card.setAttribute('role', 'listitem');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `Explore ${b.brand} — ${b.score}% match with your collection`);
@@ -850,7 +889,7 @@ function renderBrandDiscovery(container) {
       </div>
       <div class="carousel-card-name list-item-label">${b.brand}</div>
       ${reasonText ? `<div class="carousel-card-reason">${reasonText}</div>` : ''}
-      ${b.url ? `<a class="s-name-btn carousel-card-shop" href="${b.url}" target="_blank" rel="noopener noreferrer" aria-label="Shop ${b.brand} — opens official website">Shop →</a>` : ''}
+      ${b.url ? `<a class="text-link carousel-card-shop" href="${b.url}" target="_blank" rel="noopener noreferrer" aria-label="Shop ${b.brand} — opens official website">Shop →</a>` : ''}
     `;
 
     card.addEventListener('click', e => {
@@ -933,7 +972,8 @@ function renderJournalContent(container) {
   if (!container) return; container.innerHTML = '';
   const activeTrials = TRIALS.filter(t => t.status === 'active');
   if (activeTrials.length > 0) {
-    const trialSec = document.createElement('div'); trialSec.style.marginBottom = 'var(--sp-3xl)';
+    const trialSec = document.createElement('div');
+    trialSec.className = 'section-group';
     trialSec.innerHTML = `<div class="sec-label">Test Bench (Active)</div>`;
     const trialWrap = document.createElement('div'); trialWrap.className = 'list-view';
     activeTrials.forEach(t => {
@@ -943,11 +983,11 @@ function renderJournalContent(container) {
         <div class="list-item-body">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div>
-              <div class="list-item-label">${frag.name}</div>
-              <div class="list-item-sublabel" style="color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div>
+              <div class="list-item-label text-ui-strong">${frag.name}</div>
+              <div class="list-item-sublabel text-meta" style="color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div>
             </div>
             <div style="display:flex; gap:var(--sp-xs);">
-              <button class="dc-collect-btn active" style="padding:4px 12px; font-size:10px;" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button>
+              <button class="btn btn--primary" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button>
               <button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button>
             </div>
           </div>
@@ -958,7 +998,8 @@ function renderJournalContent(container) {
   }
   const completedTrials = TRIALS.filter(t => t.status === 'completed');
   if (completedTrials.length > 0) {
-    const journalSec = document.createElement('div'); journalSec.style.marginBottom = 'var(--sp-3xl)';
+    const journalSec = document.createElement('div');
+    journalSec.className = 'section-group';
     journalSec.innerHTML = `<div class="sec-label">Test History</div>`;
     const journalWrap = document.createElement('div'); journalWrap.className = 'list-view';
     completedTrials.forEach(t => {
@@ -969,12 +1010,12 @@ function renderJournalContent(container) {
       row.innerHTML = `
         <div class="list-item-body">
           <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-            <div class="list-item-label">${frag.name}</div>
-            <div class="list-item-sublabel">${date}</div>
+            <div class="list-item-label text-ui-strong">${frag.name}</div>
+            <div class="list-item-sublabel text-meta">${date}</div>
           </div>
           <div style="display:flex; align-items:center; gap:var(--sp-sm);">
-            <div class="list-item-sublabel" style="color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div>
-            <div style="font-size:12px; color:var(--amber-600); letter-spacing:1px;">${stars(t.rating || 0)}</div>
+            <div class="list-item-sublabel text-meta" style="color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div>
+            <div class="text-meta u-text-secondary" style="letter-spacing:1px;">${stars(t.rating || 0)}</div>
           </div>
         </div>`;
       row.addEventListener('click', () => openFragDetail(frag));
@@ -1028,11 +1069,11 @@ window.renderSaved = function() {
     ctaWrap.innerHTML = `
       <div class="banner">
         <div class="banner-head">
-          <span class="dot" style="background:var(--accent-primary); width:10px; height:10px;"></span>
+          <span class="dot dot--md" style="background:var(--accent-primary)"></span>
           <h3 class="text-title">Trying scents on?</h3>
         </div>
         <p class="text-meta">Start tracking to see how they evolve over time.</p>
-        <button class="s-name-btn" style="align-self:flex-start; margin-top:var(--sp-xs);" onclick="go('catalog')">Find a scent to track</button>
+        <button class="text-link" onclick="go('catalog')">Find a scent to track</button>
       </div>
     `;
   }
@@ -1058,7 +1099,7 @@ window.renderSaved = function() {
   if (owned.length > 0) {
     const stats = getCollectionStats(owned);
     const dnaSec = document.createElement('div');
-    dnaSec.className = 'dna-card';
+    dnaSec.className = 'section-group dna-card';
     const profile = stats.avgProfile;
     const bars = [{ l: 'Fresh', v: profile.freshness, c: 'var(--fam-citrus)' }, { l: 'Sweet', v: profile.sweetness, c: 'var(--fam-floral)' }, { l: 'Warm', v: profile.warmth, c: 'var(--fam-amber)' }, { l: 'Bold', v: profile.intensity, c: 'var(--fam-oud)' }];
     
@@ -1070,10 +1111,12 @@ window.renderSaved = function() {
       const archId = computeCollectionArchetype(stats);
       const arch = store.ARCHETYPES[archId];
       personaHtml = `
-        <div class="dna-divider">
-          <div class="sec-label">Your Olfactive Persona</div>
-          <div class="text-title" style="color:var(--accent-primary);">${arch.name}</div>
-          <div class="text-meta" style="font-family:var(--font-serif); opacity:0.8;">${arch.tagline}</div>
+        <div style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-md); margin-top: var(--sp-xl);">
+          <div class="section-group">
+            <div class="sec-label">Your Olfactive Persona</div>
+            <div class="text-title" style="color:var(--accent-primary);">${arch.name}</div>
+            <div class="text-meta u-font-serif u-text-secondary">${arch.tagline}</div>
+          </div>
         </div>
       `;
     }
@@ -1082,24 +1125,28 @@ window.renderSaved = function() {
     let gapHtml = '';
     if (gapRec) {
       gapHtml = `
-        <div class="sec-label" style="margin-top:var(--sp-xl);">Collection Gap</div>
-        <div class="text-meta" style="font-family:var(--font-serif); margin-bottom:var(--sp-sm);">
-          Your collection is currently low on <strong>${gapRec.label}</strong>. Consider exploring:
-        </div>
-        <button class="list-item list-item--compact" style="margin-top:var(--sp-sm);" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
-          <div class="dot--md" style="background:${(FAM[gapRec.frag.family]||{}).color}"></div>
-          <div class="list-item-body">
-            <div class="list-item-label">${gapRec.frag.name}</div>
-            <div class="list-item-detail">${gapRec.frag.brand} · To fill the gap</div>
+        <div style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-md); margin-top: var(--sp-xl);">
+          <div class="section-group">
+            <div class="sec-label">Collection Gap</div>
+            <p class="text-meta u-font-serif">
+              Your collection is currently low on <strong>${gapRec.label}</strong>. Consider exploring:
+            </p>
+            <button class="list-item" onclick="openFragDetail(CAT_MAP['${gapRec.frag.id}'])">
+              <div class="dot--md" style="background:${(FAM[gapRec.frag.family]||{}).color}"></div>
+              <div class="list-item-body">
+                <div class="list-item-label text-ui-strong">${gapRec.frag.name}</div>
+                <div class="list-item-detail text-caption">${gapRec.frag.brand} · To fill the gap</div>
+              </div>
+            </button>
           </div>
-        </button>
+        </div>
       `;
     }
 
     dnaSec.innerHTML = `
-      <div class="sec-label" style="display:flex; justify-content:space-between; align-items:center;">
-        Your Olfactive DNA
-        <button class="nav-notes-btn" style="font-size:var(--fs-caption);" onclick="window.exportAuraCard()">Export</button>
+      <div class="sec-label">
+        <span>Your Olfactive DNA</span>
+        <button class="nav-notes-btn text-caption" onclick="window.exportAuraCard()">Export</button>
       </div>
       <div class="cmp-sug-columns">
         <div>
@@ -1119,50 +1166,63 @@ window.renderSaved = function() {
           <div class="dna-stat">
             <div class="sec-label">${b.l}</div>
             <div class="cmp-score-meter">
-              <div class="cmp-score-meter-track">
+              <div class="cmp-score-meter-track" role="meter" aria-label="${b.l}: ${Math.round(b.v*100)}%" aria-valuenow="${Math.round(b.v*100)}" aria-valuemin="0" aria-valuemax="100">
                 <div class="cmp-score-meter-fill" style="width:${Math.round(b.v*100)}%; background:${b.c};"></div>
               </div>
             </div>
           </div>
         `).join('')}
       </div>
-      <div class="dna-divider">
+      <div style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-md); margin-top: var(--sp-xl);">
         <div class="sec-label">Dominant Families</div>
         <div class="dna-families">
-          ${stats.topFamilies.slice(0, 3).map(([fam, count]) => `
-            <div class="chip" style="background:${FAM[fam]?.color||'#888'};">
-              ${FAM[fam]?.label||fam} (${count})
-            </div>
-          `).join('')}
+          ${stats.topFamilies.slice(0, 3).map(([fam, count]) => {
+            const fc = FAM[fam] || {};
+            return `<span class="chip" style="background: ${fc.color||'#888'}; color: var(--bg-primary);">${fc.label||fam} (${count})</span>`;
+          }).join('')}
         </div>
         <div class="sec-label">Signature Material</div>
         <div class="dna-notes">
           You frequently gravitate towards <strong>${topNote}</strong>. Other core notes in your collection include ${stats.topNotes.slice(1, 5).map(n => n[0]).join(', ')}.
         </div>
-        
-        ${gapHtml}
       </div>
+      ${gapHtml}
     `;
     container.appendChild(dnaSec);
   }
 
-  // ── 2. SHOP YOUR STASH ──
+  // ── 2. LAYER TOGETHER ──
   if (owned.length >= 2) {
     const pairs = window.getGoldenPairs(owned);
     if (pairs.length > 0) {
-      const pairSec = document.createElement('div'); pairSec.style.marginBottom = 'var(--sp-3xl)';
-      pairSec.innerHTML = `<div class="sec-label">Shop Your Stash (Golden Pairs)</div>`;
+      const pairSec = document.createElement('div');
+      pairSec.className = 'section-group';
+      pairSec.innerHTML = `<div class="sec-label">Layer Together</div>`;
       const pairWrap = document.createElement('div'); pairWrap.className = 'carousel';
       pairs.forEach(p => {
         const card = document.createElement('div'); card.className = 'carousel-card carousel-card--wide card card--interactive';
+        const famA = FAM[p.a.family] || {}; const famB = FAM[p.b.family] || {};
+        const colA = famA.color || 'var(--fam-default)'; const colB = famB.color || 'var(--fam-default)';
         card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--sp-xs);">
-            <div class="chip chip--accent chip--xs">${p.score}% LAYER MATCH</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--sp-sm);">
+            <div class="chip chip--outline chip--xs">${p.score}% match</div>
             <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
           </div>
-          <div class="list-item-label">${p.a.name}</div>
-          <div class="list-item-sublabel">+ ${p.b.name}</div>
-          <div class="text-meta" style="margin-top:auto;">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
+          <div style="display:flex; align-items:center; gap:var(--sp-sm); margin-bottom:var(--sp-xs);">
+            <div class="list-item-dot" style="--fam-bg:${colA}; flex-shrink:0;"></div>
+            <div class="list-item-body">
+              <div class="list-item-label">${p.a.name}</div>
+              <div class="list-item-sublabel">${famA.label||p.a.family}</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:var(--sp-sm); margin-bottom:var(--sp-sm);">
+            <div class="list-item-dot" style="--fam-bg:${colB}; flex-shrink:0;"></div>
+            <div class="list-item-body">
+              <div class="list-item-label">${p.b.name}</div>
+              <div class="list-item-sublabel">${famB.label||p.b.family}</div>
+            </div>
+          </div>
+          <div class="text-meta u-font-serif" style="margin-top:auto; color:var(--text-tertiary);">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
         `;        card.onclick = () => { _selectFragForSlot('a', p.a); _selectFragForSlot('b', p.b); go('compare'); };
         pairWrap.appendChild(card);
       });
@@ -1332,9 +1392,9 @@ function pushSheet(renderFn,title){
   el.className='sheet'+(isSubNav?' nav':'');
   el.innerHTML=`<div class="sheet-inner"><div class="sheet-handle" aria-hidden="true"></div>
     <div class="sheet-topbar">
-      <button class="sheet-back hidden"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
-      ${title?`<div class="sheet-title">${title}</div>`:''}
-      <button class="sheet-close" aria-label="Close">Close</button>
+      <button class="sheet-back nav-back-btn hidden" aria-label="Back">${ICONS.chevronLeft}</button>
+      ${title?`<div class="sheet-title text-body">${title}</div>`:''}
+      <button class="sheet-close nav-back-btn" aria-label="Close">${ICONS.close}</button>
     </div>
     <div class="sheet-content"></div></div>`;
   const handle=el.querySelector('.sheet-topbar'); // Drag from the whole topbar
@@ -1455,57 +1515,23 @@ function renderDupeLab(container, anchor) {
 
   container.innerHTML = `
     <div class="dc-name">Dupe Lab</div>
-    <div class="dc-brand" style="margin-bottom:var(--sp-xl);">Finding matches for ${anchor.name}</div>
-    
-    <div class="dupe-list" style="display: flex; flex-direction: column; gap: var(--sp-md);">
+    <div class="dc-brand">Finding matches for ${anchor.name}</div>
+    <div class="list-view">
       ${dupes.map(({f, score}) => {
         const fm = FAM[f.family] || {label: f.family, color:'#888'};
         const reason = getSwapReason(anchor, f);
         return `
-          <div class="list-item dupe-item" style="display: block; padding: var(--sp-md); cursor: default;">
-            <div class="dupe-item-head" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--sp-xs);">
-              <div class="list-item-label" style="font-size: var(--fs-body);">${f.name}</div>
-              <div class="list-item-trailing-label">${score}%</div>
+          <button class="dupe-card" onclick="trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">
+            <div class="list-item-dot" style="--fam-bg: ${fm.color}"></div>
+            <div class="list-item-body">
+              <div class="list-item-label text-ui-strong">${f.name}</div>
+              <div class="list-item-sublabel text-meta">${f.brand} · ${fm.label}</div>
+              ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
             </div>
-            <div class="list-item-sublabel" style="margin-bottom: var(--sp-sm);">${f.brand} · ${fm.label}</div>
-
-            <div class="cmp-score-meter" style="margin-bottom: var(--sp-sm);">
-              <div class="cmp-score-meter-track">
-                <div class="cmp-score-meter-fill" style="width:${score}%; background:var(--accent-primary);"></div>
-              </div>
+            <div class="list-item-trail">
+              <span class="list-item-trailing-label">${score}%</span>
             </div>
-
-            <div class="list-item-detail" style="margin-bottom: var(--sp-sm); line-height: var(--lh-normal); color: var(--text-secondary);">${reason}</div>
-
-            <details style="margin-bottom: var(--sp-sm);">
-              <summary style="font-size: var(--fs-caption); font-family: var(--font-sans); font-weight: 600; color: var(--text-tertiary); cursor: pointer; list-style: none; display: flex; align-items: center; gap: var(--sp-xs);">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                Why this matches
-              </summary>
-              <div class="dupe-breakdown" style="margin-top: var(--sp-sm); padding-top: var(--sp-sm); border-top: 1px dashed var(--border-subtle); font-size: var(--fs-caption); color: var(--text-tertiary); display: flex; flex-direction: column; gap: var(--sp-xs);">
-                ${(() => {
-                  const famScore = (FAM_COMPAT[anchor.family]?.[f.family] ?? 0.5) * 40;
-                  const shBase = anchor._nBase.filter(n => f._nBase.includes(n)).length;
-                  const shMid = anchor._nMid.filter(n => f._nMid.includes(n)).length;
-                  const shTop = anchor._nTop.filter(n => f._nTop.includes(n)).length;
-                  const noteScore = Math.min(30, shBase * 5 + shMid * 3 + shTop * 2);
-                  const sillDiff = Math.abs(anchor.sillage - f.sillage);
-                  const sillScore = sillDiff <= 2 ? 10 : sillDiff <= 4 ? 5 : 0;
-                  const shRoles = anchor.roles.filter(r => f.roles.includes(r)).length;
-                  const roleScore = Math.min(20, shRoles * 7);
-
-                  return `
-                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Family match</span><span>${Math.round(famScore)}/40</span></div>
-                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Note overlap</span><span>${Math.round(noteScore)}/30</span></div>
-                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Sillage proximity</span><span>${sillScore}/10</span></div>
-                    <div class="dupe-breakdown-row" style="display: flex; justify-content: space-between;"><span>Role alignment</span><span>${roleScore}/20</span></div>
-                  `;
-                })()}
-              </div>
-            </details>
-
-            <button class="s-name-btn" style="font-size: var(--fs-meta);" onclick="event.stopPropagation(); trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">View Details →</button>
-          </div>
+          </button>
         `;
       }).join('')}
     </div>
@@ -1524,7 +1550,7 @@ function renderFragDetail(container,frag){
       const arch = ARCHETYPES[archMatch[1]];
       if (arch) {
         quizAttribution = `
-          <div class="callout">
+          <div class="quiz-attribution">
             <span class="callout-icon">✨</span> From your scent archetype: <span class="callout-strong">${arch.name}</span>
           </div>`;
       }
@@ -1533,82 +1559,77 @@ function renderFragDetail(container,frag){
 
   container.innerHTML=`
     ${quizAttribution}
-    <div>
+    <div class="u-flex-column u-gap-sm">
       <div class="dc-name">${frag.name}</div>
-      <button class="dc-brand-btn" style="margin-bottom: var(--sp-sm);">${frag.brand}</button>
-      <br>
-      <div class="chip chip--family" style="--fam-bg:${fm.color}20; --fam-color:${fm.color};">
-        <span class="dot" style="--fam-bg: ${fm.color}"></span>
-        ${fm.label}
-      </div>
+      <button class="text-link text-meta">${frag.brand}</button>
+      <span class="chip" style="background: ${fm.color}; color: var(--bg-primary);">${fm.label}</span>
     </div>
     <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
     <div id="dc-coll-ctx-${frag.id}"></div>
-    ${frag.description?`<div class="text-body" style="margin-bottom:var(--sp-md);">${frag.description}</div>`:''}
+    ${frag.description?`<div class="text-body">${frag.description}</div>`:''}
     ${frag.story?`<div class="card card--secondary text-meta"><strong>The Story:</strong> ${frag.story}</div>`:''}
-    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="dc-collect-btn" style="margin-top:var(--sp-md);">Buy from ${frag.brand}</a>`:''}
-    <div class="sec-label">Compare with</div>
-    <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
-    <button class="dc-collect-btn" id="find-dupes-${frag.id}" style="width:100%; justify-content:center;">
-      <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
-    </button>
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-card-label">Sillage</div>
-        <div class="dc-bar"><div class="dc-fill" style="width:${frag.sillage*10}%"></div></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-label">Structure</div>
-        <div class="dc-bar"><div class="dc-fill" style="width:${frag.layering*10}%"></div></div>
-      </div>
+    ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="btn btn--secondary">Buy from ${frag.brand}</a>`:''}
+    <div class="detail-section">
+      <div class="sec-label">Compare with</div>
+      <div class="dc-cmp-ctas" id="dc-ctas-${frag.id}"></div>
+      <button class="btn btn--secondary u-w-full" id="find-dupes-${frag.id}">
+        <span class="dc-collect-icon">🔍</span> Find Dupes in Catalog
+      </button>
     </div>
-    <div class="dc-div"></div>
-    <div class="sec-label">Sensory Profile</div>
-    <div class="stat-grid">
-      ${(() => {
-        const p = computeProfile(frag);
-        const card = (label, val, color) => `
-          <div class="stat-card">
-            <div class="stat-card-value">${Math.round(val*100)}%</div>
-            <div class="stat-card-label">${label}</div>
-            <div class="cmp-score-meter">
-              <div class="cmp-score-meter-track">
-                <div class="cmp-score-meter-fill" style="width:${Math.round(val*100)}%; background:${color};"></div>
-                <div class="dot" style="position:absolute; left:calc(${Math.round(val*100)}% - 4px); top:-2px; background:${color}; border:2px solid var(--bg-secondary); width:8px; height:8px;"></div>
-              </div>
+    ${(() => {
+      const p = computeProfile(frag);
+      const statCard = (label, val, color) => `
+        <div class="stat-card">
+          <div class="stat-card-value">${Math.round(val * 100)}%</div>
+          <div class="stat-card-label">${label}</div>
+          <div class="cmp-score-meter">
+            <div class="cmp-score-meter-track">
+              <div class="cmp-score-meter-fill" style="--pct: ${Math.round(val * 100)}%; --bg: ${color};"></div>
             </div>
-            <meter class="sr-only" min="0" max="100" value="${Math.round(val*100)}" aria-label="${label}: ${Math.round(val*100)}%"></meter>
-          </div>`;
-        return card('Fresh', p.freshness, 'var(--fam-citrus)') +
-               card('Sweet', p.sweetness, 'var(--fam-floral)') +
-               card('Warm', p.warmth, 'var(--fam-amber)');
-      })()}
-    </div>
+          </div>
+          <meter class="sr-only" min="0" max="100" value="${Math.round(val * 100)}" aria-label="${label}: ${Math.round(val * 100)}%"></meter>
+        </div>`;
 
-    <div class="sec-label">Scent Journey</div>
-    <div>
-      <div class="journey-timeline">
-        <div class="journey-step">
-          <div class="journey-dot"></div>
-          <div class="journey-step-title">Opening <span class="journey-step-meta">(Top Notes)</span></div>
-          <div class="dc-nv">${linkNotes(frag.top)}</div>
+      return `
+        <div class="stat-grid">
+          ${statCard('Sillage', frag.sillage / 10, 'var(--g400)')}
+          ${statCard('Structure', frag.layering / 10, 'var(--g400)')}
         </div>
-        <div class="journey-step">
-          <div class="journey-dot"></div>
-          <div class="journey-step-title">Heart <span class="journey-step-meta">(Mid Notes)</span></div>
-          <div class="dc-nv">${linkNotes(frag.mid)}</div>
+        <div class="detail-section">
+          <div class="sec-label">Sensory Profile</div>
+          <div class="stat-grid">
+            ${statCard('Fresh', p.freshness, 'var(--fam-citrus)')}
+            ${statCard('Sweet', p.sweetness, 'var(--fam-floral)')}
+            ${statCard('Warm', p.warmth, 'var(--fam-amber)')}
+          </div>
+        </div>`;
+    })()}
+    <div class="detail-section">
+      <div class="sec-label">Scent Journey</div>
+      <div>
+        <div class="journey-timeline">
+          <div class="journey-step">
+            <div class="journey-dot"></div>
+            <div class="journey-step-title">Opening <span class="journey-step-meta">(Top Notes)</span></div>
+            <div class="dc-nv">${linkNotes(frag.top)}</div>
+          </div>
+          <div class="journey-step">
+            <div class="journey-dot"></div>
+            <div class="journey-step-title">Heart <span class="journey-step-meta">(Mid Notes)</span></div>
+            <div class="dc-nv">${linkNotes(frag.mid)}</div>
+          </div>
+          <div class="journey-step">
+            <div class="journey-dot journey-dot--filled"></div>
+            <div class="journey-step-title">Dry Down <span class="journey-step-meta">(Base Notes)</span></div>
+            <div class="dc-nv">${linkNotes(frag.base)}</div>
+          </div>
         </div>
-        <div class="journey-step">
-          <div class="journey-dot journey-dot--filled"></div>
-          <div class="journey-step-title">Dry Down <span class="journey-step-meta">(Base Notes)</span></div>
-          <div class="dc-nv">${linkNotes(frag.base)}</div>
-        </div>
+        <p class="journey-caveat">Key materials only — simplified pyramid</p>
       </div>
-      <p class="journey-caveat">Key materials only — simplified pyramid</p>
     </div>`;
 
   // Note links
-  const brandBtn=container.querySelector('.dc-brand-btn');
+  const brandBtn=container.querySelector('.text-link');
   if(brandBtn)brandBtn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
   container.querySelectorAll('.tag[data-note]').forEach(btn=>{
     btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)pushDetail(c=>renderNoteDetail(c,note),note.name)});
@@ -1620,23 +1641,23 @@ function renderFragDetail(container,frag){
     const st=gst(frag.id);
     el.innerHTML='';
     const wishBtn=document.createElement('button');
-    wishBtn.className='dc-collect-btn'+(st==='wish'?' active':'');
+    wishBtn.className='btn btn--secondary'+(st==='wish'?' active':'');
     wishBtn.setAttribute('aria-pressed',st==='wish'?'true':'false');
     wishBtn.innerHTML=`<span class="dc-collect-icon">${st==='wish'?'♥':'♡'}</span> Wishlist`;
     wishBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='wish'?'none':'wish');refreshAfterStateChange(frag.id);renderCollectRow();});
     const ownBtn=document.createElement('button');
-    ownBtn.className='dc-collect-btn'+(st==='owned'?' active':'');
+    ownBtn.className='btn btn--secondary'+(st==='owned'?' active':'');
     ownBtn.setAttribute('aria-pressed',st==='owned'?'true':'false');
     ownBtn.innerHTML=`<span class="dc-collect-icon">${st==='owned'?'✓':''}</span> ${st==='owned'?'Owned':'Mark owned'}`;
     ownBtn.addEventListener('click',e=>{e.stopPropagation();setState(frag.id,st==='owned'?'none':'owned');refreshAfterStateChange(frag.id);renderCollectRow();});
-    
+
     const trialBtn=document.createElement('button');
-    trialBtn.className='dc-collect-btn';
+    trialBtn.className='btn btn--secondary';
     trialBtn.innerHTML=`<span class="dc-collect-icon">⏱</span> Track Trial`;
     trialBtn.addEventListener('click',e=>{e.stopPropagation();window.openTrialSheet(frag.id);});
 
     const shareBtn=document.createElement('button');
-    shareBtn.className='dc-collect-btn';
+    shareBtn.className='btn btn--secondary';
     shareBtn.setAttribute('aria-label','Copy shareable link to this fragrance');
     shareBtn.innerHTML=`<span class="dc-collect-icon">↗</span> Share`;
     shareBtn.addEventListener('click',e=>{
@@ -1674,8 +1695,8 @@ function renderFragDetail(container,frag){
     ctxRow.innerHTML=`
       <div class="list-item-dot" style="--fam-bg: ${fm2.color}"></div>
       <div class="list-item-body" style="flex:1;text-align:left;">
-        <div class="list-item-label">${top.name}</div>
-        <div class="list-item-sublabel">${top.brand}&thinsp;&middot;&thinsp;${famLabel2}</div>
+        <div class="list-item-label text-ui-strong">${top.name}</div>
+        <div class="list-item-sublabel text-meta">${top.brand}&thinsp;&middot;&thinsp;${famLabel2}</div>
       </div>
       <div class="list-item-trailing-label">${topScore}%</div>`;
     ctxRow.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,top),top.name);});
@@ -1723,9 +1744,9 @@ function renderFragDetail(container,frag){
       row.innerHTML=`
           <div class="list-item-dot" style="--fam-bg: ${fm2.color}"></div>
           <div class="list-item-body" style="flex:1;text-align:left;">
-            <div class="list-item-label">${f.name}</div>
-            <div class="list-item-sublabel">${f.brand} · ${famLabel2}</div>
-            ${reason ? `<div class="list-item-detail">${reason}</div>` : ''}
+            <div class="list-item-label text-ui-strong">${f.name}</div>
+            <div class="list-item-sublabel text-meta">${f.brand} · ${famLabel2}</div>
+            ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
           </div>
           ${badge&&badge.type!=='similar'?`<div style="flex-shrink:0"><span class="chip ${badge.type.replace('badge','chip')}">${badge.label}</span></div>`:''}
         `;
@@ -1743,7 +1764,9 @@ function _buildCompareCTAs(frag,container){
     const fcSelf=getCmpFam(frag.family);
     const fcOther=existingFrag?getCmpFam(existingFrag.family):null;
     const btn=document.createElement('button');
-    btn.className='dc-collect-btn dc-cmp-btn';
+    btn.className='btn btn--secondary';
+    btn.style.width='100%';
+    btn.style.justifyContent='space-between';
     const inner=existingFrag
       ?`<span class="dot" style="background:${fcSelf.accent}"></span>
         <span class="dc-cmp-btn-name">${frag.name}</span>
@@ -1754,7 +1777,7 @@ function _buildCompareCTAs(frag,container){
         <span class="dc-cmp-btn-name dc-cmp-btn-empty">Compare with ${frag.name}</span>`;
     btn.innerHTML=`
       <span class="dc-cmp-btn-text" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden">${inner}</span>
-      <span class="dc-cmp-btn-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2L10 7l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+      <span class="dc-cmp-btn-arrow">${ICONS.chevronRight}</span>`;
     btn.addEventListener('click',()=>{
       window.haptic?.('medium');
       if(existingFrag){
@@ -1801,11 +1824,12 @@ function buildLayerSuggestions(frag,container){
     row.className='list-item';
     row.innerHTML=`
         <div class="list-item-dot" style="--fam-bg: ${fm2.color}"></div>
-        <div class="list-item-body" style="flex:1">
-          <div class="list-item-label">${f.name} <span class="dc-sim-brand-btn" style="color:var(--text-secondary);font-size:var(--fs-meta);font-weight:normal">· ${f.brand}</span></div>
-          ${reason ? `<div class="list-item-detail">${reason}</div>` : ''}
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">${f.name}</div>
+          <div class="list-item-sublabel text-meta">${f.brand}</div>
+          ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
         </div>
-        <div style="flex-shrink:0; display:flex; align-items:center; gap: 4px;">
+        <div class="list-item-trail">
           <span class="dc-layer-score-badge">${score}</span>
           <span class="chip chip--xs is-owned">Owned</span>
         </div>
@@ -1814,9 +1838,6 @@ function buildLayerSuggestions(frag,container){
     shelf.appendChild(row);
   });
   container.appendChild(shelf);
-  container.querySelectorAll('.dc-sim-brand-btn').forEach(btn => {
-    btn.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(btn.textContent.replace(' · ','').trim());});
-  });
 }
 
 function buildRoleChips(frag,chipsEl){
@@ -1861,7 +1882,7 @@ function renderNoteSaveBtn(container, note) {
   const isSaved = isNoteSaved(note.name);
   container.innerHTML = '';
   const btn = document.createElement('button');
-  btn.className = 'dc-collect-btn' + (isSaved ? ' active' : '');
+  btn.className = 'btn btn--secondary' + (isSaved ? ' active' : '');
   btn.style.marginTop = '0';
   btn.innerHTML = `<span class="dc-collect-icon">${isSaved ? '★' : '☆'}</span> ${isSaved ? 'Saved Note' : 'Save Note'}`;
   btn.addEventListener('click', e => {
@@ -1879,28 +1900,50 @@ function renderNoteDetail(container,note){
   const nl=note.name.toLowerCase();
   const inf=CAT.filter(f=>f._nAll.includes(nl));
   const saveId = `nd-save-${note.name.replace(/\s+/g,'-')}`;
+  const famID = FAMOUS_FOR_MAP[note.name];
+  const famFrag = famID ? CAT_MAP[famID] : null;
+
   container.innerHTML=`
-    <div style="margin-bottom:var(--sp-xl);">
+    <div>
       <div class="text-heading">${note.name}</div>
-      <div class="chip chip--family" style="margin-top:var(--sp-xs); --fam-bg:${fm.color}20; --fam-color:${fm.color};">
-        <span class="dot" style="--fam-bg: ${fm.color}"></span>
-        ${fm.label}
-      </div>
+      <span class="chip" style="margin-top:var(--sp-xs); background: ${fm.color}; color: var(--bg-primary);">${fm.label}</span>
     </div>
-    <div class="text-body" style="margin-bottom:var(--sp-lg);">${note.desc}</div>
-    <div id="${saveId}" style="margin-bottom:var(--sp-xl);"></div>
-    ${note.extraction_method?`<div class="text-meta" style="margin-bottom:var(--sp-md);"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
+    <div class="text-body">${note.desc}</div>
+    <div id="${saveId}"></div>
+    
+    ${note.extraction_method?`<div class="text-meta"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
     ${note.insider_fact?`<div class="card card--secondary text-meta"><strong>Perfumer's Insight:</strong> ${note.insider_fact}</div>`:''}
-    ${inf.length?`<div style="margin-top:var(--sp-2xl);"><div class="sec-label">In catalog (${inf.length})</div><div id="_nfl" class="list-view"></div></div>`:''}`;
+    
+    ${famFrag ? `
+      <div class="section-group">
+        <div class="sec-label">Defining Fragrance</div>
+        <div class="card card--interactive list-item" id="nd-fam-frag">
+          <div class="list-item-dot" style="--fam-bg: ${FAM[famFrag.family]?.color || '#888'}"></div>
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">${famFrag.name}</div>
+            <div class="list-item-sublabel text-meta">${famFrag.brand} · Iconic ${note.name}</div>
+          </div>
+        </div>
+      </div>
+    ` : ''}
+
+    ${inf.length?`<div class="detail-section"><div class="sec-label">In catalog (${inf.length})</div><div id="_nfl" class="list-view"></div></div>`:''}`;
 
   renderNoteSaveBtn(container.querySelector(`#${saveId}`), note);
+
+  if (famFrag) {
+    container.querySelector('#nd-fam-frag').addEventListener('click', () => {
+      window.haptic?.('light');
+      pushDetail(c => renderFragDetail(c, famFrag), famFrag.name);
+    });
+  }
 
   if(inf.length){
     const shelf=container.querySelector('#_nfl');
     [...inf].sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{
       const fc=getCmpFam(f.family);
-      const btn=document.createElement('button');btn.className='list-item list-item--compact list-item--truncate';
-      btn.innerHTML=`<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div><div class="list-item-body"><div class="list-item-label">${f.name}</div><div class="list-item-sublabel">${f.brand}</div></div>`;
+      const btn=document.createElement('button');btn.className='list-item';
+      btn.innerHTML=`<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div><div class="list-item-body"><div class="list-item-label text-ui-strong">${f.name}</div><div class="list-item-sublabel text-meta">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
       shelf.appendChild(btn);
     });
@@ -1912,7 +1955,7 @@ function renderBrandSaveBtn(container, brandData) {
   container.innerHTML = '';
   const saved = isBrandSaved(brandData.id);
   const btn = document.createElement('button');
-  btn.className = 'dc-collect-btn' + (saved ? ' active' : '');
+  btn.className = 'btn btn--secondary' + (saved ? ' active' : '');
   btn.innerHTML = `<span class="dc-collect-icon">${saved ? '★' : '☆'}</span> ${saved ? 'Saved Brand' : 'Save Brand'}`;
   btn.addEventListener('click', e => {
     e.stopPropagation();
@@ -1925,7 +1968,17 @@ function renderBrandSaveBtn(container, brandData) {
 }
 
 function renderHouseDetail(container,brand){
-  const frags=CAT.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
+  const getPop = (f) => {
+    let s = 0;
+    if (US_POPULAR.includes(f.id)) s += 1000;
+    // Data richness proxy for popularity
+    s += (f.description?.length || 0);
+    s += ((f.top?.length || 0) + (f.mid?.length || 0) + (f.base?.length || 0)) * 5;
+    if (f.story) s += 100;
+    return s;
+  };
+
+  const frags = CAT.filter(f => f.brand === brand).sort((a, b) => getPop(b) - getPop(a));
   const houseData = BRANDS_MAP[brand.toLowerCase()];
 
   // Calculate family percentages
@@ -1943,14 +1996,14 @@ function renderHouseDetail(container,brand){
     }));
 
   const barHTML = famStats.map(f => `<div style="height:100%; width:${f.pct}%; background:${f.color};" title="${f.label} (${Math.round(f.pct)}%)"></div>`).join('');
-  const legendHTML = famStats.map(f => `<div style="display:inline-flex; align-items:center; margin-right:var(--sp-md); font-size:var(--fs-meta); color:var(--text-secondary);"><span style="display:inline-block; width:8px; height:8px; border-radius:var(--radius-circle); background:${f.color}; margin-right:var(--sp-xs);"></span>${f.label}</div>`).join('');
+  const legendHTML = famStats.map(f => `<div class="chart-legend-item"><span class="chart-legend-dot" style="background:${f.color};"></span>${f.label}</div>`).join('');
 
   let topCount = 0;
   if (frags.length >= 10) topCount = 5;
   else if (frags.length >= 5) topCount = 3;
   else if (frags.length >= 1) topCount = 2;
 
-  // We'll just take the first N fragrances in the sorted array
+  // Most popular frags from this brand
   const topFrags = frags.slice(0, topCount);
 
   // Compute best matches from owned fragrances
@@ -1969,21 +2022,21 @@ function renderHouseDetail(container,brand){
     .slice(0, 3);
   }
 
-  container.innerHTML=`<div class="house-detail-wrap" style="display:flex; flex-direction:column; gap:var(--sp-xl);">
-    <div class="house-detail-name">${brand}</div>
-    ${houseData && houseData.desc ? `<div class="card card--secondary text-meta" style="margin-bottom:var(--sp-xl);">${houseData.desc}</div>` : ''}
+  container.innerHTML=`<div class="house-detail-wrap u-flex-column u-gap-xl">
+    <div class="house-detail-name u-text-center">${brand.toUpperCase()}</div>
+    ${houseData && houseData.desc ? `<div class="card card--secondary text-meta">${houseData.desc}</div>` : ''}
     <div id="house-brand-save-wrap"></div>
-    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="dc-collect-btn">Visit ${brand} Website</a>` : ''}
-    ${brand.toLowerCase() === 'byredo' ? `<button class="dc-collect-btn byredo-quiz-btn" style="display:flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Byredo (Concierge Quiz)</button>` : ''}
+    ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="btn btn--secondary">Visit ${brand} Website</a>` : ''}
+    ${brand.toLowerCase() === 'byredo' ? `<button class="btn btn--secondary u-w-full byredo-quiz-btn">Find Your Byredo (Concierge Quiz)</button>` : ''}
 
-    <div>
+    <div class="detail-section">
       <div class="sec-label">Fragrance Families</div>
-      <div style="height:var(--sp-sm); width:100%; display:flex; border-radius:var(--radius); overflow:hidden; margin-bottom:var(--sp-sm);">${barHTML}</div>
-      <div style="display:flex; flex-wrap:wrap; gap:var(--sp-xs);">${legendHTML}</div>
+      <div class="u-flex-row u-gap-0 u-w-full u-min-w-0 u-overflow-hidden" style="height:8px; border-radius:4px;">${barHTML}</div>
+      <div class="u-flex-row u-flex-wrap u-gap-sm">${legendHTML}</div>
     </div>
 
     ${topFrags.length > 0 ? `
-    <div class="house-known-for">
+    <div class="detail-section">
       <div class="sec-label">Known For</div>
       <div class="carousel-wrap">
         <div class="carousel" id="house-known-for-carousel"></div>
@@ -1992,7 +2045,7 @@ function renderHouseDetail(container,brand){
     ` : ''}
 
     ${bestMatches.length > 0 ? `
-    <div class="house-best-matches">
+    <div class="detail-section">
       <div class="sec-label">Similar From This House</div>
       <div id="house-best-matches-list"></div>
     </div>
@@ -2017,11 +2070,9 @@ function renderHouseDetail(container,brand){
       const card = document.createElement('div');
       card.className = 'carousel-card card card--interactive';
       card.innerHTML = `
-        <div class="list-item-label">${frag.name}</div>
-        <div class="list-item-sublabel">${frag.brand}</div>
+        <div class="list-item-label text-ui-strong">${frag.name}</div>
         <div style="display:flex; align-items:center; gap:var(--sp-xs); margin-top:auto;">
           <div class="dot" style="--fam-bg: ${fm.color}"></div>
-          <span class="text-meta">${fm.label}</span>
         </div>`;
       card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       carousel.appendChild(card);
@@ -2034,11 +2085,11 @@ function renderHouseDetail(container,brand){
     bestMatches.forEach(({ frag, score }) => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
-      btn.className = 'list-item list-item--compact';
+      btn.className = 'list-item';
       btn.innerHTML = `<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div>
         <div class="list-item-body">
-          <div class="list-item-label">${frag.name}</div>
-          <div class="list-item-sublabel">${(FAM[frag.family]||{}).label||frag.family}</div>
+          <div class="list-item-label text-ui-strong">${frag.name}</div>
+          <div class="list-item-sublabel text-meta">${(FAM[frag.family]||{}).label||frag.family}</div>
         </div>
         <div class="list-item-trail">
           <div class="list-item-trailing-label">${score}%</div>
@@ -2052,11 +2103,11 @@ function renderHouseDetail(container,brand){
   frags.forEach(frag=>{
     const fc=getCmpFam(frag.family);
     const btn=document.createElement('button');
-    btn.className='list-item list-item--compact';
+    btn.className='list-item';
     btn.innerHTML=`<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div>
       <div class="list-item-body">
-        <div class="list-item-label">${frag.name}</div>
-        <div class="list-item-sublabel">${(FAM[frag.family]||{}).label||frag.family}</div>
+        <div class="list-item-label text-ui-strong">${frag.name}</div>
+        <div class="list-item-sublabel text-meta">${(FAM[frag.family]||{}).label||frag.family}</div>
       </div>`;
     btn.addEventListener('click',()=>{window.haptic?.('light');pushDetail(c=>renderFragDetail(c,frag),frag.name);});
     list.appendChild(btn);
@@ -2110,18 +2161,18 @@ function renderByredoQuiz(container) {
     }
     const q = qs[step];
     container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div style="font-size:var(--fs-meta); color:var(--g500); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
-        <div class="dc-name" style="margin-bottom:var(--sp-xl);">${q.q}</div>
+      <div class="section-group">
+        <div class="text-meta u-text-secondary">Question ${step + 1} of ${qs.length}</div>
+        <div class="dc-name">${q.q}</div>
         <div style="display:flex; flex-direction:column; gap:var(--sp-md);">
           ${q.a.map((ans, i) => `
-            <button class="dc-collect-btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal;">${ans.label}</button>
+            <button class="list-item" role="option" aria-selected="false" data-idx="${i}">${ans.label}</button>
           `).join('')}
         </div>
       </div>
     `;
 
-    container.querySelectorAll('.quiz-ans-btn').forEach(btn => {
+    container.querySelectorAll('[role="option"]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         window.haptic?.('light');
         const ansIdx = parseInt(e.target.dataset.idx, 10);
@@ -2154,9 +2205,9 @@ function renderByredoQuiz(container) {
     }
 
     container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div class="dc-name" style="margin-bottom:var(--sp-xl);">Your Byredo Signatures</div>
-        <div class="callout" style="margin-bottom:var(--sp-xl);">Based on your preferences, we recommend exploring these fragrances next time you are at a Byredo counter:</div>
+      <div class="section-group">
+        <div class="dc-name">Your Byredo Signatures</div>
+        <div class="callout">Based on your preferences, we recommend exploring these fragrances next time you are at a Byredo counter:</div>
         <div class="house-detail-list"></div>
       </div>
     `;
@@ -2165,11 +2216,11 @@ function renderByredoQuiz(container) {
     top3.forEach(frag => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
-      btn.className = 'list-item list-item--compact';
+      btn.className = 'list-item';
       btn.innerHTML = `<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div>
         <div class="list-item-body">
-          <div class="list-item-label">${frag.name}</div>
-          <div class="list-item-sublabel">${(FAM[frag.family] || {}).label || frag.family}</div>
+          <div class="list-item-label text-ui-strong">${frag.name}</div>
+          <div class="list-item-sublabel text-meta">${(FAM[frag.family] || {}).label || frag.family}</div>
         </div>`;
       btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       list.appendChild(btn);
@@ -2235,18 +2286,18 @@ function renderGlobalQuiz(container) {
     }
     const q = qs[step];
     container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div style="font-size:var(--fs-meta); color:var(--g500); margin-bottom:var(--sp-xs);">Question ${step + 1} of ${qs.length}</div>
-        <div class="dc-name" style="margin-bottom:var(--sp-xl);">${q.q}</div>
+      <div class="section-group">
+        <div class="text-meta u-text-secondary">Question ${step + 1} of ${qs.length}</div>
+        <div class="dc-name">${q.q}</div>
         <div style="display:flex; flex-direction:column; gap:var(--sp-md);">
           ${q.a.map((ans, i) => `
-            <button class="dc-collect-btn quiz-ans-btn" data-idx="${i}" style="justify-content:flex-start; font-weight:normal; text-align:left;">${ans.label}</button>
+            <button class="list-item" role="option" aria-selected="false" data-idx="${i}">${ans.label}</button>
           `).join('')}
         </div>
       </div>
     `;
 
-    container.querySelectorAll('.quiz-ans-btn').forEach(btn => {
+    container.querySelectorAll('[role="option"]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         window.haptic?.('light');
         const ansIdx = parseInt(e.target.dataset.idx, 10);
@@ -2333,11 +2384,11 @@ function renderGlobalQuiz(container) {
     }
 
     container.innerHTML = `
-      <div style="padding:var(--sp-lg) 0;">
-        <div class="dc-name" style="margin-bottom:var(--sp-xl);">Your Perfect Matches</div>
-        <div class="callout" style="margin-bottom:var(--sp-xl);">Based on your unique scent profile, we highly recommend exploring these three fragrances:</div>
+      <div class="section-group">
+        <div class="dc-name">Your Perfect Matches</div>
+        <div class="callout">Based on your unique scent profile, we highly recommend exploring these three fragrances:</div>
         <div class="house-detail-list"></div>
-        <button class="dc-collect-btn" onclick="pushDetail(c => renderGlobalQuiz(c), 'Fragrance Match')" style="margin-top:var(--sp-2xl); width:100%; justify-content:center; background:var(--bg-secondary); color:var(--text-secondary); border:1px solid var(--border-strong);">Retake Quiz</button>
+        <button class="btn btn--secondary u-w-full" onclick="pushDetail(c => renderGlobalQuiz(c), 'Fragrance Match')">Retake Quiz</button>
       </div>
     `;
 
@@ -2345,11 +2396,11 @@ function renderGlobalQuiz(container) {
     top3.forEach(frag => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
-      btn.className = 'list-item list-item--compact';
+      btn.className = 'list-item';
       btn.innerHTML = `<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div>
         <div class="list-item-body">
-          <div class="list-item-label">${frag.name}</div>
-          <div class="list-item-sublabel">${frag.brand} · ${(FAM[frag.family] || {}).label || frag.family}</div>
+          <div class="list-item-label text-ui-strong">${frag.name}</div>
+          <div class="list-item-sublabel text-meta">${frag.brand} · ${(FAM[frag.family] || {}).label || frag.family}</div>
         </div>`;
       btn.addEventListener('click', () => { window.haptic?.('light'); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       list.appendChild(btn);
@@ -2399,17 +2450,19 @@ function openNotePopup(note,triggerEl){
   const sortedInf=[...inf].sort((a,b)=>a.name.localeCompare(b.name));
   const fe=document.getElementById('np-frags');fe.innerHTML='';
   if(sortedInf.length){
-    const lbl=document.createElement('div');lbl.className='sec-label';lbl.style.marginBottom='var(--sp-xs)';lbl.textContent=`In catalog (${sortedInf.length})`;
-    fe.appendChild(lbl);
+    const sec=document.createElement('div');sec.className='section-group';
+    const lbl=document.createElement('div');lbl.className='sec-label';lbl.textContent=`In catalog (${sortedInf.length})`;
+    sec.appendChild(lbl);
     const list=document.createElement('div');list.className='list-view';
     sortedInf.forEach(f=>{
       const fc=getCmpFam(f.family);
-      const btn=document.createElement('button');btn.className='list-item list-item--compact';
-      btn.innerHTML=`<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div><div class="list-item-body"><div class="list-item-label">${f.name}</div><div class="list-item-sublabel">${f.brand}</div></div>`;
+      const btn=document.createElement('button');btn.className='list-item';
+      btn.innerHTML=`<div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div><div class="list-item-body"><div class="list-item-label text-ui-strong">${f.name}</div><div class="list-item-sublabel text-meta">${f.brand}</div></div>`;
       btn.addEventListener('click',e=>{e.stopPropagation();closeNotePopup();openFragDetail(f)});
       list.appendChild(btn);
     });
-    fe.appendChild(list);
+    sec.appendChild(list);
+    fe.appendChild(sec);
   }
   const popup=document.getElementById('note-popup');
   const rect=triggerEl.getBoundingClientRect();
@@ -2520,8 +2573,8 @@ function renderPicker(container,roleId){
       const fm=FAM[frag.family]||{color:'#888'};
       const card=document.createElement('div');card.className='carousel-card card card--interactive';
       card.innerHTML=`
-        <div class="list-item-label">${frag.name}</div>
-        <div class="list-item-sublabel">${frag.brand}</div>
+        <div class="list-item-label text-ui-strong">${frag.name}</div>
+        <div class="list-item-sublabel text-meta">${frag.brand}</div>
         <div style="display:flex; align-items:center; gap:var(--sp-xs); margin-top:auto;">
           <div class="dot" style="--fam-bg: ${fm.color}"></div>
           <span class="text-meta">${fm.label}</span>
@@ -2672,9 +2725,9 @@ function buildCatalog(roleFilter){
     const frags=visibleCat.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
     const key=brand.replace(/\s+/g,'-')+(roleFilter||'');
     const sec=document.createElement('div');sec.className='cat-section';
-    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n s-name-btn" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
+    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n text-link" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
     // Brand header → house detail
-    sec.querySelector('.s-name-btn')?.addEventListener('click',()=>openHouseDetail(brand));
+    sec.querySelector('.text-link')?.addEventListener('click',()=>openHouseDetail(brand));
     const list=document.createElement('div');list.className='list-view';
     const lastTapMap = new Map();
     let touchStartX = 0;
@@ -3043,34 +3096,28 @@ function renderCatRow(row,frag,fm,search){
       const rendered=(frag.top||[]).slice(0,3).map((n,i)=>
         (i===topIdx||frag._nTop[i].includes(q))?`<mark class="note-match">${n}</mark>`:n
       ).join(', ');
-      notesHtml=`<div class="list-item-detail">${rendered}</div>`;
+      notesHtml=`<div class="list-item-detail text-caption">${rendered}</div>`;
     } else if(midIdx!==-1||baseIdx!==-1){
       // Replace notes line with a "why matched" badge
       const tier=midIdx!==-1?'Mid':'Base';
       const note=midIdx!==-1?frag.mid[midIdx]:frag.base[baseIdx];
-      notesHtml=`<div class="list-item-detail"><span class="match-badge">↳ ${tier} · ${note}</span></div>`;
+      notesHtml=`<div class="list-item-detail text-caption"><span class="match-badge">↳ ${tier} · ${note}</span></div>`;
     } else {
       // Name or brand match — show top notes as normal
       const topNotes=(frag.top||[]).slice(0,3).join(', ');
-      if(topNotes)notesHtml=`<div class="list-item-detail">${topNotes}</div>`;
+      if(topNotes)notesHtml=`<div class="list-item-detail text-caption">${topNotes}</div>`;
     }
   } else {
     const topNotes=(frag.top||[]).slice(0,3).join(', ');
-    const midNote=(frag.mid||[])[0];
-    const baseNote=(frag.base||[])[0];
-    const parts=[];
-    if(topNotes)parts.push(topNotes);
-    if(midNote)parts.push(`<span class="note-layer-hint" aria-label="Heart note:">H</span> ${midNote}`);
-    if(baseNote)parts.push(`<span class="note-layer-hint" aria-label="Base note:">B</span> ${baseNote}`);
-    if(parts.length)notesHtml=`<div class="list-item-detail">${parts.join(' · ')}</div>`;
+    if(topNotes)notesHtml=`<div class="list-item-detail text-caption">${topNotes}</div>`;
   }
 
   row.draggable = true;
   row.innerHTML=`
-      <div class="list-item-dot" style="--fam-bg: ${fm.color}" aria-hidden="true"><span class="fam-abbr">${FAM_ABBR[frag.family]||''}</span></div>
+      <div class="list-item-dot" style="--fam-bg: ${fm.color}" aria-hidden="true"></div>
       <div class="list-item-body">
-        <div class="list-item-label">${frag.name}</div>
-        <div class="list-item-sublabel">${frag.brand} · ${famLabel}</div>
+        <div class="list-item-label text-ui-strong">${frag.name}</div>
+        <div class="list-item-sublabel text-meta">${frag.brand} · ${famLabel}</div>
         ${notesHtml}
       </div>
     `;
@@ -3113,11 +3160,366 @@ function initNotesNav() {
 }
 
 /* ══ BUILD NOTES ════════════════════════════════════════════════════ */
+const FEATURED_NOTES = [
+  'Aldehydes', 'Bergamot', 'Jasmine', 'Musk', 'Oakmoss', 'Oud', 'Patchouli',
+  'Rose', 'Sandalwood', 'Tuberose', 'Vanilla', 'Vetiver', 'Ylang-Ylang', 'Ambergris', 'Orris'
+];
+
+const FAMOUS_FOR_MAP = {
+  'Aldehydes': 'no-5',
+  'Bergamot': 'sauvage',
+  'Jasmine': 'no-5',
+  'Musk': 'fleur-de-peau',
+  'Oakmoss': 'eau-sauvage',
+  'Oud': 'oud-wood',
+  'Patchouli': 'patchouli-24',
+  'Rose': 'rose-31',
+  'Sandalwood': 'santal-33',
+  'Tuberose': 'do-son',
+  'Vanilla': 'eau-duelle',
+  'Vetiver': 'grey-vetiver',
+  'Ylang-Ylang': 'no-5',
+  'Ambergris': 'baccarat-rouge-540',
+  'Orris': 'iris-39'
+};
+
 let notesSearchQuery = '';
 let notesSortMode = 'family'; // 'family' or 'az'
 let notesTierMode = 'all';
 
 let _notesActiveTab = 'explore'; // 'explore' | 'search' | 'saved'
+
+function renderNotesExplore(container) {
+  container.innerHTML = '';
+  
+  // 1. Hero / Intro
+  const hero = document.createElement('div');
+  hero.className = 'section-group';
+  hero.innerHTML = `
+    <div class="dc-name">The Library of Notes</div>
+    <div class="text-body">Discover the raw materials and storied ingredients that build the world's most iconic fragrances.</div>
+  `;
+  container.appendChild(hero);
+
+  // 2. Star Ingredients (Carousel)
+  const starSec = document.createElement('div');
+  starSec.className = 'section-group';
+  starSec.innerHTML = `<div class="sec-label">Star Ingredients</div>`;
+  
+  const carouselWrap = document.createElement('div');
+  carouselWrap.className = 'carousel-wrap';
+  const carousel = document.createElement('div');
+  carousel.className = 'carousel';
+  carousel.setAttribute('role', 'list');
+  carousel.setAttribute('aria-label', 'Featured star ingredients');
+
+  FEATURED_NOTES.forEach(name => {
+    const note = NI_MAP[name.toLowerCase()];
+    if (!note) return;
+    const fm = FAM[note.family] || { color: '#888' };
+    
+    const card = document.createElement('div');
+    card.className = 'carousel-card card card--interactive';
+    
+    // Snippet of the fact
+    const fact = note.insider_fact || note.desc;
+    const snippet = fact.length > 80 ? fact.substring(0, 77) + '...' : fact;
+
+    const RARE_NOTES = ['Rose', 'Vanilla', 'Oud', 'Orris', 'Sandalwood', 'Jasmine', 'Ambergris', 'Tuberose'];
+    const isRare = RARE_NOTES.includes(note.name);
+
+    card.innerHTML = `
+      <div class="carousel-card-family" style="display:flex; align-items:center; gap:var(--sp-xs); margin-bottom:var(--sp-xs);">
+        <div class="dot" style="--fam-bg: ${fm.color}"></div>
+        <span class="carousel-card-family-label text-meta" style="font-weight:600;">${fm.label}</span>
+        ${isRare ? `<span class="chip chip--xs" style="margin-left:auto;">Rare</span>` : ''}
+      </div>
+      <div class="list-item-label text-ui-strong" style="font-size:var(--fs-ui); margin-bottom:var(--sp-xs);">${note.name}</div>
+      <div class="text-caption" style="margin-bottom:var(--sp-md);">${snippet}</div>
+      <button class="btn btn--secondary u-w-full" style="margin-top:auto;">Read Story</button>
+    `;
+    
+    card.addEventListener('click', () => {
+      window.haptic?.('light');
+      pushDetail(c => renderNoteDetail(c, note), note.name);
+    });
+    carousel.appendChild(card);
+  });
+
+  initCarouselKeyNav(carousel);
+  carouselWrap.appendChild(carousel);
+  starSec.appendChild(carouselWrap);
+  container.appendChild(starSec);
+
+  // 3. Quiz CTA
+  const quizCard = document.createElement('div');
+  quizCard.className = 'card card--interactive card--secondary section-group';
+  quizCard.innerHTML = `
+    <div class="section-group">
+      <div class="text-ui-strong text-title">Find Your Signature Note</div>
+      <div class="text-meta">Take the 30-second quiz to discover the notes that match your personality.</div>
+    </div>
+    <button class="btn btn--primary u-w-full note-quiz-btn">Start Note Quiz</button>
+  `;
+  quizCard.querySelector('.note-quiz-btn').addEventListener('click', () => {
+    window.haptic?.('medium');
+    pushDetail(c => renderNotesQuiz(c), 'Note Discovery');
+  });
+  container.appendChild(quizCard);
+
+  // 4. Family Explorer (Grid)
+  const famSec = document.createElement('div');
+  famSec.className = 'section-group';
+  famSec.innerHTML = `<div class="sec-label">Explore by Family</div>`;
+  
+  const famGrid = document.createElement('div');
+  famGrid.className = 'grid';
+  
+  const FAM_REF_MAP = {
+    citrus: 'sauvage',
+    green: 'bal-dafrique',
+    floral: 'no-5',
+    woody: 'santal-33',
+    amber: 'tobacco-vanille',
+    chypre: 'eau-sauvage',
+    aquatic: 'another-13',
+    leather: 'oud-wood',
+    gourmand: 'vanille-antique',
+    oud: 'oud-wood'
+  };
+
+  FAM_ORDER.forEach(fk => {
+    const fm = FAM[fk];
+    if (!fm) return;
+    
+    const card = document.createElement('div');
+    card.className = 'card section-group';
+    
+    const famNotes = NI.filter(n => n.family === fk);
+    const keyNotes = famNotes.slice(0, 3);
+    const refFrag = CAT_MAP[FAM_REF_MAP[fk]];
+
+    card.innerHTML = `
+      <div class="section-group">
+        <div style="display:flex; align-items:center; gap:var(--sp-sm);">
+          <div class="dot--md" style="background:${fm.color};"></div>
+          <div class="text-ui-strong text-title">${fm.label}</div>
+        </div>
+        <div class="text-body">${fm.desc}</div>
+      </div>
+      
+      ${refFrag ? `
+      <div class="section-group">
+        <div class="sec-label">Reference Scent</div>
+        <div class="list-item" style="padding:0; border:none; background:transparent;">
+          <div class="list-item-dot" style="--fam-bg: ${fm.color}"></div>
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">${refFrag.name}</div>
+            <div class="list-item-sublabel text-meta">${refFrag.brand}</div>
+          </div>
+        </div>
+      </div>
+      ` : ''}
+
+      <div class="section-group">
+        <div class="sec-label">Key Building Blocks</div>
+        <div class="tag-list">
+          ${keyNotes.map(n => `<span class="tag text-meta">${n.name}</span>`).join('')}
+          <span class="tag text-meta">+ ${famNotes.length - 3}</span>
+        </div>
+      </div>
+
+      <button class="btn btn--secondary u-w-full fam-filter-btn" data-fam="${fk}">See all ${famNotes.length} Notes</button>
+    `;
+    
+    card.querySelector('.fam-filter-btn').addEventListener('click', () => {
+      window.haptic?.('light');
+      notesSearchQuery = '';
+      notesSortMode = 'az';
+      notesTierMode = 'all';
+      _notesActiveTab = 'search';
+      
+      // Update navigation buttons
+      document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === 'search');
+      });
+      
+      // Show search UI
+      const searchWrap = document.getElementById('notes-search-wrap');
+      const tierWrap = document.getElementById('notes-tier-filter-wrap');
+      if (searchWrap) searchWrap.style.display = '';
+      if (tierWrap) tierWrap.style.display = '';
+      
+      // Filter by family instead of just a string match in the search box
+      const input = document.getElementById('notes-search');
+      if (input) {
+        input.value = fm.label;
+        notesSearchQuery = fm.label;
+      }
+      
+      buildNotes();
+    });
+    
+    famGrid.appendChild(card);
+  });
+  
+  famSec.appendChild(famGrid);
+  container.appendChild(famSec);
+
+  // 5. Curated Power Pairs
+  const pairSec = document.createElement('div');
+  pairSec.className = 'section-group';
+  
+  const PAIRS = [
+    { title: "Citrus + Woody", desc: "Brightness cuts through density for a classic balance.", tags: ["Bergamot", "Cedar"], example: "Dior Sauvage" },
+    { title: "Floral + Amber", desc: "Warm resins provide a golden stage for roses to shine.", tags: ["Rose", "Vanilla"], example: "Chanel No. 5" },
+    { title: "Green + Musk", desc: "Sharp vetiver grounded by soft musk creates a skin-like effect.", tags: ["Vetiver", "Musk"], example: "Byredo Bal d'Afrique" },
+    { title: "Oud + Rose", desc: "Dark, animalic oud balanced by honeyed, velvety rose.", tags: ["Oud", "Rose"], example: "Le Labo Rose 31" }
+  ];
+
+  pairSec.innerHTML = `
+    <div class="sec-label">Curated Power Pairs</div>
+    <div class="grid">
+      ${PAIRS.map(p => `
+      <div class="card card--secondary section-group">
+        <div class="section-group">
+          <div class="text-ui-strong">${p.title}</div>
+          <div class="text-meta">${p.desc}</div>
+        </div>
+        <div class="tag-list">
+          ${p.tags.map(t => `<span class="tag text-meta">${t}</span>`).join('')}
+        </div>
+        <div class="section-group">
+          <div class="sec-label">Example Evidence</div>
+          <div class="list-item" style="padding:0; border:none; background:transparent;">
+            <div class="list-item-body">
+              <div class="text-ui-strong" style="font-size:var(--fs-meta);">${p.example}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      `).join('')}
+    </div>
+  `;
+  container.appendChild(pairSec);
+}
+
+function renderNotesQuiz(container) {
+  const qs = [
+    {
+      q: "What is your morning energy?",
+      a: [
+        { label: "Crisp air and cold water", tags: ["citrus", "aquatic", "freshness"] },
+        { label: "Deep shadows and damp earth", tags: ["woody", "green", "warmth"] },
+        { label: "Soft sunlight and warm linen", tags: ["floral", "musk", "intimate"] }
+      ]
+    },
+    {
+      q: "Pick a texture:",
+      a: [
+        { label: "Smooth, cold marble", tags: ["citrus", "mineral", "clean"] },
+        { label: "Rough, weathered wood", tags: ["woody", "smoke", "intensity"] },
+        { label: "Heavy, velvet silk", tags: ["amber", "floral", "sweet"] }
+      ]
+    },
+    {
+      q: "Where is your sanctuary?",
+      a: [
+        { label: "A library of old books", tags: ["leather", "woody", "paper"] },
+        { label: "A garden after the rain", tags: ["green", "floral", "dew"] },
+        { label: "A coastal cliff at dusk", tags: ["aquatic", "salt", "ozonic"] }
+      ]
+    }
+  ];
+
+  let step = 0;
+  let collectedTags = [];
+
+  function renderStep() {
+    if (step >= qs.length) {
+      renderResult();
+      return;
+    }
+    const q = qs[step];
+    container.innerHTML = `
+      <div class="section-group">
+        <div class="text-meta">Discovery Step ${step + 1} of ${qs.length}</div>
+        <div class="dc-name">${q.q}</div>
+        <div class="section-group">
+          ${q.a.map((ans, i) => `
+            <button class="list-item" role="option" aria-selected="false" data-idx="${i}">${ans.label}</button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    container.querySelectorAll('[role="option"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        window.haptic?.('light');
+        const ansIdx = parseInt(e.target.dataset.idx, 10);
+        collectedTags.push(...q.a[ansIdx].tags);
+        step++;
+        renderStep();
+      });
+    });
+  }
+
+  function renderResult() {
+    // Map tags to families and count them
+    const famCounts = {};
+    collectedTags.forEach(t => {
+      // If the tag is a family name (e.g. 'woody'), count it
+      if (FAM[t]) famCounts[t] = (famCounts[t] || 0) + 1;
+    });
+    
+    // Sort families by count
+    const sortedFams = Object.keys(famCounts).sort((a, b) => famCounts[b] - famCounts[a]);
+    
+    // Pick top 3 unique families (fallback to common ones if none found)
+    const topFams = sortedFams.length >= 3 ? sortedFams.slice(0, 3) : [...new Set([...sortedFams, 'woody', 'citrus', 'floral'])].slice(0, 3);
+
+    // Pick 1 iconic note from each of the top 3 families
+    const suggestedNotes = topFams.map(fk => {
+      const famNotes = NI.filter(n => n.family === fk);
+      return famNotes[Math.floor(Math.random() * famNotes.length)];
+    }).filter(Boolean);
+
+    container.innerHTML = `
+      <div class="section-group">
+        <div class="dc-name">Your Scent DNA</div>
+        <div class="text-body">Based on your answers, you gravitate toward notes that are atmospheric and evocative. Explore these three building blocks:</div>
+        <div class="list-view"></div>
+        <button class="btn btn--secondary u-w-full retake-quiz-btn">Retake Quiz</button>
+      </div>
+    `;
+
+    container.querySelector('.retake-quiz-btn').addEventListener('click', () => {
+      window.haptic?.('medium');
+      renderNotesQuiz(container);
+    });
+
+    const list = container.querySelector('.list-view');
+    suggestedNotes.forEach(note => {
+      const fm = FAM[note.family] || { color: '#888' };
+      const btn = document.createElement('button');
+      btn.className = 'list-item';
+      btn.innerHTML = `
+        <div class="list-item-dot" style="--fam-bg: ${fm.color}"></div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">${note.name}</div>
+          <div class="list-item-sublabel text-meta">${fm.label} · ${note.desc.substring(0, 60)}...</div>
+        </div>
+      `;
+      btn.addEventListener('click', () => { 
+        window.haptic?.('light'); 
+        pushDetail(c => renderNoteDetail(c, note), note.name); 
+      });
+      list.appendChild(btn);
+    });
+  }
+
+  renderStep();
+}
 
 function switchNotesTab(tab) {
   _notesActiveTab = tab;
@@ -3132,6 +3534,7 @@ function switchNotesTab(tab) {
     notesSortMode = 'family';
     notesTierMode = 'all';
     if (searchWrap) searchWrap.style.display = 'none';
+    if (tierWrap) tierWrap.style.display = 'none';
   } else if (tab === 'search') {
     notesSortMode = 'az';
     notesTierMode = 'all';
@@ -3150,7 +3553,14 @@ function buildNotes(searchQuery, currentTier){
   if (searchQuery !== undefined) notesSearchQuery = searchQuery;
   if (currentTier !== undefined) notesTierMode = currentTier;
 
-  const body=document.getElementById('notes-body');body.innerHTML='';
+  const body=document.getElementById('notes-body');
+  
+  if (_notesActiveTab === 'explore') {
+    renderNotesExplore(body);
+    return;
+  }
+  
+  body.innerHTML='';
 
   // Filter notes by search query and tier
   const sq = notesSearchQuery.toLowerCase().trim();
@@ -3181,14 +3591,14 @@ function buildNotes(searchQuery, currentTier){
     sorted.forEach(note => {
       const fm = FAM[note.family] || {color: '#888'};
       const btn = document.createElement('button');
-      btn.className = 'list-item list-item--compact';
+      btn.className = 'list-item';
       btn.style.cursor = 'pointer';
 
       const isSaved = isNoteSaved(note.name);
       btn.innerHTML = `
         <div class="list-item-dot" style="--fam-bg: ${fm.color}"></div>
         <div class="list-item-body">
-          <div class="list-item-label">${note.name}</div>
+          <div class="list-item-label text-ui-strong">${note.name}</div>
         </div>
         ${isSaved ? '<span class="list-item-badge">★</span>' : ''}
       `;
@@ -3207,27 +3617,27 @@ function buildNotes(searchQuery, currentTier){
     filteredNotes.forEach(n=>{if(!grouped[n.family])grouped[n.family]=[];grouped[n.family].push(n)});
     Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name)));
 
-    FAM_ORDER.forEach(fk=>{
-      if(!grouped[fk]?.length)return;
-      const fm=FAM[fk];if(!fm)return;
+    FAM_ORDER.forEach(fk => {
+      if (!grouped[fk]?.length) return;
+      const fm = FAM[fk]; if (!fm) return;
 
-      const card=document.createElement('div');card.className='card';
+      const card = document.createElement('div'); card.className = 'card section-group';
+      card.style.gap = 'var(--sp-sm)';
 
-      const header=document.createElement('div');
+      const header = document.createElement('div');
       header.className = 'list-item';
-      header.style.cssText = 'padding:0; padding-bottom:var(--sp-sm); margin-bottom:var(--sp-sm); border-bottom:1px solid var(--border-subtle); align-items:flex-start;';
-      header.innerHTML=`<div class="dot" style="background:${fm.color}; margin-top:5px;"></div><div class="list-item-body"><div class="list-item-label">${fm.label}</div>${fm.desc?`<div class="list-item-sublabel">${fm.desc}</div>`:''}</div>`;
+      header.style.cssText = 'padding:0; padding-bottom:var(--sp-sm); border-bottom:1px solid var(--border-standard); align-items:flex-start;';
+      header.innerHTML = `<div class="dot--md" style="background:${fm.color}; margin-top:4px;"></div><div class="list-item-body"><div class="list-item-label text-ui-strong">${fm.label}</div>${fm.desc ? `<div class="list-item-sublabel text-meta">${fm.desc}</div>` : ''}</div>`;
 
-      const cardBody=document.createElement('div');
+      const cardBody = document.createElement('div');
       cardBody.style.cssText = 'display:flex; flex-wrap:wrap; gap:var(--sp-xs);';
-      grouped[fk].forEach(note=>{
-        const btn=document.createElement('button');btn.className='chip text-meta';
+      grouped[fk].forEach(note => {
+        const btn = document.createElement('button'); btn.className = 'chip text-meta';
         const savedMark = isNoteSaved(note.name) ? ' <span style="color:var(--accent-primary); margin-left:4px;">★</span>' : '';
         btn.innerHTML = `${note.name}${savedMark}`;
-        btn.addEventListener('click',e=>{e.stopPropagation();openDetail(c=>renderNoteDetail(c,note),note.name)});
+        btn.addEventListener('click', e => { e.stopPropagation(); openDetail(c => renderNoteDetail(c, note), note.name) });
         cardBody.appendChild(btn);
       });
-
       card.appendChild(header);
       card.appendChild(cardBody);
       grid.appendChild(card);
@@ -3240,7 +3650,7 @@ function buildNotes(searchQuery, currentTier){
   const quizBtnWrap = document.createElement('div');
   quizBtnWrap.style.marginTop = 'var(--sp-2xl)';
   quizBtnWrap.style.textAlign = 'center';
-  quizBtnWrap.innerHTML = `<button class="dc-collect-btn global-quiz-btn" style="display:inline-flex; justify-content:center; background:var(--g100); color:var(--g900); border:1px solid var(--g300);">Find Your Perfect Fragrance (Quiz)</button>`;
+  quizBtnWrap.innerHTML = `<button class="btn btn--secondary global-quiz-btn">Find Your Perfect Fragrance (Quiz)</button>`;
   body.appendChild(quizBtnWrap);
 
   quizBtnWrap.querySelector('.global-quiz-btn').addEventListener('click', (e) => {
@@ -3289,9 +3699,9 @@ function openQuickPeek(frag){
       <div class="dc-note"><span class="dc-nt">Top</span><span class="dc-nv">${linkNotes(frag.top)}</span></div>
       <div class="dc-note"><span class="dc-nt">Heart</span><span class="dc-nv">${linkNotes(frag.mid)}</span></div>
       <div class="dc-note"><span class="dc-nt">Base</span><span class="dc-nv">${linkNotes(frag.base)}</span></div>
-      <div class="qp-actions">
-        <button class="dc-collect-btn qp-details-btn" id="qp-details-btn">Full details</button>
-        ${hasSlot ? `<button class="dc-collect-btn qp-compare-btn" id="qp-compare-btn">Add to compare</button>` : ''}
+      <div class="qp-actions btn-group">
+        <button class="btn btn--secondary" id="qp-details-btn">Full details</button>
+        ${hasSlot ? `<button class="btn btn--secondary" id="qp-compare-btn">Add to compare</button>` : ''}
       </div>
     </div>
   `;
@@ -3555,8 +3965,8 @@ function _renderUsResults(query) {
       return `<button class="list-item list-item--search" role="option" aria-selected="false" id="us-row-${rowIdx}" data-us-type="note" data-us-id="${n.name}" data-row-idx="${rowIdx++}">
         <span class="list-item-icon">🌿</span>
         <span class="list-item-body">
-          <span class="list-item-label">${n.name}</span>
-          ${sub ? `<span class="list-item-sublabel">${sub}</span>` : ''}
+          <span class="list-item-label text-ui-strong">${n.name}</span>
+          ${sub ? `<span class="list-item-sublabel text-meta">${sub}</span>` : ''}
         </span>
       </button>`;
     }).join('');
@@ -3574,8 +3984,8 @@ function _renderUsResults(query) {
       return `<button class="list-item list-item--search" role="option" aria-selected="false" id="us-row-${rowIdx}" data-us-type="house" data-us-id="${b.name}" data-row-idx="${rowIdx++}">
         <span class="list-item-icon">🏛</span>
         <span class="list-item-body">
-          <span class="list-item-label">${b.name}</span>
-          <span class="list-item-sublabel">${count} fragrance${count !== 1 ? 's' : ''}</span>
+          <span class="list-item-label text-ui-strong">${b.name}</span>
+          <span class="list-item-sublabel text-meta">${count} fragrance${count !== 1 ? 's' : ''}</span>
         </span>
       </button>`;
     }).join('');
@@ -3604,8 +4014,8 @@ function _usFragRowHtml(f, rowIdx, scoreLabel) {
     id="us-row-${rowIdx}" data-us-type="frag" data-us-id="${f.id}" data-row-idx="${rowIdx}">
     <span class="list-item-dot" style="--fam-bg: ${fc.accent}"></span>
     <span class="list-item-body">
-      <span class="list-item-label">${f.name}</span>
-      <span class="list-item-sublabel">${f.brand} · ${famLabel}</span>
+      <span class="list-item-label text-ui-strong">${f.name}</span>
+      <span class="list-item-sublabel text-meta">${f.brand} · ${famLabel}</span>
     </span>
     ${badge ? `<span class="list-item-badge">${badge}</span>` : ''}
     ${scoreLabel ? `<span class="list-item-trailing-label">${scoreLabel}</span>` : ''}
@@ -3795,24 +4205,19 @@ document.addEventListener('DOMContentLoaded',function(){
 function openMoreSheet(btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const _ico={
-    star:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
-    megaphone:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14"/><path d="M8 6v8"/></svg>`,
-    library:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>`,
-  };
   const items=[
-    {id:'saved',icon:_ico.star, label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
-    {id:'changelog',icon:_ico.megaphone, label:'Changelog', action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
-    {id:'playground',icon:_ico.library, label:'Design System', action:"window.open('/designsystem.html', '_blank')"}
+    {id:'saved',    icon:ICONS.star,      label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
+    {id:'changelog',icon:ICONS.megaphone, label:'Changelog',     action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
+    {id:'playground',icon:ICONS.library,  label:'Design System', action:"window.open('/designsystem.html', '_blank')"}
   ];
   pushSheet(el=>{
     el.innerHTML=`<div style="padding:var(--sp-lg) 0 var(--sp-sm)">
       <div style="font-size:var(--fs-label);font-weight:700;letter-spacing:var(--ls-wide);text-transform:uppercase;color:var(--text-secondary);padding:0 var(--sp-lg) var(--sp-md)">More</div>
       ${items.map(it=>`
         <button class="list-item" onclick="${it.action}">
-          <span class="list-item-dot" style="background:none;">${it.icon}</span>
+          <span class="list-item-icon">${it.icon}</span>
           <div class="list-item-body">
-            <div class="list-item-label">${it.label}</div>
+            <div class="list-item-label text-ui-strong">${it.label}</div>
           </div>
         </button>`).join('')}
       </div>`;  });
@@ -3839,8 +4244,8 @@ function computeProfile(frag){ return engine.computeProfile(frag); }
 function getSwapReason(anchor, candidate){ return engine.getSwapReason(anchor, candidate, FAM); }
 
 function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
-function _simLabel(pct){if(pct<26)return'Very different';if(pct<51)return'Notably different';if(pct<76)return'Fairly similar';return'Nearly identical';}
-function _layLabel(pct){if(pct<25)return'Poor pairing';if(pct<50)return'Uneasy together';if(pct<75)return'Workable pair';return'Good pairing';}
+function _simLabel(pct){if(pct<26)return'Different worlds';if(pct<51)return'Distinct contrast';if(pct<76)return'Good match';return'Kindred spirits';}
+function _layLabel(pct){if(pct<25)return'Better as alternates';if(pct<50)return'Possible, with care';if(pct<75)return'Works together';return'Complementary pair';}
 
 function getVerdict(matchPct,layerPct,fa,fb){
   const shortA=fa.name.split(' ')[0],shortB=fb.name.split(' ')[0];
@@ -3912,22 +4317,22 @@ function drawCombinedRadarSvg(fa,fb,caAccent,cbAccent){
   const dotsA=dims.map((d,i)=>{const pt=ap(i,pa[d]);return`<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3" fill="${caAccent}"/>`;}).join('');
   const dotsB=dims.map((d,i)=>{const pt=ap(i,pb[d]);return`<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3" fill="${cbAccent}"/>`;}).join('');
   const lbls=dims.map((_,i)=>{
-    const lp=ap(i,1.32);const anch=lp.x<cx-4?'end':lp.x>cx+4?'start':'middle';
+    const lp=ap(i,1.22);const anch=lp.x<cx-4?'end':lp.x>cx+4?'start':'middle';
     return`<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle" font-size="8.5" fill="#6B635699" font-family="DM Sans,system-ui,sans-serif" font-weight="700" letter-spacing="0.04em">${labels[i]}</text>`;
   }).join('');
   return`<div class="cmp-radar-v2">
-    <div class="cmp-radar-v2-label">Character</div>
+    <div class="cmp-radar-v2-label sec-label">Character</div>
     <div class="cmp-radar-v2-wrap"><svg viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="radar-title-${fa.id}-${fb.id}">
       <title id="radar-title-${fa.id}-${fb.id}">Fragrance profile comparison</title>
       <desc>Radar chart comparing ${fa.name} (${dims.map((d,i)=>`${labels[i]}: ${Math.round(pa[d]*100)}%`).join(', ')}) versus ${fb.name} (${dims.map((d,i)=>`${labels[i]}: ${Math.round(pb[d]*100)}%`).join(', ')}).</desc>
       ${rings}${axes}
       <polygon points="${polyA}" fill="${caAccent}20" stroke="${caAccent}" stroke-width="1.8" stroke-linejoin="round"/>
-      <polygon points="${polyB}" fill="${cbAccent}18" stroke="${cbAccent}" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="5,3"/>
+      <polygon points="${polyB}" fill="${cbAccent}18" stroke="${cbAccent}" stroke-width="1.8" stroke-linejoin="round"/>
       ${dotsA}${dotsB}${lbls}
     </svg></div>
     <div class="cmp-radar-legend">
       <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line" style="background:${caAccent}"></div><span>${fa.name}</span></div>
-      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line dashed" style="border-color:${cbAccent}"></div><span>${fb.name}</span></div>
+      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line" style="background:${cbAccent}"></div><span>${fb.name}</span></div>
     </div>
   </div>`;
 }
@@ -3959,8 +4364,8 @@ function drawScatterSvg(fa,fb,caAccent,cbAccent){
   const lA=`<text x="${(xA+11).toFixed(1)}" y="${yA.toFixed(1)}" dominant-baseline="middle" font-size="7.5" fill="${caAccent}" font-family="DM Sans,sans-serif" font-weight="700">${fa.name}</text>`;
   const lBY=close?(yB-14):yB;
   const lB=`<text x="${(xB+11).toFixed(1)}" y="${lBY.toFixed(1)}" dominant-baseline="middle" font-size="7.5" fill="${cbAccent}" font-family="DM Sans,sans-serif" font-weight="700">${fb.name}</text>`;
-  return`<div class="cmp-scatter-v2">
-    <div class="cmp-scatter-v2-label">Sillage &amp; Complexity</div>
+  return`<div class="section-group cmp-scatter-v2">
+    <div class="sec-label">Sillage &amp; Complexity</div>
     <div class="cmp-scatter-v2-wrap"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="scatter-title-${fa.id}-${fb.id}">
       <title id="scatter-title-${fa.id}-${fb.id}">Sillage and complexity plot</title>
       <desc>${fa.name} has sillage ${fa.sillage||5}/10 and complexity ${fa.layering||5}/10. ${fb.name} has sillage ${fb.sillage||5}/10 and complexity ${fb.layering||5}/10.</desc>
@@ -3981,7 +4386,6 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
   const shortB=fb.name.split(' ').slice(0,2).join(' ');
   const onlyATop=aTop.filter(n=>!bTop.includes(n)),onlyAMid=aMid.filter(n=>!bMid.includes(n)),onlyABase=aBase.filter(n=>!bBase.includes(n));
   const onlyBTop=bTop.filter(n=>!aTop.includes(n)),onlyBMid=bMid.filter(n=>!aMid.includes(n)),onlyBBase=bBase.filter(n=>!aBase.includes(n));
-  // Render notes as pills — consistent presentation; clickable if in NI_MAP
   const pill=(n,isSh=false)=>{
     const ni=NI_MAP[n];
     const cls=`tag text-meta${isSh?' shared':''}`;
@@ -3996,18 +4400,18 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
     return`<div class="cmp-grid-row three">
       <div class="cmp-grid-cell cmp-grid-cell-a">${links(onlyA)}</div>
       <div class="cmp-grid-cell cell-center">
-        <div class="cmp-grid-layer-lbl">${layerLabel}</div>
+        <div class="cmp-grid-layer-lbl text-meta">${layerLabel}</div>
         ${links(shared,true)}
       </div>
       <div class="cmp-grid-cell cmp-grid-cell-b">${links(onlyB)}</div>
     </div>`;
   }
-  return`<div class="cmp-notes-v2">
-    <div class="cmp-notes-v2-label">Notes</div>
+  return`<div class="section-group cmp-notes-v2">
+    <div class="sec-label">Notes</div>
     <div class="cmp-grid-col-heads three">
-      <div class="cmp-grid-col-head" style="color:${caAccent}">${shortA}</div>
-      <div class="cmp-grid-col-head" style="color:var(--g400)">Shared</div>
-      <div class="cmp-grid-col-head" style="color:${cbAccent}">${shortB}</div>
+      <div class="cmp-grid-col-head sec-label" style="color:${caAccent}">${shortA}</div>
+      <div class="cmp-grid-col-head sec-label" style="color:var(--g400)">Shared</div>
+      <div class="cmp-grid-col-head sec-label" style="color:${cbAccent}">${shortB}</div>
     </div>
     <div class="cmp-grid-3x3">
       ${noteRow('Top',onlyATop,shTop,onlyBTop)}
@@ -4044,21 +4448,20 @@ function renderSuggestionsV2(fa,fb,ca,cb){
   function sugCard(frag, anchor, accent){
     const fc=getCmpFam(frag.family);
     const famLabel=(FAM[frag.family]||{label:frag.family}).label;
-    const topNotes=[...(frag.top||[])].slice(0,3).join(', ');
     const reason=getSwapReason(anchor, frag);
     return`<button class="list-item" data-fid="${frag.id}">
         <div class="list-item-dot" style="--fam-bg: ${fc.accent}"></div>
         <div class="list-item-body" style="flex:1;text-align:left;">
-          <div class="list-item-label">${frag.name}</div>
-          <div class="list-item-sublabel">${frag.brand} · ${famLabel}</div>
-          <div class="list-item-detail">${reason}</div>
+          <div class="list-item-label text-ui-strong">${frag.name}</div>
+          <div class="list-item-sublabel text-meta">${frag.brand} · ${famLabel}</div>
+          <div class="list-item-detail text-caption">${reason}</div>
         </div>
     </button>`;
   }
   const sugsA=getSugs(fa,fb),sugsB=getSugs(fb,fa);
   const shortA=fa.name.split(' ').slice(0,2).join(' ');
   const shortB=fb.name.split(' ').slice(0,2).join(' ');
-  return`<div class="cmp-sug-v2">
+  return`<div class="section-group cmp-sug-v2">
     <div class="sec-label">Swap suggestions</div>
     <div class="cmp-sug-columns">
       <div>
@@ -4072,7 +4475,6 @@ function renderSuggestionsV2(fa,fb,ca,cb){
     </div>
   </div>`;
 }
-
 /* ── Score educational overlay ── */
 function openCharacterEdu(fa, fb, ca, cb) {
   let overlay = document.getElementById('cmp-edu-overlay');
@@ -4120,15 +4522,13 @@ function openCharacterEdu(fa, fb, ca, cb) {
 
   const html = `
     <div class="cmp-edu-wrap">
-      <div class="cmp-edu-header">
-        <div class="cmp-edu-header-left">
-          <div class="cmp-edu-label">Character</div>
-          <div class="cmp-edu-num">Map</div>
-        </div>
-        <button class="cmp-edu-close" aria-label="Close" onclick="document.getElementById('cmp-edu-overlay').classList.remove('open')">✕ Close</button>
+      <div class="sheet-topbar">
+        <div style="width:var(--touch-target)"></div>
+        <div class="sheet-title text-ui-strong">Character Map</div>
+        <button class="sheet-close" id="cmp-char-close" aria-label="Close">${ICONS.close}</button>
       </div>
       <div class="cmp-edu-content">
-        <p class="cmp-edu-intro">The Character Map compares five key sensory dimensions. Here&rsquo;s what they mean and which notes drive them.</p>
+        <p class="text-body">The Character Map compares five key sensory dimensions. Here&rsquo;s what they mean and which notes drive them.</p>
 
         <div class="cmp-edu-grid">
           ${dims.map(dim => {
@@ -4139,37 +4539,37 @@ function openCharacterEdu(fa, fb, ca, cb) {
 
             return `
               <div class="cmp-edu-card">
-                <div class="cmp-edu-card-title">${dim.label}</div>
-                <div class="cmp-edu-card-desc">${dim.desc}</div>
+                <div class="sec-label">${dim.label}</div>
+                <div class="text-body">${dim.desc}</div>
 
                 ${isNoteDriven ? `
                   <div class="cmp-edu-card-notes">
                     <div class="cmp-edu-card-notes-row">
-                      <span class="cmp-edu-card-notes-frag" style="color:${ca.accent}">${fa.name}</span>
-                      <span class="cmp-edu-card-notes-list">${notesA.length ? notesA.map(cap).join(', ') : '—'}</span>
+                      <span class="text-meta" style="color:${ca.accent}">${fa.name}</span>
+                      <span class="text-caption">${notesA.length ? notesA.map(cap).join(', ') : '—'}</span>
                     </div>
                     <div class="cmp-edu-card-notes-row">
-                      <span class="cmp-edu-card-notes-frag" style="color:${cb.accent}">${fb.name}</span>
-                      <span class="cmp-edu-card-notes-list">${notesB.length ? notesB.map(cap).join(', ') : '—'}</span>
+                      <span class="text-meta" style="color:${cb.accent}">${fb.name}</span>
+                      <span class="text-caption">${notesB.length ? notesB.map(cap).join(', ') : '—'}</span>
                     </div>
                   </div>
                 ` : `
                   <div class="cmp-edu-card-notes">
                     <div class="cmp-edu-card-notes-row">
-                      <span class="cmp-edu-card-notes-frag" style="color:${ca.accent}">${fa.name}</span>
-                      <span class="cmp-edu-card-notes-list">${Math.round(pa[dim.key]*100)}%</span>
+                      <span class="text-meta" style="color:${ca.accent}">${fa.name}</span>
+                      <span class="text-caption">${Math.round(pa[dim.key]*100)}%</span>
                     </div>
                     <div class="cmp-edu-card-notes-row">
-                      <span class="cmp-edu-card-notes-frag" style="color:${cb.accent}">${fb.name}</span>
-                      <span class="cmp-edu-card-notes-list">${Math.round(pb[dim.key]*100)}%</span>
+                      <span class="text-meta" style="color:${cb.accent}">${fb.name}</span>
+                      <span class="text-caption">${Math.round(pb[dim.key]*100)}%</span>
                     </div>
                   </div>
                 `}
 
                 ${suggestion ? `
                   <div class="cmp-edu-suggestion" onclick="openScent('${suggestion.id}')">
-                    <div class="cmp-edu-suggestion-label">Want more ${dim.label}?</div>
-                    <div class="cmp-edu-suggestion-name"><strong>${suggestion.name}</strong> by ${BRANDS_MAP[suggestion.brand] || suggestion.brand}</div>
+                    <div class="text-meta">Want more ${dim.label}?</div>
+                    <div class="text-ui-strong">${suggestion.name}</div>
                   </div>
                 ` : ''}
               </div>
@@ -4181,6 +4581,9 @@ function openCharacterEdu(fa, fb, ca, cb) {
   `;
 
   overlay.innerHTML = html;
+
+  // Wire close button
+  overlay.querySelector('#cmp-char-close')?.addEventListener('click', () => overlay.classList.remove('open'));
 
   // Transition in
   requestAnimationFrame(() => overlay.classList.add('open'));
@@ -4232,32 +4635,17 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
     const rawScore = famScore + noteScore + sillScore + roleScore;
 
     bodyContent = `
-      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
+      <p class="text-body">How is this score calculated, and what does it mean for this pair?</p>
       <div class="cmp-edu-grid">
-        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
+        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="text-meta">${q.tag}</div><div class="text-ui-strong">${q.title}</div><div class="text-body">${q.desc}</div></div>`).join('')}
       </div>
-      <div class="cmp-edu-math">
-        <div class="cmp-edu-math-title">Similarity Math</div>
-        <div class="cmp-edu-math-row">
-          <span class="cmp-edu-math-label">Family Match</span>
-          <span class="cmp-edu-math-score">${Math.round(famScore)}/40</span>
-        </div>
-        <div class="cmp-edu-math-row">
-          <span class="cmp-edu-math-label">Shared Notes</span>
-          <span class="cmp-edu-math-score">${Math.round(noteScore)}/30</span>
-        </div>
-        <div class="cmp-edu-math-row">
-          <span class="cmp-edu-math-label">Sillage Match</span>
-          <span class="cmp-edu-math-score">${Math.round(sillScore)}/10</span>
-        </div>
-        <div class="cmp-edu-math-row">
-          <span class="cmp-edu-math-label">Role Overlap</span>
-          <span class="cmp-edu-math-score">${Math.round(roleScore)}/20</span>
-        </div>
-        <div class="cmp-edu-math-row total">
-          <span class="cmp-edu-math-label">Raw Similarity Score</span>
-          <span class="cmp-edu-math-score">${Math.round(rawScore)}/100</span>
-        </div>
+      <div class="sec-label" style="margin-top:var(--sp-xl);margin-bottom:var(--sp-sm)">Similarity Math</div>
+      <div class="list-view">
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Match</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/40</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Shared Notes</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/30</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Match</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/10</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Role Overlap</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(roleScore)}/20</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Similarity Score</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/100</span></div></div>
       </div>
     `;
   } else {
@@ -4270,39 +4658,25 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
     const rawScore = famScore + sillScore + noteScore;
 
     bodyContent = `
-      <div class="cmp-edu-intro">How is this score calculated, and what does it mean for this pair?</div>
+      <p class="text-body">How is this score calculated, and what does it mean for this pair?</p>
       <div class="cmp-edu-grid">
-        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="cmp-edu-quad-tag">${q.tag}</div><div class="cmp-edu-quad-title">${q.title}</div><div class="cmp-edu-quad-desc">${q.desc}</div></div>`).join('')}
+        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="text-meta">${q.tag}</div><div class="text-ui-strong">${q.title}</div><div class="text-body">${q.desc}</div></div>`).join('')}
       </div>
-      <div class="cmp-edu-math">
-        <div class="cmp-edu-math-title">Layering Math</div>
-        <div class="cmp-edu-math-row">
-          <span class="cmp-edu-math-label">Family Compatibility</span>
-          <span class="cmp-edu-math-score">${Math.round(famScore)}/35</span>
-        </div>
-        <div class="cmp-edu-math-row">
-          <span class="cmp-edu-math-label">Sillage Contrast</span>
-          <span class="cmp-edu-math-score">${Math.round(sillScore)}/20</span>
-        </div>
-        <div class="cmp-edu-math-row">
-          <span class="cmp-edu-math-label">Note Independence</span>
-          <span class="cmp-edu-math-score">${Math.round(noteScore)}/20</span>
-        </div>
-        <div class="cmp-edu-math-row total">
-          <span class="cmp-edu-math-label">Raw Layering Score</span>
-          <span class="cmp-edu-math-score">${Math.round(rawScore)}/75</span>
-        </div>
+      <div class="sec-label" style="margin-top:var(--sp-xl);margin-bottom:var(--sp-sm)">Layering Math</div>
+      <div class="list-view">
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Compatibility</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/35</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Contrast</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/20</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Note Independence</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/20</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Layering Score</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/75</span></div></div>
       </div>
     `;
   }
 
   overlay.innerHTML=`<div class="cmp-edu-wrap">
-    <div class="cmp-edu-header">
-      <div class="cmp-edu-header-left">
-        <div class="cmp-edu-label">${label}</div>
-        <div class="cmp-edu-num">${pct}%</div>
-      </div>
-      <button class="cmp-edu-close" id="cmp-edu-close">✕ Close</button>
+    <div class="sheet-topbar">
+      <div style="width:var(--touch-target)"></div>
+      <div class="sheet-title text-ui-strong">${label} — ${pct}%</div>
+      <button class="sheet-close" id="cmp-edu-close" aria-label="Close">${ICONS.close}</button>
     </div>
     <div class="cmp-edu-body">
       ${bodyContent}
@@ -4442,7 +4816,13 @@ function renderCompareResults(fa,fb){
   const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
   const matchPct=Math.round(scoreSimilarity(fa,fb));
   const layerPct=scoreLayeringPct(fa,fb);
-  const verdict=getVerdict(matchPct,layerPct,fa,fb);
+  const _baseVerdict=getVerdict(matchPct,layerPct,fa,fb);
+  const _sharedNotes=fa._nAll.filter(n=>fb._nAll.includes(n));
+  const _overlapPct=computeNoteOverlapPercentile(fa,fb);
+  let _proofSuffix='';
+  if(_sharedNotes.length>0&&_overlapPct>50)_proofSuffix=` They share ${_sharedNotes.length} note${_sharedNotes.length>1?'s':''} — more overlap than ${_overlapPct}% of cross-brand pairs.`;
+  else if(_sharedNotes.length===0)_proofSuffix=' Zero shared notes — a completely different scent experience.';
+  const verdict=_baseVerdict+_proofSuffix;
   const matchColor=matchPct>=60?ca.accent:matchPct>=30?'var(--g700)':'var(--g500)';
   const layerColor=layerPct>=60?cb.accent:layerPct>=30?'var(--g700)':'var(--g500)';
 
@@ -4514,11 +4894,9 @@ function renderCompareResults(fa,fb){
             <div class="cmp-score-tap">Tap to learn more ↗</div>
           </button>
         </div>
-        <button id="cmp-share-btn" class="dc-collect-btn active" style="width:100%;justify-content:center;">Share Comparison</button>
       </div>
     </div>
 
-    ${_renderSocialProof(fa, fb)}
     ${render3x3Notes(fa,fb,ca.accent,cb.accent)}
     ${renderSuggestionsV2(fa,fb,ca,cb)}
   `;
@@ -4527,21 +4905,6 @@ function renderCompareResults(fa,fb){
   document.getElementById('cmp-score-character')?.addEventListener('click',()=>{
     window.haptic?.('selection');
     openCharacterEdu(fa, fb, ca, cb);
-  });
-
-  document.getElementById('cmp-share-btn')?.addEventListener('click', async () => {
-    const url = window.location.href;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: `Scentmap: ${fa.name} vs ${fb.name}`, url });
-      } catch (err) {
-        console.log('Share canceled or failed', err);
-      }
-    } else {
-      navigator.clipboard.writeText(url).then(() => {
-        showUndoToast('Link copied to clipboard!', () => {});
-      });
-    }
   });
 
   document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
@@ -4612,21 +4975,23 @@ function _fillCard(slot,frag){
   const fc=getCmpFam(frag.family);
   const famLabel=(FAM[frag.family]||{label:frag.family}).label;
   card.classList.add('filled');
-  card.style.borderColor = fc.subdued;
   card.setAttribute('aria-label',`${frag.name} by ${frag.brand} — tap to change`);
   card.innerHTML=`
     <div class="chip cmp-frag-card-fam-chip" style="background:${fc.accent}">${famLabel}</div>
     <div class="cmp-frag-card-name-row">
       <div class="cmp-frag-card-name">${frag.name}</div>
-      <span class="cmp-card-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>
+      <span class="cmp-card-chevron" aria-hidden="true">${ICONS.sortUpDown}</span>
     </div>
-    <button class="cmp-frag-card-brand cmp-brand-btn">${frag.brand}</button>`;
-  card.querySelector('.cmp-brand-btn')?.addEventListener('click',e=>{e.stopPropagation();openHouseDetail(frag.brand);});
+    <div class="text-meta" style="padding:0 var(--sp-md) var(--sp-sm)">${frag.brand}</div>`;
   const meta=document.getElementById(`cmp-meta-${slot}`);
   if(meta){
     meta.innerHTML=`
       ${frag.description?`<p class="cmp-card-meta-desc">${frag.description}</p>`:''}
-      <button class="cmp-card-detail-btn" aria-label="View details for ${frag.name}">Details ↗</button>`;
+      <div style="display:flex;gap:var(--sp-md);padding-top:var(--sp-xs);">
+        <button class="text-link cmp-brand-btn" aria-label="View ${frag.brand} house">${frag.brand}</button>
+        <button class="text-link cmp-card-detail-btn" aria-label="View details for ${frag.name}">Details ↗</button>
+      </div>`;
+    meta.querySelector('.cmp-brand-btn')?.addEventListener('click',()=>openHouseDetail(frag.brand));
     meta.querySelector('.cmp-card-detail-btn')?.addEventListener('click',()=>openFragDetail(frag));
   }
 }
@@ -4635,12 +5000,10 @@ function _resetCard(slot){
   const card=document.getElementById(`cmp-card-${slot}`);
   if(!card)return;
   card.classList.remove('filled');
-  card.style.borderColor='';
   const label=slot==='a'?'Fragrance One':'Fragrance Two';
   card.setAttribute('aria-label',`Select ${label}`);
   card.innerHTML=`
-    <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">${label}</div><div class="cmp-card-empty-hint">Tap to select</div></div>
-    <span class="cmp-card-chevron" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    <div class="cmp-card-empty"><div class="cmp-card-empty-lbl">${label}</div><div class="cmp-card-empty-hint">Tap to select</div></div>`;
   const meta=document.getElementById(`cmp-meta-${slot}`);
   if(meta)meta.innerHTML='';
 }
@@ -4819,6 +5182,109 @@ document.addEventListener('keydown',function(e){
 });
 
 /* ══ INIT ═══════════════════════════════════════════════════════════ */
+/* ── Generic Search Overlay (Used on Homepage) ── */
+function initHpSearch() {
+  const input = document.getElementById('hp-search-input');
+  const results = document.getElementById('hp-search-results');
+  if (!input || !results) return;
+
+  // Global click to close
+  document.addEventListener('click', (e) => {
+    if (!input.contains(e.target) && !results.contains(e.target)) {
+      results.classList.remove('visible');
+    }
+  });
+
+  input.addEventListener('focus', () => {
+    if (input.value.trim().length > 0) results.classList.add('visible');
+  });
+
+  input.addEventListener('input', (e) => {
+    const q = e.target.value.trim();
+    if (!q) {
+      results.classList.remove('visible');
+      return;
+    }
+    _renderHpResults(q);
+    results.classList.add('visible');
+  });
+}
+
+function _renderHpResults(query) {
+  const results = document.getElementById('hp-search-results');
+  if (!results) return;
+
+  const q = normQ(query);
+  
+  // Fragrances (max 5)
+  const fragMatches = CAT.filter(f => matchFrag(f, q)).slice(0, 5);
+  
+  // Notes (max 2)
+  const noteMatches = (NI || []).filter(n => 
+    n._nameN ? n._nameN.includes(q) : n.name.toLowerCase().includes(q)
+  ).slice(0, 2);
+
+  // Brands (max 2)
+  const brandMatches = (BRANDS || []).filter(b => 
+    b.name.toLowerCase().includes(q)
+  ).slice(0, 2);
+
+  let html = '';
+
+  if (fragMatches.length) {
+    html += `<div class="us-section-hdr">Fragrances</div>`;
+    html += fragMatches.map(f => {
+      const fc = getCmpFam(f.family);
+      return `<div class="list-item" onclick="window.location.href='/app.html#frag=${f.id}'">
+        <div class="list-item-leading"><span class="dot" style="background: ${fc.accent}"></span></div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">${f.name}</div>
+          <div class="list-item-sublabel text-meta">${f.brand}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  if (noteMatches.length) {
+    html += `<div class="us-section-hdr">Notes</div>`;
+    html += noteMatches.map(n => `
+      <div class="list-item" onclick="window.location.href='/app.html#search=${encodeURIComponent(n.name)}'">
+        <div class="list-item-leading" style="font-size: var(--fs-ui);">🌿</div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">${n.name}</div>
+          <div class="list-item-sublabel text-meta">${n.family}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (brandMatches.length) {
+    html += `<div class="us-section-hdr">Houses</div>`;
+    html += brandMatches.map(b => `
+      <div class="list-item" onclick="window.location.href='/app.html#catalog?brand=${encodeURIComponent(b.name.toLowerCase())}'">
+        <div class="list-item-leading" style="font-size: var(--fs-ui);">🏛</div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">${b.name}</div>
+          <div class="list-item-sublabel text-meta">Explore collection</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (!html) {
+    html = `
+      <div class="us-empty">
+        <p class="text-body">Nothing matches "<em>${query}</em>"</p>
+        <p class="text-meta">Try a different name, note, or house</p>
+        <button class="btn btn--secondary" style="margin-top:var(--sp-md)" onclick="window.location.href='/app.html#catalog'">Browse all fragrances</button>
+      </div>
+    `;
+  }
+
+  results.innerHTML = html;
+}
+
+
 async function init() {
   const success = await store.initialize();
   if (!success) {
@@ -4859,6 +5325,7 @@ async function init() {
   initCatalogControls();
   initNotesNav();
   initCompare();
+  initHpSearch();
   if (window.renderSaved) window.renderSaved();
 
   // Load popular comparisons and auto-select first pair as default
@@ -5017,7 +5484,7 @@ function handleInitialNavigation() {
     }
     go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
   } else if (pathname === '/app' || pathname === '/app/' || pathname === '/app.html' || pathname === '/app/index.html' || pathname === '/' || pathname === '/index.html') {
-    go('compare', document.querySelector('.mbn-btn[onclick*="compare"], .global-nav-link[onclick*="compare"]'));
+    go('catalog', document.querySelector('.mbn-btn[onclick*="catalog"], .global-nav-link[onclick*="catalog"]'));
   }
 }
 

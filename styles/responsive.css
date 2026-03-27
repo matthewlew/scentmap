@@ -98,7 +98,7 @@
     border-left: 1px solid var(--border-strong);
     transform: translateX(100%);
     transition: transform var(--dur-standard) var(--ease-spring);
-    z-index: 80;
+    z-index: var(--z-nav);
     display: flex;
     flex-direction: column;
   }
@@ -111,7 +111,7 @@
   .detail-scrim {
     position: fixed;
     inset: 0;
-    z-index: 79;
+    z-index: var(--z-scrim);
     background: var(--scrim-dark);
     opacity: 0;
     pointer-events: none;
@@ -251,7 +251,7 @@
   }
 
   #cat-body {
-    padding: var(--sp-md) var(--sp-lg);
+    padding: 0;
   }
 
   /* Catalog section */
@@ -299,7 +299,7 @@
     height: 8px;
   }
 
-  .s-name-btn {
+  .text-link {
     font-size: var(--fs-body);
   }
 
@@ -456,6 +456,11 @@
     padding: var(--sp-sm) var(--sp-xs);
   }
 
+
+  .cmp-radar-v2-wrap {
+    display: flex;
+    justify-content: center;
+  }
 
   .cmp-sug-columns {
     grid-template-columns: 1fr;
