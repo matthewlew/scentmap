@@ -4425,6 +4425,9 @@ function renderCompareResults(fa,fb){
   const matchColor=matchPct>=60?ca.accent:matchPct>=30?'var(--g700)':'var(--g500)';
   const layerColor=layerPct>=60?cb.accent:layerPct>=30?'var(--g700)':'var(--g500)';
 
+  const simDetails = engine.getSimilarityDetails(fa, fb, store.FAM_COMPAT);
+  const layDetails = engine.getLayeringDetails(fa, fb, store.FAM_COMPAT);
+
   res.innerHTML=`
     <div id="cmp-sticky-bar">
       <div class="cmp-sticky-slot" data-slot-sticky="a">
@@ -4492,6 +4495,48 @@ function renderCompareResults(fa,fb){
             <div class="cmp-score-range">${_layLabel(layerPct)}</div>
             <div class="cmp-score-tap">Tap to learn more ↗</div>
           </button>
+        </div>
+        <div class="cmp-edu-math" style="margin-top:var(--sp-md);">
+          <div class="cmp-edu-math-title">Similarity Math</div>
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Family Match</span>
+            <span class="cmp-edu-math-score">${Math.round(simDetails.famScore)}/40</span>
+          </div>
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Shared Notes</span>
+            <span class="cmp-edu-math-score">${Math.round(simDetails.noteScore)}/30</span>
+          </div>
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Sillage Match</span>
+            <span class="cmp-edu-math-score">${Math.round(simDetails.sillScore)}/10</span>
+          </div>
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Role Overlap</span>
+            <span class="cmp-edu-math-score">${Math.round(simDetails.roleScore)}/20</span>
+          </div>
+          <div class="cmp-edu-math-row total">
+            <span class="cmp-edu-math-label">Raw Similarity Score</span>
+            <span class="cmp-edu-math-score">${Math.round(simDetails.total)}/100</span>
+          </div>
+        </div>
+        <div class="cmp-edu-math" style="margin-top:var(--sp-sm);margin-bottom:var(--sp-md);">
+          <div class="cmp-edu-math-title">Layering Math</div>
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Family Compatibility</span>
+            <span class="cmp-edu-math-score">${Math.round(layDetails.famScore)}/35</span>
+          </div>
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Sillage Contrast</span>
+            <span class="cmp-edu-math-score">${Math.round(layDetails.sillScore)}/20</span>
+          </div>
+          <div class="cmp-edu-math-row">
+            <span class="cmp-edu-math-label">Note Independence</span>
+            <span class="cmp-edu-math-score">${Math.round(layDetails.noteScore)}/20</span>
+          </div>
+          <div class="cmp-edu-math-row total">
+            <span class="cmp-edu-math-label">Raw Layering Score</span>
+            <span class="cmp-edu-math-score">${Math.round(layDetails.total)}/75</span>
+          </div>
         </div>
         <button id="cmp-share-btn" class="dc-collect-btn active" style="width:100%;justify-content:center;">Share Comparison</button>
       </div>
