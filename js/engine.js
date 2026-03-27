@@ -168,7 +168,11 @@ export function computeProfile(frag) {
  * Calculates a similarity score (0-100) between two fragrances.
  */
 export function scoreSimilarity(a, b, FAM_COMPAT) {
-  if (a.id === b.id) return 0;
+  return Math.round(getSimilarityDetails(a, b, FAM_COMPAT).total);
+}
+
+export function getSimilarityDetails(a, b, FAM_COMPAT) {
+  if (a.id === b.id) return { famScore: 40, noteScore: 30, sillScore: 10, roleScore: 20, total: 100 };
   const famScore = (FAM_COMPAT[a.family]?.[b.family] ?? 0.5) * 40;
   
   const shBase = a._nBase.filter(n => b._nBase.includes(n)).length;
@@ -182,13 +186,23 @@ export function scoreSimilarity(a, b, FAM_COMPAT) {
   const shRoles = a.roles.filter(r => b.roles.includes(r)).length;
   const roleScore = Math.min(20, shRoles * 7);
   
-  return Math.round(famScore + noteScore + sillScore + roleScore);
+  return {
+    famScore,
+    noteScore,
+    sillScore,
+    roleScore,
+    total: famScore + noteScore + sillScore + roleScore
+  };
 }
 
 /**
  * Calculates a layering compatibility score (0-100) between two fragrances.
  */
 export function scoreLayeringPair(a, b, FAM_COMPAT) {
+  return Math.round(getLayeringDetails(a, b, FAM_COMPAT).total);
+}
+
+export function getLayeringDetails(a, b, FAM_COMPAT) {
   const famComp = FAM_COMPAT[a.family]?.[b.family] ?? 0.5;
   const famScore = famComp * 35;
   
@@ -198,7 +212,12 @@ export function scoreLayeringPair(a, b, FAM_COMPAT) {
   const shared = a._nAll.filter(n => b._nAll.includes(n)).length;
   const noteScore = shared === 0 ? 20 : shared <= 2 ? 12 : shared <= 4 ? 5 : 0;
   
-  return Math.round(famScore + sillScore + noteScore);
+  return {
+    famScore,
+    sillScore,
+    noteScore,
+    total: famScore + sillScore + noteScore
+  };
 }
 
 /**
