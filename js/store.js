@@ -30,7 +30,6 @@ export const FAM_COMPAT = {
 };
 
 export const FAM_ORDER = ['floral','amber','citrus','woody','chypre','gourmand','green','oud','leather','aquatic'];
-export const FAM_ABBR = {citrus:'C',green:'G',floral:'F',woody:'W',amber:'A',chypre:'Ch',aquatic:'Aq',leather:'L',gourmand:'Go',oud:'O'};
 
 export const ARCHETYPES = {
   'quiet-expressionist': {

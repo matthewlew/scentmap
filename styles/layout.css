@@ -38,7 +38,7 @@
 }
 
 .col-main-content {
-  padding: var(--sp-xl) var(--sp-xl) var(--sp-xl); /* mobile override adds bottom nav clearance */
+  padding: 0; /* padding managed by individual panels */
 }
 
 /* RIGHT: detail panel — desktop: in-flow third column */
@@ -67,7 +67,7 @@
 .detail-scrim {
   position: fixed;
   inset: 0;
-  z-index: 79;
+  z-index: var(--z-scrim);
   background: var(--scrim-dark);
   opacity: 0;
   pointer-events: none;
@@ -83,16 +83,33 @@
 
 .panel {
   display: none;
+  flex-direction: column;
+  gap: var(--sp-3xl);
+  padding: var(--sp-xl);
+  animation: _panel-fade-in var(--dur-standard) ease-out;
+}
+
+@keyframes _panel-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .panel.active {
-  display: block;
+  display: flex;
 }
 
 /* Panels that need their own padding (no sidebar/shell wrapper) */
 #p-saved,
-#p-changelog {
-  padding: var(--sp-lg);
+#p-changelog,
+#p-compare,
+#p-notes {
+  padding: var(--sp-xl);
+}
+
+/* Special case: Catalog panel padding is managed inside the shell */
+#p-catalog {
+  padding: 0;
+  gap: 0;
 }
 
 /* ── SHEET STACK (Mobile) ── */
@@ -100,7 +117,7 @@
 .sheet-stack-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: var(--z-sheet);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -135,7 +152,7 @@
   border-radius: 16px 16px 0 0;
   transform: translateY(100%);
   transition: transform var(--dur-standard) var(--ease-spring);
-  z-index: 201;
+  z-index: calc(var(--z-sheet) + 1);
   pointer-events: auto;
   display: flex;
   flex-direction: column;
@@ -186,43 +203,34 @@
 }
 
 .sheet-handle {
-  width: 38px;
-  height: 5px;
-  border-radius: 2px;
-  background: var(--g300);
-  margin: var(--sp-md) auto 0;
+  width: var(--sp-3xl);
+  height: var(--border-width-heavy);
+  border-radius: var(--radius-micro);
+  background: var(--border-standard);
+  margin: var(--sp-sm) auto 0;
 }
 
 .sheet-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--sp-md) 0 var(--sp-lg);
+  padding: var(--sp-xs) 0 var(--sp-sm);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: var(--z-sticky);
   background: var(--bg-primary);
 }
 
-.sheet-back {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-xs);
-  font-size: var(--fs-body-sm);
-  color: var(--text-secondary);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: color var(--dur-fast) var(--ease-spring);
-  min-width: 56px;
-  width: 56px;
-  min-height: 44px;
+/* Sheet nav buttons — base styles from .nav-back-btn; only sheet-specific overrides here */
+.sheet-back,
+.sheet-close {
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
   flex-shrink: 0;
 }
 
-.sheet-back:hover {
-  color: var(--text-primary);
+.sheet-back {
+  justify-content: center;
 }
 
 .sheet-back.hidden {
@@ -230,35 +238,17 @@
 }
 
 .sheet-close {
-  font-size: var(--fs-body);
-  color: var(--text-secondary);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 3px 0 3px var(--sp-sm); /* 3px is intentional fine-tuning for optical alignment */
-  transition: color var(--dur-fast) var(--ease-spring);
-  min-height: 44px;
-  min-width: 56px;
-  width: 56px;
-  flex-shrink: 0;
-  text-align: right;
-}
-
-.sheet-close:hover {
-  color: var(--text-primary);
+  justify-content: flex-end;
 }
 
 .sheet-title {
-  font-family: var(--font-display);
-  font-size: var(--fs-body);
-  letter-spacing: var(--ls-tight);
-  text-align: center;
+  font-family: var(--font-sans);
   flex: 1;
+  text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding: 0 var(--sp-xs);
-  color: var(--text-primary);
 }
 
 /* ── GRID SYSTEMS ── */
@@ -300,7 +290,7 @@
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin-bottom: var(--sp-lg);
+  margin-bottom: var(--sp-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -469,6 +459,15 @@
   overflow-y: auto;
 }
 
+.catalog-main-search {
+  padding: var(--sp-sm) var(--sp-lg);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  z-index: var(--z-sticky);
+}
+
 .cat-sidebar-section {
   padding: var(--sp-md) 0 var(--sp-sm);
   border-top: 1px solid var(--border-subtle);
@@ -519,11 +518,29 @@
 
 /* Hide desktop sidebar on mobile; show it on desktop */
 @media (max-width: 767px) {
-  .catalog-sidebar {
-    display: none;
-  }
-
   .catalog-shell {
     flex-direction: column;
   }
 }
+
+/* ── UTILITIES ── */
+
+.u-text-center { text-align: center; }
+.u-justify-center { justify-content: center; }
+.u-align-center { align-items: center; }
+.u-w-full { width: 100%; }
+.u-flex-column { display: flex; flex-direction: column; }
+.u-flex-row { display: flex; flex-direction: row; }
+.u-flex-wrap { flex-wrap: wrap; }
+.u-gap-0 { gap: 0; }
+.u-gap-sm { gap: var(--sp-sm); }
+.u-gap-md { gap: var(--sp-md); }
+.u-gap-xl { gap: var(--sp-xl); }
+.u-font-serif { font-family: var(--font-serif); }
+.u-text-secondary { color: var(--text-secondary); }
+.u-icon-lg { font-size: 32px; }
+.u-border-none { border: none; }
+.u-min-w-0 { min-width: 0; }
+.u-flex-1 { flex: 1; }
+.u-overflow-hidden { overflow: hidden; }
+

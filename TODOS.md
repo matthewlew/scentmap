@@ -83,20 +83,6 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ---
 
-### TODO: Design System — 1-Off Pattern Migration
-**What:** Extract 8 inline-style violations in `app.js` into CSS classes (single CSS-only commit, no behavior change):
-1. `.quiz-attribution` — replaces fully-inline `.dc-quiz-attribution` (~line 1580)
-2. `.stat-cell` / `.stat-cell-value` / `.stat-cell-label` — inline profile stats (~lines 278–285)
-3. `.dc-badge--xs` modifier — replace `style="font-size:9px"` (~line 1216)
-4. Move `font-size` into `.dc-sim-brand` rule — remove `style="font-size:10px"` (~line 1220)
-5. `var(--scrim-dot)` token — replace `rgba(255,255,255,.3)` (~line 1594)
-6. `.tab--xs` modifier — replace `style.cssText` on removeBtn/addBtn (~lines 2536, 2575)
-7. `.chart-legend-item` — replace fully-inline family legend HTML (~line 1984)
-8. `.dupe-card` — remove `.list-item` from dupe finder results that use `display:block` override (~line 1518)
-**Why:** Inline-style violations block future refactors and make the system inconsistent.
-**Effort:** S (~30 min)
-
----
 
 ### TODO: List Item Component Consolidation
 **What:** Migrate all list-item render sites from legacy multi-variant system to canonical slot structure in `DESIGN.md` Option B. Class rename map and ~15–20 render sites documented in previous version of this file (git history: before 2026-03-21 simplification commit).

@@ -341,14 +341,18 @@ function renderStep(step, collectedTags) {
   _container.innerHTML = `
     <div class="quiz-page">
       <div class="quiz-body">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--sp-xs);">
-          <div class="quiz-progress">${step + 1} of ${qs.length}</div>
-          ${step > 0 ? `<button class="quiz-back-btn" id="quiz-btn-prev">← Previous</button>` : ''}
+        <div class="section-group">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div class="quiz-progress">${step + 1} of ${qs.length}</div>
+            ${step > 0 ? `<button class="text-link" id="quiz-btn-prev">← Previous</button>` : ''}
+          </div>
+          <div class="quiz-bar-track"><div class="quiz-bar-fill" style="width:${((step + 1) / qs.length) * 100}%"></div></div>
         </div>
-        <div class="quiz-bar-track"><div class="quiz-bar-fill" style="width:${((step + 1) / qs.length) * 100}%"></div></div>
         
-        <div class="quiz-intent-hint">Diagnostic: ${intent}</div>
-        <h1 class="quiz-question">${q.q}</h1>
+        <div class="section-group">
+          <div class="sec-label">Diagnostic: ${intent}</div>
+          <h1 class="quiz-question">${q.q}</h1>
+        </div>
         
         <div class="quiz-answers">
           ${q.a.map((ans, i) => `
@@ -394,9 +398,9 @@ function _buildMoreDiscoveryHtml() {
     { slug: 'find-your-byredo', label: 'Byredo Brand Guide' },
   ];
   const links = all.filter(q => q.slug !== _slug)
-    .map(q => `<a href="/quiz/${q.slug}" class="quiz-more-link">${q.label}</a>`)
+    .map(q => `<a href="/quiz/${q.slug}" class="text-link">${q.label}</a>`)
     .join('');
-  return `<div class="quiz-more-quizzes"><h2 class="quiz-more-title">Explore More Discovery</h2><div class="quiz-more-grid">${links}</div></div>`;
+  return `<div class="quiz-more-quizzes"><h2 class="sec-label">Explore More Discovery</h2><div class="quiz-more-grid">${links}</div></div>`;
 }
 
 function renderResults(top3) {
@@ -423,9 +427,9 @@ function renderResults(top3) {
         <div class="quiz-results">
           ${resultsHtml}
         </div>
-        <div class="quiz-actions">
-          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
-          <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
+        <div class="quiz-actions btn-group">
+          <button class="btn btn--secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
+          <button class="btn btn--primary" onclick="copyQuizLink()">Share Results</button>
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
         ${_buildMoreDiscoveryHtml()}
@@ -437,7 +441,8 @@ function renderResults(top3) {
 
 function renderArchetypeResults(archetype, frags) {
   const familyPills = archetype.families.map(f => {
-    return `<span class="quiz-arch-fam" style="background:color-mix(in srgb, var(--fam-${f}) 10%, transparent); color:var(--fam-${f}); border-color:color-mix(in srgb, var(--fam-${f}) 20%, transparent)">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
+    const fc = FAM[f] || {};
+    return `<span class="chip" style="background: ${fc.color||'var(--fam-default)'}; color: var(--bg-primary);">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
   }).join('');
 
   const moreQuizzes = _buildMoreDiscoveryHtml();
@@ -460,20 +465,20 @@ function renderArchetypeResults(archetype, frags) {
   _container.innerHTML = `
     <div class="quiz-page">
       <div class="quiz-body">
-        <div class="quiz-archetype-card">
-          <div class="quiz-archetype-eyebrow">Your Scent Archetype</div>
+        <div class="card">
+          <div class="sec-label">Your Scent Archetype</div>
           <h1 class="quiz-archetype-name">${archetype.name}</h1>
           <p class="quiz-archetype-tagline">${archetype.tagline}</p>
           <div class="quiz-arch-families">${familyPills}</div>
           <p class="quiz-archetype-desc">${archetype.desc}</p>
         </div>
-        <h2 class="quiz-section-title">Your Matches</h2>
+        <h2 class="sec-label">Your Matches</h2>
         <div class="quiz-results">
           ${resultsHtml}
         </div>
-        <div class="quiz-actions">
-          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
-          <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
+        <div class="quiz-actions btn-group">
+          <button class="btn btn--secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
+          <button class="btn btn--primary" onclick="copyQuizLink()">Share Results</button>
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
         ${moreQuizzes}
@@ -486,7 +491,8 @@ function renderArchetypeResults(archetype, frags) {
 function renderAstroResults(sign, archetype, frags) {
   const moreQuizzes = _buildMoreDiscoveryHtml();
   const familyPills = archetype.families.map(f => {
-    return `<span class="quiz-arch-fam" style="background:color-mix(in srgb, var(--fam-${f}) 10%, transparent); color:var(--fam-${f}); border-color:color-mix(in srgb, var(--fam-${f}) 20%, transparent)">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
+    const fc = FAM[f] || {};
+    return `<span class="chip" style="background: ${fc.color||'var(--fam-default)'}; color: var(--bg-primary);">${f.charAt(0).toUpperCase()+f.slice(1)}</span>`;
   }).join('');
 
   const resultsHtml = frags.map(frag => {
@@ -507,27 +513,33 @@ function renderAstroResults(sign, archetype, frags) {
   _container.innerHTML = `
     <div class="quiz-page">
       <div class="quiz-body">
-        <div class="quiz-archetype-card">
-          <div class="quiz-archetype-eyebrow">Cosmic Scent Match</div>
-          <h1 class="quiz-archetype-name">${sign.name}</h1>
-          <p class="quiz-archetype-tagline">You are ${sign.traits}.</p>
-          <p class="quiz-archetype-desc" style="margin-bottom:var(--sp-lg);">${sign.desc}</p>
+        <div class="card">
+          <div class="section-group">
+            <div class="sec-label">Cosmic Scent Match</div>
+            <h1 class="quiz-archetype-name">${sign.name}</h1>
+            <p class="quiz-archetype-tagline">You are ${sign.traits}.</p>
+            <p class="quiz-archetype-desc">${sign.desc}</p>
+          </div>
           
-          <div style="border-top:1px solid var(--border-subtle); padding-top:var(--sp-md); margin-top:var(--sp-md);">
-            <div class="quiz-archetype-eyebrow">Your Olfactive Archetype</div>
-            <h2 class="quiz-archetype-name" style="font-size:var(--fs-title);">${archetype.name}</h2>
-            <div class="quiz-arch-families" style="margin-bottom:var(--sp-sm);">${familyPills}</div>
-            <p class="quiz-archetype-desc">${archetype.desc}</p>
+          <div style="border-top:1px solid var(--border-subtle); padding-top:var(--sp-md);">
+            <div class="section-group">
+              <div class="sec-label">Your Olfactive Archetype</div>
+              <h2 class="quiz-archetype-name" style="font-size:var(--fs-title);">${archetype.name}</h2>
+              <div class="quiz-arch-families">${familyPills}</div>
+              <p class="quiz-archetype-desc">${archetype.desc}</p>
+            </div>
           </div>
         </div>
         
-        <h2 class="quiz-section-title">Your Zodiac Recommendations</h2>
-        <div class="quiz-results">
-          ${resultsHtml}
+        <div class="section-group">
+          <h2 class="sec-label">Your Zodiac Recommendations</h2>
+          <div class="quiz-results">
+            ${resultsHtml}
+          </div>
         </div>
-        <div class="quiz-actions">
-          <button class="quiz-btn-secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
-          <button class="quiz-btn-primary" onclick="copyQuizLink()">Share Results</button>
+        <div class="quiz-actions btn-group">
+          <button class="btn btn--secondary" onclick="history.replaceState(null,'','/quiz/${_slug}');_retakeQuiz();">Retake Quiz</button>
+          <button class="btn btn--primary" onclick="copyQuizLink()">Share Results</button>
         </div>
         <div class="quiz-share-toast" id="quiz-share-toast">Link copied!</div>
         ${moreQuizzes}
@@ -560,90 +572,14 @@ function copyQuizLink() {
   });
 }
 
-/* ── Styles (injected once) ── */
+/* ── Styles (injected once — chrome-hiding only; visual styles live in components.css) ── */
 function injectStyles() {
   const style = document.createElement('style');
   style.textContent = `
-    .quiz-page { min-height: 100vh; min-height: 100dvh; background: var(--bg-secondary, #F5F2EC); }
-    .quiz-title-small { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); }
-    .quiz-body { max-width: 600px; margin: 0 auto; padding: var(--sp-3xl, 36px) var(--sp-xl, 24px); }
-    .quiz-progress { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); margin-bottom: var(--sp-xs, 4px); }
-    .quiz-bar-track { height: 3px; background: var(--border-subtle, #E8E4DC); border-radius: 2px; margin-bottom: var(--sp-xl, 24px); }
-    .quiz-bar-fill { height: 100%; background: var(--text-primary, #0E0C09); border-radius: 2px; transition: width 0.3s cubic-bezier(.16,1,.3,1); }
-    .quiz-question { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: clamp(24px, 5vw, 36px); line-height: 1.15; letter-spacing: -0.02em; color: var(--text-primary, #0E0C09); margin: 0 0 var(--sp-xl, 24px); }
-    .quiz-intent-hint { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary, #B0A898); margin-bottom: var(--sp-sm, 8px); }
-    .quiz-back-btn { background: none; border: none; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); cursor: pointer; padding: 0; transition: color 0.15s; }
-    .quiz-back-btn:hover { color: var(--text-secondary, #8C8070); }
-    .quiz-subtitle { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); color: var(--text-secondary, #8C8070); margin: calc(-1 * var(--sp-sm, 8px)) 0 var(--sp-xl, 24px); line-height: var(--lh-body, 1.6); }
-    .quiz-answers { display: flex; flex-direction: column; gap: var(--sp-md, 12px); }
-    .quiz-ans-btn {
-      display: block; width: 100%; text-align: left; padding: var(--sp-lg, 20px); border: 1px solid var(--border-standard, #DDD8D0);
-      border-radius: var(--radius-lg, 12px); background: var(--bg-primary, #FAF8F4); font-family: var(--font-serif, 'Source Serif 4', serif);
-      font-size: var(--fs-body, 15px); color: var(--text-primary, #0E0C09); cursor: pointer; line-height: var(--lh-body, 1.6);
-      transition: border-color 0.15s, background 0.15s, transform 0.15s cubic-bezier(.16,1,.3,1);
-    }
-    .quiz-ans-btn:hover { border-color: var(--border-strong, #C4BFAF); background: var(--bg-secondary, #F5F2EC); transform: translateY(-1px); }
-    .quiz-ans-btn:active { transform: translateY(0); }
-    .quiz-results { display: flex; flex-direction: column; gap: var(--sp-md, 12px); margin-bottom: var(--sp-2xl, 32px); }
-    .quiz-result-card {
-      display: flex; align-items: center; gap: var(--sp-md, 12px); padding: var(--sp-lg, 20px); border: 1px solid var(--border-standard, #DDD8D0);
-      border-radius: var(--radius-lg, 12px); background: var(--bg-primary, #FAF8F4); text-decoration: none; color: inherit;
-      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s cubic-bezier(.16,1,.3,1);
-    }
-    .quiz-result-card:hover { border-color: var(--border-strong, #C4BFAF); box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,.08)); transform: translateY(-1px); }
-    .quiz-result-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; background: var(--fam-bg, var(--fam-default)); }
-    .quiz-result-info { flex: 1; min-width: 0; }
-    .quiz-result-name { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: var(--fs-ui, 14px); letter-spacing: -0.01em; }
-    .quiz-result-brand { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-secondary, #8C8070); margin-top: 2px; }
-    .quiz-result-desc { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); margin-top: var(--sp-xs, 4px); line-height: 1.5; }
-    .quiz-result-arrow { color: var(--text-tertiary, #B0A898); flex-shrink: 0; }
-    .quiz-actions { display: flex; gap: var(--sp-md, 12px); margin-bottom: var(--sp-xl, 24px); }
-    .quiz-btn-primary {
-      flex: 1; padding: var(--sp-md, 12px); border: none; border-radius: var(--radius-md, 8px);
-      background: var(--text-primary, #0E0C09); color: var(--bg-primary, #FAF8F4); font-family: var(--font-sans, 'DM Sans', sans-serif);
-      font-size: var(--fs-ui, 14px); font-weight: 600; cursor: pointer; transition: opacity 0.15s;
-    }
-    .quiz-btn-primary:hover { opacity: 0.85; }
-    .quiz-btn-secondary {
-      flex: 1; padding: var(--sp-md, 12px); border: 1px solid var(--border-strong, #C4BFAF); border-radius: var(--radius-md, 8px);
-      background: transparent; color: var(--text-primary, #0E0C09); font-family: var(--font-sans, 'DM Sans', sans-serif);
-      font-size: var(--fs-ui, 14px); font-weight: 600; cursor: pointer; transition: background 0.15s;
-    }
-    .quiz-btn-secondary:hover { background: var(--bg-secondary, #F5F2EC); }
-    .quiz-share-toast {
-      text-align: center; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px);
-      color: var(--text-secondary, #8C8070); opacity: 0; transition: opacity 0.3s; margin-bottom: var(--sp-xl, 24px);
-    }
-    .quiz-share-toast.visible { opacity: 1; }
-    .quiz-more-quizzes { border-top: 1px solid var(--border-subtle, #E8E4DC); padding-top: var(--sp-xl, 24px); margin-bottom: var(--sp-xl, 24px); }
-    .quiz-more-title { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-ui, 14px); font-weight: 600; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); }
-    .quiz-more-grid { display: flex; flex-direction: column; gap: var(--sp-sm, 8px); }
-    .quiz-more-link {
-      font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-ui, 14px); color: var(--text-primary, #0E0C09);
-      text-decoration: underline; text-underline-offset: 3px;
-    }
-    .quiz-more-link:hover { color: var(--text-secondary, #8C8070); }
-    .quiz-engine-link {
-      display: block; text-align: center; font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px);
-      color: var(--text-tertiary, #B0A898); text-decoration: underline; text-underline-offset: 3px; padding-bottom: var(--sp-4xl, 48px);
-    }
-
-    /* Archetype result card */
-    .quiz-archetype-card { border: 1px solid var(--border-standard, #DDD8D0); border-radius: var(--radius-lg, 12px); background: var(--bg-primary, #FAF8F4); padding: var(--sp-xl, 24px); margin-bottom: var(--sp-xl, 24px); }
-    .quiz-archetype-eyebrow { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); color: var(--text-tertiary, #B0A898); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: var(--sp-sm, 8px); }
-    .quiz-archetype-name { font-family: var(--font-display, 'Archivo Black', sans-serif); font-size: clamp(22px, 5vw, 32px); line-height: 1.1; letter-spacing: -0.02em; color: var(--text-primary, #0E0C09); margin: 0 0 var(--sp-sm, 8px); }
-    .quiz-archetype-tagline { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); line-height: 1.5; }
-    .quiz-arch-families { display: flex; flex-wrap: wrap; gap: var(--sp-xs, 4px); margin-bottom: var(--sp-md, 12px); }
-    .quiz-arch-fam { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-sm, 13px); font-weight: 600; padding: 3px 10px; border-radius: 20px; border: 1px solid transparent; }
-    .quiz-archetype-desc { font-family: var(--font-serif, 'Source Serif 4', serif); font-size: var(--fs-body, 15px); color: var(--text-secondary, #8C8070); margin: 0; line-height: 1.6; }
-    .quiz-section-title { font-family: var(--font-sans, 'DM Sans', sans-serif); font-size: var(--fs-ui, 14px); font-weight: 600; color: var(--text-secondary, #8C8070); margin: 0 0 var(--sp-md, 12px); }
-
-    /* Hide app chrome on quiz pages */
     .mobile-bottomnav, .sheet-stack-overlay, .note-float-overlay, .frag-picker-overlay, .catalog-sidebar,
-    .col-detail, .detail-scrim, #loading-overlay, #app-loading, .app-loading-overlay, #app-error, .app-error-overlay, .auth-modal, .frag-picker-overlay { display: none !important; }
+    .col-detail, .detail-scrim, #loading-overlay, #app-loading, .app-loading-overlay, #app-error, .app-error-overlay, .auth-modal { display: none !important; }
     .col-main { overflow: visible; }
     .shell { display: block; }
-    /* Hide all panels */
     .panel { display: none !important; }
   `;
   document.head.appendChild(style);
@@ -688,7 +624,7 @@ async function init() {
     if (id === 'compare') window.location.href = '/app.html#compare';
     else if (id === 'notes') window.location.href = '/app.html#notes';
     else if (id === 'saved' || id === 'you') window.location.href = '/app.html#saved';
-    else if (id === 'discovery') window.location.href = '/#discovery';
+    else if (id === 'discovery') window.location.href = '/app.html#catalog';
     else window.location.href = '/app.html';
   };
 

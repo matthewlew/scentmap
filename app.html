@@ -28,8 +28,8 @@
       <div class="global-nav-left">
         <a href="/" class="global-nav-logo">Scentmap</a>
         <div class="global-nav-links">
-          <a href="/#discovery" class="global-nav-link">Discovery</a>
-          <button class="global-nav-link active" onclick="go('compare', this)">Compare</button>
+          <button class="global-nav-link active" onclick="go('catalog', this)">Discovery</button>
+          <button class="global-nav-link" onclick="go('compare', this)">Compare</button>
           <button class="global-nav-link" onclick="go('notes', this)">Notes</button>
           <button class="global-nav-link" onclick="go('saved', this)">You</button>
         </div>
@@ -64,21 +64,15 @@
       <div class="col-main">
         <div class="col-main-content">
           <div class="panel" id="p-saved">
+            <h1 class="text-heading">Your Profile</h1>
             <div id="you-journal-cta"></div>
             <div id="journal-content"></div>
-            <div class="frag-main-top" style="margin-top:var(--sp-3xl); margin-bottom:var(--sp-lg); border-bottom:none;">
-              <div class="frag-title-row"><span class="frag-title">Your Profile</span></div>
-            </div>
             <div id="saved-list" class="scent-list"></div>
           </div>
 
-          <div class="panel" id="p-catalog">
+          <div class="panel active" id="p-catalog">
             <div class="catalog-shell">
               <aside class="catalog-sidebar">
-                <div class="cat-search-wrap">
-                  <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
-                  <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
-                </div>
                 <div class="cat-sidebar-section">
                   <div class="sec-label">Filters</div>
                   <div class="cat-state-bar" id="cat-state-bar"></div>
@@ -97,13 +91,19 @@
                 </div>
               </aside>
               <main class="catalog-main">
+                <div class="catalog-main-search">
+                  <div class="cat-search-wrap">
+                    <input type="text" id="cat-search" class="cat-search-input" placeholder="Search fragrances...">
+                    <button id="cat-search-clear" class="cat-search-clear" aria-label="Clear search">✕</button>
+                  </div>
+                </div>
                 <div id="cat-live" class="sr-only" aria-live="polite"></div>
                 <div id="cat-body"></div>
               </main>
             </div>
           </div>
 
-          <div class="panel active" id="p-compare">
+          <div class="panel" id="p-compare">
             <header class="cmp-header" id="cmp-header">
               <div class="cmp-pair-row">
                 <div class="cmp-card-wrap">
@@ -182,15 +182,17 @@
     <div class="note-float-bg" id="note-float-bg"></div>
     <div class="note-popup" id="note-popup" role="dialog" aria-labelledby="np-name">
       <button class="nfp-close" id="nfp-close" aria-label="Close note info">✕</button>
-      <div class="np-family" id="np-family"></div>
-      <div class="np-name" id="np-name"></div>
-      <div class="np-desc" id="np-desc"></div>
-      <div id="np-save" style="margin-bottom:var(--sp-lg)"></div>
-      <div class="np-extra" id="np-extraction" style="display:none">
+      <div class="section-group">
+        <div class="np-family" id="np-family"></div>
+        <div class="np-name" id="np-name"></div>
+        <div class="np-desc" id="np-desc"></div>
+      </div>
+      <div id="np-save"></div>
+      <div class="section-group np-extra" id="np-extraction" style="display:none">
         <div class="sec-label">Extraction</div>
         <div class="np-extra-text" id="np-extraction-text"></div>
       </div>
-      <div class="np-extra" id="np-fact" style="display:none">
+      <div class="section-group np-extra" id="np-fact" style="display:none">
         <div class="sec-label">Insider Fact</div>
         <div class="np-extra-text" id="np-fact-text"></div>
       </div>
@@ -220,8 +222,8 @@
   </div>
 
   <nav class="mobile-bottomnav">
-    <a href="/#discovery" class="mbn-btn"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>Discovery</a>
-    <button class="mbn-btn active" onclick="goMobile('compare', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M21 3l-7 7"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M8 21H3v-5"/><path d="M21 21l-7-7"/><path d="M3 21l7-7"/></svg></span>Compare</button>
+    <button class="mbn-btn active" onclick="goMobile('catalog', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>Discovery</button>
+    <button class="mbn-btn" onclick="goMobile('compare', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M21 3l-7 7"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M8 21H3v-5"/><path d="M21 21l-7-7"/><path d="M3 21l7-7"/></svg></span>Compare</button>
     <button class="mbn-btn" onclick="goMobile('notes', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/><path d="M10 2c1 .5 2 2 2 5"/></svg></span>Notes</button>
     <button class="mbn-btn" onclick="goMobile('saved', this)"><span class="mbn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>You</button>
   </nav>

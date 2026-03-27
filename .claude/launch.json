@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "scentmap",
-      "runtimeExecutable": "ruby",
-      "runtimeArgs": ["-run", "-e", "httpd", "/tmp/scentmap-copy", "-p", "3001"],
-      "port": 3001
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "ruby -run -e httpd /tmp/scentmap-copy -p $PORT"],
+      "autoPort": true
     }
   ]
 }

@@ -68,6 +68,8 @@
     margin-top: var(--sp-md);
     line-height: var(--lh-normal);
   }
+
+  @keyframes ds-spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -81,7 +83,9 @@
         <div class="sec-label">Architecture</div>
         <div class="cat-state-bar">
           <a href="#typography" class="tab">Typography</a>
-          <a href="#layout" class="tab">Layout</a>
+          <a href="#icons" class="tab">Icons</a>
+          <a href="#layout" class="tab">Layout & Sizing</a>
+          <a href="#heights" class="tab">Interactive Heights</a>
           <a href="#labels" class="tab">Labels</a>
           <a href="#grids" class="tab">Grids</a>
         </div>
@@ -94,7 +98,25 @@
           <a href="#cards" class="tab">Cards</a>
           <a href="#chips" class="tab">Chips</a>
           <a href="#tags" class="tab">Tags</a>
+          <a href="#buttons" class="tab">Buttons</a>
+          <a href="#inputs" class="tab">Inputs</a>
           <a href="#lists" class="tab">Lists & Shelves</a>
+          <a href="#dot" class="tab">Dot Indicator</a>
+          <a href="#callout" class="tab">Callout</a>
+          <a href="#accordion" class="tab">Accordion</a>
+          <a href="#carousel" class="tab">Carousel</a>
+          <a href="#toast" class="tab">Toast</a>
+        </div>
+      </div>
+
+      <div class="cat-sidebar-section">
+        <div class="sec-label">Tokens</div>
+        <div class="cat-state-bar">
+          <a href="#colors" class="tab">Colors</a>
+          <a href="#family-colors" class="tab">Family Colors</a>
+          <a href="#shadows" class="tab">Shadows</a>
+          <a href="#motion" class="tab">Motion</a>
+          <a href="#zindex" class="tab">Z-index</a>
         </div>
       </div>
     </aside>
@@ -110,98 +132,124 @@
         <section class="section-group" id="typography">
           <h2 class="sec-header">Typography (Baked-in Styles)</h2>
           <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
-            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-heading</div><div class="text-heading">Le Labo Santal 33</div></div>
-            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-title</div><div class="text-title">Discovery Wedge</div></div>
-            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-ui</div><div class="text-ui">Search fragrances...</div></div>
-            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-label</div><div class="text-label">Extraction</div></div>
-            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-body</div><div class="text-body">A warm, spicy and woody scent inspired by the Sahara at dusk.</div></div>
-            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-meta</div><div class="text-meta">Woody &middot; 2026 Release</div></div>
-            <div><div class="sec-label" style="margin-bottom:var(--sp-xs)">.text-caption</div><div class="text-caption">Steam Distillation</div></div>
+            <div class="section-group"><div class="sec-label">.text-heading — Archivo Black 32px</div><div class="text-heading">Le Labo Santal 33</div></div>
+            <div class="section-group"><div class="sec-label">.text-title — Source Serif 24px</div><div class="text-title">Discovery Wedge</div></div>
+            <div class="section-group"><div class="sec-label">.text-ui — DM Sans 18px</div><div class="text-ui">Search fragrances...</div></div>
+            <div class="section-group"><div class="sec-label">.text-ui-strong — DM Sans 16px 600 (list labels)</div><div class="text-ui-strong">Santal 33</div></div>
+            <div class="section-group"><div class="sec-label">.text-body — Source Serif 16px</div><div class="text-body">A warm, spicy and woody scent inspired by the Sahara at dusk.</div></div>
+            <div class="section-group"><div class="sec-label">.text-meta — DM Sans 14px (sublabels, brand)</div><div class="text-meta">Woody &middot; 2026 Release</div></div>
+            <div class="section-group"><div class="sec-label">.text-label — DM Sans 12px 700 uppercase (section headings)</div><div class="text-label">Extraction</div></div>
+            <div class="section-group"><div class="sec-label">.text-caption — Source Serif 12px (detail text)</div><div class="text-caption">Steam Distillation</div></div>
+          </div>
+        </section>
+
+        <!-- ICONS -->
+        <section class="section-group" id="icons">
+          <h2 class="sec-header">Icons</h2>
+          <p class="text-meta" style="color: var(--text-secondary);">All icons live in the <code>ICONS</code> registry in <code>app.js</code>. Reference via <code>${ICONS.name}</code> — never inline SVG in component code.</p>
+          <div class="card docs-card">
+            <div id="icon-grid"></div>
           </div>
         </section>
 
         <!-- LAYOUT -->
         <section class="section-group" id="layout">
-          <h2 class="sec-header">Layout & Sizing</h2>
-          
-          <div class="story-grid">
-            <div class="card canvas">
-              <div class="canvas-stage">
-                <div class="card" style="width: var(--nav-sidebar); height: calc(var(--sp-4xl) * 3); background: var(--bg-secondary); border: 2px dashed var(--border-standard); display: flex; align-items: center; justify-content: center;">
-                  <span class="text-meta">Sidebar (220px)</span>
+          <h2 class="sec-header">Layout &amp; Sizing</h2>
+
+          <!-- Live viewport demo -->
+          <div class="section-group">
+            <div class="sec-label">Viewport layout — resize window to see panels shift</div>
+            <div class="card" style="padding: var(--sp-md); overflow: hidden;">
+              <div style="display:flex; gap:2px; height:80px; border-radius:var(--radius); overflow:hidden;">
+                <div style="width:var(--nav-sidebar); flex-shrink:0; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center;">
+                  <span class="text-caption" style="color:var(--text-tertiary);">nav<br>220px</span>
                 </div>
-              </div>
-            </div>
-            <div class="card docs-card">
-              <div class="sec-label">Width Tokens</div>
-              <div class="list-view">
-                <div class="list-item">
-                  <div class="list-item-body">
-                    <div class="list-item-label">Sidebar Nav</div>
-                    <div class="list-item-sublabel">Global catalog/app nav.</div>
-                  </div>
-                  <div class="list-item-trail"><span class="tag">--nav-sidebar</span></div>
+                <div style="flex:1; background:var(--bg-secondary); display:flex; align-items:center; justify-content:center;">
+                  <span class="text-caption" style="color:var(--text-tertiary);">main col (flex: 1)</span>
                 </div>
-                <div class="list-item">
-                  <div class="list-item-body">
-                    <div class="list-item-label">Sidesheet</div>
-                    <div class="list-item-sublabel">Mobile & Desktop sheets.</div>
-                  </div>
-                  <div class="list-item-trail"><span class="tag">--sheet-max</span></div>
+                <div style="width:var(--col-detail); flex-shrink:0; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center;">
+                  <span class="text-caption" style="color:var(--text-tertiary);">detail<br>480px</span>
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- Token table -->
+          <div class="story-grid">
+            <div class="card docs-card" style="grid-column: span 2;">
+              <div class="sec-label">Layout Tokens</div>
+              <div class="list-view">
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Nav Sidebar — 220px</div><div class="list-item-sublabel text-meta">Desktop: catalog/app left nav (all breakpoints)</div></div>
+                  <div class="list-item-trail"><span class="tag">--nav-sidebar</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Detail Column — 480px</div><div class="list-item-sublabel text-meta">Desktop: in-flow right panel; slides in at ≥1100px</div></div>
+                  <div class="list-item-trail"><span class="tag">--col-detail</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Sheet Max — 440px</div><div class="list-item-sublabel text-meta">Mobile bottom sheets + tablet side sheets</div></div>
+                  <div class="list-item-trail"><span class="tag">--sheet-max</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Global Nav Height — 50px</div><div class="list-item-sublabel text-meta">Top bar; sticky on mobile, fixed on desktop</div></div>
+                  <div class="list-item-trail"><span class="tag">--nav-height</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Breakpoints -->
+          <div class="card docs-card">
+            <div class="sec-label">Breakpoints</div>
+            <div class="list-view">
+              <div class="list-item">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong">Mobile — &lt;768px</div><div class="list-item-sublabel text-meta">Single column. Detail panel hidden. Bottom nav visible.</div></div>
+                <div class="list-item-trail"><span class="tag">max-width: 767px</span></div>
+              </div>
+              <div class="list-item">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong">Tablet — 768–1099px</div><div class="list-item-sublabel text-meta">Two columns. Detail panel slides in as fixed sidesheet.</div></div>
+                <div class="list-item-trail"><span class="tag">768–1099px</span></div>
+              </div>
+              <div class="list-item">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong">Desktop — ≥1100px</div><div class="list-item-sublabel text-meta">Three columns. Detail panel opens in-flow (no overlay).</div></div>
+                <div class="list-item-trail"><span class="tag">min-width: 1100px</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HEIGHTS -->
+        <section class="section-group" id="heights">
+          <h2 class="sec-header">Interactive Heights</h2>
+          <p class="text-body" style="color: var(--text-secondary);">Standardized heights for all interactive elements to ensure touch target accessibility.</p>
+          
           <div class="story-grid">
             <div class="card canvas">
-              <div class="canvas-stage">
-                <div class="card" style="width: 100%; height: var(--nav-height); background: var(--bg-secondary); border: 2px dashed var(--border-standard); display: flex; align-items: center; justify-content: center;">
-                  <span class="text-meta">Global Nav (50px)</span>
-                </div>
+              <div class="u-flex-column u-gap-md u-w-full">
+                <button class="btn btn--primary h-sm u-w-full">Small (36px)</button>
+                <button class="btn btn--primary h-md u-w-full">Medium (48px)</button>
+                <button class="btn btn--primary h-lg u-w-full">Large (56px)</button>
               </div>
             </div>
             <div class="card docs-card">
               <div class="sec-label">Height Tokens</div>
               <div class="list-view">
                 <div class="list-item">
-                  <div class="list-item-body">
-                    <div class="list-item-label">Global Nav</div>
-                    <div class="list-item-sublabel">Top header height.</div>
-                  </div>
-                  <div class="list-item-trail"><span class="tag">--nav-height</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- LABELS -->
-        <section class="section-group" id="labels">
-          <h2 class="sec-header">Labels & Metadata</h2>
-          
-          <div class="story-grid">
-            <div class="card canvas">
-              <div class="canvas-stage">
-                <div class="sec-label" style="margin-bottom: 0;">Generic Section Label</div>
-              </div>
-            </div>
-            <div class="card docs-card">
-              <div class="sec-label">Usage</div>
-              <div class="list-view">
-                <div class="list-item">
-                  <div class="list-item-body">
-                    <div class="list-item-label">Section Label</div>
-                    <div class="list-item-sublabel">Uppercase 700. For dividing areas.</div>
-                  </div>
-                  <div class="list-item-trail"><span class="tag">.sec-label</span></div>
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Small — 36px</div><div class="list-item-sublabel text-meta">Compact filter pills, inline controls</div></div>
+                  <div class="list-item-trail"><span class="tag">--h-sm</span></div>
                 </div>
                 <div class="list-item">
-                  <div class="list-item-body">
-                    <div class="list-item-label">Metadata Tag</div>
-                    <div class="list-item-sublabel">Rectangular, fixed height.</div>
-                  </div>
-                  <div class="list-item-trail"><span class="tag">.tag</span></div>
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Medium — 48px (default)</div><div class="list-item-sublabel text-meta">All primary buttons, inputs, pickers</div></div>
+                  <div class="list-item-trail"><span class="tag">--h-md</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Large — 56px</div><div class="list-item-sublabel text-meta">Hero CTAs, prominent action rows</div></div>
+                  <div class="list-item-trail"><span class="tag">--h-lg</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Touch Target — 44px min</div><div class="list-item-sublabel text-meta">WCAG 2.5.5 — all interactive elements</div></div>
+                  <div class="list-item-trail"><span class="tag">--touch-target</span></div>
                 </div>
               </div>
             </div>
@@ -212,15 +260,15 @@
         <section class="section-group" id="banners">
           <h2 class="sec-header">Banners</h2>
           <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
-            <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">Generic .banner</div>
+            <div style="width: 100%; max-width: 520px;" class="section-group">
+              <div class="sec-label">Generic .banner</div>
               <div class="banner">
                 <div class="banner-head">
                   <span class="dot dot--md" style="background:var(--accent-primary)"></span>
                   <div class="text-title">Trying scents on?</div>
                 </div>
                 <div class="text-meta">Start tracking to see how they evolve over time.</div>
-                <button class="s-name-btn">Find a scent to track</button>
+                <button class="text-link">Find a scent to track</button>
               </div>
             </div>
           </div>
@@ -230,21 +278,21 @@
         <section class="section-group" id="cards">
           <h2 class="sec-header">Cards</h2>
           <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
-            <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.card (Primary)</div>
+            <div style="width: 100%; max-width: 520px;" class="section-group">
+              <div class="sec-label">.card (Primary)</div>
               <div class="card">
                 <div class="text-title">Amber Notes</div>
                 <div class="text-body">Resinous and warm base notes that provide longevity.</div>
               </div>
             </div>
-            <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.card--secondary</div>
+            <div style="width: 100%; max-width: 520px;" class="section-group">
+              <div class="sec-label">.card--secondary (with Border)</div>
               <div class="card card--secondary">
                 <div class="text-meta"><strong>Pro Tip:</strong> Layer with citrus to brighten.</div>
               </div>
             </div>
-            <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.card--interactive</div>
+            <div style="width: 100%; max-width: 520px;" class="section-group">
+              <div class="sec-label">.card--interactive</div>
               <div class="card card--interactive">
                 <div class="text-ui">Clickable Surface</div>
               </div>
@@ -255,18 +303,16 @@
         <!-- CHIPS -->
         <section class="section-group" id="chips">
           <h2 class="sec-header">Chips (Pills)</h2>
-          
+
           <div class="story-grid">
             <div class="card canvas">
               <div class="canvas-stage">
-                <div class="chip">Default</div>
-                <div class="chip chip--family" style="--fam-bg:var(--fam-woody)20; --fam-color:var(--fam-woody);">
-                  <span class="dot" style="--fam-bg: var(--fam-woody)"></span>
-                  Woody
-                </div>
-                <div class="chip chip--accent">Layer Match</div>
-                <div class="chip chip--xs is-owned">Owned</div>
-                <div class="chip chip--xs chip--outline">Secondary</div>
+                <span class="chip">Default</span>
+                <span class="chip" style="background: var(--fam-woody); color: var(--bg-primary);">Woody</span>
+                <span class="chip" style="background: var(--fam-floral); color: var(--bg-primary);">Floral</span>
+                <span class="chip chip--accent">Layer Match</span>
+                <span class="chip chip--xs">Owned</span>
+                <span class="chip chip--xs chip--outline">Secondary</span>
               </div>
             </div>
 
@@ -275,15 +321,36 @@
               <div class="list-view">
                 <div class="list-item">
                   <div class="list-item-body">
-                    <div class="list-item-label">Base</div>
-                    <div class="list-item-sublabel">Default status pill.</div>
+                    <div class="list-item-label text-ui-strong">Base</div>
+                    <div class="list-item-sublabel text-meta">Default neutral status pill.</div>
                   </div>
                   <div class="list-item-trail"><span class="tag">.chip</span></div>
                 </div>
                 <div class="list-item">
                   <div class="list-item-body">
-                    <div class="list-item-label">Small</div>
-                    <div class="list-item-sublabel">Compact status variant.</div>
+                    <div class="list-item-label text-ui-strong">Family</div>
+                    <div class="list-item-sublabel text-meta">Plain .chip with inline background. No variant class.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">style="background:..."</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label text-ui-strong">Accent</div>
+                    <div class="list-item-sublabel text-meta">Accent-tinted. Match score, highlights.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.chip--accent</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label text-ui-strong">Outline</div>
+                    <div class="list-item-sublabel text-meta">Ghost style for de-emphasised labels.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.chip--outline</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label text-ui-strong">Small</div>
+                    <div class="list-item-sublabel text-meta">18px compact variant. Pair with any above.</div>
                   </div>
                   <div class="list-item-trail"><span class="tag">.chip--xs</span></div>
                 </div>
@@ -291,9 +358,15 @@
             </div>
           </div>
 
-          <div class="card card--secondary code-block" style="margin-top:var(--sp-md)">
-&lt;div class="chip"&gt;Default&lt;/div&gt;
-&lt;div class="chip chip--family" style="--fam-bg:..."&gt; ... &lt;/div&gt;</div>
+          <div class="card card--secondary code-block" style="margin-top:var(--sp-md)">&lt;!-- Default --&gt;
+&lt;span class="chip"&gt;Default&lt;/span&gt;
+
+&lt;!-- Family — plain chip, inline color, no variant class --&gt;
+&lt;span class="chip" style="background: var(--fam-woody); color: var(--bg-primary);"&gt;Woody&lt;/span&gt;
+
+&lt;!-- Accent / outline / xs --&gt;
+&lt;span class="chip chip--accent"&gt;Layer Match&lt;/span&gt;
+&lt;span class="chip chip--outline chip--xs"&gt;Secondary&lt;/span&gt;</div>
         </section>
 
         <!-- TAGS -->
@@ -301,7 +374,7 @@
           <h2 class="sec-header">Tags (Metadata)</h2>
           <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
             <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.tag (Directory style)</div>
+              <div class="sec-label">.tag (Directory style)</div>
               <div style="display:flex; gap:var(--sp-xs); flex-wrap:wrap;">
                 <span class="tag text-meta">Sandalwood</span>
                 <button class="tag text-meta">Cedarwood</button>
@@ -316,20 +389,20 @@
           <h2 class="sec-header">Lists &amp; Shelves</h2>
           <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
             <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-view > .list-item (Wrapped)</div>
+              <div class="sec-label">.list-item</div>
               <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-lg); overflow:hidden;">
                 <div class="list-item">
                   <div class="list-item-dot" style="--fam-bg: var(--fam-woody)"></div>
                   <div class="list-item-body">
-                    <div class="list-item-label">Santal 33</div>
-                    <div class="list-item-sublabel">Le Labo &middot; A very long description that should wrap to multiple lines to show the new default behavior.</div>
+                    <div class="list-item-label text-ui-strong">Santal 33</div>
+                    <div class="list-item-sublabel text-meta">Le Labo &middot; A very long description that should wrap to multiple lines to show the new default behavior.</div>
                   </div>
                 </div>
                 <div class="list-item">
                   <div class="list-item-dot" style="--fam-bg: var(--fam-floral)"></div>
                   <div class="list-item-body">
-                    <div class="list-item-label">Rose 31</div>
-                    <div class="list-item-sublabel">Le Labo &middot; Floral</div>
+                    <div class="list-item-label text-ui-strong">Rose 31</div>
+                    <div class="list-item-sublabel text-meta">Le Labo &middot; Floral</div>
                   </div>
                   <div class="list-item-trail"><div class="chip chip--xs">Owned</div></div>
                 </div>
@@ -337,72 +410,16 @@
             </div>
 
             <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-item--truncate</div>
-              <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-lg); overflow:hidden;">
-                <div class="list-item list-item--truncate">
-                  <div class="list-item-dot" style="--fam-bg: var(--fam-citrus)"></div>
-                  <div class="list-item-body">
-                    <div class="list-item-label">Bergamote 22</div>
-                    <div class="list-item-sublabel">This very long sublabel will truncate instead of wrapping because of the modifier.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-item--compact</div>
-              <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-lg); overflow:hidden;">
-                <div class="list-item list-item--compact">
-                  <div class="list-item-dot" style="--fam-bg: var(--fam-amber)"></div>
-                  <div class="list-item-body">
-                    <div class="list-item-label">Ambre Nuit</div>
-                    <div class="list-item-sublabel">Dior Priv&eacute;</div>
-                  </div>
-                </div>
-                <div class="list-item list-item--compact">
-                  <div class="list-item-dot" style="--fam-bg: var(--fam-oud)"></div>
-                  <div class="list-item-body">
-                    <div class="list-item-label">Oud Wood</div>
-                    <div class="list-item-sublabel">Tom Ford</div>
-                  </div>
-                  <div class="list-item-trail"><div class="chip chip--xs">Owned</div></div>
-                </div>
-              </div>
-            </div>
-
-            <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.list-item--search</div>
-              <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-lg); overflow:hidden;">
-                <div class="list-item list-item--search">
-                  <div class="list-item-dot" style="--fam-bg: var(--fam-green)"></div>
-                  <div class="list-item-body">
-                    <div class="list-item-label">Philosykos</div>
-                    <div class="list-item-sublabel">Diptyque</div>
-                  </div>
-                  <div class="list-item-icon">&#x2192;</div>
-                </div>
-                <div class="list-item list-item--search">
-                  <div class="list-item-dot" style="--fam-bg: var(--fam-leather)"></div>
-                  <div class="list-item-body">
-                    <div class="list-item-label">Tuscan Leather</div>
-                    <div class="list-item-sublabel">Tom Ford</div>
-                  </div>
-                  <div class="list-item-icon">&#x2192;</div>
-                </div>
-              </div>
-            </div>
-
-            <div style="width: 100%; max-width: 520px;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">Full Slot Structure</div>
+              <div class="sec-label">Full Slot Structure</div>
               <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-lg); overflow:hidden;">
                 <div class="list-item">
                   <div class="list-item-leading">
                     <div class="list-item-dot" style="--fam-bg: var(--fam-chypre)"></div>
                   </div>
                   <div class="list-item-body">
-                    <div class="list-item-label">Mitsouko</div>
-                    <div class="list-item-sublabel">Guerlain &middot; Chypre</div>
-                    <div class="list-item-detail">Bergamot, Peach, Rose, Oakmoss</div>
+                    <div class="list-item-label text-ui-strong">Mitsouko</div>
+                    <div class="list-item-sublabel text-meta">Guerlain &middot; Chypre</div>
+                    <div class="list-item-detail text-caption">Bergamot, Peach, Rose, Oakmoss</div>
                   </div>
                   <div class="list-item-trail">
                     <span class="list-item-badge">★</span>
@@ -414,16 +431,220 @@
           </div>
         </section>
 
+        <!-- LABELS -->
+        <section class="section-group" id="labels">
+          <h2 class="sec-header">Labels &amp; Metadata</h2>
+          <div class="story-grid">
+            <div class="card canvas">
+              <div class="canvas-stage">
+                <div class="section-group">
+                  <div class="sec-label">Group Label</div>
+                  <div class="text-body">Grouped content using .section-group.</div>
+                </div>
+              </div>
+            </div>
+            <div class="card docs-card">
+              <div class="sec-label">Usage</div>
+              <div class="list-view">
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label text-ui-strong">Section Group</div>
+                    <div class="list-item-sublabel text-meta">Flex column with proximity gap.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.section-group</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body">
+                    <div class="list-item-label text-ui-strong">Section Label</div>
+                    <div class="list-item-sublabel text-meta">Uppercase 700. For dividing areas.</div>
+                  </div>
+                  <div class="list-item-trail"><span class="tag">.sec-label</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- GRIDS -->
         <section class="section-group" id="grids">
           <h2 class="sec-header">Grids</h2>
-          <div style="display: flex; flex-direction: column; gap: var(--sp-xl);">
-            <div style="max-width:none;">
-              <div class="sec-label" style="margin-bottom:var(--sp-xs)">.grid (Responsive columns)</div>
-              <div class="grid">
-                <div class="card"><div class="text-meta">Card 1</div></div>
-                <div class="card"><div class="text-meta">Card 2</div></div>
-                <div class="card"><div class="text-meta">Card 3</div></div>
+          <div class="section-group">
+            <div class="sec-label">.grid — auto-fill minmax(280px, 1fr)</div>
+            <div class="grid">
+              <div class="card"><div class="text-meta">Card 1</div></div>
+              <div class="card"><div class="text-meta">Card 2</div></div>
+              <div class="card"><div class="text-meta">Card 3</div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- COLORS -->
+        <section class="section-group" id="colors">
+          <h2 class="sec-header">Semantic Colors</h2>
+          <p class="text-body" style="color: var(--text-secondary);">Strict semantic tokens. No hardcoded hex values in component CSS.</p>
+          
+          <div class="card docs-card">
+            <div class="list-view" id="color-list">
+              <!-- Colors will be injected here -->
+            </div>
+          </div>
+        </section>
+
+        <!-- FAMILY COLORS -->
+        <section class="section-group" id="family-colors">
+          <h2 class="sec-header">Family Colors</h2>
+          <p class="text-body" style="color: var(--text-secondary);">One token per olfactive family. Use directly as <code style="font-family:var(--font-mono)">background</code> on a <code style="font-family:var(--font-mono)">.chip</code> with <code style="font-family:var(--font-mono)">color: var(--bg-primary)</code>.</p>
+          <div id="family-color-list" class="card docs-card"></div>
+        </section>
+
+        <!-- SHADOWS -->
+        <section class="section-group" id="shadows">
+          <h2 class="sec-header">Shadows & Elevation</h2>
+          <p class="text-body" style="color: var(--text-secondary);">Standardized depth scale for layering surfaces.</p>
+          
+          <div class="grid" style="--grid-cols: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="card" style="box-shadow: var(--shadow-sm);">
+              <div class="text-ui-strong">Small</div>
+              <div class="text-caption">--shadow-sm</div>
+            </div>
+            <div class="card" style="box-shadow: var(--shadow-md);">
+              <div class="text-ui-strong">Medium</div>
+              <div class="text-caption">--shadow-md</div>
+            </div>
+            <div class="card" style="box-shadow: var(--shadow-lg);">
+              <div class="text-ui-strong">Large</div>
+              <div class="text-caption">--shadow-lg</div>
+            </div>
+            <div class="card" style="box-shadow: var(--shadow-xl);">
+              <div class="text-ui-strong">Extra Large</div>
+              <div class="text-caption">--shadow-xl</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MOTION -->
+        <section class="section-group" id="motion">
+          <h2 class="sec-header">Motion &amp; Timing</h2>
+          <div class="story-grid">
+            <div class="card canvas" style="min-height: 200px; align-items: stretch; padding: var(--sp-lg);">
+              <div class="u-flex-column u-gap-sm u-w-full">
+                <div class="text-caption" style="color:var(--text-tertiary);">Hover each to feel the easing</div>
+                <div class="btn btn--secondary" style="transition: background var(--dur-micro) var(--ease-spring);">Micro — 0.1s hover</div>
+                <div class="btn btn--secondary" style="transition: all var(--dur-fast) var(--ease-spring);">Fast — 0.15s border / bg</div>
+                <div class="btn btn--secondary" style="transition: transform var(--dur-standard) var(--ease-spring);" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform=''">Standard — 0.28s transform</div>
+                <button class="btn btn--primary" onclick="const b=this.nextElementSibling; b.style.width='0'; requestAnimationFrame(()=>{ b.style.transition='width var(--dur-slow) var(--ease-spring)'; b.style.width='100%'; setTimeout(()=>{b.style.transition=''; b.style.width='0';},900); })">Play slow fill ↓</button>
+                <div style="height:4px; background:var(--border-standard); border-radius:var(--radius-pill); overflow:hidden; width:0;"></div>
+              </div>
+            </div>
+            <div class="card docs-card">
+              <div class="sec-label">Duration Tokens</div>
+              <div class="list-view">
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Micro — 0.1s</div><div class="list-item-sublabel text-meta">Hover color/opacity flips</div></div>
+                  <div class="list-item-trail"><span class="tag">--dur-micro</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Fast — 0.15s</div><div class="list-item-sublabel text-meta">Border, background changes</div></div>
+                  <div class="list-item-trail"><span class="tag">--dur-fast</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Standard — 0.28s</div><div class="list-item-sublabel text-meta">Panel open/close, transforms</div></div>
+                  <div class="list-item-trail"><span class="tag">--dur-standard</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Slow — 0.48s</div><div class="list-item-sublabel text-meta">Detail panel expand</div></div>
+                  <div class="list-item-trail"><span class="tag">--dur-slow</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">X-Slow — 0.6s</div><div class="list-item-sublabel text-meta">Score bar fills, metrics</div></div>
+                  <div class="list-item-trail"><span class="tag">--dur-xslow</span></div>
+                </div>
+                <div class="list-item">
+                  <div class="list-item-body"><div class="list-item-label text-ui-strong">Spring easing</div><div class="list-item-sublabel text-meta">cubic-bezier(0.16, 1, 0.3, 1) — used everywhere</div></div>
+                  <div class="list-item-trail"><span class="tag">--ease-spring</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Z-INDEX -->
+        <section class="section-group" id="zindex">
+          <h2 class="sec-header">Z-index Scale</h2>
+          <p class="text-meta" style="color: var(--text-secondary);">Semantic stacking order — all absolute/fixed elements must use a token. Raw z-index values are not allowed.</p>
+          <div class="card docs-card">
+            <div id="zindex-list"></div>
+          </div>
+        </section>
+
+        <!-- INPUTS -->
+        <section class="section-group" id="inputs">
+          <h2 class="sec-header">Inputs</h2>
+          <p class="text-body" style="color: var(--text-secondary);">Standard form fields and search inputs.</p>
+          
+          <div class="u-flex-column u-gap-xl">
+            <div class="section-group" style="max-width: 480px;">
+              <div class="sec-label">Base Input (.input)</div>
+              <input type="text" class="input" placeholder="Search fragrances...">
+              <input type="text" class="input" value="Disabled state" disabled>
+            </div>
+
+            <div class="section-group" style="max-width: 480px;">
+              <div class="sec-label">Inline Variant (.input--inline) — universal search</div>
+              <div class="card" style="padding: var(--sp-md); flex-direction: row; align-items: center; gap: var(--sp-sm);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color:var(--text-tertiary);"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" class="input input--inline" placeholder="Universal search...">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- BUTTONS -->
+        <section class="section-group" id="buttons">
+          <h2 class="sec-header">Buttons</h2>
+          <p class="text-body" style="color: var(--text-secondary);">Action-oriented interactive components with semantic variants.</p>
+          
+          <div class="u-flex-column u-gap-xl">
+            <div class="section-group">
+              <div class="sec-label">Primary Variant (.btn--primary)</div>
+              <div class="canvas-stage">
+                <button class="btn btn--primary">Default</button>
+                <button class="btn btn--primary active">Active</button>
+                <button class="btn btn--primary" disabled>Disabled</button>
+              </div>
+            </div>
+
+            <div class="section-group">
+              <div class="sec-label">Secondary Variant (.btn--secondary)</div>
+              <div class="canvas-stage">
+                <button class="btn btn--secondary">Default</button>
+                <button class="btn btn--secondary active">Active / Inverted</button>
+                <button class="btn btn--secondary" disabled>Disabled</button>
+              </div>
+            </div>
+
+            <div class="section-group">
+              <div class="sec-label">Loading State — disable + spinner during async ops</div>
+              <div class="canvas-stage">
+                <button class="btn btn--primary" id="btn-loading-demo" onclick="const b=this; b.disabled=true; b.innerHTML='<span style=\'width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:ds-spin 0.6s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px;opacity:.8\'></span>Saving…'; setTimeout(()=>{b.disabled=false;b.textContent='Save Changes';},2000);">Save Changes</button>
+                <button class="btn btn--secondary" id="btn-loading-sec" onclick="const b=this; b.disabled=true; b.innerHTML='<span style=\'width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:ds-spin 0.6s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px;opacity:.8\'></span>Loading…'; setTimeout(()=>{b.disabled=false;b.textContent='Load More';},2000);">Load More</button>
+              </div>
+            </div>
+
+            <div class="section-group">
+              <div class="sec-label">Button Groups (.btn-group)</div>
+              <div style="max-width: 400px; width: 100%;">
+                <div class="btn-group u-w-full">
+                  <button class="btn btn--secondary">Cancel</button>
+                  <button class="btn btn--primary">Confirm Action</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-group">
+              <div class="sec-label">.text-link — inline nav, quiz back</div>
+              <div class="canvas-stage">
+                <button class="text-link">← Back</button>
+                <button class="text-link">Santal 33 by Le Labo</button>
               </div>
             </div>
           </div>
@@ -432,9 +653,160 @@
     </main>
   </div>
   <script>
+    // ── DATA INJECTION ──
+
+    const ICONS = {
+      // Navigation chrome — Phosphor Icons (phosphoricons.com)
+      chevronLeft:  `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M168.49,199.51a12,12,0,0,1-17,17l-80-80a12,12,0,0,1,0-17l80-80a12,12,0,0,1,17,17L97,128Z"/></svg>`,
+      chevronRight: `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg>`,
+      chevronDown:  `<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"/></svg>`,
+      sortUpDown:   `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,167.51a12,12,0,0,1,0,17l-48,48a12,12,0,0,1-17,0l-48-48a12,12,0,0,1,17-17L128,207l39.51-39.52A12,12,0,0,1,184.49,167.51Zm-96-79L128,49l39.51,39.52a12,12,0,0,0,17-17l-48-48a12,12,0,0,0-17,0l-48,48a12,12,0,0,0,17,17Z"/></svg>`,
+      close:        `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>`,
+      search:       `<svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>`,
+      discovery:    `<svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.42,72.84l-64,32a8.05,8.05,0,0,0-3.58,3.58l-32,64A8,8,0,0,0,80,184a8.1,8.1,0,0,0,3.58-.84l64-32a8.05,8.05,0,0,0,3.58-3.58l32-64a8,8,0,0,0-10.74-10.74ZM138,138,97.89,158.11,118,118l40.15-20.07Z"/></svg>`,
+      compare:      `<svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,181.66l-32,32a8,8,0,0,1-11.32-11.32L188.69,184H48a8,8,0,0,1,0-16H188.69l-18.35-18.34a8,8,0,0,1,11.32-11.32l32,32A8,8,0,0,1,213.66,181.66Zm-139.32-64a8,8,0,0,0,11.32-11.32L67.31,88H208a8,8,0,0,0,0-16H67.31L85.66,53.66A8,8,0,0,0,74.34,42.34l-32,32a8,8,0,0,0,0,11.32Z"/></svg>`,
+      notes:        `<svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M223.45,40.07a8,8,0,0,0-7.52-7.52C139.8,28.08,78.82,51,52.82,94a87.09,87.09,0,0,0-12.76,49c.57,15.92,5.21,32,13.79,47.85l-19.51,19.5a8,8,0,0,0,11.32,11.32l19.5-19.51C81,210.73,97.09,215.37,113,215.94q1.67.06,3.33.06A86.93,86.93,0,0,0,162,203.18C205,177.18,227.93,116.21,223.45,40.07ZM153.75,189.5c-22.75,13.78-49.68,14-76.71.77l88.63-88.62a8,8,0,0,0-11.32-11.32L65.73,179c-13.19-27-13-54,.77-76.71,22.09-36.47,74.6-56.44,141.31-54.06C210.2,114.89,190.22,167.41,153.75,189.5Z"/></svg>`,
+      person:       `<svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"/></svg>`,
+      star:         `<svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M239.18,97.26A16.38,16.38,0,0,0,224.92,86l-59-4.76L143.14,26.15a16.36,16.36,0,0,0-30.27,0L90.11,81.23,31.08,86a16.46,16.46,0,0,0-9.37,28.86l45,38.83L53,211.75a16.38,16.38,0,0,0,24.5,17.82L128,198.49l50.53,31.08A16.4,16.4,0,0,0,203,211.75l-13.76-58.07,45-38.83A16.43,16.43,0,0,0,239.18,97.26Zm-15.34,5.47-48.7,42a8,8,0,0,0-2.56,7.91l14.88,62.8a.37.37,0,0,1-.17.48c-.18.14-.23.11-.38,0l-54.72-33.65a8,8,0,0,0-8.38,0L69.09,215.94c-.15.09-.19.12-.38,0a.37.37,0,0,1-.17-.48l14.88-62.8a8,8,0,0,0-2.56-7.91l-48.7-42c-.12-.1-.23-.19-.13-.5s.18-.27.33-.29l63.92-5.16A8,8,0,0,0,103,91.86l24.62-59.61c.08-.17.11-.25.35-.25s.27.08.35.25L153,91.86a8,8,0,0,0,6.75,4.92l63.92,5.16c.15,0,.24,0,.33.29S224,102.63,223.84,102.73Z"/></svg>`,
+      megaphone:    `<svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M248,120a48.05,48.05,0,0,0-48-48H160.2c-2.91-.17-53.62-3.74-101.91-44.24A16,16,0,0,0,32,40V200a16,16,0,0,0,26.29,12.25c37.77-31.68,77-40.76,93.71-43.3v31.72A16,16,0,0,0,159.12,214l11,7.33A16,16,0,0,0,194.5,212l11.77-44.36A48.07,48.07,0,0,0,248,120ZM48,199.93V40h0c42.81,35.91,86.63,45,104,47.24v65.48C134.65,155,90.84,164.07,48,199.93Zm131,8,0,.11-11-7.33V168h21.6ZM200,152H168V88h32a32,32,0,1,1,0,64Z"/></svg>`,
+      library:      `<svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M231.65,194.55,198.46,36.75a16,16,0,0,0-19-12.39L132.65,34.42a16.08,16.08,0,0,0-12.3,19l33.19,157.8A16,16,0,0,0,169.16,224a16.25,16.25,0,0,0,3.38-.36l46.81-10.06A16.09,16.09,0,0,0,231.65,194.55ZM136,50.15c0-.06,0-.09,0-.09l46.8-10,3.33,15.87L139.33,66Zm6.62,31.47,46.82-10.05,3.34,15.9L146,97.53Zm6.64,31.57,46.82-10.06,13.3,63.24-46.82,10.06ZM216,197.94l-46.8,10-3.33-15.87L212.67,182,216,197.85C216,197.91,216,197.94,216,197.94ZM104,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V48A16,16,0,0,0,104,32ZM56,48h48V64H56Zm0,32h48v96H56Zm48,128H56V192h48v16Z"/></svg>`,
+    };
+
+    const COLORS = [
+      { t: 'Background Primary',   v: '--bg-primary',       d: 'Page / card surface' },
+      { t: 'Background Secondary', v: '--bg-secondary',     d: 'Input fill, sidebar, chips' },
+      { t: 'Background Tertiary',  v: '--bg-tertiary',      d: 'Hover states, dividers' },
+      { t: 'Text Primary',         v: '--text-primary',     d: 'Headlines, labels' },
+      { t: 'Text Secondary',       v: '--text-secondary',   d: 'Sublabels, brand names' },
+      { t: 'Text Tertiary',        v: '--text-tertiary',    d: 'Detail / caption text' },
+      { t: 'Text Disabled',        v: '--text-disabled',    d: 'Disabled controls' },
+      { t: 'Border Standard',      v: '--border-standard',  d: 'Cards, list separators' },
+      { t: 'Border Strong',        v: '--border-strong',    d: 'Focus ring, emphasis' },
+      { t: 'Border Subtle',        v: '--border-subtle',    d: 'Ghost containers' },
+      { t: 'Accent Primary',       v: '--accent-primary',   d: 'Resin brown — primary CTA' },
+      { t: 'Wish',                 v: '--wish',             d: 'Wishlist indicator' },
+    ];
+
+    const FAMILY_COLORS = [
+      { label: 'Woody',     v: '--fam-woody'    },
+      { label: 'Floral',    v: '--fam-floral'   },
+      { label: 'Amber',     v: '--fam-amber'    },
+      { label: 'Citrus',    v: '--fam-citrus'   },
+      { label: 'Leather',   v: '--fam-leather'  },
+      { label: 'Oud',       v: '--fam-oud'      },
+      { label: 'Green',     v: '--fam-green'    },
+      { label: 'Chypre',    v: '--fam-chypre'   },
+      { label: 'Aquatic',   v: '--fam-aquatic'  },
+      { label: 'Gourmand',  v: '--fam-gourmand' },
+      { label: 'Default',   v: '--fam-default'  },
+    ];
+
+    const ZINDEX = [
+      { t: 'App / Toast', v: '--z-app', n: 9999 },
+      { t: 'Global Toast', v: '--z-toast', n: 1000 },
+      { t: 'Global Search', v: '--z-search', n: 400 },
+      { t: 'Modals', v: '--z-modal', n: 300 },
+      { t: 'Side Sheets', v: '--z-sheet', n: 200 },
+      { t: 'Overlays', v: '--z-overlay', n: 150 },
+      { t: 'Dropdowns', v: '--z-dropdown', n: 100 },
+      { t: 'Global Nav', v: '--z-nav', n: 80 },
+      { t: 'Scrims', v: '--z-scrim', n: 79 },
+      { t: 'Sticky Elements', v: '--z-sticky', n: 10 }
+    ];
+
+    const ICON_USAGE = {
+      chevronLeft:  'Sheet back / nav back',
+      chevronRight: 'Compare btn arrow / list trail',
+      chevronDown:  'Dropdown indicator / collapse',
+      sortUpDown:   'Compare card slot picker',
+      close:        'Dismiss sheet / modal',
+      search:       'Search input icon',
+      discovery:    'Nav: Discovery tab',
+      compare:      'Nav: Compare tab',
+      notes:        'Nav: Notes tab',
+      person:       'Nav: Profile tab',
+      star:         'More menu: Rate',
+      megaphone:    'More menu: What\'s New',
+      library:      'More menu: My Library',
+    };
+
+    // Render Icons
+    const iconGrid = document.getElementById('icon-grid');
+    iconGrid.style.display = 'grid';
+    iconGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(120px, 1fr))';
+    Object.entries(ICONS).forEach(([name, svg]) => {
+      const item = document.createElement('div');
+      item.style.cssText = 'display:flex; flex-direction:column; align-items:center; text-align:center; gap:var(--sp-xs); padding:var(--sp-lg) var(--sp-sm); border-bottom:1px solid var(--border-standard);';
+      item.innerHTML = `
+        <div style="color:var(--text-primary);">${svg}</div>
+        <div class="text-caption" style="color:var(--text-secondary); font-family:var(--font-mono);">${name}</div>
+        <div class="text-caption" style="color:var(--text-tertiary);">${ICON_USAGE[name] || ''}</div>
+      `;
+      iconGrid.appendChild(item);
+    });
+
+    // Render Colors
+    const colorList = document.getElementById('color-list');
+    COLORS.forEach(c => {
+      const item = document.createElement('div');
+      item.className = 'list-item';
+      item.innerHTML = `
+        <div class="list-item-leading">
+          <div style="width:24px; height:24px; border-radius:var(--radius-sm); border:1px solid var(--border-standard); background:var(${c.v}); flex-shrink:0;"></div>
+        </div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">${c.t}</div>
+          <div class="list-item-sublabel text-meta">${c.d} — <code style="font-family:var(--font-mono)">var(${c.v})</code></div>
+        </div>
+      `;
+      colorList.appendChild(item);
+    });
+
+    // Render Family Colors
+    const famColorList = document.getElementById('family-color-list');
+    const famListView = document.createElement('div');
+    famListView.className = 'list-view';
+    FAMILY_COLORS.forEach(f => {
+      const item = document.createElement('div');
+      item.className = 'list-item';
+      item.innerHTML = `
+        <div class="list-item-leading">
+          <div style="width:24px; height:24px; border-radius:var(--radius-sm); background:var(${f.v}); flex-shrink:0;"></div>
+        </div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">${f.label}</div>
+          <div class="list-item-sublabel text-meta"><code style="font-family:var(--font-mono)">var(${f.v})</code></div>
+        </div>
+        <div class="list-item-trail">
+          <span class="chip" style="background:var(${f.v}); color:var(--bg-primary);">${f.label}</span>
+        </div>
+      `;
+      famListView.appendChild(item);
+    });
+    famColorList.appendChild(famListView);
+
+    // Render Z-Index
+    const zindexList = document.getElementById('zindex-list');
+    ZINDEX.forEach(z => {
+      const item = document.createElement('div');
+      item.className = 'list-item';
+      item.innerHTML = `
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">${z.t}</div>
+          <div class="list-item-sublabel text-meta"><code>var(${z.v})</code></div>
+        </div>
+        <div class="list-item-trail">
+          <span class="tag">${z.n}</span>
+        </div>
+      `;
+      zindexList.appendChild(item);
+    });
+
+    // ── SHELL LOGIC ──
+
     // Simple intersection observer to highlight active section in sidebar
     const tabs = document.querySelectorAll('.catalog-sidebar .tab');
-    const sections = document.querySelectorAll('.section-group');
+    const sections = document.querySelectorAll('section.section-group');
     
     const observerOptions = {
       root: document.querySelector('.catalog-main'),

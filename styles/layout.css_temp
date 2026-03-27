@@ -1,0 +1,17 @@
+  .catalog-shell {
+    flex-direction: column;
+  }
+}
+
+/* ── UTILITIES ── */
+
+.u-text-center { text-align: center; }
+.u-justify-center { justify-content: center; }
+.u-w-full { width: 100%; }
+.u-flex-column { display: flex; flex-direction: column; }
+.u-gap-sm { gap: var(--sp-sm); }
+.u-gap-md { gap: var(--sp-md); }
+.u-font-serif { font-family: var(--font-serif); }
+.u-text-secondary { color: var(--text-secondary); }
+.u-icon-lg { font-size: 32px; }
+.u-border-none { border: none; }

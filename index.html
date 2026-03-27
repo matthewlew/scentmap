@@ -113,78 +113,9 @@
   h1, h2, h3 { font-weight: normal; margin: 0; }
   body { background: var(--bg-secondary); }
   .landing-wrap { max-width: 900px; margin: 0 auto; padding: 0 var(--sp-xl); }
-  .landing-hero { padding: var(--sp-4xl) var(--sp-xl); text-align: center; background: var(--bg-primary); border-bottom: 1px solid var(--border-standard); }
-  .landing-hero .text-heading { margin-bottom: var(--sp-md); }
-  .landing-hero .dc-description { max-width: 600px; margin: 0 auto var(--sp-xl); font-size: var(--fs-ui); }
   .landing-section { padding: var(--sp-3xl) 0; }
   .landing-section-title { text-align: center; margin-bottom: var(--sp-xl); }
-  .landing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--sp-lg); }
-  .landing-card {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-standard);
-    border-radius: var(--radius-xl);
-    padding: var(--sp-xl);
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    transition: transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
-  }
-  .landing-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
-    border-color: var(--border-strong);
-  }
-  .landing-card-head { display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm); }
-  .landing-card-title { font-family: var(--font-display); font-size: var(--fs-title); line-height: var(--lh-tight); letter-spacing: var(--ls-tight); }
-  .landing-card-desc { font-family: var(--font-serif); font-size: var(--fs-body); color: var(--text-secondary); line-height: var(--lh-body); }
-  .landing-card-cta { display: inline-block; margin-top: var(--sp-md); font-family: var(--font-sans); font-size: var(--fs-sm); font-weight: 600; color: var(--text-primary); text-decoration: underline; text-underline-offset: 3px; }
-  .landing-cmp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--sp-md); }
-  .landing-cmp-card {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-standard);
-    border-radius: var(--radius-lg);
-    padding: var(--sp-lg);
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-xs);
-    transition: transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
-  }
-
-  /* Feature: Vibe Discovery */
-  .vibe-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-md); margin-top: var(--sp-xl); }
-  .vibe-card { 
-    aspect-ratio: 16/9; border-radius: var(--radius-xl); border: 1px solid var(--border-standard); 
-    display: flex; flex-direction: column; justify-content: flex-end; padding: var(--sp-lg);
-    background-size: cover; background-position: center; position: relative; overflow: hidden;
-    cursor: pointer; transition: transform var(--dur-fast) var(--ease-spring), border-color var(--dur-fast);
-    text-decoration: none;
-  }
-  .vibe-card:hover { transform: translateY(-4px); border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
-  .vibe-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent); }
-  .vibe-card span { position: relative; z-index: 1; color: white; font-family: var(--font-display); font-size: var(--fs-body); letter-spacing: -0.01em; font-weight: 700; }
-  }
-  .landing-cmp-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--border-strong); }
-  .landing-cmp-title { font-family: var(--font-display); font-size: var(--fs-ui); line-height: var(--lh-tight); letter-spacing: var(--ls-tight); }
-  .landing-cmp-label { font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text-tertiary); }
-  .cta-group { display: flex; gap: var(--sp-md); justify-content: center; flex-wrap: wrap; }
-  .quiz-promo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--sp-md); }
-  .quiz-promo-card {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-standard);
-    border-radius: var(--radius-xl);
-    padding: var(--sp-xl);
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    text-align: center;
-    transition: transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur-fast) var(--ease-spring), border-color var(--dur-fast) var(--ease-spring);
-  }
-  .quiz-promo-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--border-strong); }
-  .quiz-promo-icon { font-size: 32px; margin-bottom: var(--sp-sm); display: block; }
-  .quiz-promo-title { font-family: var(--font-display); font-size: var(--fs-ui); line-height: var(--lh-tight); letter-spacing: var(--ls-tight); margin-bottom: var(--sp-xs); }
-  .quiz-promo-desc { font-family: var(--font-serif); font-size: var(--fs-sm); color: var(--text-secondary); }
+  
   .landing-footer { border-top: 1px solid var(--border-standard); background: var(--bg-primary); padding-top: var(--sp-4xl); }
   .footer-cta { text-align: center; padding-bottom: var(--sp-4xl); border-bottom: 1px solid var(--border-subtle); margin-bottom: var(--sp-4xl); }
   .sitemap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp-2xl); margin-bottom: var(--sp-4xl); text-align: left; }
@@ -195,12 +126,9 @@
   .sitemap-link:visited { color: var(--text-secondary); }
   .footer-bottom { border-top: 1px solid var(--border-subtle); padding: var(--sp-xl) 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--sp-md); }
   .footer-copy { font-family: var(--font-sans); font-size: var(--fs-xs); color: var(--text-tertiary); }
+  
   @media (max-width: 767px) {
-    .landing-hero { padding: var(--sp-3xl) var(--sp-lg); }
     .landing-wrap { padding: 0 var(--sp-lg); }
-    .landing-grid { grid-template-columns: 1fr; }
-    .landing-cmp-grid { grid-template-columns: 1fr 1fr; }
-    .quiz-promo-grid { grid-template-columns: 1fr; }
     .sitemap-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-xl); }
     .footer-bottom { flex-direction: column; text-align: center; }
   }
@@ -212,7 +140,7 @@
   <div class="global-nav-left">
     <a href="/" class="global-nav-logo">Scentmap</a>
     <div class="global-nav-links">
-      <a href="#discovery" class="global-nav-link">Discovery</a>
+      <a href="/app.html#catalog" class="global-nav-link">Discovery</a>
       <a href="/app.html#compare" class="global-nav-link">Compare</a>
       <a href="/app.html#notes" class="global-nav-link">Notes</a>
       <a href="/app.html#saved" class="global-nav-link">You</a>
@@ -220,23 +148,33 @@
   </div>
   <div class="global-nav-right">
     <button class="nav-search-btn" onclick="openGlobalSearch()" aria-label="Quick search (⌘K)" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; padding:var(--sp-sm); display:flex; align-items:center; justify-content:center; transition:color var(--dur-fast);">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
     </button>
     <a href="/app.html" class="nav-signin-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">Open Engine</a>
   </div>
 </nav>
 
-<div class="landing-hero">
-  <h1 class="text-heading">The Mathematical Fragrance Engine</h1>
-  <p class="dc-description">Demystify fragrance through data. Compare perfumes side-by-side, take a quiz to find your signature scent, and browse 180+ designer and niche fragrances.</p>
+<div class="banner">
+  <div class="banner-head" style="justify-content: center;">
+    <h1 class="text-heading">The Mathematical Fragrance Engine</h1>
+  </div>
+  <p class="text-ui" style="text-align: center; max-width: 600px; margin: 0 auto var(--sp-xl); color: var(--text-secondary);">Demystify fragrance through data. Compare perfumes side-by-side, analyze note overlap, and find your next signature scent with our concierge consultation.</p>
+  
   <div style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--sp-sm);">
-    <form onsubmit="event.preventDefault(); window.location.href='/app.html#search=' + encodeURIComponent(this.q.value);" style="display: flex; gap: var(--sp-xs); width: 100%;">
-      <input type="text" name="q" placeholder="Search fragrances, notes, or brands..." style="flex: 1; padding: var(--sp-md); border: 1px solid var(--border-strong); border-radius: var(--radius-md); font-family: var(--font-sans); font-size: var(--fs-ui); background: var(--bg-secondary);">
-      <button type="submit" class="dc-collect-btn active" style="padding: var(--sp-md) var(--sp-xl); font-size: var(--fs-ui); border: none; cursor: pointer;">Search</button>
-    </form>
-    <div class="cta-group" style="margin-top: var(--sp-sm);">
-      <a href="/quiz/find-your-scent" class="dc-collect-btn active" style="text-decoration: none; padding: var(--sp-sm) var(--sp-xl);">Take the Quiz</a>
-      <a href="/app.html#compare" class="dc-collect-btn" style="text-decoration: none; padding: var(--sp-sm) var(--sp-xl);">Compare Scents</a>
+    <div class="overlay-wrap">
+      <form onsubmit="event.preventDefault(); window.location.href='/app.html#search=' + encodeURIComponent(document.getElementById('hp-search-input').value);" style="display: flex; gap: var(--sp-xs); width: 100%;">
+        <input type="text" id="hp-search-input" class="input" placeholder="Search fragrances, notes, or brands..." autocomplete="off">
+        <button type="submit" class="btn btn--primary active">Search</button>
+      </form>
+      <div id="hp-search-results" class="overlay-results"></div>
+    </div>
+    
+    <div class="chip-group">
+      <span class="sec-label" style="width: 100%; text-align: center; margin-bottom: var(--sp-xs);">Quick start:</span>
+      <button class="chip chip--interactive" onclick="window.location.href='/app.html#search=woody'">Woody</button>
+      <button class="chip chip--interactive" onclick="window.location.href='/app.html#search=fresh'">Fresh</button>
+      <button class="chip chip--interactive" onclick="window.location.href='/app.html#search=sweet'">Sweet</button>
+      <button class="chip chip--interactive" onclick="window.location.href='/app.html#search=dark'">Dark</button>
     </div>
   </div>
 </div>
@@ -249,101 +187,117 @@
       <div class="sec-label" style="text-align: center; margin-bottom: var(--sp-sm);">Discovery by feeling</div>
       <h2 class="text-title">How do you want to feel?</h2>
     </div>
-    <div class="landing-grid">
-      <a href="/app.html#feel=solar" class="landing-card">
-        <div class="landing-card-head">
-          <span class="picker-fdot" style="background: #F4E76E;"></span>
-          <h3 class="landing-card-title">Solar & Energetic</h3>
+    <div class="grid">
+      <a href="/app.html#feel=solar" class="card card--interactive" style="text-decoration: none; color: inherit;">
+        <div class="landing-card-head" style="display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm);">
+          <span class="dot dot--md" style="background: #F4E76E;"></span>
+          <h3 class="text-ui-strong" style="font-family: var(--font-display); letter-spacing: var(--ls-tight);">Solar & Energetic</h3>
         </div>
-        <p class="landing-card-desc">Bright, uplifting citrus and aquatic notes to start the day with intention.</p>
-        <span class="landing-card-cta">Explore feelings</span>
+        <p class="text-meta">Bright, uplifting citrus and aquatic notes. Perfect for early starts and kinetic energy.</p>
+        <span class="text-link" style="margin-top: var(--sp-md);">Explore solar scents</span>
       </a>
-      <a href="/app.html#feel=grounded" class="landing-card">
-        <div class="landing-card-head">
-          <span class="picker-fdot" style="background: #6E3210;"></span>
-          <h3 class="landing-card-title">Grounded & Intellectual</h3>
+      <a href="/app.html#feel=grounded" class="card card--interactive" style="text-decoration: none; color: inherit;">
+        <div class="landing-card-head" style="display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm);">
+          <span class="dot dot--md" style="background: #6E3210;"></span>
+          <h3 class="text-ui-strong" style="font-family: var(--font-display); letter-spacing: var(--ls-tight);">Grounded & Intellectual</h3>
         </div>
-        <p class="landing-card-desc">Dry woods and roots for a focused, academic, and calm atmosphere.</p>
-        <span class="landing-card-cta">Explore feelings</span>
+        <p class="text-meta">Dry woods, roots, and vetiver. Calm, scholarly, and focused character.</p>
+        <span class="text-link" style="margin-top: var(--sp-md);">Explore grounded scents</span>
       </a>
-      <a href="/app.html#feel=romantic" class="landing-card">
-        <div class="landing-card-head">
-          <span class="picker-fdot" style="background: #902050;"></span>
-          <h3 class="landing-card-title">Romantic & Velvety</h3>
+      <a href="/app.html#feel=romantic" class="card card--interactive" style="text-decoration: none; color: inherit;">
+        <div class="landing-card-head" style="display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm);">
+          <span class="dot dot--md" style="background: #902050;"></span>
+          <h3 class="text-ui-strong" style="font-family: var(--font-display); letter-spacing: var(--ls-tight);">Romantic & Velvety</h3>
         </div>
-        <p class="landing-card-desc">Rich florals and soft musks that evoke intimacy and classical beauty.</p>
-        <span class="landing-card-cta">Explore feelings</span>
+        <p class="text-meta">Rich florals, iris, and soft musks. Classic beauty and intimate presence.</p>
+        <span class="text-link" style="margin-top: var(--sp-md);">Explore romantic scents</span>
       </a>
-      <a href="/app.html#feel=mysterious" class="landing-card">
-        <div class="landing-card-head">
-          <span class="picker-fdot" style="background: #4A1850;"></span>
-          <h3 class="landing-card-title">Dark & Mysterious</h3>
+      <a href="/app.html#feel=mysterious" class="card card--interactive" style="text-decoration: none; color: inherit;">
+        <div class="landing-card-head" style="display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm);">
+          <span class="dot dot--md" style="background: #4A1850;"></span>
+          <h3 class="text-ui-strong" style="font-family: var(--font-display); letter-spacing: var(--ls-tight);">Dark & Mysterious</h3>
         </div>
-        <p class="landing-card-desc">Deep oud, leather, and amber for an evening profile with gravity.</p>
-        <span class="landing-card-cta">Explore feelings</span>
+        <p class="text-meta">Deep oud, leather, and resins. High-gravity profiles for evening declarations.</p>
+        <span class="text-link" style="margin-top: var(--sp-md);">Explore mysterious scents</span>
       </a>
     </div>
   </div>
 
   <!-- Features -->
   <div class="landing-section">
-    <h2 class="text-title landing-section-title">What You Can Do</h2>
-    <div class="landing-grid">
-      <a href="/app.html#journal" class="landing-card" style="border-color:var(--accent-primary); background:var(--bg-secondary);">
-        <div class="landing-card-head">
-          <span class="picker-fdot" style="background: var(--accent-primary);"></span>
-          <h3 class="landing-card-title">Scent Journal</h3>
+    <h2 class="text-title landing-section-title">Fragrance Concierge</h2>
+    <div class="grid">
+      <a href="/quiz/find-your-scent" class="card card--interactive card--secondary" style="text-decoration: none; color: inherit; border-color: var(--accent-primary);">
+        <div class="landing-card-head" style="display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm);">
+          <span class="dot dot--md" style="background: var(--accent-primary);"></span>
+          <h3 class="text-ui-strong" style="font-family: var(--font-display); letter-spacing: var(--ls-tight);">Find Your Next Scent</h3>
         </div>
-        <p class="landing-card-desc">At a retail store? Track exactly where you sprayed a scent and how it evolves on your skin over 1 hour.</p>
-        <span class="landing-card-cta">Start tracking</span>
+        <p class="text-meta">What are you looking for in your next fragrance? Our 5-question consultation matches you with your perfect olfactive profile.</p>
+        <span class="text-link" style="margin-top: var(--sp-md);">Start consultation</span>
       </a>
-      <a href="/app.html#compare" class="landing-card">
-        <div class="landing-card-head">
-          <span class="picker-fdot" style="background: var(--fam-amber);"></span>
-          <h3 class="landing-card-title">Compare Fragrances</h3>
+      <a href="/app.html#compare" class="card card--interactive" style="text-decoration: none; color: inherit;">
+        <div class="landing-card-head" style="display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm);">
+          <span class="dot dot--md" style="background: var(--fam-amber);"></span>
+          <h3 class="text-ui-strong" style="font-family: var(--font-display); letter-spacing: var(--ls-tight);">Compare Fragrances</h3>
         </div>
-        <p class="landing-card-desc">Put any two perfumes head-to-head. See similarity scores, shared notes, radar charts, and layering compatibility.</p>
-        <span class="landing-card-cta">Start comparing</span>
+        <p class="text-meta">Name your favorite scents and see where they overlap. Perfect for finding "vibe" matches based on scents you already love.</p>
+        <span class="text-link" style="margin-top: var(--sp-md);">Start comparing</span>
       </a>
-      <a href="/app.html#notes" class="landing-card">
-        <div class="landing-card-head">
-          <span class="picker-fdot" style="background: var(--fam-woody);"></span>
-          <h3 class="landing-card-title">Browse Notes</h3>
+      <a href="/app.html#notes" class="card card--interactive" style="text-decoration: none; color: inherit;">
+        <div class="landing-card-head" style="display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm);">
+          <span class="dot dot--md" style="background: var(--fam-woody);"></span>
+          <h3 class="text-ui-strong" style="font-family: var(--font-display); letter-spacing: var(--ls-tight);">Browse Notes</h3>
         </div>
-        <p class="landing-card-desc">Explore 177 fragrance notes with sensory profiles. Understand what you smell and why certain notes work together.</p>
-        <span class="landing-card-cta">Explore notes</span>
+        <p class="text-meta">Explore 177 fragrance notes with sensory profiles. Understand what you smell and why certain notes work together.</p>
+        <span class="text-link" style="margin-top: var(--sp-md);">Explore materials</span>
       </a>
-      <a href="/quiz/find-your-scent" class="landing-card">
-        <div class="landing-card-head">
-          <span class="picker-fdot" style="background: var(--fam-floral);"></span>
-          <h3 class="landing-card-title">Find Your Scent</h3>
+      <a href="/app.html#journal" class="card card--interactive" style="text-decoration: none; color: inherit;">
+        <div class="landing-card-head" style="display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-sm);">
+          <span class="dot dot--md" style="background: var(--text-tertiary);"></span>
+          <h3 class="text-ui-strong" style="font-family: var(--font-display); letter-spacing: var(--ls-tight);">Scent Journal</h3>
         </div>
-        <p class="landing-card-desc">Answer 5 quick questions about your style, vibe, and preferences. Our algorithm matches you with your ideal fragrance.</p>
-        <span class="landing-card-cta">Take the quiz</span>
+        <p class="text-meta">Track exactly where you sprayed a scent and how it evolves on your skin over time. Your personal test bench.</p>
+        <span class="text-link" style="margin-top: var(--sp-md);">Track a trial</span>
       </a>
     </div>
   </div>
 
-  <!-- Discovery Promos -->
-  <div class="landing-section" id="discovery" style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-3xl);">
-    <h2 class="text-title landing-section-title">Olfactive Discovery</h2>
-    <p class="dc-description" style="text-align: center; max-width: 500px; margin: calc(-1 * var(--sp-sm)) auto var(--sp-xl);">Not sure where to start? Our data-driven consultations match you with the perfect fragrance.</p>
-    <div class="quiz-promo-grid">
-      <a href="/quiz/best-perfume-for-men-2026" class="quiz-promo-card">
-        <span class="quiz-promo-title">Best Perfume for Men 2026</span>
-        <span class="quiz-promo-desc">4 questions to find your signature scent from woody, fresh, and bold categories.</span>
+  <!-- Consultations -->
+  <div class="landing-section" id="quizzes" style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-3xl);">
+    <h2 class="text-title landing-section-title">Consultations</h2>
+    <p class="text-meta" style="text-align: center; max-width: 500px; margin: calc(-1 * var(--sp-sm)) auto var(--sp-xl);">Data-driven guides to finding your signature profile.</p>
+    <div class="list-view" style="max-width: 600px; margin: 0 auto; border: 1px solid var(--border-standard); border-radius: var(--radius-lg); overflow: hidden;">
+      <a href="/quiz/best-perfume-for-men-2026" class="list-item" style="text-decoration: none; color: inherit;">
+        <div class="list-item-leading" style="font-size: var(--fs-ui);">👔</div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Best Perfume for Men 2026</div>
+          <div class="list-item-sublabel text-meta">Woody, fresh, and bold categories.</div>
+        </div>
+        <span class="list-item-trail"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg></span>
       </a>
-      <a href="/quiz/best-perfume-for-women-2026" class="quiz-promo-card">
-        <span class="quiz-promo-title">Best Perfume for Women 2026</span>
-        <span class="quiz-promo-desc">Discover your ideal fragrance from floral, gourmand, and chypre families.</span>
+      <a href="/quiz/best-perfume-for-women-2026" class="list-item" style="text-decoration: none; color: inherit;">
+        <div class="list-item-leading" style="font-size: var(--fs-ui);">💃</div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Best Perfume for Women 2026</div>
+          <div class="list-item-sublabel text-meta">Floral, gourmand, and chypre families.</div>
+        </div>
+        <span class="list-item-trail"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg></span>
       </a>
-      <a href="/quiz/best-perfume-to-gift-2026" class="quiz-promo-card">
-        <span class="quiz-promo-title">Best Perfume to Gift 2026</span>
-        <span class="quiz-promo-desc">Shopping for someone else? 4 questions to find the perfect fragrance gift.</span>
+      <a href="/quiz/best-perfume-to-gift-2026" class="list-item" style="text-decoration: none; color: inherit;">
+        <div class="list-item-leading" style="font-size: var(--fs-ui);">🎁</div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Best Perfume to Gift 2026</div>
+          <div class="list-item-sublabel text-meta">4 questions to find the perfect gift.</div>
+        </div>
+        <span class="list-item-trail"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg></span>
       </a>
-      <a href="/quiz/find-your-byredo" class="quiz-promo-card">
-        <span class="quiz-promo-title">Find Your Byredo</span>
-        <span class="quiz-promo-desc">3 questions to narrow down Byredo's lineup to your perfect match.</span>
+      <a href="/quiz/find-your-byredo" class="list-item" style="text-decoration: none; color: inherit;">
+        <div class="list-item-leading" style="font-size: var(--fs-ui);">✨</div>
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Find Your Byredo</div>
+          <div class="list-item-sublabel text-meta">Narrow down the cult-favorite lineup.</div>
+        </div>
+        <span class="list-item-trail"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg></span>
       </a>
     </div>
   </div>
@@ -351,30 +305,30 @@
   <!-- FAQ Section -->
   <div class="landing-section" style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-3xl);">
     <h2 class="text-title landing-section-title">Frequently Asked Questions</h2>
-    <div class="faq-list">
-      <details class="faq-item">
-        <summary class="faq-question">How does Scentmap compare fragrances?</summary>
-        <p class="faq-answer">Scentmap uses a multi-factor similarity algorithm. Each comparison scores family compatibility (40%), shared note overlap weighted by tier — base notes count most (30%), sillage proximity (10%), and shared fragrance roles (20%). The result is a 0–100% match score plus a breakdown of shared and unique notes, radar charts, and layering compatibility.</p>
+    <div class="accordion">
+      <details class="accordion-item">
+        <summary class="accordion-trigger">How does Scentmap compare fragrances?</summary>
+        <p class="accordion-content">Scentmap uses a multi-factor similarity algorithm. Each comparison scores family compatibility (40%), shared note overlap weighted by tier — base notes count most (30%), sillage proximity (10%), and shared fragrance roles (20%). The result is a 0–100% match score plus a breakdown of shared and unique notes, radar charts, and layering compatibility.</p>
       </details>
-      <details class="faq-item">
-        <summary class="faq-question">What fragrance brands does Scentmap cover?</summary>
-        <p class="faq-answer">Scentmap currently covers 180+ fragrances from 12 brands: Aesop, Byredo, Chanel, Dior, Diptyque, D.S. &amp; Durga, Fueguia 1833, Le Labo, Loewe, Replica (Maison Margiela), Tom Ford, and Xinu. The database is regularly updated with new releases.</p>
+      <details class="accordion-item">
+        <summary class="accordion-trigger">What fragrance brands does Scentmap cover?</summary>
+        <p class="accordion-content">Scentmap currently covers 180+ fragrances from 12 brands: Aesop, Byredo, Chanel, Dior, Diptyque, D.S. &amp; Durga, Fueguia 1833, Le Labo, Loewe, Replica (Maison Margiela), Tom Ford, and Xinu. The database is regularly updated with new releases.</p>
       </details>
-      <details class="faq-item">
-        <summary class="faq-question">How do the fragrance quizzes work?</summary>
-        <p class="faq-answer">Each quiz asks 3–5 questions about your style, vibe, season preference, and note preferences. Your answers generate weighted tags that are scored against every fragrance in the database. The algorithm considers family match, note profile compatibility, sillage preferences, and role alignment to recommend your top 3 matches.</p>
+      <details class="accordion-item">
+        <summary class="accordion-trigger">How do the fragrance quizzes work?</summary>
+        <p class="accordion-content">Each quiz asks 3–5 questions about your style, vibe, season preference, and note preferences. Your answers generate weighted tags that are scored against every fragrance in the database. The algorithm considers family match, note profile compatibility, sillage preferences, and role alignment to recommend your top 3 matches.</p>
       </details>
-      <details class="faq-item">
-        <summary class="faq-question">What are fragrance notes and why do they matter?</summary>
-        <p class="faq-answer">Fragrance notes are the individual scent ingredients in a perfume, organized into three tiers: top notes (first impression, 15–30 minutes), heart/middle notes (the core character, 1–3 hours), and base notes (the lasting foundation, 4+ hours). Understanding notes helps you predict whether you'll like a fragrance and find similar alternatives.</p>
+      <details class="accordion-item">
+        <summary class="accordion-trigger">What are fragrance notes and why do they matter?</summary>
+        <p class="accordion-content">Fragrance notes are the individual scent ingredients in a perfume, organized into three tiers: top notes (first impression, 15–30 minutes), heart/middle notes (the core character, 1–3 hours), and base notes (the lasting foundation, 4+ hours). Understanding notes helps you predict whether you'll like a fragrance and find similar alternatives.</p>
       </details>
-      <details class="faq-item">
-        <summary class="faq-question">What is sillage and how is it measured?</summary>
-        <p class="faq-answer">Sillage (from the French word for "wake") describes how far a fragrance projects from the wearer. Scentmap rates sillage on a 0–10 scale: 0–3 is intimate (skin scent), 4–6 is moderate (arm's length), and 7–10 is powerful (room-filling). Sillage is different from longevity — a fragrance can last all day but sit close to the skin.</p>
+      <details class="accordion-item">
+        <summary class="accordion-trigger">What is sillage and how is it measured?</summary>
+        <p class="accordion-content">Sillage (from the French word for "wake") describes how far a fragrance projects from the wearer. Scentmap rates sillage on a 0–10 scale: 0–3 is intimate (skin scent), 4–6 is moderate (arm's length), and 7–10 is powerful (room-filling). Sillage is different from longevity — a fragrance can last all day but sit close to the skin.</p>
       </details>
-      <details class="faq-item">
-        <summary class="faq-question">What fragrance families does Scentmap categorize?</summary>
-        <p class="faq-answer">Scentmap organizes fragrances into 9 families: Woody (sandalwood, cedar, vetiver), Floral (rose, jasmine, iris), Amber (labdanum, benzoin, warm resins), Citrus (bergamot, lemon, yuzu), Leather (suede, birch tar, smoky), Oud (agarwood-dominant), Green (galbanum, tea, herbs), Chypre (oakmoss, bergamot, patchouli), and Gourmand (vanilla, caramel, coffee).</p>
+      <details class="accordion-item">
+        <summary class="accordion-trigger">What fragrance families does Scentmap categorize?</summary>
+        <p class="accordion-content">Scentmap organizes fragrances into 9 families: Woody (sandalwood, cedar, vetiver), Floral (rose, jasmine, iris), Amber (labdanum, benzoin, warm resins), Citrus (bergamot, lemon, yuzu), Leather (suede, birch tar, smoky), Oud (agarwood-dominant), Green (galbanum, tea, herbs), Chypre (oakmoss, bergamot, patchouli), and Gourmand (vanilla, caramel, coffee).</p>
       </details>
     </div>
   </div>
@@ -382,30 +336,42 @@
   <!-- Popular Comparisons -->
   <div class="landing-section" style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-3xl);">
     <h2 class="text-title landing-section-title">Popular Comparisons</h2>
-    <div class="landing-cmp-grid">
-      <a href="/compare/bleu-de-chanel/sauvage" class="landing-cmp-card">
-        <span class="landing-cmp-title">Bleu de Chanel vs Sauvage</span>
-        <span class="landing-cmp-label">The eternal debate</span>
+    <div class="list-view" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); border: 1px solid var(--border-standard); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-primary);">
+      <a href="/compare/bleu-de-chanel/sauvage" class="list-item" style="text-decoration: none; color: inherit; border-right: 1px solid var(--border-standard);">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Bleu de Chanel vs Sauvage</div>
+          <div class="list-item-sublabel text-meta">The eternal debate</div>
+        </div>
       </a>
-      <a href="/compare/santal-33/another-13" class="landing-cmp-card">
-        <span class="landing-cmp-title">Santal 33 vs Another 13</span>
-        <span class="landing-cmp-label">Le Labo face-off</span>
+      <a href="/compare/santal-33/another-13" class="list-item" style="text-decoration: none; color: inherit; border-right: 1px solid var(--border-standard);">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Santal 33 vs Another 13</div>
+          <div class="list-item-sublabel text-meta">Le Labo face-off</div>
+        </div>
       </a>
-      <a href="/compare/bal-dafrique/gypsy-water" class="landing-cmp-card">
-        <span class="landing-cmp-title">Bal d'Afrique vs Gypsy Water</span>
-        <span class="landing-cmp-label">Most searched Byredo pair</span>
+      <a href="/compare/bal-dafrique/gypsy-water" class="list-item" style="text-decoration: none; color: inherit; border-right: 1px solid var(--border-standard);">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Bal d'Afrique vs Gypsy Water</div>
+          <div class="list-item-sublabel text-meta">Byredo cult favorites</div>
+        </div>
       </a>
-      <a href="/compare/rose-31/tf-rose-prick" class="landing-cmp-card">
-        <span class="landing-cmp-title">Rose 31 vs Rose Prick</span>
-        <span class="landing-cmp-label">Battle of the roses</span>
+      <a href="/compare/rose-31/tf-rose-prick" class="list-item" style="text-decoration: none; color: inherit; border-right: 1px solid var(--border-standard);">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Rose 31 vs Rose Prick</div>
+          <div class="list-item-sublabel text-meta">Battle of the roses</div>
+        </div>
       </a>
-      <a href="/compare/santal-33/tf-santal-blush" class="landing-cmp-card">
-        <span class="landing-cmp-title">Santal 33 vs Santal Blush</span>
-        <span class="landing-cmp-label">Sandalwood showdown</span>
+      <a href="/compare/santal-33/tf-santal-blush" class="list-item" style="text-decoration: none; color: inherit; border-right: 1px solid var(--border-standard);">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Santal 33 vs Santal Blush</div>
+          <div class="list-item-sublabel text-meta">Sandalwood showdown</div>
+        </div>
       </a>
-      <a href="/compare/gypsy-water/santal-33" class="landing-cmp-card">
-        <span class="landing-cmp-title">Gypsy Water vs Santal 33</span>
-        <span class="landing-cmp-label">Cult classic vs cult classic</span>
+      <a href="/compare/gypsy-water/santal-33" class="list-item" style="text-decoration: none; color: inherit;">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">Gypsy Water vs Santal 33</div>
+          <div class="list-item-sublabel text-meta">Cult classic vs cult classic</div>
+        </div>
       </a>
     </div>
   </div>
@@ -415,11 +381,11 @@
 <div class="landing-footer">
   <div class="landing-wrap">
     <div class="footer-cta">
-      <h2 class="text-title" style="margin-bottom: var(--sp-md);">Ready to explore?</h2>
-      <p class="dc-description" style="margin-bottom: var(--sp-xl); margin-left: auto; margin-right: auto;">180+ fragrances from Byredo, Le Labo, Diptyque, Tom Ford, Chanel, and more.</p>
-      <div class="cta-group">
-        <a href=" /app.html" class="dc-collect-btn active" style="text-decoration: none;">Open the Full Engine</a>
-        <a href="/app.html#catalog" class="dc-collect-btn" style="text-decoration: none;">Browse All Brands</a>
+      <h2 class="text-title" style="margin-bottom: var(--sp-md); text-align: center;">Ready to explore?</h2>
+      <p class="text-meta" style="margin-bottom: var(--sp-xl); text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">180+ fragrances from Byredo, Le Labo, Diptyque, Tom Ford, Chanel, and more.</p>
+      <div class="btn-group btn-group--responsive" style="max-width: 480px; margin: 0 auto;">
+        <a href="/app.html" class="btn btn--primary" style="text-decoration: none;">Launch Fragrance Catalog</a>
+        <a href="/app.html#catalog" class="btn btn--secondary" style="text-decoration: none;">Explore 12 Niche Houses</a>
       </div>
     </div>
 
