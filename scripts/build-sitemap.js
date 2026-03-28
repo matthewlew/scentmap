@@ -12,7 +12,8 @@ const path = require('path');
 
 const SITE = 'https://scentmap.vercel.app';
 const dataDir = path.join(__dirname, '..', 'data');
-const scents = JSON.parse(fs.readFileSync(path.join(dataDir, 'scents-flat.json'), 'utf8'));
+const scentsArr = JSON.parse(fs.readFileSync(path.join(dataDir, 'scents.json'), 'utf8'));
+const scents = Object.fromEntries(scentsArr.map(f => [f.id, f]));
 const popular = JSON.parse(fs.readFileSync(path.join(dataDir, 'popular-comparisons.json'), 'utf8'));
 
 const urls = new Set();

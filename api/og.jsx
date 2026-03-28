@@ -52,8 +52,9 @@ export default async function handler(req) {
 
   if (!_scentsCache) {
     const origin = new URL(req.url).origin;
-    const res = await fetch(new URL('/data/scents-flat.json', origin));
-    _scentsCache = await res.json();
+    const res = await fetch(new URL('/data/scents.json', origin));
+    const arr = await res.json();
+    _scentsCache = Object.fromEntries(arr.map(f => [f.id, f]));
   }
 
   const fa = _scentsCache[idA], fb = _scentsCache[idB];

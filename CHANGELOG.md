@@ -1,6 +1,14 @@
 ## 2026-03-28
 
 ### Changed
+- **Scents API migration complete** — updated `api/fragrance.js`, `api/compare.js`, `api/quiz.js`, `api/og.jsx`, `api/og-quiz.jsx`, `test/fragrance-api.test.js`, `scripts/build-static.js`, `scripts/build-sitemap.js`, and `validate.js` to use `data/scents.json` instead of `data/scents-flat.json`. All 16 tests pass.
+
+### Removed
+- Deleted `data/scents-flat.json`, `data/scents-index.json`, `data/scents/` (12 brand files), `scripts/build-flat-scents.js`, `data/MIGRATION-SCENTS.md`, and `styles/layout.css_temp` — 16 files removed. `data/scents.json` is now the single source of truth for all consumers.
+
+## 2026-03-28
+
+### Changed
 - **Design system token audit** — Added 3 undefined tokens referenced throughout `components.css`: `--g50` (lightest gray, #F0EDE5), `--fs-sm` (13px), `--fs-body-sm` (15px).
 - **Undefined token refs fixed** — `var(--lh-body)` (8 uses) → `var(--lh-relaxed)`; `var(--radius-md)` (2 uses) → `var(--radius-lg)`; `font-size: var(--fs-sm)` (3 uses) → `var(--fs-meta)`; `var(--text-xs, 10px)` → `var(--fs-caption)`.
 - **Duplicate CSS blocks removed** — Merged duplicate definitions for `.stat-grid`/`.stat-card`, `.picker-header`/`.picker-hero`, `.picker-list`/`.picker-row`, `.cmp-frag-card-name-row`, `.cmp-frag-card-brand` (5 duplicate blocks → single canonical definitions).

@@ -1,6 +1,7 @@
 const { readFileSync } = require('fs');
 const { join } = require('path');
-const SCENTS = require('../data/scents-flat.json');
+const SCENTS_ARR = require('../data/scents.json');
+const SCENTS = Object.fromEntries(SCENTS_ARR.map(f => [f.id, f]));
 
 const FAM_COMPAT = {
   woody:   {woody:.7,floral:.8,amber:.9,citrus:.6,leather:.8,oud:.9,green:.6,chypre:.7,gourmand:.5},

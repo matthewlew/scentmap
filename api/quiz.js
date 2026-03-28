@@ -1,6 +1,7 @@
 const { readFileSync } = require('fs');
 const { join } = require('path');
-const SCENTS = require('../data/scents-flat.json');
+const SCENTS_ARR = require('../data/scents.json');
+const SCENTS = Object.fromEntries(SCENTS_ARR.map(f => [f.id, f]));
 
 const SITE = 'https://scentmap.vercel.app';
 

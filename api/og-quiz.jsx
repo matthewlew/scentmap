@@ -30,8 +30,9 @@ export default async function handler(req) {
   if (resultsParam) {
     if (!_scentsCache) {
       const origin = new URL(req.url).origin;
-      const res = await fetch(new URL('/data/scents-flat.json', origin));
-      _scentsCache = await res.json();
+      const res = await fetch(new URL('/data/scents.json', origin));
+      const arr = await res.json();
+      _scentsCache = Object.fromEntries(arr.map(f => [f.id, f]));
     }
     resultFrags = resultsParam.split(',').map(id => _scentsCache[id]).filter(Boolean).slice(0, 3);
   }
