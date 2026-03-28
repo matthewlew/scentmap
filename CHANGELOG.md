@@ -1,3 +1,13 @@
+## 2026-03-28
+
+### Changed
+- **Design system token audit** — Added 3 undefined tokens referenced throughout `components.css`: `--g50` (lightest gray, #F0EDE5), `--fs-sm` (13px), `--fs-body-sm` (15px).
+- **Undefined token refs fixed** — `var(--lh-body)` (8 uses) → `var(--lh-relaxed)`; `var(--radius-md)` (2 uses) → `var(--radius-lg)`; `font-size: var(--fs-sm)` (3 uses) → `var(--fs-meta)`; `var(--text-xs, 10px)` → `var(--fs-caption)`.
+- **Duplicate CSS blocks removed** — Merged duplicate definitions for `.stat-grid`/`.stat-card`, `.picker-header`/`.picker-hero`, `.picker-list`/`.picker-row`, `.cmp-frag-card-name-row`, `.cmp-frag-card-brand` (5 duplicate blocks → single canonical definitions).
+- **Dead CSS removed** — `.dc-eyebrow`, `.dc-brand-btn:hover`, `.cmp-brand-btn`, `.cmp-brand-btn:hover` deleted (no references in HTML or JS).
+- **Catalog empty state** — Migrated `.cat-empty-clear` button → `.btn.btn--secondary` in `app.js`; removed 1-off CSS class from `components.css`.
+- **Won't-fix documented** — `.gap-cta`, `.picker-sec-lbl`, `.frag-sb-label`, `.dc-stat`/`.dc-stats` added to TODOS.md "Design System — Won't Fix" table with rationale.
+
 ## 2026-03-27
 
 ### Changed

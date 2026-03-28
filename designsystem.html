@@ -126,6 +126,18 @@
         <header class="section-group">
           <h1 class="text-heading">Scentmap Design System</h1>
           <p class="text-body" style="color: var(--text-secondary); max-width: 640px;">Generic components, baked-in typography, and token-driven layout.</p>
+          <div class="card card--secondary" style="margin-top: var(--sp-md);">
+            <div class="sec-label">DS Audit — 2026-03-28</div>
+            <div class="text-meta" style="color: var(--text-secondary);">Fixes applied: duplicate CSS blocks collapsed, missing tokens defined, dead classes removed, canonical class migrations.</div>
+            <ul style="font-size: var(--fs-meta); color: var(--text-secondary); padding-left: 1.2em; line-height: var(--lh-relaxed);">
+              <li>Tokens added: <code>--g50</code>, <code>--fs-sm</code>, <code>--fs-body-sm</code></li>
+              <li>Undefined token refs fixed: <code>--lh-body</code> → <code>--lh-relaxed</code>; <code>--radius-md</code> → <code>--radius-lg</code>; <code>var(--text-xs, 10px)</code> → <code>--fs-caption</code>; <code>--fs-sm</code> uses → <code>--fs-meta</code></li>
+              <li>Duplicate blocks removed: <code>.stat-grid/.stat-card</code> (2→1), <code>.picker-header/.picker-hero</code> (2→1), <code>.picker-list/.picker-row</code> (3→1), <code>.cmp-frag-card-name-row</code> (2→1), <code>.cmp-frag-card-brand</code> (2→1)</li>
+              <li>Dead classes removed: <code>.dc-eyebrow</code>, <code>.dc-brand-btn:hover</code>, <code>.cmp-brand-btn</code></li>
+              <li>Migrated: <code>.cat-empty-clear</code> → <code>.btn.btn--secondary</code></li>
+              <li>Won't fix (documented in TODOS.md): <code>.gap-cta</code> (needs <code>.btn--accent</code>), <code>.picker-sec-lbl</code> (different size/padding), <code>.frag-sb-label</code> (layout context)</li>
+            </ul>
+          </div>
         </header>
 
         <!-- TYPOGRAPHY -->

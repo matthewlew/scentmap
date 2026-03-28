@@ -12,14 +12,14 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ## P2 — Active (ship in order)
 
-### TODO: Golden Pairs Carousel — Keyboard Nav
+### [DONE] Golden Pairs Carousel — Keyboard Nav
 **What:** Call `initCarouselKeyNav()` on the `pairWrap` element after `pairSec` is built (~line 1252). Apply `role="list"`, `aria-label`, and roving tabindex — same pattern as Brand Discovery carousel.
 **Why:** A11y obligation — `initCarouselKeyNav()` was never called on Golden Pairs at render time.
 **Effort:** XS (~10 min)
 
 ---
 
-### TODO: Quiz Result Persistence
+### [DONE] Quiz Result Persistence
 **What:** Store quiz results in `sessionStorage` key `sm_quiz_session`; back-navigation returns to results, not catalog.
 **Schema:** `{quizId: string, timestamp: number, answers: string[], results: string[]}`.
 **Why:** UX bug — losing state on back-nav from detail breaks every gift-giver and casual-shopper session.
@@ -27,28 +27,28 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ---
 
-### TODO: DNA Card Profile Bars — ARIA
+### [DONE] DNA Card Profile Bars — ARIA
 **What:** Replace visual-only profile bars on the DNA Card with `<meter>` elements (`min="0"` `max="100"` `value="{n}"` `aria-label="Freshness: {n}%"`).
 **Why:** Screen readers skip the current bars entirely — a11y obligation for a shipped feature.
 **Effort:** XS (~10 min) · **Depends on:** DNA card markup in `app.js`.
 
 ---
 
-### TODO: Carousel Focus Restoration After Detail Close
+### [DONE] Carousel Focus Restoration After Detail Close
 **What:** Push `document.activeElement` when a carousel card triggers `openDesktopDetail()` or a mobile sheet. Pop + restore focus on close. Use a focus stack (`_focusStack = []`) to handle nested carousels.
 **Why:** Keyboard focus jumps to page top after detail close — breaks Nadia's flow every session.
 **Effort:** XS (~15 min) · **Depends on:** `openDesktopDetail()`, `closeDesktopDetail()`, sheet stack.
 
 ---
 
-### TODO: State Bar Collection Count Text
+### [DONE] State Bar Collection Count Text
 **What:** Add "N items" text beside the active state tab (Owned/Wishlist) in the catalog filter bar.
 **Why:** Users want to know collection size without scanning the list.
 **Effort:** XS (~10 min) · **Depends on:** `CAT_STATE_FILTER`, owned/wish counts from `ST{}`.
 
 ---
 
-### TODO: Brand Card Hover Affordance
+### [DONE] Brand Card Hover Affordance
 **What:** Increase brand discovery card hover state from `--border-subtle` to `--border-strong` + light background shift.
 **Why:** Current subtle border change is invisible for imprecise cursor users (Miguel).
 **Effort:** XS (CSS only, ~5 min) · **Depends on:** `.carousel-card` in `components.css`.
@@ -84,10 +84,26 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 ---
 
 
+### TODO: Design System Anti-Pattern Cleanup
+**What:** Audit documented in `panel-demos.html` (Anti-Pattern Audit section). Remove ~120 lines of 1-off CSS and migrate ~20 render sites in `app.js` to canonical components. Key changes:
+- `dc-sim-*` family → `.list-item` slot structure (4 classes removed)
+- `cmp-sug-*` family → `.list-item` + `.list-item-trailing-label` (3 classes removed)
+- `cat-empty-clear` → `.btn.btn--secondary` (delete 20-line duplicate)
+- 5 `.sec-label` duplicates (`.dc-roles-lbl`, `.picker-sec-lbl`, `.frag-sb-label`, `.cmp-stat-label`, `.dc-eyebrow`) → `.sec-label`
+- `picker-row` system → `.list-item` slot structure (~50 lines removed)
+- `cmp-edu-card` / `cmp-edu-quad` → `.card` / `.card--secondary`
+- `brand-n` / `brand-c` → `.text-ui-strong` / `.text-meta`
+- `dc-div` / `dc-desc` / `dc-roles-lbl` → remove/replace with semantics
+- Add 1 new utility: `.section-top-rule` (border-top divider pattern used 6× inline)
+**Why:** ~9 parallel or duplicate component definitions; violates pre-PR checklist (inline styles for appearance, non-system classes). Full mapping with before/after demos in `panel-demos.html`.
+**Effort:** M (~60 min) · **Depends on:** Read `panel-demos.html` Anti-Pattern Audit section before starting.
+
+---
+
 ### TODO: List Item Component Consolidation
 **What:** Migrate all list-item render sites from legacy multi-variant system to canonical slot structure in `DESIGN.md` Option B. Class rename map and ~15–20 render sites documented in previous version of this file (git history: before 2026-03-21 simplification commit).
 **Why:** 4 inconsistent variants, dead inner wrapper, mixin anti-pattern, typography violations.
-**Effort:** M (~45 min) · **Depends on:** `designsystem.html` Option B demo.
+**Effort:** M (~45 min) · **Depends on:** `designsystem.html` Option B demo. **Note:** Overlaps with Anti-Pattern Cleanup above — consider doing both in one pass.
 
 ---
 
@@ -197,6 +213,19 @@ Require designer specs and/or content deliverables before engineering.
 **What:** Replace 14 scent data files (`scents-flat.json`, `scents-index.json`, `data/scents/*.json`) with a single `data/scents.json` flat array. Reduces startup from 16 HTTP requests (waterfall) to 4 (parallel). Full plan: `data/MIGRATION-SCENTS.md`.
 **Why:** Two parallel schemas in sync, 12-file waterfall on every load, `quiz.js` working from a stale copy missing `url` and `story` fields.
 **Effort:** S (~30 min) · **Gate:** Can start any time, independent of P2.
+
+---
+
+## Design System — Won't Fix (Documented)
+
+Items reviewed during design system audit (2026-03-28). Not migrating because:
+
+| Class | Why Not Migrating |
+|---|---|
+| `.gap-cta` | Accent-colored (`--accent-primary` / resin) CTA. Distinct from `.btn--primary` (ink). Migration requires new `.btn--accent` variant — new component, out of scope. |
+| `.picker-sec-lbl` | Section headers inside picker panel. Uses `--fs-meta` (14px) vs `.sec-label`'s `--fs-label` (12px) + picker-specific padding (`0 sp-xl sp-sm`). Visual regression to swap. |
+| `.frag-sb-label` | Sidebar section label. Same semantics as `.sec-label` but in sidebar layout context with different padding. Requires HTML changes to migrate. |
+| `.dc-stat` / `.dc-stats` | Fragrance detail stat grid (pre `.stat-card`). Different layout (2-col) and padding from `.stat-card`. Used in `openFragDetail` render. |
 
 ---
 

@@ -2,7 +2,7 @@ import * as store from './store.js';
 import * as engine from './engine.js';
 
 // Proxy data from store for backward compatibility during transition
-let { ROLES, CAT, CAT_MAP, NI, NI_MAP, BRANDS } = store.getData();
+let { roles: ROLES, catalog: CAT, catalogMap: CAT_MAP, notes: NI, notesMap: NI_MAP, brands: BRANDS } = store.getData();
 let RM = {};
 let BRANDS_MAP = {};
 const { FAM, FAM_ORDER, FAM_COMPAT } = store;
@@ -33,6 +33,17 @@ const ICONS = {
 
 const SW=['','Skin','Skin','Subtle','Subtle','Moderate','Moderate','Strong','Strong','Enveloping','Enormous'];
 const LW=['','Linear','Linear','Simple','Simple','Balanced','Balanced','Layered','Layered','Complex','Deep'];
+const US_POPULAR = ['santal-33', 'bleu-de-chanel', 'bal-dafrique', 'gypsy-water', 'rose-31'];
+
+const getPop = (f) => {
+  let s = 0;
+  if (typeof US_POPULAR !== 'undefined' && US_POPULAR.includes(f.id)) s += 1000;
+  // Data richness proxy for popularity
+  s += (f.description?.length || 0);
+  s += ((f.top?.length || 0) + (f.mid?.length || 0) + (f.base?.length || 0)) * 5;
+  if (f.story) s += 100;
+  return s;
+};
 
 // Analytics stubs
 function trackEvent(name, props) {
@@ -43,6 +54,19 @@ function trackEvent(name, props) {
 function debounce(fn, delay) {
   let timer;
   return function(...args) { clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), delay); };
+}
+
+/* ── Utility: renderMeter ── */
+function renderMeter(val, max, label, color) {
+  const pct = Math.round((val / max) * 100);
+  return `
+    <div class="cmp-score-meter">
+      <div class="cmp-score-meter-track" aria-hidden="true">
+        <div class="cmp-score-meter-fill" style="--pct: ${pct}%; --bg: ${color};"></div>
+      </div>
+      <meter class="sr-only" min="0" max="${max}" value="${val}" aria-label="${label}: ${pct}%"></meter>
+    </div>
+  `;
 }
 
 /* ── Search helpers: diacritic normalization + fuzzy matching ── */
@@ -1013,7 +1037,7 @@ function renderJournalContent(container) {
             <div class="list-item-label text-ui-strong">${frag.name}</div>
             <div class="list-item-sublabel text-meta">${date}</div>
           </div>
-          <div style="display:flex; align-items:center; gap:var(--sp-sm);">
+          <div class="u-flex-row u-align-center u-gap-sm">
             <div class="list-item-sublabel text-meta" style="color:var(--accent-primary); font-weight:700; text-transform:uppercase;">${t.location}</div>
             <div class="text-meta u-text-secondary" style="letter-spacing:1px;">${stars(t.rating || 0)}</div>
           </div>
@@ -1165,11 +1189,7 @@ window.renderSaved = function() {
         ${bars.map(b => `
           <div class="dna-stat">
             <div class="sec-label">${b.l}</div>
-            <div class="cmp-score-meter">
-              <div class="cmp-score-meter-track" role="meter" aria-label="${b.l}: ${Math.round(b.v*100)}%" aria-valuenow="${Math.round(b.v*100)}" aria-valuemin="0" aria-valuemax="100">
-                <div class="cmp-score-meter-fill" style="width:${Math.round(b.v*100)}%; background:${b.c};"></div>
-              </div>
-            </div>
+            ${renderMeter(b.v, 1, b.l, b.c)}
           </div>
         `).join('')}
       </div>
@@ -1198,9 +1218,15 @@ window.renderSaved = function() {
       const pairSec = document.createElement('div');
       pairSec.className = 'section-group';
       pairSec.innerHTML = `<div class="sec-label">Layer Together</div>`;
-      const pairWrap = document.createElement('div'); pairWrap.className = 'carousel';
+      const pairWrap = document.createElement('div'); 
+      pairWrap.className = 'carousel';
+      pairWrap.setAttribute('role', 'list');
+      pairWrap.setAttribute('aria-label', 'Golden Pairs for Layering');
+
       pairs.forEach(p => {
-        const card = document.createElement('div'); card.className = 'carousel-card carousel-card--wide card card--interactive';
+        const card = document.createElement('button'); 
+        card.className = 'carousel-card carousel-card--wide card card--interactive';
+        card.setAttribute('role', 'listitem');
         const famA = FAM[p.a.family] || {}; const famB = FAM[p.b.family] || {};
         const colA = famA.color || 'var(--fam-default)'; const colB = famB.color || 'var(--fam-default)';
         card.innerHTML = `
@@ -1317,7 +1343,11 @@ function isTablet(){return window.innerWidth>=768&&window.innerWidth<1100}
 
 const detailStack=[];
 function openDesktopDetail(renderFn){
-  detailStack.length=0;
+  // If already open, we are REPLACING the stack. Return focus to balance.
+  while(detailStack.length > 0) {
+    _returnFocus();
+    detailStack.pop();
+  }
   detailStack.push(renderFn);
   _renderDeskDetail();
   document.getElementById('col-detail').classList.add('open');
@@ -1578,29 +1608,37 @@ function renderFragDetail(container,frag){
     </div>
     ${(() => {
       const p = computeProfile(frag);
-      const statCard = (label, val, color) => `
-        <div class="stat-card">
-          <div class="stat-card-value">${Math.round(val * 100)}%</div>
-          <div class="stat-card-label">${label}</div>
-          <div class="cmp-score-meter">
-            <div class="cmp-score-meter-track">
-              <div class="cmp-score-meter-fill" style="--pct: ${Math.round(val * 100)}%; --bg: ${color};"></div>
-            </div>
-          </div>
-          <meter class="sr-only" min="0" max="100" value="${Math.round(val * 100)}" aria-label="${label}: ${Math.round(val * 100)}%"></meter>
-        </div>`;
-
       return `
         <div class="stat-grid">
-          ${statCard('Sillage', frag.sillage / 10, 'var(--g400)')}
-          ${statCard('Structure', frag.layering / 10, 'var(--g400)')}
+          <div class="stat-card">
+            <div class="stat-card-value">${Math.round(frag.sillage * 10)}%</div>
+            <div class="stat-card-label">Sillage</div>
+            ${renderMeter(frag.sillage, 10, 'Sillage', 'var(--g400)')}
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-value">${Math.round(frag.layering * 10)}%</div>
+            <div class="stat-card-label">Structure</div>
+            ${renderMeter(frag.layering, 10, 'Structure', 'var(--g400)')}
+          </div>
         </div>
         <div class="detail-section">
           <div class="sec-label">Sensory Profile</div>
           <div class="stat-grid">
-            ${statCard('Fresh', p.freshness, 'var(--fam-citrus)')}
-            ${statCard('Sweet', p.sweetness, 'var(--fam-floral)')}
-            ${statCard('Warm', p.warmth, 'var(--fam-amber)')}
+            <div class="stat-card">
+              <div class="stat-card-value">${Math.round(p.freshness * 100)}%</div>
+              <div class="stat-card-label">Fresh</div>
+              ${renderMeter(p.freshness, 1, 'Fresh', 'var(--fam-citrus)')}
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-value">${Math.round(p.sweetness * 100)}%</div>
+              <div class="stat-card-label">Sweet</div>
+              ${renderMeter(p.sweetness, 1, 'Sweet', 'var(--fam-floral)')}
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-value">${Math.round(p.warmth * 100)}%</div>
+              <div class="stat-card-label">Warm</div>
+              ${renderMeter(p.warmth, 1, 'Warm', 'var(--fam-amber)')}
+            </div>
           </div>
         </div>`;
     })()}
@@ -1968,16 +2006,6 @@ function renderBrandSaveBtn(container, brandData) {
 }
 
 function renderHouseDetail(container,brand){
-  const getPop = (f) => {
-    let s = 0;
-    if (US_POPULAR.includes(f.id)) s += 1000;
-    // Data richness proxy for popularity
-    s += (f.description?.length || 0);
-    s += ((f.top?.length || 0) + (f.mid?.length || 0) + (f.base?.length || 0)) * 5;
-    if (f.story) s += 100;
-    return s;
-  };
-
   const frags = CAT.filter(f => f.brand === brand).sort((a, b) => getPop(b) - getPop(a));
   const houseData = BRANDS_MAP[brand.toLowerCase()];
 
@@ -2416,6 +2444,7 @@ function refreshAfterStateChange(id){
   const brands=[...new Set(CAT.map(f=>f.brand))];
   brands.forEach(b=>updBC(b,b.replace(/\s+/g,'-')));
   updCC();
+  window._updateStateCounts?.();
   if(window.renderSaved)window.renderSaved();
 }
 
@@ -2471,8 +2500,15 @@ function openNotePopup(note,triggerEl){
   if(left<8)left=8;if(top+220>window.innerHeight)top=rect.top-220;if(top<8)top=8;
   popup.style.left=left+'px';popup.style.top=top+'px';
   document.getElementById('note-float-overlay').classList.add('open');
+  _trapFocus(popup);
 }
-function closeNotePopup(){document.getElementById('note-float-overlay').classList.remove('open')}
+function closeNotePopup(){
+  const overlay = document.getElementById('note-float-overlay');
+  if (overlay && overlay.classList.contains('open')) {
+    overlay.classList.remove('open');
+    _returnFocus();
+  }
+}
 document.getElementById('note-float-bg').addEventListener('click',closeNotePopup);
 document.getElementById('nfp-close').addEventListener('click',closeNotePopup);
 
@@ -2698,7 +2734,7 @@ function buildCatalog(roleFilter){
   if(!visibleCat.length){
     const empty=document.createElement('div');empty.className='cat-empty';
     if(search){
-      empty.innerHTML=`<div class="cat-empty-msg">No matches for <strong>"${search}"</strong></div><button class="cat-empty-clear" onclick="document.getElementById('cat-search').value='';document.getElementById('cat-search-clear').classList.remove('visible');buildCatalog()">Clear search</button>`;
+      empty.innerHTML=`<div class="cat-empty-msg">No matches for <strong>"${search}"</strong></div><button class="btn btn--secondary" onclick="document.getElementById('cat-search').value='';document.getElementById('cat-search-clear').classList.remove('visible');buildCatalog()">Clear search</button>`;
     } else {
       empty.innerHTML=`<div class="cat-empty-msg">No fragrances in this view.</div>`;
     }
@@ -2867,8 +2903,9 @@ function initCatalogControls(){
     const nOwned=CAT.filter(f=>isOwned(f.id)).length;
     const nWish=CAT.filter(f=>isWish(f.id)).length;
     allStateBtns.forEach(b=>{
-      if(b.dataset.val==='owned')b.textContent=nOwned?`Owned (${nOwned})`:'Owned';
-      if(b.dataset.val==='wish')b.textContent=nWish?`Wishlist (${nWish})`:'Wishlist';
+      if(b.dataset.val==='owned') b.innerHTML = `Owned ${nOwned ? `<span class="brand-total">${nOwned}</span>` : ''}`;
+      else if(b.dataset.val==='wish') b.innerHTML = `Wishlist ${nWish ? `<span class="brand-total">${nWish}</span>` : ''}`;
+      else b.innerHTML = 'All';
     });
   };
   window._updateStateCounts(); // initial render — buildCatalog ran before this was defined
@@ -3301,7 +3338,7 @@ function renderNotesExplore(container) {
 
     card.innerHTML = `
       <div class="section-group">
-        <div style="display:flex; align-items:center; gap:var(--sp-sm);">
+        <div class="u-flex-row u-align-center u-gap-sm">
           <div class="dot--md" style="background:${fm.color};"></div>
           <div class="text-ui-strong text-title">${fm.label}</div>
         </div>
@@ -3750,40 +3787,31 @@ function go(id,btn){
   
   if (panelId === 'saved') renderSaved();
 
-  // Find and activate the matching global nav link or button
-  if (btn) {
-    btn.classList.add('active');
-  } else {
-    // If no btn provided, try to find one by onclick or href
-    const navLinks = document.querySelectorAll('.global-nav-link, .mbn-btn');
-    navLinks.forEach(l => {
-      const oc = l.getAttribute('onclick') || '';
-      const href = l.getAttribute('href') || '';
-      // Map 'saved' panel to 'You' nav label or #saved hash
-      if (oc.includes(`go('${id}'`) || href.endsWith(`#${id}`) || (id==='saved' && (oc.includes("go('saved'") || href.endsWith('#saved')))) {
-        l.classList.add('active');
-      }
-    });
-  }
+  const navLinks = document.querySelectorAll('.global-nav-link, .mbn-btn');
+  navLinks.forEach(l => {
+    const oc = l.getAttribute('onclick') || '';
+    const href = l.getAttribute('href') || '';
+    if (oc.includes(`go('${id}'`) || href.endsWith(`#${id}`) || (id==='saved' && (oc.includes("go('saved'") || href.endsWith('#saved')))) {
+      l.classList.add('active');
+    }
+  });
+
+  if (btn) btn.classList.add('active');
+
+  const backBtn = document.getElementById('nav-back-btn');
+  if (backBtn && id === 'catalog') backBtn.hidden = true;
 
   closeDesktopDetail();
-  // Sync URL with compare tab state
+  
   if(id==='compare'){
     if(CMP_A&&CMP_B){
       const[a,b]=[CMP_A.id,CMP_B.id].sort();
-      // On localhost (static dev server), use hashes to avoid 404s on refresh for non-rendered comparison pages.
-      // Production (Vercel) handles /compare/a/b paths via serverless functions.
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         const newHash = '#compare/'+a+'/'+b;
         if (window.location.hash !== newHash) history.replaceState(null, '', newHash);
       } else {
         const newPath = '/compare/'+a+'/'+b;
         if (window.location.pathname !== newPath) history.replaceState(null,'',newPath);
-      }
-    } else {
-      // Only redirect away from /compare/ paths if we are explicitly on one and have no comparison active
-      if (window.location.pathname.startsWith('/compare/') && !CMP_A && !CMP_B) {
-        history.replaceState(null,'','/app.html');
       }
     }
   } else if(window.location.pathname.startsWith('/compare/')){
@@ -3794,8 +3822,6 @@ window.go = go;
 window.closeDesktopDetail = closeDesktopDetail;
 
 /* ══ UNIVERSAL SEARCH ═══════════════════════════════════════════════ */
-
-const US_POPULAR = ['santal-33', 'bleu-de-chanel', 'bal-dafrique', 'gypsy-water', 'rose-31'];
 
 let _usContext = null; // null | { context: 'compare', slot: 'a'|'b' }
 let _usScores = null;  // Map<fragId, score> — pre-computed in compare mode
@@ -3812,6 +3838,62 @@ function openUniversalSearch(opts = {}) {
     if (other) {
       _usScores = new Map();
       CAT.forEach(f => _usScores.set(f.id, scoreSimilarity(other, f)));
+    }
+  }
+
+  // Handle Inline (Desktop) vs Modal (Mobile/Global)
+  if (_usContext && (isDesktop() || isTablet())) {
+    const slot = _usContext.slot;
+    const inlineContainer = document.getElementById(`us-inline-${slot}`);
+    if (inlineContainer) {
+      // Close other inline search if any
+      document.querySelectorAll('.us-inline-results').forEach(el => { if (el !== inlineContainer) el.hidden = true; });
+      
+      inlineContainer.innerHTML = `
+        <div class="us-inline-inner card" style="background:var(--bg-primary); box-shadow:var(--shadow-lg); border:1px solid var(--border-standard); margin-top:var(--sp-xs); position:absolute; left:0; right:0; z-index:var(--z-dropdown); overflow:hidden;">
+          <div class="us-input-wrap" style="padding: var(--sp-sm); border-bottom: 1px solid var(--border-subtle);">
+            <input type="text" id="us-inline-input" class="input input--inline u-w-full" placeholder="Search to compare..." autocomplete="off">
+          </div>
+          <div id="us-inline-results-list" class="list-view" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+      `;
+      inlineContainer.hidden = false;
+      const input = inlineContainer.querySelector('#us-inline-input');
+      input.focus();
+      
+      input.addEventListener('input', (e) => {
+        _usHighlight = -1;
+        _renderUsResults(e.target.value.trim(), 'us-inline-results-list');
+      });
+      
+      input.addEventListener('keydown', (e) => {
+        const rows = Array.from(inlineContainer.querySelectorAll('.list-item--search'));
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          _usHighlight = Math.min(_usHighlight + 1, rows.length - 1);
+          _usSetHighlight(_usHighlight, 'us-inline-results-list');
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          _usHighlight = Math.max(_usHighlight - 1, 0);
+          _usSetHighlight(_usHighlight, 'us-inline-results-list');
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (_usHighlight >= 0 && rows[_usHighlight]) _usSelectRow(rows[_usHighlight]);
+        } else if (e.key === 'Escape') {
+          inlineContainer.hidden = true;
+        }
+      });
+      
+      _renderUsResults('', 'us-inline-results-list');
+      
+      const closeListener = (e) => {
+        if (!inlineContainer.contains(e.target) && !e.target.closest(`.cmp-frag-card`)) {
+          inlineContainer.hidden = true;
+          document.removeEventListener('mousedown', closeListener);
+        }
+      };
+      setTimeout(() => document.addEventListener('mousedown', closeListener), 10);
+      return;
     }
   }
 
@@ -3867,31 +3949,25 @@ function _onUsInput(e) {
   _renderUsResults(e.target.value.trim());
 }
 
-function _renderUsResults(query) {
-  const results = document.getElementById('us-results');
+function _renderUsResults(query, resultsId = 'us-results') {
+  const results = document.getElementById(resultsId);
   if (!results) return;
 
-  // Loading state — catalog not ready yet
   if (!CAT || !CAT.length) {
     results.innerHTML = Array.from({length: 5}, () =>
-      `<div class="us-skeleton">
-        <div class="us-skeleton-dot"></div>
-        <div class="us-skeleton-line" style="width:${40 + Math.random()*40|0}%"></div>
-      </div>`
+      `<div class="us-skeleton"><div class="us-skeleton-dot"></div><div class="us-skeleton-line" style="width:${40 + Math.random()*40|0}%"></div></div>`
     ).join('');
     return;
   }
 
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().trim();
 
-  /* ── COMPARE MODE ── */
   if (_usContext) {
+    const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
     let frags = CAT.filter(f => {
-      // Exclude the frag already in the other slot
-      const other = _usContext.slot === 'a' ? CMP_B : CMP_A;
       if (other && f.id === other.id) return false;
       if (!q) return true;
-      return matchFrag(f, normQ(q));
+      return matchFrag(f, q);
     });
 
     if (_usScores) {
@@ -3906,9 +3982,9 @@ function _renderUsResults(query) {
     }
 
     results.innerHTML = frags.slice(0, 10).map((f, i) =>
-      _usFragRowHtml(f, i, _usScores ? `${_usScores.get(f.id)||0}%` : null)
-    ).join('');
-    _wireUsRows(results);
+      _usFragRowHtml(f, i, _usScores ? `${_usScores.get(f.id)||0}%` : null)).join('');
+
+    _wireUsRows(results, resultsId);
     return;
   }
 
@@ -3935,7 +4011,7 @@ function _renderUsResults(query) {
     }
 
     results.innerHTML = html || _usEmptyHtml('');
-    _wireUsRows(results);
+    _wireUsRows(results, resultsId);
     return;
   }
 
@@ -3944,8 +4020,7 @@ function _renderUsResults(query) {
   let rowIdx = 0;
 
   // Fragrances (max 6)
-  const normQStr = normQ(q);
-  const fragMatches = CAT.filter(f => matchFrag(f, normQStr)).slice(0, 6);
+  const fragMatches = CAT.filter(f => matchFrag(f, q)).slice(0, 6);
 
   if (fragMatches.length) {
     html += `<div class="us-section-hdr" role="presentation">Fragrances</div>`;
@@ -3954,7 +4029,7 @@ function _renderUsResults(query) {
 
   // Notes (max 3)
   const noteMatches = (NI || []).filter(n =>
-    n._nameN ? n._nameN.includes(normQStr) : n.name.toLowerCase().includes(q)
+    n._nameN ? n._nameN.includes(q) : n.name.toLowerCase().includes(q)
   ).slice(0, 3);
 
   if (noteMatches.length) {
@@ -3972,7 +4047,7 @@ function _renderUsResults(query) {
     }).join('');
   }
 
-  // Houses (max 2) — BRANDS is array of {id, name, desc, url}
+  // Houses (max 2)
   const brandMatches = (BRANDS || []).filter(b =>
     b.name.toLowerCase().includes(q)
   ).slice(0, 2);
@@ -3992,7 +4067,7 @@ function _renderUsResults(query) {
   }
 
   results.innerHTML = html || _usEmptyHtml(query);
-  _wireUsRows(results);
+  _wireUsRows(results, resultsId);
 
   // Announce result count to screen readers (Braille display / JAWS users)
   const rowCount = results.querySelectorAll('.list-item--search').length;
@@ -4100,14 +4175,17 @@ document.getElementById('universal-search').addEventListener('keydown', function
   }
 });
 
-function _usSetHighlight(idx) {
-  const rows = Array.from(document.querySelectorAll('#us-results .list-item--search'));
+function _usSetHighlight(idx, resultsId = 'us-results') {
+  const container = document.getElementById(resultsId);
+  if (!container) return;
+  const rows = Array.from(container.querySelectorAll('.list-item--search'));
   rows.forEach((r, i) => {
     const active = i === idx;
     r.setAttribute('aria-selected', active ? 'true' : 'false');
     if (active) {
       r.scrollIntoView({ block: 'nearest' });
-      document.getElementById('us-input').setAttribute('aria-activedescendant', r.id || '');
+      const inputId = resultsId === 'us-results' ? 'us-input' : 'us-inline-input';
+      document.getElementById(inputId)?.setAttribute('aria-activedescendant', r.id || '');
     }
   });
 }
@@ -4172,7 +4250,10 @@ window.settingsGo=function(id){
     if(btn)btn.setAttribute('aria-expanded', 'false');
   }
   const backBtn=document.getElementById('nav-back-btn');
-  if(backBtn)backBtn.hidden=false;
+  if(backBtn) {
+    backBtn.hidden=false;
+    backBtn.innerHTML = `${ICONS.chevronLeft} Back`;
+  }
   go(id,null);
 };
 window.navBack=function(){
@@ -4302,38 +4383,31 @@ function _setupChartHaptics(containerSelector, pointSelector) {
 }
 
 function drawCombinedRadarSvg(fa,fb,caAccent,cbAccent){
-  const dims=['freshness','sweetness','warmth','intensity','complexity'];
-  const labels=['Fresh','Sweet','Warm','Intensity','Depth'];
+  const dims=['freshness','sweetness','warmth','intensity','complexity','floralness'];
+  const labels=['Freshness','Sweetness','Warmth','Intensity','Depth','Floral'];
   const pa=computeProfile(fa),pb=computeProfile(fb);
-  const cx=110,cy=110,r=76,n=5;
-  function ap(i,val){const a=(Math.PI*2*i/n)-Math.PI/2;return{x:cx+r*val*Math.cos(a),y:cy+r*val*Math.sin(a)};}
-  const rings=[0.25,0.5,0.75,1.0].map(rv=>{
-    const pts=dims.map((_,i)=>ap(i,rv));
-    return`<polygon points="${pts.map(pt=>`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ')}" fill="none" stroke="#0E0C0912" stroke-width="1"/>`;
+  const cx=110,cy=110,r=85,n=dims.length;
+  const ap=(i,val)=>{const a=(Math.PI*2*i/n)-Math.PI/2;return{x:cx+r*val*Math.cos(a),y:cy+r*val*Math.sin(a)};};
+  const polyA=dims.map((d,i)=>{const pt=ap(i,pa[d]||0);return`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`;}).join(' ');
+  const polyB=dims.map((d,i)=>{const pt=ap(i,pb[d]||0);return`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`;}).join(' ');
+  const rings=[0.25,0.5,0.75,1].map(v=>{
+    const pts=dims.map((_,i)=>ap(i,v)).map(pt=>`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ');
+    return`<polygon points="${pts}" fill="none" stroke="#0E0C0912" stroke-width="0.8"/>`;
   }).join('');
-  const axes=dims.map((_,i)=>{const e=ap(i,1);return`<line x1="${cx}" y1="${cy}" x2="${e.x.toFixed(1)}" y2="${e.y.toFixed(1)}" stroke="#0E0C0912" stroke-width="1"/>`;}).join('');
-  const polyA=dims.map((d,i)=>{const pt=ap(i,pa[d]);return`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`;}).join(' ');
-  const polyB=dims.map((d,i)=>{const pt=ap(i,pb[d]);return`${pt.x.toFixed(1)},${pt.y.toFixed(1)}`;}).join(' ');
-  const dotsA=dims.map((d,i)=>{const pt=ap(i,pa[d]);return`<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3" fill="${caAccent}"/>`;}).join('');
-  const dotsB=dims.map((d,i)=>{const pt=ap(i,pb[d]);return`<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="3" fill="${cbAccent}"/>`;}).join('');
+  const axes=dims.map((_,i)=>{
+    const pt=ap(i,1);return`<line x1="${cx}" y1="${cy}" x2="${pt.x.toFixed(1)}" y2="${pt.y.toFixed(1)}" stroke="#0E0C0912" stroke-width="1"/>`;
+  }).join('');
   const lbls=dims.map((_,i)=>{
-    const lp=ap(i,1.22);const anch=lp.x<cx-4?'end':lp.x>cx+4?'start':'middle';
-    return`<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle" font-size="8.5" fill="#6B635699" font-family="DM Sans,system-ui,sans-serif" font-weight="700" letter-spacing="0.04em">${labels[i]}</text>`;
+    const lp=ap(i,1.15);const anch=lp.x<cx-4?'end':lp.x>cx+4?'start':'middle';
+    return`<text x="${lp.x.toFixed(1)}" y="${lp.y.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle" font-size="9" fill="var(--text-tertiary)" font-family="var(--font-sans)" font-weight="600" letter-spacing="0.02em">${labels[i]}</text>`;
   }).join('');
   return`<div class="cmp-radar-v2">
-    <div class="cmp-radar-v2-label sec-label">Character</div>
-    <div class="cmp-radar-v2-wrap"><svg viewBox="-18 -8 256 246" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="radar-title-${fa.id}-${fb.id}">
-      <title id="radar-title-${fa.id}-${fb.id}">Fragrance profile comparison</title>
-      <desc>Radar chart comparing ${fa.name} (${dims.map((d,i)=>`${labels[i]}: ${Math.round(pa[d]*100)}%`).join(', ')}) versus ${fb.name} (${dims.map((d,i)=>`${labels[i]}: ${Math.round(pb[d]*100)}%`).join(', ')}).</desc>
+    <div class="cmp-radar-v2-wrap"><svg viewBox="-10 -10 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison radar chart">
       ${rings}${axes}
-      <polygon points="${polyA}" fill="${caAccent}20" stroke="${caAccent}" stroke-width="1.8" stroke-linejoin="round"/>
-      <polygon points="${polyB}" fill="${cbAccent}18" stroke="${cbAccent}" stroke-width="1.8" stroke-linejoin="round"/>
-      ${dotsA}${dotsB}${lbls}
+      <polygon points="${polyA}" fill="${caAccent}20" stroke="${caAccent}" stroke-width="2" stroke-linejoin="round"/>
+      <polygon points="${polyB}" fill="${cbAccent}18" stroke="${cbAccent}" stroke-width="2" stroke-linejoin="round"/>
+      ${lbls}
     </svg></div>
-    <div class="cmp-radar-legend">
-      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line" style="background:${caAccent}"></div><span>${fa.name}</span></div>
-      <div class="cmp-radar-legend-item"><div class="cmp-radar-legend-line" style="background:${cbAccent}"></div><span>${fb.name}</span></div>
-    </div>
   </div>`;
 }
 
@@ -4389,7 +4463,7 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
   const pill=(n,isSh=false)=>{
     const ni=NI_MAP[n];
     const cls=`tag text-meta${isSh?' shared':''}`;
-    const savedMark = isNoteSaved(n) ? ' <span style="color:var(--accent);margin-left:2px;font-size:0.85em;text-decoration:none;display:inline-block;">★</span>' : '';
+    const savedMark = isNoteSaved(n) ? ' ★' : '';
     return ni?`<button class="${cls}" data-note="${cap(n)}">${cap(n)}${savedMark}</button>`
              :`<span class="${cls}">${cap(n)}</span>`;
   };
@@ -4406,11 +4480,10 @@ function render3x3Notes(fa,fb,caAccent,cbAccent){
       <div class="cmp-grid-cell cmp-grid-cell-b">${links(onlyB)}</div>
     </div>`;
   }
-  return`<div class="section-group cmp-notes-v2">
-    <div class="sec-label">Notes</div>
+  return`<div class="section-group cmp-notes-v2" style="margin-bottom:0">
     <div class="cmp-grid-col-heads three">
       <div class="cmp-grid-col-head sec-label" style="color:${caAccent}">${shortA}</div>
-      <div class="cmp-grid-col-head sec-label" style="color:var(--g400)">Shared</div>
+      <div class="cmp-grid-col-head sec-label" style="color:var(--text-tertiary)">Shared</div>
       <div class="cmp-grid-col-head sec-label" style="color:${cbAccent}">${shortB}</div>
     </div>
     <div class="cmp-grid-3x3">
@@ -4808,144 +4881,214 @@ function _renderSocialProof(fa, fb) {
 }
 
 function renderCompareResults(fa,fb){
-  const res=document.getElementById('cmp-results');
-  if(!res)return;
+  const scroll = document.getElementById('cmp-stats-scroll');
+  const empty = document.getElementById('cmp-empty-state');
+  if(!scroll) return;
   
-  // NOTE: URL and Card fills are now handled by _selectFragForSlot
   window.haptic?.('success');
-  const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
-  const matchPct=Math.round(scoreSimilarity(fa,fb));
-  const layerPct=scoreLayeringPct(fa,fb);
-  const _baseVerdict=getVerdict(matchPct,layerPct,fa,fb);
-  const _sharedNotes=fa._nAll.filter(n=>fb._nAll.includes(n));
-  const _overlapPct=computeNoteOverlapPercentile(fa,fb);
-  let _proofSuffix='';
-  if(_sharedNotes.length>0&&_overlapPct>50)_proofSuffix=` They share ${_sharedNotes.length} note${_sharedNotes.length>1?'s':''} — more overlap than ${_overlapPct}% of cross-brand pairs.`;
-  else if(_sharedNotes.length===0)_proofSuffix=' Zero shared notes — a completely different scent experience.';
-  const verdict=_baseVerdict+_proofSuffix;
-  const matchColor=matchPct>=60?ca.accent:matchPct>=30?'var(--g700)':'var(--g500)';
-  const layerColor=layerPct>=60?cb.accent:layerPct>=30?'var(--g700)':'var(--g500)';
+  if (empty) empty.style.display = 'none';
 
-  res.innerHTML=`
-    <div id="cmp-sticky-bar">
-      <div class="cmp-sticky-slot" data-slot-sticky="a">
-        <span class="dot" style="background:${ca.accent}"></span>
-        <span class="cmp-sticky-name">${fa.name}</span>
+  const metrics = _getComparisonMetrics(fa, fb);
+  
+  // Render all metrics as continuous scrolling blocks in middle rail
+  scroll.innerHTML = '';
+  Object.values(metrics).forEach(m => {
+    const block = document.createElement('div');
+    block.className = 'cmp-stat-block';
+    block.id = `cmp-block-${m.id}`;
+    block.innerHTML = `
+      <div class="cmp-stat-header">
+        <div class="u-text-secondary" style="display:flex; align-items:center;">${m.icon}</div>
+        <div class="cmp-stat-label">${m.label}</div>
+        <div class="cmp-stat-value">${m.value}</div>
       </div>
-      <span class="cmp-sticky-vs">VS</span>
-      <div class="cmp-sticky-slot" data-slot-sticky="b" style="justify-content:flex-end">
-        <span class="cmp-sticky-name">${fb.name}</span>
-        <span class="dot" style="background:${cb.accent}"></span>
+      <div class="cmp-block-content">
+        ${m.render()}
       </div>
-    </div>
-
-    <div class="sr-only" role="region" aria-label="Comparison summary">
-      ${fa.name} versus ${fb.name}: ${matchPct}% similarity, ${layerPct}% layering compatibility.
-      ${fa.name} sillage ${fa.sillage}/10, depth ${fa.layering}/10.
-      ${fb.name} sillage ${fb.sillage}/10, depth ${fb.layering}/10.
-    </div>
-    <div class="cmp-pair-card">
-      <button class="cmp-pair-card-left" id="cmp-score-character">
-        <div class="cmp-pair-card-radar">${drawCombinedRadarSvg(fa,fb,ca.accentHex,cb.accentHex)}</div>
-        <div class="cmp-char-metrics">
-          <div class="cmp-char-metric-row">
-            <div class="cmp-char-metric-track left"><div class="cmp-char-metric-fill" style="width:${fa.sillage*10}%;background:${ca.accent}"></div></div>
-            <span class="cmp-char-metric-lbl">Sillage</span>
-            <div class="cmp-char-metric-track right"><div class="cmp-char-metric-fill" style="width:${fb.sillage*10}%;background:${cb.accent}"></div></div>
-          </div>
-          <div class="cmp-char-metric-row">
-            <div class="cmp-char-metric-track left"><div class="cmp-char-metric-fill" style="width:${fa.layering*10}%;background:${ca.accent}"></div></div>
-            <span class="cmp-char-metric-lbl">Depth</span>
-            <div class="cmp-char-metric-track right"><div class="cmp-char-metric-fill" style="width:${fb.layering*10}%;background:${cb.accent}"></div></div>
-          </div>
-        </div>
-      </button>
-      <div class="cmp-pair-card-right">
-        <div class="cmp-pair-card-verdict">${verdict}</div>
-        <div class="cmp-pair-card-scores">
-          <button class="cmp-score-card" id="cmp-score-match">
-            <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
-            <div class="cmp-score-label">Similarity</div>
-            <div class="cmp-score-meter">
-              <div class="cmp-score-meter-track">
-                <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
-                <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,matchPct))}%;background:${matchColor}"></div>
-                <div class="cmp-score-meter-tick" style="left:25%"></div>
-                <div class="cmp-score-meter-tick" style="left:50%"></div>
-                <div class="cmp-score-meter-tick" style="left:75%"></div>
-              </div>
-            </div>
-            <div class="cmp-score-range">${_simLabel(matchPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
-          </button>
-          <button class="cmp-score-card" id="cmp-score-layer">
-            <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
-            <div class="cmp-score-label">Pairing</div>
-            <div class="cmp-score-meter">
-              <div class="cmp-score-meter-track">
-                <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
-                <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,layerPct))}%;background:${layerColor}"></div>
-                <div class="cmp-score-meter-tick" style="left:25%"></div>
-                <div class="cmp-score-meter-tick" style="left:50%"></div>
-                <div class="cmp-score-meter-tick" style="left:75%"></div>
-              </div>
-            </div>
-            <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    ${render3x3Notes(fa,fb,ca.accent,cb.accent)}
-    ${renderSuggestionsV2(fa,fb,ca,cb)}
-  `;
-
-  // Wire score taps
-  document.getElementById('cmp-score-character')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openCharacterEdu(fa, fb, ca, cb);
-  });
-
-  document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openScoreEdu('match',matchPct,layerPct,fa,fb);
-  });
-  document.getElementById('cmp-score-layer')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openScoreEdu('layer',matchPct,layerPct,fa,fb);
-  });
-
-  // Wire note pill taps in notes grid
-  res.querySelectorAll('.cmp-notes-v2 button[data-note]').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();const note=NI_MAP[btn.dataset.note.toLowerCase()];if(note)openDetail(c=>renderNoteDetail(c,note),note.name);});
-  });
-
-  // Wire suggestion taps
-  res.querySelectorAll('button[data-fid]').forEach(card=>{
-    card.addEventListener('click',()=>{
-      window.haptic?.('light');
-      const f=CAT_MAP[card.dataset.fid];
-      if(f)openFragDetail(f);
+    `;
+    scroll.appendChild(block);
+    
+    // Wire up events for specific blocks
+    if (m.id === 'sensory') {
+      _setupChartHaptics(`#cmp-block-sensory svg`, 'circle');
+    }
+    block.querySelectorAll('button[data-note], .tag[data-note]').forEach(btn => {
+      const noteName = btn.dataset.note;
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const note = NI_MAP[noteName.toLowerCase()];
+        if (note) openDetail(c => renderNoteDetail(c, note), note.name);
+      });
+      btn.addEventListener('mouseenter', () => {
+        document.querySelectorAll(`[data-note="${noteName}"]`).forEach(el => el.classList.add('highlight'));
+      });
+      btn.addEventListener('mouseleave', () => {
+        document.querySelectorAll(`[data-note="${noteName}"]`).forEach(el => el.classList.remove('highlight'));
+      });
     });
   });
 
-  // Wire sticky slot taps — pass el as sourceEl so picker anchors below it
-  res.querySelectorAll('[data-slot-sticky]').forEach(el=>{
-    el.addEventListener('click',()=>openUniversalSearch({context:'compare',slot:el.dataset.slotSticky}));
-  });
+  // Render Discovery Rails on sides
+  renderDiscoveryRail(fa, 'a');
+  renderDiscoveryRail(fb, 'b');
 
-  // Start sticky scroll observer
-  _initStickyScroll();
+  // Ensure cards are filled
+  _fillCard('a', fa);
+  _fillCard('b', fb);
 
-  // Initialize chart haptics
-  setTimeout(() => {
-    _setupChartHaptics('.cmp-radar-v2-wrap svg', 'circle');
-  }, 100);
-
-  // Save this pair
-  // (saved comparisons removed)
+  // Hide old results container if it exists
+  const oldRes = document.getElementById('cmp-results');
+  if (oldRes) oldRes.style.display = 'none';
 }
+
+function _getComparisonMetrics(fa, fb) {
+  const ca = getCmpFam(fa.family), cb = getCmpFam(fb.family);
+  const matchPct = Math.round(scoreSimilarity(fa, fb));
+  const layerPct = scoreLayeringPct(fa, fb);
+  const overlapPct = computeNoteOverlapPercentile(fa, fb);
+  const sharedNotes = fa._nAll.filter(n => fb._nAll.includes(n));
+  
+  const baseVerdict = getVerdict(matchPct, layerPct, fa, fb);
+  let proofSuffix = '';
+  if (sharedNotes.length > 0 && overlapPct > 50) {
+    proofSuffix = ` Shared notes: ${sharedNotes.length} (${overlapPct}% overlap).`;
+  } else if (sharedNotes.length === 0) {
+    proofSuffix = ' Zero shared notes.';
+  }
+
+  return {
+    match: {
+      id: 'match',
+      label: 'Similarity',
+      value: `${matchPct}%`,
+      icon: ICONS.compare,
+      render: () => `
+        <div class="section-group">
+          <p class="text-body u-font-serif" style="margin-bottom:var(--sp-md)">${baseVerdict + proofSuffix}</p>
+          ${renderMeter(matchPct, 100, '', matchPct >= 60 ? ca.accent : 'var(--accent-primary)')}
+        </div>
+      `
+    },
+    performance: {
+      id: 'performance',
+      label: 'Performance',
+      value: 'Sillage & Structure',
+      icon: ICONS.megaphone,
+      render: () => `
+        <div class="cmp-perf-b2b-container">
+          ${_renderPerfB2BRow(fa, ca.accent)}
+          ${_renderPerfB2BRow(fb, cb.accent)}
+        </div>
+        <div class="u-flex-row u-justify-between text-caption u-text-secondary" style="margin-top: var(--sp-sm); padding: 0 var(--sp-xs);">
+          <span>← Structure (Complexity)</span>
+          <span>Sillage (Projection) →</span>
+        </div>
+      `
+    },
+    sensory: {
+      id: 'sensory',
+      label: 'Character',
+      value: `${layerPct}% Pairing`,
+      icon: ICONS.discovery,
+      render: () => `
+        <div class="section-group u-text-center">
+          <div class="cmp-radar-v2-wrap" style="margin: var(--sp-md) auto;">
+            ${drawCombinedRadarSvg(fa, fb, ca.accentHex, cb.accentHex)}
+          </div>
+          <div style="border-top: 1px solid var(--border-standard); padding-top: var(--sp-md); margin-top: var(--sp-md);">
+            <p class="text-body u-font-serif u-text-left">${baseVerdict}</p>
+          </div>
+        </div>
+      `
+    },
+    notes: {
+      id: 'notes',
+      label: 'Notes',
+      value: `${sharedNotes.length} Shared`,
+      icon: ICONS.notes,
+      render: () => `
+        <div class="section-group">
+          ${render3x3Notes(fa, fb, ca.accent, cb.accent)}
+        </div>
+      `
+    }
+  };
+}
+
+function _renderPerfB2BRow(frag, color) {
+  // val 1-10
+  const sillagePct = (frag.sillage / 10) * 100;
+  const structurePct = (frag.layering / 10) * 100;
+  
+  return `
+    <div class="cmp-perf-row">
+      <div class="cmp-perf-name text-meta">${frag.name}</div>
+      <div class="cmp-perf-viz">
+        <div class="cmp-perf-bar-wrap left">
+          <div class="cmp-perf-bar-fill" style="width: ${structurePct}%; background: ${color}"></div>
+        </div>
+        <div class="cmp-perf-center"></div>
+        <div class="cmp-perf-bar-wrap right">
+          <div class="cmp-perf-bar-fill" style="width: ${sillagePct}%; background: ${color}"></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderDiscoveryRail(frag, slot) {
+  const rail = document.getElementById(`cmp-discovery-${slot}`);
+  if (!rail) return;
+
+  // Context: More from Brand
+  const brandFrags = CAT.filter(f => f.brand === frag.brand && f.id !== frag.id)
+                        .sort((a,b) => getPop(b) - getPop(a))
+                        .slice(0, 5);
+  
+  // Context: Truly Similar (using similarity score)
+  const similarFrags = CAT.filter(f => f.id !== frag.id && f.brand !== frag.brand)
+                        .map(f => ({ f, score: scoreSimilarity(frag, f) }))
+                        .sort((a, b) => b.score - a.score)
+                        .slice(0, 8);
+
+  rail.innerHTML = `
+    <div class="sec-label">More from ${frag.brand}</div>
+    <div class="list-view">
+      ${brandFrags.length ? brandFrags.map(f => _renderDiscoveryItem(f, slot, frag)).join('') : '<p class="text-meta" style="opacity:0.5; padding: var(--sp-sm);">No other scents from this house</p>'}
+    </div>
+    
+    <div class="sec-label" style="margin-top: var(--sp-xl);">Similar Alternatives</div>
+    <div class="list-view">
+      ${similarFrags.map(({f}) => _renderDiscoveryItem(f, slot, frag)).join('')}
+    </div>
+  `;
+
+  // Wire up clicks for discovery items
+  rail.querySelectorAll('.cmp-disc-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const f = CAT_MAP[el.dataset.id];
+      if (f) _selectFragForSlot(slot, f);
+    });
+  });
+}
+
+function _renderDiscoveryItem(f, slot, sourceFrag) {
+  const dot = getCmpFam(f.family).accent;
+  const reason = getSwapReason(sourceFrag, f);
+  return `
+    <div class="list-item cmp-disc-item" data-id="${f.id}" style="cursor: pointer;">
+      <div class="list-item-leading">
+        <div class="dot" style="background: ${dot}"></div>
+      </div>
+      <div class="list-item-body">
+        <div class="list-item-label text-ui-strong u-ellipsis">${f.name}</div>
+        <div class="list-item-sublabel text-meta">${f.brand}</div>
+        <div class="list-item-detail text-caption u-text-secondary">${reason}</div>
+      </div>
+    </div>
+  `;
+}
+
 
 
 function _selectFragForSlot(slot,frag){
@@ -4977,22 +5120,44 @@ function _fillCard(slot,frag){
   card.classList.add('filled');
   card.setAttribute('aria-label',`${frag.name} by ${frag.brand} — tap to change`);
   card.innerHTML=`
-    <div class="chip cmp-frag-card-fam-chip" style="background:${fc.accent}">${famLabel}</div>
+    <div class="chip cmp-frag-card-fam-chip" style="background:${fc.accent}; color: var(--bg-primary);">${famLabel}</div>
     <div class="cmp-frag-card-name-row">
       <div class="cmp-frag-card-name">${frag.name}</div>
       <span class="cmp-card-chevron" aria-hidden="true">${ICONS.sortUpDown}</span>
     </div>
-    <div class="text-meta" style="padding:0 var(--sp-md) var(--sp-sm)">${frag.brand}</div>`;
+    <div class="text-meta cmp-frag-card-brand">${frag.brand}</div>`;
   const meta=document.getElementById(`cmp-meta-${slot}`);
   if(meta){
+    const topNotes = frag.top.slice(0,3).map(n => `<span class="tag text-meta" data-note="${n}">${n}</span>`).join('');
     meta.innerHTML=`
-      ${frag.description?`<p class="cmp-card-meta-desc">${frag.description}</p>`:''}
-      <div style="display:flex;gap:var(--sp-md);padding-top:var(--sp-xs);">
-        <button class="text-link cmp-brand-btn" aria-label="View ${frag.brand} house">${frag.brand}</button>
-        <button class="text-link cmp-card-detail-btn" aria-label="View details for ${frag.name}">Details ↗</button>
+      ${frag.description?`<p class="text-meta cmp-card-meta-desc">${frag.description}</p>`:''}
+      <div class="cmp-card-meta-notes">
+        ${topNotes}
+      </div>
+      <div class="cmp-card-meta-actions">
+        <button class="cmp-card-detail-btn" aria-label="View details for ${frag.name}">Details ↗</button>
       </div>`;
-    meta.querySelector('.cmp-brand-btn')?.addEventListener('click',()=>openHouseDetail(frag.brand));
-    meta.querySelector('.cmp-card-detail-btn')?.addEventListener('click',()=>openFragDetail(frag));
+    
+    // Wire up note interaction for cards
+    meta.querySelectorAll('[data-note]').forEach(el => {
+      const noteName = el.dataset.note;
+      el.addEventListener('mouseenter', () => {
+        document.querySelectorAll(`[data-note="${noteName}"]`).forEach(n => n.classList.add('highlight'));
+      });
+      el.addEventListener('mouseleave', () => {
+        document.querySelectorAll(`[data-note="${noteName}"]`).forEach(n => n.classList.remove('highlight'));
+      });
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const note = NI_MAP[noteName.toLowerCase()];
+        if (note) openDetail(c => renderNoteDetail(c, note), note.name);
+      });
+    });
+
+    meta.querySelector('.cmp-card-detail-btn')?.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      openFragDetail(frag);
+    });
   }
 }
 
@@ -5056,31 +5221,55 @@ function _setupDragAndDropDropzones() {
 /* ── Saved Comparisons ── */
 
 function initCompare(){
-  ['a','b'].forEach(slot=>{
-    const card=document.getElementById(`cmp-card-${slot}`);
-    if(card){
-      card.addEventListener('click',()=>openUniversalSearch({context:'compare',slot}));
-      card.addEventListener('keydown',e=>{
-        if(e.key==='Enter'||e.key===' '){
-          e.preventDefault();
-          openUniversalSearch({context:'compare',slot});
-        }
-      });
-    }
-  });
+  const cardA = document.getElementById('cmp-card-a');
+  const cardB = document.getElementById('cmp-card-b');
+  
+  if (cardA) {
+    cardA.addEventListener('click', () => openUniversalSearch({context:'compare', slot:'a'}));
+  }
+  if (cardB) {
+    cardB.addEventListener('click', () => openUniversalSearch({context:'compare', slot:'b'}));
+  }
+
   _setupDragAndDropDropzones();
 }
 window.clearCmpSlot=function(slot){
   window.haptic?.('nudge')||window.haptic?.('selection');
   if(slot==='a')CMP_A=null;else CMP_B=null;
   _resetCard(slot);
-  const res=document.getElementById('cmp-results');
-  if(res)res.innerHTML='';
-  if(window._cmpStickyObs)window._cmpStickyObs.disconnect();
-  // Reset URL when a compare slot is cleared
-  if(window.location.pathname.startsWith('/compare/'))history.replaceState(null,'','/');
-  // Show popular comparisons when both slots are empty
-  if(!CMP_A && !CMP_B) renderPopularComparisons();
+  
+  // Show empty state if both cleared, or refresh if one remains
+  if (!CMP_A && !CMP_B) {
+    const scroll = document.getElementById('cmp-stats-scroll');
+    const empty = document.getElementById('cmp-empty-state');
+    if (scroll) scroll.innerHTML = '';
+    if (empty) {
+      empty.style.display = 'flex';
+      scroll.appendChild(empty);
+    }
+    // Clear discovery rails
+    const ra = document.getElementById('cmp-discovery-a');
+    const rb = document.getElementById('cmp-discovery-b');
+    if (ra) ra.innerHTML = '';
+    if (rb) rb.innerHTML = '';
+  } else if (CMP_A || CMP_B) {
+    // One remains — we don't have comparison results to show
+    const scroll = document.getElementById('cmp-stats-scroll');
+    if (scroll) scroll.innerHTML = '<div class="cmp-empty-state"><p>Select another fragrance to compare</p></div>';
+    
+    // Refresh discovery for the remaining one
+    if (CMP_A) renderDiscoveryRail(CMP_A, 'a');
+    if (CMP_B) renderDiscoveryRail(CMP_B, 'b');
+    
+    // Clear the rail of the empty slot
+    const emptySlot = !CMP_A ? 'a' : 'b';
+    const er = document.getElementById(`cmp-discovery-${emptySlot}`);
+    if (er) er.innerHTML = '';
+  }
+
+  if (window.location.pathname.startsWith('/compare/')) {
+    history.replaceState(null, '', '/app.html');
+  }
 };
 
 /* ══ KEYBOARD & FOCUS MANAGEMENT ═══════════════════════════════════ */
@@ -5095,30 +5284,10 @@ function _trapFocus(el){
 }
 function _returnFocus(){
   const lastFocusedEl=_focusStack.pop();
-  if(lastFocusedEl&&typeof lastFocusedEl.focus==='function'){
+  if(lastFocusedEl && document.body.contains(lastFocusedEl) && typeof lastFocusedEl.focus === 'function'){
     lastFocusedEl.focus();
   }
 }
-
-// Augment open/close functions to manage focus
-const _origOpenNotePopup=window.openNoteFloat;
-const _origCloseNotePopup=closeNotePopup;
-
-// Patch note popup to trap focus and return on close
-(function(){
-  const nfpClose=document.getElementById('nfp-close');
-  const orig=nfpClose._closeHandler;
-  // Override closeNotePopup to also return focus
-  const _origClose=closeNotePopup;
-  window.closeNotePopup=function(){
-    _origClose();
-    _returnFocus();
-  };
-  nfpClose.removeEventListener('click',_origClose);
-  nfpClose.addEventListener('click',window.closeNotePopup);
-  document.getElementById('note-float-bg').removeEventListener('click',_origClose);
-  document.getElementById('note-float-bg').addEventListener('click',window.closeNotePopup);
-})();
 
 // Dev utility: search tests (run in console with runSearchTests())
 function runSearchTests(){
