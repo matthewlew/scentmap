@@ -4641,11 +4641,11 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
       </div>
       <div class="sec-label" style="margin-top:var(--sp-xl);margin-bottom:var(--sp-sm)">Similarity Math</div>
       <div class="list-view">
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Match</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/40</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Shared Notes</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/30</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Match</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/10</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Role Overlap</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(roleScore)}/20</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Similarity Score</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/100</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Match</div><div class="list-item-sublabel text-meta">Based on compatibility between ${(FAM[fa.family]||{}).label||fa.family} and ${(FAM[fb.family]||{}).label||fb.family}</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/40</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Shared Notes</div><div class="list-item-sublabel text-meta">They share ${shTop} top, ${shMid} mid, and ${shBase} base notes</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/30</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Match</div><div class="list-item-sublabel text-meta">A projection difference of ${sillDiff} out of 10</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/10</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Role Overlap</div><div class="list-item-sublabel text-meta">They share ${shRoles} usage contexts</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(roleScore)}/20</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Similarity Score</div><div class="list-item-sublabel text-meta">Combined score before normalization</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/100</span></div></div>
       </div>
     `;
   } else {
@@ -4664,10 +4664,10 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
       </div>
       <div class="sec-label" style="margin-top:var(--sp-xl);margin-bottom:var(--sp-sm)">Layering Math</div>
       <div class="list-view">
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Compatibility</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/35</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Contrast</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/20</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Note Independence</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/20</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Layering Score</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/75</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Compatibility</div><div class="list-item-sublabel text-meta">How well ${(FAM[fa.family]||{}).label||fa.family} blends with ${(FAM[fb.family]||{}).label||fb.family}</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/35</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Contrast</div><div class="list-item-sublabel text-meta">A projection difference of ${sillDiff} out of 10 creates depth</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/20</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Note Independence</div><div class="list-item-sublabel text-meta">They share ${shared} note${shared !== 1 ? 's' : ''}, preventing muddiness</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/20</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Layering Score</div><div class="list-item-sublabel text-meta">Combined score before normalization</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/75</span></div></div>
       </div>
     `;
   }
