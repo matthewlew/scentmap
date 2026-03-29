@@ -2903,8 +2903,8 @@ function initCatalogControls(){
         tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-pressed', 'false'); });
         tab.classList.add('active');
         tab.setAttribute('aria-pressed', 'true');
-        currentNoteTier = tab.dataset.tier;
-        buildNotes(currentNoteQuery, currentNoteTier);
+        notesTierMode = tab.dataset.tier;
+        buildNotes(notesSearchQuery, notesTierMode);
       });
     });
   }
@@ -3341,7 +3341,14 @@ function renderNotesExplore(container) {
       
       // Update navigation buttons
       document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === 'search');
+        const isActive = btn.dataset.tab === 'search';
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+      document.querySelectorAll('#notes-tier-bar .tab').forEach(btn => {
+        const isActive = btn.dataset.tier === 'all';
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
       
       // Show search UI
@@ -3525,7 +3532,9 @@ function switchNotesTab(tab) {
   _notesActiveTab = tab;
   // Update button active states
   document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === tab);
+    const isActive = btn.dataset.tab === tab;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
   // Show/hide search controls
   const searchWrap = document.getElementById('notes-search-wrap');
@@ -3545,6 +3554,14 @@ function switchNotesTab(tab) {
     notesTierMode = 'saved';
     if (searchWrap) searchWrap.style.display = '';
     if (tierWrap) tierWrap.style.display = 'none';
+  }
+
+  if (notesTierMode === 'all') {
+    document.querySelectorAll('#notes-tier-bar .tab').forEach(btn => {
+      const isActive = btn.dataset.tier === 'all';
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
   }
   buildNotes();
 }
