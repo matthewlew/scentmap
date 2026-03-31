@@ -3525,7 +3525,9 @@ function switchNotesTab(tab) {
   _notesActiveTab = tab;
   // Update button active states
   document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === tab);
+    const isActive = btn.dataset.tab === tab;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
   // Show/hide search controls
   const searchWrap = document.getElementById('notes-search-wrap');
@@ -3546,6 +3548,13 @@ function switchNotesTab(tab) {
     if (searchWrap) searchWrap.style.display = '';
     if (tierWrap) tierWrap.style.display = 'none';
   }
+
+  // Sync tier tab visual and ARIA state to match notesTierMode
+  document.querySelectorAll('#notes-tier-bar .tab').forEach(t => {
+    const isActive = t.dataset.tier === notesTierMode;
+    t.classList.toggle('active', isActive);
+    t.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
   buildNotes();
 }
 
