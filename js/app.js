@@ -4816,6 +4816,10 @@ function renderCompareResults(fa,fb){
   const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
   const matchPct=Math.round(scoreSimilarity(fa,fb));
   const layerPct=scoreLayeringPct(fa,fb);
+
+  const simDetails = engine.getSimilarityDetails(fa, fb, store.FAM_COMPAT);
+  const layDetails = engine.getLayeringDetails(fa, fb, store.FAM_COMPAT);
+
   const _baseVerdict=getVerdict(matchPct,layerPct,fa,fb);
   const _sharedNotes=fa._nAll.filter(n=>fb._nAll.includes(n));
   const _overlapPct=computeNoteOverlapPercentile(fa,fb);
@@ -4863,7 +4867,7 @@ function renderCompareResults(fa,fb){
       <div class="cmp-pair-card-right">
         <div class="cmp-pair-card-verdict">${verdict}</div>
         <div class="cmp-pair-card-scores">
-          <button class="cmp-score-card" id="cmp-score-match">
+          <div class="cmp-score-card">
             <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
             <div class="cmp-score-label">Similarity</div>
             <div class="cmp-score-meter">
@@ -4876,9 +4880,16 @@ function renderCompareResults(fa,fb){
               </div>
             </div>
             <div class="cmp-score-range">${_simLabel(matchPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
-          </button>
-          <button class="cmp-score-card" id="cmp-score-layer">
+
+            <div class="list-view" style="margin-top:var(--sp-md); text-align:left; border:none;">
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;"><div class="list-item-body"><div class="list-item-sublabel text-meta">Family Match</div></div><div class="list-item-trail"><span class="list-item-sublabel text-meta">${Math.round(simDetails.famScore)}/40</span></div></div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;"><div class="list-item-body"><div class="list-item-sublabel text-meta">Shared Notes</div></div><div class="list-item-trail"><span class="list-item-sublabel text-meta">${Math.round(simDetails.noteScore)}/30</span></div></div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;"><div class="list-item-body"><div class="list-item-sublabel text-meta">Sillage Match</div></div><div class="list-item-trail"><span class="list-item-sublabel text-meta">${Math.round(simDetails.sillScore)}/10</span></div></div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;"><div class="list-item-body"><div class="list-item-sublabel text-meta">Role Overlap</div></div><div class="list-item-trail"><span class="list-item-sublabel text-meta">${Math.round(simDetails.roleScore)}/20</span></div></div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;"><div class="list-item-body"><div class="list-item-sublabel text-meta" style="color:var(--text-primary)">Raw Score</div></div><div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-primary)">${Math.round(simDetails.total)}/100</span></div></div>
+            </div>
+          </div>
+          <div class="cmp-score-card">
             <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
             <div class="cmp-score-label">Pairing</div>
             <div class="cmp-score-meter">
@@ -4891,8 +4902,14 @@ function renderCompareResults(fa,fb){
               </div>
             </div>
             <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
-          </button>
+
+            <div class="list-view" style="margin-top:var(--sp-md); text-align:left; border:none;">
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;"><div class="list-item-body"><div class="list-item-sublabel text-meta">Family Compat</div></div><div class="list-item-trail"><span class="list-item-sublabel text-meta">${Math.round(layDetails.famScore)}/35</span></div></div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;"><div class="list-item-body"><div class="list-item-sublabel text-meta">Sillage Contrast</div></div><div class="list-item-trail"><span class="list-item-sublabel text-meta">${Math.round(layDetails.sillScore)}/20</span></div></div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;"><div class="list-item-body"><div class="list-item-sublabel text-meta">Note Independence</div></div><div class="list-item-trail"><span class="list-item-sublabel text-meta">${Math.round(layDetails.noteScore)}/20</span></div></div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;"><div class="list-item-body"><div class="list-item-sublabel text-meta" style="color:var(--text-primary)">Raw Score</div></div><div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-primary)">${Math.round(layDetails.total)}/75</span></div></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -4905,15 +4922,6 @@ function renderCompareResults(fa,fb){
   document.getElementById('cmp-score-character')?.addEventListener('click',()=>{
     window.haptic?.('selection');
     openCharacterEdu(fa, fb, ca, cb);
-  });
-
-  document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openScoreEdu('match',matchPct,layerPct,fa,fb);
-  });
-  document.getElementById('cmp-score-layer')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openScoreEdu('layer',matchPct,layerPct,fa,fb);
   });
 
   // Wire note pill taps in notes grid
