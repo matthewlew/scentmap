@@ -4623,16 +4623,7 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
   ];
   let bodyContent = '';
   if (isMatch) {
-    const famScore=(FAM_COMPAT[fa.family]?.[fb.family]??0.5)*40;
-    const shBase=fa._nBase.filter(n=>fb._nBase.includes(n)).length;
-    const shMid=fa._nMid.filter(n=>fb._nMid.includes(n)).length;
-    const shTop=fa._nTop.filter(n=>fb._nTop.includes(n)).length;
-    const noteScore=Math.min(30,shBase*5+shMid*3+shTop*2);
-    const sillDiff=Math.abs(fa.sillage-fb.sillage);
-    const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
-    const shRoles=fa.roles.filter(r=>fb.roles.includes(r)).length;
-    const roleScore=Math.min(20,shRoles*7);
-    const rawScore = famScore + noteScore + sillScore + roleScore;
+    const { famScore, noteScore, sillScore, roleScore, total } = engine.getSimilarityDetails(fa, fb, store.FAM_COMPAT);
 
     bodyContent = `
       <p class="text-body">How is this score calculated, and what does it mean for this pair?</p>
@@ -4641,21 +4632,15 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
       </div>
       <div class="sec-label" style="margin-top:var(--sp-xl);margin-bottom:var(--sp-sm)">Similarity Math</div>
       <div class="list-view">
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Match</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/40</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Shared Notes</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/30</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Match</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/10</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Role Overlap</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(roleScore)}/20</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Similarity Score</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/100</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Match</div><div class="list-item-sublabel text-meta">${Math.round(famScore)}/40</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Shared Notes</div><div class="list-item-sublabel text-meta">${Math.round(noteScore)}/30</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Match</div><div class="list-item-sublabel text-meta">${Math.round(sillScore)}/10</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Role Overlap</div><div class="list-item-sublabel text-meta">${Math.round(roleScore)}/20</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(roleScore)}</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Similarity Score</div><div class="list-item-sublabel text-meta">${total}/100</div></div><div class="list-item-trail"><span class="text-ui-strong">${total}</span></div></div>
       </div>
     `;
   } else {
-    const famComp=FAM_COMPAT[fa.family]?.[fb.family]??0.5;
-    const famScore=famComp*35;
-    const sillDiff=Math.abs(fa.sillage-fb.sillage);
-    const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
-    const shared=fa._nAll.filter(n=>fb._nAll.includes(n)).length;
-    const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
-    const rawScore = famScore + sillScore + noteScore;
+    const { famScore, sillScore, noteScore, total } = engine.getLayeringDetails(fa, fb, store.FAM_COMPAT);
 
     bodyContent = `
       <p class="text-body">How is this score calculated, and what does it mean for this pair?</p>
@@ -4664,10 +4649,10 @@ function openScoreEdu(type,matchPct,layerPct,fa,fb){
       </div>
       <div class="sec-label" style="margin-top:var(--sp-xl);margin-bottom:var(--sp-sm)">Layering Math</div>
       <div class="list-view">
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Compatibility</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/35</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Contrast</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/20</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Note Independence</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/20</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Layering Score</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/75</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Compatibility</div><div class="list-item-sublabel text-meta">${Math.round(famScore)}/35</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Contrast</div><div class="list-item-sublabel text-meta">${Math.round(sillScore)}/20</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Note Independence</div><div class="list-item-sublabel text-meta">${Math.round(noteScore)}/20</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}</span></div></div>
+        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Layering Score</div><div class="list-item-sublabel text-meta">${total}/75</div></div><div class="list-item-trail"><span class="text-ui-strong">${total}</span></div></div>
       </div>
     `;
   }
