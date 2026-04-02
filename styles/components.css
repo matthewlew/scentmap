@@ -3985,6 +3985,17 @@ mark.note-match {
   justify-content: space-between;
   align-items: center;
   user-select: none;
+  transition: background var(--dur-fast) var(--ease-spring);
+}
+
+.accordion-trigger:hover {
+  background: var(--bg-secondary);
+}
+
+.accordion-trigger:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 var(--focus-ring-offset) var(--bg-primary),
+              inset 0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
 }
 
 .accordion-trigger::-webkit-details-marker {
