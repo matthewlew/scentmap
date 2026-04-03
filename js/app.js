@@ -3341,7 +3341,9 @@ function renderNotesExplore(container) {
       
       // Update navigation buttons
       document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === 'search');
+        const isActive = btn.dataset.tab === 'search';
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
       
       // Show search UI
@@ -3525,7 +3527,9 @@ function switchNotesTab(tab) {
   _notesActiveTab = tab;
   // Update button active states
   document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === tab);
+    const isActive = btn.dataset.tab === tab;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
   // Show/hide search controls
   const searchWrap = document.getElementById('notes-search-wrap');
