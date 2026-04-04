@@ -13,7 +13,9 @@
 .shell {
   display: flex;
   flex-direction: column;
+  height: 100vh;
   min-height: 100vh;
+  overflow: hidden;
   margin: 0 auto;
 }
 
@@ -25,7 +27,7 @@
 .content-row {
   flex: 1;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   min-height: 0;
 }
 
@@ -33,12 +35,17 @@
 .col-main {
   flex: 1;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
 .col-main-content {
   padding: 0; /* padding managed by individual panels */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* RIGHT: detail panel — desktop: in-flow third column */
@@ -101,15 +108,27 @@
 /* Panels that need their own padding (no sidebar/shell wrapper) */
 #p-saved,
 #p-changelog,
-#p-compare,
 #p-notes {
   padding: var(--sp-xl);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+#p-compare {
+  padding: 0;
+  flex: 1;
+  min-height: 0;
+  /* overflow set per breakpoint: hidden on desktop (rails scroll), auto on mobile (panel scrolls) */
 }
 
 /* Special case: Catalog panel padding is managed inside the shell */
 #p-catalog {
   padding: 0;
   gap: 0;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* ── SHEET STACK (Mobile) ── */
@@ -527,12 +546,17 @@
 
 .u-text-center { text-align: center; }
 .u-justify-center { justify-content: center; }
+.u-justify-between { justify-content: space-between; }
 .u-align-center { align-items: center; }
 .u-w-full { width: 100%; }
+.u-mt-auto { margin-top: auto; }
+.u-mt-0 { margin-top: 0; }
+.u-p-0 { padding: 0; }
 .u-flex-column { display: flex; flex-direction: column; }
 .u-flex-row { display: flex; flex-direction: row; }
 .u-flex-wrap { flex-wrap: wrap; }
 .u-gap-0 { gap: 0; }
+.u-gap-xs { gap: var(--sp-xs); }
 .u-gap-sm { gap: var(--sp-sm); }
 .u-gap-md { gap: var(--sp-md); }
 .u-gap-xl { gap: var(--sp-xl); }

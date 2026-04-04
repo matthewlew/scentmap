@@ -1,3 +1,60 @@
+## 2026-04-04
+
+### Added
+- **Multi-fragrance compare matrix** — Replaced 2-frag 3-rail compare with an Audubon-style CSS Grid matrix that scales to 2–5 fragrances. Desktop: sticky left sidebar of attribute rows (Family, Top/Heart/Base Notes, Sillage, Structure, Sensory Profile, Roles) + horizontally scrollable fragrance columns. Ghost "+ Add" column always visible up to 5 slots; disappears when all 5 are filled.
+- **`CMP_SLOTS[]` state array** — Primary compare state is now an array of up to 5 frags. `CMP_A`/`CMP_B` kept as compat aliases reflecting `CMP_SLOTS[0]`/`[1]`. New setters: `setCmpSlot(idx, frag)`, `removeCmpSlot(idx)`, `openCmpSlot(idx)`, `addCmpSlot()`.
+- **Per-column mini-radar** — 80×80px SVG shape per fragrance column (freshness/sweetness/warmth/intensity/complexity). Shape-only, no axis labels. `role="img"` with `aria-label` enumerating all 5 axis values for screen readers.
+- **Shared Notes callout** — Below-matrix section showing notes appearing in 2+ selected fragrances as a tag cloud with `×N` count chips. Hidden when no notes are shared.
+- **Best Pairings** — Below-matrix section computing all C(n,2) pairwise scores, filtering ≥60, showing top 2 with a 1-sentence narrative summary. Hidden entirely when no pair reaches 60%.
+- **Mobile card carousel** — Separate `_renderMobileCards()` renders full-content snap cards on mobile (`scroll-snap-type: x mandatory`). Matrix grid hidden; carousel shown. Navigation dots and keyboard arrow key support via `initCarouselKeyNav`.
+- **N-slot URL schema** — `/compare/id1/id2/id3` (up to 5 IDs). Backward-compatible with all existing `/compare/id1/id2` URLs. URL updates on slot add/remove.
+- **`_simCache` memoization** — `scoreSimilarity()` now reads/writes a keyed cache (`id1:id2` alphabetical) so repeated pairwise calls during matrix render are O(1) after the first computation.
+
+### Changed
+- **3-rail compare layout retired** — `.cmp-layout-3col`, SVG Venn diagram, narrative/verdict text, back-to-back performance bars, overlaid 2-polygon radar, and discovery rails removed. All replaced by the matrix.
+- **Universal search** — Updated `openUniversalSearch` to accept `{slotIdx: N}` for matrix slot targeting (alongside legacy `{slot: 'a'|'b'}`). Results exclude all currently-filled slots.
+- **5 static compare pages updated** — All `/compare/*/index.html` files updated to the new matrix panel HTML structure.
+
+## 2026-04-03 (continued)
+
+### Fixed
+- **Compare content cut-off** — `height: calc(100vh - var(--col-nav-h))` and `overflow: hidden` moved from the base `.cmp-layout-3col` style to the `@media (min-width: 1100px)` block only. Non-desktop viewports no longer get a fixed-height container that truncates content; the parent panel scrolls instead.
+- **Compare card brand label centered** — Added `text-align: left` to the brand `div` in `_fillCard()` so the brand name is flush-left under the fragrance title.
+- **Compare card title inline override** — Removed `style="font-size: var(--fs-title);"` from the title div in `_fillCard()`. Title now uses `.text-ui-strong` as defined in the design system, no inline override.
+- **"Best For" chips using 1-off component** — Swapped `.frag-ctx-chip` / `.frag-ctx-chips` for the design system `.tag.text-meta` class. Removed custom `.frag-ctx-chips`, `.frag-ctx-chip`, `.frag-ctx-chip--neutral` CSS.
+- **Narrative abbreviated names** — `getCompareNarrative()` was using `fa.name.split(' ')[0]` for short names. Changed to full `fa.name` / `fb.name` so fragrance names are never truncated in the decision text.
+
+### Changed
+- `.tabs.tab--xs .tab` — Added cascade rule so when `tab--xs` is applied to a `.tabs` container (rather than individual buttons), child `.tab` elements correctly inherit the compact size (`fs-caption`, micro padding, no min-height).
+
+## 2026-04-03
+
+### Fixed
+- **Compare stat block card styling** — Added `.cmp-stat-block`, `.cmp-stat-header`, `.cmp-stat-label`, `.cmp-stat-value`, `.cmp-block-content` CSS. Previously these classes had zero styles so each block in the middle rail rendered as unstyled floating content.
+- **Notes grid no gridlines** — Added `.cmp-notes-grid`, `.cmp-notes-row`, `.cmp-notes-col--shared` CSS and updated `render3x3Notes()` to emit these classes. Row dividers and shared-column borders now visible.
+- **Discovery rail edge bleed** — `.cmp-rail-discovery` desktop padding changed from `var(--sp-sm) 0` to `var(--sp-sm) var(--sp-lg)` so content is no longer flush against the container edge.
+- **Compare panel cut-off height** — `.shell` changed to `height: 100vh; overflow: hidden` to create a fixed scroll context. Added `flex: 1; min-height: 0` to `.col-main`, `col-main-content`, `#p-compare`, `#p-catalog`. On mobile `#p-compare.active` now has `overflow-y: auto` so the full scrollable compare stack is reachable.
+- **Compare panel bleeding into Notes page** — Removed `display: flex` from `#p-compare` in the mobile `@media (max-width: 767px)` block. The selector is now `#p-compare.active` so the panel only activates when actually navigated to.
+
+### Changed
+- `content-row` flex alignment changed from `flex-start` to `stretch` so `.col-main` fills the full viewport height.
+- `.cmp-stats-scroll` mobile override now uses `overflow: visible` (parent panel scrolls); desktop keeps `overflow-y: auto` inside the capped 3-rail layout.
+
+## 2026-04-02
+
+### Fixed
+- **Static compare pages** — All 5 `/compare/*/index.html` files updated to the new 3-rail layout (`cmp-layout-3col`). Pages now load and render compare results correctly. Previously broken since the 3-rail migration.
+
+### Added
+- **Compare Stories** — `getCompareNarrative(a, b)` produces 2–3 decision sentences rendered above the compare metrics in `#cmp-stats-scroll`. Answers "what makes A different from B" using profile deltas from `computeProfile()`. Template-based, not LLM.
+- **"Best For" context chips** — `getBestFor(frag)` derives Season / Occasion / Projection chips from existing `family` and `sillage` data. Rendered as `.frag-ctx-chips` row in the detail panel, below More Like This.
+- **More Like This elevation** — Section moved above the stat grid in `renderFragDetail()`. Swap-reason labels reformatted as `"Name — distinguishing trait"` sentence style.
+- **Compare CTA reframe** — Empty slot button copy updated to "Trying to decide? Compare [name]".
+
+### Changed
+- `renderFragDetail()` restructured: More Like This + Best For chips now appear before the stat grid / sensory profile / scent journey sections.
+- Added `.frag-ctx-chips`, `.frag-ctx-chip`, `.frag-ctx-chip--neutral`, `.cmp-decision-framing` to `styles/components.css`.
+
 ## 2026-03-28
 
 ### Changed

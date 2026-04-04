@@ -14,6 +14,16 @@
     font-size: 17px;
   }
 
+  /* Desktop compare: matrix fills panel height */
+  #p-compare {
+    overflow-y: auto;
+    max-height: calc(100vh - var(--col-nav-h));
+  }
+  /* Wider sidebar on desktop for better label fit */
+  #cmp-matrix {
+    grid-template-columns: 180px repeat(var(--cmp-col-count, 2), minmax(220px, 1fr)) var(--cmp-add-width, 140px);
+  }
+
   .cmp-pair-card {
     display: flex;
     flex-direction: row;
@@ -57,6 +67,15 @@
 
   .detail-scrim {
     display: none !important;
+  }
+
+  /* Comparison Canvas */
+  #p-compare {
+    height: calc(100vh - var(--col-nav-h));
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
   }
 
 }
@@ -161,6 +180,64 @@
 
   .detail-scrim {
     display: none !important;
+  }
+
+  /* Comparison Mobile results area — scrollable stack */
+  /* NOTE: display is controlled by .panel / .panel.active — do NOT set display here */
+  #p-compare.active {
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+  }
+
+  .cmp-layout-3col {
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cmp-rail--side {
+    margin-bottom: 0;
+    display: contents; /* Allow children to be reordered by cmp-layout-3col */
+  }
+
+  .cmp-rail-header {
+    order: 1;
+    padding: var(--sp-lg);
+    border-bottom: 1px solid var(--border-standard);
+  }
+
+  #cmp-rail-a .cmp-rail-header { order: 1; }
+  #cmp-rail-b .cmp-rail-header { order: 2; }
+
+  .cmp-rail--middle {
+    order: 3;
+    padding: var(--sp-lg);
+    background: var(--bg-secondary);
+  }
+
+  .cmp-rail-discovery {
+    order: 4;
+    padding: var(--sp-xl) var(--sp-lg);
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-standard);
+  }
+
+  #cmp-rail-a .cmp-rail-discovery { order: 4; }
+  #cmp-rail-b .cmp-rail-discovery { order: 5; }
+
+  .cmp-stats-scroll {
+    padding: var(--sp-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-md);
+    overflow: visible; /* parent #p-compare scrolls on mobile */
+  }
+
+  .cmp-stat-block {
+    /* no extra padding — .cmp-block-content already has padding */
   }
 
   /* Tap targets (44px minimum) */
@@ -483,4 +560,9 @@
     border-left: none;
     border-right: none;
   }
+
+  /* Compare matrix: hide grid on mobile, show card carousel */
+  #cmp-matrix { display: none; }
+  .cmp-mobile-cards { display: flex; }
+  #cmp-below-matrix { padding: var(--sp-md); }
 }

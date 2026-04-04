@@ -1,12 +1,42 @@
 # Scentmap — TODOs
 
-Updated 2026-03-21.
+Updated 2026-03-28.
 
 **Product direction:** Help people discover fragrances that complete their wardrobe.
 
 **Scope rule:** No new features until P2 ships. Ideas go in the Ideas section, not here.
 
 Read `DESIGN.md` and `CLAUDE.md` before starting any task.
+
+---
+
+## Bugs — Fix Before Shipping (found by /qa 2026-03-28)
+
+### [DONE] BUG [CRITICAL]: Static compare pages show empty results
+**Fixed:** Updated all 5 `compare/*/index.html` files to the new 3-rail layout (2026-04-02).
+
+---
+
+### BUG [MEDIUM]: Quiz result persistence not working in standalone quiz pages
+**What:** Completing a quiz at `/quiz/*/` does not save results to `sessionStorage`. Back-navigating from results returns to quiz start instead of results. All standalone quizzes show the same 5 hardcoded questions from `renderGlobalQuiz` instead of their quiz-config.json questions (scent-archetype, astro-scent, best-perfume-* all show "What are we looking for today?").
+**Why:** `renderStandaloneQuiz()` routes all non-Byredo quizzes to `renderGlobalQuiz()` which: (1) doesn't save sessionStorage, (2) ignores quiz-config.json questions, (3) doesn't update URL with `?results=...`. `quiz.js` (which has the full persistence + archetype implementation) is never imported by `app.js` or loaded by quiz pages.
+**Fix:** Import `quiz.js` in `app.js` and update `renderStandaloneQuiz` to route archetype/astro/standard quiz slugs to `renderQuiz(container, config, catalog)` from `quiz.js`.
+**Effort:** S (~25 min)
+
+---
+
+### BUG [MEDIUM]: CHANGELOG.md 404 on every page load + missing from sync script
+**What:** `app.js` fetches `/CHANGELOG.md` on init but it's not in the CLAUDE.md sync script. Also `app.html` is not in the sync script (copy it manually or changelog panel won't show and new compare layout won't be visible in dev).
+**Fix:** Add to CLAUDE.md sync: `cp .../CHANGELOG.md /tmp/scentmap-copy/CHANGELOG.md` and `cp .../app.html /tmp/scentmap-copy/app.html`
+**Effort:** XS (~2 min)
+
+---
+
+### BUG [MEDIUM]: URL double-hash on compare slot card click
+**What:** After popular pair auto-loads (URL = `/compare/X/Y`), clicking a slot card to change the fragrance results in URL `/compare/X/Y#compare/X/Y`.
+**Why:** `handleInitialNavigation` is being triggered by the hashchange event or by slot card interaction, appending the compare hash on top of an already-path-based URL.
+**Fix:** Investigate and remove duplicate hash append in compare slot click handler.
+**Effort:** XS (~10 min)
 
 ---
 
@@ -85,7 +115,7 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 
 ### TODO: Design System Anti-Pattern Cleanup
-**What:** Audit documented in `panel-demos.html` (Anti-Pattern Audit section). Remove ~120 lines of 1-off CSS and migrate ~20 render sites in `app.js` to canonical components. Key changes:
+**What:** Audit documented in `playground.html`. Remove ~120 lines of 1-off CSS and migrate ~20 render sites in `app.js` to canonical components. Key changes:
 - `dc-sim-*` family → `.list-item` slot structure (4 classes removed)
 - `cmp-sug-*` family → `.list-item` + `.list-item-trailing-label` (3 classes removed)
 - `cat-empty-clear` → `.btn.btn--secondary` (delete 20-line duplicate)
@@ -95,8 +125,17 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 - `brand-n` / `brand-c` → `.text-ui-strong` / `.text-meta`
 - `dc-div` / `dc-desc` / `dc-roles-lbl` → remove/replace with semantics
 - Add 1 new utility: `.section-top-rule` (border-top divider pattern used 6× inline)
-**Why:** ~9 parallel or duplicate component definitions; violates pre-PR checklist (inline styles for appearance, non-system classes). Full mapping with before/after demos in `panel-demos.html`.
-**Effort:** M (~60 min) · **Depends on:** Read `panel-demos.html` Anti-Pattern Audit section before starting.
+- **New (2026-03-29):** `.house-detail-name/.house-detail-count` → `.dc-name/.dc-brand` (exact duplicate, delete both CSS classes, update 2 render sites)
+- **New (2026-03-29):** `.us-section-hdr` → `.sec-label` + padding inline style (delete class, update 4 render sites in search modal)
+- **New (2026-03-29):** `.dc-notes-caveat` → `.text-caption` (delete class, update 1 render site)
+- **New (2026-03-29):** `.cmp-edu-wrap border-radius: 16px` → `var(--radius-xl)` (1-line fix)
+- **New (2026-03-29):** `.brand-count-chip margin-left: 3px` → `var(--sp-micro)` or remove
+- **New (2026-03-29):** `.frag-picker-wrap` + `.note-popup` hardcoded box-shadow → `var(--shadow-lg)`
+- **New (2026-03-29):** All `.dot` render sites: `style="background:${color}"` → `style="--fam-bg:${color}"` (~15 sites)
+- **New (2026-03-29):** Note location inline styles (app.js:1011,1041) → add `.text-label--accent` utility to design-system.css
+- **New (2026-03-29):** `style="font-size: 64px"` compare score → add `.text-display` utility + `--fs-display` token
+**Why:** ~9 parallel or duplicate component definitions; violates pre-PR checklist (inline styles for appearance, non-system classes). Full audit with before/after demos in `playground.html`.
+**Effort:** M (~75 min) · **Depends on:** Read `playground.html` before starting.
 
 ---
 
@@ -181,6 +220,13 @@ Read `DESIGN.md` and `CLAUDE.md` before starting any task.
 
 ### Phase 4 — Monetization (after trust layer ships)
 
+#### TODO: Occasion-Based Gift Quiz Filtering
+**What:** Add Season/Occasion filter questions to gift quiz flow. "Is this for day or evening wear?" → filters toward sillage range. "What season?" → filters toward family. Derived from `getBestFor()` chip logic (shipped 2026-04-02).
+**Why:** Closes the loop from Best For chips to quiz decisioning. Gifters get contextually relevant results without knowing fragrance vocabulary.
+**Effort:** M · **Depends on:** Gift quiz shipping + Best For chips (shipped)
+
+---
+
 #### TODO: Sampling Partnership Infrastructure
 **What:** Add `sampleUrl` field to fragrance JSON (manual curation). "Try a sample" link on detail pages — clearly labeled external. Candidate services: MicroPerfumes, DecantX, Luckyscent.
 **Why:** Aligned incentives: $4 samples, not $300 bottles. No financial incentive to recommend one fragrance over another.
@@ -226,6 +272,27 @@ Items reviewed during design system audit (2026-03-28). Not migrating because:
 | `.picker-sec-lbl` | Section headers inside picker panel. Uses `--fs-meta` (14px) vs `.sec-label`'s `--fs-label` (12px) + picker-specific padding (`0 sp-xl sp-sm`). Visual regression to swap. |
 | `.frag-sb-label` | Sidebar section label. Same semantics as `.sec-label` but in sidebar layout context with different padding. Requires HTML changes to migrate. |
 | `.dc-stat` / `.dc-stats` | Fragrance detail stat grid (pre `.stat-card`). Different layout (2-col) and padding from `.stat-card`. Used in `openFragDetail` render. |
+
+---
+
+### TODO: Compare — `getCompareNarrative()` short-form for Best Pairings
+**What:** `getCompareNarrative(fa, fb)` generates 2–3 sentences. Best Pairings currently uses `split('. ')[0]` to get the first sentence. Refactor `getCompareNarrative` to also expose a dedicated 1-sentence path: prioritize the decision-closer (sillage/choose-between sentence) which is the most useful for layering decisions.
+**Why:** The full narrative's structure (freshness → warmth → sillage) means the first sentence is sometimes a character description, not the gifter-facing decision summary. P2 polish.
+**Effort:** S (~20 min) · **Depends on:** `getCompareNarrative()` in `app.js`, `renderBestPairings()`.
+
+---
+
+### TODO: Compare — Mini-radar hover/focus tooltip for axis labels
+**What:** The 80×80 mini-radar shows shape only (no axis labels). The `aria-label` on the SVG provides values for screen readers. Add a CSS `title` tooltip or JS popover showing axis names+values on hover/focus for sighted users with low vision.
+**Why:** Closes the accessibility gap for low-vision sighted users (Nadia persona) who can read the shape but want label confirmation. P2 polish.
+**Effort:** S (~20 min) · **Depends on:** `_drawMiniRadarSvg()` in `app.js`, `.cmp-m-mini-radar` CSS.
+
+---
+
+### TODO: Compare — `_simCache` memoization review
+**What:** `_simCache` is wired up in `scoreSimilarity()` keyed by `id1:id2`. Verify it correctly prevents duplicate computation across the `C(n,2)` pairwise calls in `renderBestPairings()` and any other callers. Add a dev-mode counter to measure hit rate during a 5-frag compare session.
+**Why:** Performance hygiene — ensures the cache is actually working and not silently bypassed. P2 verification.
+**Effort:** XS (~10 min) · **Depends on:** `scoreSimilarity()`, `_simCache` in `app.js`.
 
 ---
 
