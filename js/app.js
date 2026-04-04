@@ -90,9 +90,9 @@ window.getGoldenPairs = function(owned) {
   const pairs = [];
   for (let i = 0; i < owned.length; i++) {
     for (let j = i + 1; j < owned.length; j++) {
-      const score = scoreLayeringPair(owned[i], owned[j]);
-      if (score >= 50) { 
-        pairs.push({ a: owned[i], b: owned[j], score: Math.round(score / 75 * 100) });
+      const details = engine.getLayeringDetails(owned[i], owned[j], store.FAM_COMPAT);
+      if (details.total >= 50) {
+        pairs.push({ a: owned[i], b: owned[j], score: Math.round(details.total / 75 * 100), details });
       }
     }
   }
@@ -1222,7 +1222,20 @@ window.renderSaved = function() {
               <div class="list-item-sublabel">${famB.label||p.b.family}</div>
             </div>
           </div>
-          <div class="text-meta u-font-serif" style="margin-top:auto; color:var(--text-tertiary);">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
+          <div class="list-view" style="margin-top:auto;">
+            <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;">
+              <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Family Compatibility</div></div>
+              <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(p.details.famScore)}/35</span></div>
+            </div>
+            <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;">
+              <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Sillage Contrast</div></div>
+              <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(p.details.sillScore)}/20</span></div>
+            </div>
+            <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;">
+              <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Note Independence</div></div>
+              <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(p.details.noteScore)}/20</span></div>
+            </div>
+          </div>
         `;        card.onclick = () => { _selectFragForSlot('a', p.a); _selectFragForSlot('b', p.b); go('compare'); };
         pairWrap.appendChild(card);
       });
@@ -1808,7 +1821,10 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
+    .map(f=>{
+      const details=engine.getLayeringDetails(frag,f,store.FAM_COMPAT);
+      return {f,score:details.total,details};
+    })
     .filter(x=>x.score>=40)
     .sort((a,b)=>b.score-a.score)
     .slice(0,2);
@@ -1817,17 +1833,31 @@ function buildLayerSuggestions(frag,container){
   lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
   const shelf=document.createElement('div');shelf.className='list-view';
-  candidates.forEach(({f,score})=>{
+  candidates.forEach(({f,score,details})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
     const row=document.createElement('button');
     row.className='list-item';
     row.innerHTML=`
         <div class="list-item-dot" style="--fam-bg: ${fm2.color}"></div>
-        <div class="list-item-body">
+        <div class="list-item-body" style="width:100%;">
           <div class="list-item-label text-ui-strong">${f.name}</div>
           <div class="list-item-sublabel text-meta">${f.brand}</div>
-          ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
+          ${reason ? `<div class="list-item-detail text-caption" style="margin-bottom:var(--sp-xs);">${reason}</div>` : ''}
+          <div class="list-view" style="margin:0; width:100%;">
+            <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;">
+              <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Family</div></div>
+              <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(details.famScore)}/35</span></div>
+            </div>
+            <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;">
+              <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Sillage</div></div>
+              <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(details.sillScore)}/20</span></div>
+            </div>
+            <div class="list-item" style="padding:var(--sp-xs) 0; border:none; min-height:0;">
+              <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Notes</div></div>
+              <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(details.noteScore)}/20</span></div>
+            </div>
+          </div>
         </div>
         <div class="list-item-trail">
           <span class="dc-layer-score-badge">${score}</span>
@@ -4604,90 +4634,6 @@ function openCharacterEdu(fa, fb, ca, cb) {
   });
 }
 
-function openScoreEdu(type,matchPct,layerPct,fa,fb){
-  let overlay=document.getElementById('cmp-edu-overlay');
-  if(!overlay){overlay=document.createElement('div');overlay.id='cmp-edu-overlay';overlay.className='cmp-edu-overlay';document.body.appendChild(overlay);}
-  const isMatch=type==='match';
-  const pct=isMatch?matchPct:layerPct;
-  const label=isMatch?'Similarity':'Pairing';
-  const quads=isMatch?[
-    {tag:'High match ≥ 70',title:'Kindred spirits',desc:'Same family, many shared notes. Great as alternates for the same occasion.',hi:matchPct>=70},
-    {tag:'Good match 50–69',title:'Cohesive pair',desc:'Enough DNA in common to feel related. Alternate or layer lightly.',hi:matchPct>=50&&matchPct<70},
-    {tag:'Low match 30–49',title:'Distinct contrast',desc:'Different enough to complement. Explore separately or layer for depth.',hi:matchPct>=30&&matchPct<50},
-    {tag:'Very low < 30',title:'Different worlds',desc:'Little in common. May feel jarring together but powerful as a contrast.',hi:matchPct<30},
-  ]:[
-    {tag:'Good pairing ≥ 65',title:'Complementary pair',desc:'Different sillage + compatible families + unique note sets. Wear together with confidence.',hi:layerPct>=65},
-    {tag:'Workable 45–64',title:'Works together',desc:'Some contrast in projection and notes. Interesting but not always balanced.',hi:layerPct>=45&&layerPct<65},
-    {tag:'Uneasy 25–44',title:'Possible, with care',desc:'Similar sillage or competing notes. Layer sparingly to avoid muddiness.',hi:layerPct>=25&&layerPct<45},
-    {tag:'Poor pairing < 25',title:'Better as alternates',desc:'Very similar projection or note profiles. Better worn separately.',hi:layerPct<25},
-  ];
-  let bodyContent = '';
-  if (isMatch) {
-    const famScore=(FAM_COMPAT[fa.family]?.[fb.family]??0.5)*40;
-    const shBase=fa._nBase.filter(n=>fb._nBase.includes(n)).length;
-    const shMid=fa._nMid.filter(n=>fb._nMid.includes(n)).length;
-    const shTop=fa._nTop.filter(n=>fb._nTop.includes(n)).length;
-    const noteScore=Math.min(30,shBase*5+shMid*3+shTop*2);
-    const sillDiff=Math.abs(fa.sillage-fb.sillage);
-    const sillScore=sillDiff<=2?10:sillDiff<=4?5:0;
-    const shRoles=fa.roles.filter(r=>fb.roles.includes(r)).length;
-    const roleScore=Math.min(20,shRoles*7);
-    const rawScore = famScore + noteScore + sillScore + roleScore;
-
-    bodyContent = `
-      <p class="text-body">How is this score calculated, and what does it mean for this pair?</p>
-      <div class="cmp-edu-grid">
-        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="text-meta">${q.tag}</div><div class="text-ui-strong">${q.title}</div><div class="text-body">${q.desc}</div></div>`).join('')}
-      </div>
-      <div class="sec-label" style="margin-top:var(--sp-xl);margin-bottom:var(--sp-sm)">Similarity Math</div>
-      <div class="list-view">
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Match</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/40</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Shared Notes</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/30</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Match</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/10</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Role Overlap</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(roleScore)}/20</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Similarity Score</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/100</span></div></div>
-      </div>
-    `;
-  } else {
-    const famComp=FAM_COMPAT[fa.family]?.[fb.family]??0.5;
-    const famScore=famComp*35;
-    const sillDiff=Math.abs(fa.sillage-fb.sillage);
-    const sillScore=sillDiff>=3?20:sillDiff>=1?10:0;
-    const shared=fa._nAll.filter(n=>fb._nAll.includes(n)).length;
-    const noteScore=shared===0?20:shared<=2?12:shared<=4?5:0;
-    const rawScore = famScore + sillScore + noteScore;
-
-    bodyContent = `
-      <p class="text-body">How is this score calculated, and what does it mean for this pair?</p>
-      <div class="cmp-edu-grid">
-        ${quads.map(q=>`<div class="cmp-edu-quad${q.hi?' highlight':''}"><div class="text-meta">${q.tag}</div><div class="text-ui-strong">${q.title}</div><div class="text-body">${q.desc}</div></div>`).join('')}
-      </div>
-      <div class="sec-label" style="margin-top:var(--sp-xl);margin-bottom:var(--sp-sm)">Layering Math</div>
-      <div class="list-view">
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Family Compatibility</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(famScore)}/35</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Sillage Contrast</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(sillScore)}/20</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Note Independence</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(noteScore)}/20</span></div></div>
-        <div class="list-item"><div class="list-item-body"><div class="list-item-label text-ui-strong">Raw Layering Score</div></div><div class="list-item-trail"><span class="text-ui-strong">${Math.round(rawScore)}/75</span></div></div>
-      </div>
-    `;
-  }
-
-  overlay.innerHTML=`<div class="cmp-edu-wrap">
-    <div class="sheet-topbar">
-      <div style="width:var(--touch-target)"></div>
-      <div class="sheet-title text-ui-strong">${label} — ${pct}%</div>
-      <button class="sheet-close" id="cmp-edu-close" aria-label="Close">${ICONS.close}</button>
-    </div>
-    <div class="cmp-edu-body">
-      ${bodyContent}
-    </div>
-  </div>`;
-  overlay.classList.add('open');
-  overlay.addEventListener('click',e=>{if(e.target===overlay)closeScoreEdu();});
-  document.getElementById('cmp-edu-close')?.addEventListener('click',closeScoreEdu);
-}
-function closeScoreEdu(){const o=document.getElementById('cmp-edu-overlay');if(o)o.classList.remove('open');}
-
 /* ── Sticky bar scroll watcher ── */
 function _initStickyScroll(){
   const header=document.getElementById('cmp-header');
@@ -4814,8 +4760,10 @@ function renderCompareResults(fa,fb){
   // NOTE: URL and Card fills are now handled by _selectFragForSlot
   window.haptic?.('success');
   const ca=getCmpFam(fa.family),cb=getCmpFam(fb.family);
-  const matchPct=Math.round(scoreSimilarity(fa,fb));
-  const layerPct=scoreLayeringPct(fa,fb);
+  const matchDetails=engine.getSimilarityDetails(fa,fb,store.FAM_COMPAT);
+  const matchPct=matchDetails.total;
+  const layerDetails=engine.getLayeringDetails(fa,fb,store.FAM_COMPAT);
+  const layerPct=Math.round(Math.min(100,layerDetails.total/75*100));
   const _baseVerdict=getVerdict(matchPct,layerPct,fa,fb);
   const _sharedNotes=fa._nAll.filter(n=>fb._nAll.includes(n));
   const _overlapPct=computeNoteOverlapPercentile(fa,fb);
@@ -4862,11 +4810,13 @@ function renderCompareResults(fa,fb){
       </button>
       <div class="cmp-pair-card-right">
         <div class="cmp-pair-card-verdict">${verdict}</div>
-        <div class="cmp-pair-card-scores">
-          <button class="cmp-score-card" id="cmp-score-match">
-            <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
-            <div class="cmp-score-label">Similarity</div>
-            <div class="cmp-score-meter">
+        <div class="cmp-pair-card-scores" style="flex-direction:column; gap:var(--sp-md);">
+          <div class="cmp-score-card" style="cursor:default; padding:var(--sp-md);">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--sp-sm);">
+              <div class="cmp-score-label">Similarity</div>
+              <div class="cmp-score-pct" style="color:${matchColor}">${matchPct}%</div>
+            </div>
+            <div class="cmp-score-meter" style="margin-bottom:var(--sp-sm);">
               <div class="cmp-score-meter-track">
                 <div class="cmp-score-meter-fill" style="width:${matchPct}%;background:${matchColor}"></div>
                 <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,matchPct))}%;background:${matchColor}"></div>
@@ -4875,13 +4825,32 @@ function renderCompareResults(fa,fb){
                 <div class="cmp-score-meter-tick" style="left:75%"></div>
               </div>
             </div>
-            <div class="cmp-score-range">${_simLabel(matchPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
-          </button>
-          <button class="cmp-score-card" id="cmp-score-layer">
-            <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
-            <div class="cmp-score-label">Pairing</div>
-            <div class="cmp-score-meter">
+            <div class="cmp-score-range" style="margin-bottom:var(--sp-md);">${_simLabel(matchPct)}</div>
+            <div class="list-view" style="margin:0;">
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none;">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Family Match</div></div>
+                <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(matchDetails.famScore)}/40</span></div>
+              </div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none;">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Shared Notes</div></div>
+                <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(matchDetails.noteScore)}/30</span></div>
+              </div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none;">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Sillage Match</div></div>
+                <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(matchDetails.sillScore)}/10</span></div>
+              </div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none;">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Role Overlap</div></div>
+                <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(matchDetails.roleScore)}/20</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="cmp-score-card" style="cursor:default; padding:var(--sp-md);">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--sp-sm);">
+              <div class="cmp-score-label">Pairing</div>
+              <div class="cmp-score-pct" style="color:${layerColor}">${layerPct}%</div>
+            </div>
+            <div class="cmp-score-meter" style="margin-bottom:var(--sp-sm);">
               <div class="cmp-score-meter-track">
                 <div class="cmp-score-meter-fill" style="width:${layerPct}%;background:${layerColor}"></div>
                 <div class="cmp-score-meter-dot" style="left:${Math.max(4,Math.min(96,layerPct))}%;background:${layerColor}"></div>
@@ -4890,9 +4859,22 @@ function renderCompareResults(fa,fb){
                 <div class="cmp-score-meter-tick" style="left:75%"></div>
               </div>
             </div>
-            <div class="cmp-score-range">${_layLabel(layerPct)}</div>
-            <div class="cmp-score-tap">Tap to learn more ↗</div>
-          </button>
+            <div class="cmp-score-range" style="margin-bottom:var(--sp-md);">${_layLabel(layerPct)}</div>
+            <div class="list-view" style="margin:0;">
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none;">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Family Compatibility</div></div>
+                <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(layerDetails.famScore)}/35</span></div>
+              </div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none;">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Sillage Contrast</div></div>
+                <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(layerDetails.sillScore)}/20</span></div>
+              </div>
+              <div class="list-item" style="padding:var(--sp-xs) 0; border:none;">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong" style="font-size:var(--fs-meta)">Note Independence</div></div>
+                <div class="list-item-trail"><span class="list-item-sublabel text-meta" style="color:var(--text-secondary)">${Math.round(layerDetails.noteScore)}/20</span></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -4905,15 +4887,6 @@ function renderCompareResults(fa,fb){
   document.getElementById('cmp-score-character')?.addEventListener('click',()=>{
     window.haptic?.('selection');
     openCharacterEdu(fa, fb, ca, cb);
-  });
-
-  document.getElementById('cmp-score-match')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openScoreEdu('match',matchPct,layerPct,fa,fb);
-  });
-  document.getElementById('cmp-score-layer')?.addEventListener('click',()=>{
-    window.haptic?.('selection');
-    openScoreEdu('layer',matchPct,layerPct,fa,fb);
   });
 
   // Wire note pill taps in notes grid
