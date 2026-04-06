@@ -1723,13 +1723,6 @@ mark.note-match {
 .cmp-m-col-header--empty { cursor: default; background: var(--bg-secondary); }
 .cmp-m-col-header--empty:hover { background: var(--bg-tertiary); }
 
-/* 4px family-color bar at top of each column */
-.cmp-m-col-top-bar {
-  height: 4px;
-  width: 100%;
-  flex-shrink: 0;
-}
-
 .cmp-m-col-header-inner {
   padding: var(--sp-sm) var(--sp-md) var(--sp-sm);
   display: flex;
@@ -1851,7 +1844,7 @@ mark.note-match {
   border-radius: var(--radius-micro);
   transition: width var(--dur-xslow) var(--ease-spring);
 }
-.cmp-m-bar-label { white-space: nowrap; flex-shrink: 0; }
+.cmp-m-bar-label { white-space: nowrap; flex-shrink: 0; min-width: 2.8em; text-align: right; }
 
 /* Mini radar */
 .cmp-m-mini-radar { display: block; }
@@ -1859,6 +1852,16 @@ mark.note-match {
 
 /* Notes overflow indicator */
 .cmp-m-notes-more { opacity: 0.5; margin-left: var(--sp-xs); }
+
+/* Description cell */
+.cmp-m-desc { line-height: var(--lh-relaxed); color: var(--text-secondary); }
+.cmp-m-data-cell:has(.cmp-m-desc) { align-items: flex-start; }
+
+/* Mobile card description */
+.cmp-m-card-desc { color: var(--text-secondary); line-height: var(--lh-relaxed); margin: 0 0 var(--sp-xs); }
+
+/* Empty/dash placeholder — replaces inline opacity:0.4 */
+.cmp-m-empty-val { opacity: 0.4; }
 
 /* Add column */
 .cmp-m-add-header {
@@ -1987,7 +1990,6 @@ mark.note-match {
   display: flex;
   flex-direction: column;
 }
-.cmp-m-card-top-bar { height: 4px; width: 100%; flex-shrink: 0; }
 .cmp-m-card-header {
   display: flex;
   justify-content: space-between;

@@ -4205,13 +4205,14 @@ function _usSelectRow(row) {
     const frag = CAT_MAP[id];
     if (!frag) return;
     if (_usContext) {
+      const ctx = _usContext; // capture before closeUniversalSearch nulls it
       closeUniversalSearch();
-      if (_usContext.slotIdx !== undefined) {
+      if (ctx.slotIdx !== undefined) {
         // Matrix slot: use index-based API
-        setCmpSlot(_usContext.slotIdx, frag);
+        setCmpSlot(ctx.slotIdx, frag);
       } else {
         // Old 'a'/'b' slot API (inline search, popular comparisons)
-        _selectFragForSlot(_usContext.slot, frag);
+        _selectFragForSlot(ctx.slot, frag);
       }
     } else {
       closeUniversalSearch();
@@ -4501,14 +4502,12 @@ function _renderColHeader(idx, frag) {
     return `<div class="cmp-m-cell cmp-m-col-header cmp-m-col-header--empty" role="columnheader" data-slot="${idx}">
       <button class="cmp-m-slot-select" data-slot="${idx}" aria-label="Select fragrance for slot ${idx + 1}">
         <div class="cmp-m-empty-label">Select a fragrance</div>
-        <div class="cmp-m-empty-hint">Tap to choose</div>
       </button>
     </div>`;
   }
   const fc = getCmpFam(frag.family);
   const famLabel = (FAM[frag.family] || {label: frag.family}).label;
   return `<div class="cmp-m-cell cmp-m-col-header filled" role="columnheader" data-slot="${idx}">
-    <div class="cmp-m-col-top-bar" style="background:${fc.accent}"></div>
     <div class="cmp-m-col-header-inner">
       <div class="cmp-m-col-name">${frag.name}</div>
       <div class="cmp-m-col-brand">${frag.brand}</div>
@@ -4519,16 +4518,17 @@ function _renderColHeader(idx, frag) {
 }
 
 /* ── Attribute row cell ── */
-function _renderRowCell(rowId, idx, frag) {
+function _renderRowCell(rowId, idx, frag, sharedNoteSet) {
   if (!frag) {
     return `<div class="cmp-m-cell cmp-m-data-cell cmp-m-data-cell--empty" role="cell" data-slot="${idx}"></div>`;
   }
   const fc = getCmpFam(frag.family);
   let content = '';
   switch (rowId) {
-    case 'family': {
-      const famLabel = (FAM[frag.family] || {label: frag.family}).label;
-      content = `<span class="cmp-m-family-dot" style="background:${fc.accent}"></span><span class="text-meta">${famLabel}</span>`;
+    case 'description': {
+      content = frag.description
+        ? `<span class="text-meta cmp-m-desc">${frag.description}</span>`
+        : '<span class="text-caption cmp-m-empty-val">—</span>';
       break;
     }
     case 'top':
@@ -4537,25 +4537,31 @@ function _renderRowCell(rowId, idx, frag) {
       const noteArr = rowId === 'top' ? (frag.top||[]) : rowId === 'heart' ? (frag.mid||[]) : (frag.base||[]);
       const shown = noteArr.slice(0, 4);
       const extra = noteArr.length > 4 ? `<span class="text-caption cmp-m-notes-more">+${noteArr.length - 4}</span>` : '';
-      content = shown.map(n => `<button class="tag text-meta" data-note="${n}">${n}</button>`).join('') + extra;
+      const shared = sharedNoteSet || new Set();
+      content = shown.map(n => {
+        const cls = shared.has(n) ? 'tag text-meta shared' : 'tag text-meta';
+        return `<button class="${cls}" data-note="${n}">${n}</button>`;
+      }).join('') + extra;
       break;
     }
     case 'sillage': {
       const val = frag.sillage || 5;
       const pct = (val / 10) * 100;
       content = `<div class="cmp-m-bar-row">
+        <span class="cmp-m-bar-label text-ui">${val}/10</span>
         <div class="cmp-m-bar-wrap"><div class="cmp-m-bar-fill" style="width:${pct}%;background:${fc.accent}"
           role="meter" aria-valuenow="${val}" aria-valuemin="0" aria-valuemax="10" aria-label="Sillage ${val}/10"></div></div>
-        <span class="cmp-m-bar-label text-meta">${val}/10</span></div>`;
+      </div>`;
       break;
     }
     case 'structure': {
       const val = frag.layering || 5;
       const pct = (val / 10) * 100;
       content = `<div class="cmp-m-bar-row">
+        <span class="cmp-m-bar-label text-ui">${val}/10</span>
         <div class="cmp-m-bar-wrap"><div class="cmp-m-bar-fill" style="width:${pct}%;background:${fc.accent}"
           role="meter" aria-valuenow="${val}" aria-valuemin="0" aria-valuemax="10" aria-label="Structure ${val}/10"></div></div>
-        <span class="cmp-m-bar-label text-meta">${val}/10</span></div>`;
+      </div>`;
       break;
     }
     case 'sensory': {
@@ -4565,8 +4571,8 @@ function _renderRowCell(rowId, idx, frag) {
     case 'roles': {
       const fragRoles = frag.roles || [];
       content = fragRoles.length
-        ? fragRoles.map(r => `<span class="chip">${r}</span>`).join('')
-        : '<span class="text-caption" style="opacity:0.4">—</span>';
+        ? fragRoles.map(r => `<span class="chip">${r.charAt(0).toUpperCase() + r.slice(1)}</span>`).join('')
+        : '<span class="text-caption cmp-m-empty-val">—</span>';
       break;
     }
   }
@@ -4579,23 +4585,36 @@ function renderMatrix() {
   if (!matrix) return;
 
   const colCount = Math.max(CMP_SLOTS.length, 2);
-  const showAdd = colCount < 5;
+  // Only show + Add when every current slot is filled (no redundancy with empty slots)
+  const allFilled = !CMP_SLOTS.includes(null);
+  const showAdd = allFilled && CMP_SLOTS.length < 5;
 
   matrix.style.setProperty('--cmp-col-count', colCount);
   matrix.style.setProperty('--cmp-add-width', showAdd ? '140px' : '0px');
 
   const rows = [
-    { id: 'family',    label: 'Family' },
-    { id: 'top',       label: 'Top Notes' },
-    { id: 'heart',     label: 'Heart Notes' },
-    { id: 'base',      label: 'Base Notes' },
-    { id: 'sillage',   label: 'Sillage' },
-    { id: 'structure', label: 'Structure' },
-    { id: 'sensory',   label: 'Sensory' },
-    { id: 'roles',     label: 'Roles' },
+    { id: 'description', label: 'About' },
+    { id: 'top',         label: 'Top Notes' },
+    { id: 'heart',       label: 'Heart Notes' },
+    { id: 'base',        label: 'Base Notes' },
+    { id: 'sillage',     label: 'Sillage' },
+    { id: 'structure',   label: 'Structure' },
+    { id: 'sensory',     label: 'Sensory' },
+    { id: 'roles',       label: 'Roles' },
   ];
 
-  const filled = CMP_SLOTS.filter(Boolean).length;
+  // Compute shared notes across all filled slots for highlighting
+  const sharedNoteSet = new Set();
+  const filledSlots = CMP_SLOTS.filter(Boolean);
+  if (filledSlots.length >= 2) {
+    const counts = {};
+    filledSlots.forEach(f => {
+      [...(f.top||[]), ...(f.mid||[]), ...(f.base||[])].forEach(n => { counts[n] = (counts[n]||0) + 1; });
+    });
+    Object.entries(counts).forEach(([n, c]) => { if (c >= 2) sharedNoteSet.add(n); });
+  }
+
+  const filled = filledSlots.length;
   const cells = [];
 
   // Header row — sidebar corner
@@ -4622,7 +4641,7 @@ function renderMatrix() {
       <span class="sec-label">${row.label}</span>
     </div>`);
     for (let i = 0; i < colCount; i++) {
-      cells.push(_renderRowCell(row.id, i, CMP_SLOTS[i] || null));
+      cells.push(_renderRowCell(row.id, i, CMP_SLOTS[i] || null, sharedNoteSet));
     }
     if (showAdd) {
       cells.push(`<div class="cmp-m-cell cmp-m-add-col" role="cell"></div>`);
@@ -4672,7 +4691,20 @@ function _renderMobileCards() {
   if (!wrap) return;
 
   const colCount = Math.max(CMP_SLOTS.length, 2);
-  const showAdd = colCount < 5;
+  const allFilled = !CMP_SLOTS.includes(null);
+  const showAdd = allFilled && CMP_SLOTS.length < 5;
+
+  // Shared notes for highlighting
+  const sharedNoteSet = new Set();
+  const filledSlots = CMP_SLOTS.filter(Boolean);
+  if (filledSlots.length >= 2) {
+    const counts = {};
+    filledSlots.forEach(f => {
+      [...(f.top||[]), ...(f.mid||[]), ...(f.base||[])].forEach(n => { counts[n] = (counts[n]||0) + 1; });
+    });
+    Object.entries(counts).forEach(([n, c]) => { if (c >= 2) sharedNoteSet.add(n); });
+  }
+
   const cards = [];
 
   for (let i = 0; i < colCount; i++) {
@@ -4681,20 +4713,24 @@ function _renderMobileCards() {
       cards.push(`<div class="cmp-m-card cmp-m-card--empty">
         <button class="cmp-m-slot-select cmp-m-card-select" data-slot="${i}" aria-label="Select fragrance for slot ${i + 1}">
           <div class="cmp-m-empty-label">Select a fragrance</div>
-          <div class="cmp-m-empty-hint">Tap to choose</div>
         </button>
       </div>`);
     } else {
       const fc = getCmpFam(frag.family);
       const famLabel = (FAM[frag.family] || {label: frag.family}).label;
-      const topNotes = (frag.top||[]).slice(0,4).map(n=>`<button class="tag text-meta" data-note="${n}">${n}</button>`).join('');
-      const midNotes = (frag.mid||[]).slice(0,4).map(n=>`<button class="tag text-meta" data-note="${n}">${n}</button>`).join('');
-      const baseNotes = (frag.base||[]).slice(0,4).map(n=>`<button class="tag text-meta" data-note="${n}">${n}</button>`).join('');
-      const sillPct = ((frag.sillage||5)/10)*100;
-      const strPct = ((frag.layering||5)/10)*100;
-      const roles = (frag.roles||[]).map(r=>`<span class="chip">${r}</span>`).join('') || '<span class="text-caption" style="opacity:0.4">—</span>';
-      cards.push(`<div class="cmp-m-card" style="--card-accent:${fc.accent}">
-        <div class="cmp-m-card-top-bar" style="background:${fc.accent}"></div>
+      const mkNoteTags = (arr) => (arr||[]).slice(0,4).map(n => {
+        const cls = sharedNoteSet.has(n) ? 'tag text-meta shared' : 'tag text-meta';
+        return `<button class="${cls}" data-note="${n}">${n}</button>`;
+      }).join('');
+      const topNotes = mkNoteTags(frag.top);
+      const midNotes = mkNoteTags(frag.mid);
+      const baseNotes = mkNoteTags(frag.base);
+      const sillVal = frag.sillage||5;
+      const strVal = frag.layering||5;
+      const sillPct = (sillVal/10)*100;
+      const strPct = (strVal/10)*100;
+      const roles = (frag.roles||[]).map(r=>`<span class="chip">${r.charAt(0).toUpperCase() + r.slice(1)}</span>`).join('') || '<span class="text-caption cmp-m-empty-val">—</span>';
+      cards.push(`<div class="cmp-m-card">
         <div class="cmp-m-card-header">
           <div>
             <div class="cmp-m-col-name">${frag.name}</div>
@@ -4704,13 +4740,14 @@ function _renderMobileCards() {
           <button class="cmp-m-remove-btn" data-slot="${i}" aria-label="Remove ${frag.name}">×</button>
         </div>
         <div class="cmp-m-card-body">
+          ${frag.description ? `<p class="text-meta cmp-m-card-desc">${frag.description}</p>` : ''}
           <div class="sec-label">Top Notes</div><div class="cmp-m-card-notes">${topNotes}</div>
           <div class="sec-label">Heart Notes</div><div class="cmp-m-card-notes">${midNotes}</div>
           <div class="sec-label">Base Notes</div><div class="cmp-m-card-notes">${baseNotes}</div>
           <div class="sec-label">Sillage</div>
-          <div class="cmp-m-bar-row"><div class="cmp-m-bar-wrap"><div class="cmp-m-bar-fill" style="width:${sillPct}%;background:${fc.accent}"></div></div><span class="cmp-m-bar-label text-meta">${frag.sillage||5}/10</span></div>
+          <div class="cmp-m-bar-row"><span class="cmp-m-bar-label text-ui">${sillVal}/10</span><div class="cmp-m-bar-wrap"><div class="cmp-m-bar-fill" style="width:${sillPct}%;background:${fc.accent}"></div></div></div>
           <div class="sec-label">Structure</div>
-          <div class="cmp-m-bar-row"><div class="cmp-m-bar-wrap"><div class="cmp-m-bar-fill" style="width:${strPct}%;background:${fc.accent}"></div></div><span class="cmp-m-bar-label text-meta">${frag.layering||5}/10</span></div>
+          <div class="cmp-m-bar-row"><span class="cmp-m-bar-label text-ui">${strVal}/10</span><div class="cmp-m-bar-wrap"><div class="cmp-m-bar-fill" style="width:${strPct}%;background:${fc.accent}"></div></div></div>
           <div class="sec-label">Sensory</div>
           <div class="cmp-m-card-radar">${_drawMiniRadarSvg(frag, fc.accentHex)}</div>
           <div class="sec-label">Roles</div><div class="cmp-m-card-roles">${roles}</div>

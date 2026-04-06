@@ -1,3 +1,18 @@
+## 2026-04-05
+
+### Fixed
+- **Compare fragrance switching broken** — `closeUniversalSearch()` was nulling `_usContext` before the selection handler could read it. Fixed by capturing `_usContext` into a local `ctx` variable before calling close, so the slot index is never lost.
+- **Shared notes not highlighted** — Matrix note tag cells now compute a `sharedNoteSet` across all filled slots and apply `.tag.shared` to any note appearing in 2+ fragrances. Same logic applied to mobile card carousel.
+- **+ Add button redundant with empty slots** — "+ Add" column now only appears when every current slot is filled. Previously it showed alongside empty "Select a fragrance" placeholders, creating two competing affordances for the same action.
+
+### Changed
+- **Family row removed from matrix** — Family is already shown as a colored chip in each column header; the dedicated attribute row was a duplicate.
+- **Description row added to matrix** — New "About" row shows the fragrance description text. Also shown in mobile cards above the notes sections.
+- **Sillage/Structure label moved left** — Score (`7/10`) now appears to the left of the bar so it reads with the row label before scanning the bar. Fixed-width `2.8em` right-aligned so values stack cleanly.
+- **Roles chips capitalized** — First letter of each role chip is now uppercased via `charAt(0).toUpperCase() + r.slice(1)` in both matrix and mobile cards.
+- **Top color bar removed** — `.cmp-m-col-top-bar` (4px family-color stripe at top of each column header) removed from both desktop matrix columns and mobile cards. Family color is conveyed by the chip instead.
+- **Inline `style="opacity:0.4"` replaced** — All placeholder dash/em values now use `.cmp-m-empty-val` utility class. Removed from `_renderRowCell` and `_renderMobileCards`.
+
 ## 2026-04-04
 
 ### Added
