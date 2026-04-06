@@ -1660,10 +1660,11 @@ mark.note-match {
 /* ── Desktop matrix grid ── */
 #cmp-matrix {
   display: grid;
-  grid-template-columns: 160px repeat(var(--cmp-col-count, 2), minmax(220px, 1fr)) var(--cmp-add-width, 140px);
+  --cmp-sidebar-w: 160px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   min-width: 0;
+  flex-shrink: 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -1712,7 +1713,6 @@ mark.note-match {
 /* Column header cells */
 .cmp-m-col-header {
   position: relative;
-  cursor: pointer;
   border-bottom: 2px solid var(--border-standard);
   padding: 0;
   overflow: hidden;
@@ -1722,13 +1722,37 @@ mark.note-match {
 .cmp-m-col-header:hover { background: var(--bg-secondary); }
 .cmp-m-col-header--empty { cursor: default; background: var(--bg-secondary); }
 .cmp-m-col-header--empty:hover { background: var(--bg-tertiary); }
+/* Drag states */
+.cmp-m-col-header.dragging { opacity: 0.45; cursor: grabbing; }
+.cmp-m-col-header.filled { cursor: grab; }
+.cmp-m-col-header.drag-over { outline: 2px solid var(--accent-primary); outline-offset: -2px; }
 
 .cmp-m-col-header-inner {
-  padding: var(--sp-sm) var(--sp-md) var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-md);
   display: flex;
   flex-direction: column;
   gap: var(--sp-xs);
-  padding-right: 32px; /* room for × button */
+}
+
+/* Top row: name + actions (switch + ×) on same line */
+.cmp-m-col-header-top {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-xs);
+}
+/* Meta row: brand · chip on same line */
+.cmp-m-col-header-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  flex-wrap: wrap;
+}
+.cmp-m-col-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .cmp-m-col-name {
@@ -1743,33 +1767,39 @@ mark.note-match {
   font-size: var(--fs-caption);
   color: var(--text-tertiary);
 }
-.cmp-m-col-fam-chip { margin-top: var(--sp-xs); width: fit-content; }
+.cmp-m-col-fam-chip { width: fit-content; }
+.cmp-m-pair-badge {
+  color: var(--accent-primary);
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
 
-/* Remove button */
-.cmp-m-remove-btn {
-  position: absolute;
-  top: var(--sp-sm);
-  right: var(--sp-sm);
-  width: 24px;
-  height: 24px;
+/* Remove / Switch buttons — inline in header actions row */
+.cmp-m-remove-btn,
+.cmp-m-swap-btn {
+  width: 22px;
+  height: 22px;
   min-height: unset;
   border-radius: var(--radius-circle);
   border: 1px solid var(--border-subtle);
   background: var(--bg-primary);
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   opacity: 0;
-  transition: opacity var(--dur-fast) ease, background var(--dur-fast) ease;
-  z-index: 1;
+  transition: opacity var(--dur-fast) ease, background var(--dur-fast) ease, color var(--dur-fast) ease;
+  flex-shrink: 0;
+  padding: 0;
 }
 .cmp-m-col-header:hover .cmp-m-remove-btn,
+.cmp-m-col-header:hover .cmp-m-swap-btn,
 .cmp-m-card:hover .cmp-m-remove-btn { opacity: 1; }
 .cmp-m-remove-btn:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.cmp-m-swap-btn:hover { background: var(--accent-primary); border-color: var(--accent-primary); color: var(--bg-primary); }
 
 /* Empty slot placeholder */
 .cmp-m-slot-select {
@@ -1801,11 +1831,46 @@ mark.note-match {
 /* Row sidebar cells */
 .cmp-m-row-sidebar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
   border-right: 2px solid var(--border-standard);
   background: var(--bg-primary);
 }
 .cmp-m-row-sidebar .sec-label { white-space: nowrap; }
+
+/* Inline sort button next to sillage/structure label */
+.cmp-m-row-sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  width: 100%;
+}
+.cmp-m-sort-btn {
+  width: 20px;
+  height: 20px;
+  min-height: unset;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+  flex-shrink: 0;
+  font-size: var(--fs-caption);
+  gap: 1px;
+  padding: 0;
+}
+.cmp-m-sort-btn:hover { color: var(--text-primary); border-color: var(--border-subtle); }
+.cmp-m-sort-btn.active { color: var(--accent-primary); border-color: var(--accent-primary); }
+
+/* Notes cohesion — suppress border between top/heart rows */
+.cmp-m-cell[data-row="top"],
+.cmp-m-cell[data-row="heart"] { border-bottom: none; }
+.cmp-m-cell[data-row="base"] { border-bottom: 1px solid var(--border-subtle); }
 
 /* Data cells */
 .cmp-m-data-cell {
@@ -1853,9 +1918,15 @@ mark.note-match {
 /* Notes overflow indicator */
 .cmp-m-notes-more { opacity: 0.5; margin-left: var(--sp-xs); }
 
-/* Description cell */
-.cmp-m-desc { line-height: var(--lh-relaxed); color: var(--text-secondary); }
-.cmp-m-data-cell:has(.cmp-m-desc) { align-items: flex-start; }
+/* Description cell — block layout avoids flex/grid intrinsic-sizing bug */
+.cmp-m-data-cell:has(.cmp-m-desc) { display: block; }
+.cmp-m-desc {
+  display: block;
+  width: 100%;
+  overflow-wrap: break-word;
+  line-height: var(--lh-relaxed);
+  color: var(--text-secondary);
+}
 
 /* Mobile card description */
 .cmp-m-card-desc { color: var(--text-secondary); line-height: var(--lh-relaxed); margin: 0 0 var(--sp-xs); }
@@ -1894,78 +1965,77 @@ mark.note-match {
   text-transform: uppercase;
 }
 
-/* ── Below-matrix sections ── */
-#cmp-below-matrix {
-  padding: var(--sp-xl);
+/* ── Name button (opens fragrance detail) ── */
+.cmp-m-col-name-btn {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+.cmp-m-col-name-btn:hover .cmp-m-col-name { text-decoration: underline; }
+
+/* ── Suggestions section (below the matrix) ── */
+.cmp-suggestions {
+  border-top: 1px solid var(--border-subtle);
+  padding: var(--sp-xl) 0 var(--sp-4xl);
+}
+.cmp-suggestions-inner {
+  max-width: 860px;
+  padding: 0 var(--sp-xl);
   display: flex;
   flex-direction: column;
   gap: var(--sp-xl);
 }
-.cmp-m-below-section {
+.cmp-suggest-section {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-md);
-}
-.cmp-m-shared-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-xs);
-}
-.cmp-m-note-count {
-  font-size: var(--fs-caption);
-  opacity: 0.6;
-  margin-left: 2px;
+  gap: var(--sp-sm);
 }
 
-/* Best Pairings cards */
-.cmp-m-pairings {
+/* ── Sensory axis legend (sidebar) ── */
+.cmp-m-sensory-legend {
+  list-style: none;
+  padding: 0;
+  margin: var(--sp-xs) 0 0;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-md);
+  gap: 1px;
+  counter-reset: sensory-axis;
 }
-.cmp-m-pairing-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: var(--sp-md) var(--sp-lg);
+.cmp-m-sensory-legend li {
+  counter-increment: sensory-axis;
+  color: var(--text-tertiary);
   display: flex;
-  flex-direction: column;
+  align-items: baseline;
   gap: var(--sp-xs);
 }
-.cmp-m-pairing-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.cmp-m-sensory-legend li::before {
+  content: counter(sensory-axis);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-tertiary);
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  min-width: 10px;
+  flex-shrink: 0;
+}
+
+/* ── Role detail panel ── */
+.cmp-m-role-detail {
+  padding: var(--sp-lg);
+  align-items: flex-start;
   gap: var(--sp-md);
 }
-.cmp-m-pairing-label {
-  font-family: var(--font-sans);
-  font-size: var(--fs-caption);
-  font-weight: 700;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--text-tertiary);
+.cmp-m-role-sym {
+  font-size: 24px;
+  line-height: 1;
+  display: block;
 }
-.cmp-m-pairing-score {
-  font-family: var(--font-sans);
-  font-size: var(--fs-caption);
-  font-weight: 600;
-  color: var(--accent-primary);
-  white-space: nowrap;
-}
-.cmp-m-pairing-names {
-  font-family: var(--font-serif);
-  font-size: var(--fs-ui);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-.cmp-m-pairing-desc {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  color: var(--text-secondary);
-  line-height: 1.5;
-  font-style: italic;
-  margin: 0;
+.cmp-m-role-detail .list-item-detail {
+  margin-top: var(--sp-sm);
+  line-height: var(--lh-relaxed);
 }
 
 /* ── Mobile card carousel — shown instead of matrix on mobile ── */

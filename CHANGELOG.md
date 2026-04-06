@@ -1,6 +1,43 @@
+## 2026-04-06 (3)
+
+### Added
+- **Compare: suggestions section** — Scrolling below the matrix reveals "Similar to compare" and "Try layering with" recommendation rows. Each suggestion shows family dot, name, brand, and an Add button to pull it directly into an empty compare slot.
+
+### Changed
+- **Compare: drag-to-reorder columns** — Replaced ← → arrow move buttons with HTML5 drag-and-drop. Dragging a column header swaps it with the drop target. Dragging column is visually dimmed; drop target gets an accent outline.
+- **Compare: sort controls moved inline** — Sillage and Structure sort buttons now appear inline next to their respective row labels in the sidebar, not in the header corner.
+- **Compare: notes rows cohesion** — Removed border between Top, Heart, and Base note rows so the three rows read as a single grouped section.
+- **Compare: description font size** — "About" description now uses `.text-body` (16px) instead of `.text-meta` (14px), matching the visual weight of the primary fragrance copy.
+- **Compare: compact column headers** — Removed star button and arrow move buttons. Header is now a 2-line layout: name + ⇄/× actions on top row, brand · chip on second row.
+- **Compare: pairs badge specificity** — Badge only shows "Pairs with [name]" when the named partner is actually present in the current comparison. No percentage shown.
+
+### Fixed
+- **Compare: matrix compressed by suggestions** — `#cmp-suggestions` appended as a flex sibling of `#cmp-matrix` inside the fixed-height `overflow: hidden` panel caused the matrix to shrink to ~210px. Fixed by changing desktop `#p-compare` to `overflow-y: auto` and adding `flex-shrink: 0` to `#cmp-matrix`, so the matrix holds its content height and the panel scrolls.
+
+## 2026-04-06 (2)
+
+### Added
+- **Compare: sensory radar legend** — Sidebar for the Sensory row now shows a numbered 1–5 key (Freshness, Sweetness, Warmth, Intensity, Complexity). Each pentagon's vertices carry matching tiny "1"–"5" labels in the fragrance's family accent color.
+- **Compare: role chip explanations** — Role chips (Casual, Intimate, etc.) are now tappable buttons. Clicking opens a detail panel with the role's symbol, short description, and full definition from `data/roles.json`. Works on both desktop matrix and mobile cards.
+- **Compare: sort by metric** — Sort buttons appear inline next to Sillage and Structure row labels. First click = descending (↓), second = ascending (↑), third = unsorted. Uses `.tab` pattern with `aria-pressed`.
+
+### Changed
+- **Compare: header swap vs. detail split** — Clicking the fragrance name/brand now opens the fragrance detail panel. A dedicated "⇄ Switch" button in the header opens the swap search.
+- **Compare: consistent Add button label** — "Add fragrance" now appears identically on desktop and mobile.
+
+## 2026-04-06
+
+### Changed
+- **Compare: removed below-matrix section** — `#cmp-below-matrix` (Shared Notes + Best Pairings) removed from `app.html`, all 5 static compare pages, and all associated JS/CSS. The section consumed too much vertical space and blocked matrix content.
+- **Compare: inline pairing badge** — When two fragrances score ≥60% similarity, a "Pairs well · XX%" badge now appears inline in each column header instead of a separate sheet below.
+
+### Fixed
+- **Compare description row truncated** — "About" row description text was visually cut off due to a flex/CSS Grid intrinsic-sizing interaction where wrapped text height wasn't propagated to the grid row. Fixed by switching the description cell to `display: block`, ensuring the row auto-sizes to the full text height.
+
 ## 2026-04-05
 
 ### Fixed
+- **Compare matrix grid cascade** — Grid rows shifted by 1 and cascaded whenever any slot was unfilled (`showAdd = false`). Root cause: `--cmp-add-width: 0px` left a phantom 0px column track in the CSS grid; auto-placement flowed cells into it, misaligning every subsequent row. Fix: `renderMatrix()` now sets `grid-template-columns` directly via JS, omitting the add-column track entirely when not needed. Responsive sidebar width handled via new `--cmp-sidebar-w` CSS variable (160px default, 180px at ≥1100px).
 - **Compare fragrance switching broken** — `closeUniversalSearch()` was nulling `_usContext` before the selection handler could read it. Fixed by capturing `_usContext` into a local `ctx` variable before calling close, so the slot index is never lost.
 - **Shared notes not highlighted** — Matrix note tag cells now compute a `sharedNoteSet` across all filled slots and apply `.tag.shared` to any note appearing in 2+ fragrances. Same logic applied to mobile card carousel.
 - **+ Add button redundant with empty slots** — "+ Add" column now only appears when every current slot is filled. Previously it showed alongside empty "Select a fragrance" placeholders, creating two competing affordances for the same action.

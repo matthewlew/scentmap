@@ -4391,6 +4391,8 @@ function openMoreSheet(btn){
 /* ══ COMPARE ════════════════════════════════════════════════════════ */
 let CMP_SLOTS=[null,null]; // primary state — array of up to 5 frags (null = empty slot)
 let CMP_A=null,CMP_B=null; // compat aliases — always reflect CMP_SLOTS[0]/[1]
+let CMP_STARS=new Set();   // fragrance ids starred in this compare session
+let CMP_SORT=null;         // active sort: null | 'sillage-desc' | 'sillage-asc' | 'structure-desc' | 'structure-asc'
 
 /* Family colors — CSS is the single source of truth (design-system.css --fam-* tokens).
    accent: CSS var string for inline style="" attributes.
@@ -4469,15 +4471,19 @@ function getCompareNarrative(fa, fb) {
    State: CMP_SLOTS[] (primary), CMP_A/CMP_B (compat aliases for slots 0/1).
    ═══════════════════════════════════════════════════════════════════ */
 
-/* ── Mini radar SVG (80×80, no axis labels — shape only) ── */
+/* ── Mini radar SVG (80×80 rendered, "-8 -8 96 96" viewBox for label room) ── */
 function _drawMiniRadarSvg(frag, accentHex) {
   const dims = ['freshness','sweetness','warmth','intensity','complexity'];
   const labels = ['Freshness','Sweetness','Warmth','Intensity','Complexity'];
   const p = computeProfile(frag);
-  const cx = 40, cy = 40, r = 33, n = dims.length;
+  const cx = 40, cy = 40, r = 33, rLabel = 40, n = dims.length;
   const ap = (i, val) => {
     const a = (Math.PI * 2 * i / n) - Math.PI / 2;
     return { x: cx + r * val * Math.cos(a), y: cy + r * val * Math.sin(a) };
+  };
+  const apLabel = (i) => {
+    const a = (Math.PI * 2 * i / n) - Math.PI / 2;
+    return { x: cx + rLabel * Math.cos(a), y: cy + rLabel * Math.sin(a) };
   };
   const poly = dims.map((d, i) => { const pt = ap(i, p[d] || 0); return `${pt.x.toFixed(1)},${pt.y.toFixed(1)}`; }).join(' ');
   const rings = [0.25, 0.5, 0.75, 1].map(v => {
@@ -4488,16 +4494,29 @@ function _drawMiniRadarSvg(frag, accentHex) {
     const pt = ap(i, 1);
     return `<line x1="${cx}" y1="${cy}" x2="${pt.x.toFixed(1)}" y2="${pt.y.toFixed(1)}" stroke="#0E0C0915" stroke-width="0.6"/>`;
   }).join('');
+  // Vertex number labels (1–5) positioned just outside the pentagon at each axis tip
+  const anchors = ['middle','start','start','end','end'];
+  const baselines = ['auto','middle','middle','middle','middle'];
+  const vertexLabels = dims.map((_, i) => {
+    const pt = apLabel(i);
+    // Nudge label 0 (top) up slightly for visual clarity
+    const dy = i === 0 ? -1 : 0;
+    return `<text x="${pt.x.toFixed(1)}" y="${(pt.y + dy).toFixed(1)}"
+      font-size="4.5" font-family="DM Sans, sans-serif" fill="${accentHex}"
+      text-anchor="${anchors[i]}" dominant-baseline="${baselines[i]}"
+      aria-hidden="true">${i + 1}</text>`;
+  }).join('');
   const pctVals = dims.map((d, i) => `${labels[i]}: ${Math.round((p[d]||0)*100)}%`).join(', ');
-  return `<svg class="cmp-m-mini-radar" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"
+  return `<svg class="cmp-m-mini-radar" viewBox="-8 -8 96 96" xmlns="http://www.w3.org/2000/svg"
     role="img" aria-label="Sensory profile: ${pctVals}" width="80" height="80">
     ${rings}${axes}
     <polygon points="${poly}" fill="${accentHex}28" stroke="${accentHex}" stroke-width="1.5" stroke-linejoin="round"/>
+    ${vertexLabels}
   </svg>`;
 }
 
 /* ── Column header cell ── */
-function _renderColHeader(idx, frag) {
+function _renderColHeader(idx, frag, pairingBadge) {
   if (!frag) {
     return `<div class="cmp-m-cell cmp-m-col-header cmp-m-col-header--empty" role="columnheader" data-slot="${idx}">
       <button class="cmp-m-slot-select" data-slot="${idx}" aria-label="Select fragrance for slot ${idx + 1}">
@@ -4507,13 +4526,25 @@ function _renderColHeader(idx, frag) {
   }
   const fc = getCmpFam(frag.family);
   const famLabel = (FAM[frag.family] || {label: frag.family}).label;
-  return `<div class="cmp-m-cell cmp-m-col-header filled" role="columnheader" data-slot="${idx}">
+
+  return `<div class="cmp-m-cell cmp-m-col-header filled" role="columnheader"
+      draggable="true" data-slot="${idx}" title="Drag to reorder">
     <div class="cmp-m-col-header-inner">
-      <div class="cmp-m-col-name">${frag.name}</div>
-      <div class="cmp-m-col-brand">${frag.brand}</div>
-      <div class="chip cmp-m-col-fam-chip" style="background:${fc.accent};color:var(--bg-primary)">${famLabel}</div>
+      <div class="cmp-m-col-header-top">
+        <button class="cmp-m-col-name-btn" data-slot="${idx}" aria-label="View ${frag.name} details">
+          <span class="cmp-m-col-name">${frag.name}</span>
+        </button>
+        <div class="cmp-m-col-header-actions">
+          <button class="cmp-m-swap-btn" data-slot="${idx}" aria-label="Switch ${frag.name}">⇄</button>
+          <button class="cmp-m-remove-btn" data-slot="${idx}" aria-label="Remove ${frag.name}">×</button>
+        </div>
+      </div>
+      <div class="cmp-m-col-header-meta">
+        <span class="cmp-m-col-brand text-caption">${frag.brand}</span>
+        <div class="chip chip--xs cmp-m-col-fam-chip" style="background:${fc.accent};color:var(--bg-primary)">${famLabel}</div>
+      </div>
+      ${pairingBadge ? `<div class="cmp-m-pair-badge text-caption">Pairs with ${pairingBadge.partnerName}</div>` : ''}
     </div>
-    <button class="cmp-m-remove-btn" data-slot="${idx}" aria-label="Remove ${frag.name}">×</button>
   </div>`;
 }
 
@@ -4527,7 +4558,7 @@ function _renderRowCell(rowId, idx, frag, sharedNoteSet) {
   switch (rowId) {
     case 'description': {
       content = frag.description
-        ? `<span class="text-meta cmp-m-desc">${frag.description}</span>`
+        ? `<span class="text-body cmp-m-desc">${frag.description}</span>`
         : '<span class="text-caption cmp-m-empty-val">—</span>';
       break;
     }
@@ -4571,12 +4602,35 @@ function _renderRowCell(rowId, idx, frag, sharedNoteSet) {
     case 'roles': {
       const fragRoles = frag.roles || [];
       content = fragRoles.length
-        ? fragRoles.map(r => `<span class="chip">${r.charAt(0).toUpperCase() + r.slice(1)}</span>`).join('')
+        ? fragRoles.map(r => {
+            const roleObj = RM[r] || {};
+            const label = roleObj.name || (r.charAt(0).toUpperCase() + r.slice(1));
+            const sym = roleObj.sym || '';
+            return `<button class="chip" data-role="${r}" aria-label="${label} — tap to learn more">${sym ? sym + ' ' : ''}${label}</button>`;
+          }).join('')
         : '<span class="text-caption cmp-m-empty-val">—</span>';
       break;
     }
   }
   return `<div class="cmp-m-cell cmp-m-data-cell" role="cell" data-slot="${idx}">${content}</div>`;
+}
+
+/* ── Sort columns by a measurable metric ── */
+function _applyCmpSort(field) {
+  const cur = CMP_SORT;
+  if (cur === field + '-desc') CMP_SORT = field + '-asc';
+  else if (cur === field + '-asc') CMP_SORT = null;
+  else CMP_SORT = field + '-desc';
+
+  if (CMP_SORT) {
+    const prop = field === 'sillage' ? 'sillage' : 'layering';
+    const dir = CMP_SORT.endsWith('asc') ? 1 : -1;
+    const filled = CMP_SLOTS.filter(Boolean);
+    const nullCount = CMP_SLOTS.length - filled.length;
+    filled.sort((a, b) => dir * ((a[prop] || 5) - (b[prop] || 5)));
+    CMP_SLOTS = [...filled, ...Array(nullCount).fill(null)];
+  }
+  renderMatrix();
 }
 
 /* ── Render matrix DOM ── */
@@ -4589,8 +4643,9 @@ function renderMatrix() {
   const allFilled = !CMP_SLOTS.includes(null);
   const showAdd = allFilled && CMP_SLOTS.length < 5;
 
-  matrix.style.setProperty('--cmp-col-count', colCount);
-  matrix.style.setProperty('--cmp-add-width', showAdd ? '140px' : '0px');
+  matrix.style.gridTemplateColumns = showAdd
+    ? `var(--cmp-sidebar-w, 160px) repeat(${colCount}, minmax(220px, 1fr)) 140px`
+    : `var(--cmp-sidebar-w, 160px) repeat(${colCount}, minmax(220px, 1fr))`;
 
   const rows = [
     { id: 'description', label: 'About' },
@@ -4614,57 +4669,170 @@ function renderMatrix() {
     Object.entries(counts).forEach(([n, c]) => { if (c >= 2) sharedNoteSet.add(n); });
   }
 
+  // Compute best pairing partner per slot index (score >= 60)
+  const pairingBadges = {};
+  if (filledSlots.length >= 2) {
+    filledSlots.forEach(a => {
+      const ai = CMP_SLOTS.indexOf(a);
+      let best = null;
+      filledSlots.forEach(b => {
+        if (a === b) return;
+        const score = Math.round(scoreSimilarity(a, b));
+        if (score >= 60 && (!best || score > best.score))
+          best = { score, partnerName: b.name };
+      });
+      if (best) pairingBadges[ai] = best;
+    });
+  }
+
   const filled = filledSlots.length;
   const cells = [];
 
-  // Header row — sidebar corner
+  // Header row — sidebar corner (title only — sorts live next to their rows)
   cells.push(`<div class="cmp-m-cell cmp-m-sidebar cmp-m-header-sidebar" role="cell">
     <div class="cmp-m-title">Compare</div>
-    <div class="cmp-m-subtitle">${filled} ${filled === 1 ? 'fragrance' : 'fragrances'} selected</div>
+    <div class="cmp-m-subtitle">${filled} ${filled === 1 ? 'fragrance' : 'fragrances'}</div>
   </div>`);
 
   for (let i = 0; i < colCount; i++) {
-    cells.push(_renderColHeader(i, CMP_SLOTS[i] || null));
+    cells.push(_renderColHeader(i, CMP_SLOTS[i] || null, pairingBadges[i]));
   }
   if (showAdd) {
     cells.push(`<div class="cmp-m-cell cmp-m-add-col cmp-m-add-header" role="columnheader">
       <button class="cmp-m-add-btn" onclick="addCmpSlot()" aria-label="Add fragrance">
-        <span class="cmp-m-add-icon">+</span>
-        <span class="cmp-m-add-label">Add</span>
+        <span class="cmp-m-add-label">Add fragrance</span>
       </button>
     </div>`);
   }
 
   // Attribute rows
+  const sortActive = (field) => CMP_SORT?.startsWith(field);
+  const sortDir = (field) => CMP_SORT === field + '-asc' ? '↑' : '↓';
   rows.forEach(row => {
-    cells.push(`<div class="cmp-m-cell cmp-m-sidebar cmp-m-row-sidebar" role="rowheader">
-      <span class="sec-label">${row.label}</span>
+    let sidebarContent;
+    if (row.id === 'sensory') {
+      sidebarContent = `<span class="sec-label">${row.label}</span>
+         <ol class="cmp-m-sensory-legend" aria-label="Sensory axis key">
+           <li class="text-caption">Freshness</li>
+           <li class="text-caption">Sweetness</li>
+           <li class="text-caption">Warmth</li>
+           <li class="text-caption">Intensity</li>
+           <li class="text-caption">Complexity</li>
+         </ol>`;
+    } else if (row.id === 'sillage' || row.id === 'structure') {
+      const active = sortActive(row.id);
+      sidebarContent = `<div class="cmp-m-row-sort-wrap">
+        <span class="sec-label">${row.label}</span>
+        ${filled >= 2 ? `<button class="cmp-m-sort-btn${active ? ' active' : ''}"
+          data-sort="${row.id}" aria-pressed="${active ? 'true' : 'false'}"
+          aria-label="Sort by ${row.label}">${ICONS.sortUpDown}${active ? sortDir(row.id) : ''}</button>` : ''}
+      </div>`;
+    } else {
+      sidebarContent = `<span class="sec-label">${row.label}</span>`;
+    }
+    // Notes rows get data-row for border suppression via CSS
+    const isNotes = row.id === 'top' || row.id === 'heart' || row.id === 'base';
+    cells.push(`<div class="cmp-m-cell cmp-m-sidebar cmp-m-row-sidebar${isNotes ? ' cmp-m-notes-sidebar' : ''}"
+      data-row="${row.id}" role="rowheader">
+      ${sidebarContent}
     </div>`);
     for (let i = 0; i < colCount; i++) {
-      cells.push(_renderRowCell(row.id, i, CMP_SLOTS[i] || null, sharedNoteSet));
+      const cell = _renderRowCell(row.id, i, CMP_SLOTS[i] || null, sharedNoteSet);
+      // Inject data-row into the cell div for CSS border targeting
+      cells.push(cell.replace(/^<div /, `<div data-row="${row.id}" `));
     }
     if (showAdd) {
-      cells.push(`<div class="cmp-m-cell cmp-m-add-col" role="cell"></div>`);
+      cells.push(`<div class="cmp-m-cell cmp-m-add-col" data-row="${row.id}" role="cell"></div>`);
     }
   });
 
   matrix.innerHTML = cells.join('');
 
-  // Wire events — slot selection
+  // Wire events — empty slot selection
   matrix.querySelectorAll('.cmp-m-slot-select').forEach(btn => {
     const idx = parseInt(btn.dataset.slot);
     btn.addEventListener('click', () => openCmpSlot(idx));
   });
-  matrix.querySelectorAll('.cmp-m-col-header.filled').forEach(hdr => {
-    hdr.addEventListener('click', (e) => {
-      if (!e.target.closest('.cmp-m-remove-btn')) openCmpSlot(parseInt(hdr.dataset.slot));
+
+  // Fragrance name button → view details
+  matrix.querySelectorAll('.cmp-m-col-name-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const frag = CMP_SLOTS[parseInt(btn.dataset.slot)];
+      if (frag) openFragDetail(frag);
     });
   });
+
+  // Switch button → swap fragrance
+  matrix.querySelectorAll('.cmp-m-swap-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openCmpSlot(parseInt(btn.dataset.slot));
+    });
+  });
+
+  // Remove button
   matrix.querySelectorAll('.cmp-m-remove-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       window.haptic?.('nudge');
       removeCmpSlot(parseInt(btn.dataset.slot));
+    });
+  });
+
+  // Drag-to-reorder columns
+  let _dragIdx = null;
+  matrix.querySelectorAll('.cmp-m-col-header.filled').forEach(hdr => {
+    hdr.addEventListener('dragstart', (e) => {
+      _dragIdx = parseInt(hdr.dataset.slot);
+      hdr.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    hdr.addEventListener('dragend', () => {
+      _dragIdx = null;
+      matrix.querySelectorAll('.cmp-m-col-header').forEach(h => h.classList.remove('dragging', 'drag-over'));
+    });
+    hdr.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (_dragIdx !== null && parseInt(hdr.dataset.slot) !== _dragIdx)
+        hdr.classList.add('drag-over');
+    });
+    hdr.addEventListener('dragleave', () => hdr.classList.remove('drag-over'));
+    hdr.addEventListener('drop', (e) => {
+      e.preventDefault();
+      hdr.classList.remove('drag-over');
+      const dropIdx = parseInt(hdr.dataset.slot);
+      if (_dragIdx !== null && _dragIdx !== dropIdx) {
+        [CMP_SLOTS[_dragIdx], CMP_SLOTS[dropIdx]] = [CMP_SLOTS[dropIdx], CMP_SLOTS[_dragIdx]];
+        CMP_SORT = null;
+        renderMatrix();
+      }
+    });
+  });
+
+  // Inline sort buttons (next to Sillage / Structure row labels)
+  matrix.querySelectorAll('.cmp-m-sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => _applyCmpSort(btn.dataset.sort));
+  });
+
+  // Role chips → role definition
+  matrix.querySelectorAll('[data-role]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const role = ROLES.find(r => r.id === btn.dataset.role);
+      if (!role) return;
+      openDetail(c => {
+        c.innerHTML = `<div class="list-item cmp-m-role-detail">
+          <div class="list-item-leading">
+            <span class="cmp-m-role-sym" aria-hidden="true">${role.sym}</span>
+          </div>
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">${role.name}</div>
+            <div class="list-item-sublabel text-meta">${role.desc}</div>
+            <div class="list-item-detail text-caption">${role.long}</div>
+          </div>
+        </div>`;
+      }, role.name);
     });
   });
 
@@ -4677,12 +4845,9 @@ function renderMatrix() {
     });
   });
 
-  // Mobile cards
+  // Mobile cards + suggestions
   _renderMobileCards();
-
-  // Below-matrix
-  renderSharedNotes();
-  renderBestPairings();
+  renderCmpSuggestions();
 }
 
 /* ── Mobile card carousel ── */
@@ -4729,7 +4894,12 @@ function _renderMobileCards() {
       const strVal = frag.layering||5;
       const sillPct = (sillVal/10)*100;
       const strPct = (strVal/10)*100;
-      const roles = (frag.roles||[]).map(r=>`<span class="chip">${r.charAt(0).toUpperCase() + r.slice(1)}</span>`).join('') || '<span class="text-caption cmp-m-empty-val">—</span>';
+      const roles = (frag.roles||[]).map(r=>{
+        const roleObj = RM[r] || {};
+        const label = roleObj.name || (r.charAt(0).toUpperCase() + r.slice(1));
+        const sym = roleObj.sym || '';
+        return `<button class="chip" data-role="${r}" aria-label="${label} — tap to learn more">${sym ? sym + ' ' : ''}${label}</button>`;
+      }).join('') || '<span class="text-caption cmp-m-empty-val">—</span>';
       cards.push(`<div class="cmp-m-card">
         <div class="cmp-m-card-header">
           <div>
@@ -4759,7 +4929,6 @@ function _renderMobileCards() {
   if (showAdd) {
     cards.push(`<div class="cmp-m-card cmp-m-card--add">
       <button class="cmp-m-add-btn" onclick="addCmpSlot()" aria-label="Add fragrance">
-        <span class="cmp-m-add-icon">+</span>
         <span class="cmp-m-add-label">Add fragrance</span>
       </button>
     </div>`);
@@ -4787,81 +4956,29 @@ function _renderMobileCards() {
     });
   });
 
-  // Keyboard nav for carousel (reuse existing pattern)
-  if (typeof initCarouselKeyNav === 'function') initCarouselKeyNav(wrap);
-}
-
-/* ── Below-matrix: Shared Notes ── */
-function renderSharedNotes() {
-  const el = document.getElementById('cmp-shared-notes');
-  if (!el) return;
-  const filled = CMP_SLOTS.filter(Boolean);
-  if (filled.length < 2) { el.hidden = true; return; }
-
-  const noteCounts = {};
-  filled.forEach(frag => {
-    const seen = new Set(frag._nAll || []);
-    seen.forEach(note => { noteCounts[note] = (noteCounts[note] || 0) + 1; });
-  });
-  const shared = Object.entries(noteCounts)
-    .filter(([, count]) => count >= 2)
-    .sort((a, b) => b[1] - a[1]);
-  if (!shared.length) { el.hidden = true; return; }
-
-  el.hidden = false;
-  el.innerHTML = `<div class="cmp-m-below-section">
-    <div class="sec-label">Shared Notes</div>
-    <div class="cmp-m-shared-tags">
-      ${shared.map(([note, count]) =>
-        `<button class="tag text-meta" data-note="${note}">${note} <span class="cmp-m-note-count">×${count}</span></button>`
-      ).join('')}
-    </div>
-  </div>`;
-  el.querySelectorAll('[data-note]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const note = NI_MAP[btn.dataset.note.toLowerCase()];
-      if (note) openDetail(c => renderNoteDetail(c, note), note.name);
+  // Role chips → role definition
+  wrap.querySelectorAll('[data-role]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const role = ROLES.find(r => r.id === btn.dataset.role);
+      if (!role) return;
+      openDetail(c => {
+        c.innerHTML = `<div class="list-item cmp-m-role-detail">
+          <div class="list-item-leading">
+            <span class="cmp-m-role-sym" aria-hidden="true">${role.sym}</span>
+          </div>
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">${role.name}</div>
+            <div class="list-item-sublabel text-meta">${role.desc}</div>
+            <div class="list-item-detail text-caption">${role.long}</div>
+          </div>
+        </div>`;
+      }, role.name);
     });
   });
-}
 
-/* ── Below-matrix: Best Pairings ── */
-function renderBestPairings() {
-  const el = document.getElementById('cmp-best-pairings');
-  if (!el) return;
-  const filled = CMP_SLOTS.filter(Boolean);
-  if (filled.length < 2) { el.hidden = true; return; }
-
-  const pairs = [];
-  for (let i = 0; i < filled.length; i++) {
-    for (let j = i + 1; j < filled.length; j++) {
-      const score = Math.round(scoreSimilarity(filled[i], filled[j]));
-      if (score >= 60) pairs.push({ a: filled[i], b: filled[j], score });
-    }
-  }
-  if (!pairs.length) { el.hidden = true; return; }
-
-  pairs.sort((a, b) => b.score - a.score);
-  const top2 = pairs.slice(0, 2);
-
-  el.hidden = false;
-  el.innerHTML = `<div class="cmp-m-below-section">
-    <div class="sec-label">Best Pairings</div>
-    <div class="cmp-m-pairings">
-      ${top2.map((pair, i) => {
-        const narrative = getCompareNarrative(pair.a, pair.b);
-        const sentence = narrative ? narrative.split('. ')[0] : '';
-        return `<div class="cmp-m-pairing-card">
-          <div class="cmp-m-pairing-header">
-            <span class="cmp-m-pairing-label">${i === 0 ? 'Best pairing for layering' : 'Also worth trying together'}</span>
-            <span class="cmp-m-pairing-score">${pair.score}% match</span>
-          </div>
-          <div class="cmp-m-pairing-names">${pair.a.name} + ${pair.b.name}</div>
-          ${sentence ? `<p class="cmp-m-pairing-desc">&ldquo;${sentence}.&rdquo;</p>` : ''}
-        </div>`;
-      }).join('')}
-    </div>
-  </div>`;
+  // Keyboard nav for carousel (reuse existing pattern)
+  if (typeof initCarouselKeyNav === 'function') initCarouselKeyNav(wrap);
 }
 
 /* ── Slot management ── */
@@ -4923,6 +5040,92 @@ window.addCmpSlot = function addCmpSlot() {
 function _selectFragForSlot(slot, frag) {
   const idx = slot === 'a' ? 0 : slot === 'b' ? 1 : parseInt(slot);
   setCmpSlot(idx, frag);
+}
+
+/* ── Suggestions: similar + layering picks below the matrix ── */
+function renderCmpSuggestions() {
+  const panel = document.getElementById('p-compare');
+  if (!panel) return;
+
+  // Find or create container (appended once, updated in-place)
+  let wrap = document.getElementById('cmp-suggestions');
+  if (!wrap) {
+    wrap = document.createElement('div');
+    wrap.id = 'cmp-suggestions';
+    wrap.className = 'cmp-suggestions';
+    panel.appendChild(wrap);
+  }
+
+  const filled = CMP_SLOTS.filter(Boolean);
+  if (filled.length < 2 || !CAT?.length) { wrap.hidden = true; return; }
+  wrap.hidden = false;
+
+  const inSlots = new Set(filled.map(f => f.id));
+
+  // Score every catalogue frag against all filled slots
+  const simScored = [];
+  const layScored = [];
+  CAT.forEach(f => {
+    if (inSlots.has(f.id)) return;
+    let maxSim = 0, maxLay = 0;
+    filled.forEach(s => {
+      maxSim = Math.max(maxSim, scoreSimilarity(s, f));
+      maxLay = Math.max(maxLay, scoreLayeringPair(s, f));
+    });
+    simScored.push({ f, score: maxSim });
+    layScored.push({ f, score: maxLay });
+  });
+
+  const topSim = simScored.sort((a, b) => b.score - a.score).slice(0, 4);
+  const simIds = new Set(topSim.map(x => x.f.id));
+  const topLay = layScored
+    .filter(x => !simIds.has(x.f.id))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4);
+
+  const mkRow = ({f}) => {
+    const fam = FAM[f.family] || {};
+    const famLabel = fam.label || f.family;
+    return `<button class="list-item cmp-suggest-row" data-id="${f.id}">
+      <div class="list-item-dot" style="--fam-bg:${fam.color||'#888'}"></div>
+      <div class="list-item-body">
+        <div class="list-item-label text-ui-strong">${f.name}</div>
+        <div class="list-item-sublabel text-meta">${f.brand} · ${famLabel}</div>
+      </div>
+      <div class="list-item-trail">
+        <span class="chip chip--xs">Add</span>
+      </div>
+    </button>`;
+  };
+
+  wrap.innerHTML = `
+    <div class="cmp-suggestions-inner">
+      ${topSim.length ? `
+        <div class="cmp-suggest-section">
+          <div class="sec-label">Similar to compare</div>
+          <div class="list-view">${topSim.map(mkRow).join('')}</div>
+        </div>` : ''}
+      ${topLay.length ? `
+        <div class="cmp-suggest-section">
+          <div class="sec-label">Try layering with</div>
+          <div class="list-view">${topLay.map(mkRow).join('')}</div>
+        </div>` : ''}
+    </div>`;
+
+  wrap.querySelectorAll('.cmp-suggest-row').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const frag = CAT_MAP[btn.dataset.id];
+      if (!frag) return;
+      // Add to next empty slot, or push new slot if all filled and < 5
+      let emptyIdx = CMP_SLOTS.findIndex(s => !s);
+      if (emptyIdx === -1) {
+        if (CMP_SLOTS.length >= 5) return;
+        emptyIdx = CMP_SLOTS.length;
+        CMP_SLOTS.push(null);
+      }
+      setCmpSlot(emptyIdx, frag);
+    });
+  });
 }
 
 function initCompare() {

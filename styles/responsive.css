@@ -14,14 +14,9 @@
     font-size: 17px;
   }
 
-  /* Desktop compare: matrix fills panel height */
-  #p-compare {
-    overflow-y: auto;
-    max-height: calc(100vh - var(--col-nav-h));
-  }
   /* Wider sidebar on desktop for better label fit */
   #cmp-matrix {
-    grid-template-columns: 180px repeat(var(--cmp-col-count, 2), minmax(220px, 1fr)) var(--cmp-add-width, 140px);
+    --cmp-sidebar-w: 180px;
   }
 
   .cmp-pair-card {
@@ -69,10 +64,9 @@
     display: none !important;
   }
 
-  /* Comparison Canvas */
+  /* Comparison Canvas — scrolls vertically so suggestions appear below matrix */
   #p-compare {
-    height: calc(100vh - var(--col-nav-h));
-    overflow: hidden;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -564,5 +558,4 @@
   /* Compare matrix: hide grid on mobile, show card carousel */
   #cmp-matrix { display: none; }
   .cmp-mobile-cards { display: flex; }
-  #cmp-below-matrix { padding: var(--sp-md); }
 }
