@@ -4835,13 +4835,13 @@ function renderBestPairings() {
   const pairs = [];
   for (let i = 0; i < filled.length; i++) {
     for (let j = i + 1; j < filled.length; j++) {
-      const score = Math.round(scoreSimilarity(filled[i], filled[j]));
-      if (score >= 60) pairs.push({ a: filled[i], b: filled[j], score });
+      const details = engine.getLayeringDetails(filled[i], filled[j], store.FAM_COMPAT);
+      if (details.total >= 40) pairs.push({ a: filled[i], b: filled[j], details });
     }
   }
   if (!pairs.length) { el.hidden = true; return; }
 
-  pairs.sort((a, b) => b.score - a.score);
+  pairs.sort((a, b) => b.details.total - a.details.total);
   const top2 = pairs.slice(0, 2);
 
   el.hidden = false;
@@ -4851,13 +4851,34 @@ function renderBestPairings() {
       ${top2.map((pair, i) => {
         const narrative = getCompareNarrative(pair.a, pair.b);
         const sentence = narrative ? narrative.split('. ')[0] : '';
+        const d = pair.details;
         return `<div class="cmp-m-pairing-card">
           <div class="cmp-m-pairing-header">
             <span class="cmp-m-pairing-label">${i === 0 ? 'Best pairing for layering' : 'Also worth trying together'}</span>
-            <span class="cmp-m-pairing-score">${pair.score}% match</span>
+            <span class="cmp-m-pairing-score">${d.total}% score</span>
           </div>
           <div class="cmp-m-pairing-names">${pair.a.name} + ${pair.b.name}</div>
-          ${sentence ? `<p class="cmp-m-pairing-desc">&ldquo;${sentence}.&rdquo;</p>` : ''}
+          <div class="cmp-m-pairing-desc" style="margin-bottom: var(--sp-sm);">${sentence}</div>
+          <div class="list-view" style="margin-top: 0;">
+            <div class="list-item" style="padding: var(--sp-xs) 0;">
+              <div class="list-item-body">
+                <div class="list-item-label text-ui-strong">Family Compatibility</div>
+                <div class="list-item-sublabel text-meta">${Math.round(d.famScore)} / 35 pts</div>
+              </div>
+            </div>
+            <div class="list-item" style="padding: var(--sp-xs) 0;">
+              <div class="list-item-body">
+                <div class="list-item-label text-ui-strong">Sillage Contrast</div>
+                <div class="list-item-sublabel text-meta">${Math.round(d.sillScore)} / 20 pts</div>
+              </div>
+            </div>
+            <div class="list-item" style="padding: var(--sp-xs) 0;">
+              <div class="list-item-body">
+                <div class="list-item-label text-ui-strong">Note Independence</div>
+                <div class="list-item-sublabel text-meta">${Math.round(d.noteScore)} / 20 pts</div>
+              </div>
+            </div>
+          </div>
         </div>`;
       }).join('')}
     </div>
