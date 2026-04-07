@@ -1913,7 +1913,10 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
+    .map(f=>{
+      const details = engine.getLayeringDetails(frag, f, store.FAM_COMPAT);
+      return { f, details, score: details.total };
+    })
     .filter(x=>x.score>=40)
     .sort((a,b)=>b.score-a.score)
     .slice(0,2);
@@ -1922,12 +1925,15 @@ function buildLayerSuggestions(frag,container){
   lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
   const shelf=document.createElement('div');shelf.className='list-view';
-  candidates.forEach(({f,score})=>{
+  candidates.forEach(({f,score,details})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
     const row=document.createElement('button');
     row.className='list-item';
+    row.style.flexDirection = 'column';
+    row.style.alignItems = 'stretch';
     row.innerHTML=`
+      <div style="display:flex; align-items:center; width:100%;">
         <div class="list-item-dot" style="--fam-bg: ${fm2.color}"></div>
         <div class="list-item-body">
           <div class="list-item-label text-ui-strong">${f.name}</div>
@@ -1938,7 +1944,11 @@ function buildLayerSuggestions(frag,container){
           <span class="dc-layer-score-badge">${score}</span>
           <span class="chip chip--xs is-owned">Owned</span>
         </div>
-      `;
+      </div>
+      <div class="list-item-sublabel text-meta" style="margin-top:var(--sp-xs); padding-left:28px;">
+        Math: Family Comp +${details.famScore} | Notes +${details.noteScore} | Sillage +${details.sillScore}
+      </div>
+    `;
     row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
     shelf.appendChild(row);
   });
@@ -4835,8 +4845,8 @@ function renderBestPairings() {
   const pairs = [];
   for (let i = 0; i < filled.length; i++) {
     for (let j = i + 1; j < filled.length; j++) {
-      const score = Math.round(scoreSimilarity(filled[i], filled[j]));
-      if (score >= 60) pairs.push({ a: filled[i], b: filled[j], score });
+      const details = engine.getSimilarityDetails(filled[i], filled[j], store.FAM_COMPAT);
+      if (details.total >= 60) pairs.push({ a: filled[i], b: filled[j], score: details.total, details });
     }
   }
   if (!pairs.length) { el.hidden = true; return; }
@@ -4847,17 +4857,19 @@ function renderBestPairings() {
   el.hidden = false;
   el.innerHTML = `<div class="cmp-m-below-section">
     <div class="sec-label">Best Pairings</div>
-    <div class="cmp-m-pairings">
+    <div class="list-view">
       ${top2.map((pair, i) => {
         const narrative = getCompareNarrative(pair.a, pair.b);
         const sentence = narrative ? narrative.split('. ')[0] : '';
-        return `<div class="cmp-m-pairing-card">
-          <div class="cmp-m-pairing-header">
-            <span class="cmp-m-pairing-label">${i === 0 ? 'Best pairing for layering' : 'Also worth trying together'}</span>
-            <span class="cmp-m-pairing-score">${pair.score}% match</span>
+        return `<div class="list-item" style="flex-direction: column; align-items: stretch; cursor: default;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--sp-xs);">
+            <div class="list-item-label text-ui-strong">${pair.a.name} + ${pair.b.name}</div>
+            <div class="list-item-trailing-label">${pair.score}% match</div>
           </div>
-          <div class="cmp-m-pairing-names">${pair.a.name} + ${pair.b.name}</div>
-          ${sentence ? `<p class="cmp-m-pairing-desc">&ldquo;${sentence}.&rdquo;</p>` : ''}
+          ${sentence ? `<div class="list-item-sublabel text-meta" style="margin-bottom: var(--sp-xs);">&ldquo;${sentence}.&rdquo;</div>` : ''}
+          <div class="list-item-sublabel text-meta" style="color: var(--text-secondary);">
+            Math: Family +${pair.details.famScore} | Notes +${pair.details.noteScore} | Sillage +${pair.details.sillScore} | Role +${pair.details.roleScore}
+          </div>
         </div>`;
       }).join('')}
     </div>
