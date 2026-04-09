@@ -4835,8 +4835,8 @@ function renderBestPairings() {
   const pairs = [];
   for (let i = 0; i < filled.length; i++) {
     for (let j = i + 1; j < filled.length; j++) {
-      const score = Math.round(scoreSimilarity(filled[i], filled[j]));
-      if (score >= 60) pairs.push({ a: filled[i], b: filled[j], score });
+      const det = engine.getLayeringDetails(filled[i], filled[j], store.FAM_COMPAT);
+      if (det.total >= 60) pairs.push({ a: filled[i], b: filled[j], score: det.total, det });
     }
   }
   if (!pairs.length) { el.hidden = true; return; }
@@ -4858,6 +4858,13 @@ function renderBestPairings() {
           </div>
           <div class="cmp-m-pairing-names">${pair.a.name} + ${pair.b.name}</div>
           ${sentence ? `<p class="cmp-m-pairing-desc">&ldquo;${sentence}.&rdquo;</p>` : ''}
+          <div class="list-view" style="margin-top:var(--sp-sm);">
+            <div class="list-item">
+              <div class="list-item-sublabel text-meta">Family Compatibility: +${Math.round(pair.det.famScore)}</div>
+              <div class="list-item-sublabel text-meta">Sillage Contrast: +${pair.det.sillScore}</div>
+              <div class="list-item-sublabel text-meta">Note Synergy: +${pair.det.noteScore}</div>
+            </div>
+          </div>
         </div>`;
       }).join('')}
     </div>
