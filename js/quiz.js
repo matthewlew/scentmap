@@ -434,14 +434,16 @@ function renderResults(top3) {
   const resultsHtml = top3.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
-      <a href="/app.html#frag=${frag.id}" class="quiz-result-card">
-        <div class="quiz-result-dot" style="--fam-bg: ${fc.color}"></div>
-        <div class="quiz-result-info">
-          <div class="quiz-result-name">${frag.name}</div>
-          <div class="quiz-result-brand">${frag.brand} &middot; ${fc.label}</div>
-          ${frag.description ? `<div class="quiz-result-desc">${frag.description}</div>` : ''}
+      <a href="/app.html#frag=${frag.id}" class="card card--interactive" style="text-decoration:none; color:inherit;">
+        <div style="display:flex; align-items:center; gap:var(--sp-md);">
+          <div class="dot" style="--fam-bg: ${fc.color}; flex-shrink:0;"></div>
+          <div style="flex:1; min-width:0;">
+            <div class="text-ui-strong">${frag.name}</div>
+            <div class="text-meta" style="color:var(--text-secondary);">${frag.brand} &middot; ${fc.label}</div>
+            ${frag.description ? `<div class="text-meta" style="color:var(--text-tertiary); margin-top:var(--sp-xs);">${frag.description}</div>` : ''}
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color:var(--text-tertiary); flex-shrink:0;"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <svg class="quiz-result-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     `;
   }).join('');
@@ -477,14 +479,16 @@ function renderArchetypeResults(archetype, frags) {
   const resultsHtml = frags.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
-      <a href="/app.html#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
-        <div class="quiz-result-dot" style="--fam-bg: ${fc.color}"></div>
-        <div class="quiz-result-info">
-          <div class="quiz-result-name">${frag.name}</div>
-          <div class="quiz-result-brand">${frag.brand} &middot; ${fc.label}</div>
-          ${frag.description ? `<div class="quiz-result-desc">${frag.description}</div>` : ''}
+      <a href="/app.html#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="card card--interactive" style="text-decoration:none; color:inherit;">
+        <div style="display:flex; align-items:center; gap:var(--sp-md);">
+          <div class="dot" style="--fam-bg: ${fc.color}; flex-shrink:0;"></div>
+          <div style="flex:1; min-width:0;">
+            <div class="text-ui-strong">${frag.name}</div>
+            <div class="text-meta" style="color:var(--text-secondary);">${frag.brand} &middot; ${fc.label}</div>
+            ${frag.description ? `<div class="text-meta" style="color:var(--text-tertiary); margin-top:var(--sp-xs);">${frag.description}</div>` : ''}
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color:var(--text-tertiary); flex-shrink:0;"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <svg class="quiz-result-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     `;
   }).join('');
@@ -525,14 +529,16 @@ function renderAstroResults(sign, archetype, frags) {
   const resultsHtml = frags.map(frag => {
     const fc = FAM[frag.family] || { label: frag.family, color: '#8C5E30' };
     return `
-      <a href="/app.html#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="quiz-result-card">
-        <div class="quiz-result-dot" style="--fam-bg: ${fc.color}"></div>
-        <div class="quiz-result-info">
-          <div class="quiz-result-name">${frag.name}</div>
-          <div class="quiz-result-brand">${frag.brand} &middot; ${fc.label}</div>
-          ${frag.description ? `<div class="quiz-result-desc">${frag.description}</div>` : ''}
+      <a href="/app.html#frag=${frag.id}&source=quiz&archetype=${archetype.id}" class="card card--interactive" style="text-decoration:none; color:inherit;">
+        <div style="display:flex; align-items:center; gap:var(--sp-md);">
+          <div class="dot" style="--fam-bg: ${fc.color}; flex-shrink:0;"></div>
+          <div style="flex:1; min-width:0;">
+            <div class="text-ui-strong">${frag.name}</div>
+            <div class="text-meta" style="color:var(--text-secondary);">${frag.brand} &middot; ${fc.label}</div>
+            ${frag.description ? `<div class="text-meta" style="color:var(--text-tertiary); margin-top:var(--sp-xs);">${frag.description}</div>` : ''}
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color:var(--text-tertiary); flex-shrink:0;"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <svg class="quiz-result-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     `;
   }).join('');

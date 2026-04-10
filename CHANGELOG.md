@@ -1,6 +1,14 @@
 ## 2026-04-09
 
 ### Changed
+- **Container standardization** — Adopted 4 consolidated rules across all panels: universal left-alignment (`align-items: flex-start; text-align: left` baked into `.card` and `.banner`), standardized padding (`--sp-md` for carousel/interactive, `--sp-lg` for static), design system typography (`text-ui-strong`, `text-meta`), and proximity logic (`--sp-xs` for tight groups).
+- **Carousel cards** — Width updated 136px → 160px; padding reduced to `--sp-md` via `.carousel-card.card` specificity rule; dead class names (`carousel-card-family`, `carousel-card-name`, `carousel-card-brand`) replaced with design system utility classes.
+- **Dupe Lab** — Outer class changed from `.dupe-card` to `.list-item`; interior slot structure was already correct.
+- **Quiz attribution callout** — `.quiz-attribution` → `.callout`; duplicate CSS removed.
+- **Quiz result cards** — Migrated from `.quiz-result-card` bespoke component to `.card.card--interactive` with inline flex layout; 8 dead CSS rules removed.
+- **DESIGN.md** — Added Container Rules section documenting the 4 consolidated rules; deprecated table updated with all migrated classes.
+
+### Changed
 - **Compare: icon buttons** — Swap (⇄) and Remove (×) buttons in column headers now use SVG icons (`arrowsLeftRight`, `trash`) consistent with the rest of the icon system. Sort direction indicators also use SVG arrows instead of ↑↓ glyphs.
 - **Compare: larger mini radar** — Mini radar charts in mobile cards increased from 80px to 110px, with axis labels scaled up from 4.5px to 7px for legibility.
 - **Quiz: session key migration** — Quiz session storage now uses `quizId` instead of `slug` for the key field, and includes `timestamp` and `answers` alongside results. Existing sessions with the old key restore correctly via fallback.

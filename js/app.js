@@ -684,12 +684,12 @@ function renderWardrobeGap(container) {
         card.setAttribute('tabindex', '0');
         card.setAttribute('aria-label', `${frag.name} by ${frag.brand}, ${gap.gapAxisShort} recommendation`);
         card.innerHTML = `
-          <div class="carousel-card-family">
+          <div style="display:flex; align-items:center; gap:var(--sp-xs);">
             <div class="dot" style="background:${famColor}" aria-hidden="true"></div>
-            <span class="carousel-card-family-label">${gap.gapAxisShort}</span>
+            <span class="text-meta">${gap.gapAxisShort}</span>
           </div>
-          <div class="carousel-card-name list-item-label">${frag.name}</div>
-          <div class="carousel-card-brand list-item-sublabel">${frag.brand}</div>
+          <div class="text-ui-strong">${frag.name}</div>
+          <div class="text-meta">${frag.brand}</div>
         `;
         card.addEventListener('click', () => { window.haptic?.('light'); openFragDetail(frag); });
         card.addEventListener('keydown', e => {
@@ -911,12 +911,12 @@ function renderBrandDiscovery(container) {
         : '';
 
     card.innerHTML = `
-      <div class="carousel-card-family">
+      <div style="display:flex; align-items:center; gap:var(--sp-xs);">
         <div class="dot" style="background:${famColor}" aria-hidden="true"></div>
-        <span class="carousel-card-family-label">${famLabel}</span>
+        <span class="text-meta">${famLabel}</span>
       </div>
-      <div class="carousel-card-name list-item-label">${b.brand}</div>
-      ${reasonText ? `<div class="carousel-card-reason">${reasonText}</div>` : ''}
+      <div class="text-ui-strong">${b.brand}</div>
+      ${reasonText ? `<div class="text-meta" style="color:var(--text-secondary);">${reasonText}</div>` : ''}
       ${b.url ? `<a class="text-link carousel-card-shop" href="${b.url}" target="_blank" rel="noopener noreferrer" aria-label="Shop ${b.brand} — opens official website">Shop →</a>` : ''}
     `;
 
@@ -1559,7 +1559,7 @@ function renderDupeLab(container, anchor) {
         const fm = FAM[f.family] || {label: f.family, color:'#888'};
         const reason = getSwapReason(anchor, f);
         return `
-          <button class="dupe-card" onclick="trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">
+          <button class="list-item" onclick="trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">
             <div class="list-item-dot" style="--fam-bg: ${fm.color}"></div>
             <div class="list-item-body">
               <div class="list-item-label text-ui-strong">${f.name}</div>
@@ -1627,7 +1627,7 @@ function renderFragDetail(container,frag){
       const arch = ARCHETYPES[archMatch[1]];
       if (arch) {
         quizAttribution = `
-          <div class="quiz-attribution">
+          <div class="callout">
             <span class="callout-icon">✨</span> From your scent archetype: <span class="callout-strong">${arch.name}</span>
           </div>`;
       }
@@ -1720,7 +1720,7 @@ function renderFragDetail(container,frag){
     ctxRow.setAttribute('aria-label',`${top.name} by ${top.brand}, ${topScore}% match — in your collection`);
     ctxRow.innerHTML=`
       <div class="list-item-dot" style="--fam-bg: ${fm2.color}"></div>
-      <div class="list-item-body" style="flex:1;text-align:left;">
+      <div class="list-item-body" style="flex:1;">
         <div class="list-item-label text-ui-strong">${top.name}</div>
         <div class="list-item-sublabel text-meta">${top.brand}&thinsp;&middot;&thinsp;${famLabel2}</div>
       </div>
@@ -1772,7 +1772,7 @@ function renderFragDetail(container,frag){
       const reasonLabel = reason ? `${f.name} \u2014 ${reason.replace(/^An alternative[^:]*:\s*/i,'').replace(/^Shares /i,'shares ')}` : '';
       row.innerHTML=`
           <div class="list-item-dot" style="--fam-bg: ${fm2.color}"></div>
-          <div class="list-item-body" style="flex:1;text-align:left;">
+          <div class="list-item-body" style="flex:1;">
             <div class="list-item-label text-ui-strong">${f.name}</div>
             <div class="list-item-sublabel text-meta">${f.brand} · ${famLabel2}</div>
             ${reasonLabel ? `<div class="list-item-detail text-caption">${reasonLabel}</div>` : ''}
@@ -3337,12 +3337,12 @@ function renderNotesExplore(container) {
     const isRare = RARE_NOTES.includes(note.name);
 
     card.innerHTML = `
-      <div class="carousel-card-family" style="display:flex; align-items:center; gap:var(--sp-xs); margin-bottom:var(--sp-xs);">
+      <div style="display:flex; align-items:center; gap:var(--sp-xs); margin-bottom:var(--sp-xs);">
         <div class="dot" style="--fam-bg: ${fm.color}"></div>
-        <span class="carousel-card-family-label text-meta" style="font-weight:600;">${fm.label}</span>
+        <span class="text-meta" style="font-weight:600;">${fm.label}</span>
         ${isRare ? `<span class="chip chip--xs" style="margin-left:auto;">Rare</span>` : ''}
       </div>
-      <div class="list-item-label text-ui-strong" style="font-size:var(--fs-ui); margin-bottom:var(--sp-xs);">${note.name}</div>
+      <div class="text-ui-strong" style="font-size:var(--fs-ui); margin-bottom:var(--sp-xs);">${note.name}</div>
       <div class="text-caption" style="margin-bottom:var(--sp-md);">${snippet}</div>
       <button class="btn btn--secondary u-w-full" style="margin-top:auto;">Read Story</button>
     `;

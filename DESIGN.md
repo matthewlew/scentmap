@@ -98,6 +98,17 @@ Only contains chrome-hiding overrides (hides app nav, panels, sidebar). All visu
 
 ---
 
+## Container Rules
+
+Ratified in `container-demos.html`. Apply to all surfaces: `.card`, `.banner`, carousel cards, and any bespoke card-like elements.
+
+1. **Universal Left-Alignment** — All containers enforce `align-items: flex-start; text-align: left`. Never center-align content inside a card or banner.
+2. **Standardized Padding** — Static cards (`.card`, `.banner`): `--sp-lg` (16px). Interactive/carousel cards: `--sp-md` (12px).
+3. **Typography Mapping** — `.text-ui-strong` for primary names. `.text-meta` for brand/secondary text. `.text-body` for descriptions.
+4. **Proximity Logic** — `--sp-xs` (4px) gap for tightly related elements (dot + name). `--sp-md` (12px) gap for distinct content blocks.
+
+---
+
 ## Token Rules
 
 ### Typography
@@ -148,6 +159,11 @@ Do not use in new code. Migrate to the components above.
 | `.quiz-btn-secondary` | `.btn.btn--secondary` |
 | `.badge`, `.dc-badge` | `.chip` |
 | `.landing-card`, `.notes-grid`, `.notes-card`, `.notes-card-header` | `.card`, `.grid`, `.list-item` |
+| `.quiz-result-card` | `.card.card--interactive` with flex row interior |
+| `.quiz-result-dot`, `.quiz-result-info`, `.quiz-result-name`, `.quiz-result-brand`, `.quiz-result-desc`, `.quiz-result-arrow` | `.dot`, inline flex layout, `.text-ui-strong`, `.text-meta`, `.text-meta`, trailing SVG arrow |
+| `.dupe-card` | `.list-item` (interior slot structure unchanged) |
+| `.quiz-attribution` | `.callout` |
+| `carousel-card-family`, `carousel-card-family-label`, `carousel-card-name`, `carousel-card-brand`, `carousel-card-reason` | Inline flex wrapper + `.text-meta` / `.text-ui-strong` |
 
 ---
 

@@ -608,51 +608,7 @@
   gap: var(--sp-md);
   margin-bottom: var(--sp-2xl);
 }
-.quiz-result-card {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-md);
-  padding: var(--sp-lg);
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius-lg);
-  background: var(--bg-primary);
-  text-decoration: none;
-  color: inherit;
-  transition: border-color var(--dur-fast) var(--ease-spring),
-              box-shadow var(--dur-fast) var(--ease-spring),
-              transform var(--dur-fast) var(--ease-spring);
-}
-.quiz-result-card:hover {
-  border-color: var(--border-strong);
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-1px);
-}
-.quiz-result-dot {
-  width: var(--sp-md);
-  height: var(--sp-md);
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-  background: var(--fam-bg, var(--fam-default));
-}
-.quiz-result-info { flex: 1; min-width: 0; }
-.quiz-result-name {
-  font-family: var(--font-display);
-  font-size: var(--fs-ui);
-  letter-spacing: -0.01em;
-}
-.quiz-result-brand {
-  font-size: var(--fs-meta);
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
-.quiz-result-desc {
-  font-family: var(--font-serif);
-  font-size: var(--fs-meta);
-  color: var(--text-tertiary);
-  margin-top: var(--sp-xs);
-  line-height: var(--lh-relaxed);
-}
-.quiz-result-arrow { color: var(--text-tertiary); flex-shrink: 0; }
+
 .quiz-share-toast {
   text-align: center;
   font-size: var(--fs-meta);
@@ -767,6 +723,8 @@ button.tag:hover {
   padding: var(--sp-lg);
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
   gap: var(--sp-md);
 }
 
@@ -831,6 +789,8 @@ button.tag:hover {
   padding: var(--sp-lg);
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
   gap: var(--sp-sm);
   margin-bottom: var(--sp-2xl);
 }
@@ -2902,10 +2862,14 @@ mark.note-match {
 
 .carousel-card {
   flex-shrink: 0;
-  width: 136px;
+  width: 160px;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
+}
+
+.carousel-card.card {
+  padding: var(--sp-md);
 }
 
 /* Wide variant for golden-pairs layering cards */
@@ -3005,28 +2969,6 @@ mark.note-match {
   height: 8px;
   border-radius: var(--radius-circle);
   margin-right: var(--sp-xs);
-}
-
-.quiz-attribution {
-  padding: var(--sp-sm) var(--sp-md);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  gap: var(--sp-xs);
-  margin-bottom: var(--sp-lg);
-}
-
-.dupe-card {
-  display: block;
-  text-align: left;
-  width: 100%;
-  padding: var(--sp-md) var(--sp-lg);
-  background: var(--bg-primary);
-  border: none;
-  border-bottom: 1px solid var(--border-standard);
-  cursor: pointer;
 }
 
 .profile-copy-toast {
