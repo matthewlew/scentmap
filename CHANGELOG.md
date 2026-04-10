@@ -1,3 +1,15 @@
+## 2026-04-10
+
+### Changed
+- **House Detail panel** — Brand name changed from centered uppercase `.house-detail-name` to left-aligned `.dc-name` (display font, consistent with fragrance detail). Fragrance count label migrated to `.sec-label`. Full fragrance list container migrated from `.house-detail-list` (custom bordered wrapper) to `.list-view` with inline structural styles. Known For carousel cards updated to show family dot + label at top-left, fragrance name below — matches container-demos proximity hierarchy.
+- **Note Detail panel** — "Defining Fragrance" migrated from broken `card card--interactive list-item` class combo (conflicting flex directions and padding) to a clean `.list-item` inside a bordered `.list-view` wrapper. Also made the reference fragrance button tappable (navigates to frag detail on click).
+- **Notes Explore — Family cards** — Removed redundant `.section-group` from `card section-group` (`.card` already has `flex-column gap-md`); inner layout uses direct children per card container rules.
+- **Notes Explore — Reference Scent** — Removed the `style="padding:0; border:none; background:transparent;"` hack on `.list-item`. Now uses a proper bordered `.list-view` container with a full `.list-item` button. Click handler added to navigate to the reference fragrance detail.
+- **Notes Explore — Quiz CTA** — Removed `card--interactive` and `section-group` from the quiz card (card is not itself the clickable element; the button inside is). Inner redundant `section-group` wrapper removed; card gap drives spacing.
+- **Notes Explore — Power Pairs** — `card card--secondary section-group` → `card card--secondary`. Inner `section-group` wrappers removed. "Example Evidence" replaced hacked `.list-item` with a `.callout` block.
+- **Byredo / Global quiz results** — `house-detail-list` class → `.list-view` with inline border/radius; selectors updated to use element IDs.
+- **CSS cleanup** — Removed dead `.house-detail-name`, `.house-detail-count`, `.house-detail-list` CSS blocks (~20 lines).
+
 ## 2026-04-09
 
 ### Changed

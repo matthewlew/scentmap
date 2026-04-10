@@ -2024,14 +2024,16 @@ function renderNoteDetail(container,note){
     ${note.insider_fact?`<div class="card card--secondary text-meta"><strong>Perfumer's Insight:</strong> ${note.insider_fact}</div>`:''}
     
     ${famFrag ? `
-      <div class="section-group">
+      <div class="detail-section">
         <div class="sec-label">Defining Fragrance</div>
-        <div class="card card--interactive list-item" id="nd-fam-frag">
-          <div class="list-item-dot" style="--fam-bg: ${FAM[famFrag.family]?.color || '#888'}"></div>
-          <div class="list-item-body">
-            <div class="list-item-label text-ui-strong">${famFrag.name}</div>
-            <div class="list-item-sublabel text-meta">${famFrag.brand} · Iconic ${note.name}</div>
-          </div>
+        <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-xl); overflow:hidden;">
+          <button class="list-item" id="nd-fam-frag">
+            <div class="list-item-dot" style="--fam-bg: ${FAM[famFrag.family]?.color || '#888'}"></div>
+            <div class="list-item-body">
+              <div class="list-item-label text-ui-strong">${famFrag.name}</div>
+              <div class="list-item-sublabel text-meta">${famFrag.brand} · Iconic ${note.name}</div>
+            </div>
+          </button>
         </div>
       </div>
     ` : ''}
@@ -2122,7 +2124,7 @@ function renderHouseDetail(container,brand){
   }
 
   container.innerHTML=`<div class="house-detail-wrap u-flex-column u-gap-xl">
-    <div class="house-detail-name u-text-center">${brand.toUpperCase()}</div>
+    <div class="dc-name">${brand}</div>
     ${houseData && houseData.desc ? `<div class="card card--secondary text-meta">${houseData.desc}</div>` : ''}
     <div id="house-brand-save-wrap"></div>
     ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="btn btn--secondary">Visit ${brand} Website</a>` : ''}
@@ -2150,9 +2152,9 @@ function renderHouseDetail(container,brand){
     </div>
     ` : ''}
 
-    <div>
-      <div class="house-detail-count">${frags.length} fragrance${frags.length!==1?'s':''}</div>
-      <div class="house-detail-list" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
+    <div class="detail-section">
+      <div class="sec-label">${frags.length} fragrance${frags.length!==1?'s':''}</div>
+      <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-xl); overflow:hidden;" id="house-list-${brand.replace(/\s+/g,'-')}"></div>
     </div>
   </div>`;
 
@@ -2169,10 +2171,11 @@ function renderHouseDetail(container,brand){
       const card = document.createElement('div');
       card.className = 'carousel-card card card--interactive';
       card.innerHTML = `
-        <div class="list-item-label text-ui-strong">${frag.name}</div>
-        <div style="display:flex; align-items:center; gap:var(--sp-xs); margin-top:auto;">
-          <div class="dot" style="--fam-bg: ${fm.color}"></div>
-        </div>`;
+        <div style="display:flex; align-items:center; gap:var(--sp-xs);">
+          <div class="dot" style="--fam-bg: ${fm.color}" aria-hidden="true"></div>
+          <span class="text-meta">${FAM[frag.family]?.label || frag.family}</span>
+        </div>
+        <div class="text-ui-strong">${frag.name}</div>`;
       card.addEventListener('click', e => { e.stopPropagation(); pushDetail(c => renderFragDetail(c, frag), frag.name); });
       carousel.appendChild(card);
     });
@@ -2198,7 +2201,7 @@ function renderHouseDetail(container,brand){
     });
   }
 
-  const list=container.querySelector('.house-detail-list');
+  const list=container.querySelector(`#house-list-${brand.replace(/\s+/g,'-')}`);
   frags.forEach(frag=>{
     const fc=getCmpFam(frag.family);
     const btn=document.createElement('button');
@@ -2304,14 +2307,14 @@ function renderByredoQuiz(container) {
     }
 
     container.innerHTML = `
-      <div class="section-group">
+      <div class="detail-section">
         <div class="dc-name">Your Byredo Signatures</div>
         <div class="callout">Based on your preferences, we recommend exploring these fragrances next time you are at a Byredo counter:</div>
-        <div class="house-detail-list"></div>
+        <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-xl); overflow:hidden;" id="byredo-results-list"></div>
       </div>
     `;
 
-    const list = container.querySelector('.house-detail-list');
+    const list = container.querySelector('#byredo-results-list');
     top3.forEach(frag => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
@@ -2483,15 +2486,15 @@ function renderGlobalQuiz(container) {
     }
 
     container.innerHTML = `
-      <div class="section-group">
+      <div class="detail-section">
         <div class="dc-name">Your Perfect Matches</div>
         <div class="callout">Based on your unique scent profile, we highly recommend exploring these three fragrances:</div>
-        <div class="house-detail-list"></div>
+        <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-xl); overflow:hidden;" id="global-quiz-results-list"></div>
         <button class="btn btn--secondary u-w-full" onclick="pushDetail(c => renderGlobalQuiz(c), 'Fragrance Match')">Retake Quiz</button>
       </div>
     `;
 
-    const list = container.querySelector('.house-detail-list');
+    const list = container.querySelector('#global-quiz-results-list');
     top3.forEach(frag => {
       const fc = getCmpFam(frag.family);
       const btn = document.createElement('button');
@@ -3361,12 +3364,10 @@ function renderNotesExplore(container) {
 
   // 3. Quiz CTA
   const quizCard = document.createElement('div');
-  quizCard.className = 'card card--interactive card--secondary section-group';
+  quizCard.className = 'card card--secondary';
   quizCard.innerHTML = `
-    <div class="section-group">
-      <div class="text-ui-strong text-title">Find Your Signature Note</div>
-      <div class="text-meta">Take the 30-second quiz to discover the notes that match your personality.</div>
-    </div>
+    <div class="text-ui-strong">Find Your Signature Note</div>
+    <div class="text-meta">Take the 30-second quiz to discover the notes that match your personality.</div>
     <button class="btn btn--primary u-w-full note-quiz-btn">Start Note Quiz</button>
   `;
   quizCard.querySelector('.note-quiz-btn').addEventListener('click', () => {
@@ -3401,35 +3402,35 @@ function renderNotesExplore(container) {
     if (!fm) return;
     
     const card = document.createElement('div');
-    card.className = 'card section-group';
-    
+    card.className = 'card';
+
     const famNotes = NI.filter(n => n.family === fk);
     const keyNotes = famNotes.slice(0, 3);
     const refFrag = CAT_MAP[FAM_REF_MAP[fk]];
 
     card.innerHTML = `
-      <div class="section-group">
-        <div class="u-flex-row u-align-center u-gap-sm">
-          <div class="dot--md" style="background:${fm.color};"></div>
-          <div class="text-ui-strong text-title">${fm.label}</div>
-        </div>
-        <div class="text-body">${fm.desc}</div>
+      <div style="display:flex; align-items:center; gap:var(--sp-sm);">
+        <div class="dot--md" style="background:${fm.color};"></div>
+        <div class="text-ui-strong">${fm.label}</div>
       </div>
-      
+      <div class="text-body">${fm.desc}</div>
+
       ${refFrag ? `
-      <div class="section-group">
+      <div class="detail-section">
         <div class="sec-label">Reference Scent</div>
-        <div class="list-item" style="padding:0; border:none; background:transparent;">
-          <div class="list-item-dot" style="--fam-bg: ${fm.color}"></div>
-          <div class="list-item-body">
-            <div class="list-item-label text-ui-strong">${refFrag.name}</div>
-            <div class="list-item-sublabel text-meta">${refFrag.brand}</div>
-          </div>
+        <div class="list-view" style="border:1px solid var(--border-standard); border-radius:var(--radius-xl); overflow:hidden;">
+          <button class="list-item fam-ref-btn" data-frag="${refFrag.id}">
+            <div class="list-item-dot" style="--fam-bg: ${fm.color}"></div>
+            <div class="list-item-body">
+              <div class="list-item-label text-ui-strong">${refFrag.name}</div>
+              <div class="list-item-sublabel text-meta">${refFrag.brand}</div>
+            </div>
+          </button>
         </div>
       </div>
       ` : ''}
 
-      <div class="section-group">
+      <div class="detail-section">
         <div class="sec-label">Key Building Blocks</div>
         <div class="tag-list">
           ${keyNotes.map(n => `<span class="tag text-meta">${n.name}</span>`).join('')}
@@ -3440,6 +3441,16 @@ function renderNotesExplore(container) {
       <button class="btn btn--secondary u-w-full fam-filter-btn" data-fam="${fk}">See all ${famNotes.length} Notes</button>
     `;
     
+    const refBtn = card.querySelector('.fam-ref-btn');
+    if (refBtn) {
+      refBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        window.haptic?.('light');
+        const f = CAT_MAP[refBtn.dataset.frag];
+        if (f) pushDetail(c => renderFragDetail(c, f), f.name);
+      });
+    }
+
     card.querySelector('.fam-filter-btn').addEventListener('click', () => {
       window.haptic?.('light');
       notesSearchQuery = '';
@@ -3489,21 +3500,14 @@ function renderNotesExplore(container) {
     <div class="sec-label">Curated Power Pairs</div>
     <div class="grid">
       ${PAIRS.map(p => `
-      <div class="card card--secondary section-group">
-        <div class="section-group">
-          <div class="text-ui-strong">${p.title}</div>
-          <div class="text-meta">${p.desc}</div>
-        </div>
+      <div class="card card--secondary">
+        <div class="text-ui-strong">${p.title}</div>
+        <div class="text-meta">${p.desc}</div>
         <div class="tag-list">
           ${p.tags.map(t => `<span class="tag text-meta">${t}</span>`).join('')}
         </div>
-        <div class="section-group">
-          <div class="sec-label">Example Evidence</div>
-          <div class="list-item" style="padding:0; border:none; background:transparent;">
-            <div class="list-item-body">
-              <div class="text-ui-strong" style="font-size:var(--fs-meta);">${p.example}</div>
-            </div>
-          </div>
+        <div class="callout">
+          <span class="text-meta"><strong>e.g.</strong> ${p.example}</span>
         </div>
       </div>
       `).join('')}
