@@ -1,3 +1,16 @@
+## 2026-04-09
+
+### Changed
+- **Compare: icon buttons** — Swap (⇄) and Remove (×) buttons in column headers now use SVG icons (`arrowsLeftRight`, `trash`) consistent with the rest of the icon system. Sort direction indicators also use SVG arrows instead of ↑↓ glyphs.
+- **Compare: larger mini radar** — Mini radar charts in mobile cards increased from 80px to 110px, with axis labels scaled up from 4.5px to 7px for legibility.
+- **Quiz: session key migration** — Quiz session storage now uses `quizId` instead of `slug` for the key field, and includes `timestamp` and `answers` alongside results. Existing sessions with the old key restore correctly via fallback.
+- **Static pages: search input markup** — Quiz and compare static pages updated to use the shared `cat-search-icon` + `.input` markup pattern matching `app.html`.
+- **HTML: removed orphaned compare containers** — `#cmp-below-matrix`, `#cmp-shared-notes`, `#cmp-best-pairings` placeholders removed from `app.html`; functionality is now inline in the matrix render.
+
+### Fixed
+- **Compare: panel visible on all pages** — `#p-compare { display: flex }` in `components.css` (and a duplicate in the responsive.css desktop block) used ID specificity to override `.panel { display: none }`, making the compare panel always visible regardless of active state. Removed the offending `display` declarations so the standard `.panel` / `.panel.active` visibility system applies.
+- **Compare: mobile carousel blocked** — `overflow-x: hidden` on `#p-compare.active` in the mobile breakpoint was removed; the panel now scrolls only vertically (`overflow-y: auto`), leaving the `.cmp-mobile-cards` horizontal carousel unclipped.
+
 ## 2026-04-06 (3)
 
 ### Added

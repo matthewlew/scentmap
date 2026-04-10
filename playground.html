@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Design System Anti-Pattern Audit | Scentmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/design-system.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/layout.css">
+<style>
+  body {
+    padding: var(--sp-4xl) var(--sp-2xl);
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--bg-secondary);
+  }
+
+  /* ── Audit layout ── */
+  .audit-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xl);
+    margin-bottom: var(--sp-4xl);
+  }
+
+  .audit-header {
+    border-bottom: 2px solid var(--border-standard);
+    padding-bottom: var(--sp-md);
+    margin-bottom: var(--sp-xs);
+  }
+
+  .finding {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .finding-head {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-sm);
+    padding: var(--sp-md) var(--sp-lg);
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-secondary);
+  }
+
+  .finding-body {
+    padding: var(--sp-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-lg);
+  }
+
+  .col-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-lg);
+  }
+
+  @media (max-width: 900px) { .col-2 { grid-template-columns: 1fr; } }
+
+  .demo-box {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-sm);
+  }
+
+  .demo-box--before { background: color-mix(in srgb, #f87171 8%, var(--bg-primary)); border-color: #f87171; }
+  .demo-box--after  { background: color-mix(in srgb, #4ade80 8%, var(--bg-primary)); border-color: #4ade80; }
+  .demo-box--info   { background: var(--bg-secondary); }
+
+  .demo-label {
+    font-family: var(--font-sans);
+    font-size: var(--fs-caption);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--sp-xs);
+  }
+  .demo-label--before { color: #dc2626; }
+  .demo-label--after  { color: #16a34a; }
+  .demo-label--info   { color: var(--text-tertiary); }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    background: var(--bg-tertiary);
+    padding: 2px var(--sp-xs);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+  }
+
+  pre {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-md);
+    overflow-x: auto;
+    white-space: pre;
+    line-height: var(--lh-relaxed);
+  }
+
+  /* Severity badges */
+  .sev {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-sans);
+    font-size: calc(var(--fs-caption) - 1px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    height: 20px;
+    padding: 0 var(--sp-sm);
+    border-radius: var(--radius-pill);
+    flex-shrink: 0;
+  }
+  .sev--xs  { background: color-mix(in srgb, #4ade80 15%, transparent); color: #15803d; }
+  .sev--s   { background: color-mix(in srgb, #60a5fa 15%, transparent); color: #1d4ed8; }
+  .sev--m   { background: color-mix(in srgb, #fb923c 15%, transparent); color: #c2410c; }
+
+  .file-ref {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    color: var(--text-tertiary);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* ── Status badges ── */
+  .status-new    { color: #c2410c; }
+  .status-tracked { color: var(--text-tertiary); }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-xl);
+    padding: var(--sp-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xs);
+    margin-bottom: var(--sp-4xl);
+  }
+
+  .toc a {
+    font-family: var(--font-sans);
+    font-size: var(--fs-meta);
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--border-standard);
+  }
+
+  .toc a:hover { color: var(--text-primary); }
+
+  .toc-group {
+    margin-top: var(--sp-sm);
+  }
+
+  .toc-group-label {
+    font-family: var(--font-sans);
+    font-size: var(--fs-caption);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: var(--sp-xs);
+  }
+</style>
+</head>
+<body>
+
+  <header style="margin-bottom: var(--sp-4xl);">
+    <div class="text-label" style="color:var(--text-tertiary); margin-bottom:var(--sp-sm);">Scentmap Design System</div>
+    <h1 class="text-heading">Anti-Pattern Audit</h1>
+    <p class="text-body" style="color:var(--text-secondary); margin-top:var(--sp-sm); max-width:640px;">
+      1-off CSS classes and inline styles found in the app that bypass the design system.
+      Each finding includes the problem, the canonical pattern, and a migration path.
+      <strong>Do not build these into the design system as new components</strong> — migrate render sites to existing tokens.
+    </p>
+    <div class="card card--secondary" style="margin-top:var(--sp-lg); max-width:640px;">
+      <div class="text-label" style="color:var(--text-tertiary);">Audit date: 2026-03-29</div>
+      <div class="text-meta" style="color:var(--text-secondary);">
+        Scope: <code>styles/components.css</code>, <code>js/app.js</code> inline styles.<br>
+        Previous findings (already tracked in TODOS.md): dc-sim-*, cmp-sug-*, cmp-edu-card, brand-n/brand-c, dc-roles-lbl, dc-desc, dc-div.<br>
+        This file documents <strong>new</strong> findings from the 2026-03-29 session.
+      </div>
+    </div>
+  </header>
+
+  <!-- TOC -->
+  <nav class="toc" aria-label="Findings">
+    <div class="sec-label" style="margin-bottom:var(--sp-sm);">Findings</div>
+    <div class="toc-group">
+      <div class="toc-group-label">CSS — Duplicate Class Definitions</div>
+      <a href="#house-detail">1. .house-detail-name / .house-detail-count — exact duplicate of .dc-name / .dc-brand</a><br>
+      <a href="#us-section-hdr">2. .us-section-hdr — duplicate of .sec-label uppercase pattern</a><br>
+      <a href="#dc-notes-caveat">3. .dc-notes-caveat — should be .text-caption utility</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">CSS — Magic Numbers</div>
+      <a href="#cmp-edu-wrap-radius">4. .cmp-edu-wrap border-radius: 16px — should use var(--radius-xl)</a><br>
+      <a href="#brand-count-chip-margin">5. .brand-count-chip margin-left: 3px — off 4px grid</a><br>
+      <a href="#hardcoded-shadows">6. Hardcoded box-shadow in .frag-picker-wrap / .note-popup</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">JS — Inline Appearance Styles</div>
+      <a href="#dot-bg-inconsistency">7. dot style="background:..." vs --fam-bg inconsistency</a><br>
+      <a href="#location-label-inline">8. Inline note location label styles (2 sites)</a><br>
+      <a href="#text-display">9. style="font-size: 64px" on compare score — needs .text-display utility</a><br>
+      <a href="#sec-label-accent">10. sec-label with style="color:${accent}" — needs modifier</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">Already Tracked (reference only)</div>
+      <a href="#already-tracked">Previously found: dc-sim-*, cmp-sug-*, cmp-edu-card, brand-n/brand-c, etc.</a>
+    </div>
+  </nav>
+
+
+  <!-- ════════════════════════════════════════
+       SECTION 1: DUPLICATE CLASS DEFINITIONS
+       ════════════════════════════════════════ -->
+  <section class="audit-section" id="duplicate-classes">
+    <div class="audit-header">
+      <div class="text-ui" style="font-family: var(--font-display);">CSS — Duplicate Class Definitions</div>
+      <div class="text-meta" style="color:var(--text-secondary);">Classes in components.css that recreate styles already provided by canonical design system classes.</div>
+    </div>
+
+    <!-- FINDING 1: house-detail-name/count -->
+    <div class="finding" id="house-detail">
+      <div class="finding-head">
+        <span class="sev sev--xs">XS</span>
+        <span class="text-ui-strong">1. .house-detail-name / .house-detail-count</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">components.css:2031–2047</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          <code>.house-detail-name</code> and <code>.house-detail-count</code> are pixel-for-pixel duplicates of <code>.dc-name</code> and <code>.dc-brand</code>. Same font family, same size, same letter-spacing, same color, same margin. The only difference is the class name. They exist because the brand detail view was built separately from the fragrance detail view, without checking if the heading pattern already existed.
+        </div>
+
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current — 1-off classes</div>
+<pre>/* components.css:2031 */
+.house-detail-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  margin-bottom: 0;
+}
+.house-detail-count {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--g450);
+  margin-bottom: 0;
+}</pre>
+            <!-- Live preview -->
+            <div style="margin-top:var(--sp-md); padding:var(--sp-md); background:var(--bg-primary); border-radius:var(--radius);">
+              <div class="house-detail-name">Le Labo</div>
+              <div class="house-detail-count">12 fragrances</div>
+            </div>
+          </div>
+
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Migration — use existing .dc-name / .dc-brand</div>
+<pre>/* Delete both .house-detail-name
+   and .house-detail-count from CSS.
+   In renderBrandDetail() app.js:2054: */
+
+// Before:
+`&lt;div class="house-detail-name"&gt;`
+`&lt;div class="house-detail-count"&gt;`
+
+// After:
+`&lt;div class="dc-name"&gt;`
+`&lt;div class="dc-brand"&gt;`</pre>
+            <!-- Live preview -->
+            <div style="margin-top:var(--sp-md); padding:var(--sp-md); background:var(--bg-primary); border-radius:var(--radius);">
+              <div class="dc-name">Le Labo</div>
+              <div class="dc-brand">12 fragrances</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-box demo-box--info">
+          <div class="demo-label demo-label--info">Action</div>
+          <div class="text-meta" style="color:var(--text-secondary);">
+            1. Delete <code>.house-detail-name</code> and <code>.house-detail-count</code> from <code>components.css</code> (~14 lines).<br>
+            2. In <code>app.js:2054</code> change <code>class="house-detail-name"</code> → <code>class="dc-name"</code>.<br>
+            3. In <code>app.js:2083</code> change <code>class="house-detail-count"</code> → <code>class="dc-brand"</code>.<br>
+            Note: <code>.dc-name</code> uses <code>var(--fs-heading)</code> / Archivo Black; <code>.dc-brand</code> uses <code>var(--g450)</code>. Visually identical.
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FINDING 2: us-section-hdr -->
+    <div class="finding" id="us-section-hdr">
+      <div class="finding-head">
+        <span class="sev sev--xs">XS</span>
+        <span class="text-ui-strong">2. .us-section-hdr</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">components.css:2164 · app.js:4001,4009,4026,4036</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          <code>.us-section-hdr</code> implements the same uppercase label pattern as <code>.sec-label</code> (caption size, 700 weight, wide letter-spacing, text-tertiary) but with a unique padding <code>var(--sp-xs) var(--sp-lg) 2px</code> and a top margin. It was created because the author needed a section header inside the search modal and didn't want to override <code>.sec-label</code>'s margin. The right fix is to let the parent control spacing via gap, not a separate class.
+        </div>
+
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current — 1-off class</div>
+<pre>/* components.css:2164 */
+.us-section-hdr {
+  padding: var(--sp-xs) var(--sp-lg) 2px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-top: var(--sp-sm);
+}</pre>
+            <div style="background:var(--bg-primary); border-radius:var(--radius); overflow:hidden; margin-top:var(--sp-md);">
+              <div class="us-section-hdr">Recently Opened</div>
+              <button class="list-item--search">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong">Santal 33</div><div class="list-item-sublabel text-meta">Le Labo</div></div>
+              </button>
+            </div>
+          </div>
+
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Migration — .sec-label with padding wrapper</div>
+<pre>/* Delete .us-section-hdr.
+   In app.js search modal render:
+
+// Before:
+`&lt;div class="us-section-hdr"&gt;...`
+
+// After:
+`&lt;div class="sec-label"
+  style="padding:var(--sp-xs)
+         var(--sp-lg) 0;"&gt;...`
+*/
+
+/* One structural inline style is
+   acceptable per DESIGN.md rules.
+   Appearance stays in sec-label. */</pre>
+            <div style="background:var(--bg-primary); border-radius:var(--radius); overflow:hidden; margin-top:var(--sp-md);">
+              <div class="sec-label" style="padding: var(--sp-xs) var(--sp-lg) 0; margin-top:var(--sp-sm);">Recently Opened</div>
+              <button class="list-item--search">
+                <div class="list-item-body"><div class="list-item-label text-ui-strong">Santal 33</div><div class="list-item-sublabel text-meta">Le Labo</div></div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-box demo-box--info">
+          <div class="demo-label demo-label--info">Action</div>
+          <div class="text-meta" style="color:var(--text-secondary);">
+            1. Delete <code>.us-section-hdr</code> from <code>components.css</code> (~12 lines).<br>
+            2. In <code>app.js</code> lines 4001, 4009, 4026, 4036: replace <code>class="us-section-hdr"</code> with <code>class="sec-label" style="padding:var(--sp-xs) var(--sp-lg) 0;"</code>.<br>
+            The one inline structural style (padding) is acceptable per DESIGN.md — it controls position, not appearance.
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FINDING 3: dc-notes-caveat -->
+    <div class="finding" id="dc-notes-caveat">
+      <div class="finding-head">
+        <span class="sev sev--xs">XS</span>
+        <span class="text-ui-strong">3. .dc-notes-caveat</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">components.css:374</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          <code>.dc-notes-caveat</code> sets <code>font-size: var(--fs-caption)</code>, <code>color: var(--text-tertiary)</code>, and <code>letter-spacing: 0.01em</code>. This is exactly the <code>.text-caption</code> utility class. The <code>letter-spacing</code> is the only deviation (Source Serif doesn't need it). No reason for a component-specific class.
+        </div>
+
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current</div>
+<pre>/* components.css:374 */
+.dc-notes-caveat {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  color: var(--text-tertiary);
+  letter-spacing: 0.01em;
+  margin-top: 0;
+}</pre>
+          </div>
+
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Migration</div>
+<pre>/* Delete .dc-notes-caveat.
+   In app.js renderFragDetail():
+
+// Before:
+`&lt;div class="dc-notes-caveat"&gt;`
+
+// After:
+`&lt;p class="text-caption"
+   style="color:var(--text-tertiary);"&gt;`
+*/</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SECTION 2: MAGIC NUMBERS
+       ════════════════════════════════════════ -->
+  <section class="audit-section" id="magic-numbers">
+    <div class="audit-header">
+      <div class="text-ui" style="font-family: var(--font-display);">CSS — Magic Numbers</div>
+      <div class="text-meta" style="color:var(--text-secondary);">Hard-coded pixel values that should reference design tokens.</div>
+    </div>
+
+    <!-- FINDING 4: cmp-edu-wrap border-radius -->
+    <div class="finding" id="cmp-edu-wrap-radius">
+      <div class="finding-head">
+        <span class="sev sev--xs">XS</span>
+        <span class="text-ui-strong">4. .cmp-edu-wrap border-radius: 16px 16px 0 0</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">components.css:1899</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          The score education overlay uses <code>border-radius: 16px 16px 0 0</code>. This is the bottom-sheet rounding pattern — the same value used by <code>.sheet</code>. It should use <code>var(--radius-xl)</code> (which resolves to 16px via the token scale) so both stay in sync if the sheet radius ever changes.
+        </div>
+
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current</div>
+<pre>/* components.css:1899 */
+.cmp-edu-wrap {
+  border-radius: 16px 16px 0 0;
+  /* ... */
+}</pre>
+          </div>
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Fix</div>
+<pre>/* components.css:1899 */
+.cmp-edu-wrap {
+  border-radius: var(--radius-xl)
+                 var(--radius-xl) 0 0;
+  /* ... */
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FINDING 5: brand-count-chip margin -->
+    <div class="finding" id="brand-count-chip-margin">
+      <div class="finding-head">
+        <span class="sev sev--xs">XS</span>
+        <span class="text-ui-strong">5. .brand-count-chip margin-left: 3px</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">components.css:1505</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          <code>margin-left: 3px</code> is off the 4px grid. The spacing scale's smallest values are <code>--sp-micro</code> (2px) for optical nudges and <code>--sp-xs</code> (4px) for layout. 3px is not defined. Use <code>var(--sp-micro)</code> if the intent is optical, or remove and let the parent flex gap handle it.
+        </div>
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current</div>
+<pre>.brand-count-chip {
+  margin-left: 3px; /* off-grid */
+  font-size: var(--fs-meta);
+  font-weight: 500;
+  color: var(--text-tertiary);
+}</pre>
+          </div>
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Fix — use token or remove</div>
+<pre>.brand-count-chip {
+  /* Option A: optical nudge token */
+  margin-left: var(--sp-micro);
+
+  /* Option B: remove margin, use
+     parent gap instead */
+  font-size: var(--fs-meta);
+  font-weight: 500;
+  color: var(--text-tertiary);
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FINDING 6: Hardcoded shadows -->
+    <div class="finding" id="hardcoded-shadows">
+      <div class="finding-head">
+        <span class="sev sev--xs">XS</span>
+        <span class="text-ui-strong">6. Hardcoded box-shadow in .frag-picker-wrap and .note-popup</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">components.css:2268, 2304</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          Both floating overlays use hand-crafted <code>box-shadow</code> values instead of the shadow scale. The design system defines <code>--shadow-sm</code>, <code>--shadow-md</code>, <code>--shadow-lg</code>. <code>0 8px 24px var(--fade-strong)</code> and <code>0 8px 32px var(--fade-strong)</code> are both "elevated floating panel" — use <code>var(--shadow-lg)</code>.
+        </div>
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current</div>
+<pre>/* frag-picker-wrap */
+box-shadow: 0 8px 24px
+  var(--fade-strong);
+
+/* note-popup */
+box-shadow: 0 8px 32px
+  var(--fade-strong);</pre>
+          </div>
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Fix</div>
+<pre>/* Both */
+box-shadow: var(--shadow-lg);
+
+/* Verify --shadow-lg definition in
+   design-system.css matches intent.
+   If not, update the token, not
+   the component. */</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SECTION 3: INLINE APPEARANCE STYLES
+       ════════════════════════════════════════ -->
+  <section class="audit-section" id="inline-styles">
+    <div class="audit-header">
+      <div class="text-ui" style="font-family: var(--font-display);">JS — Inline Appearance Styles</div>
+      <div class="text-meta" style="color:var(--text-secondary);">Inline <code>style=""</code> attributes in app.js that set visual appearance (color, font-size, font-weight). Per pre-PR checklist: inline styles should be structural only (layout, position). Appearance must use class names.</div>
+    </div>
+
+    <!-- FINDING 7: dot inconsistency -->
+    <div class="finding" id="dot-bg-inconsistency">
+      <div class="finding-head">
+        <span class="sev sev--s">S</span>
+        <span class="text-ui-strong">7. .dot style="background:..." vs style="--fam-bg:..."</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">app.js — ~15 render sites</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          The <code>.dot</code> component uses <code>background: var(--fam-bg, var(--fam-default))</code>. The canonical way to color it is <code>style="--fam-bg: ${color}"</code> (sets the CSS custom property). However, many render sites in <code>app.js</code> use <code>style="background: ${color}"</code> directly, bypassing the component contract. Both work today, but the CSS-var approach is the contract: if <code>.dot</code> gains a hover variant or dark-mode override that modifies <code>--fam-bg</code>, inline <code>background</code> will override it silently.
+        </div>
+
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current — mixed approaches</div>
+<pre>/* Correct (CSS var approach) */
+`&lt;div class="dot"
+  style="--fam-bg:${famColor}"&gt;`
+
+/* Wrong (bypasses component) */
+`&lt;span class="dot"
+  style="background:${famColor}"&gt;`
+`&lt;span class="dot dot--md"
+  style="background:${color}"&gt;`</pre>
+            <div style="display:flex; gap:var(--sp-sm); align-items:center; margin-top:var(--sp-md);">
+              <span class="dot" style="--fam-bg: var(--fam-woody)"></span>
+              <span class="text-caption">--fam-bg var (correct)</span>
+            </div>
+          </div>
+
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Canonical — always use --fam-bg</div>
+<pre>/* All dot render sites: */
+`&lt;div class="dot"
+  style="--fam-bg:${color}"&gt;`
+
+`&lt;span class="dot dot--md"
+  style="--fam-bg:${color}"&gt;`
+
+/* Search for: */
+/* class="dot" style="background */
+/* class="dot--md" style="background */</pre>
+            <div style="display:flex; gap:var(--sp-sm); align-items:center; margin-top:var(--sp-md);">
+              <span class="dot" style="--fam-bg: var(--fam-floral)"></span>
+              <span class="text-caption">Identical visually, correct contract</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-box demo-box--info">
+          <div class="demo-label demo-label--info">Grep to find all sites</div>
+<pre>grep -n 'class="dot' js/app.js | grep 'background'
+grep -n 'class="dot--md' js/app.js | grep 'background'</pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FINDING 8: Location label inline styles -->
+    <div class="finding" id="location-label-inline">
+      <div class="finding-head">
+        <span class="sev sev--xs">XS</span>
+        <span class="text-ui-strong">8. Inline note location label styling</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">app.js:1011, 1041</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          Two render sites style a location sublabel with identical inline appearance rules: <code>color:var(--accent-primary); font-weight:700; text-transform:uppercase;</code>. This is visual styling that should be a class, not an inline style. The pattern is: a compact uppercase accent label — similar to <code>.text-label</code> but in accent color. Add a utility <code>.text-label--accent</code> or reuse <code>.text-label</code> with a semantic accent context.
+        </div>
+
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current — inline appearance</div>
+<pre>/* app.js:1011 and :1041 */
+`&lt;div class="list-item-sublabel text-meta"
+  style="color:var(--accent-primary);
+         font-weight:700;
+         text-transform:uppercase;"&gt;
+  ${t.location}
+&lt;/div&gt;`</pre>
+            <div style="margin-top:var(--sp-md);">
+              <div class="list-item-sublabel text-meta" style="color:var(--accent-primary); font-weight:700; text-transform:uppercase;">Top Note</div>
+            </div>
+          </div>
+
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Migration — add .text-label--accent to design-system.css</div>
+<pre>/* design-system.css — add utility: */
+.text-label--accent {
+  color: var(--accent-primary);
+}
+
+/* app.js:1011 and :1041: */
+`&lt;div class="text-label text-label--accent"&gt;
+  ${t.location}
+&lt;/div&gt;`
+
+/* .text-label already handles: */
+/* font-size: caption, 700 weight,
+   uppercase, letter-spacing */</pre>
+            <div style="margin-top:var(--sp-md);">
+              <div class="text-label" style="color:var(--accent-primary);">Top Note</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FINDING 9: text-display -->
+    <div class="finding" id="text-display">
+      <div class="finding-head">
+        <span class="sev sev--xs">XS</span>
+        <span class="text-ui-strong">9. style="font-size: 64px" on compare match score</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">app.js:4977</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          The compare panel renders the match percentage as a 64px hero number using an inline <code>style="font-size: 64px"</code>. This is an appearance override outside the type scale. 64px is a valid display size but it's not defined as a token. Either add <code>--fs-display: 4rem</code> to the type scale and a <code>.text-display</code> utility, or accept it as a one-time inline (the score hero is truly unique and unlikely to appear elsewhere).
+        </div>
+
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current</div>
+<pre>/* app.js:4977 */
+`&lt;div class="text-heading"
+  style="font-size: 64px;
+    color: ${matchPct >= 60
+      ? ca.accent
+      : 'var(--text-primary)'}"&gt;
+  ${matchPct}%
+&lt;/div&gt;`</pre>
+            <div style="margin-top:var(--sp-md);">
+              <div class="text-heading" style="font-size: 64px;">84%</div>
+            </div>
+          </div>
+
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Option A — add .text-display token (preferred)</div>
+<pre>/* design-system.css — add: */
+--fs-display: 4rem; /* 64px hero numbers */
+
+/* design-system.css utilities: */
+.text-display {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+}
+
+/* app.js: */
+`&lt;div class="text-display"
+  style="color: ${accent}"&gt;
+  ${matchPct}%
+&lt;/div&gt;`
+
+/* color is dynamic (accent varies
+   by frag) — structural inline ok */</pre>
+            <div style="margin-top:var(--sp-md);">
+              <div style="font-family: var(--font-display); font-size: 4rem; line-height: 1; letter-spacing: -0.02em;">84%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-box demo-box--info">
+          <div class="demo-label demo-label--info">Recommendation</div>
+          <div class="text-meta" style="color:var(--text-secondary);">
+            Add <code>.text-display</code>. The score hero is the highest-frequency visual element in the Compare panel — it deserves a named token. Also prevents future devs from inventing another "big number" with a different magic size.
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FINDING 10: sec-label with accent color -->
+    <div class="finding" id="sec-label-accent">
+      <div class="finding-head">
+        <span class="sev sev--xs">XS</span>
+        <span class="text-ui-strong">10. .sec-label with inline style="color:${accent}"</span>
+        <span class="sev status-new" style="background:none; padding:0; font-size:var(--fs-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">NEW</span>
+        <span class="file-ref">app.js:4551, 4555</span>
+      </div>
+      <div class="finding-body">
+        <div class="text-body" style="color:var(--text-secondary);">
+          The compare panel's "Swap" sections render section labels colored to match each fragrance's family accent. This is done with <code>style="color:${ca.accent}"</code> on <code>.sec-label</code>. The dynamic accent is unavoidable (it varies per-frag), so the inline style is acceptable — but it mixes an appearance property (<code>color</code>) inline. The correct approach is to set the dynamic value as a CSS custom property and reference it in a class modifier.
+        </div>
+
+        <div class="col-2">
+          <div class="demo-box demo-box--before">
+            <div class="demo-label demo-label--before">Current — inline color</div>
+<pre>/* app.js:4551 */
+`&lt;div class="sec-label"
+  style="color:${ca.accent}"&gt;
+  Swap ${shortA}
+&lt;/div&gt;`</pre>
+            <div style="margin-top:var(--sp-md);">
+              <div class="sec-label" style="color:var(--fam-woody);">Swap Santal 33</div>
+            </div>
+          </div>
+
+          <div class="demo-box demo-box--after">
+            <div class="demo-label demo-label--after">Better — CSS var + .sec-label--colored</div>
+<pre>/* design-system.css — add utility: */
+.sec-label--colored {
+  color: var(--sec-label-color,
+             var(--text-tertiary));
+}
+
+/* app.js: */
+`&lt;div class="sec-label sec-label--colored"
+  style="--sec-label-color:${ca.accent}"&gt;
+  Swap ${shortA}
+&lt;/div&gt;`</pre>
+            <div style="margin-top:var(--sp-md);">
+              <div class="sec-label" style="--sec-label-color: var(--fam-floral); color: var(--sec-label-color, var(--text-tertiary));">Swap Santal Blush</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-box demo-box--info">
+          <div class="demo-label demo-label--info">Note</div>
+          <div class="text-meta" style="color:var(--text-secondary);">
+            This is a low-priority refinement. The current approach works and is readable. Migrate if the pattern appears in 3+ more places, or when doing the broader anti-pattern cleanup pass.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       SECTION 4: ALREADY TRACKED REFERENCE
+       ════════════════════════════════════════ -->
+  <section class="audit-section" id="already-tracked">
+    <div class="audit-header">
+      <div class="text-ui" style="font-family: var(--font-display);">Already Tracked in TODOS.md</div>
+      <div class="text-meta" style="color:var(--text-secondary);">Previously found patterns. Do not re-audit these — they have a migration plan. Reference only.</div>
+    </div>
+
+    <div class="card card--secondary">
+      <div class="list-view">
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">dc-sim-* family (4 classes)</div>
+            <div class="list-item-sublabel text-meta">dc-sim-name, dc-sim-brand, dc-sim-info, dc-sim-state → .list-item slot structure</div>
+          </div>
+          <div class="list-item-trail"><span class="chip chip--outline">Tracked</span></div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">cmp-sug-* family (3 classes)</div>
+            <div class="list-item-sublabel text-meta">cmp-sug-name, cmp-sug-brand, cmp-sug-score → .list-item + .list-item-trailing-label</div>
+          </div>
+          <div class="list-item-trail"><span class="chip chip--outline">Tracked</span></div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">cmp-edu-card / cmp-edu-quad</div>
+            <div class="list-item-sublabel text-meta">Both re-implement .card. Use .card / .card--secondary</div>
+          </div>
+          <div class="list-item-trail"><span class="chip chip--outline">Tracked</span></div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">brand-n / brand-c</div>
+            <div class="list-item-sublabel text-meta">Use .text-ui-strong / .text-meta</div>
+          </div>
+          <div class="list-item-trail"><span class="chip chip--outline">Tracked</span></div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">dc-roles-lbl</div>
+            <div class="list-item-sublabel text-meta">Duplicate .sec-label — delete and use .sec-label</div>
+          </div>
+          <div class="list-item-trail"><span class="chip chip--outline">Tracked</span></div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">dc-desc / dc-div</div>
+            <div class="list-item-sublabel text-meta">dc-desc → .text-body; dc-div → native hr or border-top utility</div>
+          </div>
+          <div class="list-item-trail"><span class="chip chip--outline">Tracked</span></div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">.section-top-rule utility (missing)</div>
+            <div class="list-item-sublabel text-meta">border-top divider pattern used 6× inline — needs a utility class</div>
+          </div>
+          <div class="list-item-trail"><span class="chip chip--outline">Tracked</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card--secondary">
+      <div class="sec-label">Won't Fix (documented)</div>
+      <div class="list-view">
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">.dc-stat / .dc-stats</div>
+            <div class="list-item-sublabel text-meta">Different layout from .stat-card. Migration is a visual regression risk. Documented in TODOS.md.</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">.frag-sb-label</div>
+            <div class="list-item-sublabel text-meta">Sidebar context with different padding. Requires HTML changes to migrate.</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">.picker-sec-lbl</div>
+            <div class="list-item-sublabel text-meta">Uses --fs-meta (14px) vs .sec-label's --fs-label (12px). Visual regression to swap.</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-body">
+            <div class="list-item-label text-ui-strong">.gap-cta</div>
+            <div class="list-item-sublabel text-meta">Accent-colored CTA. Requires new .btn--accent variant — out of scope.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

@@ -1651,8 +1651,6 @@ mark.note-match {
 
 /* Panel wrapper: give compare panel a defined height for desktop scroll */
 #p-compare {
-  display: flex;
-  flex-direction: column;
   min-height: 0;
   overflow-y: auto;
 }

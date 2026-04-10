@@ -67,8 +67,6 @@
   /* Comparison Canvas — scrolls vertically so suggestions appear below matrix */
   #p-compare {
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
     padding: 0;
   }
 
@@ -181,7 +179,6 @@
   #p-compare.active {
     flex-direction: column;
     overflow-y: auto;
-    overflow-x: hidden;
     padding: 0;
   }
 

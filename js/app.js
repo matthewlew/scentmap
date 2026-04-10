@@ -18,6 +18,10 @@ const ICONS = {
   chevronRight: `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg>`,
   chevronDown:  `<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"/></svg>`,
   sortUpDown:   `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,167.51a12,12,0,0,1,0,17l-48,48a12,12,0,0,1-17,0l-48-48a12,12,0,0,1,17-17L128,207l39.51-39.52A12,12,0,0,1,184.49,167.51Zm-96-79L128,49l39.51,39.52a12,12,0,0,0,17-17l-48-48a12,12,0,0,0-17,0l-48,48a12,12,0,0,0,17,17Z"/></svg>`,
+  sortAsc:      `<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,128a8,8,0,0,1-8,8H48a8,8,0,0,1,0-16h72A8,8,0,0,1,128,128ZM48,72H184a8,8,0,0,0,0-16H48a8,8,0,0,0,0,16ZM104,184H48a8,8,0,0,0,0,16h56a8,8,0,0,0,0-16Zm88-48a8,8,0,0,0-8,8v39l-7.51-7.52a8,8,0,0,0-11.32,11.32l21.17,21.17a8,8,0,0,0,11.32,0L218.83,187a8,8,0,0,0-11.32-11.32L200,183.05V144A8,8,0,0,0,192,136Z"/></svg>`,
+  sortDesc:     `<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,128a8,8,0,0,1-8,8H48a8,8,0,0,1,0-16h72A8,8,0,0,1,128,128ZM48,72H184a8,8,0,0,0,0-16H48a8,8,0,0,0,0,16ZM104,184H48a8,8,0,0,0,0,16h56a8,8,0,0,0,0-16Zm115.17-36.83a8,8,0,0,0-11.32,0L200,154.05V112a8,8,0,0,0-16,0v42l-7.51-7.51a8,8,0,0,0-11.32,11.32l21.17,21.17a8,8,0,0,0,11.32,0l21.17-21.17A8,8,0,0,0,219.17,147.17Z"/></svg>`,
+  trash:        `<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg>`,
+  arrowsLeftRight: `<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,181.66l-48,48a8,8,0,0,1-11.32-11.32L204.69,184H32a8,8,0,0,1,0-16H204.69l-34.35-34.34a8,8,0,0,1,11.32-11.32l48,48A8,8,0,0,1,229.66,181.66ZM85.66,90.34,51.31,56H224a8,8,0,0,0,0-16H51.31L85.66,25.66A8,8,0,0,0,74.34,14.34l-48,48a8,8,0,0,0,0,11.32l48,48a8,8,0,0,0,11.32-11.32Z"/></svg>`,
   close:        `<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>`,
   search:       `<svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>`,
   // Mobile bottom nav
@@ -4502,13 +4506,13 @@ function _drawMiniRadarSvg(frag, accentHex) {
     // Nudge label 0 (top) up slightly for visual clarity
     const dy = i === 0 ? -1 : 0;
     return `<text x="${pt.x.toFixed(1)}" y="${(pt.y + dy).toFixed(1)}"
-      font-size="4.5" font-family="DM Sans, sans-serif" fill="${accentHex}"
+      font-size="7" font-family="DM Sans, sans-serif" fill="${accentHex}"
       text-anchor="${anchors[i]}" dominant-baseline="${baselines[i]}"
       aria-hidden="true">${i + 1}</text>`;
   }).join('');
   const pctVals = dims.map((d, i) => `${labels[i]}: ${Math.round((p[d]||0)*100)}%`).join(', ');
   return `<svg class="cmp-m-mini-radar" viewBox="-8 -8 96 96" xmlns="http://www.w3.org/2000/svg"
-    role="img" aria-label="Sensory profile: ${pctVals}" width="80" height="80">
+    role="img" aria-label="Sensory profile: ${pctVals}" width="110" height="110">
     ${rings}${axes}
     <polygon points="${poly}" fill="${accentHex}28" stroke="${accentHex}" stroke-width="1.5" stroke-linejoin="round"/>
     ${vertexLabels}
@@ -4535,8 +4539,8 @@ function _renderColHeader(idx, frag, pairingBadge) {
           <span class="cmp-m-col-name">${frag.name}</span>
         </button>
         <div class="cmp-m-col-header-actions">
-          <button class="cmp-m-swap-btn" data-slot="${idx}" aria-label="Switch ${frag.name}">⇄</button>
-          <button class="cmp-m-remove-btn" data-slot="${idx}" aria-label="Remove ${frag.name}">×</button>
+          <button class="cmp-m-swap-btn" data-slot="${idx}" aria-label="Switch ${frag.name}">${ICONS.arrowsLeftRight}</button>
+          <button class="cmp-m-remove-btn" data-slot="${idx}" aria-label="Remove ${frag.name}">${ICONS.trash}</button>
         </div>
       </div>
       <div class="cmp-m-col-header-meta">
@@ -4707,7 +4711,7 @@ function renderMatrix() {
 
   // Attribute rows
   const sortActive = (field) => CMP_SORT?.startsWith(field);
-  const sortDir = (field) => CMP_SORT === field + '-asc' ? '↑' : '↓';
+  const sortDir = (field) => CMP_SORT === field + '-asc' ? ICONS.sortAsc : ICONS.sortDesc;
   rows.forEach(row => {
     let sidebarContent;
     if (row.id === 'sensory') {
@@ -4907,7 +4911,7 @@ function _renderMobileCards() {
             <div class="cmp-m-col-brand">${frag.brand}</div>
             <div class="chip cmp-m-col-fam-chip" style="background:${fc.accent};color:var(--bg-primary)">${famLabel}</div>
           </div>
-          <button class="cmp-m-remove-btn" data-slot="${i}" aria-label="Remove ${frag.name}">×</button>
+          <button class="cmp-m-remove-btn" data-slot="${i}" aria-label="Remove ${frag.name}">${ICONS.trash}</button>
         </div>
         <div class="cmp-m-card-body">
           ${frag.description ? `<p class="text-meta cmp-m-card-desc">${frag.description}</p>` : ''}

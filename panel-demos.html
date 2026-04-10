@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Panel Content Hierarchy Proposals | Scentmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/design-system.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/layout.css">
+<style>
+  body { 
+    padding: var(--sp-4xl) var(--sp-2xl); 
+    max-width: 1400px; 
+    margin: 0 auto; 
+    background: var(--bg-secondary);
+  }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: var(--sp-4xl);
+    align-items: start;
+  }
+  .panel-mock {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    height: 800px; /* Fixed for demo */
+    overflow: hidden;
+  }
+  .demo-label {
+    margin-bottom: var(--sp-sm);
+    color: var(--accent-primary);
+  }
+
+  /* Force Headings to match Archivo Black normal weight */
+  .panel-mock .text-title, 
+  .panel-mock .text-heading,
+  .panel-mock h2,
+  .panel-mock h3 {
+    font-weight: normal !important;
+    margin: 0;
+  }
+
+  /* Alignment fix for list-item dots */
+  .panel-mock .list-item {
+    align-items: center;
+  }
+
+  /* Standardized Carousel Card fixes */
+  .panel-mock .carousel-wrap {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+  }
+  .panel-mock .carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: var(--sp-xs) 0;
+    gap: var(--sp-md);
+    margin: 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+  }
+  .panel-mock .carousel::-webkit-scrollbar { display: none; }
+
+  .panel-mock .carousel-card {
+    width: 160px; /* Slightly wider for list-style layout */
+    padding: var(--sp-md);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    align-items: center;
+    gap: var(--sp-sm);
+    text-align: left;
+  }
+
+  /* Hierarchy matching list-item */
+  .carousel-card-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+
+  /* Multi-segment Distribution Bar */
+  .dist-bar {
+    height: 8px;
+    border-radius: 4px;
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg-tertiary);
+  }
+
+  /* Legend helper for multi-segment bar */
+  .dist-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-md);
+    margin-top: var(--sp-sm);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-xs);
+    font-size: var(--fs-caption);
+    color: var(--text-secondary);
+  }
+
+  /* Title + Chip Row */
+  .title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-sm);
+  }
+  
+  /* Collect row hugging buttons */
+  .panel-mock .dc-collect-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-sm);
+    justify-content: flex-start;
+  }
+  .panel-mock .dc-collect-row .btn {
+    flex: 0 0 auto;
+    width: auto;
+    padding-left: var(--sp-md);
+    padding-right: var(--sp-md);
+  }
+
+  /* Standardized Match Card (matches carousel background/border) */
+  .quiz-match-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-md);
+    text-align: left;
+    width: 100%;
+  }
+
+  /* Breadcrumb helper */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-xs);
+    margin-bottom: var(--sp-xs);
+  }
+</style>
+</head>
+<body>
+
+  <header class="section-group" style="margin-bottom: var(--sp-4xl);">
+    <h1 class="text-heading">Panel Content Hierarchy Rules</h1>
+    <p class="text-body">Standardized rules for consistent panel scaffolding and data visualization.</p>
+  </header>
+
+  <div class="demo-grid">
+
+    <!-- PROPOSAL 1: FRAGRANCE DETAIL -->
+    <div class="section-group">
+      <div class="text-label demo-label">Proposal 1: Fragrance Detail</div>
+      <div class="panel-mock">
+        <div class="detail-topbar">
+          <button class="detail-back visible" aria-label="Back">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back
+          </button>
+          <button class="detail-close-btn" aria-label="Close details">✕</button>
+        </div>
+        
+        <div class="detail-inner">
+          <header class="u-flex-column u-gap-md">
+            <nav class="breadcrumb">
+              <button class="text-link text-meta">Le Labo</button>
+            </nav>
+            <div class="u-flex-column u-gap-xs">
+              <div class="title-row">
+                <h2 class="text-title">Santal 33</h2>
+                <span class="chip" style="background:var(--fam-woody); color:var(--bg-primary);">Woody</span>
+              </div>
+              <div class="text-body">
+                An iconic, woody fragrance that captures the spirit of the American West. Defines a generation of niche perfumery.
+              </div>
+            </div>
+          </header>
+
+          <div class="dc-collect-row">
+            <button class="btn btn--secondary active"><span class="dc-collect-icon">♥</span> Wishlist</button>
+            <button class="btn btn--secondary">Mark Owned</button>
+            <button class="btn btn--secondary"><span class="dc-collect-icon">↗</span></button>
+          </div>
+
+          <section class="detail-section">
+            <div class="sec-label">Compare with</div>
+            <div class="list-view">
+              <button class="list-item">
+                <div class="list-item-dot" style="--fam-bg: var(--fam-woody)"></div>
+                <div class="list-item-body">
+                  <div class="list-item-label text-ui-strong">Santal Blush</div>
+                  <div class="list-item-sublabel text-meta">Tom Ford</div>
+                </div>
+                <div class="list-item-trail"><span class="text-meta">84%</span></div>
+              </button>
+            </div>
+          </section>
+
+          <div class="u-margin-top-auto u-padding-top-xl">
+            <a href="#" class="btn btn--primary u-w-full u-justify-center">Buy from Le Labo — $220</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PROPOSAL 2: NOTE PROFILE -->
+    <div class="section-group">
+      <div class="text-label demo-label">Proposal 2: Note Profile</div>
+      <div class="panel-mock">
+        <div class="detail-topbar">
+          <div class="text-label" style="margin-left:var(--sp-md)">Note Profile</div>
+          <button class="detail-close-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="detail-inner">
+          <header class="u-flex-column u-gap-md">
+            <nav class="breadcrumb">
+              <button class="text-link text-meta">Note</button>
+            </nav>
+            <div class="u-flex-column u-gap-xs">
+              <div class="title-row">
+                <h2 class="text-title">Bergamot</h2>
+                <span class="chip" style="background:var(--fam-citrus); color:var(--bg-primary);">Citrus</span>
+              </div>
+              <div class="text-body">
+                A fragrant citrus fruit essential for the "opening" of most fragrances.
+              </div>
+            </div>
+          </header>
+
+          <section class="detail-section">
+            <div class="sec-label">The Story</div>
+            <div class="text-body" style="font-style: italic; color:var(--text-secondary);">
+              "The Calabria harvest begins in November. We wait for the fruit to turn from deep green to a pale yellow, ensuring the oils are at their most volatile and bright."
+            </div>
+          </section>
+
+          <section class="detail-section">
+            <div class="sec-label">Popular with this note</div>
+            <div class="carousel-wrap">
+              <div class="carousel">
+                <button class="carousel-card card--interactive">
+                  <div class="dot" style="--fam-bg: var(--fam-citrus)"></div>
+                  <div class="carousel-card-body">
+                    <div class="list-item-label text-ui-strong">Bergamote 22</div>
+                    <div class="text-meta">Le Labo</div>
+                  </div>
+                </button>
+                <button class="carousel-card card--interactive">
+                  <div class="dot" style="--fam-bg: var(--fam-citrus)"></div>
+                  <div class="carousel-card-body">
+                    <div class="list-item-label text-ui-strong">Aqua Allegoria</div>
+                    <div class="text-meta">Guerlain</div>
+                  </div>
+                </button>
+                <button class="carousel-card card--interactive">
+                  <div class="dot" style="--fam-bg: var(--fam-citrus)"></div>
+                  <div class="carousel-card-body">
+                    <div class="list-item-label text-ui-strong">Arancia</div>
+                    <div class="text-meta">Acqua di Parma</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="detail-section">
+            <div class="sec-label">Catalog</div>
+            <div class="list-view">
+              <button class="list-item">
+                <div class="list-item-dot" style="--fam-bg: var(--fam-citrus)"></div>
+                <div class="list-item-body">
+                  <div class="list-item-label text-ui-strong">Bergamote 22</div>
+                  <div class="list-item-sublabel text-meta">Le Labo</div>
+                </div>
+              </button>
+              <button class="list-item">
+                <div class="list-item-dot" style="--fam-bg: var(--fam-green)"></div>
+                <div class="list-item-body">
+                  <div class="list-item-label text-ui-strong">Gypsy Water</div>
+                  <div class="list-item-sublabel text-meta">Byredo</div>
+                </div>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPOSAL 4: FAMILY PROFILE -->
+    <div class="section-group">
+      <div class="text-label demo-label">Proposal 4: Family Profile</div>
+      <div class="panel-mock">
+        <div class="detail-topbar">
+          <div class="text-label" style="margin-left:var(--sp-md)">Family Profile</div>
+          <button class="detail-close-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="detail-inner">
+          <header class="u-flex-column u-gap-md">
+            <nav class="breadcrumb">
+              <button class="text-link text-meta">Family</button>
+            </nav>
+            <div class="u-flex-column u-gap-xs">
+              <div class="title-row">
+                <h2 class="text-title">Woody</h2>
+                <span class="chip" style="background:var(--fam-woody); color:var(--bg-primary);">Woody</span>
+              </div>
+              <div class="text-body">
+                Dry, warm, and often masculine-leaning notes. Characterized by sandalwood, cedarwood, and patchouli.
+              </div>
+            </div>
+          </header>
+
+          <section class="detail-section">
+            <div class="sec-label">Popular Woody Scents</div>
+            <div class="carousel-wrap">
+              <div class="carousel">
+                <button class="carousel-card card--interactive">
+                  <div class="dot" style="--fam-bg: var(--fam-woody)"></div>
+                  <div class="carousel-card-body">
+                    <div class="list-item-label text-ui-strong">Santal 33</div>
+                    <div class="text-meta">Le Labo</div>
+                  </div>
+                </button>
+                <button class="carousel-card card--interactive">
+                  <div class="dot" style="--fam-bg: var(--fam-woody)"></div>
+                  <div class="carousel-card-body">
+                    <div class="list-item-label text-ui-strong">Terre d'Hermès</div>
+                    <div class="text-meta">Hermès</div>
+                  </div>
+                </button>
+                <button class="carousel-card card--interactive">
+                  <div class="dot" style="--fam-bg: var(--fam-woody)"></div>
+                  <div class="carousel-card-body">
+                    <div class="list-item-label text-ui-strong">Sycomore</div>
+                    <div class="text-meta">Chanel</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="detail-section">
+            <div class="sec-label">Catalog</div>
+            <div class="list-view">
+              <button class="list-item">
+                <div class="list-item-dot" style="--fam-bg: var(--fam-woody)"></div>
+                <div class="list-item-body">
+                  <div class="list-item-label text-ui-strong">Santal 33</div>
+                  <div class="list-item-sublabel text-meta">Le Labo</div>
+                </div>
+              </button>
+              <button class="list-item">
+                <div class="list-item-dot" style="--fam-bg: var(--fam-woody)"></div>
+                <div class="list-item-body">
+                  <div class="list-item-label text-ui-strong">Oud Wood</div>
+                  <div class="list-item-sublabel text-meta">Tom Ford</div>
+                </div>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPOSAL 5: BRAND PROFILE -->
+    <div class="section-group">
+      <div class="text-label demo-label">Proposal 5: Brand Profile</div>
+      <div class="panel-mock">
+        <div class="detail-topbar">
+          <div class="text-label" style="margin-left:var(--sp-md)">Brand Profile</div>
+          <button class="detail-close-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="detail-inner">
+          <header class="u-flex-column u-gap-md">
+            <nav class="breadcrumb">
+              <button class="text-link text-meta">Brand</button>
+            </nav>
+            <div class="u-flex-column u-gap-xs">
+              <h2 class="text-title">Le Labo</h2>
+              <div class="text-meta" style="color:var(--text-secondary)">Est. 2006 · Grasse/NYC</div>
+              <div class="text-body">
+                A cult-favorite perfumery known for its industrial aesthetic and the philosophy of Wabi-Sabi.
+              </div>
+            </div>
+          </header>
+
+          <section class="detail-section">
+            <div class="sec-label">Olfactive Distribution</div>
+            <div class="u-flex-column">
+              <div class="dist-bar">
+                <div style="width:40%; background:var(--fam-woody);" title="Woody"></div>
+                <div style="width:30%; background:var(--fam-floral);" title="Floral"></div>
+                <div style="width:30%; background:var(--fam-citrus);" title="Citrus"></div>
+              </div>
+              <div class="dist-legend">
+                <div class="legend-item"><span class="dot" style="--fam-bg: var(--fam-woody); width:6px; height:6px;"></span> Woody</div>
+                <div class="legend-item"><span class="dot" style="--fam-bg: var(--fam-floral); width:6px; height:6px;"></span> Floral</div>
+                <div class="legend-item"><span class="dot" style="--fam-bg: var(--fam-citrus); width:6px; height:6px;"></span> Citrus</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="detail-section">
+            <div class="sec-label">Catalog</div>
+            <div class="list-view">
+              <button class="list-item">
+                <div class="list-item-dot" style="--fam-bg: var(--fam-woody)"></div>
+                <div class="list-item-body">
+                  <div class="list-item-label text-ui-strong">Santal 33</div>
+                  <div class="list-item-sublabel text-meta">Woody</div>
+                </div>
+              </button>
+              <button class="list-item">
+                <div class="list-item-dot" style="--fam-bg: var(--fam-floral)"></div>
+                <div class="list-item-body">
+                  <div class="list-item-label text-ui-strong">Rose 31</div>
+                  <div class="list-item-sublabel text-meta">Floral</div>
+                </div>
+              </button>
+            </div>
+          </section>
+
+          <div class="u-margin-top-auto u-padding-top-xl">
+            <a href="#" target="_blank" class="btn btn--secondary u-w-full u-justify-center">Visit Official Site ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPOSAL 6: SCENT ARCHETYPES -->
+    <div class="section-group">
+      <div class="text-label demo-label">Proposal 6: Archetype Result</div>
+      <div class="panel-mock">
+        <div class="detail-topbar">
+          <div class="text-label" style="margin-left:var(--sp-md)">Archetype Result</div>
+          <button class="detail-close-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="detail-inner">
+          <header class="u-flex-column u-gap-md">
+            <nav class="breadcrumb">
+              <button class="text-link text-meta">Scent Archetypes</button>
+            </nav>
+            <div class="u-flex-column u-gap-xs">
+              <h2 class="text-title">The Architect</h2>
+              <div class="text-body">
+                You prefer fragrances with clear structure, often favoring woody and mineral notes that feel architectural and intentional.
+              </div>
+            </div>
+          </header>
+
+          <section class="detail-section">
+            <div class="sec-label">Your Top Match</div>
+            <button class="quiz-match-card card--interactive">
+              <div class="u-flex-row u-gap-sm u-align-center">
+                <div class="dot" style="--fam-bg: var(--fam-woody)"></div>
+                <div class="u-flex-column">
+                  <div class="list-item-label text-ui-strong">Another 13</div>
+                  <div class="text-meta">Le Labo</div>
+                </div>
+              </div>
+              <div class="text-meta" style="color:var(--text-secondary)">A clean, structural woody amber that aligns 98% with your archetype.</div>
+            </button>
+          </section>
+
+          <section class="detail-section">
+            <div class="sec-label">Archetype Families</div>
+            <div class="u-flex-row u-gap-xs">
+              <span class="chip" style="background:var(--fam-woody); color:var(--bg-primary);">Woody</span>
+              <span class="chip" style="background:var(--fam-amber); color:var(--bg-primary);">Amber</span>
+            </div>
+          </section>
+
+          <div class="u-margin-top-auto u-padding-top-xl">
+            <button class="btn btn--primary u-w-full u-justify-center">Retake Discovery Quiz</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-group" style="margin-top: var(--sp-4xl); padding: var(--sp-2xl); background: var(--bg-primary); border-radius: var(--radius-lg); border: 1px solid var(--border-standard);">
+    <h2 class="text-title" style="margin-bottom: var(--sp-md); font-weight: normal !important;">Hierarchy Consistency Rules</h2>
+    <div class="list-view">
+      <div class="list-item">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">1. Header Grouping</div>
+          <div class="list-item-sublabel text-meta">The Breadcrumb, Title, Chip, and Description must live in a single <code>u-gap-md</code> header container. Description follows the title immediately.</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">2. Card Consistency</div>
+          <div class="list-item-sublabel text-meta">All internal match/action cards (like <code>quiz-match-card</code>) must match carousel cards in background (<code>bg-primary</code>) and border (<code>border-standard</code>).</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">3. List-Style Alignment</div>
+          <div class="list-item-sublabel text-meta">Carousel cards must use a horizontal row layout (<code>dot</code> + <code>u-flex-column</code>) to align with standard <code>list-item</code> aesthetics.</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">4. Archetype Hierarchy</div>
+          <div class="list-item-sublabel text-meta">Use <code>Scent Archetypes</code> as the breadcrumb for quiz-related intelligence.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

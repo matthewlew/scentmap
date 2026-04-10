@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Container & Surface Standardizations | Scentmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=DM+Sans:ital,opsz,wght@0,9..40,200..900;1,9..40,200..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/design-system.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/layout.css">
+<style>
+  body { 
+    padding: var(--sp-4xl) var(--sp-2xl); 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    background: var(--bg-secondary);
+  }
+  .audit-section {
+    margin-bottom: var(--sp-4xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xl);
+  }
+  .audit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--sp-2xl);
+    align-items: start;
+  }
+  .label-group {
+    border-left: 2px solid var(--accent-primary);
+    padding-left: var(--sp-md);
+    margin-bottom: var(--sp-md);
+  }
+  
+  /* Standardized Container Rules (proposed) */
+  .u-container-standard {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Demonstration of Carousel Card standardization */
+  .demo-carousel-card {
+    width: 160px;
+    padding: var(--sp-md);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-standard);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-sm);
+    text-align: left;
+  }
+</style>
+</head>
+<body>
+
+  <header class="audit-section" style="margin-bottom: var(--sp-4xl);">
+    <h1 class="text-heading" style="font-weight: normal !important;">Container Standardizations</h1>
+    <p class="text-body">Consolidating all surface patterns: cards, callouts, and banners into a unified hierarchy.</p>
+  </header>
+
+  <!-- SECTION 1: CORE SURFACES -->
+  <section class="audit-section">
+    <div class="label-group">
+      <h2 class="text-title" style="font-weight: normal !important;">1. Static Surfaces</h2>
+      <p class="text-meta">Base containers for housing information and data groups.</p>
+    </div>
+    
+    <div class="audit-grid">
+      <div>
+        <div class="sec-label">.card (Primary)</div>
+        <div class="card u-container-standard">
+          <div class="text-ui-strong">Primary Surface</div>
+          <div class="text-body">Standard container used for high-level groupings. Always uses <code>bg-primary</code> and 1px border.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-label">.card--secondary</div>
+        <div class="card card--secondary u-container-standard">
+          <div class="text-ui-strong">Secondary Surface</div>
+          <div class="text-body">Used for supporting content. Uses <code>bg-secondary</code> to create depth.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-label">.callout</div>
+        <div class="callout u-container-standard">
+          <div class="text-meta"><strong>Note:</strong> Used for brief inline alerts or facts. Uses 8px padding and subtle border.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: INTERACTIVE CONTAINERS -->
+  <section class="audit-section">
+    <div class="label-group">
+      <h2 class="text-title" style="font-weight: normal !important;">2. Interactive Containers</h2>
+      <p class="text-meta">Actionable cards used in carousels and match results.</p>
+    </div>
+
+    <div class="audit-grid">
+      <div>
+        <div class="sec-label">Standard Carousel Card</div>
+        <button class="demo-carousel-card card--interactive">
+          <div class="dot" style="--fam-bg: var(--fam-woody)"></div>
+          <div class="u-flex-column">
+            <div class="list-item-label text-ui-strong">Santal 33</div>
+            <div class="text-meta">Le Labo</div>
+          </div>
+        </button>
+      </div>
+
+      <div>
+        <div class="sec-label">Quiz Match Card</div>
+        <button class="card card--interactive u-container-standard" style="padding: var(--sp-lg); border-radius: var(--radius-lg);">
+          <div class="u-flex-row u-gap-sm u-align-center">
+            <div class="dot--md" style="--fam-bg: var(--fam-amber)"></div>
+            <div class="u-flex-column">
+              <div class="list-item-label text-ui-strong">Another 13</div>
+              <div class="text-meta">Le Labo</div>
+            </div>
+          </div>
+          <div class="text-meta" style="color:var(--text-secondary); margin-top: var(--sp-xs);">98% Match with your archetype</div>
+        </button>
+      </div>
+
+      <div>
+        <div class="sec-label">Interactive List Item</div>
+        <div class="list-view" style="border: 1px solid var(--border-standard); border-radius: var(--radius-lg); overflow: hidden;">
+          <button class="list-item">
+            <div class="list-item-dot" style="--fam-bg: var(--fam-citrus)"></div>
+            <div class="list-item-body">
+              <div class="list-item-label text-ui-strong">Bergamote 22</div>
+              <div class="list-item-sublabel text-meta">Le Labo</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: HIGH-IMPACT BANNERS -->
+  <section class="audit-section">
+    <div class="label-group">
+      <h2 class="text-title" style="font-weight: normal !important;">3. High-Impact Banners</h2>
+      <p class="text-meta">Hero-level containers for calls-to-action.</p>
+    </div>
+
+    <div class="banner u-container-standard">
+      <div class="banner-head">
+        <h3 class="text-title" style="font-weight: normal !important;">Find Your Scent Identity</h3>
+      </div>
+      <div class="text-body">Our olfactive engine uses mathematical modeling to map your preferences to 5,000+ niche fragrances.</div>
+      <button class="btn btn--primary u-margin-top-md" style="width: auto;">Take the Quiz</button>
+    </div>
+  </section>
+
+  <!-- SECTION 4: THE CONSOLIDATED RULEBOOK -->
+  <section class="section-group" style="margin-top: var(--sp-4xl); padding: var(--sp-2xl); background: var(--bg-primary); border-radius: var(--radius-lg); border: 1px solid var(--border-standard);">
+    <h2 class="text-title" style="margin-bottom: var(--sp-md); font-weight: normal !important;">Consolidated Container Rules</h2>
+    <div class="list-view">
+      <div class="list-item">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">1. Universal Left-Alignment</div>
+          <div class="list-item-sublabel text-meta">Containers must never center-align content by default. Use <code>align-items: flex-start</code> and <code>text-align: left</code> for all cards, banners, and carousel items.</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">2. Standardized Padding</div>
+          <div class="list-item-sublabel text-meta">Static cards use <code>var(--sp-lg)</code> (16px). Interactive/Carousel cards use <code>var(--sp-md)</code> (12px) to optimize for density.</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">3. Typography Mapping</div>
+          <div class="list-item-sublabel text-meta">Use <code>.text-ui-strong</code> or <code>.list-item-label</code> for primary names. Supporting text always uses <code>.text-meta</code>. Descriptions use <code>.text-body</code>.</div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-body">
+          <div class="list-item-label text-ui-strong">4. Proximity Logic</div>
+          <div class="list-item-sublabel text-meta">Related elements (Dot + Name) use <code>var(--sp-xs)</code> (4px) gap. Distant blocks (Title + Description) use <code>var(--sp-md)</code> (12px) gap.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

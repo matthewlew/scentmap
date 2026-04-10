@@ -40,8 +40,10 @@ The preview server serves from `/tmp/scentmap-copy/` on port 3001.
 **Sync after every edit before testing:**
 ```bash
 cp /Users/matthewlewair/Documents/scentmap/index.html /tmp/scentmap-copy/index.html
+cp /Users/matthewlewair/Documents/scentmap/app.html /tmp/scentmap-copy/app.html
 cp -r /Users/matthewlewair/Documents/scentmap/styles /tmp/scentmap-copy/
 cp -r /Users/matthewlewair/Documents/scentmap/js /tmp/scentmap-copy/
+cp -r /Users/matthewlewair/Documents/scentmap/data /tmp/scentmap-copy/
 cp -r /Users/matthewlewair/Documents/scentmap/app /tmp/scentmap-copy/
 cp -r /Users/matthewlewair/Documents/scentmap/quiz /tmp/scentmap-copy/
 cp -r /Users/matthewlewair/Documents/scentmap/compare /tmp/scentmap-copy/

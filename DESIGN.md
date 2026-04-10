@@ -23,6 +23,7 @@ Live component demos: [`designsystem.html`](./designsystem.html)
 | Shelf | `.list-view` | `styles/components.css` | — | Vertical list of `.list-item` with separators. |
 | Tab / Filter Button | `.tab` | `styles/components.css` | `.tab.active` | All filter bars, state tabs, role tabs. Must have `aria-pressed`. |
 | List Item | `.list-item` | `styles/components.css` | — | All catalog/saved/suggestion/search rows AND selectable option lists. Use slot sub-elements below. Typography must be applied via utility classes. |
+| Input | `.input` | `styles/components.css` | `.input--inline` | Standard form fields and search inputs. Use `.input--inline` for search bars with icons. |
 | ↳ Slot: leading | `.list-item-leading` | — | — | Holds dot or icon. flex, align-items:center, flex-shrink:0. |
 | ↳ Slot: dot | `.list-item-dot` | — | — | Layout container for indicator (unified 8x8px). Place a `.dot` inside it. |
 | ↳ Slot: body | `.list-item-body` | — | — | flex:1, min-width:0. Wraps by default. |
