@@ -1,3 +1,15 @@
+## 2026-04-13
+
+### Fixed
+- **Chip layout** — Added `align-self: flex-start` to `.chip` base rule so family chips never stretch to full row width inside flex-column containers (e.g. frag detail header, note detail header).
+- **Mobile compare cards** — Carousel was collapsing to 24px (suggestions div consumed all panel height). Fixed by giving `.cmp-mobile-cards` an explicit `height: calc(100svh - 130px)` and `align-items: stretch` so cards fill the viewport and card body scrolls within each card.
+- **Compare description cell** — `class="text-body cmp-m-desc"` replaced with `class="text-body"`. Feature typography class removed. Layout handled via `[data-row="description"]` CSS attribute selector instead of `:has(.cmp-m-desc)` hack.
+- **Mobile card description** — `class="text-meta cmp-m-card-desc"` replaced with `class="text-meta"`. `cmp-m-card-desc` CSS rule removed.
+- **Brand chips in Saved panel** — `saved-brand-chip` custom class migrated to `.btn.btn--secondary`. CSS rule removed.
+
+### Changed
+- **`_renderRowCell`** — Cell `<div>` now includes `data-row="${rowId}"` attribute, enabling CSS targeting by row type without brittle class selectors.
+
 ## 2026-04-10
 
 ### Changed

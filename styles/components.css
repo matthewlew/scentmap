@@ -176,6 +176,7 @@
 
 .chip {
   display: inline-flex;
+  align-self: flex-start;
   align-items: center;
   gap: var(--sp-2xs);
   font-family: var(--font-sans);
@@ -1410,7 +1411,7 @@ button.tag:hover {
   font-weight: 500;
   color: var(--text-tertiary);
   letter-spacing: var(--ls-normal);
-  margin-left: 3px;
+  margin-left: var(--sp-micro);
 }
 
 /* .brand-n → .text-ui-strong; .brand-c → .text-meta */
@@ -1876,18 +1877,8 @@ mark.note-match {
 /* Notes overflow indicator */
 .cmp-m-notes-more { opacity: 0.5; margin-left: var(--sp-xs); }
 
-/* Description cell — block layout avoids flex/grid intrinsic-sizing bug */
-.cmp-m-data-cell:has(.cmp-m-desc) { display: block; }
-.cmp-m-desc {
-  display: block;
-  width: 100%;
-  overflow-wrap: break-word;
-  line-height: var(--lh-relaxed);
-  color: var(--text-secondary);
-}
-
-/* Mobile card description */
-.cmp-m-card-desc { color: var(--text-secondary); line-height: var(--lh-relaxed); margin: 0 0 var(--sp-xs); }
+/* Description cell — block layout for text reflow */
+.cmp-m-data-cell[data-row="description"] { display: block; overflow-wrap: break-word; }
 
 /* Empty/dash placeholder — replaces inline opacity:0.4 */
 .cmp-m-empty-val { opacity: 0.4; }
@@ -1999,12 +1990,16 @@ mark.note-match {
 /* ── Mobile card carousel — shown instead of matrix on mobile ── */
 .cmp-mobile-cards {
   display: none; /* shown by @media in responsive.css */
+  height: calc(100svh - 130px); /* fill viewport minus header + nav; suggestions scroll below */
+  min-height: 400px;
+  flex-shrink: 0;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   gap: var(--sp-md);
   padding: var(--sp-md);
   flex-direction: row;
+  align-items: stretch;
 }
 .cmp-m-card {
   scroll-snap-align: start;
@@ -2029,8 +2024,8 @@ mark.note-match {
   display: flex;
   flex-direction: column;
   gap: var(--sp-sm);
-  overflow-y: auto;
   flex: 1;
+  overflow-y: auto;
 }
 .cmp-m-card-notes { display: flex; flex-wrap: wrap; gap: var(--sp-xs); }
 .cmp-m-card-radar { display: flex; justify-content: flex-start; padding: var(--sp-xs) 0; }
@@ -2220,54 +2215,9 @@ mark.note-match {
   gap: var(--sp-lg);
 }
 
-.cmp-edu-card {
-  padding: var(--sp-md);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-standard);
-  background: var(--bg-primary);
-  display: flex;
-  flex-direction: column;
-}
 
-.cmp-edu-quad {
-  padding: var(--sp-md);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-standard);
-  background: var(--bg-primary);
-  display: flex;
-  flex-direction: column;
-}
 
-.cmp-edu-quad.highlight {
-  border-color: var(--border-strong);
-  background: var(--bg-secondary);
-}
 
-.cmp-edu-card-notes {
-  margin-bottom: var(--sp-md);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-xs);
-}
-
-.cmp-edu-card-notes-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: var(--fs-meta);
-}
-
-.cmp-edu-suggestion {
-  margin-top: auto;
-  padding-top: var(--sp-sm);
-  border-top: 1px solid var(--border-subtle);
-  cursor: pointer;
-  transition: opacity var(--dur-fast) var(--ease-spring);
-}
-
-.cmp-edu-suggestion:hover {
-  opacity: 0.7;
-}
 
 /* ── Character map — sillage/depth mirrored bars ── */
 
@@ -3277,26 +3227,6 @@ mark.note-match {
   gap: var(--sp-xs);
 }
 
-.saved-brand-chip {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  font-weight: 500;
-  color: var(--text-primary);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-standard);
-  border-radius: var(--radius-pill);
-  padding: var(--sp-xs) var(--sp-md);
-  cursor: pointer;
-  min-height: var(--touch-target);
-  transition: background var(--dur-fast) var(--ease-spring),
-              border-color var(--dur-fast) var(--ease-spring);
-}
-.saved-brand-chip:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--border-strong);
-}
 
 .copy-collection-btn {
   display: inline-flex;

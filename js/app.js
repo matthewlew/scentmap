@@ -383,7 +383,7 @@ function renderCollectionSection(container, label, items, type) {
     wrap.className = 'collection-brands-wrap';
     items.forEach(brand => {
       const btn = document.createElement('button');
-      btn.className = 'saved-brand-chip';
+      btn.className = 'btn btn--secondary';
       btn.textContent = brand.name;
       btn.addEventListener('click', () => openHouseDetail(brand.name));
       wrap.appendChild(btn);
@@ -1234,22 +1234,22 @@ window.renderSaved = function() {
         const famA = FAM[p.a.family] || {}; const famB = FAM[p.b.family] || {};
         const colA = famA.color || 'var(--fam-default)'; const colB = famB.color || 'var(--fam-default)';
         card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--sp-sm);">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
             <div class="chip chip--outline chip--xs">${p.score}% match</div>
             <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
           </div>
-          <div style="display:flex; align-items:center; gap:var(--sp-sm); margin-bottom:var(--sp-xs);">
-            <div class="list-item-dot" style="--fam-bg:${colA}; flex-shrink:0;"></div>
+          <div class="list-item u-p-0" style="border:none; background:none;">
+            <div class="list-item-dot" style="--fam-bg:${colA};"></div>
             <div class="list-item-body">
-              <div class="list-item-label">${p.a.name}</div>
-              <div class="list-item-sublabel">${famA.label||p.a.family}</div>
+              <div class="list-item-label text-ui-strong">${p.a.name}</div>
+              <div class="list-item-sublabel text-meta">${famA.label||p.a.family}</div>
             </div>
           </div>
-          <div style="display:flex; align-items:center; gap:var(--sp-sm); margin-bottom:var(--sp-sm);">
-            <div class="list-item-dot" style="--fam-bg:${colB}; flex-shrink:0;"></div>
+          <div class="list-item u-p-0" style="border:none; background:none;">
+            <div class="list-item-dot" style="--fam-bg:${colB};"></div>
             <div class="list-item-body">
-              <div class="list-item-label">${p.b.name}</div>
-              <div class="list-item-sublabel">${famB.label||p.b.family}</div>
+              <div class="list-item-label text-ui-strong">${p.b.name}</div>
+              <div class="list-item-sublabel text-meta">${famB.label||p.b.family}</div>
             </div>
           </div>
           <div class="text-meta u-font-serif" style="margin-top:auto; color:var(--text-tertiary);">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
@@ -2013,9 +2013,9 @@ function renderNoteDetail(container,note){
   const famFrag = famID ? CAT_MAP[famID] : null;
 
   container.innerHTML=`
-    <div>
+    <div class="u-flex-column u-gap-xs">
       <div class="text-heading">${note.name}</div>
-      <span class="chip" style="margin-top:var(--sp-xs); background: ${fm.color}; color: var(--bg-primary);">${fm.label}</span>
+      <span class="chip" style="background: ${fm.color}; color: var(--bg-primary);">${fm.label}</span>
     </div>
     <div class="text-body">${note.desc}</div>
     <div id="${saveId}"></div>
@@ -2835,7 +2835,7 @@ function buildCatalog(roleFilter){
     const frags=visibleCat.filter(f=>f.brand===brand).sort((a,b)=>a.name.localeCompare(b.name));
     const key=brand.replace(/\s+/g,'-')+(roleFilter||'');
     const sec=document.createElement('div');sec.className='cat-section';
-    sec.innerHTML=`<div class="brand-hdr"><button class="brand-n text-link" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="brand-c" id="bc-${key}"></div></div>`;
+    sec.innerHTML=`<div class="brand-hdr"><button class="text-ui-strong text-link" data-brand="${brand}">${brand}<span class="brand-total">${frags.length}</span></button><div class="text-meta" id="bc-${key}"></div></div>`;
     // Brand header → house detail
     sec.querySelector('.text-link')?.addEventListener('click',()=>openHouseDetail(brand));
     const list=document.createElement('div');list.className='list-view';
@@ -4566,7 +4566,7 @@ function _renderRowCell(rowId, idx, frag, sharedNoteSet) {
   switch (rowId) {
     case 'description': {
       content = frag.description
-        ? `<span class="text-body cmp-m-desc">${frag.description}</span>`
+        ? `<span class="text-body">${frag.description}</span>`
         : '<span class="text-caption cmp-m-empty-val">—</span>';
       break;
     }
@@ -4620,7 +4620,7 @@ function _renderRowCell(rowId, idx, frag, sharedNoteSet) {
       break;
     }
   }
-  return `<div class="cmp-m-cell cmp-m-data-cell" role="cell" data-slot="${idx}">${content}</div>`;
+  return `<div class="cmp-m-cell cmp-m-data-cell" role="cell" data-slot="${idx}" data-row="${rowId}">${content}</div>`;
 }
 
 /* ── Sort columns by a measurable metric ── */
@@ -4918,7 +4918,7 @@ function _renderMobileCards() {
           <button class="cmp-m-remove-btn" data-slot="${i}" aria-label="Remove ${frag.name}">${ICONS.trash}</button>
         </div>
         <div class="cmp-m-card-body">
-          ${frag.description ? `<p class="text-meta cmp-m-card-desc">${frag.description}</p>` : ''}
+          ${frag.description ? `<p class="text-meta">${frag.description}</p>` : ''}
           <div class="sec-label">Top Notes</div><div class="cmp-m-card-notes">${topNotes}</div>
           <div class="sec-label">Heart Notes</div><div class="cmp-m-card-notes">${midNotes}</div>
           <div class="sec-label">Base Notes</div><div class="cmp-m-card-notes">${baseNotes}</div>
