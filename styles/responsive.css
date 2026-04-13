@@ -332,13 +332,7 @@
     font-size: var(--fs-body-sm);
   }
 
-  .brand-n {
-    font-size: var(--fs-body-sm);
-  }
 
-  .brand-c {
-    font-size: var(--fs-body-sm);
-  }
 
   .cat-legend {
     gap: var(--sp-md);

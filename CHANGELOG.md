@@ -1,5 +1,10 @@
 ## 2026-04-13
 
+### Changed
+- **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
+- **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
+- **Settings panel** — Added `text-ui-strong` to `.list-item-label` in changelog and design system nav items.
+
 ### Fixed
 - **Chip layout** — Added `align-self: flex-start` to `.chip` base rule so family chips never stretch to full row width inside flex-column containers (e.g. frag detail header, note detail header).
 - **Mobile compare cards** — Carousel was collapsing to 24px (suggestions div consumed all panel height). Fixed by giving `.cmp-mobile-cards` an explicit `height: calc(100svh - 130px)` and `align-items: stretch` so cards fill the viewport and card body scrolls within each card.
