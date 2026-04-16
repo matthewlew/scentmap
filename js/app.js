@@ -445,7 +445,7 @@ window.openTrialSheet = function(fragId) {
           <div class="sec-label">Initial Impression</div>
           <div style="display:flex; gap:var(--sp-sm);">
             ${[1, 2, 3, 4, 5].map(v => `
-              <button class="btn btn--secondary trial-rate-btn u-flex-1 text-title" data-val="${v}">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+              <button class="btn btn--secondary trial-rate-btn u-flex-1 text-title" data-val="${v}" aria-label="Rate ${v} out of 5" aria-pressed="false">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
             `).join('')}
           </div>
         </div>
@@ -468,8 +468,12 @@ window.openTrialSheet = function(fragId) {
 
     container.querySelectorAll('.trial-rate-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        container.querySelectorAll('.trial-rate-btn').forEach(b => b.classList.remove('active'));
+        container.querySelectorAll('.trial-rate-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         selectedRate = parseInt(btn.dataset.val);
         updateBtn();
       });
@@ -500,7 +504,7 @@ window.openTrialUpdateSheet = function(fragId, timestamp) {
           <div class="sec-label">New Rating</div>
           <div style="display:flex; gap:var(--sp-sm);">
             ${[1, 2, 3, 4, 5].map(v => `
-              <button class="btn btn--secondary update-rate-btn u-flex-1 text-title" data-val="${v}">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+              <button class="btn btn--secondary update-rate-btn u-flex-1 text-title" data-val="${v}" aria-label="Rate ${v} out of 5" aria-pressed="false">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
             `).join('')}
           </div>
         </div>
@@ -512,8 +516,12 @@ window.openTrialUpdateSheet = function(fragId, timestamp) {
     let selectedRate = null;
     container.querySelectorAll('.update-rate-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        container.querySelectorAll('.update-rate-btn').forEach(b => b.classList.remove('active'));
+        container.querySelectorAll('.update-rate-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         selectedRate = parseInt(btn.dataset.val);
         container.querySelector('#update-trial-btn').disabled = false;
       });
