@@ -1,3 +1,5 @@
 ## 2024-03-14 - Mobile Filter Toggle ARIA State Management
 **Learning:** Even simple toggle buttons that show/hide panels using standard CSS classes (like `open`) need explicit ARIA state synchronization (`aria-expanded` and `aria-controls`) to communicate their function and state to screen readers.
-**Action:** When implementing show/hide toggles via JavaScript `classList.toggle`, always capture the returned boolean state and immediately sync it to the triggering button's `aria-expanded` attribute. Also, remember that `aria-controls` should be hardcoded in HTML to establish the relationship.
+**Action:** When implementing show/hide toggles via JavaScript `classList.toggle`, always capture the returned boolean state and immediately sync it to the triggering button's `aria-expanded` attribute. Also, remember that `aria-controls` should be hardcoded in HTML to establish the relationship.## 2026-04-17 - Added ARIA labels to icon-only buttons
+**Learning:** Icon-only buttons or those with decorative content (like `✕`, `⤓`, and emojis) need explicit `aria-label`s to be accessible to screen readers, especially when generated dynamically in JS templates.
+**Action:** Always include an `aria-label` explaining the button's action when creating interactive elements without visible, descriptive text.
