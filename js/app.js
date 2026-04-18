@@ -1270,6 +1270,9 @@ window.renderSaved = function() {
 
 /* Similarity scoring: 0–100 across family, notes, sillage, roles */
 const _simCache={};
+function getSimilarityDetails(a,b){
+  return engine.getSimilarityDetails(a, b, store.FAM_COMPAT);
+}
 function scoreSimilarity(a,b){
   const key = a.id < b.id ? `${a.id}:${b.id}` : `${b.id}:${a.id}`;
   if(key in _simCache) return _simCache[key];
@@ -1280,6 +1283,9 @@ function scoreSimilarity(a,b){
 
 /* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
 const _layCache={};
+function getLayeringDetails(a,b){
+  return engine.getLayeringDetails(a, b, store.FAM_COMPAT);
+}
 function scoreLayeringPair(a,b){
   return engine.scoreLayeringPair(a, b, store.FAM_COMPAT);
 }
@@ -1917,18 +1923,20 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
-    .filter(x=>x.score>=40)
-    .sort((a,b)=>b.score-a.score)
+    .map(f=>({f,details:getLayeringDetails(frag,f)}))
+    .filter(x=>x.details.total>=40)
+    .sort((a,b)=>b.details.total-a.details.total)
     .slice(0,2);
   if(!candidates.length)return;
   const lbl=document.createElement('div');
   lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
   const shelf=document.createElement('div');shelf.className='list-view';
-  candidates.forEach(({f,score})=>{
+  candidates.forEach(({f,details})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
+    const score=details.total;
+    const breakdown = `Fam: ${Math.round(details.famScore)} | Sill: ${Math.round(details.sillScore)} | Contrast: ${Math.round(details.noteScore)}`;
     const row=document.createElement('button');
     row.className='list-item';
     row.innerHTML=`
@@ -1936,6 +1944,7 @@ function buildLayerSuggestions(frag,container){
         <div class="list-item-body">
           <div class="list-item-label text-ui-strong">${f.name}</div>
           <div class="list-item-sublabel text-meta">${f.brand}</div>
+          <div class="list-item-sublabel text-meta" style="margin-top:2px;">${breakdown}</div>
           ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
         </div>
         <div class="list-item-trail">

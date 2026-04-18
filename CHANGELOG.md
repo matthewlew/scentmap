@@ -1,3 +1,9 @@
+## 2026-04-18
+
+### Added
+- Mathematical breakdowns for layering recommendations in UI (Utilitarian Transparency).
+- Exposed `getLayeringDetails` and `getSimilarityDetails` from engine to compute component scores.
+
 ## 2026-04-13
 
 ### Changed
