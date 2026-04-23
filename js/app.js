@@ -1283,6 +1283,12 @@ const _layCache={};
 function scoreLayeringPair(a,b){
   return engine.scoreLayeringPair(a, b, store.FAM_COMPAT);
 }
+function getLayeringDetails(a,b){
+  return engine.getLayeringDetails(a, b, store.FAM_COMPAT);
+}
+function getSimilarityDetails(a,b){
+  return engine.getSimilarityDetails(a, b, store.FAM_COMPAT);
+}
 
 /* Classify how a candidate relates to a source frag for discover shelf */
 function classifyDiscovery(source,candidate){
@@ -1917,7 +1923,10 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
+    .map(f=>{
+      const details = getLayeringDetails(frag,f);
+      return {f,score:details.total,details};
+    })
     .filter(x=>x.score>=40)
     .sort((a,b)=>b.score-a.score)
     .slice(0,2);
@@ -1926,9 +1935,10 @@ function buildLayerSuggestions(frag,container){
   lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
   const shelf=document.createElement('div');shelf.className='list-view';
-  candidates.forEach(({f,score})=>{
+  candidates.forEach(({f,score,details})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
+    const mathStr = `Math: Fam +${details.famScore} · Sill +${details.sillScore} · Contrast +${details.noteScore}`;
     const row=document.createElement('button');
     row.className='list-item';
     row.innerHTML=`
@@ -1936,6 +1946,7 @@ function buildLayerSuggestions(frag,container){
         <div class="list-item-body">
           <div class="list-item-label text-ui-strong">${f.name}</div>
           <div class="list-item-sublabel text-meta">${f.brand}</div>
+          <div class="list-item-sublabel text-meta">${mathStr}</div>
           ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
         </div>
         <div class="list-item-trail">
@@ -5076,12 +5087,16 @@ function renderCmpSuggestions() {
   CAT.forEach(f => {
     if (inSlots.has(f.id)) return;
     let maxSim = 0, maxLay = 0;
+    let bestSimDetails = null, bestLayDetails = null;
     filled.forEach(s => {
-      maxSim = Math.max(maxSim, scoreSimilarity(s, f));
-      maxLay = Math.max(maxLay, scoreLayeringPair(s, f));
+      const simDet = getSimilarityDetails(s, f);
+      if (simDet.total > maxSim) { maxSim = simDet.total; bestSimDetails = simDet; }
+
+      const layDet = getLayeringDetails(s, f);
+      if (layDet.total > maxLay) { maxLay = layDet.total; bestLayDetails = layDet; }
     });
-    simScored.push({ f, score: maxSim });
-    layScored.push({ f, score: maxLay });
+    simScored.push({ f, score: maxSim, details: bestSimDetails });
+    layScored.push({ f, score: maxLay, details: bestLayDetails });
   });
 
   const topSim = simScored.sort((a, b) => b.score - a.score).slice(0, 4);
@@ -5091,14 +5106,33 @@ function renderCmpSuggestions() {
     .sort((a, b) => b.score - a.score)
     .slice(0, 4);
 
-  const mkRow = ({f}) => {
+  const mkRowSim = ({f, details}) => {
     const fam = FAM[f.family] || {};
     const famLabel = fam.label || f.family;
+    const mathStr = details ? `Math: Fam +${details.famScore} · Notes +${details.noteScore} · Sill +${details.sillScore} · Roles +${details.roleScore}` : '';
     return `<button class="list-item cmp-suggest-row" data-id="${f.id}">
       <div class="list-item-dot" style="--fam-bg:${fam.color||'#888'}"></div>
       <div class="list-item-body">
         <div class="list-item-label text-ui-strong">${f.name}</div>
         <div class="list-item-sublabel text-meta">${f.brand} · ${famLabel}</div>
+        ${mathStr ? `<div class="list-item-sublabel text-meta">${mathStr}</div>` : ''}
+      </div>
+      <div class="list-item-trail">
+        <span class="chip chip--xs">Add</span>
+      </div>
+    </button>`;
+  };
+
+  const mkRowLay = ({f, details}) => {
+    const fam = FAM[f.family] || {};
+    const famLabel = fam.label || f.family;
+    const mathStr = details ? `Math: Fam +${details.famScore} · Sill +${details.sillScore} · Contrast +${details.noteScore}` : '';
+    return `<button class="list-item cmp-suggest-row" data-id="${f.id}">
+      <div class="list-item-dot" style="--fam-bg:${fam.color||'#888'}"></div>
+      <div class="list-item-body">
+        <div class="list-item-label text-ui-strong">${f.name}</div>
+        <div class="list-item-sublabel text-meta">${f.brand} · ${famLabel}</div>
+        ${mathStr ? `<div class="list-item-sublabel text-meta">${mathStr}</div>` : ''}
       </div>
       <div class="list-item-trail">
         <span class="chip chip--xs">Add</span>
@@ -5111,12 +5145,12 @@ function renderCmpSuggestions() {
       ${topSim.length ? `
         <div class="cmp-suggest-section">
           <div class="sec-label">Similar to compare</div>
-          <div class="list-view">${topSim.map(mkRow).join('')}</div>
+          <div class="list-view">${topSim.map(mkRowSim).join('')}</div>
         </div>` : ''}
       ${topLay.length ? `
         <div class="cmp-suggest-section">
           <div class="sec-label">Try layering with</div>
-          <div class="list-view">${topLay.map(mkRow).join('')}</div>
+          <div class="list-view">${topLay.map(mkRowLay).join('')}</div>
         </div>` : ''}
     </div>`;
 
