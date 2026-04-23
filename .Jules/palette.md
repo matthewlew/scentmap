@@ -1,3 +1,6 @@
 ## 2024-03-14 - Mobile Filter Toggle ARIA State Management
 **Learning:** Even simple toggle buttons that show/hide panels using standard CSS classes (like `open`) need explicit ARIA state synchronization (`aria-expanded` and `aria-controls`) to communicate their function and state to screen readers.
 **Action:** When implementing show/hide toggles via JavaScript `classList.toggle`, always capture the returned boolean state and immediately sync it to the triggering button's `aria-expanded` attribute. Also, remember that `aria-controls` should be hardcoded in HTML to establish the relationship.
+## 2024-04-23 - Transparent UI for Complex Scoring
+**Learning:** For utility-focused users, presenting aggregate scores (like "65% layering match") without a breakdown of the inputs can feel opaque and diminish trust in the system's recommendations. Transparency increases trust.
+**Action:** When calculating complex multi-factor scores, refactor the underlying engine functions to return detailed breakdown objects instead of just total numbers. Expose this mathematical breakdown in the UI (e.g., using `text-meta` sublabels) to explain exactly *why* a recommendation is being made (e.g., "Math: Fam +15 · Sill +20 · Contrast +12").
