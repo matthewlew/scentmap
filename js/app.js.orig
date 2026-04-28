@@ -119,7 +119,7 @@ window.getGoldenPairs = function(owned) {
   for (let i = 0; i < owned.length; i++) {
     for (let j = i + 1; j < owned.length; j++) {
       const score = scoreLayeringPair(owned[i], owned[j]);
-      if (score >= 50) { 
+      if (score >= 50) {
         pairs.push({ a: owned[i], b: owned[j], score: Math.round(score / 75 * 100) });
       }
     }
@@ -133,17 +133,17 @@ function showUndoToast(msg, onUndo) {
 
   toast.querySelector('.global-toast-msg').textContent = msg;
   const undoBtn = toast.querySelector('.global-toast-undo');
-  
+
   const newUndoBtn = undoBtn.cloneNode(true);
   undoBtn.parentNode.replaceChild(newUndoBtn, undoBtn);
-  
+
   newUndoBtn.addEventListener('click', () => {
     onUndo();
     toast.classList.remove('visible');
   });
 
   toast.classList.add('visible');
-  
+
   if (toast._timeout) clearTimeout(toast._timeout);
   toast._timeout = setTimeout(() => {
     toast.classList.remove('visible');
@@ -184,12 +184,12 @@ function setState(id,s){
           });
         };
       });
-      return; 
+      return;
     }
   }
-  
+
   store.setState(id,s);
-  
+
   const frag = CAT_MAP[id];
   const name = frag ? frag.name : 'Fragrance';
   let msg = '';
@@ -203,7 +203,7 @@ function setState(id,s){
     liveEl.textContent = `${name} ${msg.toLowerCase()}`;
     setTimeout(() => { if (liveEl.textContent === `${name} ${msg.toLowerCase()}`) liveEl.textContent = ''; }, 3000);
   }
-  
+
   showUndoToast(msg, () => {
     store.setState(id, oldState);
     refreshAfterStateChange(id);
@@ -431,7 +431,7 @@ window.openTrialSheet = function(fragId) {
           <div class="dc-name">${frag.name}</div>
           <div class="dc-brand">${frag.brand}</div>
         </div>
-        
+
         <div class="section-group">
           <div class="sec-label">Where did you spray it?</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-sm);">
@@ -1073,7 +1073,7 @@ function getGapRecommendation(stats) {
     { key: 'warmth', label: 'warmth' },
     { key: 'intensity', label: 'boldness' }
   ];
-  
+
   const gap = dimensions.sort((a, b) => p[a.key] - p[b.key])[0];
   if (p[gap.key] > 0.5) return null; // No major gaps
 
@@ -1083,7 +1083,7 @@ function getGapRecommendation(stats) {
     const pb = engine.computeProfile(b);
     return pb[gap.key] - pa[gap.key];
   })[0];
-  
+
   return { label: gap.label, frag: best };
 }
 
@@ -1092,7 +1092,7 @@ window.renderSaved = function() {
   const ctaWrap = document.getElementById('you-journal-cta');
   const journalWrap = document.getElementById('journal-content');
   if (!container) return;
-  
+
   if (ctaWrap) {
     ctaWrap.innerHTML = `
       <div class="banner">
@@ -1105,7 +1105,7 @@ window.renderSaved = function() {
       </div>
     `;
   }
-  
+
   if (journalWrap) { renderJournalContent(journalWrap); }
 
   container.innerHTML = '';
@@ -1130,10 +1130,10 @@ window.renderSaved = function() {
     dnaSec.className = 'section-group dna-card';
     const profile = stats.avgProfile;
     const bars = [{ l: 'Fresh', v: profile.freshness, c: 'var(--fam-citrus)' }, { l: 'Sweet', v: profile.sweetness, c: 'var(--fam-floral)' }, { l: 'Warm', v: profile.warmth, c: 'var(--fam-amber)' }, { l: 'Bold', v: profile.intensity, c: 'var(--fam-oud)' }];
-    
+
     const topNote = stats.topNotes[0] ? stats.topNotes[0][0] : 'None';
     const avgSillage = Math.round(owned.reduce((s,f)=>s+f.sillage,0)/owned.length * 10) / 10;
-    
+
     let personaHtml = '';
     if (owned.length >= 3) {
       const archId = computeCollectionArchetype(stats);
@@ -1186,7 +1186,7 @@ window.renderSaved = function() {
           <div class="sec-label">Average Sillage</div>
         </div>
       </div>
-      
+
       ${personaHtml}
 
       <div class="dna-stats">
@@ -1222,13 +1222,13 @@ window.renderSaved = function() {
       const pairSec = document.createElement('div');
       pairSec.className = 'section-group';
       pairSec.innerHTML = `<div class="sec-label">Layer Together</div>`;
-      const pairWrap = document.createElement('div'); 
+      const pairWrap = document.createElement('div');
       pairWrap.className = 'carousel';
       pairWrap.setAttribute('role', 'list');
       pairWrap.setAttribute('aria-label', 'Golden Pairs for Layering');
 
       pairs.forEach(p => {
-        const card = document.createElement('button'); 
+        const card = document.createElement('button');
         card.className = 'carousel-card carousel-card--wide card card--interactive';
         card.setAttribute('role', 'listitem');
         const famA = FAM[p.a.family] || {}; const famB = FAM[p.b.family] || {};
@@ -2080,10 +2080,10 @@ function renderNoteDetail(container,note){
     </div>
     <div class="text-body">${note.desc}</div>
     <div id="${saveId}"></div>
-    
+
     ${note.extraction_method?`<div class="text-meta"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
     ${note.insider_fact?`<div class="card card--secondary text-meta"><strong>Perfumer's Insight:</strong> ${note.insider_fact}</div>`:''}
-    
+
     ${famFrag ? `
       <div class="detail-section">
         <div class="sec-label">Defining Fragrance</div>
@@ -3363,7 +3363,7 @@ let _notesActiveTab = 'explore'; // 'explore' | 'search' | 'saved'
 
 function renderNotesExplore(container) {
   container.innerHTML = '';
-  
+
   // 1. Hero / Intro
   const hero = document.createElement('div');
   hero.className = 'section-group';
@@ -3377,7 +3377,7 @@ function renderNotesExplore(container) {
   const starSec = document.createElement('div');
   starSec.className = 'section-group';
   starSec.innerHTML = `<div class="sec-label">Star Ingredients</div>`;
-  
+
   const carouselWrap = document.createElement('div');
   carouselWrap.className = 'carousel-wrap';
   const carousel = document.createElement('div');
@@ -3389,10 +3389,10 @@ function renderNotesExplore(container) {
     const note = NI_MAP[name.toLowerCase()];
     if (!note) return;
     const fm = FAM[note.family] || { color: '#888' };
-    
+
     const card = document.createElement('div');
     card.className = 'carousel-card card card--interactive';
-    
+
     // Snippet of the fact
     const fact = note.insider_fact || note.desc;
     const snippet = fact.length > 80 ? fact.substring(0, 77) + '...' : fact;
@@ -3410,7 +3410,7 @@ function renderNotesExplore(container) {
       <div class="text-caption" style="margin-bottom:var(--sp-md);">${snippet}</div>
       <button class="btn btn--secondary u-w-full" style="margin-top:auto;">Read Story</button>
     `;
-    
+
     card.addEventListener('click', () => {
       window.haptic?.('light');
       pushDetail(c => renderNoteDetail(c, note), note.name);
@@ -3441,10 +3441,10 @@ function renderNotesExplore(container) {
   const famSec = document.createElement('div');
   famSec.className = 'section-group';
   famSec.innerHTML = `<div class="sec-label">Explore by Family</div>`;
-  
+
   const famGrid = document.createElement('div');
   famGrid.className = 'grid';
-  
+
   const FAM_REF_MAP = {
     citrus: 'sauvage',
     green: 'bal-dafrique',
@@ -3461,7 +3461,7 @@ function renderNotesExplore(container) {
   FAM_ORDER.forEach(fk => {
     const fm = FAM[fk];
     if (!fm) return;
-    
+
     const card = document.createElement('div');
     card.className = 'card';
 
@@ -3501,7 +3501,7 @@ function renderNotesExplore(container) {
 
       <button class="btn btn--secondary u-w-full fam-filter-btn" data-fam="${fk}">See all ${famNotes.length} Notes</button>
     `;
-    
+
     const refBtn = card.querySelector('.fam-ref-btn');
     if (refBtn) {
       refBtn.addEventListener('click', e => {
@@ -3518,38 +3518,38 @@ function renderNotesExplore(container) {
       notesSortMode = 'az';
       notesTierMode = 'all';
       _notesActiveTab = 'search';
-      
+
       // Update navigation buttons
       document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === 'search');
       });
-      
+
       // Show search UI
       const searchWrap = document.getElementById('notes-search-wrap');
       const tierWrap = document.getElementById('notes-tier-filter-wrap');
       if (searchWrap) searchWrap.style.display = '';
       if (tierWrap) tierWrap.style.display = '';
-      
+
       // Filter by family instead of just a string match in the search box
       const input = document.getElementById('notes-search');
       if (input) {
         input.value = fm.label;
         notesSearchQuery = fm.label;
       }
-      
+
       buildNotes();
     });
-    
+
     famGrid.appendChild(card);
   });
-  
+
   famSec.appendChild(famGrid);
   container.appendChild(famSec);
 
   // 5. Curated Power Pairs
   const pairSec = document.createElement('div');
   pairSec.className = 'section-group';
-  
+
   const PAIRS = [
     { title: "Citrus + Woody", desc: "Brightness cuts through density for a classic balance.", tags: ["Bergamot", "Cedar"], example: "Dior Sauvage" },
     { title: "Floral + Amber", desc: "Warm resins provide a golden stage for roses to shine.", tags: ["Rose", "Vanilla"], example: "Chanel No. 5" },
@@ -3644,10 +3644,10 @@ function renderNotesQuiz(container) {
       // If the tag is a family name (e.g. 'woody'), count it
       if (FAM[t]) famCounts[t] = (famCounts[t] || 0) + 1;
     });
-    
+
     // Sort families by count
     const sortedFams = Object.keys(famCounts).sort((a, b) => famCounts[b] - famCounts[a]);
-    
+
     // Pick top 3 unique families (fallback to common ones if none found)
     const topFams = sortedFams.length >= 3 ? sortedFams.slice(0, 3) : [...new Set([...sortedFams, 'woody', 'citrus', 'floral'])].slice(0, 3);
 
@@ -3683,9 +3683,9 @@ function renderNotesQuiz(container) {
           <div class="list-item-sublabel text-meta">${fm.label} · ${note.desc.substring(0, 60)}...</div>
         </div>
       `;
-      btn.addEventListener('click', () => { 
-        window.haptic?.('light'); 
-        pushDetail(c => renderNoteDetail(c, note), note.name); 
+      btn.addEventListener('click', () => {
+        window.haptic?.('light');
+        pushDetail(c => renderNoteDetail(c, note), note.name);
       });
       list.appendChild(btn);
     });
@@ -3727,12 +3727,12 @@ function buildNotes(searchQuery, currentTier){
   if (currentTier !== undefined) notesTierMode = currentTier;
 
   const body=document.getElementById('notes-body');
-  
+
   if (_notesActiveTab === 'explore') {
     renderNotesExplore(body);
     return;
   }
-  
+
   body.innerHTML='';
 
   // Filter notes by search query and tier
@@ -3918,10 +3918,10 @@ function go(id,btn){
 
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link, .mbn-btn').forEach(t=>t.classList.remove('active'));
-  
+
   const panel = document.getElementById('p-'+panelId);
   if(panel) panel.classList.add('active');
-  
+
   if (panelId === 'saved') renderSaved();
 
   const navLinks = document.querySelectorAll('.global-nav-link, .mbn-btn');
@@ -3939,7 +3939,7 @@ function go(id,btn){
   if (backBtn && id === 'catalog') backBtn.hidden = true;
 
   closeDesktopDetail();
-  
+
   if(id==='compare'){
     const _filled = CMP_SLOTS.filter(Boolean);
     if(_filled.length >= 2){
@@ -3990,7 +3990,7 @@ function openUniversalSearch(opts = {}) {
     if (inlineContainer) {
       // Close other inline search if any
       document.querySelectorAll('.us-inline-results').forEach(el => { if (el !== inlineContainer) el.hidden = true; });
-      
+
       inlineContainer.innerHTML = `
         <div class="us-inline-inner card" style="background:var(--bg-primary); box-shadow:var(--shadow-lg); border:1px solid var(--border-standard); margin-top:var(--sp-xs); position:absolute; left:0; right:0; z-index:var(--z-dropdown); overflow:hidden;">
           <div class="us-input-wrap" style="padding: var(--sp-sm); border-bottom: 1px solid var(--border-subtle);">
@@ -4002,12 +4002,12 @@ function openUniversalSearch(opts = {}) {
       inlineContainer.hidden = false;
       const input = inlineContainer.querySelector('#us-inline-input');
       input.focus();
-      
+
       input.addEventListener('input', (e) => {
         _usHighlight = -1;
         _renderUsResults(e.target.value.trim(), 'us-inline-results-list');
       });
-      
+
       input.addEventListener('keydown', (e) => {
         const rows = Array.from(inlineContainer.querySelectorAll('.list-item--search'));
         if (e.key === 'ArrowDown') {
@@ -4025,9 +4025,9 @@ function openUniversalSearch(opts = {}) {
           inlineContainer.hidden = true;
         }
       });
-      
+
       _renderUsResults('', 'us-inline-results-list');
-      
+
       const closeListener = (e) => {
         if (!inlineContainer.contains(e.target) && !e.target.closest(`.cmp-frag-card`)) {
           inlineContainer.hidden = true;
@@ -5340,17 +5340,17 @@ function _renderHpResults(query) {
   if (!results) return;
 
   const q = normQ(query);
-  
+
   // Fragrances (max 5)
   const fragMatches = CAT.filter(f => matchFrag(f, q)).slice(0, 5);
-  
+
   // Notes (max 2)
-  const noteMatches = (NI || []).filter(n => 
+  const noteMatches = (NI || []).filter(n =>
     n._nameN ? n._nameN.includes(q) : n.name.toLowerCase().includes(q)
   ).slice(0, 2);
 
   // Brands (max 2)
-  const brandMatches = (BRANDS || []).filter(b => 
+  const brandMatches = (BRANDS || []).filter(b =>
     b.name.toLowerCase().includes(q)
   ).slice(0, 2);
 

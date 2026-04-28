@@ -1,3 +1,8 @@
+## 2026-04-28
+
+### Added
+- **Score Transparency** — Added an educational bottom sheet (`openScoreEdu`) that shows the mathematical breakdown behind Layering Compatibility and Similarity scores when clicking score badges.
+
 ## 2026-04-13
 
 ### Changed
