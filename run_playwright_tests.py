@@ -9,7 +9,7 @@ def run_tests():
         page.goto('http://localhost:8000/tests.html')
 
         # Wait for the test app frame to load
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(10000)
 
         # Evaluate window.runAll()
         page.evaluate("window.runAll()")

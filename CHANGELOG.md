@@ -1,3 +1,8 @@
+## 2026-05-09
+
+### Added
+- **Accessibility** — Added dynamic `aria-label`s to multiple search `<input>` fields across `app.html`, `index.html`, and `js/app.js` to ensure proper screen reader context for icon-only/placeholder-only inputs.
+
 ## 2026-04-13
 
 ### Changed
