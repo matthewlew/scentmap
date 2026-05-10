@@ -1,3 +1,8 @@
+## 2026-05-10
+
+### Changed
+- **Accessibility** — Added explicit `aria-label` attributes to the universal search input and main UI search inputs to improve screen reader announceability when placeholder text alone is insufficient.
+
 ## 2026-04-13
 
 ### Changed
