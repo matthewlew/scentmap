@@ -1,3 +1,8 @@
+## 2026-05-11
+
+### Added
+- **Accessibility** — Added proper `aria-label`s to visually label-less search inputs to improve screen reader accessibility.
+
 ## 2026-04-13
 
 ### Changed
