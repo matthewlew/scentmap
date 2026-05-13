@@ -39,6 +39,7 @@
 
 ### Changed
 - **Compare: icon buttons** — Swap (⇄) and Remove (×) buttons in column headers now use SVG icons (`arrowsLeftRight`, `trash`) consistent with the rest of the icon system. Sort direction indicators also use SVG arrows instead of ↑↓ glyphs.
+- **ARIA Synchronization** - added dynamic `aria-label` updates for `#us-input` and `#us-inline-input` to ensure screen readers announce visual placeholder changes accurately when switching search modes.
 - **Compare: larger mini radar** — Mini radar charts in mobile cards increased from 80px to 110px, with axis labels scaled up from 4.5px to 7px for legibility.
 - **Quiz: session key migration** — Quiz session storage now uses `quizId` instead of `slug` for the key field, and includes `timestamp` and `answers` alongside results. Existing sessions with the old key restore correctly via fallback.
 - **Static pages: search input markup** — Quiz and compare static pages updated to use the shared `cat-search-icon` + `.input` markup pattern matching `app.html`.
