@@ -1,3 +1,6 @@
 ## 2024-03-14 - Mobile Filter Toggle ARIA State Management
 **Learning:** Even simple toggle buttons that show/hide panels using standard CSS classes (like `open`) need explicit ARIA state synchronization (`aria-expanded` and `aria-controls`) to communicate their function and state to screen readers.
 **Action:** When implementing show/hide toggles via JavaScript `classList.toggle`, always capture the returned boolean state and immediately sync it to the triggering button's `aria-expanded` attribute. Also, remember that `aria-controls` should be hardcoded in HTML to establish the relationship.
+## 2026-05-17 - Dynamic Input Placeholder ARIA Sync
+**Learning:** For elements like the Universal Search input that dynamically change their `placeholder` depending on the current search context, the `aria-label` gets out of sync and screen readers won't announce the new context if only `placeholder` is updated. Placeholders aren't reliably announced by screen readers.
+**Action:** When modifying an input element's `placeholder` property dynamically via JavaScript, always simultaneously update its `aria-label` attribute using `setAttribute('aria-label', ...)` to ensure screen readers remain synchronized with the input's current purpose.
