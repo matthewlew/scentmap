@@ -1,3 +1,8 @@
+## 2026-05-17
+
+### Added
+- **Transparency in Scoring:** Exposed mathematical breakdowns for similarity scores and layering suggestions directly in the UI. Similarity features now display detailed family, notes, sillage, and roles scores. Layering suggestions detail family, sillage, and unique notes scoring. This eliminates the "black box" feel behind app recommendations.
+
 ## 2026-04-13
 
 ### Changed
