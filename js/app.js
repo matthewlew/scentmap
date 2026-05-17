@@ -1277,11 +1277,17 @@ function scoreSimilarity(a,b){
   _simCache[key] = score;
   return score;
 }
+function getSimilarityDetails(a,b){
+  return engine.getSimilarityDetails(a, b, store.FAM_COMPAT);
+}
 
 /* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
 const _layCache={};
 function scoreLayeringPair(a,b){
   return engine.scoreLayeringPair(a, b, store.FAM_COMPAT);
+}
+function getLayeringDetails(a,b){
+  return engine.getLayeringDetails(a, b, store.FAM_COMPAT);
 }
 
 /* Classify how a candidate relates to a source frag for discover shelf */
@@ -1557,14 +1563,17 @@ function renderDupeLab(container, anchor) {
     <div class="list-view">
       ${dupes.map(({f, score}) => {
         const fm = FAM[f.family] || {label: f.family, color:'#888'};
+        const details = getSimilarityDetails(anchor, f);
+        const mathPrefix = `[Fam: ${details.famScore}/40 | Notes: ${details.noteScore}/30 | Sill: ${details.sillScore}/10 | Roles: ${details.roleScore}/20] `;
         const reason = getSwapReason(anchor, f);
+        const fullReason = reason ? mathPrefix + reason : mathPrefix.trim();
         return `
           <button class="list-item" onclick="trackEvent('dupe_clicked', { source: '${anchor.id}', target: '${f.id}', score: ${score} }); pushDetail(c => renderFragDetail(c, CAT_MAP['${f.id}']), '${f.name.replace(/'/g, "\\'")}')">
             <div class="list-item-dot" style="--fam-bg: ${fm.color}"></div>
             <div class="list-item-body">
               <div class="list-item-label text-ui-strong">${f.name}</div>
               <div class="list-item-sublabel text-meta">${f.brand} · ${fm.label}</div>
-              ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
+              ${fullReason ? `<div class="list-item-detail text-caption">${fullReason}</div>` : ''}
             </div>
             <div class="list-item-trail">
               <span class="list-item-trailing-label">${score}%</span>
@@ -1764,18 +1773,21 @@ function renderFragDetail(container,frag){
     scored.forEach(({f})=>{
       const fm2=FAM[f.family]||{color:'#888'};
       const famLabel2=(FAM[f.family]||{label:f.family}).label;
+      const details=getSimilarityDetails(frag,f);
+      const mathPrefix=`[Fam: ${details.famScore}/40 | Notes: ${details.noteScore}/30 | Sill: ${details.sillScore}/10 | Roles: ${details.roleScore}/20] `;
       const reason=getSwapReason(frag,f);
       const badge=classifyDiscovery(frag,f);
       const row=document.createElement('button');
       row.className='list-item';
       // Sentence-format distinguishing trait: "Name — reason" (rendering layer only, getSwapReason unchanged)
       const reasonLabel = reason ? `${f.name} \u2014 ${reason.replace(/^An alternative[^:]*:\s*/i,'').replace(/^Shares /i,'shares ')}` : '';
+      const fullReasonLabel = reasonLabel ? mathPrefix + reasonLabel : mathPrefix.trim();
       row.innerHTML=`
           <div class="list-item-dot" style="--fam-bg: ${fm2.color}"></div>
           <div class="list-item-body" style="flex:1;">
             <div class="list-item-label text-ui-strong">${f.name}</div>
             <div class="list-item-sublabel text-meta">${f.brand} · ${famLabel2}</div>
-            ${reasonLabel ? `<div class="list-item-detail text-caption">${reasonLabel}</div>` : ''}
+            ${fullReasonLabel ? `<div class="list-item-detail text-caption">${fullReasonLabel}</div>` : ''}
           </div>
           ${badge&&badge.type!=='similar'?`<div style="flex-shrink:0"><span class="chip ${badge.type.replace('badge','chip')}">${badge.label}</span></div>`:''}
         `;
@@ -1909,12 +1921,14 @@ function buildLayerSuggestions(frag,container){
   const owned=CAT.filter(f=>isOwned(f.id)&&f.id!==frag.id);
   if(!owned.length)return;
   function layerReason(a,b){
+    const details = getLayeringDetails(a, b);
+    const mathPrefix = `[Fam: ${details.famScore}/35 | Sill: ${details.sillScore}/20 | Notes: ${details.noteScore}/20] `;
     const sillDiff=b.sillage-a.sillage;
-    if(Math.abs(sillDiff)>=3)return sillDiff>0?`Wear ${b.name} over — projects further`:`Wear ${b.name} under — anchors the blend`;
+    if(Math.abs(sillDiff)>=3)return mathPrefix + (sillDiff>0?`Wear ${b.name} over — projects further`:`Wear ${b.name} under — anchors the blend`);
     const allA=a._nAll;
     const uniqueB=[...b.base,...b.mid].find((n,i)=>!allA.includes(i<b.base.length?b._nBase[i]:b._nMid[i-b.base.length]));
-    if(uniqueB)return`Adds ${uniqueB}`;
-    return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
+    if(uniqueB)return mathPrefix + `Adds ${uniqueB}`;
+    return mathPrefix + `${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
     .map(f=>({f,score:scoreLayeringPair(frag,f)}))
