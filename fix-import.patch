@@ -1,0 +1,11 @@
+--- js/app.js
++++ js/app.js
+@@ -5077,7 +5077,7 @@
+     let bestLay = null;
+     filled.forEach(s => {
+       maxSim = Math.max(maxSim, scoreSimilarity(s, f));
+-      const layDetails = engine.getLayeringDetails(s, f, store.FAM_COMPAT);
++      const layDetails = engine.getLayeringDetails(s, f, FAM_COMPAT);
+       if (!bestLay || layDetails.total > bestLay.total) {
+         bestLay = layDetails;
+       }
