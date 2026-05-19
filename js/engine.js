@@ -202,6 +202,23 @@ export function scoreLayeringPair(a, b, FAM_COMPAT) {
 }
 
 /**
+ * Returns a detailed breakdown of the layering compatibility score between two fragrances.
+ */
+export function getLayeringDetails(a, b, FAM_COMPAT) {
+  const famComp = FAM_COMPAT[a.family]?.[b.family] ?? 0.5;
+  const famScore = Math.round(famComp * 35);
+
+  const sillDiff = Math.abs(a.sillage - b.sillage);
+  const sillScore = Math.round(sillDiff >= 3 ? 20 : sillDiff >= 1 ? 10 : 0);
+
+  const shared = a._nAll.filter(n => b._nAll.includes(n)).length;
+  const noteScore = Math.round(shared === 0 ? 20 : shared <= 2 ? 12 : shared <= 4 ? 5 : 0);
+
+  const total = famScore + sillScore + noteScore;
+  return { famScore, sillScore, noteScore, total };
+}
+
+/**
  * Generates a human-readable reason for a fragrance recommendation.
  */
 export function getSwapReason(anchor, candidate, FAM) {

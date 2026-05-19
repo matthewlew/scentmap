@@ -1,0 +1,13 @@
+--- js/app.js
++++ js/app.js
+@@ -5084,7 +5084,9 @@
+       }
+     });
+     simScored.push({ f, score: maxSim });
+-    layScored.push({ f, score: bestLay.total, details: bestLay });
++    if (bestLay) {
++      layScored.push({ f, score: bestLay.total, details: bestLay });
++    }
+   });
+
+   const topSim = simScored.sort((a, b) => b.score - a.score).slice(0, 4);

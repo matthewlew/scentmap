@@ -1,3 +1,8 @@
+## 2026-05-19
+
+### Added
+- **Layering Details** — Enhanced the "Try layering with" suggestions UI to explicitly show the mathematical breakdown (Family match, Sillage contrast, Note overlap) behind layering recommendations.
+
 ## 2026-04-13
 
 ### Changed
