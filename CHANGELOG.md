@@ -1,3 +1,8 @@
+## 2026-05-23
+
+### Changed
+- **Accessibility** — Added missing `aria-label`s to dynamic search input placeholders (`#cat-search`, `#notes-search`, `#us-inline-input`, `#us-input`) and clear/remove icon buttons ("✕") in `app.html` and `js/app.js` to improve screen reader accessibility.
+
 ## 2026-04-13
 
 ### Changed
