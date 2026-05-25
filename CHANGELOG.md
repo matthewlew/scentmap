@@ -1,3 +1,9 @@
+## [Unreleased]
+
+### Added
+- Added contextual `aria-label` attributes to the emoji rating buttons in the 'Test Bench' feature to improve screen reader accessibility.
+
+
 ## 2026-04-13
 
 ### Changed
