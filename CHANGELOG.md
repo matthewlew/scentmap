@@ -1,3 +1,8 @@
+## 2026-05-27
+
+### Added
+- **Accessibility** — Added `aria-label` attributes to placeholder-only search inputs in `index.html` and `app.html` for improved screen reader accessibility.
+
 ## 2026-04-13
 
 ### Changed
