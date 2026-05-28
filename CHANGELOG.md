@@ -205,6 +205,11 @@
 - **`renderHouseDetail` spacing refactor** — Wrapped "Fragrance Families", "Known For", "Similar From This House", and "Fragrances" sections in `.detail-section`. Removed `margin-bottom:var(--sp-3xl)` inline wrappers (was adding 32px on top of parent 20px gap = 52px total).
 - **`renderNoteDetail` spacing refactor** — Removed all inline `margin-bottom` from header, description, save-btn, and metadata divs. Wrapped "In catalog (n)" section in `.detail-section`.
 
+ ## [1.3.1] - 2026-05-28
+
+ ### Fixed
+ - Accessibility: Added descriptive `aria-label`s to dynamically placed inputs and core application search bars, ensuring reliable screen reader announcements regardless of visual placeholders.
+
 ## 2026-03-24
 
 ### Added
