@@ -114,22 +114,22 @@
           <div class="panel" id="p-notes">
             <div class="notes-shell">
               <div class="notes-nav-bar" id="notes-nav-bar">
-                <button class="notes-nav-btn active" data-tab="explore">Explore</button>
-                <button class="notes-nav-btn" data-tab="search">Search & A-Z</button>
-                <button class="notes-nav-btn" data-tab="saved">My Notes</button>
+                <button class="notes-nav-btn active" data-tab="explore" aria-pressed="true">Explore</button>
+                <button class="notes-nav-btn" data-tab="search" aria-pressed="false">Search & A-Z</button>
+                <button class="notes-nav-btn" data-tab="saved" aria-pressed="false">My Notes</button>
               </div>
               <div class="notes-search-wrap" id="notes-search-wrap" style="display:none">
                 <div class="cat-search-wrap">
                   <svg class="cat-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                   <input type="text" id="notes-search" class="input" placeholder="Search notes...">
-                  <button id="notes-search-clear" class="cat-search-clear" style="display:none">✕</button>
+                  <button id="notes-search-clear" class="cat-search-clear" style="display:none" aria-label="Clear search">✕</button>
                 </div>
                 <div class="cat-sidebar-section" id="notes-tier-filter-wrap" style="display:none; margin-top:var(--sp-md)">
                   <div class="notes-tier-bar" id="notes-tier-bar">
-                    <button class="tab active" data-tier="all">All Tiers</button>
-                    <button class="tab" data-tier="top">Top</button>
-                    <button class="tab" data-tier="mid">Heart</button>
-                    <button class="tab" data-tier="base">Base</button>
+                    <button class="tab active" data-tier="all" aria-pressed="true">All Tiers</button>
+                    <button class="tab" data-tier="top" aria-pressed="false">Top</button>
+                    <button class="tab" data-tier="mid" aria-pressed="false">Heart</button>
+                    <button class="tab" data-tier="base" aria-pressed="false">Base</button>
                   </div>
                 </div>
               </div>
