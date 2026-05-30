@@ -1,3 +1,8 @@
+## 2026-05-30
+
+### Fixed
+- Enhanced accessibility of inputs by associating an explicit `aria-label` where the design relies only on `placeholder`
+
 ## 2026-04-13
 
 ### Changed
