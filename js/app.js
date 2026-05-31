@@ -1917,7 +1917,10 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
+    .map(f=>{
+      const details = engine.getLayeringDetails(frag, f, store.FAM_COMPAT);
+      return {f, score: details.total, details};
+    })
     .filter(x=>x.score>=40)
     .sort((a,b)=>b.score-a.score)
     .slice(0,2);
@@ -1926,7 +1929,7 @@ function buildLayerSuggestions(frag,container){
   lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
   const shelf=document.createElement('div');shelf.className='list-view';
-  candidates.forEach(({f,score})=>{
+  candidates.forEach(({f,score,details})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
     const row=document.createElement('button');
@@ -1937,6 +1940,9 @@ function buildLayerSuggestions(frag,container){
           <div class="list-item-label text-ui-strong">${f.name}</div>
           <div class="list-item-sublabel text-meta">${f.brand}</div>
           ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
+          <div class="list-item-detail text-caption" style="opacity:0.8; font-family:var(--ff-mono); margin-top:2px;">
+            Fam: ${Math.round(details.famScore)} | Sill: ${details.sillScore} | Note: ${details.noteScore}
+          </div>
         </div>
         <div class="list-item-trail">
           <span class="dc-layer-score-badge">${score}</span>

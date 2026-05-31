@@ -1,3 +1,8 @@
+## 2026-05-31
+
+### Changed
+- **Layering math visibility** — Refactored layering scoring in `engine.js` to return detailed components (`getLayeringDetails` and `getSimilarityDetails`). Updated layering suggestions in `app.js` to explicitly display mathematical breakdown (Family, Sillage, Note) for improved transparency, satisfying the Elias utilitarian persona.
+
 ## 2026-04-13
 
 ### Changed
