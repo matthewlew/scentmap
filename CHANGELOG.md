@@ -389,3 +389,7 @@ Wardrobe Gap suggestions, collection context in detail panels, and design system
 - **App moved to `/app`** — landing page at `/`; app at `/app`.
 - **Desktop nav** — Fragrances, Compare, Notes, Collection tabs; logo wordmark.
 - **Mobile bottom nav** — Lucide SVG icons; More sheet for overflow items (Notes, Changelog).
+
+### Changed
+- Added screen reader `aria-pressed` synchronization to Notes navigation tabs.
+- Added screen reader `aria-pressed` synchronization and `aria-label` context to the Test Bench trial rating and location buttons.

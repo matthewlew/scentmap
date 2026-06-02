@@ -436,7 +436,7 @@ window.openTrialSheet = function(fragId) {
           <div class="sec-label">Where did you spray it?</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-sm);">
             ${['Left Wrist', 'Right Wrist', 'Left Elbow', 'Right Elbow', 'Neck', 'Chest', 'Paper Strip'].map(loc => `
-              <button class="btn btn--secondary trial-loc-btn" data-loc="${loc}">${loc}</button>
+              <button class="btn btn--secondary trial-loc-btn" data-loc="${loc}" aria-pressed="false">${loc}</button>
             `).join('')}
           </div>
         </div>
@@ -445,7 +445,7 @@ window.openTrialSheet = function(fragId) {
           <div class="sec-label">Initial Impression</div>
           <div style="display:flex; gap:var(--sp-sm);">
             ${[1, 2, 3, 4, 5].map(v => `
-              <button class="btn btn--secondary trial-rate-btn u-flex-1 text-title" data-val="${v}">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+              <button class="btn btn--secondary trial-rate-btn u-flex-1 text-title" data-val="${v}" aria-pressed="false" aria-label="Rate ${v} out of 5">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
             `).join('')}
           </div>
         </div>
@@ -459,8 +459,9 @@ window.openTrialSheet = function(fragId) {
 
     container.querySelectorAll('.trial-loc-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        container.querySelectorAll('.trial-loc-btn').forEach(b => b.classList.remove('active'));
+        container.querySelectorAll('.trial-loc-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         selectedLoc = btn.dataset.loc;
         updateBtn();
       });
@@ -468,8 +469,9 @@ window.openTrialSheet = function(fragId) {
 
     container.querySelectorAll('.trial-rate-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        container.querySelectorAll('.trial-rate-btn').forEach(b => b.classList.remove('active'));
+        container.querySelectorAll('.trial-rate-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         selectedRate = parseInt(btn.dataset.val);
         updateBtn();
       });
@@ -3460,7 +3462,9 @@ function renderNotesExplore(container) {
       
       // Update navigation buttons
       document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === 'search');
+        const isActive = btn.dataset.tab === 'search';
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
       
       // Show search UI
@@ -3637,7 +3641,9 @@ function switchNotesTab(tab) {
   _notesActiveTab = tab;
   // Update button active states
   document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === tab);
+    const isActive = btn.dataset.tab === tab;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
   // Show/hide search controls
   const searchWrap = document.getElementById('notes-search-wrap');
