@@ -1,3 +1,6 @@
 ## 2024-03-14 - Mobile Filter Toggle ARIA State Management
 **Learning:** Even simple toggle buttons that show/hide panels using standard CSS classes (like `open`) need explicit ARIA state synchronization (`aria-expanded` and `aria-controls`) to communicate their function and state to screen readers.
 **Action:** When implementing show/hide toggles via JavaScript `classList.toggle`, always capture the returned boolean state and immediately sync it to the triggering button's `aria-expanded` attribute. Also, remember that `aria-controls` should be hardcoded in HTML to establish the relationship.
+## 2024-03-24 - Tabbed Navigation Aria-Pressed Synchronization
+**Learning:** When creating custom tab navigation interfaces (like the notes explore/search/saved tabs) using buttons and `classList.toggle('active')`, screen readers will not announce the selected state visually indicated by the `active` class unless `aria-pressed` (or `aria-selected` depending on role structure) is also explicitly managed and synchronized.
+**Action:** Whenever a button's `active` CSS class is toggled via JS, always ensure the corresponding `aria-pressed` or `aria-expanded` attribute is toggled in tandem to keep the accessibility tree accurate. This applies to both click event handlers and programmatic state overrides.
