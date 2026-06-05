@@ -1,3 +1,8 @@
+## 2026-06-05
+
+### Changed
+- **Accessibility** — Added `aria-label="Clear notes search"` to the notes search clear button in `app.html` for screen reader support.
+
 ## 2026-04-13
 
 ### Changed
