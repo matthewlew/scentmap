@@ -1,3 +1,8 @@
+## 2026-06-05
+
+### Added
+- **Layering Score Breakdown** — The layering suggestion engine and "Golden Pairs" carousel now expose the exact breakdown of how the pairing score is calculated (showing individual math contributions for Family Compatibility, Sillage Contrast, and Unique Notes).
+
 ## 2026-04-13
 
 ### Changed

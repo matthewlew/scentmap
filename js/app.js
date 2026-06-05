@@ -118,9 +118,9 @@ window.getGoldenPairs = function(owned) {
   const pairs = [];
   for (let i = 0; i < owned.length; i++) {
     for (let j = i + 1; j < owned.length; j++) {
-      const score = scoreLayeringPair(owned[i], owned[j]);
-      if (score >= 50) { 
-        pairs.push({ a: owned[i], b: owned[j], score: Math.round(score / 75 * 100) });
+      const result = scoreLayeringPair(owned[i], owned[j]);
+      if (result.score >= 50) {
+        pairs.push({ a: owned[i], b: owned[j], score: Math.round(result.score / 75 * 100), breakdown: result.breakdown });
       }
     }
   }
@@ -1253,6 +1253,11 @@ window.renderSaved = function() {
             </div>
           </div>
           <div class="text-meta u-font-serif" style="margin-top:auto; color:var(--text-tertiary);">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
+          <div class="text-caption" style="display:flex; gap:var(--sp-xs); margin-top:var(--sp-xs); color:var(--text-meta);">
+            <span>Fam: +${p.breakdown.fam}</span>
+            <span>Sill: +${p.breakdown.sill}</span>
+            <span>Notes: +${p.breakdown.notes}</span>
+          </div>
         `;        card.onclick = () => { _selectFragForSlot('a', p.a); _selectFragForSlot('b', p.b); go('compare'); };
         pairWrap.appendChild(card);
       });
@@ -1917,7 +1922,10 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
+    .map(f=>{
+      const result = scoreLayeringPair(frag,f);
+      return {f, score: result.score, breakdown: result.breakdown};
+    })
     .filter(x=>x.score>=40)
     .sort((a,b)=>b.score-a.score)
     .slice(0,2);
@@ -1926,7 +1934,7 @@ function buildLayerSuggestions(frag,container){
   lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
   const shelf=document.createElement('div');shelf.className='list-view';
-  candidates.forEach(({f,score})=>{
+  candidates.forEach(({f,score,breakdown})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
     const row=document.createElement('button');
@@ -1937,10 +1945,15 @@ function buildLayerSuggestions(frag,container){
           <div class="list-item-label text-ui-strong">${f.name}</div>
           <div class="list-item-sublabel text-meta">${f.brand}</div>
           ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
+          <div class="text-caption" style="display:flex; gap:var(--sp-xs); margin-top:2px; color:var(--text-meta);">
+            <span>Fam: +${breakdown.fam}</span>
+            <span>Sill: +${breakdown.sill}</span>
+            <span>Notes: +${breakdown.notes}</span>
+          </div>
         </div>
-        <div class="list-item-trail">
+        <div class="list-item-trail" style="flex-direction:column; align-items:flex-end;">
           <span class="dc-layer-score-badge">${score}</span>
-          <span class="chip chip--xs is-owned">Owned</span>
+          <span class="chip chip--xs is-owned" style="margin-top:4px;">Owned</span>
         </div>
       `;
     row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
@@ -4419,7 +4432,7 @@ function getCmpFam(fam){
 function computeProfile(frag){ return engine.computeProfile(frag); }
 function getSwapReason(anchor, candidate){ return engine.getSwapReason(anchor, candidate, FAM); }
 
-function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
+function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b).score/75*100));}
 function _simLabel(pct){if(pct<26)return'Different worlds';if(pct<51)return'Distinct contrast';if(pct<76)return'Good match';return'Kindred spirits';}
 function _layLabel(pct){if(pct<25)return'Better as alternates';if(pct<50)return'Possible, with care';if(pct<75)return'Works together';return'Complementary pair';}
 
@@ -5078,7 +5091,7 @@ function renderCmpSuggestions() {
     let maxSim = 0, maxLay = 0;
     filled.forEach(s => {
       maxSim = Math.max(maxSim, scoreSimilarity(s, f));
-      maxLay = Math.max(maxLay, scoreLayeringPair(s, f));
+      maxLay = Math.max(maxLay, scoreLayeringPair(s, f).score);
     });
     simScored.push({ f, score: maxSim });
     layScored.push({ f, score: maxLay });
