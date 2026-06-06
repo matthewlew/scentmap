@@ -1,5 +1,8 @@
 ## 2026-04-13
 
+### Added
+- **Layering Transparency** — Exposed the underlying math behind the layering recommendation engine to users. `scoreLayeringPair` now returns a detailed object breaking down `famScore`, `sillScore`, and `noteScore` along with the `total`. Layering suggestions in the UI now explicitly display this math breakdown to increase trust and transparency (The "Elias" Metric).
+
 ### Changed
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
