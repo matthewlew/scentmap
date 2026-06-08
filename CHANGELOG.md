@@ -1,5 +1,8 @@
 ## 2026-04-13
 
+### Added
+- **Layering Transparency** — "Layer with what you own" recommendations now expose the exact mathematical breakdown of their score (Family, Sillage, Notes) directly in the UI.
+
 ### Changed
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
