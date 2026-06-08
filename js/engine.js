@@ -190,7 +190,7 @@ export function scoreSimilarity(a, b, FAM_COMPAT) {
  */
 export function scoreLayeringPair(a, b, FAM_COMPAT) {
   const famComp = FAM_COMPAT[a.family]?.[b.family] ?? 0.5;
-  const famScore = famComp * 35;
+  const famScore = Math.round(famComp * 35);
   
   const sillDiff = Math.abs(a.sillage - b.sillage);
   const sillScore = sillDiff >= 3 ? 20 : sillDiff >= 1 ? 10 : 0;
@@ -198,7 +198,8 @@ export function scoreLayeringPair(a, b, FAM_COMPAT) {
   const shared = a._nAll.filter(n => b._nAll.includes(n)).length;
   const noteScore = shared === 0 ? 20 : shared <= 2 ? 12 : shared <= 4 ? 5 : 0;
   
-  return Math.round(famScore + sillScore + noteScore);
+  const total = famScore + sillScore + noteScore;
+  return { total, famScore, sillScore, noteScore };
 }
 
 /**
