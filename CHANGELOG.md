@@ -1,3 +1,9 @@
+## 2026-06-08
+
+### Changed
+- **Accessibility** — Added explicit `aria-label` attributes to all search input fields (`#cat-search`, `#notes-search`, `#us-input`, `#hp-search-input`, `#us-inline-input`).
+- **Accessibility** — Updated dynamic universal search placeholder logic in `js/app.js` to synchronously update the `aria-label` attribute, ensuring screen readers remain synchronized with the visual input context.
+
 ## 2026-04-13
 
 ### Changed
