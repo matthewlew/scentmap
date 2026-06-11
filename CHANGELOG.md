@@ -1,3 +1,8 @@
+## 2026-06-11
+
+### Fixed
+- **Accessibility** — Added missing `aria-label`s to dynamically generated icon-only buttons (`✕`) in the Notes search clear button and Trial Bench delete buttons to ensure screen readers announce their function correctly.
+
 ## 2026-04-13
 
 ### Changed
