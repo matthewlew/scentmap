@@ -1016,7 +1016,7 @@ function renderJournalContent(container) {
             </div>
             <div style="display:flex; gap:var(--sp-xs);">
               <button class="btn btn--primary" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button>
-              <button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button>
+              <button class="settings-btn" style="padding:4px;" aria-label="Delete test bench entry" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button>
             </div>
           </div>
         </div>`;
