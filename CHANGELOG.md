@@ -262,6 +262,12 @@ Fragrance detail pages (213 URLs), deep-link routing, consolidated scent data (s
 ### Added
 - **`data/scents.json`** — canonical 213-fragrance flat array with `id`, `brand`, `name`, `family`, `sillage`, `layering`, `top[]`, `mid[]`, `base[]`, `roles[]`, `description`, `url`, `story` fields.
 
+## 2026-06-12 (Transparency Refactoring)
+
+### Changed
+- **Exposed Layering Math** — Refactored `engine.scoreLayeringPair` to return a detailed breakdown object containing individual category scores (family compatibility, sillage difference, note overlap) instead of an opaque aggregate number.
+- **Layering UI Updates** — Updated the "Golden Pairs" carousel and the "Layer with what you own" detail shelf to explicitly display the math breakdown `Match: Fam (+X) · Notes (+Y) · Sill (+Z)` explaining exactly why a recommendation was made.
+
 ## 2026-03-21 (Project Hygiene)
 
 ### Changed
