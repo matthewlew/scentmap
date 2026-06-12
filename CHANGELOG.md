@@ -1,3 +1,8 @@
+## 2026-06-12
+
+### Added
+- **Search Accessibility** — Added explicit `aria-label` attributes to all search inputs across the application (catalog, notes, homepage, and universal search) to improve screen reader accessibility. Dynamic placeholders now also update their corresponding `aria-label` correctly.
+
 ## 2026-04-13
 
 ### Changed
