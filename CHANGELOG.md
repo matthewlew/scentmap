@@ -389,3 +389,6 @@ Wardrobe Gap suggestions, collection context in detail panels, and design system
 - **App moved to `/app`** — landing page at `/`; app at `/app`.
 - **Desktop nav** — Fragrances, Compare, Notes, Collection tabs; logo wordmark.
 - **Mobile bottom nav** — Lucide SVG icons; More sheet for overflow items (Notes, Changelog).
+
+### Fixed
+- **Accessibility**: Added explicit `aria-label` attributes to all search input fields across the app (`app.html`, `index.html`, and dynamic universal search in `js/app.js`) to ensure screen readers announce their purpose, mitigating the unreliability of visual `placeholder` attributes alone.
