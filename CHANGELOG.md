@@ -1,3 +1,8 @@
+## 2026-06-14
+
+### Changed
+- **Accessibility** — Added explicit `aria-label` attributes to dynamically generated icon-only and emoji buttons (e.g., rating emojis, '✕' delete, '⤓' export, and search clear buttons) to ensure screen readers can announce their function.
+
 ## 2026-04-13
 
 ### Changed
