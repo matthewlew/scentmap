@@ -1,6 +1,7 @@
-## 2026-04-13
+## 2026-06-15
 
 ### Changed
+- Exposed layering recommendation sub-scores in Golden Pairs UI for transparency.
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
 - **Settings panel** — Added `text-ui-strong` to `.list-item-label` in changelog and design system nav items.
