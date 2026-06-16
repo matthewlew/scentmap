@@ -1,3 +1,8 @@
+## 2026-06-16
+
+### Changed
+- **Layering engine** — Updated `scoreLayeringPair` to return a detailed breakdown object instead of an aggregate number. The layering UI now explicitly shows the 'math' behind the recommendation (Family, Sillage, Notes compatibility).
+
 ## 2026-04-13
 
 ### Changed
