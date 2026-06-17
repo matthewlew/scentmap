@@ -1,3 +1,9 @@
+## 2026-06-17
+
+### Added
+- **Layering Transparency** — "Layer Together" recommendation cards now display a clear breakdown of the match score showing exact percentages for Family, Sillage Contrast, and Note Overlap to increase data transparency for users.
+- **Engine Analytics** — `scoreLayeringPair` now returns a detailed object with aggregate and category-specific scores rather than a primitive number.
+
 ## 2026-04-13
 
 ### Changed
