@@ -1016,7 +1016,7 @@ function renderJournalContent(container) {
             </div>
             <div style="display:flex; gap:var(--sp-xs);">
               <button class="btn btn--primary" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button>
-              <button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button>
+              <button class="settings-btn" style="padding:4px;" aria-label="Delete test bench entry" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button>
             </div>
           </div>
         </div>`;
@@ -1236,7 +1236,7 @@ window.renderSaved = function() {
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div class="chip chip--outline chip--xs">${p.score}% match</div>
-            <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
+            <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" aria-label="Download layering recipe" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
           </div>
           <div class="list-item u-p-0" style="border:none; background:none;">
             <div class="list-item-dot" style="--fam-bg:${colA};"></div>
