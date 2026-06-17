@@ -1,3 +1,8 @@
+## 2026-06-17
+
+### Fixed
+- Added missing `aria-label`s to icon-only buttons (`✕`, `⤓`) for clear notes search, delete test bench entry, and export layering recipe.
+
 ## 2026-04-13
 
 ### Changed
