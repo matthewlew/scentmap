@@ -1,3 +1,9 @@
+## 2026-06-18
+
+### Added
+- **Accessibility** — Added explicit `aria-label` attributes to all search input fields across the application (catalog, notes, universal search, home page) and synchronized dynamic `placeholder` updates with `aria-label`s in JavaScript for better screen reader support.
+
+
 ## 2026-04-13
 
 ### Changed
