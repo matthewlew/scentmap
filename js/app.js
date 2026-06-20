@@ -445,7 +445,7 @@ window.openTrialSheet = function(fragId) {
           <div class="sec-label">Initial Impression</div>
           <div style="display:flex; gap:var(--sp-sm);">
             ${[1, 2, 3, 4, 5].map(v => `
-              <button class="btn btn--secondary trial-rate-btn u-flex-1 text-title" data-val="${v}">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+              <button class="btn btn--secondary trial-rate-btn u-flex-1 text-title" data-val="${v}" aria-label="Rate ${v} out of 5">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
             `).join('')}
           </div>
         </div>
@@ -500,7 +500,7 @@ window.openTrialUpdateSheet = function(fragId, timestamp) {
           <div class="sec-label">New Rating</div>
           <div style="display:flex; gap:var(--sp-sm);">
             ${[1, 2, 3, 4, 5].map(v => `
-              <button class="btn btn--secondary update-rate-btn u-flex-1 text-title" data-val="${v}">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
+              <button class="btn btn--secondary update-rate-btn u-flex-1 text-title" data-val="${v}" aria-label="Rate ${v} out of 5">${v === 1 ? '🙁' : v === 3 ? '😐' : v === 5 ? '😍' : v}</button>
             `).join('')}
           </div>
         </div>

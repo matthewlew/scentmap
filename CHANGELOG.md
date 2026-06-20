@@ -1,3 +1,7 @@
+## 2026-06-20
+### Fixed
+- **Emoji Rating Button ARIA Labels** — Updated `.trial-rate-btn` and `.update-rate-btn` in `js/app.js` to include descriptive `aria-label`s for screen readers when interacting with emoji-based ratings.
+
 ## 2026-04-13
 
 ### Changed
