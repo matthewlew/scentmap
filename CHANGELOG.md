@@ -1,3 +1,8 @@
+## 2026-06-20
+
+### Changed
+- **Layering UI Transparency** — Enhanced `scoreLayeringPair` to return a detailed breakdown object instead of an aggregate integer. The "Layer with what you own" suggestions now explicitly display the mathematical scoring components (Family + Sillage + Notes) to improve trust and algorithm transparency.
+
 ## 2026-04-13
 
 ### Changed
