@@ -1,3 +1,8 @@
+## 2026-06-25
+
+### Added
+- **Accessibility** — Added explicit `aria-label`s to search inputs with visual placeholders and dynamic icon-only utility buttons (`app.html` and `js/app.js`) to ensure proper screen reader announcements.
+
 ## 2026-04-13
 
 ### Changed
