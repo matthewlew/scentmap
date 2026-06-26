@@ -363,6 +363,10 @@ Wardrobe Gap suggestions, collection context in detail panels, and design system
 
 ---
 
+## 2026-06-26
+### Fixed
+* Accessibility: Added missing `aria-label`s to the icon-only "Remove trial" and "Export layering recipe" buttons in the app interface.
+
 ## 2026-03-17
 
 ### Added
