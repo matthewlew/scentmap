@@ -1,3 +1,8 @@
+## 2026-06-30
+
+### Added
+- **Accessibility** — Added explicit `aria-label` attributes to all search inputs (Catalog, Notes, Universal) to ensure screen readers can announce their purpose since `placeholder` text is not reliably read.
+
 ## 2026-04-13
 
 ### Changed
