@@ -1,5 +1,8 @@
 ## 2026-04-13
 
+### Fixed
+- **Accessibility** — Added explicit `aria-label` attributes to visually-only search inputs (`cat-search`, `notes-search`, `us-input`, `hp-search-input`, `us-inline-input`) and synced dynamic updates. Added missing `aria-label` to the `notes-search-clear` button.
+
 ### Changed
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
