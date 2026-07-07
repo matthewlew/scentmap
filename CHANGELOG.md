@@ -1,5 +1,8 @@
 ## 2026-04-13
 
+### Added
+- **Accessibility** — Added explicit `aria-label`s to all main and inline search inputs across the app. Dynamically synchronized `aria-label` with `placeholder` changes during global search context switches (e.g., when switching from general search to 'Search to compare...').
+
 ### Changed
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
