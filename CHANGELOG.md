@@ -1,6 +1,7 @@
 ## 2026-04-13
 
 ### Changed
+- **Layering Math UI** — Refactored layering engine to expose calculation math. `scoreLayeringPair` now returns a breakdown object, allowing the UI to display exactly why a recommendation was made (Family + Sillage + Notes).
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
 - **Settings panel** — Added `text-ui-strong` to `.list-item-label` in changelog and design system nav items.
