@@ -1,5 +1,8 @@
 ## 2026-04-13
 
+### Fixed
+- **Accessibility** — Added explicit `aria-label` attributes matching `placeholder` text to all search inputs across `app.html`, `index.html`, and dynamic universal search in `js/app.js` to ensure screen readers reliably announce the inputs' purpose.
+
 ### Changed
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
