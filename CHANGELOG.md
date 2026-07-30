@@ -1,5 +1,8 @@
 ## 2026-04-13
 
+### Fixed
+- **Accessibility** — Added explicit `aria-label` attributes to text inputs (`#cat-search`, `#notes-search`, `#us-input`, `#us-inline-input`) to ensure screen readers reliably announce their purpose, as visual placeholders are insufficient. Dynamically synchronized `aria-label` with placeholder updates in Universal Search context switching.
+
 ### Changed
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
