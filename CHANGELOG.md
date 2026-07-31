@@ -1,3 +1,9 @@
+## 2026-07-31
+
+### Changed
+- **Accessibility** — Added explicit `aria-label` attributes to search inputs in `app.html` and `index.html` that previously relied only on placeholders. Dynamically synchronized `aria-label` for contextual search in `js/app.js`. Added descriptive `aria-label`s to utility icon buttons like review deletion and layering recipe export.
+
+
 ## 2026-04-13
 
 ### Changed
