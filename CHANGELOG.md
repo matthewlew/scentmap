@@ -1,6 +1,7 @@
 ## 2026-04-13
 
 ### Changed
+- **Accessibility** — Added `aria-label` attributes to text inputs that previously relied solely on visual `placeholder` text (like `.input` and `.input--inline`), and ensured dynamic updates sync the ARIA label.
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
 - **Settings panel** — Added `text-ui-strong` to `.list-item-label` in changelog and design system nav items.
