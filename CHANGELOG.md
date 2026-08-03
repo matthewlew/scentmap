@@ -1,5 +1,8 @@
 ## 2026-04-13
 
+### Added
+- **Accessibility** — Added `aria-label` attributes to global and context-specific search inputs (catalog search, notes search, homepage search, and universal search) to ensure screen readers announce their function appropriately, even when `placeholder` text changes dynamically.
+
 ### Changed
 - **Landing page** — Removed `.landing-card-head` class and redundant inline `font-family`/`letter-spacing`/`margin` overrides from feature cards. Rely on `text-ui-strong` defaults.
 - **Responsive CSS** — Removed `.brand-n` and `.brand-c` font-size overrides (unnecessary downsizing no longer needed).
