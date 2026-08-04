@@ -3993,9 +3993,11 @@ function openUniversalSearch(opts = {}) {
       (other ? ` &nbsp;↔&nbsp; <span class="us-context-name">${other.name}</span>` : '');
     ctx.hidden = false;
     input.placeholder = 'Search to compare...';
+    input.setAttribute('aria-label', 'Search to compare...');
   } else {
     ctx.hidden = true;
     input.placeholder = 'Search fragrances, notes, brands...';
+    input.setAttribute('aria-label', 'Search fragrances, notes, brands...');
   }
 
   overlay.hidden = false;
