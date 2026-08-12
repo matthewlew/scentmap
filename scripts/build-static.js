@@ -91,9 +91,8 @@ function buildPage(outPath, titleText, descText, ogTitleText, canonicalUrl, ogIm
   html = html.replace('<meta charset="UTF-8">', '<meta charset="UTF-8">\n' + metaTags);
 
   if (isQuiz) {
-    // Remove WebHaptics and Supabase, swap app.js for quiz.js
+    // Remove WebHaptics, swap app.js for quiz.js
     html = html.replace(/<script type="module">[\s\S]*?<\/script>/, '');
-    html = html.replace(/<script src="https:\/\/cdn\.jsdelivr\.net[^"]*supabase[^"]*"><\/script>/, '');
     html = html.replace(/js\/app\.js\?v=[^"']+/, 'js/quiz.js?v=20260317c');
   }
 

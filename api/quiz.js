@@ -173,8 +173,6 @@ ${popularList}
   html = html.replace('<body>', '<body>' + noscriptContent);
   // Remove WebHaptics module (blocks DOMContentLoaded on quiz pages)
   html = html.replace(/<script type="module">[\s\S]*?<\/script>/, '');
-  // Remove Supabase SDK (not needed for quiz)
-  html = html.replace(/<script src="https:\/\/cdn\.jsdelivr\.net[^"]*supabase[^"]*"><\/script>/, '');
   // Swap app.js for quiz.js
   html = html.replace(/js\/app\.js\?v=[^"']+/, 'js/quiz.js?v=20260317c');
 

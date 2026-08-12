@@ -220,38 +220,8 @@ function toggleBrandSave(id){
   store.setState(key, store.getState(key)==='saved'?'none':'saved');
 }
 
-/* ── Auth (Supabase) ─────────────────────────────────────────────── */
-// Fill these in after creating your Supabase project:
-//   Authentication → URL Configuration → set Site URL to your app URL
-//   Authentication → Providers → enable Google and/or Apple
-const SUPABASE_URL      = 'https://ttbywijzemzqtelxkffn.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_ApGoKsgSewzitLprbBWzHw_dSWColPV';
-
+/* ── Auth ─────────────────────────────────────────────────────────── */
 let currentUser = null;
-let _sb = null;
-if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
-  _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
-
-async function initSupabaseAuth() {
-  if (!_sb) return;
-  // Restore session (also handles the OAuth redirect fragment automatically)
-  const { data: { session } } = await _sb.auth.getSession();
-  if (session?.user) _applyUser(session.user);
-  _sb.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN' && session?.user) _applyUser(session.user);
-    else if (event === 'SIGNED_OUT') { currentUser = null; updateNavForUser(); }
-  });
-}
-
-function _applyUser(user) {
-  currentUser = {
-    name:  user.user_metadata?.full_name || user.user_metadata?.name || user.email,
-    email: user.email
-  };
-  updateNavForUser();
-}
-
 
 function updateNavForUser() {
   const btn = document.getElementById('nav-signin-btn');
@@ -320,8 +290,8 @@ function openProfilePanel() {
     container.querySelector('#profile-signout-btn').addEventListener('click', async () => {
       if (isDesktop() || isTablet()) closeDesktopDetail();
       else closeAllSheets();
-      if (_sb) await _sb.auth.signOut();
-      else { currentUser = null; updateNavForUser(); }
+      currentUser = null;
+      updateNavForUser();
     });
   }
 
@@ -4373,7 +4343,6 @@ document.addEventListener('DOMContentLoaded',function(){
 
   // nav-signin-btn click is managed by updateNavForUser()
   updateNavForUser();
-  initSupabaseAuth();
 });
 function openMoreSheet(btn){
   document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));

@@ -1,3 +1,10 @@
+## 2026-08-12
+
+### Changed
+- **Auth** — Removed dead Supabase integration from `js/app.js` (`SUPABASE_URL`/`SUPABASE_ANON_KEY` constants, `initSupabaseAuth`, `_applyUser`, and the Supabase-SDK branch of sign-out). The Supabase JS SDK was never loaded in any HTML page, so `_sb` was always `null` and these code paths were permanent no-ops; all fragrance state already persists via `localStorage` independent of auth. Sign-in UI (`updateNavForUser`, profile panel) is unchanged — `currentUser` simply stays `null`, same effective behavior as before.
+- **Build scripts** — Removed now-unnecessary Supabase-SDK-script-removal regexes from `scripts/build-static.js` and `api/quiz.js` (no such script tag exists in any source HTML).
+- Untracked `.env.local` (a stale, already-expired Vercel OIDC token) from git; added going forward via existing `.gitignore` rule.
+
 ## 2026-04-13
 
 ### Changed
