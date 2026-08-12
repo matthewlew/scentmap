@@ -5362,7 +5362,7 @@ async function init() {
   if (window.renderSaved) window.renderSaved();
 
   // Load popular comparisons and auto-select first pair as default
-  fetch('/data/popular-comparisons.json')
+  fetch('/scentmap/data/popular-comparisons.json')
     .then(r => r.json())
     .then(pairs => {
       _popularPairs = pairs;
@@ -5525,7 +5525,7 @@ function handleInitialNavigation() {
 async function renderStandaloneQuiz(slug) {
   // Try to use full quiz logic if available (by loading quiz config)
   try {
-    const res = await fetch('/data/quiz-config.json');
+    const res = await fetch('/scentmap/data/quiz-config.json');
     const allConfigs = await res.json();
     const config = allConfigs[slug];
     if (config) {
@@ -5548,7 +5548,7 @@ async function renderStandaloneQuiz(slug) {
 init();
 
 // Load and render changelog
-fetch('/CHANGELOG.md').then(r=>r.text()).then(md=>{
+fetch('/scentmap/CHANGELOG.md').then(r=>r.text()).then(md=>{
   const el=document.getElementById('changelog-body');
   // Minimal Markdown → HTML renderer (supports ## h2, ### h3, - lists, nested  - lists, **bold**, `code`, ---)
   function inlineFmt(s){

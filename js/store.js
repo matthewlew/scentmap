@@ -167,10 +167,10 @@ export const initialize = async () => {
   const _nc = { cache: 'no-cache' };
   try {
     const [roles, notes, brands, scents] = await Promise.all([
-      fetch('/data/roles.json', _nc).then(r => r.json()),
-      fetch('/data/notes.json', _nc).then(r => r.json()),
-      fetch('/data/brands.json', _nc).then(r => r.json()),
-      fetch('/data/scents.json', _nc).then(r => r.json()),
+      fetch('/scentmap/data/roles.json', _nc).then(r => r.json()),
+      fetch('/scentmap/data/notes.json', _nc).then(r => r.json()),
+      fetch('/scentmap/data/brands.json', _nc).then(r => r.json()),
+      fetch('/scentmap/data/scents.json', _nc).then(r => r.json()),
     ]);
 
     _ROLES = roles;

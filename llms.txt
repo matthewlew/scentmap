@@ -19,11 +19,11 @@ Similarity scores are computed from: family compatibility (40%), shared note ove
 
 ## Key URLs
 
-- Homepage: https://scentmap.vercel.app/
-- Fragrance Engine (app): https://scentmap.vercel.app/app
-- Compare (example): https://scentmap.vercel.app/compare/santal-33/another-13
-- Quiz (example): https://scentmap.vercel.app/quiz/find-your-scent
-- Sitemap: https://scentmap.vercel.app/sitemap.xml
+- Homepage: https://matthewlew.github.io/scentmap/
+- Fragrance Engine (app): https://matthewlew.github.io/scentmap/app
+- Compare (example): https://matthewlew.github.io/scentmap/compare/santal-33/another-13
+- Quiz (example): https://matthewlew.github.io/scentmap/quiz/find-your-scent
+- Sitemap: https://matthewlew.github.io/scentmap/sitemap.xml
 
 ## Fragrance Families
 
@@ -51,4 +51,4 @@ Aesop, Byredo, Chanel, Dior, Diptyque, D.S. & Durga, Fueguia 1833, Le Labo, Loew
 
 ## Contact
 
-Website: https://scentmap.vercel.app
+Website: https://matthewlew.github.io/scentmap

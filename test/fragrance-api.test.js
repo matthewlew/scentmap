@@ -1,13 +1,17 @@
 /**
- * Server-side tests for /api/fragrance handler.
+ * Tests for the static fragrance page build (scripts/lib/fragrance-seo.js +
+ * scripts/build-static.js). Replaces the old Vercel-serverless-handler tests
+ * now that GitHub Pages serves pre-rendered static HTML instead.
  * Run: node test/fragrance-api.test.js
  * No dependencies — uses built-in assert.
  */
 const assert = require('assert');
-const handler = require('../api/fragrance');
-const SCENTS_ARR = require('../data/scents.json');
-const SCENTS = Object.fromEntries(SCENTS_ARR.map(f => [f.id, f]));
 const fs = require('fs');
+const path = require('path');
+const { buildFragranceSEO, SCENTS } = require('../scripts/lib/fragrance-seo');
+
+const SITE = 'https://matthewlew.github.io/scentmap';
+const ids = Object.keys(SCENTS);
 
 let passed = 0;
 let failed = 0;
@@ -24,56 +28,32 @@ function test(name, fn) {
   }
 }
 
-function mockReqRes(pathname) {
-  const req = {
-    url: pathname,
-    headers: { host: 'scentmap.vercel.app' },
-  };
-  let _status = 200;
-  let _headers = {};
-  let _body = '';
-  const res = {
-    get statusCode() { return _status; },
-    set statusCode(v) { _status = v; },
-    setHeader(k, v) { _headers[k] = v; },
-    end(body) { _body = body || ''; },
-    getBody() { return _body; },
-    getStatus() { return _status; },
-    getHeaders() { return _headers; },
-  };
-  return { req, res };
-}
-
 // ── Valid fragrance ID ──────────────────────────────────────
 console.log('\nSuite: Valid fragrance page');
 
-const { req: r1, res: s1 } = mockReqRes('/fragrance/gypsy-water');
-handler(r1, s1);
+const seo = buildFragranceSEO('gypsy-water', SITE);
 
-test('returns 200 with HTML content type', () => {
-  assert.strictEqual(s1.getHeaders()['Content-Type'], 'text/html; charset=utf-8');
+test('returns SEO payload for known ID', () => {
+  assert.ok(seo);
 });
 
-test('HTML contains correct <title>', () => {
-  assert.ok(s1.getBody().includes('<title>Gypsy Water by Byredo'));
+test('title is correct', () => {
+  assert.ok(seo.titleText.startsWith('Gypsy Water by Byredo'));
 });
 
-test('HTML contains canonical URL', () => {
-  assert.ok(s1.getBody().includes('href="https://scentmap.vercel.app/fragrance/gypsy-water"'));
+test('canonical URL is correct', () => {
+  assert.strictEqual(seo.canonicalUrl, `${SITE}/fragrance/gypsy-water`);
 });
 
-test('HTML contains JSON-LD Product schema', () => {
-  const match = s1.getBody().match(/<script type="application\/ld\+json">(.*?)<\/script>/g);
-  assert.ok(match && match.length >= 2, 'Expected at least 2 JSON-LD blocks');
-  const productLd = JSON.parse(match[0].replace(/<\/?script[^>]*>/g, ''));
+test('JSON-LD Product schema is present and correct', () => {
+  const productLd = JSON.parse(seo.jsonLd);
   assert.strictEqual(productLd['@type'], 'Product');
   assert.strictEqual(productLd.name, 'Gypsy Water');
   assert.strictEqual(productLd.brand.name, 'Byredo');
 });
 
-test('HTML contains FAQ JSON-LD with gift questions', () => {
-  const match = s1.getBody().match(/<script type="application\/ld\+json">(.*?)<\/script>/g);
-  const faqLd = JSON.parse(match[1].replace(/<\/?script[^>]*>/g, ''));
+test('FAQ JSON-LD contains gift questions', () => {
+  const faqLd = JSON.parse(seo.faqLd);
   assert.strictEqual(faqLd['@type'], 'FAQPage');
   const questions = faqLd.mainEntity.map(q => q.name);
   assert.ok(questions.some(q => q.includes('smell like')), 'Missing "smell like" question');
@@ -82,76 +62,40 @@ test('HTML contains FAQ JSON-LD with gift questions', () => {
   assert.ok(questions.some(q => q.includes('What to get')), 'Missing "what to get" question');
 });
 
-test('HTML contains noscript fallback with notes', () => {
-  const body = s1.getBody();
-  assert.ok(body.includes('<noscript>'));
-  assert.ok(body.includes('Juniper'));
-  assert.ok(body.includes('Sandalwood'));
-  assert.ok(body.includes('Gift This Fragrance'));
-});
-
-test('HTML contains OG meta tags', () => {
-  const body = s1.getBody();
-  assert.ok(body.includes('og:title'));
-  assert.ok(body.includes('og:description'));
-  assert.ok(body.includes('og:url'));
-});
-
-test('sets cache headers', () => {
-  assert.ok(s1.getHeaders()['Cache-Control'].includes('s-maxage=86400'));
+test('noscript fallback contains notes', () => {
+  assert.ok(seo.noscriptContent.includes('<noscript>'));
+  assert.ok(seo.noscriptContent.includes('Juniper'));
+  assert.ok(seo.noscriptContent.includes('Sandalwood'));
+  assert.ok(seo.noscriptContent.includes('Gift This Fragrance'));
 });
 
 test('noscript contains Gift Intelligence quiz link', () => {
-  assert.ok(s1.getBody().includes('/quiz/gift-intelligence'));
+  assert.ok(seo.noscriptContent.includes('/quiz/gift-intelligence'));
 });
 
 // ── Invalid fragrance ID ────────────────────────────────────
 console.log('\nSuite: Invalid fragrance ID');
 
-const { req: r2, res: s2 } = mockReqRes('/fragrance/nonexistent-perfume-xyz');
-handler(r2, s2);
-
-test('unknown ID returns app.html fallback (not 404)', () => {
-  assert.ok(s2.getBody().includes('<html'), 'Expected HTML response');
-  assert.strictEqual(s2.getStatus(), 200);
-});
-
-// ── Bad path ────────────────────────────────────────────────
-console.log('\nSuite: Bad paths');
-
-const { req: r3, res: s3 } = mockReqRes('/fragrance/');
-handler(r3, s3);
-test('no ID segment returns 404', () => {
-  assert.strictEqual(s3.getStatus(), 404);
-});
-
-const { req: r4, res: s4 } = mockReqRes('/other/path');
-handler(r4, s4);
-test('wrong prefix returns 404', () => {
-  assert.strictEqual(s4.getStatus(), 404);
+test('unknown ID returns null (caller falls back to app.html)', () => {
+  assert.strictEqual(buildFragranceSEO('nonexistent-perfume-xyz', SITE), null);
 });
 
 // ── XSS prevention ─────────────────────────────────────────
 console.log('\nSuite: XSS prevention');
 
-const { req: r5, res: s5 } = mockReqRes('/fragrance/<script>alert(1)</script>');
-handler(r5, s5);
-test('XSS in ID does not inject script tags', () => {
-  assert.ok(!s5.getBody().includes('<script>alert'));
+test('XSS in ID does not crash and produces no unknown fragrance', () => {
+  assert.strictEqual(buildFragranceSEO('<script>alert(1)</script>', SITE), null);
 });
 
 // ── All fragrances produce valid output ─────────────────────
 console.log('\nSuite: All 213 fragrances');
 
-const ids = Object.keys(SCENTS);
 let allValid = true;
 let errorId = '';
 ids.forEach(id => {
-  const { req, res } = mockReqRes(`/fragrance/${id}`);
   try {
-    handler(req, res);
-    const body = res.getBody();
-    if (!body.includes('<title>') || !body.includes('ld+json') || !body.includes('<noscript>')) {
+    const s = buildFragranceSEO(id, SITE);
+    if (!s || !s.titleText || !s.jsonLd || !s.noscriptContent.includes('<noscript>')) {
       allValid = false;
       errorId = id;
     }
@@ -164,10 +108,28 @@ test(`all ${ids.length} fragrances render without error`, () => {
   assert.ok(allValid, `Failed on: ${errorId}`);
 });
 
+// ── Static build output ─────────────────────────────────────
+console.log('\nSuite: Static build output (scripts/build-static.js)');
+
+const fragDir = path.join(__dirname, '..', 'fragrance');
+
+test('every fragrance has a pre-rendered static page', () => {
+  const missing = ids.filter(id => !fs.existsSync(path.join(fragDir, id, 'index.html')));
+  assert.strictEqual(missing.length, 0, `Missing static pages for: ${missing.slice(0, 5).join(', ')}${missing.length > 5 ? '...' : ''}`);
+});
+
+test('a fragrance page contains title, JSON-LD, and noscript content', () => {
+  const body = fs.readFileSync(path.join(fragDir, 'gypsy-water', 'index.html'), 'utf8');
+  assert.ok(body.includes('<title>Gypsy Water by Byredo'));
+  assert.ok(body.includes('ld+json'));
+  assert.ok(body.includes('<noscript>'));
+  assert.ok(body.includes(`href="${SITE}/fragrance/gypsy-water"`));
+});
+
 // ── Sitemap integrity ───────────────────────────────────────
 console.log('\nSuite: Sitemap coverage');
 
-const sitemap = fs.readFileSync(require('path').join(__dirname, '..', 'sitemap.xml'), 'utf8');
+const sitemap = fs.readFileSync(path.join(__dirname, '..', 'sitemap.xml'), 'utf8');
 
 test('every fragrance ID has a sitemap entry', () => {
   const missing = ids.filter(id => !sitemap.includes(`/fragrance/${id}`));
@@ -175,7 +137,7 @@ test('every fragrance ID has a sitemap entry', () => {
 });
 
 test('sitemap fragrance URLs use correct format', () => {
-  const fragUrls = sitemap.match(/scentmap\.vercel\.app\/fragrance\/[a-z0-9-]+/g) || [];
+  const fragUrls = sitemap.match(/matthewlew\.github\.io\/scentmap\/fragrance\/[a-z0-9-]+/g) || [];
   assert.strictEqual(fragUrls.length, ids.length, `Expected ${ids.length} fragrance URLs, found ${fragUrls.length}`);
 });
 

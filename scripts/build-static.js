@@ -1,8 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const { buildFragranceSEO, SCENTS, SCENTS_ARR } = require('./lib/fragrance-seo');
 
-const SCENTS_ARR = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'scents.json'), 'utf8'));
-const SCENTS = Object.fromEntries(SCENTS_ARR.map(f => [f.id, f]));
+// GitHub Pages project-page base — matthewlew/scentmap serves under this path.
+// Update SITE (and the /scentmap prefixes baked into index.html/app.html/js/*.js)
+// together if this ever moves to a custom domain.
+const SITE = 'https://matthewlew.github.io/scentmap';
 
 const QUIZ_META = {
   'find-your-scent': {
@@ -60,7 +63,7 @@ function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-function buildPage(outPath, titleText, descText, ogTitleText, canonicalUrl, ogImageUrl, isQuiz = false) {
+function buildPage(outPath, { titleText, descText, ogTitleText, canonicalUrl, ogImageUrl, isQuiz = false, jsonLd = null, faqLd = null, noscriptContent = null }) {
   let html = appHtml;
   const title = escHtml(titleText);
   const description = escHtml(descText);
@@ -78,7 +81,9 @@ function buildPage(outPath, titleText, descText, ogTitleText, canonicalUrl, ogIm
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${ogTitle}">
     <meta name="twitter:description" content="${description}">
-    <meta name="twitter:image" content="${ogImageUrl}">`;
+    <meta name="twitter:image" content="${ogImageUrl}">${jsonLd ? `
+    <script type="application/ld+json">${jsonLd}</script>` : ''}${faqLd ? `
+    <script type="application/ld+json">${faqLd}</script>` : ''}`;
 
   // Remove existing default meta/OG tags
   html = html.replace(/<title>[^<]*<\/title>/, '');
@@ -86,9 +91,13 @@ function buildPage(outPath, titleText, descText, ogTitleText, canonicalUrl, ogIm
   html = html.replace(/<link rel="canonical"[^>]*>/g, '');
   html = html.replace(/<meta property="og:[^>]*>/g, '');
   html = html.replace(/<meta name="twitter:[^>]*>/g, '');
-  
+
   // Inject tags
   html = html.replace('<meta charset="UTF-8">', '<meta charset="UTF-8">\n' + metaTags);
+
+  if (noscriptContent) {
+    html = html.replace('<body>', '<body>' + noscriptContent);
+  }
 
   if (isQuiz) {
     // Remove WebHaptics, swap app.js for quiz.js
@@ -98,30 +107,31 @@ function buildPage(outPath, titleText, descText, ogTitleText, canonicalUrl, ogIm
 
   ensureDir(path.dirname(outPath));
   fs.writeFileSync(outPath, html);
-  console.log(`Wrote ${outPath}`);
 }
 
+let written = 0;
+
 // 1. /app/index.html
-buildPage(
-  path.join(__dirname, '..', 'app', 'index.html'),
-  'Scentmap — Compare Fragrances',
-  'Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.',
-  'Scentmap — Compare Fragrances',
-  'https://scentmap.vercel.app/app',
-  'https://scentmap.vercel.app/api/og'
-);
+buildPage(path.join(__dirname, '..', 'app', 'index.html'), {
+  titleText: 'Scentmap — Compare Fragrances',
+  descText: 'Compare fragrances side-by-side with data-driven analysis. See similarity scores, shared notes, radar charts, and layering compatibility.',
+  ogTitleText: 'Scentmap — Compare Fragrances',
+  canonicalUrl: `${SITE}/app`,
+  ogImageUrl: `${SITE}/og/default.png`,
+});
+written++;
 
 // 2. Quiz pages
 for (const [slug, meta] of Object.entries(QUIZ_META)) {
-  buildPage(
-    path.join(__dirname, '..', 'quiz', slug, 'index.html'),
-    meta.title,
-    meta.description,
-    meta.ogTitle,
-    `https://scentmap.vercel.app/quiz/${slug}`,
-    `https://scentmap.vercel.app/api/og-quiz?quiz=${slug}`,
-    true
-  );
+  buildPage(path.join(__dirname, '..', 'quiz', slug, 'index.html'), {
+    titleText: meta.title,
+    descText: meta.description,
+    ogTitleText: meta.ogTitle,
+    canonicalUrl: `${SITE}/quiz/${slug}`,
+    ogImageUrl: `${SITE}/og/quiz-${slug}.png`,
+    isQuiz: true,
+  });
+  written++;
 }
 
 // 3. Popular comparisons
@@ -129,12 +139,32 @@ for (const [idA, idB] of POPULAR_COMPARISONS) {
   const fa = SCENTS[idA], fb = SCENTS[idB];
   const titleText = `${fa.name} vs ${fb.name} | Scentmap`;
   const descText = `Compare ${fa.brand} ${fa.name} and ${fb.brand} ${fb.name}. Data-driven breakdown with radar chart and note analysis.`;
-  buildPage(
-    path.join(__dirname, '..', 'compare', idA, idB, 'index.html'),
+  buildPage(path.join(__dirname, '..', 'compare', idA, idB, 'index.html'), {
     titleText,
     descText,
-    titleText,
-    `https://scentmap.vercel.app/compare/${idA}/${idB}`,
-    `https://scentmap.vercel.app/api/og?a=${idA}&b=${idB}`
-  );
+    ogTitleText: titleText,
+    canonicalUrl: `${SITE}/compare/${idA}/${idB}`,
+    ogImageUrl: `${SITE}/og/compare-${idA}-${idB}.png`,
+  });
+  written++;
 }
+
+// 4. All 213 individual fragrance pages (previously served dynamically by the
+// Vercel serverless function api/fragrance.js — GitHub Pages has no server,
+// so every fragrance gets pre-rendered at build time instead).
+for (const frag of SCENTS_ARR) {
+  const seo = buildFragranceSEO(frag.id, SITE);
+  buildPage(path.join(__dirname, '..', 'fragrance', frag.id, 'index.html'), {
+    titleText: seo.titleText,
+    descText: seo.descText,
+    ogTitleText: seo.ogTitle,
+    canonicalUrl: seo.canonicalUrl,
+    ogImageUrl: `${SITE}/og/default.png`,
+    jsonLd: seo.jsonLd,
+    faqLd: seo.faqLd,
+    noscriptContent: seo.noscriptContent,
+  });
+  written++;
+}
+
+console.log(`Wrote ${written} static pages (1 app, ${Object.keys(QUIZ_META).length} quiz, ${POPULAR_COMPARISONS.length} compare, ${SCENTS_ARR.length} fragrance).`);

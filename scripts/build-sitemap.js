@@ -10,11 +10,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const SITE = 'https://scentmap.vercel.app';
+// GitHub Pages project-page base — keep in sync with scripts/build-static.js.
+const SITE = 'https://matthewlew.github.io/scentmap';
 const dataDir = path.join(__dirname, '..', 'data');
 const scentsArr = JSON.parse(fs.readFileSync(path.join(dataDir, 'scents.json'), 'utf8'));
 const scents = Object.fromEntries(scentsArr.map(f => [f.id, f]));
-const popular = JSON.parse(fs.readFileSync(path.join(dataDir, 'popular-comparisons.json'), 'utf8'));
 
 const urls = new Set();
 
@@ -29,35 +29,32 @@ const quizSlugs = [
   'best-perfume-for-men-2026',
   'best-perfume-for-women-2026',
   'find-your-byredo',
+  'scent-archetype',
+  'astro-scent',
 ];
 for (const slug of quizSlugs) {
   urls.add(`${SITE}/quiz/${slug}`);
 }
 
-// Popular curated pairs
-for (const p of popular) {
-  const [a, b] = [p.a, p.b].sort();
+// GitHub Pages is static-only — only the curated popular pairs are actually
+// pre-rendered (see scripts/build-static.js), so only those belong here.
+// (The old Vercel deploy could serve any /compare/:a/:b on demand via a
+// serverless rewrite; a full same-brand-pairs sitemap would now 404.)
+const POPULAR_COMPARISONS = [
+  ['bleu-de-chanel', 'sauvage'],
+  ['santal-33', 'another-13'],
+  ['bal-dafrique', 'gypsy-water'],
+  ['rose-31', 'tf-rose-prick'],
+  ['santal-33', 'tf-santal-blush'],
+];
+for (const [idA, idB] of POPULAR_COMPARISONS) {
+  const [a, b] = [idA, idB].sort();
   urls.add(`${SITE}/compare/${a}/${b}`);
 }
 
 // Individual fragrance detail pages
 for (const id of Object.keys(scents)) {
   urls.add(`${SITE}/fragrance/${id}`);
-}
-
-// Same-brand pairs (highest search volume — "X vs Y same brand")
-const byBrand = {};
-for (const [id, s] of Object.entries(scents)) {
-  if (!byBrand[s.brand]) byBrand[s.brand] = [];
-  byBrand[s.brand].push(id);
-}
-for (const ids of Object.values(byBrand)) {
-  ids.sort();
-  for (let i = 0; i < ids.length; i++) {
-    for (let j = i + 1; j < ids.length; j++) {
-      urls.add(`${SITE}/compare/${ids[i]}/${ids[j]}`);
-    }
-  }
 }
 
 // Build XML
