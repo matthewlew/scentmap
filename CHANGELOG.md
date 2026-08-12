@@ -1,3 +1,21 @@
+## 2026-08-12
+
+### Added
+- **GitHub Pages migration** — Scentmap now deploys as a fully static site to GitHub Pages (`https://matthewlew.github.io/scentmap`) instead of Vercel, via `.github/workflows/deploy-pages.yml`. Replaces `.github/workflows/deploy-release.yml` (Vercel deploy-on-tag).
+- **All 213 fragrance pages pre-rendered** — `scripts/build-static.js` now generates a static `fragrance/:id/index.html` for every fragrance (JSON-LD Product + FAQPage schema, noscript crawler content, similarity computation), reusing logic extracted into `scripts/lib/fragrance-seo.js`. Previously these were rendered on-demand by the Vercel serverless function `api/fragrance.js`, which has no GitHub Pages equivalent.
+- **Static OG images** — `scripts/generate-og-images.js` uses `satori` + `@resvg/resvg-js` (Node-side, no Edge Runtime needed) to pre-render the same 13 OG images the old `@vercel/og`-based `api/og.jsx`/`api/og-quiz.jsx` generated dynamically: 1 brand image, 7 quiz promo images, 5 popular-comparison images. Written to `og/*.png`.
+- **`npm run build`** now chains `build-static.js` → `generate-og-images.js` → `build-sitemap.js` (previously separate/undocumented steps).
+
+### Changed
+- **Removed Vercel serverless backend** — Deleted `api/` (fragrance.js, compare.js, quiz.js, og.jsx, og-quiz.jsx), `vercel.json`, and `.vercel/`. Arbitrary (non-popular) `/compare/:a/:b` pairs and dynamic quiz-result OG images (unbounded `?results=` combinations) are no longer generated — GitHub Pages can only serve pre-rendered pages. Sitemap and internal links updated to only reference the 5 curated popular comparison pages that are actually pre-rendered.
+- **Site base path** — Since this is a GitHub Pages *project* page (not a custom domain), all root-absolute asset/link references (`href="/..."`, `src="/..."`, `fetch('/data/...')`) in `index.html`, `app.html`, `js/store.js`, `js/quiz.js`, and `js/app.js` now carry a `/scentmap` prefix.
+- **Domain** — All canonical URLs, OG/Twitter meta, JSON-LD, `robots.txt`, `llms.txt`, and `sitemap.xml` updated from `scentmap.vercel.app` to `matthewlew.github.io/scentmap`.
+- **`test/fragrance-api.test.js`** rewritten to test the static build (`scripts/lib/fragrance-seo.js` output and generated `fragrance/*/index.html` files) instead of the now-removed `api/fragrance.js` serverless handler.
+- **`@vercel/og`** moved from `dependencies` to `devDependencies` — it's now only used at build time (as a font source for `generate-og-images.js`), not at runtime.
+
+- **Auth** — Removed dead Supabase integration from `js/app.js` (`SUPABASE_URL`/`SUPABASE_ANON_KEY` constants, `initSupabaseAuth`, `_applyUser`, and the Supabase-SDK branch of sign-out). The Supabase JS SDK was never loaded in any HTML page, so `_sb` was always `null` and these code paths were permanent no-ops; all fragrance state already persists via `localStorage` independent of auth. Sign-in UI (`updateNavForUser`, profile panel) is unchanged — `currentUser` simply stays `null`, same effective behavior as before.
+- Untracked `.env.local` (a stale, already-expired Vercel OIDC token) from git; added going forward via existing `.gitignore` rule.
+
 ## 2026-04-13
 
 ### Changed

@@ -21,15 +21,26 @@ data/
   roles.json        8 fragrance roles (id, name, sym, desc)
   notes.json        Note reference index (177 entries)
   scents.json       Canonical 213-fragrance flat array (all brands, single file)
-api/
-  fragrance.js      Vercel serverless: /fragrance/:id pages (213 URLs)
+scripts/
+  build-static.js   Pre-renders app/, quiz/, compare/ (popular pairs), and all 213 fragrance/:id pages to static HTML
+  generate-og-images.js  Renders static OG images (satori + resvg) into og/
+  build-sitemap.js  Generates sitemap.xml
+  lib/fragrance-seo.js   Shared SEO/JSON-LD logic used by build-static.js
 test/
-  fragrance-api.test.js  Server-side tests (16 assertions, run: node test/fragrance-api.test.js)
+  fragrance-api.test.js  Tests for the static build (14 assertions, run: node test/fragrance-api.test.js)
 CHANGELOG.md        Feature log — updated on every commit
 CLAUDE.md           This file
 .claude/
   launch.json       Dev server config (Ruby WEBrick on port 3001)
 ```
+
+---
+
+## Deployment
+
+Static site on GitHub Pages (`https://matthewlew.github.io/scentmap`), built and deployed by `.github/workflows/deploy-pages.yml` on every push to `main` (`npm run build` → pre-render pages, generate OG images, build sitemap → publish). No server, no serverless functions, no Supabase — all state is client-side (`localStorage`) and all SEO pages are pre-rendered at build time.
+
+Because this is a GitHub Pages **project** page (not a custom domain), the site is served under the `/scentmap` path prefix. Every root-absolute asset reference (`href="/..."`, `src="/..."`, `fetch('/data/...')`) in `index.html`, `app.html`, `js/store.js`, `js/quiz.js`, and `js/app.js` is hard-coded with a `/scentmap` prefix — keep that prefix if you add new root-absolute references, or generalize it into a shared constant if this ever moves to a custom domain.
 
 ---
 

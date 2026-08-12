@@ -663,8 +663,8 @@ async function init() {
 
   try {
     const [catalog, allConfigs] = await Promise.all([
-      fetch('/data/scents.json').then(r => { if (!r.ok) throw new Error(`scents.json: ${r.status}`); return r.json(); }),
-      fetch('/data/quiz-config.json').then(r => { if (!r.ok) throw new Error(`quiz-config.json: ${r.status}`); return r.json(); }),
+      fetch('/scentmap/data/scents.json').then(r => { if (!r.ok) throw new Error(`scents.json: ${r.status}`); return r.json(); }),
+      fetch('/scentmap/data/quiz-config.json').then(r => { if (!r.ok) throw new Error(`quiz-config.json: ${r.status}`); return r.json(); }),
     ]);
     const config = allConfigs[slug] || null;
     renderQuiz(container, config, catalog);
