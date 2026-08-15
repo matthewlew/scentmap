@@ -3430,7 +3430,9 @@ function renderNotesExplore(container) {
       
       // Update navigation buttons
       document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === 'search');
+        const isActive = btn.dataset.tab === 'search';
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
       
       // Show search UI
@@ -3607,7 +3609,9 @@ function switchNotesTab(tab) {
   _notesActiveTab = tab;
   // Update button active states
   document.querySelectorAll('#notes-nav-bar .notes-nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === tab);
+    const isActive = btn.dataset.tab === tab;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
   // Show/hide search controls
   const searchWrap = document.getElementById('notes-search-wrap');
@@ -3826,7 +3830,10 @@ function go(id,btn){
   if (id === 'journal') panelId = 'saved';
 
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link, .mbn-btn').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab:not(.dc-state-wrap .tab):not(.picker-row .tab):not(.cat-state-bar .tab):not(.cat-brand-bar .tab):not(.cat-state-bar-m .tab):not(.cat-brand-bar-m .tab):not(.roles-brand-bar .tab), .global-nav-link, .mbn-btn').forEach(t=>{
+    t.classList.remove('active');
+    t.setAttribute('aria-pressed', 'false');
+  });
   
   const panel = document.getElementById('p-'+panelId);
   if(panel) panel.classList.add('active');
@@ -3839,6 +3846,7 @@ function go(id,btn){
     const href = l.getAttribute('href') || '';
     if (oc.includes(`go('${id}'`) || href.endsWith(`#${id}`) || (id==='saved' && (oc.includes("go('saved'") || href.endsWith('#saved')))) {
       l.classList.add('active');
+      l.setAttribute('aria-pressed', 'true');
     }
   });
 
@@ -4253,8 +4261,12 @@ function _usSetHighlight(idx, resultsId = 'us-results') {
 }
 
 function goMobile(id,btn){
-  document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mbn-btn').forEach(b=>{
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed', 'false');
+  });
   btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
   go(id,null);
 }
 window.goMobile = goMobile;
@@ -4345,8 +4357,12 @@ document.addEventListener('DOMContentLoaded',function(){
   updateNavForUser();
 });
 function openMoreSheet(btn){
-  document.querySelectorAll('.mbn-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mbn-btn').forEach(b=>{
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed', 'false');
+  });
   btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
   const items=[
     {id:'saved',    icon:ICONS.star,      label:'My Collection', action:"closeAllSheets();goMobile('saved',document.querySelector('.mbn-more'))"},
     {id:'changelog',icon:ICONS.megaphone, label:'Changelog',     action:"closeAllSheets();goMobile('changelog',document.querySelector('.mbn-more'))"},
