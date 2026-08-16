@@ -118,9 +118,9 @@ window.getGoldenPairs = function(owned) {
   const pairs = [];
   for (let i = 0; i < owned.length; i++) {
     for (let j = i + 1; j < owned.length; j++) {
-      const score = scoreLayeringPair(owned[i], owned[j]);
-      if (score >= 50) { 
-        pairs.push({ a: owned[i], b: owned[j], score: Math.round(score / 75 * 100) });
+      const details = engine.getLayeringDetails(owned[i], owned[j], store.FAM_COMPAT);
+      if (details.score >= 50) {
+        pairs.push({ a: owned[i], b: owned[j], score: Math.round(details.score / 75 * 100), details });
       }
     }
   }
@@ -1222,7 +1222,12 @@ window.renderSaved = function() {
               <div class="list-item-sublabel text-meta">${famB.label||p.b.family}</div>
             </div>
           </div>
-          <div class="text-meta u-font-serif" style="margin-top:auto; color:var(--text-tertiary);">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
+          <div class="text-meta u-font-serif" style="margin-top:auto; margin-bottom:var(--sp-xs); color:var(--text-tertiary);">${engine.getSwapReason(p.a, p.b, store.FAM_COMPAT).replace('An alternative', 'Layers well')}</div>
+          <div class="cmp-score-breakdown" style="display:flex; gap:var(--sp-sm); font-size:var(--fs-micro); color:var(--text-tertiary); margin-top:auto;">
+            <span>Fam: ${p.details.famScore}</span>
+            <span>Note: ${p.details.noteScore}</span>
+            <span>Sill: ${p.details.sillScore}</span>
+          </div>
         `;        card.onclick = () => { _selectFragForSlot('a', p.a); _selectFragForSlot('b', p.b); go('compare'); };
         pairWrap.appendChild(card);
       });
@@ -1887,7 +1892,10 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
+    .map(f=>{
+      const details = engine.getLayeringDetails(frag, f, store.FAM_COMPAT);
+      return {f, score: details.score, details};
+    })
     .filter(x=>x.score>=40)
     .sort((a,b)=>b.score-a.score)
     .slice(0,2);
@@ -1896,21 +1904,28 @@ function buildLayerSuggestions(frag,container){
   lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
   const shelf=document.createElement('div');shelf.className='list-view';
-  candidates.forEach(({f,score})=>{
+  candidates.forEach(({f,score,details})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
     const row=document.createElement('button');
     row.className='list-item';
     row.innerHTML=`
         <div class="list-item-dot" style="--fam-bg: ${fm2.color}"></div>
-        <div class="list-item-body">
-          <div class="list-item-label text-ui-strong">${f.name}</div>
+        <div class="list-item-body" style="width:100%;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="list-item-label text-ui-strong">${f.name}</div>
+            <div style="display:flex; gap:var(--sp-xs); align-items:center;">
+              <span class="dc-layer-score-badge">${score}</span>
+              <span class="chip chip--xs is-owned">Owned</span>
+            </div>
+          </div>
           <div class="list-item-sublabel text-meta">${f.brand}</div>
-          ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
-        </div>
-        <div class="list-item-trail">
-          <span class="dc-layer-score-badge">${score}</span>
-          <span class="chip chip--xs is-owned">Owned</span>
+          ${reason ? `<div class="list-item-detail text-caption" style="margin-bottom:var(--sp-xs);">${reason}</div>` : ''}
+          <div class="cmp-score-breakdown" style="display:flex; gap:var(--sp-sm); font-size:var(--fs-micro); color:var(--text-tertiary); margin-top:var(--sp-xs);">
+            <span>Fam: ${details.famScore}</span>
+            <span>Note: ${details.noteScore}</span>
+            <span>Sill: ${details.sillScore}</span>
+          </div>
         </div>
       `;
     row.addEventListener('click',e=>{e.stopPropagation();pushDetail(c=>renderFragDetail(c,f),f.name);});
