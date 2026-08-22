@@ -198,7 +198,12 @@ export function scoreLayeringPair(a, b, FAM_COMPAT) {
   const shared = a._nAll.filter(n => b._nAll.includes(n)).length;
   const noteScore = shared === 0 ? 20 : shared <= 2 ? 12 : shared <= 4 ? 5 : 0;
   
-  return Math.round(famScore + sillScore + noteScore);
+  return {
+    total: Math.round(famScore + sillScore + noteScore),
+    famScore: Math.round(famScore),
+    sillScore,
+    noteScore
+  };
 }
 
 /**
