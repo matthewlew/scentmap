@@ -118,7 +118,7 @@ window.getGoldenPairs = function(owned) {
   const pairs = [];
   for (let i = 0; i < owned.length; i++) {
     for (let j = i + 1; j < owned.length; j++) {
-      const score = scoreLayeringPair(owned[i], owned[j]);
+      const score = scoreLayeringPair(owned[i], owned[j]).total;
       if (score >= 50) { 
         pairs.push({ a: owned[i], b: owned[j], score: Math.round(score / 75 * 100) });
       }
@@ -1249,7 +1249,6 @@ function scoreSimilarity(a,b){
 }
 
 /* Layering compatibility score: higher = better layering pair (different sillage + complementary families + unique notes) */
-const _layCache={};
 function scoreLayeringPair(a,b){
   return engine.scoreLayeringPair(a, b, store.FAM_COMPAT);
 }
@@ -1887,7 +1886,10 @@ function buildLayerSuggestions(frag,container){
     return`${FAM[b.family]?.label||b.family} × ${FAM[a.family]?.label||a.family}`;
   }
   const candidates=owned
-    .map(f=>({f,score:scoreLayeringPair(frag,f)}))
+    .map(f=>{
+      const breakdown = scoreLayeringPair(frag,f);
+      return {f,score:breakdown.total,breakdown};
+    })
     .filter(x=>x.score>=40)
     .sort((a,b)=>b.score-a.score)
     .slice(0,2);
@@ -1896,7 +1898,7 @@ function buildLayerSuggestions(frag,container){
   lbl.className='sec-label';lbl.textContent='Layer with what you own';
   container.appendChild(lbl);
   const shelf=document.createElement('div');shelf.className='list-view';
-  candidates.forEach(({f,score})=>{
+  candidates.forEach(({f,score,breakdown})=>{
     const fm2=FAM[f.family]||{color:'#888'};
     const reason=layerReason(frag,f);
     const row=document.createElement('button');
@@ -1907,6 +1909,7 @@ function buildLayerSuggestions(frag,container){
           <div class="list-item-label text-ui-strong">${f.name}</div>
           <div class="list-item-sublabel text-meta">${f.brand}</div>
           ${reason ? `<div class="list-item-detail text-caption">${reason}</div>` : ''}
+          <div class="dc-description">Family Synergy: ${breakdown.famScore} | Sillage Contrast: ${breakdown.sillScore} | Note Synergy: ${breakdown.noteScore}</div>
         </div>
         <div class="list-item-trail">
           <span class="dc-layer-score-badge">${score}</span>
@@ -4388,7 +4391,7 @@ function getCmpFam(fam){
 function computeProfile(frag){ return engine.computeProfile(frag); }
 function getSwapReason(anchor, candidate){ return engine.getSwapReason(anchor, candidate, FAM); }
 
-function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b)/75*100));}
+function scoreLayeringPct(a,b){return Math.round(Math.min(100,scoreLayeringPair(a,b).total/75*100));}
 function _simLabel(pct){if(pct<26)return'Different worlds';if(pct<51)return'Distinct contrast';if(pct<76)return'Good match';return'Kindred spirits';}
 function _layLabel(pct){if(pct<25)return'Better as alternates';if(pct<50)return'Possible, with care';if(pct<75)return'Works together';return'Complementary pair';}
 
@@ -5047,7 +5050,7 @@ function renderCmpSuggestions() {
     let maxSim = 0, maxLay = 0;
     filled.forEach(s => {
       maxSim = Math.max(maxSim, scoreSimilarity(s, f));
-      maxLay = Math.max(maxLay, scoreLayeringPair(s, f));
+      maxLay = Math.max(maxLay, scoreLayeringPair(s, f).total);
     });
     simScored.push({ f, score: maxSim });
     layScored.push({ f, score: maxLay });
