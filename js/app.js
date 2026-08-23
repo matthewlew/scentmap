@@ -1608,12 +1608,12 @@ function renderFragDetail(container,frag){
     ${quizAttribution}
     <div class="u-flex-column u-gap-sm">
       <div class="dc-name">${frag.name}</div>
-      <button class="text-link text-meta">${frag.brand}</button>
+      <button class="text-link dc-brand">${frag.brand}</button>
       <span class="chip" style="background: ${fm.color}; color: var(--bg-primary);">${fm.label}</span>
     </div>
     <div class="dc-collect-row" id="dc-collect-${frag.id}"></div>
     <div id="dc-coll-ctx-${frag.id}"></div>
-    ${frag.description?`<div class="text-body">${frag.description}</div>`:''}
+    ${frag.description?`<div class="dc-description">${frag.description}</div>`:''}
     ${frag.story?`<div class="card card--secondary text-meta"><strong>The Story:</strong> ${frag.story}</div>`:''}
     ${frag.url?`<a href="${frag.url}" target="_blank" rel="noopener" class="btn btn--secondary">Buy from ${frag.brand}</a>`:''}
     <div class="detail-section">
@@ -1984,10 +1984,10 @@ function renderNoteDetail(container,note){
 
   container.innerHTML=`
     <div class="u-flex-column u-gap-xs">
-      <div class="text-heading">${note.name}</div>
+      <div class="dc-name">${note.name}</div>
       <span class="chip" style="background: ${fm.color}; color: var(--bg-primary);">${fm.label}</span>
     </div>
-    <div class="text-body">${note.desc}</div>
+    <div class="dc-description">${note.desc}</div>
     <div id="${saveId}"></div>
     
     ${note.extraction_method?`<div class="text-meta"><strong>Extraction:</strong> ${note.extraction_method}</div>`:''}
@@ -2095,7 +2095,7 @@ function renderHouseDetail(container,brand){
 
   container.innerHTML=`<div class="house-detail-wrap u-flex-column u-gap-xl">
     <div class="dc-name">${brand}</div>
-    ${houseData && houseData.desc ? `<div class="card card--secondary text-meta">${houseData.desc}</div>` : ''}
+    ${houseData && houseData.desc ? `<div class="dc-description">${houseData.desc}</div>` : ''}
     <div id="house-brand-save-wrap"></div>
     ${houseData && houseData.url ? `<a href="${houseData.url}" target="_blank" rel="noopener" class="btn btn--secondary">Visit ${brand} Website</a>` : ''}
     ${brand.toLowerCase() === 'byredo' ? `<button class="btn btn--secondary u-w-full byredo-quiz-btn">Find Your Byredo (Concierge Quiz)</button>` : ''}
@@ -2569,7 +2569,7 @@ function renderPicker(container,roleId){
   // Header
   const hdr=document.createElement('div');hdr.className='picker-header';
   hdr.innerHTML=`
-    <div class="picker-title">${role.sym} ${role.name}</div><div class="picker-sub">${role.desc}</div>`;
+    <div class="dc-name">${role.sym} ${role.name}</div><div class="dc-description">${role.desc}</div>`;
   container.appendChild(hdr);
 
   // Hero
@@ -2597,8 +2597,8 @@ function renderPicker(container,roleId){
     hero.innerHTML=`<div class="picker-hero-filled">
       <div class="picker-hero-sym" style="color:${fm.color}">${role.sym}</div>
       <div class="picker-hero-info">
-        <div class="picker-hero-name${isW?' is-wish':''}">${primaryFrag.name}</div>
-        <div class="picker-hero-brand">${primaryFrag.brand}</div>
+        <div class="dc-name${isW?' is-wish':''}">${primaryFrag.name}</div>
+        <div class="dc-brand">${primaryFrag.brand}</div>
         <div class="picker-hero-notes"><strong>Top</strong>${primaryFrag.top.join(', ')}</div>
       </div>
     </div>
@@ -3381,9 +3381,9 @@ function renderNotesExplore(container) {
     card.innerHTML = `
       <div style="display:flex; align-items:center; gap:var(--sp-sm);">
         <div class="dot--md" style="background:${fm.color};"></div>
-        <div class="text-ui-strong">${fm.label}</div>
+        <div class="dc-name">${fm.label}</div>
       </div>
-      <div class="text-body">${fm.desc}</div>
+      <div class="dc-description">${fm.desc}</div>
 
       ${refFrag ? `
       <div class="detail-section">
