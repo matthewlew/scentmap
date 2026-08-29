@@ -163,7 +163,7 @@
   <div style="max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--sp-sm);">
     <div class="overlay-wrap">
       <form onsubmit="event.preventDefault(); window.location.href='/app.html#search=' + encodeURIComponent(document.getElementById('hp-search-input').value);" style="display: flex; gap: var(--sp-xs); width: 100%;">
-        <input type="text" id="hp-search-input" class="input" placeholder="Search fragrances, notes, or brands..." autocomplete="off">
+        <input type="text" id="hp-search-input" class="input" placeholder="Search fragrances, notes, or brands..." aria-label="Search fragrances, notes, or brands" autocomplete="off">
         <button type="submit" class="btn btn--primary active">Search</button>
       </form>
       <div id="hp-search-results" class="overlay-results"></div>
