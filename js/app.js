@@ -986,7 +986,7 @@ function renderJournalContent(container) {
             </div>
             <div style="display:flex; gap:var(--sp-xs);">
               <button class="btn btn--primary" onclick="window.openTrialUpdateSheet('${t.id}', ${t.timestamp})">Final Review</button>
-              <button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});">✕</button>
+              <button class="settings-btn" style="padding:4px;" onclick="deleteTrial('${t.id}', ${t.timestamp});" aria-label="Delete trial">✕</button>
             </div>
           </div>
         </div>`;
@@ -1206,7 +1206,7 @@ window.renderSaved = function() {
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div class="chip chip--outline chip--xs">${p.score}% match</div>
-            <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})">⤓</button>
+            <button class="settings-btn" style="padding:var(--sp-xs); opacity:0.6;" onclick="event.stopPropagation(); window.exportLayeringRecipe('${p.a.id}', '${p.b.id}', ${p.score})" aria-label="Export layering recipe">⤓</button>
           </div>
           <div class="list-item u-p-0" style="border:none; background:none;">
             <div class="list-item-dot" style="--fam-bg:${colA};"></div>
@@ -3903,7 +3903,7 @@ function openUniversalSearch(opts = {}) {
       inlineContainer.innerHTML = `
         <div class="us-inline-inner card" style="background:var(--bg-primary); box-shadow:var(--shadow-lg); border:1px solid var(--border-standard); margin-top:var(--sp-xs); position:absolute; left:0; right:0; z-index:var(--z-dropdown); overflow:hidden;">
           <div class="us-input-wrap" style="padding: var(--sp-sm); border-bottom: 1px solid var(--border-subtle);">
-            <input type="text" id="us-inline-input" class="input input--inline u-w-full" placeholder="Search to compare..." autocomplete="off">
+            <input type="text" id="us-inline-input" class="input input--inline u-w-full" placeholder="Search to compare..." aria-label="Search to compare" autocomplete="off">
           </div>
           <div id="us-inline-results-list" class="list-view" style="max-height: 300px; overflow-y: auto;"></div>
         </div>
@@ -3963,9 +3963,11 @@ function openUniversalSearch(opts = {}) {
       (other ? ` &nbsp;↔&nbsp; <span class="us-context-name">${other.name}</span>` : '');
     ctx.hidden = false;
     input.placeholder = 'Search to compare...';
+    input.setAttribute('aria-label', 'Search to compare');
   } else {
     ctx.hidden = true;
     input.placeholder = 'Search fragrances, notes, brands...';
+    input.setAttribute('aria-label', 'Search fragrances, notes, brands');
   }
 
   overlay.hidden = false;
